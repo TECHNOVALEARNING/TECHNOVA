@@ -147,9 +147,9 @@ function ProductPage() {
                       className="w-full flex items-center justify-between px-6 py-4 text-left focus:outline-none"
                     >
                       <span className="font-bold text-[15px] text-slate-900">{faq.q}</span>
-                      <ChevronDown className={\`w-5 h-5 text-slate-400 transition-transform duration-300 \${faqOpen === idx ? 'rotate-180' : ''}\`} />
+                      <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform duration-300 ${faqOpen === idx ? 'rotate-180' : ''}`} />
                     </button>
-                    <div className={\`px-6 overflow-hidden transition-all duration-300 \${faqOpen === idx ? 'max-h-[200px] pb-4 opacity-100' : 'max-h-0 opacity-0'}\`}>
+                    <div className={`px-6 overflow-hidden transition-all duration-300 ${faqOpen === idx ? 'max-h-[200px] pb-4 opacity-100' : 'max-h-0 opacity-0'}`}>
                       <p className="text-slate-500 text-[14px] leading-relaxed">{faq.a}</p>
                     </div>
                   </div>
@@ -175,7 +175,7 @@ function ProductPage() {
               </div>
 
               <button 
-                onClick={() => navigate({ to: '/checkout/$id', params: { id: product.id } as any })}
+                onClick={() => alert("Le module de paiement n'est pas encore configuré.")}
                 className="w-full bg-[#034694] hover:bg-[#02336D] text-white font-bold text-[16px] py-4 rounded-xl transition-all shadow-md hover:shadow-lg active:scale-[0.98] mb-8"
               >
                 Profiter de l'offre

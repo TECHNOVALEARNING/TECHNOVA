@@ -405,7 +405,7 @@ export const CourseCard = ({ c, i = 0 }: { c: Course; i?: number }) => (
           <span className="font-display font-bold text-xl text-[color:var(--primary)]">{c.price}</span>
           {c.oldPrice && <span className="ml-2 text-xs text-muted-foreground line-through">{c.oldPrice}</span>}
         </div>
-        <Link to={`/product/${c.slug}`}
+        <Link to="/product/$id" params={{ id: c.slug }}
            className="inline-flex items-center gap-1 text-xs font-semibold text-[color:var(--primary)] hover:gap-2 transition-all">
           Obtenir <ArrowRight className="h-3 w-3" />
         </Link>
