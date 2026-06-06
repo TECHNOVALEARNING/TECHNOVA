@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { 
   Search, Filter, MoreVertical, FileText, ChevronLeft, ChevronRight, 
   Loader2, PackageOpen, Edit2, Link as LinkIcon, Trash2, Plus,
-  Eye, Copy, Share2, Pin, Globe, Circle
+  Eye, Copy, Share2, Pin, Globe, Circle, AlertCircle
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { adminSupabase } from '@/lib/supabase';
@@ -22,6 +22,10 @@ function AdminProducts() {
 
   // Dropdown state
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+
+  // Delete Modal state
+  const [productToDelete, setProductToDelete] = useState<{id: string, title: string} | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const fetchProducts = async () => {
     try {
@@ -43,15 +47,18 @@ function AdminProducts() {
     fetchProducts();
   }, []);
 
-  const handleDelete = async (id: string) => {
-    if (window.confirm('Voulez-vous vraiment supprimer ce produit ?')) {
-      try {
-        await adminSupabase.from('products').delete().eq('id', id);
-        setProducts(products.filter(p => p.id !== id));
-      } catch (err) {
-        console.error("Erreur suppression:", err);
-        alert("Erreur lors de la suppression");
-      }
+  const confirmDelete = async () => {
+    if (!productToDelete) return;
+    setIsDeleting(true);
+    try {
+      await adminSupabase.from('products').delete().eq('id', productToDelete.id);
+      setProducts(products.filter(p => p.id !== productToDelete.id));
+      setProductToDelete(null);
+    } catch (err) {
+      console.error("Erreur suppression:", err);
+      alert("Erreur lors de la suppression");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -342,7 +349,7 @@ function AdminProducts() {
                         <div className="h-px w-full bg-slate-100 my-1"></div>
                         
                         <button 
-                          onClick={() => { handleDelete(product.id); setActiveDropdown(null); }}
+                          onClick={() => { setProductToDelete({id: product.id, title: product.title}); setActiveDropdown(null); }}
                           className="w-full text-left px-4 py-2 hover:bg-red-50 flex items-center gap-3 text-[13px] text-red-600 font-medium transition-colors"
                         >
                           <Trash2 className="w-4 h-4 text-red-500" />
@@ -367,6 +374,40 @@ function AdminProducts() {
           <button className="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center hover:bg-white hover:text-slate-600 transition-colors shadow-sm bg-white">
             <ChevronRight className="w-5 h-5" />
           </button>
+        </div>
+      )}
+
+      {/* DELETE CONFIRMATION MODAL */}
+      {productToDelete && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200">
+            <div className="p-6">
+              <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mb-4">
+                <AlertCircle className="w-6 h-6 text-red-600" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-2">Supprimer le produit</h3>
+              <p className="text-slate-600 text-[15px]">
+                Êtes-vous sûr de vouloir supprimer <strong>{productToDelete.title}</strong> ? Cette action est irréversible.
+              </p>
+            </div>
+            <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-end gap-3">
+              <button 
+                onClick={() => setProductToDelete(null)}
+                disabled={isDeleting}
+                className="px-4 py-2 rounded-xl text-[14px] font-semibold text-slate-700 hover:bg-slate-200 transition-colors disabled:opacity-50"
+              >
+                Annuler
+              </button>
+              <button 
+                onClick={confirmDelete}
+                disabled={isDeleting}
+                className="flex items-center gap-2 px-4 py-2 rounded-xl text-[14px] font-semibold text-white bg-red-600 hover:bg-red-700 transition-colors disabled:opacity-50"
+              >
+                {isDeleting && <Loader2 className="w-4 h-4 animate-spin" />}
+                Oui, supprimer
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
