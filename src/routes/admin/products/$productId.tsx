@@ -609,8 +609,8 @@ function EditProduct() {
                           className={`flex items-center justify-center gap-2 py-3.5 rounded-[24px] border text-[14px] font-semibold transition-colors ${lessonType === 'Vidéo' ? 'bg-[#3A3B40] border-[#3A3B40] text-white' : 'bg-white border-[#E5E7EB] text-slate-700 hover:bg-slate-50'}`}
                         >
                           {lessonType === 'Vidéo' && (
-                            <div className="w-5 h-5 rounded-full bg-[#FFD700] flex items-center justify-center mr-1">
-                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <div className="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center mr-1">
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
                             </div>
                           )}
                           <Video className="w-4 h-4" /> Vidéo
@@ -620,8 +620,8 @@ function EditProduct() {
                           className={`flex items-center justify-center gap-2 py-3.5 rounded-[24px] border text-[14px] font-semibold transition-colors ${lessonType === 'Audio' ? 'bg-[#3A3B40] border-[#3A3B40] text-white' : 'bg-white border-[#E5E7EB] text-slate-700 hover:bg-slate-50'}`}
                         >
                           {lessonType === 'Audio' && (
-                            <div className="w-5 h-5 rounded-full bg-[#FFD700] flex items-center justify-center mr-1">
-                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <div className="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center mr-1">
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
                             </div>
                           )}
                           <Headphones className="w-4 h-4" /> Audio
@@ -631,8 +631,8 @@ function EditProduct() {
                           className={`flex items-center justify-center gap-2 py-3.5 rounded-[24px] border text-[14px] font-semibold transition-colors ${lessonType === 'Texte' ? 'bg-[#3A3B40] border-[#3A3B40] text-white' : 'bg-white border-[#E5E7EB] text-slate-700 hover:bg-slate-50'}`}
                         >
                           {lessonType === 'Texte' && (
-                            <div className="w-5 h-5 rounded-full bg-[#FFD700] flex items-center justify-center mr-1">
-                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <div className="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center mr-1">
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
                             </div>
                           )}
                           <FileText className="w-4 h-4" /> Texte
@@ -679,7 +679,7 @@ function EditProduct() {
                   </div>
 
                   <div className="p-6 border-t border-slate-100 flex justify-end bg-white relative z-10">
-                    <button onClick={handleAddLesson} disabled={saving} className="bg-[#FFD700] hover:bg-[#FACC15] text-slate-900 font-bold px-8 py-3.5 rounded-[24px] text-[14px] transition-colors flex items-center gap-2 shadow-sm disabled:opacity-50">
+                    <button onClick={handleAddLesson} disabled={saving} className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-3.5 rounded-[24px] text-[14px] transition-colors flex items-center gap-2 shadow-sm disabled:opacity-50">
                       {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
                       Ajouter une leçon
                     </button>
