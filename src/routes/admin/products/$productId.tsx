@@ -95,7 +95,7 @@ function EditProduct() {
           <button className="flex items-center gap-2 text-[13px] font-medium text-slate-600 border border-slate-200 rounded-lg px-4 py-2 hover:bg-slate-50 transition-colors">
             <Eye className="w-4 h-4" /> Voir
           </button>
-          <button className="bg-[#FFB800] hover:bg-[#E6A600] text-slate-900 font-bold px-5 py-2 rounded-lg text-[13px] transition-colors shadow-sm">
+          <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-2 rounded-lg text-[13px] transition-colors shadow-sm">
             Publier
           </button>
           <button className="flex items-center gap-1 text-[13px] font-medium text-slate-600 border border-slate-200 rounded-lg px-3 py-2 hover:bg-slate-50 transition-colors">
@@ -146,7 +146,7 @@ function EditProduct() {
                 <div className="animate-in fade-in slide-in-from-bottom-2">
                   <div className="flex items-center justify-between mb-8">
                     <h2 className="text-[18px] font-bold text-slate-900">Contenu du cours</h2>
-                    <button className="bg-[#FFB800] hover:bg-[#E6A600] text-slate-900 font-bold px-4 py-2 rounded-lg text-[13px] transition-colors flex items-center gap-2 shadow-sm">
+                    <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded-lg text-[13px] transition-colors flex items-center gap-2 shadow-sm">
                       <Plus className="w-4 h-4" /> Ajouter un chapitre
                     </button>
                   </div>
@@ -234,7 +234,7 @@ function EditProduct() {
                     <h3 className="text-[15px] font-bold text-slate-900 uppercase">{selectedChapter.title}</h3>
                     <button 
                       onClick={() => setShowAddLesson(true)}
-                      className="bg-[#FFB800] hover:bg-[#E6A600] text-slate-900 font-bold px-4 py-2 rounded-lg text-[13px] transition-colors flex items-center gap-2 shadow-sm"
+                      className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded-lg text-[13px] transition-colors flex items-center gap-2 shadow-sm"
                     >
                       <Plus className="w-4 h-4" /> Ajouter une leçon
                     </button>
@@ -251,7 +251,7 @@ function EditProduct() {
                     <div className="flex items-center gap-3">
                       <button 
                         onClick={() => setShowAddLesson(true)}
-                        className="bg-[#FFB800] hover:bg-[#E6A600] text-slate-900 font-bold px-6 py-2.5 rounded-lg text-[14px] transition-colors flex items-center gap-2 shadow-sm"
+                        className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2.5 rounded-lg text-[14px] transition-colors flex items-center gap-2 shadow-sm"
                       >
                         <Plus className="w-4 h-4" /> Ajouter une leçon
                       </button>
@@ -308,7 +308,7 @@ function EditProduct() {
                           onClick={() => setLessonType('Vidéo')}
                           className={`flex items-center justify-center gap-2 py-3 rounded-xl border text-[13px] font-semibold transition-colors ${lessonType === 'Vidéo' ? 'bg-slate-800 border-slate-800 text-white' : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'}`}
                         >
-                          {lessonType === 'Vidéo' && <div className="w-4 h-4 rounded-full bg-[#FFB800] flex items-center justify-center mr-1"><div className="w-1.5 h-1.5 bg-slate-800 rounded-full"></div></div>}
+                          {lessonType === 'Vidéo' && <div className="w-4 h-4 rounded-full bg-blue-500 flex items-center justify-center mr-1"><div className="w-1.5 h-1.5 bg-white rounded-full"></div></div>}
                           <Video className="w-4 h-4" /> Vidéo
                         </button>
                         <button 
@@ -379,7 +379,7 @@ function EditProduct() {
                   </div>
 
                   <div className="p-4 border-t border-slate-100 flex justify-end">
-                    <button className="bg-[#FFB800] hover:bg-[#E6A600] text-slate-900 font-bold px-6 py-2.5 rounded-xl text-[13px] transition-colors flex items-center gap-2 shadow-sm">
+                    <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2.5 rounded-xl text-[13px] transition-colors flex items-center gap-2 shadow-sm">
                       Ajouter une leçon
                     </button>
                   </div>

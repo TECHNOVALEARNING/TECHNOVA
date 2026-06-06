@@ -297,7 +297,19 @@ function AdminProducts() {
                         onClick={(e) => e.stopPropagation()}
                       >
                         <button 
-                          onClick={() => navigate({ to: '/admin/products/new' as any, search: { id: product.id } as any })}
+                          onClick={() => {
+                            const pType = (() => {
+                              try {
+                                const f = typeof product.features === 'string' ? JSON.parse(product.features) : (product.features || {});
+                                return f.type || 'fichier';
+                              } catch { return 'fichier'; }
+                            })();
+                            if (pType === 'formation') {
+                              navigate({ to: `/admin/products/${product.id}`, search: { tab: 'course' } as any });
+                            } else {
+                              navigate({ to: `/admin/products/${product.id}`, search: { tab: 'informations' } as any });
+                            }
+                          }}
                           className="w-full text-left px-4 py-2 hover:bg-slate-50 flex items-center gap-3 text-[13px] text-slate-700 font-medium transition-colors"
                         >
                           <Edit2 className="w-4 h-4 text-slate-500" />

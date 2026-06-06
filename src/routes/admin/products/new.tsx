@@ -378,7 +378,7 @@ Ne fais aucune introduction. Génère directement le contenu HTML final prêt à
 
           <button 
             onClick={() => navigate({ to: `/admin/products/${productId}?tab=course` })}
-            className="w-full bg-[#FFB800] hover:bg-[#E6A600] text-slate-900 font-bold py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm"
           >
             Ajouter des leçons <span className="text-lg leading-none">&rarr;</span>
           </button>
@@ -1215,7 +1215,7 @@ Ne fais aucune introduction. Génère directement le contenu HTML final prêt à
                 <button 
                   onClick={generateIADescription}
                   disabled={isGenerating}
-                  className="bg-[#FFB800] hover:bg-[#E6A600] text-slate-900 font-semibold px-5 py-2 rounded-lg text-[13px] transition-colors flex items-center gap-2 disabled:opacity-70"
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded-lg text-[13px] transition-colors flex items-center gap-2 disabled:opacity-70 shadow-sm"
                 >
                   {isGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
                   Générer
