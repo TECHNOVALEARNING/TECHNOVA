@@ -40,6 +40,13 @@ function EditProduct() {
   const [lessonDesc, setLessonDesc] = useState('');
   const [lessonType, setLessonType] = useState('Vidéo');
   const [lessonUrl, setLessonUrl] = useState('');
+  const [lessonContent, setLessonContent] = useState('');
+
+  // Chapter Modal State
+  const [showAddChapter, setShowAddChapter] = useState(false);
+  const [newChapterTitle, setNewChapterTitle] = useState('');
+
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -56,6 +63,78 @@ function EditProduct() {
     };
     fetchProduct();
   }, [productId]);
+
+  const handleSaveChapters = async (newChapters: any[]) => {
+    setSaving(true);
+    try {
+      const features = typeof product.features === 'string' ? JSON.parse(product.features) : (product.features || {});
+      const updatedFeatures = { ...features, chapters: newChapters };
+      
+      const { error } = await adminSupabase
+        .from('products')
+        .update({ features: JSON.stringify(updatedFeatures) })
+        .eq('id', product.id);
+
+      if (error) throw error;
+      setProduct({ ...product, features: JSON.stringify(updatedFeatures) });
+    } catch(err) {
+      console.error(err);
+      alert('Erreur lors de la sauvegarde');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleAddChapter = () => {
+    if (!newChapterTitle) return;
+    const features = typeof product.features === 'string' ? JSON.parse(product.features) : (product.features || {});
+    const existingChapters = features.chapters || [];
+    
+    const newChapter = {
+      id: Math.random().toString(36).substring(2, 9),
+      title: newChapterTitle,
+      status: 'active',
+      lessons: []
+    };
+    handleSaveChapters([...existingChapters, newChapter]);
+    setShowAddChapter(false);
+    setNewChapterTitle('');
+  };
+
+  const handleAddLesson = () => {
+    if (!lessonTitle) {
+       alert("Le titre est requis");
+       return;
+    }
+    const features = typeof product.features === 'string' ? JSON.parse(product.features) : (product.features || {});
+    const existingChapters = features.chapters || [];
+    
+    const newLesson = {
+      id: Math.random().toString(36).substring(2, 9),
+      title: lessonTitle,
+      description: lessonDesc,
+      type: lessonType,
+      url: lessonUrl,
+      content: lessonContent
+    };
+
+    const updatedChapters = existingChapters.map((c: any) => {
+      if (c.id === selectedChapter.id) {
+        return { ...c, lessons: [...(c.lessons || []), newLesson] };
+      }
+      return c;
+    });
+
+    handleSaveChapters(updatedChapters);
+    setSelectedChapter(updatedChapters.find((c: any) => c.id === selectedChapter.id));
+    
+    setShowAddLesson(false);
+    setLessonTitle('');
+    setLessonDesc('');
+    setLessonType('Vidéo');
+    setLessonUrl('');
+    setLessonContent('');
+  };
 
   const tabs = [
     { id: 'informations', label: 'Informations', icon: LayoutDashboard },
@@ -146,8 +225,8 @@ function EditProduct() {
                 <div className="animate-in fade-in slide-in-from-bottom-2">
                   <div className="flex items-center justify-between mb-8">
                     <h2 className="text-[18px] font-bold text-slate-900">Contenu du cours</h2>
-                    <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded-lg text-[13px] transition-colors flex items-center gap-2 shadow-sm">
-                      <Plus className="w-4 h-4" /> Ajouter un chapitre
+                    <button onClick={() => setShowAddChapter(true)} disabled={saving} className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded-lg text-[13px] transition-colors flex items-center gap-2 shadow-sm disabled:opacity-50">
+                      {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />} Ajouter un chapitre
                     </button>
                   </div>
 
@@ -244,19 +323,45 @@ function EditProduct() {
                     <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-6">
                       <PlayCircle className="w-8 h-8 text-slate-600" />
                     </div>
-                    <h3 className="text-[20px] font-bold text-slate-900 mb-2">Créez votre première leçon</h3>
-                    <p className="text-slate-500 text-[14px] mb-8 max-w-[300px]">
-                      Ajoutez des vidéos, textes ou fichiers pour enrichir ce chapitre.
-                    </p>
+                    
+                    {(!selectedChapter.lessons || selectedChapter.lessons.length === 0) ? (
+                      <>
+                        <h3 className="text-[20px] font-bold text-slate-900 mb-2">Créez votre première leçon</h3>
+                        <p className="text-slate-500 text-[14px] mb-8 max-w-[300px]">
+                          Ajoutez des vidéos, textes ou fichiers pour enrichir ce chapitre.
+                        </p>
+                      </>
+                    ) : (
+                      <>
+                        <h3 className="text-[20px] font-bold text-slate-900 mb-2">{selectedChapter.lessons.length} leçon(s) dans ce chapitre</h3>
+                        <p className="text-slate-500 text-[14px] mb-8 max-w-[300px]">
+                          Continuez à ajouter du contenu ou modifiez l'existant.
+                        </p>
+                        
+                        <div className="w-full text-left mb-8 space-y-2">
+                          {selectedChapter.lessons.map((lesson: any, i: number) => (
+                            <div key={lesson.id} className="bg-slate-50 border border-slate-200 p-3 rounded-lg flex items-center justify-between">
+                              <div className="flex items-center gap-3">
+                                {lesson.type === 'Vidéo' && <Video className="w-4 h-4 text-blue-600" />}
+                                {lesson.type === 'Audio' && <Headphones className="w-4 h-4 text-purple-600" />}
+                                {lesson.type === 'Texte' && <FileText className="w-4 h-4 text-emerald-600" />}
+                                <span className="text-[14px] font-medium text-slate-900">{lesson.title}</span>
+                              </div>
+                              <button className="text-slate-400 hover:text-slate-600">
+                                <MoreHorizontal className="w-4 h-4" />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </>
+                    )}
+
                     <div className="flex items-center gap-3">
                       <button 
                         onClick={() => setShowAddLesson(true)}
                         className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2.5 rounded-lg text-[14px] transition-colors flex items-center gap-2 shadow-sm"
                       >
                         <Plus className="w-4 h-4" /> Ajouter une leçon
-                      </button>
-                      <button className="bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-medium px-6 py-2.5 rounded-lg text-[14px] transition-colors flex items-center gap-2 shadow-sm">
-                        En savoir plus
                       </button>
                     </div>
                   </div>
@@ -373,13 +478,14 @@ function EditProduct() {
                           <div className="w-px h-4 bg-slate-300"></div>
                           <ImageIcon className="w-4 h-4 text-slate-600 hover:text-blue-600" />
                         </div>
-                        <textarea className="w-full p-3 h-32 outline-none resize-none text-[14px]" />
+                        <textarea value={lessonContent} onChange={(e) => setLessonContent(e.target.value)} className="w-full p-3 h-32 outline-none resize-none text-[14px]" />
                       </div>
                     </div>
                   </div>
 
                   <div className="p-4 border-t border-slate-100 flex justify-end">
-                    <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2.5 rounded-xl text-[13px] transition-colors flex items-center gap-2 shadow-sm">
+                    <button onClick={handleAddLesson} disabled={saving} className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2.5 rounded-xl text-[13px] transition-colors flex items-center gap-2 shadow-sm disabled:opacity-50">
+                      {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
                       Ajouter une leçon
                     </button>
                   </div>
@@ -390,6 +496,43 @@ function EditProduct() {
         )}
 
       </div>
+
+      {showAddChapter && (
+        <div className="fixed inset-0 bg-slate-900/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200">
+            <div className="p-6">
+              <h3 className="text-[18px] font-bold text-slate-900 mb-4">Nouveau chapitre</h3>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-[13px] font-medium text-slate-900 mb-1.5">Titre du chapitre <span className="text-red-500">*</span></label>
+                  <input 
+                    type="text" 
+                    value={newChapterTitle}
+                    onChange={(e) => setNewChapterTitle(e.target.value)}
+                    placeholder="Ex: Introduction au design"
+                    className="w-full bg-white border border-[#D1D5DB] rounded-md px-3 py-2 text-[14px] text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors shadow-sm"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-end gap-3">
+              <button 
+                onClick={() => { setShowAddChapter(false); setNewChapterTitle(''); }}
+                className="px-4 py-2 text-[13px] font-semibold text-slate-600 hover:bg-slate-200 rounded-lg transition-colors"
+              >
+                Annuler
+              </button>
+              <button 
+                onClick={handleAddChapter}
+                disabled={!newChapterTitle || saving}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded-lg text-[13px] transition-colors shadow-sm disabled:opacity-50"
+              >
+                Créer le chapitre
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
