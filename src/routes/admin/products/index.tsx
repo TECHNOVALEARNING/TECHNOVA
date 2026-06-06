@@ -142,7 +142,7 @@ function AdminProducts() {
   return (
     <div className="w-full pb-12 font-sans" onClick={() => setActiveDropdown(null)}>
       
-      <div className="bg-white rounded-[24px] overflow-hidden">
+      <div className="bg-white rounded-[24px]">
         
         {/* HEADER */}
         <div className="p-6 flex items-center justify-between border-b border-slate-100">
