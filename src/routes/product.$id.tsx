@@ -181,16 +181,44 @@ function ProductPage() {
                 Profiter de l'offre
               </button>
 
+
               <div className="border-t border-slate-100 pt-6 mb-6">
-                <p className="text-center text-[12px] font-medium text-slate-500 mb-4">Moyens de paiement disponibles</p>
-                <div className="flex items-center justify-center gap-2 flex-wrap">
-                  {/* Fake payment logos using generic icons for now */}
-                  <div className="w-10 h-7 bg-slate-50 border border-slate-200 rounded flex items-center justify-center"><CreditCard className="w-4 h-4 text-slate-600" /></div>
-                  <div className="w-10 h-7 bg-slate-50 border border-slate-200 rounded flex items-center justify-center"><CreditCard className="w-4 h-4 text-[#E11D48]" /></div>
-                  <div className="w-10 h-7 bg-slate-50 border border-slate-200 rounded flex items-center justify-center"><CreditCard className="w-4 h-4 text-[#F59E0B]" /></div>
-                  <div className="w-10 h-7 bg-slate-50 border border-slate-200 rounded flex items-center justify-center"><CreditCard className="w-4 h-4 text-blue-500" /></div>
+                <p className="text-center text-[11px] font-semibold tracking-widest uppercase text-slate-400 mb-4">Moyens de paiement acceptés</p>
+                <div className="grid grid-cols-5 gap-2">
+                  {/* MTN MoMo */}
+                  <div className="flex flex-col items-center justify-center rounded-xl py-2 px-1 bg-[#FFCD00] border border-[#E6B800] shadow-sm hover:shadow-md transition-shadow cursor-default" title="MTN Mobile Money">
+                    <span className="font-black text-[11px] text-black leading-tight tracking-tight">MTN</span>
+                    <span className="font-bold text-[7px] text-black/70 leading-none mt-0.5">MoMo</span>
+                  </div>
+                  {/* MOOV Money */}
+                  <div className="flex flex-col items-center justify-center rounded-xl py-2 px-1 bg-gradient-to-br from-[#F97316] to-[#EA580C] border border-orange-400 shadow-sm hover:shadow-md transition-shadow cursor-default" title="MOOV Money">
+                    <span className="font-black text-[11px] text-white leading-tight tracking-tight">MOOV</span>
+                    <span className="font-bold text-[7px] text-white/80 leading-none mt-0.5">Money</span>
+                  </div>
+                  {/* VISA */}
+                  <div className="flex flex-col items-center justify-center rounded-xl py-2 px-1 bg-[#1A1F71] border border-[#151961] shadow-sm hover:shadow-md transition-shadow cursor-default" title="VISA">
+                    <span className="font-black italic text-[13px] text-white leading-none tracking-tight">VISA</span>
+                  </div>
+                  {/* Mastercard */}
+                  <div className="flex flex-col items-center justify-center rounded-xl py-2 px-1 bg-white border border-slate-200 shadow-sm hover:shadow-md transition-shadow cursor-default" title="Mastercard">
+                    <div className="flex -space-x-1.5">
+                      <div className="w-4 h-4 rounded-full bg-[#EB001B] opacity-90"></div>
+                      <div className="w-4 h-4 rounded-full bg-[#F79E1B] opacity-90"></div>
+                    </div>
+                    <span className="font-semibold text-[6px] text-slate-600 leading-none mt-0.5 tracking-tight">mastercard</span>
+                  </div>
+                  {/* M-PESA */}
+                  <div className="flex flex-col items-center justify-center rounded-xl py-2 px-1 bg-gradient-to-br from-[#00A651] to-[#007A3D] border border-green-600 shadow-sm hover:shadow-md transition-shadow cursor-default" title="M-PESA">
+                    <span className="font-black text-[9px] text-white leading-tight tracking-tight">M-PESA</span>
+                  </div>
+                </div>
+                {/* Secure badge */}
+                <div className="flex items-center justify-center gap-1.5 mt-3">
+                  <svg className="w-3 h-3 text-emerald-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+                  <span className="text-[10px] font-medium text-slate-400">Paiements 100% sécurisés et cryptés</span>
                 </div>
               </div>
+
 
               <div className="flex items-center justify-center gap-6 pt-4 border-t border-slate-100 text-[12px] font-medium text-slate-600">
                 <button className="flex items-center gap-1.5 hover:text-blue-600 transition-colors">
