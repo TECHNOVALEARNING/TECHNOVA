@@ -41,6 +41,7 @@ function CustomersPage() {
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -125,6 +126,13 @@ function CustomersPage() {
     return `${firstName.charAt(0) || ''}${lastName.charAt(0) || ''}`.toUpperCase() || 'C';
   };
 
+  const filteredCustomers = customers.filter(c => 
+    c.firstName.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    c.lastName.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    c.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (c.phone && c.phone.includes(searchQuery))
+  );
+
   return (
     <div className="w-full pb-12 font-sans relative flex">
       
@@ -141,7 +149,9 @@ function CustomersPage() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <input 
                 type="text" 
-                placeholder="Trouvez n'importe quoi : Appuyez sur Ctrl+K..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Trouvez n'importe quoi..."
                 className="w-full bg-slate-50 border border-slate-200 rounded-full pl-9 pr-4 py-2 text-[13px] focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition-all"
               />
             </div>
@@ -170,22 +180,22 @@ function CustomersPage() {
               <div className="py-24 flex justify-center text-slate-400">
                 <Loader2 className="w-8 h-8 animate-spin" />
               </div>
-            ) : customers.length === 0 ? (
+            ) : filteredCustomers.length === 0 ? (
               <div className="py-24 text-center px-4 flex flex-col items-center justify-center">
                 <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4 border border-slate-100">
                   <FileText className="w-6 h-6 text-slate-300" />
                 </div>
                 <h3 className="text-[15px] font-medium text-slate-700 mb-1">Aucun client trouvé</h3>
                 <p className="text-slate-500 text-[13px] max-w-sm mx-auto">
-                  Vos futurs clients apparaîtront ici dès qu'ils auront effectué une tentative d'achat.
+                  {searchQuery ? "Aucun client ne correspond à votre recherche." : "Vos futurs clients apparaîtront ici dès qu'ils auront effectué une tentative d'achat."}
                 </p>
               </div>
             ) : (
-              customers.map((customer, idx) => (
+              filteredCustomers.map((customer, idx) => (
                 <div 
                   key={customer.id} 
                   onClick={() => setSelectedCustomer(customer)}
-                  className={`grid grid-cols-[2fr_1fr_100px] gap-4 px-6 py-3 items-center hover:bg-slate-50/50 transition-colors cursor-pointer group ${idx !== customers.length - 1 ? 'border-b border-slate-100' : ''}`}
+                  className={`grid grid-cols-[2fr_1fr_100px] gap-4 px-6 py-3 items-center hover:bg-slate-50/50 transition-colors cursor-pointer group ${idx !== filteredCustomers.length - 1 ? 'border-b border-slate-100' : ''}`}
                 >
                   <div className="flex items-center gap-3">
                     {customer.avatarUrl ? (
@@ -216,7 +226,7 @@ function CustomersPage() {
           </div>
           
           {/* Pagination mockup */}
-          {customers.length > 0 && (
+          {filteredCustomers.length > 0 && (
             <div className="px-6 py-4 border-t border-slate-100 flex items-center justify-center gap-4">
               <button className="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:bg-slate-50 hover:text-slate-900 transition-colors">
                 <span className="text-lg">‹</span>
