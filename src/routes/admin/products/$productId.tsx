@@ -713,6 +713,88 @@ function EditProduct() {
                       </div>
                     )}
 
+                    {lessonType === 'Audio' && (
+                      <div className="space-y-4">
+                        <div className="flex gap-4">
+                          <div className="flex-1">
+                            <label className="block text-[14px] font-medium text-slate-900 mb-2">Téléverser un fichier audio</label>
+                            <label className="flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 w-full rounded-[24px] px-4 py-3.5 text-[14px] font-medium transition-colors cursor-pointer relative">
+                              <input 
+                                type="file" 
+                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" 
+                                accept="audio/*"
+                                onChange={async (e) => {
+                                  const file = e.target.files?.[0];
+                                  if (file) {
+                                    try {
+                                      const { uploadFileToLWS } = await import('@/lib/api/lws-storage');
+                                      const url = await uploadFileToLWS(file);
+                                      setLessonUrl(url);
+                                    } catch (err) {
+                                      alert("Erreur lors du téléversement: " + err);
+                                    }
+                                  }
+                                }}
+                              />
+                              <Headphones className="w-4 h-4" />
+                              Choisir un fichier...
+                            </label>
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-[14px] font-medium text-slate-900 mb-2">URL du fichier audio (générée ou manuelle)</label>
+                          <input 
+                            type="text" 
+                            value={lessonUrl}
+                            onChange={(e) => setLessonUrl(e.target.value)}
+                            className="w-full bg-white border border-[#E5E7EB] rounded-2xl px-4 py-3.5 text-[14px] text-slate-900 focus:outline-none focus:border-slate-400 transition-colors shadow-sm"
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    {lessonType === 'Texte' && (
+                      <div className="space-y-4">
+                        <div className="flex gap-4">
+                          <div className="flex-1">
+                            <label className="block text-[14px] font-medium text-slate-900 mb-2">Téléverser un fichier (PDF, Word, etc.)</label>
+                            <label className="flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 w-full rounded-[24px] px-4 py-3.5 text-[14px] font-medium transition-colors cursor-pointer relative">
+                              <input 
+                                type="file" 
+                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" 
+                                accept=".pdf,.doc,.docx,.txt"
+                                onChange={async (e) => {
+                                  const file = e.target.files?.[0];
+                                  if (file) {
+                                    try {
+                                      const { uploadFileToLWS } = await import('@/lib/api/lws-storage');
+                                      const url = await uploadFileToLWS(file);
+                                      setLessonUrl(url);
+                                    } catch (err) {
+                                      alert("Erreur lors du téléversement: " + err);
+                                    }
+                                  }
+                                }}
+                              />
+                              <FileText className="w-4 h-4" />
+                              Choisir un fichier...
+                            </label>
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-[14px] font-medium text-slate-900 mb-2">URL du document (générée ou manuelle)</label>
+                          <input 
+                            type="text" 
+                            value={lessonUrl}
+                            onChange={(e) => setLessonUrl(e.target.value)}
+                            className="w-full bg-white border border-[#E5E7EB] rounded-2xl px-4 py-3.5 text-[14px] text-slate-900 focus:outline-none focus:border-slate-400 transition-colors shadow-sm"
+                          />
+                        </div>
+                      </div>
+                    )}
+
                     <div className="mt-4">
                       <RichTextEditor 
                         value={lessonContent} 
