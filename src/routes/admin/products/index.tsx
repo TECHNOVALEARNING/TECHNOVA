@@ -1,3 +1,4 @@
+import { toast } from 'sonner';
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { 
   Search, Filter, MoreVertical, FileText, ChevronLeft, ChevronRight, 
@@ -56,7 +57,7 @@ function AdminProducts() {
       setProductToDelete(null);
     } catch (err) {
       console.error("Erreur suppression:", err);
-      alert("Erreur lors de la suppression");
+      toast.error("Erreur lors de la suppression");
     } finally {
       setIsDeleting(false);
     }
@@ -65,7 +66,7 @@ function AdminProducts() {
   const handleCopyLink = (id: string) => {
     const url = `${window.location.origin}/checkout/${id}`;
     navigator.clipboard.writeText(url);
-    alert('Lien de paiement copié !');
+    toast.success('Lien de paiement copié !');
   };
 
   const handleShare = async (id: string) => {
@@ -90,7 +91,7 @@ function AdminProducts() {
       }
     } catch (err) {
       console.error("Erreur de duplication:", err);
-      alert("Erreur lors de la duplication");
+      toast.error("Erreur lors de la duplication");
     }
   };
 

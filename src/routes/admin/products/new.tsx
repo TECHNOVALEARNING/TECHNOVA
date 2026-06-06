@@ -1,3 +1,4 @@
+import { toast } from 'sonner';
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
 import { useState, useRef, useEffect } from 'react';
 import { adminSupabase } from '@/lib/supabase';
@@ -200,7 +201,7 @@ function AdminNewProductWizard() {
     try {
       const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
       if (!apiKey) {
-        alert("La clé API Gemini n'est pas configurée ! Ajoutez VITE_GEMINI_API_KEY dans votre fichier .env");
+        toast.error("La clé API Gemini n'est pas configurée ! Ajoutez VITE_GEMINI_API_KEY dans votre fichier .env");
         setIsGenerating(false);
         return;
       }
@@ -258,7 +259,7 @@ Ne fais aucune introduction. Génère directement le contenu HTML final prêt à
       setShowIAImproveModal(false);
     } catch (err: any) {
       console.error(err);
-      alert("Erreur lors de la génération IA : " + err.message);
+      toast.error("Erreur lors de la génération IA : " + err.message);
     } finally {
       setIsGenerating(false);
     }
@@ -327,7 +328,7 @@ Ne fais aucune introduction. Génère directement le contenu HTML final prêt à
 
     } catch (err: any) {
       console.error(err);
-      alert("Erreur lors de la publication: " + err.message);
+      toast.error("Erreur lors de la publication: " + err.message);
       isPublishing.current = false;
     } finally {
       setLoading(false);
