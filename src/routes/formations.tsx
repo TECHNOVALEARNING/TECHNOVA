@@ -8,7 +8,6 @@ import {
   PaymentSecurity, Reviews, FaqSection,
   Course
 } from "@/components/site/shared";
-import { ALL_COURSES } from "@/data/courses";
 import { supabase } from "@/lib/supabase";
 
 export const Route = createFileRoute("/formations")({
@@ -64,7 +63,7 @@ function FormationsPage() {
     }
   });
 
-  const combinedCourses = [...dbProducts, ...ALL_COURSES];
+  const combinedCourses = [...dbProducts];
 
   const filtered = combinedCourses.filter((c) => {
     const matchCat = filter === "Toutes" || c.category === filter;

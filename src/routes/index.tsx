@@ -12,7 +12,6 @@ import {
   Header, Footer, LogoMarquee, WhyChoose, FaqSection,
   PaymentSecurity, Reviews, Benefits, CourseCard, SectionHead,
 } from "@/components/site/shared";
-import { ALL_COURSES } from "@/data/courses";
 import { getPawapayLogos } from "@/lib/pawapay.functions";
 
 export const Route = createFileRoute("/")({
