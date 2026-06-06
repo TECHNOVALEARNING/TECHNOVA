@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { adminSupabase } from '@/lib/supabase';
+import { RichTextEditor } from '@/components/RichTextEditor';
 
 // Define the search params type
 type ProductSearch = {
@@ -355,30 +356,12 @@ function EditProduct() {
 
               {activeTab === 'description' && (
                 <div className="animate-in fade-in slide-in-from-bottom-2">
-                  <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-[18px] font-bold text-slate-900">Description du produit</h2>
-                  </div>
-                  <div className="border border-slate-200 rounded-lg overflow-hidden max-w-4xl bg-white shadow-sm">
-                    <div className="bg-slate-50 border-b border-slate-200 px-3 py-2 flex items-center gap-3 overflow-x-auto">
-                      <select onChange={(e) => document.execCommand('formatBlock', false, e.target.value)} className="bg-transparent text-[13px] font-medium outline-none">
-                        <option value="P">Normal</option>
-                        <option value="H1">Titre 1</option>
-                        <option value="H2">Titre 2</option>
-                        <option value="H3">Titre 3</option>
-                      </select>
-                      <div className="w-px h-4 bg-slate-300"></div>
-                      <button onMouseDown={(e) => { e.preventDefault(); document.execCommand('bold', false); }} className="font-serif font-bold text-[14px] px-1 hover:text-blue-600">B</button>
-                      <button onMouseDown={(e) => { e.preventDefault(); document.execCommand('italic', false); }} className="font-serif italic text-[14px] px-1 hover:text-blue-600">I</button>
-                      <button onMouseDown={(e) => { e.preventDefault(); document.execCommand('underline', false); }} className="underline text-[14px] px-1 hover:text-blue-600">U</button>
-                      <button onMouseDown={(e) => { e.preventDefault(); document.execCommand('strikeThrough', false); }} className="line-through text-[14px] px-1 hover:text-blue-600">S</button>
-                      <button onMouseDown={(e) => { e.preventDefault(); document.execCommand('insertUnorderedList', false); }} className="text-[14px] px-1 hover:text-blue-600"><List className="w-4 h-4" /></button>
-                      <button onMouseDown={(e) => { e.preventDefault(); document.execCommand('insertOrderedList', false); }} className="text-[14px] px-1 hover:text-blue-600"><ListOrdered className="w-4 h-4" /></button>
-                    </div>
-                    <div 
-                      contentEditable
-                      onBlur={(e) => setDescription(e.currentTarget.innerHTML)}
-                      dangerouslySetInnerHTML={{ __html: description }}
-                      className="w-full p-4 h-64 outline-none text-[14px] bg-white overflow-y-auto"
+                  <div className="max-w-4xl">
+                    <RichTextEditor 
+                      value={description} 
+                      onChange={setDescription} 
+                      label="Description du produit"
+                      withAI={true}
                     />
                   </div>
                 </div>
@@ -671,32 +654,13 @@ function EditProduct() {
                       </div>
                     )}
 
-                    <div>
-                      <label className="block text-[13px] font-medium text-slate-900 mb-1.5">Contenu de la leçon</label>
-                      <div className="border border-slate-200 rounded-lg overflow-hidden">
-                        <div className="bg-slate-50 border-b border-slate-200 px-3 py-2 flex items-center gap-3 overflow-x-auto">
-                          <select onChange={(e) => document.execCommand('formatBlock', false, e.target.value)} className="bg-transparent text-[13px] font-medium outline-none">
-                            <option value="P">Normal</option>
-                            <option value="H1">Titre 1</option>
-                            <option value="H2">Titre 2</option>
-                            <option value="H3">Titre 3</option>
-                          </select>
-                          <div className="w-px h-4 bg-slate-300"></div>
-                          <button onMouseDown={(e) => { e.preventDefault(); document.execCommand('bold', false); }} className="font-serif font-bold text-[14px] px-1 hover:text-blue-600">B</button>
-                          <button onMouseDown={(e) => { e.preventDefault(); document.execCommand('italic', false); }} className="font-serif italic text-[14px] px-1 hover:text-blue-600">I</button>
-                          <button onMouseDown={(e) => { e.preventDefault(); document.execCommand('underline', false); }} className="underline text-[14px] px-1 hover:text-blue-600">U</button>
-                          <button onMouseDown={(e) => { e.preventDefault(); document.execCommand('strikeThrough', false); }} className="line-through text-[14px] px-1 hover:text-blue-600">S</button>
-                          <button onMouseDown={(e) => { e.preventDefault(); document.execCommand('insertUnorderedList', false); }} className="text-[14px] px-1 hover:text-blue-600"><List className="w-4 h-4" /></button>
-                          <div className="w-px h-4 bg-slate-300"></div>
-                          <button onMouseDown={(e) => { e.preventDefault(); document.execCommand('justifyLeft', false); }} className="text-[14px] px-1 hover:text-blue-600"><AlignLeft className="w-4 h-4" /></button>
-                        </div>
-                        <div 
-                          contentEditable
-                          onBlur={(e) => setLessonContent(e.currentTarget.innerHTML)}
-                          dangerouslySetInnerHTML={{ __html: lessonContent }}
-                          className="w-full p-3 h-32 outline-none resize-y text-[14px] bg-white overflow-y-auto"
-                        />
-                      </div>
+                    <div className="mt-4">
+                      <RichTextEditor 
+                        value={lessonContent} 
+                        onChange={setLessonContent} 
+                        label="Contenu de la leçon"
+                        withAI={true}
+                      />
                     </div>
                   </div>
 
