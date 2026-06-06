@@ -26,6 +26,7 @@ import { Route as AdminSettingsTrackingRouteImport } from './routes/admin/settin
 import { Route as AdminSettingsSeoRouteImport } from './routes/admin/settings/seo'
 import { Route as AdminProductsNewRouteImport } from './routes/admin/products/new'
 import { Route as AdminProductsCreateRouteImport } from './routes/admin/products/create'
+import { Route as AdminProductsProductIdRouteImport } from './routes/admin/products/$productId'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -112,6 +113,11 @@ const AdminProductsCreateRoute = AdminProductsCreateRouteImport.update({
   path: '/products/create',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminProductsProductIdRoute = AdminProductsProductIdRouteImport.update({
+  id: '/products/$productId',
+  path: '/products/$productId',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -125,6 +131,7 @@ export interface FileRoutesByFullPath {
   '/admin/sales': typeof AdminSalesRoute
   '/history/$id': typeof HistoryIdRoute
   '/admin/': typeof AdminIndexRoute
+  '/admin/products/$productId': typeof AdminProductsProductIdRoute
   '/admin/products/create': typeof AdminProductsCreateRoute
   '/admin/products/new': typeof AdminProductsNewRoute
   '/admin/settings/seo': typeof AdminSettingsSeoRoute
@@ -143,6 +150,7 @@ export interface FileRoutesByTo {
   '/admin/sales': typeof AdminSalesRoute
   '/history/$id': typeof HistoryIdRoute
   '/admin': typeof AdminIndexRoute
+  '/admin/products/$productId': typeof AdminProductsProductIdRoute
   '/admin/products/create': typeof AdminProductsCreateRoute
   '/admin/products/new': typeof AdminProductsNewRoute
   '/admin/settings/seo': typeof AdminSettingsSeoRoute
@@ -163,6 +171,7 @@ export interface FileRoutesById {
   '/admin/sales': typeof AdminSalesRoute
   '/history/$id': typeof HistoryIdRoute
   '/admin/': typeof AdminIndexRoute
+  '/admin/products/$productId': typeof AdminProductsProductIdRoute
   '/admin/products/create': typeof AdminProductsCreateRoute
   '/admin/products/new': typeof AdminProductsNewRoute
   '/admin/settings/seo': typeof AdminSettingsSeoRoute
@@ -184,6 +193,7 @@ export interface FileRouteTypes {
     | '/admin/sales'
     | '/history/$id'
     | '/admin/'
+    | '/admin/products/$productId'
     | '/admin/products/create'
     | '/admin/products/new'
     | '/admin/settings/seo'
@@ -202,6 +212,7 @@ export interface FileRouteTypes {
     | '/admin/sales'
     | '/history/$id'
     | '/admin'
+    | '/admin/products/$productId'
     | '/admin/products/create'
     | '/admin/products/new'
     | '/admin/settings/seo'
@@ -221,6 +232,7 @@ export interface FileRouteTypes {
     | '/admin/sales'
     | '/history/$id'
     | '/admin/'
+    | '/admin/products/$productId'
     | '/admin/products/create'
     | '/admin/products/new'
     | '/admin/settings/seo'
@@ -359,6 +371,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminProductsCreateRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/products/$productId': {
+      id: '/admin/products/$productId'
+      path: '/products/$productId'
+      fullPath: '/admin/products/$productId'
+      preLoaderRoute: typeof AdminProductsProductIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
@@ -368,6 +387,7 @@ interface AdminRouteChildren {
   AdminEarningsRoute: typeof AdminEarningsRoute
   AdminSalesRoute: typeof AdminSalesRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  AdminProductsProductIdRoute: typeof AdminProductsProductIdRoute
   AdminProductsCreateRoute: typeof AdminProductsCreateRoute
   AdminProductsNewRoute: typeof AdminProductsNewRoute
   AdminSettingsSeoRoute: typeof AdminSettingsSeoRoute
@@ -382,6 +402,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminEarningsRoute: AdminEarningsRoute,
   AdminSalesRoute: AdminSalesRoute,
   AdminIndexRoute: AdminIndexRoute,
+  AdminProductsProductIdRoute: AdminProductsProductIdRoute,
   AdminProductsCreateRoute: AdminProductsCreateRoute,
   AdminProductsNewRoute: AdminProductsNewRoute,
   AdminSettingsSeoRoute: AdminSettingsSeoRoute,

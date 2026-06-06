@@ -300,6 +300,7 @@ Ne fais aucune introduction. Génère directement le contenu HTML final prêt à
         status: 'active',
         type: productType,
         file_url: fileUrl,
+        chapters: productType === 'formation' ? chapters : undefined
       };
 
       const productData = {
@@ -319,16 +320,22 @@ Ne fais aucune introduction. Génère directement le contenu HTML final prêt à
           .eq('id', productId);
         if (dbError) throw dbError;
       } else {
-        const { error: dbError } = await adminSupabase
+        const { data, error: dbError } = await adminSupabase
           .from('products')
-          .insert([productData]);
+          .insert([productData])
+          .select()
+          .single();
         if (dbError) throw dbError;
+        if (data) setProductId(data.id);
       }
 
       setSuccess(true);
-      setTimeout(() => {
-        navigate({ to: '/admin/products' });
-      }, 2000);
+      
+      if (productType !== 'formation') {
+        setTimeout(() => {
+          navigate({ to: '/admin/products' });
+        }, 2000);
+      }
 
     } catch (err: any) {
       console.error(err);
@@ -339,7 +346,48 @@ Ne fais aucune introduction. Génère directement le contenu HTML final prêt à
     }
   };
 
-  if (success) {
+  if (success && productType === 'formation') {
+    return (
+      <div className="flex flex-col items-center justify-center py-16 px-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="w-full max-w-[500px] bg-[#F9FAFB] rounded-3xl p-10 flex flex-col items-center text-center shadow-sm">
+          <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mb-6">
+            <CheckCircle2 className="w-8 h-8 text-emerald-500" />
+          </div>
+          <h2 className="text-[28px] font-serif text-slate-900 mb-3">Formation créée</h2>
+          <p className="text-slate-500 text-[15px] mb-8 leading-relaxed">Votre formation est prête. Complétez la avec des leçons, puis publiez la.</p>
+          
+          <div className="w-full bg-white border border-slate-200 rounded-2xl p-5 flex items-center gap-5 mb-6 shadow-sm">
+            <div className="w-14 h-14 bg-slate-100 rounded-xl flex items-center justify-center shrink-0">
+               <GraduationCap className="w-7 h-7 text-slate-400" />
+            </div>
+            <div className="text-left flex-1">
+              <div className="font-bold text-slate-900 text-[16px] mb-1">{title}</div>
+              <div className="text-slate-500 text-[14px]">{price} FCFA</div>
+            </div>
+          </div>
+
+          <div className="w-full bg-blue-50 border border-blue-100 rounded-xl p-5 flex gap-3 text-left mb-8">
+            <div className="w-6 h-6 bg-blue-200 rounded-full flex items-center justify-center shrink-0 mt-0.5">
+              <span className="text-blue-700 text-[12px] font-bold">i</span>
+            </div>
+            <div>
+              <div className="text-[14px] font-semibold text-blue-800 mb-1">Prochaine étape</div>
+              <div className="text-[13px] text-blue-600 leading-relaxed">Ajoutez des leçons à vos chapitres : vidéos, textes, fichiers téléchargeables.</div>
+            </div>
+          </div>
+
+          <button 
+            onClick={() => navigate({ to: `/admin/products/${productId}?tab=course` })}
+            className="w-full bg-[#FFB800] hover:bg-[#E6A600] text-slate-900 font-bold py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm"
+          >
+            Ajouter des leçons <span className="text-lg leading-none">&rarr;</span>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (success && productType !== 'formation') {
     return (
       <div className="flex flex-col items-center justify-center h-[70vh] animate-in fade-in zoom-in duration-500">
         <div className="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mb-6 relative">
