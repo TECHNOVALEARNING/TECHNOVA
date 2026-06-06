@@ -174,7 +174,13 @@ function AdminLayout() {
         <header className="h-[72px] bg-white flex items-center justify-between px-4 sm:px-6 lg:px-8 sticky top-0 z-20 shrink-0">
           <div className="flex items-center gap-4 min-w-max">
             <div className="flex items-center gap-2">
-              <ArrowLeft className="w-4 h-4 text-slate-400" />
+              <button 
+                onClick={() => window.history.back()}
+                className="p-1 hover:bg-slate-100 rounded-md transition-colors cursor-pointer"
+                aria-label="Retour"
+              >
+                <ArrowLeft className="w-4 h-4 text-slate-400" />
+              </button>
               <span className="font-semibold text-[15px] text-slate-900">{getPageTitle()}</span>
             </div>
           </div>
