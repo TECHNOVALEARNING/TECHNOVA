@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { TrackingProvider } from "@/components/TrackingProvider";
 import { SeoProvider } from "@/components/SeoProvider";
 import { trackEvent } from "@/lib/tracking";
+import { Toaster } from "@/components/ui/sonner";
 import {
   Outlet,
   Link,
@@ -88,6 +89,7 @@ function RootComponent() {
       <TrackingProvider />
       <SeoProvider />
       <Outlet />
+      <Toaster />
     </QueryClientProvider>
   );
 }
