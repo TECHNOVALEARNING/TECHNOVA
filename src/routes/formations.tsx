@@ -38,12 +38,20 @@ function FormationsPage() {
       const { data, error } = await supabase
         .from("products")
         .select("*")
-        .eq("status", "active")
         .order("created_at", { ascending: false });
       
       if (error) throw error;
       
-      return (data || []).map((p: any) => ({
+      const activeProducts = (data || []).filter((p: any) => {
+        try {
+          const feats = typeof p.features === 'string' ? JSON.parse(p.features) : (p.features || {});
+          return feats.status !== 'draft';
+        } catch(e) {
+          return true;
+        }
+      });
+      
+      return activeProducts.map((p: any) => ({
         slug: p.id,
         title: p.title,
         cover: p.image_url || "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=800",
