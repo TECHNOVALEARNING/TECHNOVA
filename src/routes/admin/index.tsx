@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useRouter } from '@tanstack/react-router';
 import { 
-  Plus, Users, Info, Loader2, PackageOpen, Sparkles, Workflow, Tag, Play, FileText
+  Plus, Users, Info, Loader2, PackageOpen, Sparkles, Workflow, Tag, Play, FileText, ShoppingBag
 } from 'lucide-react';
 import { adminSupabase } from '@/lib/supabase';
 import { useEffect, useState } from 'react';
@@ -201,12 +201,12 @@ function AdminDashboard() {
                         {product.title} 🚀
                         <FileText className="w-3.5 h-3.5 text-slate-400" />
                       </h4>
-                      <div className="text-[13px] text-slate-500 line-through mt-0.5">{product.price.toLocaleString('fr-FR')} FCFA</div>
+                      <div className="text-[13px] text-slate-500 line-through mt-0.5">{(product.price || 0).toLocaleString('fr-FR')} FCFA</div>
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="font-semibold text-[14px] text-slate-900">{product.total_revenue.toLocaleString('fr-FR')} FCFA</div>
-                    <div className="text-[13px] text-slate-500">{product.sales_count} Ventes</div>
+                    <div className="font-semibold text-[14px] text-slate-900">{(product.total_revenue || 0).toLocaleString('fr-FR')} FCFA</div>
+                    <div className="text-[13px] text-slate-500">{product.sales_count || 0} Ventes</div>
                   </div>
                 </div>
               ))}
