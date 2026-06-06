@@ -1,0 +1,189 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-glow: var(--primary-glow);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --color-navy: var(--navy);
+  --color-sky-soft: var(--sky-soft);
+  --color-pastel-blue: var(--pastel-blue);
+  --color-pastel-amber: var(--pastel-amber);
+  --color-pastel-green: var(--pastel-green);
+  --color-pastel-pink: var(--pastel-pink);
+  --color-pastel-violet: var(--pastel-violet);
+
+  --font-display: "Space Grotesk", "Poppins", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-sans: "Poppins", system-ui, sans-serif;
+}
+
+:root {
+  --radius: 1rem;
+
+  --background: oklch(0.985 0.008 240);   /* very light blue-tinted white */
+  --foreground: oklch(0.18 0.05 264);     /* deep navy */
+
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.18 0.05 264);
+
+  --primary: oklch(0.55 0.22 264);          /* #2563eb */
+  --primary-foreground: oklch(0.99 0 0);
+  --primary-glow: oklch(0.72 0.17 250);
+
+  --secondary: oklch(0.965 0.02 245);
+  --secondary-foreground: oklch(0.22 0.05 264);
+
+  --accent: oklch(0.78 0.16 75);            /* amber */
+  --accent-foreground: oklch(0.18 0.04 264);
+
+  --muted: oklch(0.97 0.012 245);
+  --muted-foreground: oklch(0.48 0.03 256);
+
+  --navy: oklch(0.18 0.05 264);
+
+  --sky-soft: oklch(0.96 0.025 240);
+  --pastel-blue: oklch(0.92 0.06 245);
+  --pastel-amber: oklch(0.94 0.06 80);
+  --pastel-green: oklch(0.93 0.07 155);
+  --pastel-pink: oklch(0.93 0.05 20);
+  --pastel-violet: oklch(0.93 0.05 295);
+
+  --border: oklch(0.92 0.015 250);
+  --input: oklch(0.92 0.015 250);
+  --ring: oklch(0.55 0.22 264);
+
+  --gradient-hero: radial-gradient(1200px 600px at 80% 0%, oklch(0.92 0.08 245 / 0.6), transparent 60%),
+                    radial-gradient(900px 500px at 10% 90%, oklch(0.95 0.06 75 / 0.5), transparent 60%),
+                    linear-gradient(180deg, oklch(0.985 0.012 240) 0%, oklch(0.96 0.03 245) 100%);
+  --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--primary-glow) 100%);
+  --gradient-accent: linear-gradient(135deg, var(--accent) 0%, oklch(0.70 0.18 50) 100%);
+  --gradient-dark: linear-gradient(160deg, oklch(0.15 0.05 264) 0%, oklch(0.22 0.09 264) 100%);
+
+  --shadow-glow: 0 25px 60px -20px color-mix(in oklab, var(--primary) 45%, transparent);
+  --shadow-soft: 0 10px 30px -10px oklch(0.22 0.04 264 / 0.12);
+  --shadow-elegant: 0 30px 60px -25px oklch(0.22 0.04 264 / 0.25);
+}
+
+@layer base {
+  * { border-color: var(--color-border); }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,h2,h3,h4 { font-family: var(--font-display); letter-spacing: -0.025em; }
+  ::selection { background: color-mix(in oklab, var(--primary) 25%, transparent); }
+}
+
+@utility text-gradient {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+@utility text-gradient-accent {
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+@utility bg-hero { background: var(--gradient-hero); }
+@utility bg-primary-gradient { background: var(--gradient-primary); }
+@utility bg-dark-gradient { background: var(--gradient-dark); }
+@utility shadow-glow { box-shadow: var(--shadow-glow); }
+@utility shadow-soft { box-shadow: var(--shadow-soft); }
+@utility shadow-elegant { box-shadow: var(--shadow-elegant); }
+@utility font-mono-display { font-family: var(--font-mono); }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-22px); }
+}
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-14px) rotate(3deg); }
+}
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--primary) 50%, transparent); }
+  100% { box-shadow: 0 0 0 30px transparent; }
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes marquee-reverse {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+@keyframes blob {
+  0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+  50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+}
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes gradient-x {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@utility animate-float { animation: float 6s ease-in-out infinite; }
+@utility animate-float-slow { animation: float-slow 8s ease-in-out infinite; }
+@utility animate-pulse-ring { animation: pulse-ring 2s ease-out infinite; }
+@utility animate-marquee { animation: marquee 30s linear infinite; }
+@utility animate-marquee-slow { animation: marquee 50s linear infinite; }
+@utility animate-marquee-reverse { animation: marquee-reverse 35s linear infinite; }
+@utility animate-blob { animation: blob 12s ease-in-out infinite; }
+@utility animate-spin-slow { animation: spin-slow 22s linear infinite; }
+@utility animate-gradient-x {
+  background-size: 200% 200%;
+  animation: gradient-x 6s ease infinite;
+}
+
+@utility grid-bg {
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--primary) 8%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--primary) 8%, transparent) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 40%, transparent 100%);
+}
+
+@utility dotted-bg {
+  background-image: radial-gradient(color-mix(in oklab, var(--primary) 20%, transparent) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+@utility animation-delay-2000 {
+  animation-delay: 2s;
+}
+@utility animation-delay-4000 {
+  animation-delay: 4s;
+}
