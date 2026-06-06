@@ -8,6 +8,7 @@ import {
 import { useState, useEffect } from 'react';
 import { adminSupabase } from '@/lib/supabase';
 import { RichTextEditor } from '@/components/RichTextEditor';
+import { toast } from 'sonner';
 
 // Define the search params type
 type ProductSearch = {
@@ -110,10 +111,10 @@ function EditProduct() {
 
       if (error) throw error;
       setProduct({ ...product, ...updateData, features: JSON.stringify(updatedFeatures) });
-      alert('Produit mis à jour avec succès !');
+      toast.error('Produit mis à jour avec succès !');
     } catch(err) {
       console.error(err);
-      alert('Erreur lors de la sauvegarde');
+      toast.error('Erreur lors de la sauvegarde');
     } finally {
       setSaving(false);
     }
@@ -134,7 +135,7 @@ function EditProduct() {
       setProduct({ ...product, features: JSON.stringify(updatedFeatures) });
     } catch(err) {
       console.error(err);
-      alert('Erreur lors de la sauvegarde');
+      toast.error('Erreur lors de la sauvegarde');
     } finally {
       setSaving(false);
     }
@@ -158,7 +159,7 @@ function EditProduct() {
 
   const handleAddLesson = () => {
     if (!lessonTitle) {
-       alert("Le titre est requis");
+       toast.error("Le titre est requis");
        return;
     }
     const features = typeof product.features === 'string' ? JSON.parse(product.features) : (product.features || {});
@@ -394,7 +395,7 @@ function EditProduct() {
                                 const url = await uploadFileToLWS(file);
                                 setImageUrl(url);
                               } catch (err) {
-                                alert("Erreur lors du téléversement: " + err);
+                                toast.error("Erreur lors du téléversement: " + err);
                               }
                             }
                           }}
@@ -685,7 +686,7 @@ function EditProduct() {
                                       const url = await uploadFileToLWS(file);
                                       setLessonUrl(url);
                                     } catch (err) {
-                                      alert("Erreur lors du téléversement: " + err);
+                                      toast.error("Erreur lors du téléversement: " + err);
                                     }
                                   }
                                 }}
@@ -731,7 +732,7 @@ function EditProduct() {
                                       const url = await uploadFileToLWS(file);
                                       setLessonUrl(url);
                                     } catch (err) {
-                                      alert("Erreur lors du téléversement: " + err);
+                                      toast.error("Erreur lors du téléversement: " + err);
                                     }
                                   }
                                 }}
@@ -772,7 +773,7 @@ function EditProduct() {
                                       const url = await uploadFileToLWS(file);
                                       setLessonUrl(url);
                                     } catch (err) {
-                                      alert("Erreur lors du téléversement: " + err);
+                                      toast.error("Erreur lors du téléversement: " + err);
                                     }
                                   }
                                 }}
@@ -858,3 +859,4 @@ function EditProduct() {
     </div>
   );
 }
+
