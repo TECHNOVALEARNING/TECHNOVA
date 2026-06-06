@@ -10,7 +10,7 @@ import {
   Box, 
   PlayCircle,
   Bold, Italic, Underline, Strikethrough, List, ListOrdered, Link as LinkIcon, Image as ImageIcon2, Video,
-  Rocket, Languages, CheckCheck, X
+  Rocket, Languages, CheckCheck, X, GraduationCap, Folder, ChevronUp, ChevronDown, MoreHorizontal, Plus
 } from 'lucide-react';
 
 export const Route = createFileRoute('/admin/products/new')({
@@ -23,7 +23,7 @@ function AdminNewProductWizard() {
   const productType = search?.type || 'fichier';
 
   const [step, setStep] = useState(1);
-  const totalSteps = 5;
+  const totalSteps = productType === 'formation' ? 4 : 5;
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -69,6 +69,13 @@ function AdminNewProductWizard() {
   const [iaInstructions, setIaInstructions] = useState('');
   const [iaTone, setIaTone] = useState('Persuasif');
   const [isGenerating, setIsGenerating] = useState(false);
+
+  // Chapters State (for Formation)
+  type Chapter = { id: string; title: string; description: string; status: 'active' | 'draft'; order: number };
+  const [chapters, setChapters] = useState<Chapter[]>([]);
+  const [showAddChapterModal, setShowAddChapterModal] = useState(false);
+  const [newChapterTitle, setNewChapterTitle] = useState('');
+  const [newChapterDesc, setNewChapterDesc] = useState('');
 
   const draftId = search?.id || null;
   const [productId, setProductId] = useState<string | null>(draftId);
@@ -813,8 +820,8 @@ Ne fais aucune introduction. Génère directement le contenu HTML final prêt à
           </div>
         )}
 
-        {/* STEP 3: Customize Page (Thumbnail) */}
-        {step === 3 && (
+        {/* STEP 3: Customize Page (Thumbnail) - For Fichier/Service */}
+        {step === 3 && productType !== 'formation' && (
           <div className="animate-in fade-in slide-in-from-bottom-2">
             <h2 className="text-[22px] font-medium text-slate-900 mb-6">Personnaliser la page produit</h2>
             
@@ -864,8 +871,115 @@ Ne fais aucune introduction. Génère directement le contenu HTML final prêt à
           </div>
         )}
 
-        {/* STEP 4: Content Upload */}
-        {step === 4 && (
+        {/* STEP 3: Content Builder (For Formation) */}
+        {step === 3 && productType === 'formation' && (
+          <div className="animate-in fade-in slide-in-from-bottom-2">
+            <h2 className="text-[22px] font-medium text-slate-900 mb-6 text-center">Ajouter le contenu de la formation</h2>
+            
+            {chapters.length === 0 ? (
+              <div className="flex flex-col items-center justify-center text-center py-10">
+                <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-6">
+                  <GraduationCap className="w-8 h-8 text-slate-600" />
+                </div>
+                <h3 className="text-[20px] font-bold text-slate-900 mb-2">Construisez votre programme</h3>
+                <p className="text-slate-500 text-[14px] max-w-[400px] mb-8 leading-relaxed">
+                  Créez des chapitres et ajoutez-y des leçons : vidéos, textes ou fichiers téléchargeables.
+                </p>
+                <button 
+                  onClick={() => setShowAddChapterModal(true)}
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-lg text-[14px] transition-colors flex items-center gap-2 shadow-sm"
+                >
+                  <Plus className="w-4 h-4" /> Ajouter un chapitre
+                </button>
+              </div>
+            ) : (
+              <div>
+                <div className="flex items-center justify-between mb-8">
+                  <h3 className="text-[16px] font-bold text-slate-900">Contenu du cours</h3>
+                  <button 
+                    onClick={() => setShowAddChapterModal(true)}
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg text-[13px] transition-colors flex items-center gap-2 shadow-sm"
+                  >
+                    <Plus className="w-4 h-4" /> Ajouter un chapitre
+                  </button>
+                </div>
+
+                <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 text-[12px] font-semibold text-slate-500 mb-4">
+                  <div className="flex items-center gap-4 flex-1">
+                    <span className="w-8">#</span>
+                    <span>Titre</span>
+                  </div>
+                  <div className="flex items-center gap-12 pr-[140px]">
+                    <span>Statut</span>
+                    <span>Actions</span>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  {chapters.map((chapter, index) => (
+                    <div key={chapter.id} className="flex items-center justify-between px-4 py-3 bg-white border border-slate-200 rounded-xl shadow-sm hover:border-slate-300 transition-colors">
+                      <div className="flex items-center gap-4 flex-1">
+                        <span className="w-8 text-[13px] text-slate-400 font-medium">{(index + 1).toString().padStart(2, '0')}</span>
+                        <div className="flex items-center gap-3">
+                          <Folder className="w-4 h-4 text-slate-700" />
+                          <span className="text-[14px] font-bold text-slate-900">{chapter.title}</span>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center gap-8">
+                        <button 
+                          className={`w-11 h-6 rounded-full flex items-center transition-colors px-1 ${chapter.status === 'active' ? 'bg-slate-900' : 'bg-slate-200'}`}
+                          onClick={() => {
+                            setChapters(chapters.map(c => c.id === chapter.id ? { ...c, status: c.status === 'active' ? 'draft' : 'active' } : c));
+                          }}
+                        >
+                          <div className={`w-4 h-4 rounded-full bg-white transition-transform ${chapter.status === 'active' ? 'translate-x-5' : 'translate-x-0'}`}></div>
+                        </button>
+                        
+                        <div className="flex items-center gap-2">
+                          <button 
+                            onClick={() => {
+                              if (index > 0) {
+                                const newChapters = [...chapters];
+                                const temp = newChapters[index - 1];
+                                newChapters[index - 1] = newChapters[index];
+                                newChapters[index] = temp;
+                                setChapters(newChapters);
+                              }
+                            }}
+                            className="w-8 h-8 rounded-lg border border-slate-200 flex items-center justify-center hover:bg-slate-50 transition-colors"
+                          >
+                            <ChevronUp className="w-4 h-4 text-slate-600" />
+                          </button>
+                          <button 
+                            onClick={() => {
+                              if (index < chapters.length - 1) {
+                                const newChapters = [...chapters];
+                                const temp = newChapters[index + 1];
+                                newChapters[index + 1] = newChapters[index];
+                                newChapters[index] = temp;
+                                setChapters(newChapters);
+                              }
+                            }}
+                            className="w-8 h-8 rounded-lg border border-slate-200 flex items-center justify-center hover:bg-slate-50 transition-colors"
+                          >
+                            <ChevronDown className="w-4 h-4 text-slate-600" />
+                          </button>
+                          <button className="w-8 h-8 rounded-lg border border-slate-200 flex items-center justify-center hover:bg-slate-50 transition-colors">
+                            <MoreHorizontal className="w-4 h-4 text-slate-600" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* STEP 4: Content Upload (For Fichier/Service) */}
+        {step === 4 && productType !== 'formation' && (
           <div className="animate-in fade-in slide-in-from-bottom-2">
             <h2 className="text-[22px] font-medium text-slate-900 mb-6">Ajoutez le contenu du produit</h2>
             
@@ -914,8 +1028,8 @@ Ne fais aucune introduction. Génère directement le contenu HTML final prêt à
           </div>
         )}
 
-        {/* STEP 5: Review and Publish */}
-        {step === 5 && (
+        {/* STEP 4/5: Review and Publish */}
+        {((step === 5 && productType !== 'formation') || (step === 4 && productType === 'formation')) && (
           <div className="animate-in fade-in slide-in-from-bottom-2">
             <h2 className="text-[22px] font-medium text-slate-900 mb-6">Vérifier et publier</h2>
             
@@ -1057,6 +1171,73 @@ Ne fais aucune introduction. Génère directement le contenu HTML final prêt à
                 >
                   {isGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
                   Générer
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add Chapter Modal */}
+      {showAddChapterModal && (
+        <div className="fixed inset-0 bg-slate-900/40 z-[100] flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-[500px] overflow-hidden animate-in zoom-in-95 duration-200">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+              <h3 className="font-bold text-[16px] text-slate-900">Ajouter un chapitre</h3>
+              <button onClick={() => setShowAddChapterModal(false)} className="text-slate-400 hover:text-slate-600 transition-colors">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="p-6 space-y-5">
+              <div>
+                <label className="block text-[13px] font-medium text-slate-900 mb-1.5">Titre <span className="text-red-500">*</span></label>
+                <input 
+                  type="text" 
+                  value={newChapterTitle}
+                  onChange={(e) => setNewChapterTitle(e.target.value)}
+                  className="w-full bg-white border border-[#D1D5DB] rounded-md px-3 py-2 text-[14px] text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors shadow-sm"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[13px] font-medium text-slate-900 mb-1.5">Description</label>
+                <div className="relative">
+                  <textarea 
+                    value={newChapterDesc}
+                    onChange={(e) => {
+                      if (e.target.value.length <= 160) {
+                        setNewChapterDesc(e.target.value);
+                      }
+                    }}
+                    rows={4}
+                    className="w-full bg-white border border-[#D1D5DB] rounded-md px-3 py-2 text-[14px] text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors shadow-sm resize-none"
+                  />
+                  <div className="absolute bottom-2 right-2 text-[11px] font-medium text-emerald-500">
+                    {newChapterDesc.length}/160
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end pt-2">
+                <button 
+                  onClick={() => {
+                    if (!newChapterTitle.trim()) return;
+                    setChapters([...chapters, {
+                      id: Math.random().toString(36).substr(2, 9),
+                      title: newChapterTitle,
+                      description: newChapterDesc,
+                      status: 'active',
+                      order: chapters.length
+                    }]);
+                    setNewChapterTitle('');
+                    setNewChapterDesc('');
+                    setShowAddChapterModal(false);
+                  }}
+                  disabled={!newChapterTitle.trim()}
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded-lg text-[13px] transition-colors disabled:opacity-50 shadow-sm"
+                >
+                  Ajouter
                 </button>
               </div>
             </div>
