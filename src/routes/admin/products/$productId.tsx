@@ -497,7 +497,7 @@ function EditProduct() {
             <div className="fixed inset-0 bg-slate-900/20 z-40 block xl:hidden" onClick={() => setSelectedChapter(null)} />
             
             {/* The Panel */}
-            <div className="w-[500px] shrink-0 bg-white border-l border-slate-200 flex flex-col z-50 h-[calc(100vh-65px)] animate-in slide-in-from-right duration-300 shadow-2xl">
+            <div className="w-1/2 min-w-[600px] shrink-0 bg-white border-l border-slate-200 flex flex-col z-[60] h-[calc(100vh-65px)] animate-in slide-in-from-right duration-300 shadow-[0_0_40px_rgba(0,0,0,0.1)]">
               
               {!showAddLesson ? (
                 // State: Empty / List of lessons
