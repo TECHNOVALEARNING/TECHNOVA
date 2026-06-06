@@ -3,7 +3,7 @@ import {
   ChevronLeft, LayoutDashboard, DollarSign, Folder, FileText, 
   Image as ImageIcon, HelpCircle, Search as SearchIcon, Settings,
   Eye, Plus, ChevronUp, ChevronDown, MoreHorizontal, Video, Headphones,
-  AlignLeft, PlayCircle, Loader2
+  AlignLeft, PlayCircle, Loader2, List, ListOrdered
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { adminSupabase } from '@/lib/supabase';
@@ -46,6 +46,15 @@ function EditProduct() {
   const [showAddChapter, setShowAddChapter] = useState(false);
   const [newChapterTitle, setNewChapterTitle] = useState('');
 
+  // Product Fields State
+  const [title, setTitle] = useState('');
+  const [category, setCategory] = useState('');
+  const [price, setPrice] = useState('');
+  const [crossedPrice, setCrossedPrice] = useState('');
+  const [pricingModel, setPricingModel] = useState('Paiement unique');
+  const [description, setDescription] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
+
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -58,11 +67,56 @@ function EditProduct() {
       
       if (data) {
         setProduct(data);
+        setTitle(data.title || '');
+        setCategory(data.category || '');
+        setPrice(data.price?.toString() || '');
+        setDescription(data.description || '');
+        setImageUrl(data.image_url || '');
+        try {
+           const feats = typeof data.features === 'string' ? JSON.parse(data.features) : (data.features || {});
+           if (feats.pricing_model) setPricingModel(feats.pricing_model);
+           if (feats.crossed_price) setCrossedPrice(feats.crossed_price.toString());
+        } catch(e) {}
       }
       setLoading(false);
     };
     fetchProduct();
   }, [productId]);
+
+  const handleSaveProduct = async () => {
+    setSaving(true);
+    try {
+      const features = typeof product.features === 'string' ? JSON.parse(product.features) : (product.features || {});
+      const updatedFeatures = { 
+        ...features, 
+        pricing_model: pricingModel, 
+        crossed_price: crossedPrice ? parseInt(crossedPrice) : null 
+      };
+      
+      const updateData = {
+         title,
+         category,
+         price: price ? parseInt(price) : 0,
+         description,
+         image_url: imageUrl,
+         features: JSON.stringify(updatedFeatures)
+      };
+
+      const { error } = await adminSupabase
+        .from('products')
+        .update(updateData)
+        .eq('id', product.id);
+
+      if (error) throw error;
+      setProduct({ ...product, ...updateData, features: JSON.stringify(updatedFeatures) });
+      alert('Produit mis à jour avec succès !');
+    } catch(err) {
+      console.error(err);
+      alert('Erreur lors de la sauvegarde');
+    } finally {
+      setSaving(false);
+    }
+  };
 
   const handleSaveChapters = async (newChapters: any[]) => {
     setSaving(true);
@@ -174,8 +228,8 @@ function EditProduct() {
           <button className="flex items-center gap-2 text-[13px] font-medium text-slate-600 border border-slate-200 rounded-lg px-4 py-2 hover:bg-slate-50 transition-colors">
             <Eye className="w-4 h-4" /> Voir
           </button>
-          <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-2 rounded-lg text-[13px] transition-colors shadow-sm">
-            Publier
+          <button onClick={handleSaveProduct} disabled={saving} className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-2 rounded-lg text-[13px] transition-colors shadow-sm disabled:opacity-50">
+            {saving ? 'Enregistrement...' : 'Enregistrer'}
           </button>
           <button className="flex items-center gap-1 text-[13px] font-medium text-slate-600 border border-slate-200 rounded-lg px-3 py-2 hover:bg-slate-50 transition-colors">
             Plus <ChevronDown className="w-4 h-4" />
@@ -219,8 +273,152 @@ function EditProduct() {
             </div>
 
             {/* Tab Content */}
-            <div className="flex-1 pt-2">
+            <div className="flex-1 pt-2 pb-24">
               
+              {activeTab === 'informations' && (
+                <div className="animate-in fade-in slide-in-from-bottom-2">
+                  <h2 className="text-[18px] font-bold text-slate-900 mb-6">Informations générales</h2>
+                  <div className="space-y-6 max-w-2xl">
+                    <div>
+                      <label className="block text-[13px] font-medium text-[#111827] mb-1.5">Nom du produit <span className="text-red-500">*</span></label>
+                      <input 
+                        type="text" 
+                        value={title}
+                        onChange={e => setTitle(e.target.value)}
+                        className="w-full bg-white border border-[#D1D5DB] rounded-md px-3 py-2 text-[14px] text-slate-900 focus:outline-none focus:border-blue-500 transition-colors"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[13px] font-medium text-[#111827] mb-1.5">Catégorie <span className="text-red-500">*</span></label>
+                      <select 
+                        value={category}
+                        onChange={e => setCategory(e.target.value)}
+                        className="w-full bg-white border border-[#D1D5DB] rounded-md px-3 py-2 text-[14px] text-slate-900 focus:outline-none focus:border-blue-500 transition-colors"
+                      >
+                        <option value="Éducation & Apprentissage">Éducation & Apprentissage</option>
+                        <option value="Marketing Digital">Marketing Digital</option>
+                        <option value="Tech & Programmation">Tech & Programmation</option>
+                        <option value="Business & Entrepreneuriat">Business & Entrepreneuriat</option>
+                        <option value="Design">Design</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'tarification' && (
+                <div className="animate-in fade-in slide-in-from-bottom-2">
+                  <h2 className="text-[18px] font-bold text-slate-900 mb-6">Tarification</h2>
+                  <div className="space-y-6 max-w-2xl">
+                    <div>
+                      <label className="block text-[13px] font-medium text-[#111827] mb-1.5">Modèle de tarification <span className="text-red-500">*</span></label>
+                      <select 
+                        value={pricingModel}
+                        onChange={e => setPricingModel(e.target.value)}
+                        className="w-full bg-white border border-[#D1D5DB] rounded-md px-3 py-2 text-[14px] text-slate-900 focus:outline-none focus:border-blue-500 transition-colors"
+                      >
+                        <option value="Paiement unique">Paiement unique</option>
+                        <option value="Abonnement mensuel">Abonnement mensuel</option>
+                        <option value="Abonnement annuel">Abonnement annuel</option>
+                        <option value="Gratuit">Gratuit</option>
+                      </select>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-[13px] font-medium text-[#111827] mb-1.5">Prix</label>
+                        <div className="relative">
+                          <input 
+                            type="number" 
+                            value={price}
+                            onChange={e => setPrice(e.target.value)}
+                            className="w-full bg-white border border-[#D1D5DB] rounded-md pl-3 pr-12 py-2 text-[14px] text-slate-900 focus:outline-none focus:border-blue-500 transition-colors"
+                          />
+                          <div className="absolute right-3 top-1/2 -translate-y-1/2 text-[13px] text-slate-400">FCFA</div>
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-[13px] font-medium text-[#111827] mb-1.5">Prix promotionnel</label>
+                        <div className="relative">
+                          <input 
+                            type="number" 
+                            value={crossedPrice}
+                            onChange={e => setCrossedPrice(e.target.value)}
+                            className="w-full bg-white border border-[#D1D5DB] rounded-md pl-3 pr-12 py-2 text-[14px] text-slate-900 focus:outline-none focus:border-blue-500 transition-colors"
+                          />
+                          <div className="absolute right-3 top-1/2 -translate-y-1/2 text-[13px] text-slate-400">FCFA</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'description' && (
+                <div className="animate-in fade-in slide-in-from-bottom-2">
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-[18px] font-bold text-slate-900">Description du produit</h2>
+                  </div>
+                  <div className="border border-slate-200 rounded-lg overflow-hidden max-w-4xl bg-white shadow-sm">
+                    <div className="bg-slate-50 border-b border-slate-200 px-3 py-2 flex items-center gap-3 overflow-x-auto">
+                      <select onChange={(e) => document.execCommand('formatBlock', false, e.target.value)} className="bg-transparent text-[13px] font-medium outline-none">
+                        <option value="P">Normal</option>
+                        <option value="H1">Titre 1</option>
+                        <option value="H2">Titre 2</option>
+                        <option value="H3">Titre 3</option>
+                      </select>
+                      <div className="w-px h-4 bg-slate-300"></div>
+                      <button onMouseDown={(e) => { e.preventDefault(); document.execCommand('bold', false); }} className="font-serif font-bold text-[14px] px-1 hover:text-blue-600">B</button>
+                      <button onMouseDown={(e) => { e.preventDefault(); document.execCommand('italic', false); }} className="font-serif italic text-[14px] px-1 hover:text-blue-600">I</button>
+                      <button onMouseDown={(e) => { e.preventDefault(); document.execCommand('underline', false); }} className="underline text-[14px] px-1 hover:text-blue-600">U</button>
+                      <button onMouseDown={(e) => { e.preventDefault(); document.execCommand('strikeThrough', false); }} className="line-through text-[14px] px-1 hover:text-blue-600">S</button>
+                      <button onMouseDown={(e) => { e.preventDefault(); document.execCommand('insertUnorderedList', false); }} className="text-[14px] px-1 hover:text-blue-600"><List className="w-4 h-4" /></button>
+                      <button onMouseDown={(e) => { e.preventDefault(); document.execCommand('insertOrderedList', false); }} className="text-[14px] px-1 hover:text-blue-600"><ListOrdered className="w-4 h-4" /></button>
+                    </div>
+                    <div 
+                      contentEditable
+                      onBlur={(e) => setDescription(e.currentTarget.innerHTML)}
+                      dangerouslySetInnerHTML={{ __html: description }}
+                      className="w-full p-4 h-64 outline-none text-[14px] bg-white overflow-y-auto"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'visuel' && (
+                <div className="animate-in fade-in slide-in-from-bottom-2">
+                  <h2 className="text-[18px] font-bold text-slate-900 mb-6">Visuel & Design</h2>
+                  <div className="max-w-2xl">
+                    <label className="block text-[13px] font-medium text-[#111827] mb-1.5">Image de couverture</label>
+                    {imageUrl && imageUrl !== 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=800' ? (
+                      <div className="relative rounded-xl overflow-hidden border border-slate-200 mb-4 h-64 group bg-slate-100 flex items-center justify-center">
+                        <img src={imageUrl} alt="Cover" className="max-h-full object-contain" />
+                        <div className="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                           <button onClick={() => setImageUrl('')} className="bg-white text-red-600 px-4 py-2 rounded-lg text-[13px] font-bold">Supprimer l'image</button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="border-2 border-dashed border-[#D1D5DB] rounded-xl bg-[#F9FAFB] flex flex-col items-center justify-center py-12 px-6 text-center hover:bg-slate-50 transition-colors cursor-pointer mb-4">
+                        <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mb-3">
+                          <ImageIcon className="w-6 h-6" />
+                        </div>
+                        <h3 className="text-[15px] font-bold text-slate-900 mb-1">Téléverser une image</h3>
+                        <p className="text-[13px] text-slate-500 max-w-[250px]">
+                          JPG, PNG, GIF. Taille max 5MB. Ratio recommandé 16:9.
+                        </p>
+                      </div>
+                    )}
+                    <label className="block text-[13px] font-medium text-[#111827] mb-1.5">URL de l'image (alternative)</label>
+                    <input 
+                      type="text" 
+                      value={imageUrl}
+                      onChange={e => setImageUrl(e.target.value)}
+                      placeholder="https://"
+                      className="w-full bg-white border border-[#D1D5DB] rounded-md px-3 py-2 text-[14px] text-slate-900 focus:outline-none focus:border-blue-500 transition-colors"
+                    />
+                  </div>
+                </div>
+              )}
+
               {activeTab === 'course' && (
                 <div className="animate-in fade-in slide-in-from-bottom-2">
                   <div className="flex items-center justify-between mb-8">
@@ -284,9 +482,24 @@ function EditProduct() {
                 </div>
               )}
 
-              {activeTab !== 'course' && (
+              {activeTab === 'fichiers' && (
                 <div className="flex items-center justify-center h-64 text-slate-400 text-[14px]">
-                  Module "{activeTab}" en cours de développement
+                  Fichiers: téléversez vos documents ici.
+                </div>
+              )}
+              {activeTab === 'faq' && (
+                <div className="flex items-center justify-center h-64 text-slate-400 text-[14px]">
+                  Module de Questions fréquentes en cours de développement
+                </div>
+              )}
+              {activeTab === 'seo' && (
+                <div className="flex items-center justify-center h-64 text-slate-400 text-[14px]">
+                  Paramètres SEO en cours de développement
+                </div>
+              )}
+              {activeTab === 'avance' && (
+                <div className="flex items-center justify-center h-64 text-slate-400 text-[14px]">
+                  Paramètres avancés en cours de développement
                 </div>
               )}
             </div>
@@ -462,23 +675,27 @@ function EditProduct() {
                       <label className="block text-[13px] font-medium text-slate-900 mb-1.5">Contenu de la leçon</label>
                       <div className="border border-slate-200 rounded-lg overflow-hidden">
                         <div className="bg-slate-50 border-b border-slate-200 px-3 py-2 flex items-center gap-3 overflow-x-auto">
-                          <select className="bg-transparent text-[13px] font-medium outline-none">
-                            <option>Normal</option>
+                          <select onChange={(e) => document.execCommand('formatBlock', false, e.target.value)} className="bg-transparent text-[13px] font-medium outline-none">
+                            <option value="P">Normal</option>
+                            <option value="H1">Titre 1</option>
+                            <option value="H2">Titre 2</option>
+                            <option value="H3">Titre 3</option>
                           </select>
                           <div className="w-px h-4 bg-slate-300"></div>
-                          <button className="font-serif font-bold text-[14px] px-1 hover:text-blue-600">B</button>
-                          <button className="font-serif italic text-[14px] px-1 hover:text-blue-600">I</button>
-                          <button className="underline text-[14px] px-1 hover:text-blue-600">U</button>
-                          <button className="line-through text-[14px] px-1 hover:text-blue-600">S</button>
-                          <button className="font-serif font-bold text-[18px] px-1 hover:text-blue-600 leading-none">"</button>
+                          <button onMouseDown={(e) => { e.preventDefault(); document.execCommand('bold', false); }} className="font-serif font-bold text-[14px] px-1 hover:text-blue-600">B</button>
+                          <button onMouseDown={(e) => { e.preventDefault(); document.execCommand('italic', false); }} className="font-serif italic text-[14px] px-1 hover:text-blue-600">I</button>
+                          <button onMouseDown={(e) => { e.preventDefault(); document.execCommand('underline', false); }} className="underline text-[14px] px-1 hover:text-blue-600">U</button>
+                          <button onMouseDown={(e) => { e.preventDefault(); document.execCommand('strikeThrough', false); }} className="line-through text-[14px] px-1 hover:text-blue-600">S</button>
+                          <button onMouseDown={(e) => { e.preventDefault(); document.execCommand('insertUnorderedList', false); }} className="text-[14px] px-1 hover:text-blue-600"><List className="w-4 h-4" /></button>
                           <div className="w-px h-4 bg-slate-300"></div>
-                          <span className="text-slate-400 text-[14px]">A</span>
-                          <div className="w-px h-4 bg-slate-300"></div>
-                          <AlignLeft className="w-4 h-4 text-slate-600 hover:text-blue-600" />
-                          <div className="w-px h-4 bg-slate-300"></div>
-                          <ImageIcon className="w-4 h-4 text-slate-600 hover:text-blue-600" />
+                          <button onMouseDown={(e) => { e.preventDefault(); document.execCommand('justifyLeft', false); }} className="text-[14px] px-1 hover:text-blue-600"><AlignLeft className="w-4 h-4" /></button>
                         </div>
-                        <textarea value={lessonContent} onChange={(e) => setLessonContent(e.target.value)} className="w-full p-3 h-32 outline-none resize-none text-[14px]" />
+                        <div 
+                          contentEditable
+                          onBlur={(e) => setLessonContent(e.currentTarget.innerHTML)}
+                          dangerouslySetInnerHTML={{ __html: lessonContent }}
+                          className="w-full p-3 h-32 outline-none resize-y text-[14px] bg-white overflow-y-auto"
+                        />
                       </div>
                     </div>
                   </div>
