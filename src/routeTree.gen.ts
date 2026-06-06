@@ -17,6 +17,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as HistoryIdRouteImport } from './routes/history.$id'
 import { Route as AdminSalesRouteImport } from './routes/admin/sales'
+import { Route as AdminEarningsRouteImport } from './routes/admin/earnings'
 import { Route as AdminCustomersRouteImport } from './routes/admin/customers'
 import { Route as AdminAnalyticsRouteImport } from './routes/admin/analytics'
 import { Route as AdminSettingsIndexRouteImport } from './routes/admin/settings/index'
@@ -64,6 +65,11 @@ const HistoryIdRoute = HistoryIdRouteImport.update({
 const AdminSalesRoute = AdminSalesRouteImport.update({
   id: '/sales',
   path: '/sales',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminEarningsRoute = AdminEarningsRouteImport.update({
+  id: '/earnings',
+  path: '/earnings',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminCustomersRoute = AdminCustomersRouteImport.update({
@@ -115,6 +121,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/customers': typeof AdminCustomersRoute
+  '/admin/earnings': typeof AdminEarningsRoute
   '/admin/sales': typeof AdminSalesRoute
   '/history/$id': typeof HistoryIdRoute
   '/admin/': typeof AdminIndexRoute
@@ -132,6 +139,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/customers': typeof AdminCustomersRoute
+  '/admin/earnings': typeof AdminEarningsRoute
   '/admin/sales': typeof AdminSalesRoute
   '/history/$id': typeof HistoryIdRoute
   '/admin': typeof AdminIndexRoute
@@ -151,6 +159,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/customers': typeof AdminCustomersRoute
+  '/admin/earnings': typeof AdminEarningsRoute
   '/admin/sales': typeof AdminSalesRoute
   '/history/$id': typeof HistoryIdRoute
   '/admin/': typeof AdminIndexRoute
@@ -171,6 +180,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/admin/analytics'
     | '/admin/customers'
+    | '/admin/earnings'
     | '/admin/sales'
     | '/history/$id'
     | '/admin/'
@@ -188,6 +198,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/admin/analytics'
     | '/admin/customers'
+    | '/admin/earnings'
     | '/admin/sales'
     | '/history/$id'
     | '/admin'
@@ -206,6 +217,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/admin/analytics'
     | '/admin/customers'
+    | '/admin/earnings'
     | '/admin/sales'
     | '/history/$id'
     | '/admin/'
@@ -284,6 +296,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSalesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/earnings': {
+      id: '/admin/earnings'
+      path: '/earnings'
+      fullPath: '/admin/earnings'
+      preLoaderRoute: typeof AdminEarningsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/customers': {
       id: '/admin/customers'
       path: '/customers'
@@ -346,6 +365,7 @@ declare module '@tanstack/react-router' {
 interface AdminRouteChildren {
   AdminAnalyticsRoute: typeof AdminAnalyticsRoute
   AdminCustomersRoute: typeof AdminCustomersRoute
+  AdminEarningsRoute: typeof AdminEarningsRoute
   AdminSalesRoute: typeof AdminSalesRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminProductsCreateRoute: typeof AdminProductsCreateRoute
@@ -359,6 +379,7 @@ interface AdminRouteChildren {
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAnalyticsRoute: AdminAnalyticsRoute,
   AdminCustomersRoute: AdminCustomersRoute,
+  AdminEarningsRoute: AdminEarningsRoute,
   AdminSalesRoute: AdminSalesRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminProductsCreateRoute: AdminProductsCreateRoute,

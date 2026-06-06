@@ -1,7 +1,7 @@
 import { createFileRoute, Outlet, useRouterState, redirect, Link } from '@tanstack/react-router';
 import { 
   Home, ShoppingBag, Users, Settings, HelpCircle, Package, Bell, Search,
-  CircleDollarSign, Menu as MenuIcon, X
+  CircleDollarSign, Menu as MenuIcon, X, BarChart2, Megaphone, Share2, Zap, Plus, ArrowLeft
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import siteLogo from '@/assets/logo.png';
@@ -34,50 +34,102 @@ function AdminLayout() {
       : currentPath.startsWith(path);
   };
 
+  const getPageTitle = () => {
+    if (currentPath === '/admin' || currentPath === '/admin/') return 'Aperçu';
+    if (currentPath.startsWith('/admin/sales')) return 'Ventes';
+    if (currentPath.startsWith('/admin/products')) return 'Produits';
+    if (currentPath.startsWith('/admin/customers')) return 'Clients';
+    if (currentPath.startsWith('/admin/earnings')) return 'Revenus';
+    if (currentPath.startsWith('/admin/analytics')) return 'Analytiques';
+    if (currentPath.startsWith('/admin/settings')) return 'Paramètres';
+    return 'Dashboard';
+  };
+
   return (
-    <div className="min-h-screen bg-[#FAFAFA] flex text-slate-800 font-sans overflow-hidden">
+    <div className="min-h-screen bg-white flex text-slate-800 font-sans overflow-hidden">
       
       {/* ======================= */}
       {/* SIDEBAR PC (Hidden on mobile) */}
       {/* ======================= */}
-      <aside className="hidden lg:flex fixed inset-y-0 left-0 z-50 w-[260px] bg-white border-r border-slate-200 flex-col h-screen">
-        <div className="h-16 flex items-center justify-between px-6 border-b border-slate-100 shrink-0">
-          <div className="flex items-center gap-2 font-display font-black text-xl text-blue-600 tracking-tight">
-            <img src={siteLogo} alt="Logo" className="h-8 w-auto object-contain" />
-            TECHNOVA <span className="text-[10px] bg-slate-100 text-slate-500 px-2 py-1 rounded-full font-medium ml-1">Admin</span>
-          </div>
+      <aside className="hidden lg:flex fixed inset-y-0 left-0 z-50 w-[240px] bg-white border-r border-slate-100 flex-col h-screen py-4">
+        {/* Logo Section */}
+        <div className="px-6 mb-6 flex items-center gap-2 font-display font-black text-xl text-blue-600 tracking-tight shrink-0">
+          <img src={siteLogo} alt="Logo" className="h-6 w-auto object-contain" />
+          TECHNOVA <span className="text-[9px] bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded font-medium ml-1">Preview</span>
         </div>
 
-        <div className="p-4 border-b border-slate-100 shrink-0">
-          <button className="w-full flex items-center justify-between bg-slate-50 hover:bg-slate-100 transition px-3 py-2 rounded-lg text-sm font-semibold">
+        {/* Store Selector */}
+        <div className="px-4 mb-4 shrink-0">
+          <button className="w-full flex items-center justify-between bg-white border border-slate-200 hover:bg-slate-50 transition px-3 py-2 rounded-xl text-[13px] font-semibold shadow-sm">
             <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-md bg-gradient-to-br from-blue-500 to-indigo-500 text-white flex items-center justify-center text-[10px]">
-                IE
+              <div className="w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
+                <Settings className="w-3.5 h-3.5" />
               </div>
-              <span>Boutique Principale</span>
+              <span className="truncate max-w-[120px]">Dolapo-ECOM</span>
             </div>
             <span className="text-slate-400">▾</span>
           </button>
         </div>
 
-        <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1 scrollbar-hide">
-          <Link to="/admin" className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors group ${isActive('/admin') && currentPath === '/admin' ? 'bg-blue-50 text-blue-600' : 'text-slate-600 hover:bg-slate-50'}`}>
-            <Home className={`w-5 h-5 ${isActive('/admin') && currentPath === '/admin' ? 'text-blue-600' : 'text-slate-400 group-hover:text-blue-600'}`} />
-            <span className="font-medium text-[14px]">Accueil</span>
+        {/* Navigation */}
+        <nav className="flex-1 overflow-y-auto px-3 space-y-0.5 scrollbar-hide pb-4">
+          <Link to="/admin" className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors group ${isActive('/admin') && currentPath === '/admin' ? 'bg-slate-100 text-slate-900 font-semibold' : 'text-slate-600 hover:bg-slate-50 font-medium'}`}>
+            <Home className={`w-[18px] h-[18px] ${isActive('/admin') && currentPath === '/admin' ? 'text-slate-900' : 'text-slate-400'}`} />
+            <span className="text-[14px]">Accueil</span>
           </Link>
-          <Link to="/admin/sales" className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors group ${isActive('/admin/sales') ? 'bg-blue-50 text-blue-600' : 'text-slate-600 hover:bg-slate-50'}`}>
-            <ShoppingBag className={`w-5 h-5 ${isActive('/admin/sales') ? 'text-blue-600' : 'text-slate-400 group-hover:text-blue-600'}`} />
-            <span className="font-medium text-[14px]">Ventes</span>
+          <Link to="/admin/sales" className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors group ${isActive('/admin/sales') ? 'bg-slate-100 text-slate-900 font-semibold' : 'text-slate-600 hover:bg-slate-50 font-medium'}`}>
+            <ShoppingBag className={`w-[18px] h-[18px] ${isActive('/admin/sales') ? 'text-slate-900' : 'text-slate-400'}`} />
+            <span className="text-[14px]">Ventes</span>
           </Link>
-          <Link to="/admin/products" className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors group ${isActive('/admin/products') ? 'bg-blue-50 text-blue-600' : 'text-slate-600 hover:bg-slate-50'}`}>
-            <Package className={`w-5 h-5 ${isActive('/admin/products') ? 'text-blue-600' : 'text-slate-400 group-hover:text-blue-600'}`} />
-            <span className="font-medium text-[14px]">Produits</span>
+          <Link to="/admin/products" className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors group ${isActive('/admin/products') ? 'bg-slate-100 text-slate-900 font-semibold' : 'text-slate-600 hover:bg-slate-50 font-medium'}`}>
+            <Package className={`w-[18px] h-[18px] ${isActive('/admin/products') ? 'text-slate-900' : 'text-slate-400'}`} />
+            <span className="text-[14px]">Produits</span>
           </Link>
-          <Link to="/admin/customers" className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors group ${isActive('/admin/customers') ? 'bg-blue-50 text-blue-600' : 'text-slate-600 hover:bg-slate-50'}`}>
-            <Users className={`w-5 h-5 ${isActive('/admin/customers') ? 'text-blue-600' : 'text-slate-400 group-hover:text-blue-600'}`} />
-            <span className="font-medium text-[14px]">Clients</span>
+          <Link to="/admin/customers" className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors group ${isActive('/admin/customers') ? 'bg-slate-100 text-slate-900 font-semibold' : 'text-slate-600 hover:bg-slate-50 font-medium'}`}>
+            <Users className={`w-[18px] h-[18px] ${isActive('/admin/customers') ? 'text-slate-900' : 'text-slate-400'}`} />
+            <span className="text-[14px]">Clients</span>
           </Link>
+          <Link to="/admin/earnings" className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors group ${isActive('/admin/earnings') ? 'bg-slate-100 text-slate-900 font-semibold' : 'text-slate-600 hover:bg-slate-50 font-medium'}`}>
+            <CircleDollarSign className={`w-[18px] h-[18px] ${isActive('/admin/earnings') ? 'text-slate-900' : 'text-slate-400'}`} />
+            <span className="text-[14px]">Revenus</span>
+          </Link>
+          <Link to="/admin/analytics" className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors group ${isActive('/admin/analytics') ? 'bg-slate-100 text-slate-900 font-semibold' : 'text-slate-600 hover:bg-slate-50 font-medium'}`}>
+            <BarChart2 className={`w-[18px] h-[18px] ${isActive('/admin/analytics') ? 'text-slate-900' : 'text-slate-400'}`} />
+            <span className="text-[14px]">Analytiques</span>
+          </Link>
+          <div className="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-50 font-medium cursor-pointer">
+            <Megaphone className="w-[18px] h-[18px] text-slate-400" />
+            <span className="text-[14px]">Marketing</span>
+          </div>
+          <div className="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-50 font-medium cursor-pointer">
+            <Share2 className="w-[18px] h-[18px] text-slate-400" />
+            <span className="text-[14px]">Affiliation</span>
+          </div>
+          <div className="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-50 font-medium cursor-pointer">
+            <Zap className="w-[18px] h-[18px] text-slate-400" />
+            <span className="text-[14px]">Automatisations</span>
+          </div>
+          <div className="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-50 font-medium cursor-pointer">
+            <Plus className="w-[18px] h-[18px] text-slate-400" />
+            <span className="text-[14px]">Plus</span>
+          </div>
+          <Link to="/admin/settings" className={`flex items-center gap-3 px-3 py-2 mt-4 rounded-lg transition-colors group ${isActive('/admin/settings') ? 'bg-slate-100 text-slate-900 font-semibold' : 'text-slate-600 hover:bg-slate-50 font-medium'}`}>
+            <Settings className={`w-[18px] h-[18px] ${isActive('/admin/settings') ? 'text-slate-900' : 'text-slate-400'}`} />
+            <span className="text-[14px]">Paramètres</span>
+          </Link>
+          <div className="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-50 font-medium cursor-pointer">
+            <HelpCircle className="w-[18px] h-[18px] text-slate-400" />
+            <span className="text-[14px]">Centre d'aide</span>
+          </div>
         </nav>
+        
+        {/* Bottom Collapse Button */}
+        <div className="px-4 shrink-0 border-t border-slate-100 pt-4">
+          <button className="flex items-center gap-2 text-slate-500 hover:text-slate-700 text-[13px] font-medium transition-colors">
+            <MenuIcon className="w-4 h-4" />
+            Réduire le menu
+          </button>
+        </div>
       </aside>
 
       {/* ======================= */}
@@ -89,10 +141,6 @@ function AdminLayout() {
             <div className="flex items-center gap-2">
               <img src={siteLogo} alt="Logo" className="h-6 w-auto" />
               <span className="font-bold text-lg">technova</span>
-              <div className="ml-2 flex items-center gap-2 border border-slate-200 rounded-full px-3 py-1">
-                <span className="w-4 h-4 rounded-full bg-blue-500"></span>
-                <span className="text-sm font-medium">Boutique</span>
-              </div>
             </div>
             <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 bg-slate-100 rounded-lg">
               <X className="w-5 h-5 text-slate-600" />
@@ -104,9 +152,9 @@ function AdminLayout() {
               <Link to="/admin/sales" className="flex items-center gap-4 text-slate-700 font-medium text-[15px]"><ShoppingBag className="w-5 h-5 text-slate-400"/> Ventes</Link>
               <Link to="/admin/products" className="flex items-center gap-4 text-slate-700 font-medium text-[15px]"><Package className="w-5 h-5 text-slate-400"/> Produits</Link>
               <Link to="/admin/customers" className="flex items-center gap-4 text-slate-700 font-medium text-[15px]"><Users className="w-5 h-5 text-slate-400"/> Clients</Link>
+              <Link to="/admin/earnings" className="flex items-center gap-4 text-slate-700 font-medium text-[15px]"><CircleDollarSign className="w-5 h-5 text-slate-400"/> Revenus</Link>
               <div className="h-px bg-slate-100 my-4"></div>
               <Link to="/admin/settings" className="flex items-center gap-4 text-slate-700 font-medium text-[15px]"><Settings className="w-5 h-5 text-slate-400"/> Paramètres</Link>
-              <div className="flex items-center gap-4 text-slate-700 font-medium text-[15px]"><HelpCircle className="w-5 h-5 text-slate-400"/> Centre d'aide</div>
             </nav>
             <div className="mt-auto pt-8">
               <a href="/" target="_blank" className="w-full flex items-center justify-center gap-2 py-4 bg-slate-100 rounded-xl font-semibold text-slate-800">
@@ -120,29 +168,46 @@ function AdminLayout() {
       {/* ======================= */}
       {/* MAIN CONTENT AREA */}
       {/* ======================= */}
-      <main className="flex-1 flex flex-col min-w-0 h-screen w-full relative lg:pl-[260px] pb-[70px] lg:pb-0">
+      <main className="flex-1 flex flex-col min-w-0 h-screen w-full relative lg:pl-[240px] pb-[70px] lg:pb-0">
         
         {/* HEADER MOBILE & PC */}
-        <header className="h-16 bg-white border-b border-slate-100 flex items-center justify-between px-4 sm:px-6 lg:px-8 sticky top-0 z-20 shrink-0">
-          <div className="flex items-center gap-2">
-            <img src={siteLogo} alt="Logo" className="h-6 w-auto lg:hidden" />
-            <span className="font-bold text-lg lg:hidden">technova</span>
+        <header className="h-[72px] bg-white flex items-center justify-between px-4 sm:px-6 lg:px-8 sticky top-0 z-20 shrink-0">
+          <div className="flex items-center gap-4 min-w-max">
+            <div className="flex items-center gap-2">
+              <ArrowLeft className="w-4 h-4 text-slate-400" />
+              <span className="font-semibold text-[15px] text-slate-900">{getPageTitle()}</span>
+            </div>
+          </div>
+
+          <div className="hidden lg:flex flex-1 max-w-[600px] mx-8 relative">
+            <Search className="w-[18px] h-[18px] text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
+            <input 
+              type="text" 
+              placeholder="Trouvez n'importe quoi : Appuyez sur ⌘K sur votre clavier"
+              className="w-full bg-slate-50/80 border border-slate-200/60 rounded-full pl-11 pr-4 py-2.5 text-[14px] focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition-all"
+            />
           </div>
 
           <div className="flex items-center gap-3 sm:gap-4 ml-auto">
-            <button className="w-9 h-9 rounded-full flex items-center justify-center text-slate-500 bg-slate-50 transition-colors">
-              <Search className="w-4 h-4" />
+            <button className="hidden lg:flex items-center gap-2 border border-slate-200 px-4 py-2 rounded-xl text-[13px] font-semibold hover:bg-slate-50 transition-colors shadow-sm">
+              Visiter ma boutique
             </button>
-            <button className="w-9 h-9 rounded-full flex items-center justify-center text-slate-500 bg-slate-50 transition-colors">
-              <HelpCircle className="w-4 h-4" />
+            <button className="w-9 h-9 rounded-full flex items-center justify-center text-blue-600 bg-blue-50 transition-colors">
+              <Zap className="w-[18px] h-[18px]" />
             </button>
-            <div className="w-8 h-8 rounded-full bg-slate-900 border-2 border-white shadow-sm" />
+            <button className="w-9 h-9 rounded-full flex items-center justify-center text-slate-500 hover:bg-slate-50 transition-colors">
+              <Plus className="w-[18px] h-[18px]" />
+            </button>
+            <button className="w-9 h-9 rounded-full flex items-center justify-center text-slate-500 hover:bg-slate-50 transition-colors">
+              <Bell className="w-[18px] h-[18px]" />
+            </button>
+            <div className="w-9 h-9 rounded-full bg-slate-900 border-2 border-white shadow-sm flex-shrink-0" />
           </div>
         </header>
 
         {/* SCROLLABLE PAGE CONTENT */}
-        <div className="flex-1 overflow-auto bg-white lg:bg-[#FAFAFA]">
-          <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto">
+        <div className="flex-1 overflow-auto bg-white lg:px-8 px-4">
+          <div className="py-6 max-w-[1200px] mx-auto h-full">
             <Outlet />
           </div>
         </div>
