@@ -239,10 +239,9 @@ function EditProduct() {
       </div>
 
       <div className="flex flex-1 overflow-hidden">
-        {/* Main Content Area */}
-        <div className="flex-1 overflow-y-auto p-8 relative">
-          
-          <div className="max-w-[1000px] mx-auto flex gap-12">
+        {/* Left Column (Main Form) */}
+        <div className="flex-1 overflow-y-auto relative">
+          <div className="max-w-[1000px] mx-auto px-8 py-8 flex gap-12">
             
             {/* Sidebar Tabs */}
             <div className="w-[240px] shrink-0">
@@ -493,11 +492,11 @@ function EditProduct() {
         {/* Slide-over panel for Lessons */}
         {selectedChapter && (
           <>
-            {/* Backdrop for mobile or just separation */}
-            <div className="fixed inset-0 bg-slate-900/20 z-40 block xl:hidden" onClick={() => setSelectedChapter(null)} />
+            {/* Backdrop */}
+            <div className="fixed inset-0 bg-slate-900/60 z-[50] animate-in fade-in duration-200" onClick={() => setSelectedChapter(null)} />
             
             {/* The Panel */}
-            <div className="w-1/2 min-w-[600px] shrink-0 bg-white border-l border-slate-200 flex flex-col z-[60] h-[calc(100vh-65px)] animate-in slide-in-from-right duration-300 shadow-[0_0_40px_rgba(0,0,0,0.1)]">
+            <div className="fixed right-0 top-0 w-1/2 min-w-[600px] bg-white flex flex-col z-[60] h-screen animate-in slide-in-from-right duration-300 shadow-[0_0_40px_rgba(0,0,0,0.2)]">
               
               {!showAddLesson ? (
                 // State: Empty / List of lessons
@@ -572,19 +571,19 @@ function EditProduct() {
                     <h3 className="text-[15px] font-bold text-slate-900">Ajouter une leçon</h3>
                   </div>
 
-                  <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                  <div className="flex-1 overflow-y-auto p-8 space-y-8">
                     <div>
-                      <label className="block text-[13px] font-medium text-slate-900 mb-1.5">Titre <span className="text-red-500">*</span></label>
+                      <label className="block text-[14px] font-medium text-slate-900 mb-2">Titre <span className="text-red-500">*</span></label>
                       <input 
                         type="text" 
                         value={lessonTitle}
                         onChange={(e) => setLessonTitle(e.target.value)}
-                        className="w-full bg-white border border-[#D1D5DB] rounded-md px-3 py-2 text-[14px] text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors shadow-sm"
+                        className="w-full bg-white border border-[#E5E7EB] rounded-2xl px-4 py-3.5 text-[14px] text-slate-900 focus:outline-none focus:border-slate-400 transition-colors shadow-sm"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-[13px] font-medium text-slate-900 mb-1.5">Description <span className="text-red-500">*</span></label>
+                      <label className="block text-[14px] font-medium text-slate-900 mb-2">Description <span className="text-red-500">*</span></label>
                       <div className="relative">
                         <textarea 
                           value={lessonDesc}
@@ -593,35 +592,49 @@ function EditProduct() {
                               setLessonDesc(e.target.value);
                             }
                           }}
-                          rows={3}
-                          className="w-full bg-white border border-[#D1D5DB] rounded-md px-3 py-2 text-[14px] text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors shadow-sm resize-none"
+                          rows={4}
+                          className="w-full bg-white border border-[#E5E7EB] rounded-2xl px-4 py-3.5 text-[14px] text-slate-900 focus:outline-none focus:border-slate-400 transition-colors shadow-sm resize-none"
                         />
-                        <div className="absolute bottom-2 right-2 text-[11px] font-medium text-emerald-500">
+                        <div className="absolute bottom-3 right-4 text-[12px] font-medium text-emerald-500">
                           {lessonDesc.length}/160
                         </div>
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-[13px] font-medium text-slate-900 mb-3">Type de contenu</label>
+                      <label className="block text-[14px] font-medium text-slate-900 mb-3">Type de contenu</label>
                       <div className="grid grid-cols-3 gap-3">
                         <button 
                           onClick={() => setLessonType('Vidéo')}
-                          className={`flex items-center justify-center gap-2 py-3 rounded-xl border text-[13px] font-semibold transition-colors ${lessonType === 'Vidéo' ? 'bg-slate-800 border-slate-800 text-white' : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'}`}
+                          className={`flex items-center justify-center gap-2 py-3.5 rounded-[24px] border text-[14px] font-semibold transition-colors ${lessonType === 'Vidéo' ? 'bg-[#3A3B40] border-[#3A3B40] text-white' : 'bg-white border-[#E5E7EB] text-slate-700 hover:bg-slate-50'}`}
                         >
-                          {lessonType === 'Vidéo' && <div className="w-4 h-4 rounded-full bg-blue-500 flex items-center justify-center mr-1"><div className="w-1.5 h-1.5 bg-white rounded-full"></div></div>}
+                          {lessonType === 'Vidéo' && (
+                            <div className="w-5 h-5 rounded-full bg-[#FFD700] flex items-center justify-center mr-1">
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                          )}
                           <Video className="w-4 h-4" /> Vidéo
                         </button>
                         <button 
                           onClick={() => setLessonType('Audio')}
-                          className={`flex items-center justify-center gap-2 py-3 rounded-xl border text-[13px] font-semibold transition-colors ${lessonType === 'Audio' ? 'bg-slate-800 border-slate-800 text-white' : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'}`}
+                          className={`flex items-center justify-center gap-2 py-3.5 rounded-[24px] border text-[14px] font-semibold transition-colors ${lessonType === 'Audio' ? 'bg-[#3A3B40] border-[#3A3B40] text-white' : 'bg-white border-[#E5E7EB] text-slate-700 hover:bg-slate-50'}`}
                         >
+                          {lessonType === 'Audio' && (
+                            <div className="w-5 h-5 rounded-full bg-[#FFD700] flex items-center justify-center mr-1">
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                          )}
                           <Headphones className="w-4 h-4" /> Audio
                         </button>
                         <button 
                           onClick={() => setLessonType('Texte')}
-                          className={`flex items-center justify-center gap-2 py-3 rounded-xl border text-[13px] font-semibold transition-colors ${lessonType === 'Texte' ? 'bg-slate-800 border-slate-800 text-white' : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'}`}
+                          className={`flex items-center justify-center gap-2 py-3.5 rounded-[24px] border text-[14px] font-semibold transition-colors ${lessonType === 'Texte' ? 'bg-[#3A3B40] border-[#3A3B40] text-white' : 'bg-white border-[#E5E7EB] text-slate-700 hover:bg-slate-50'}`}
                         >
+                          {lessonType === 'Texte' && (
+                            <div className="w-5 h-5 rounded-full bg-[#FFD700] flex items-center justify-center mr-1">
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                          )}
                           <FileText className="w-4 h-4" /> Texte
                         </button>
                       </div>
@@ -630,25 +643,26 @@ function EditProduct() {
                     {lessonType === 'Vidéo' && (
                       <div className="space-y-4">
                         <div>
-                          <label className="block text-[13px] font-medium text-slate-900 mb-1.5">Méthode d'intégration</label>
-                          <select className="w-full bg-white border border-[#D1D5DB] rounded-md px-3 py-2.5 text-[14px] text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors shadow-sm appearance-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239CA3AF'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`, backgroundPosition: 'right 0.75rem center', backgroundRepeat: 'no-repeat', backgroundSize: '1em 1em' }}>
+                          <label className="block text-[14px] font-medium text-slate-900 mb-2">Méthode d'intégration</label>
+                          <select className="w-full bg-white border border-[#E5E7EB] rounded-[24px] px-4 py-3.5 text-[14px] text-slate-900 focus:outline-none focus:border-slate-400 transition-colors shadow-sm appearance-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239CA3AF'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`, backgroundPosition: 'right 1rem center', backgroundRepeat: 'no-repeat', backgroundSize: '1em 1em' }}>
                             <option>URL de la vidéo</option>
                             <option>Code d'intégration</option>
                             <option>Téléverser</option>
                           </select>
                         </div>
                         
-                        <div className="bg-[#FFFBEB] border border-[#FEF3C7] text-[#D97706] px-4 py-2 rounded-lg text-[13px] flex gap-2 items-center">
-                          <span className="font-bold border border-[#D97706] rounded-full w-4 h-4 flex items-center justify-center text-[10px]">!</span> YouTube, Vimeo, etc.
+                        <div className="bg-[#FFFBEB] border border-[#FEF3C7] text-[#D97706] px-4 py-3 rounded-2xl text-[13px] flex gap-2 items-center">
+                          <HelpCircle className="w-4 h-4 shrink-0" />
+                          <span>YouTube, Vimeo, etc.</span>
                         </div>
 
                         <div>
-                          <label className="block text-[13px] font-medium text-slate-900 mb-1.5">URL de la vidéo <span className="text-red-500">*</span></label>
+                          <label className="block text-[14px] font-medium text-slate-900 mb-2">URL de la vidéo <span className="text-red-500">*</span></label>
                           <input 
                             type="text" 
                             value={lessonUrl}
                             onChange={(e) => setLessonUrl(e.target.value)}
-                            className="w-full bg-white border border-[#D1D5DB] rounded-md px-3 py-2 text-[14px] text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors shadow-sm"
+                            className="w-full bg-white border border-[#E5E7EB] rounded-2xl px-4 py-3.5 text-[14px] text-slate-900 focus:outline-none focus:border-slate-400 transition-colors shadow-sm"
                           />
                         </div>
                       </div>
@@ -664,8 +678,8 @@ function EditProduct() {
                     </div>
                   </div>
 
-                  <div className="p-4 border-t border-slate-100 flex justify-end">
-                    <button onClick={handleAddLesson} disabled={saving} className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2.5 rounded-xl text-[13px] transition-colors flex items-center gap-2 shadow-sm disabled:opacity-50">
+                  <div className="p-6 border-t border-slate-100 flex justify-end bg-white relative z-10">
+                    <button onClick={handleAddLesson} disabled={saving} className="bg-[#FFD700] hover:bg-[#FACC15] text-slate-900 font-bold px-8 py-3.5 rounded-[24px] text-[14px] transition-colors flex items-center gap-2 shadow-sm disabled:opacity-50">
                       {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
                       Ajouter une leçon
                     </button>
