@@ -1,6 +1,6 @@
 export const uploadFileToLWS = async (file: File): Promise<string> => {
   // Remplacez par l'URL de votre script PHP sur LWS
-  const UPLOAD_URL = 'https://votre-domaine.com/api/upload.php';
+  const UPLOAD_URL = 'https://technovalearning.com/upload.php';
 
   const formData = new FormData();
   formData.append('file', file);
@@ -13,11 +13,11 @@ export const uploadFileToLWS = async (file: File): Promise<string> => {
 
     const result = await response.json();
 
-    if (!response.ok) {
-      throw new Error(result.error || 'Erreur lors du téléversement');
+    if (!response.ok || result.error || !result.url) {
+      throw new Error(result.error || 'Erreur lors du téléversement vers LWS (Vérifiez votre dossier uploads ou vos permissions LWS)');
     }
 
-    return result.url; // Retourne l'URL publique du fichier
+    return result.url;
   } catch (error) {
     console.error('Erreur Upload LWS:', error);
     throw error;
