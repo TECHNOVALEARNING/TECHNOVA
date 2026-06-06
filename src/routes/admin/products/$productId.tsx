@@ -371,15 +371,34 @@ function EditProduct() {
                   <h2 className="text-[18px] font-bold text-slate-900 mb-6">Visuel & Design</h2>
                   <div className="max-w-2xl">
                     <label className="block text-[13px] font-medium text-[#111827] mb-1.5">Image de couverture</label>
-                    {imageUrl && imageUrl !== 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=800' ? (
-                      <div className="relative rounded-xl overflow-hidden border border-slate-200 mb-4 h-64 group bg-slate-100 flex items-center justify-center">
-                        <img src={imageUrl} alt="Cover" className="max-h-full object-contain" />
-                        <div className="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                           <button onClick={() => setImageUrl('')} className="bg-white text-red-600 px-4 py-2 rounded-lg text-[13px] font-bold">Supprimer l'image</button>
+                    {imageUrl ? (
+                      <div className="relative rounded-xl overflow-hidden mb-4 group border border-slate-200">
+                        <img src={imageUrl} alt="Cover" className="w-full h-48 object-cover" />
+                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                          <button onClick={() => setImageUrl('')} className="bg-white text-red-600 font-medium px-4 py-2 rounded-lg text-[13px] shadow-sm">
+                            Supprimer l'image
+                          </button>
                         </div>
                       </div>
                     ) : (
-                      <div className="border-2 border-dashed border-[#D1D5DB] rounded-xl bg-[#F9FAFB] flex flex-col items-center justify-center py-12 px-6 text-center hover:bg-slate-50 transition-colors cursor-pointer mb-4">
+                      <label className="border-2 border-dashed border-[#D1D5DB] rounded-xl bg-[#F9FAFB] flex flex-col items-center justify-center py-12 px-6 text-center hover:bg-slate-50 transition-colors cursor-pointer mb-4 relative">
+                        <input 
+                          type="file" 
+                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" 
+                          accept="image/*"
+                          onChange={async (e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              try {
+                                const { uploadFileToLWS } = await import('@/lib/api/lws-storage');
+                                const url = await uploadFileToLWS(file);
+                                setImageUrl(url);
+                              } catch (err) {
+                                alert("Erreur lors du téléversement: " + err);
+                              }
+                            }
+                          }}
+                        />
                         <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mb-3">
                           <ImageIcon className="w-6 h-6" />
                         </div>
@@ -387,7 +406,7 @@ function EditProduct() {
                         <p className="text-[13px] text-slate-500 max-w-[250px]">
                           JPG, PNG, GIF. Taille max 5MB. Ratio recommandé 16:9.
                         </p>
-                      </div>
+                      </label>
                     )}
                     <label className="block text-[13px] font-medium text-[#111827] mb-1.5">URL de l'image (alternative)</label>
                     <input 
@@ -642,13 +661,39 @@ function EditProduct() {
 
                     {lessonType === 'Vidéo' && (
                       <div className="space-y-4">
-                        <div>
-                          <label className="block text-[14px] font-medium text-slate-900 mb-2">Méthode d'intégration</label>
-                          <select className="w-full bg-white border border-[#E5E7EB] rounded-[24px] px-4 py-3.5 text-[14px] text-slate-900 focus:outline-none focus:border-slate-400 transition-colors shadow-sm appearance-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239CA3AF'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`, backgroundPosition: 'right 1rem center', backgroundRepeat: 'no-repeat', backgroundSize: '1em 1em' }}>
-                            <option>URL de la vidéo</option>
-                            <option>Code d'intégration</option>
-                            <option>Téléverser</option>
-                          </select>
+                        <div className="flex gap-4">
+                          <div className="flex-1">
+                            <label className="block text-[14px] font-medium text-slate-900 mb-2">Méthode d'intégration</label>
+                            <select className="w-full bg-white border border-[#E5E7EB] rounded-[24px] px-4 py-3.5 text-[14px] text-slate-900 focus:outline-none focus:border-slate-400 transition-colors shadow-sm appearance-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239CA3AF'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`, backgroundPosition: 'right 1rem center', backgroundRepeat: 'no-repeat', backgroundSize: '1em 1em' }}>
+                              <option>URL de la vidéo</option>
+                              <option>Code d'intégration</option>
+                            </select>
+                          </div>
+                          
+                          <div className="flex-1">
+                            <label className="block text-[14px] font-medium text-slate-900 mb-2">Ou téléverser une vidéo</label>
+                            <label className="flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 w-full rounded-[24px] px-4 py-3.5 text-[14px] font-medium transition-colors cursor-pointer relative">
+                              <input 
+                                type="file" 
+                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" 
+                                accept="video/*"
+                                onChange={async (e) => {
+                                  const file = e.target.files?.[0];
+                                  if (file) {
+                                    try {
+                                      const { uploadFileToLWS } = await import('@/lib/api/lws-storage');
+                                      const url = await uploadFileToLWS(file);
+                                      setLessonUrl(url);
+                                    } catch (err) {
+                                      alert("Erreur lors du téléversement: " + err);
+                                    }
+                                  }
+                                }}
+                              />
+                              <Video className="w-4 h-4" />
+                              Choisir un fichier...
+                            </label>
+                          </div>
                         </div>
                         
                         <div className="bg-[#FFFBEB] border border-[#FEF3C7] text-[#D97706] px-4 py-3 rounded-2xl text-[13px] flex gap-2 items-center">
