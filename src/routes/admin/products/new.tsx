@@ -271,27 +271,15 @@ Ne fais aucune introduction. Génère directement le contenu HTML final prêt à
       let coverImageUrl = coverPreview && !coverPreview.startsWith('blob:') ? coverPreview : '';
       let fileUrl = '';
 
+      // Import dynamique de la fonction d'upload LWS
+      const { uploadFileToLWS } = await import('@/lib/api/lws-storage');
+
       if (coverImage) {
-        const fileExt = coverImage.name.split('.').pop();
-        const fileName = `${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
-        const { error: uploadError } = await adminSupabase.storage
-          .from('product_images')
-          .upload(fileName, coverImage);
-        if (uploadError) throw uploadError;
-        const { data: publicUrlData } = adminSupabase.storage
-          .from('product_images')
-          .getPublicUrl(fileName);
-        coverImageUrl = publicUrlData.publicUrl;
+        coverImageUrl = await uploadFileToLWS(coverImage);
       }
 
       if (productFile) {
-        const fileExt = productFile.name.split('.').pop();
-        const fileName = `${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
-        const { error: uploadError } = await adminSupabase.storage
-          .from('product_files')
-          .upload(fileName, productFile);
-        if (uploadError) throw uploadError;
-        fileUrl = fileName; 
+        fileUrl = await uploadFileToLWS(productFile);
       }
 
       const features = {
