@@ -87,7 +87,7 @@ function FormationsPage() {
             src={heroImage}
             alt=""
             aria-hidden="true"
-            className="relative h-[280px] w-[280px] object-contain opacity-[0.12] sm:h-[400px] sm:w-[400px] md:h-[520px] md:w-[520px] select-none"
+            className="relative h-[280px] w-[280px] object-contain opacity-[0.22] sm:h-[400px] sm:w-[400px] md:h-[520px] md:w-[520px] select-none"
           />
         </div>
         {/* Very subtle top and bottom fades */}
