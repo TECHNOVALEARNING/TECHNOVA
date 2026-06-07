@@ -93,6 +93,7 @@ function HomePage() {
           --divider: rgba(0,0,0,0.08); --glass-blur: blur(24px) saturate(180%);
           --shadow-sm: 0 2px 16px rgba(0,0,0,0.06); --shadow-md: 0 8px 40px rgba(0,0,0,0.09);
           --shadow-lg: 0 20px 60px rgba(0,0,0,0.12); --radius: 20px; --radius-sm: 12px; --radius-lg: 28px;
+          --section-alt: rgba(0,0,0,0.018);
         }
         [data-theme="dark"] {
           --bg: #000000;
@@ -105,6 +106,7 @@ function HomePage() {
           --divider: rgba(255,255,255,0.08);
           --shadow-sm: 0 2px 16px rgba(0,0,0,0.3);
           --shadow-md: 0 8px 40px rgba(0,0,0,0.4);
+          --section-alt: rgba(255,255,255,0.018);
         }
         .tn-card { background: var(--card); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border: 1px solid var(--card-border); }
         .tn-hero-title { font-family:'Outfit',sans-serif; font-size:clamp(2.6rem,5vw,4.2rem); font-weight:800; line-height:1.08; letter-spacing:-0.04em; }
@@ -203,7 +205,7 @@ function HomePage() {
                 style={{ width: "100%", borderRadius: "var(--radius-lg)", boxShadow: "var(--shadow-lg)", animation: "heroImageFloat 6s ease-in-out infinite" }}
               />
               {/* Stat card */}
-              <div style={{ position: "absolute", bottom: 28, left: -24, background: "rgba(255,255,255,0.92)", backdropFilter: "blur(24px) saturate(180%)", border: "1px solid rgba(255,255,255,0.55)", borderRadius: "var(--radius)", padding: "16px 22px", boxShadow: "var(--shadow-md)", minWidth: 180, animation: "heroCardFloat 7s ease-in-out infinite", animationDelay: "-2s" }}>
+              <div style={{ position: "absolute", bottom: 28, left: -24, background: "var(--surface-strong)", backdropFilter: "blur(24px) saturate(180%)", border: "1px solid var(--card-border)", borderRadius: "var(--radius)", padding: "16px 22px", boxShadow: "var(--shadow-md)", minWidth: 180, animation: "heroCardFloat 7s ease-in-out infinite", animationDelay: "-2s" }}>
                 <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: "1.6rem", fontWeight: 800, color: "var(--blue)", letterSpacing: "-0.03em" }}>95%</div>
                 <div style={{ fontSize: "0.78rem", color: "var(--text-secondary)", marginTop: 2 }}>Taux de satisfaction</div>
               </div>
@@ -218,7 +220,7 @@ function HomePage() {
       </section>
 
       {/* ============ PARTNERS MARQUEE ============ */}
-      <div style={{ position: "relative", zIndex: 1, background: "rgba(255,255,255,0.75)", backdropFilter: "blur(24px) saturate(180%)", borderTop: "1px solid var(--divider)", borderBottom: "1px solid var(--divider)", padding: "28px 0", overflow: "hidden" }}>
+      <div style={{ position: "relative", zIndex: 1, background: "var(--surface)", backdropFilter: "blur(24px) saturate(180%)", borderTop: "1px solid var(--divider)", borderBottom: "1px solid var(--divider)", padding: "28px 0", overflow: "hidden" }}>
         <p style={{ textAlign: "center", fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--text-secondary)", marginBottom: 16 }}>NOS PARTENAIRES TECHNOLOGIQUES</p>
         <div className="partners-track">
           {[...PARTNERS, ...PARTNERS].map((p, i) => (
@@ -255,7 +257,7 @@ function HomePage() {
       </section>
 
       {/* ============ COURSES ============ */}
-      <section id="courses" style={{ position: "relative", zIndex: 1, padding: "100px 0", background: "rgba(0,0,0,0.018)" }}>
+      <section id="courses" style={{ position: "relative", zIndex: 1, padding: "100px 0", background: "var(--section-alt)" }}>
         <div className="mx-auto" style={{ maxWidth: 1280, padding: "0 24px" }}>
           <div style={{ marginBottom: 48 }}>
             <span className="tn-eyebrow">Formations</span>
@@ -315,7 +317,7 @@ function HomePage() {
       </section>
 
       {/* ============ ABOUT ============ */}
-      <section id="about" style={{ position: "relative", zIndex: 1, padding: "100px 0", background: "rgba(0,0,0,0.018)" }}>
+      <section id="about" style={{ position: "relative", zIndex: 1, padding: "100px 0", background: "var(--section-alt)" }}>
         <div className="mx-auto" style={{ maxWidth: 1280, padding: "0 24px" }}>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1.4fr", gap: 48, alignItems: "center" }} className="max-lg:!grid-cols-1">
             <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&h=600&fit=crop" alt="Team" style={{ borderRadius: 16, boxShadow: "var(--shadow-lg)", width: "100%" }} />
@@ -367,7 +369,7 @@ function HomePage() {
       </section>
 
       {/* ============ PAYMENT ============ */}
-      <section style={{ position: "relative", zIndex: 1, padding: "60px 0", background: "rgba(0,0,0,0.018)" }}>
+      <section style={{ position: "relative", zIndex: 1, padding: "60px 0", background: "var(--section-alt)" }}>
         <div className="mx-auto" style={{ maxWidth: 1280, padding: "0 24px", textAlign: "center" }}>
           <span className="tn-eyebrow">Moyens de paiement</span>
           <h2 className="tn-section-title" style={{ color: "var(--text)", marginBottom: 24 }}>Payez facilement</h2>
