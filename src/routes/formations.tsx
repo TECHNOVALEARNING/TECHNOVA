@@ -4,8 +4,7 @@ import { useState } from "react";
 import { Search, Sparkles, Shield, Lock, BadgeCheck, Fingerprint, ChevronDown } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import {
-  Header, Footer, CourseCard, SectionHead, Benefits,
-  PaymentSecurity, Reviews, FaqSection,
+  Header, Footer, CourseCard,
   Course
 } from "@/components/site/shared";
 import { supabase } from "@/lib/supabase";
@@ -247,11 +246,6 @@ function FormationsPage() {
           )}
         </div>
       </section>
-
-      <Benefits />
-      <Reviews />
-      <PaymentSecurity />
-      <FaqSection />
 
       <Footer />
     </div>
