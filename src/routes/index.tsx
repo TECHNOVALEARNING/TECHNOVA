@@ -168,20 +168,20 @@ function HomePage() {
             {/* Left */}
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
               <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: "0.78rem", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--blue)", background: "var(--blue-soft)", border: "1px solid rgba(0,113,227,0.15)", padding: "6px 14px", borderRadius: 20, marginBottom: 28 }}>
-                <i className="fas fa-rocket" /> <span>Plateforme #1 en Afrique</span>
+                <i className="fas fa-rocket" /> <span>{lang === 'fr' ? 'Plateforme #1 en Afrique' : '#1 Platform in Africa'}</span>
               </div>
               <h1 className="tn-hero-title" style={{ marginBottom: 24, color: "var(--text)" }}>
-                Maîtrisez la Tech de <span className="tn-hero-span">Demain</span>.
+                {lang === 'fr' ? <>Maîtrisez la Tech de <span className="tn-hero-span">Demain</span>.</> : <>Master the Tech of <span className="tn-hero-span">Tomorrow</span>.</>}
               </h1>
               <p style={{ fontSize: "1.05rem", color: "var(--text-secondary)", lineHeight: 1.7, maxWidth: 520, marginBottom: 40 }}>
-                TECHNOVA Courses est la plateforme ultime pour apprendre le développement, la data science et le design. Formez-vous aux compétences recherchées par les recruteurs.
+                {lang === 'fr' ? 'TECHNOVA Courses est la plateforme ultime pour apprendre le développement, la data science et le design. Formez-vous aux compétences recherchées par les recruteurs.' : 'TECHNOVA Courses is the ultimate platform to learn development, data science, and design. Learn the skills recruiters are looking for.'}
               </p>
               <div style={{ display: "flex", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 36 }}>
                 <Link to="/formations" className="tn-btn-primary">
-                  Explorer les cours <i className="fas fa-arrow-right" />
+                  {lang === 'fr' ? 'Démarrer maintenant' : 'Start now'} <i className="fas fa-arrow-right" style={{ marginLeft: 6 }} />
                 </Link>
                 <Link to="/formations" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 28px", borderRadius: 50, border: "1.5px solid var(--blue)", color: "var(--blue)", fontWeight: 600, fontSize: "0.88rem", textDecoration: "none", transition: "all 0.25s" }}>
-                  Voir les formations
+                  {lang === 'fr' ? 'Voir les formations' : 'View courses'}
                 </Link>
               </div>
               {/* Social proof */}
@@ -192,7 +192,7 @@ function HomePage() {
                   ))}
                 </div>
                 <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", margin: 0 }}>
-                  <strong style={{ color: "var(--text)" }}>+10k</strong> étudiants nous font confiance
+                  <strong style={{ color: "var(--text)" }}>+10k</strong> {lang === 'fr' ? 'étudiants nous font confiance' : 'students trust us'}
                 </p>
               </div>
             </motion.div>
@@ -207,12 +207,12 @@ function HomePage() {
               {/* Stat card */}
               <div style={{ position: "absolute", bottom: 28, left: -24, background: "var(--surface-strong)", backdropFilter: "blur(24px) saturate(180%)", border: "1px solid var(--card-border)", borderRadius: "var(--radius)", padding: "16px 22px", boxShadow: "var(--shadow-md)", minWidth: 180, animation: "heroCardFloat 7s ease-in-out infinite", animationDelay: "-2s" }}>
                 <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: "1.6rem", fontWeight: 800, color: "var(--blue)", letterSpacing: "-0.03em" }}>95%</div>
-                <div style={{ fontSize: "0.78rem", color: "var(--text-secondary)", marginTop: 2 }}>Taux de satisfaction</div>
+                <div style={{ fontSize: "0.78rem", color: "var(--text-secondary)", marginTop: 2 }}>{lang === 'fr' ? 'Taux de satisfaction' : 'Satisfaction rate'}</div>
               </div>
               {/* Badge */}
               <div style={{ position: "absolute", top: 24, right: -16, background: "linear-gradient(135deg,#0071e3,#409cff)", borderRadius: "var(--radius)", padding: "14px 18px", textAlign: "center", color: "white", boxShadow: "var(--shadow-md)", minWidth: 110, animation: "heroCardFloat 9s ease-in-out infinite", animationDelay: "-4s" }}>
                 <div style={{ fontSize: "1.4rem", fontWeight: 800, fontFamily: "'Outfit',sans-serif" }}>500+</div>
-                <div style={{ fontSize: "0.7rem", opacity: 0.85 }}>Entreprises</div>
+                <div style={{ fontSize: "0.7rem", opacity: 0.85 }}>{lang === 'fr' ? 'Entreprises' : 'Companies'}</div>
               </div>
             </motion.div>
           </div>
@@ -221,7 +221,7 @@ function HomePage() {
 
       {/* ============ PARTNERS MARQUEE ============ */}
       <div style={{ position: "relative", zIndex: 1, background: "var(--surface)", backdropFilter: "blur(24px) saturate(180%)", borderTop: "1px solid var(--divider)", borderBottom: "1px solid var(--divider)", padding: "28px 0", overflow: "hidden" }}>
-        <p style={{ textAlign: "center", fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--text-secondary)", marginBottom: 16 }}>NOS PARTENAIRES TECHNOLOGIQUES</p>
+        <p style={{ textAlign: "center", fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--text-secondary)", marginBottom: 16 }}>{lang === 'fr' ? 'NOS PARTENAIRES TECHNOLOGIQUES' : 'OUR TECHNOLOGY PARTNERS'}</p>
         <div className="partners-track">
           {[...PARTNERS, ...PARTNERS].map((p, i) => (
             <div key={i} className="partner-item">
@@ -235,16 +235,16 @@ function HomePage() {
       {/* ============ FEATURES ============ */}
       <section id="features" style={{ position: "relative", zIndex: 1, padding: "100px 0" }}>
         <div className="mx-auto" style={{ maxWidth: 1280, padding: "0 24px" }}>
-          <div style={{ marginBottom: 48 }}>
-            <span className="tn-eyebrow">Pourquoi TECHNOVA</span>
-            <h2 className="tn-section-title" style={{ color: "var(--text)" }}>Pourquoi choisir TECHNOVA ?</h2>
-            <p style={{ fontSize: "1rem", color: "var(--text-secondary)", maxWidth: 480, lineHeight: 1.6 }}>Une pédagogie adaptée au marché de l'emploi local et international.</p>
+          <div style={{ textAlign: "center", marginBottom: 60 }}>
+            <span className="tn-eyebrow">{lang === 'fr' ? 'Pourquoi TECHNOVA' : 'Why TECHNOVA'}</span>
+            <h2 className="tn-section-title" style={{ color: "var(--text)" }}>{lang === 'fr' ? 'Pourquoi choisir TECHNOVA ?' : 'Why choose TECHNOVA?'}</h2>
+            <p style={{ fontSize: "1rem", color: "var(--text-secondary)", maxWidth: 480, lineHeight: 1.6, margin: "16px auto" }}>{lang === 'fr' ? 'Une pédagogie adaptée au marché de l\'emploi local et international.' : 'A pedagogy adapted to the local and international job market.'}</p>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 24 }}>
             {[
-              { icon: "fas fa-laptop-code", title: "100% Pratique", desc: "Des projets concrets pour construire votre portfolio professionnel dès la première semaine." },
-              { icon: "fas fa-headset", title: "Support Dédié", desc: "Un accompagnement personnalisé via WhatsApp pour répondre à toutes vos questions." },
-              { icon: "fas fa-mobile-alt", title: "Paiement Local", desc: "Payez facilement via MTN MoMo, Moov Money, Orange Money, Wave ou Carte Visa." },
+              { icon: "fas fa-laptop-code", title: lang === 'fr' ? "100% Pratique" : "100% Practical", desc: lang === 'fr' ? "Des projets concrets pour construire votre portfolio professionnel dès la première semaine." : "Concrete projects to build your professional portfolio from the first week." },
+              { icon: "fas fa-headset", title: lang === 'fr' ? "Support Dédié" : "Dedicated Support", desc: lang === 'fr' ? "Un accompagnement personnalisé via WhatsApp pour répondre à toutes vos questions." : "Personalized guidance via WhatsApp to answer all your questions." },
+              { icon: "fas fa-mobile-alt", title: lang === 'fr' ? "Paiement Local" : "Local Payment", desc: lang === 'fr' ? "Payez facilement via MTN MoMo, Moov Money, Orange Money, Wave ou Carte Visa." : "Pay easily via MTN MoMo, Moov Money, Orange Money, Wave, or Visa Card." },
             ].map((f, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="tn-feature-card">
                 <div className="tn-feature-icon"><i className={f.icon} /></div>
@@ -259,10 +259,14 @@ function HomePage() {
       {/* ============ COURSES ============ */}
       <section id="courses" style={{ position: "relative", zIndex: 1, padding: "100px 0", background: "var(--section-alt)" }}>
         <div className="mx-auto" style={{ maxWidth: 1280, padding: "0 24px" }}>
-          <div style={{ marginBottom: 48 }}>
-            <span className="tn-eyebrow">Formations</span>
-            <h2 className="tn-section-title" style={{ color: "var(--text)" }}>Nos Formations Phares</h2>
-            <p style={{ fontSize: "1rem", color: "var(--text-secondary)", maxWidth: 480, lineHeight: 1.6 }}>Investissez dans votre avenir à petit prix.</p>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 40, flexWrap: "wrap", gap: 16 }}>
+            <div>
+              <span className="tn-eyebrow">{lang === 'fr' ? 'Formations' : 'Courses'}</span>
+              <h2 className="tn-section-title" style={{ color: "var(--text)" }}>{lang === 'fr' ? 'Nos Formations Phares' : 'Featured Courses'}</h2>
+            </div>
+            <Link to="/formations" style={{ fontWeight: 600, color: "var(--blue)", fontSize: "0.95rem", display: "flex", alignItems: "center", gap: 6 }}>
+              {lang === 'fr' ? 'Voir toutes les formations' : 'View all courses'} <i className="fas fa-chevron-right" style={{ fontSize: "0.8em" }} />
+            </Link>
           </div>
           {dbProducts.length > 0 ? (
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 20 }}>
@@ -271,14 +275,9 @@ function HomePage() {
           ) : (
             <div style={{ textAlign: "center", padding: "48px 0", color: "var(--text-secondary)" }}>
               <i className="fas fa-graduation-cap" style={{ fontSize: "3rem", marginBottom: 16, display: "block", color: "var(--blue)" }} />
-              <p>Les formations sont en cours de chargement...</p>
+              <p>{lang === 'fr' ? 'Les formations sont en cours de chargement...' : 'Loading courses...'}</p>
             </div>
           )}
-          <div style={{ textAlign: "center", marginTop: 40 }}>
-            <Link to="/formations" className="tn-btn-primary">
-              Voir toutes les formations <i className="fas fa-arrow-right" />
-            </Link>
-          </div>
         </div>
       </section>
 
@@ -286,15 +285,14 @@ function HomePage() {
       <section id="blog" style={{ position: "relative", zIndex: 1, padding: "100px 0" }}>
         <div className="mx-auto" style={{ maxWidth: 1280, padding: "0 24px" }}>
           <div style={{ marginBottom: 48 }}>
-            <span className="tn-eyebrow">Blog & Actualités</span>
-            <h2 className="tn-section-title" style={{ color: "var(--text)" }}>Informez-vous</h2>
-            <p style={{ fontSize: "1rem", color: "var(--text-secondary)", maxWidth: 480 }}>Actualités et conseils tech</p>
+            <span className="tn-eyebrow">{lang === 'fr' ? 'Blog & Actualités' : 'Blog & News'}</span>
+            <h2 className="tn-section-title" style={{ color: "var(--text)" }}>{lang === 'fr' ? 'Informez-vous' : 'Stay Informed'}</h2>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 24 }}>
             {[
-              { img: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=600&h=350&fit=crop", date: "15 Jan 2026", title: "L'IA générative en 2026", desc: "Découvrez les dernières avancées en intelligence artificielle et leur impact sur le marché du travail." },
-              { img: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=350&fit=crop", date: "12 Jan 2026", title: "Cybersécurité : Les tendances", desc: "Protégez vos données avec les meilleures pratiques de sécurité en 2026." },
-              { img: "https://images.unsplash.com/photo-1551434678-e076c223a692?w=600&h=350&fit=crop", date: "08 Jan 2026", title: "Devenir développeur Full Stack", desc: "Le guide complet pour maîtriser le développement web moderne." },
+              { img: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=600&h=350&fit=crop", date: "15 Jan 2026", title: lang === 'fr' ? "L'IA générative en 2026" : "Generative AI in 2026", desc: lang === 'fr' ? "Découvrez les dernières avancées en intelligence artificielle et leur impact sur le marché du travail." : "Discover the latest advances in AI and their impact on the job market." },
+              { img: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=350&fit=crop", date: "12 Jan 2026", title: lang === 'fr' ? "Cybersécurité : Les tendances" : "Cybersecurity: Trends", desc: lang === 'fr' ? "Protégez vos données avec les meilleures pratiques de sécurité en 2026." : "Protect your data with the best security practices in 2026." },
+              { img: "https://images.unsplash.com/photo-1551434678-e076c223a692?w=600&h=350&fit=crop", date: "08 Jan 2026", title: lang === 'fr' ? "Devenir développeur Full Stack" : "Becoming a Full Stack Developer", desc: lang === 'fr' ? "Le guide complet pour maîtriser le développement web moderne." : "The complete guide to mastering modern web development." },
             ].map((b, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="tn-blog-card">
                 <div style={{ height: 200, overflow: "hidden" }}>
@@ -307,7 +305,7 @@ function HomePage() {
                   <h5 style={{ fontSize: "0.98rem", fontWeight: 700, marginBottom: 10, color: "var(--text)" }}>{b.title}</h5>
                   <p style={{ fontSize: "0.84rem", color: "var(--text-secondary)", marginBottom: 16, lineHeight: 1.6 }}>{b.desc}</p>
                   <a href="#" style={{ fontSize: "0.82rem", fontWeight: 600, color: "var(--blue)", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 4 }}>
-                    Lire plus <i className="fas fa-arrow-right fa-xs" />
+                    {lang === 'fr' ? 'Lire plus' : 'Read more'} <i className="fas fa-arrow-right fa-xs" />
                   </a>
                 </div>
               </motion.div>

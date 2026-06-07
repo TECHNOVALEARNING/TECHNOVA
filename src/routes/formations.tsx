@@ -108,28 +108,28 @@ function FormationsPage() {
             className="mx-auto max-w-3xl text-center"
           >
             <span className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-[color:var(--accent)]/40 bg-[color:var(--accent)]/10 px-3 py-1 text-[11px] font-semibold text-foreground backdrop-blur sm:text-xs">
-              <Sparkles className="h-3 w-3 text-[color:var(--accent)]" /> La référence des formations numériques
+              <Sparkles className="h-3 w-3 text-[color:var(--accent)]" /> {lang === 'fr' ? 'La référence des formations numériques' : 'The reference for digital courses'}
             </span>
             <h1 className="mb-4 text-3xl font-display font-extrabold leading-[1.05] tracking-tight text-[color:var(--navy)] sm:text-5xl md:text-6xl">
-              Catalogue complet.{" "}
+              {lang === 'fr' ? 'Explorez Nos Formations' : 'Explore Our Courses'}{" "}
               <span className="text-gradient">
                 Apprenez sans limite.
               </span>
             </h1>
             <p className="mx-auto mb-8 max-w-xl text-sm text-slate-600 sm:text-base md:text-lg">
-              Choisissez votre prochaine compétence. Apprenez à votre rythme, payez en Mobile Money, recevez votre certificat reconnu.
+              {lang === 'fr' ? "Passez au niveau supérieur avec nos programmes conçus par des experts de l'industrie." : "Take it to the next level with our industry expert-designed programs."}
             </p>
 
             <div className="mx-auto max-w-2xl rounded-2xl border border-border/60 bg-card/80 p-2 shadow-2xl backdrop-blur-xl sm:p-3">
               <div className="flex items-center gap-1.5 sm:gap-2 bg-card rounded-xl border border-border p-1.5 sm:p-2 pl-4 sm:pl-5">
                 <Search className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground/60 flex-none" />
                 <input value={search} onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Rechercher une formation..."
+                  placeholder={lang === 'fr' ? "Rechercher une formation..." : "Search for a course..."}
                   className="flex-1 min-w-0 bg-transparent outline-none text-sm py-2 text-foreground/80" />
                 <button aria-label="Chercher"
                   className="h-9 w-9 sm:h-11 sm:w-auto sm:px-6 rounded-lg bg-[#004DB8] hover:bg-[#003c91] transition-colors text-white text-sm font-semibold inline-flex items-center justify-center flex-none">
                   <Search className="h-4 w-4 sm:hidden" />
-                  <span className="hidden sm:inline">Chercher</span>
+                  <span className="hidden sm:inline">{lang === 'fr' ? 'Chercher' : 'Search'}</span>
                 </button>
               </div>
             </div>
@@ -140,10 +140,10 @@ function FormationsPage() {
         <div className="mx-auto max-w-7xl px-4 pb-2 pt-10 sm:pt-14 relative z-10">
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
             {[
-              { icon: Fingerprint, label: "Accès à vie", desc: "Mises à jour incluses" },
-              { icon: BadgeCheck, label: "Certificat inclus", desc: "Reconnu sur le marché" },
-              { icon: Lock, label: "Paiement Mobile Money", desc: "Sécurisé & Rapide" },
-              { icon: Shield, label: "Qualité garantie", desc: "Experts du domaine" },
+              { icon: Fingerprint, label: lang === 'fr' ? "Accès à vie" : "Lifetime access", desc: lang === 'fr' ? "Mises à jour incluses" : "Updates included" },
+              { icon: BadgeCheck, label: lang === 'fr' ? "Certificat inclus" : "Certificate included", desc: lang === 'fr' ? "Reconnu sur le marché" : "Market recognized" },
+              { icon: Lock, label: lang === 'fr' ? "Paiement Mobile Money" : "Mobile Money Payment", desc: lang === 'fr' ? "Sécurisé & Rapide" : "Secure & Fast" },
+              { icon: Shield, label: lang === 'fr' ? "Qualité garantie" : "Quality guaranteed", desc: lang === 'fr' ? "Experts du domaine" : "Industry experts" },
             ].map((b, i) => (
               <motion.div
                 key={b.label}
@@ -180,7 +180,7 @@ function FormationsPage() {
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Rechercher une formation..."
+                placeholder={lang === 'fr' ? "Rechercher une formation..." : "Search for a course..."}
                 className="w-full rounded-xl border border-border bg-muted py-2.5 pl-10 pr-4 text-sm text-foreground placeholder-muted-foreground outline-none focus:border-primary focus:bg-card focus:ring-2 focus:ring-primary/10 transition"
               />
             </div>
@@ -204,10 +204,10 @@ function FormationsPage() {
               <select
                 className="appearance-none cursor-pointer rounded-xl border border-border bg-muted py-2.5 pl-4 pr-10 text-sm text-foreground/80 outline-none focus:border-primary focus:bg-card focus:ring-2 focus:ring-primary/10 transition w-full sm:w-44"
               >
-                <option>Plus récents</option>
-                <option>Prix croissant</option>
-                <option>Prix décroissant</option>
-                <option>Mieux notés</option>
+                <option>{lang === 'fr' ? 'Plus récents' : 'Most recent'}</option>
+                <option>{lang === 'fr' ? 'Prix croissant' : 'Price: Low to High'}</option>
+                <option>{lang === 'fr' ? 'Prix décroissant' : 'Price: High to Low'}</option>
+                <option>{lang === 'fr' ? 'Mieux notés' : 'Top rated'}</option>
               </select>
               <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/60" />
             </div>
@@ -220,16 +220,15 @@ function FormationsPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {/* Count + label */}
           <div className="flex items-center justify-between mb-6">
-            <p className="text-sm text-muted-foreground">
-              <span className="font-bold text-foreground">{filtered.length}</span>{" "}
-              formation{filtered.length > 1 ? "s" : ""} disponible{filtered.length > 1 ? "s" : ""}
+            <p className="text-sm font-medium text-muted-foreground">
+              <strong className="text-foreground">{filtered.length}</strong> {lang === 'fr' ? 'formations disponibles' : 'courses available'}
             </p>
             {filter !== "Toutes" && (
               <button
                 onClick={() => setFilter("Toutes")}
                 className="text-xs text-primary font-semibold hover:underline"
               >
-                ✕ Effacer le filtre
+                ✕ {lang === 'fr' ? 'Effacer le filtre' : 'Clear filter'}
               </button>
             )}
           </div>
@@ -239,11 +238,11 @@ function FormationsPage() {
               <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-muted">
                 <Search className="h-8 w-8 text-muted-foreground" />
               </div>
-              <p className="text-lg font-semibold text-foreground">Aucune formation trouvée</p>
-              <p className="mt-1 text-sm text-muted-foreground">Essayez un autre mot-clé ou catégorie.</p>
+              <p className="text-lg font-semibold text-foreground">{lang === 'fr' ? 'Aucune formation trouvée' : 'No courses found'}</p>
+              <p className="mt-1 text-sm text-muted-foreground">{lang === 'fr' ? 'Essayez un autre mot-clé ou catégorie.' : 'Try another keyword or category.'}</p>
               <button onClick={() => { setSearch(""); setFilter("Toutes"); }}
                 className="mt-4 rounded-lg bg-primary px-5 py-2 text-sm font-medium text-white hover:bg-primary/90 transition">
-                Voir toutes les formations
+                {lang === 'fr' ? 'Voir toutes les formations' : 'View all courses'}
               </button>
             </div>
           ) : (
