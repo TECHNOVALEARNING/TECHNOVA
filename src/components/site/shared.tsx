@@ -28,6 +28,11 @@ export const Header = () => {
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
     localStorage.setItem("technova_theme", theme);
   }, [theme]);
 
@@ -45,7 +50,7 @@ export const Header = () => {
   ];
 
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/75 dark:bg-slate-900/80 border-b border-[color:var(--border)]/60" style={{ background: "var(--surface)", color: "var(--text)" }}>
+    <header className="sticky top-0 z-50 backdrop-blur-xl bg-card/75 dark:bg-slate-900/80 border-b border-[color:var(--border)]/60" style={{ background: "var(--surface)", color: "var(--text)" }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <Logo />
         <nav className="hidden lg:flex items-center gap-8 text-sm font-medium">
@@ -118,19 +123,19 @@ export const Footer = () => (
           entreprises recherchent vraiment.
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
-          <a href="#" className="h-10 w-10 rounded-full bg-white/10 hover:bg-[#1877F2] transition-colors flex items-center justify-center text-white shadow-sm hover:-translate-y-1 duration-300">
+          <a href="#" className="h-10 w-10 rounded-full bg-card/10 hover:bg-[#1877F2] transition-colors flex items-center justify-center text-white shadow-sm hover:-translate-y-1 duration-300">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
               <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
             </svg>
           </a>
-          <a href="#" className="h-10 w-10 rounded-full bg-white/10 hover:bg-[#E4405F] transition-colors flex items-center justify-center text-white shadow-sm hover:-translate-y-1 duration-300">
+          <a href="#" className="h-10 w-10 rounded-full bg-card/10 hover:bg-[#E4405F] transition-colors flex items-center justify-center text-white shadow-sm hover:-translate-y-1 duration-300">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
               <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
               <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
               <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
             </svg>
           </a>
-          <a href="#" className="h-10 w-10 rounded-full bg-white/10 hover:bg-black transition-colors flex items-center justify-center text-white shadow-sm hover:-translate-y-1 duration-300">
+          <a href="#" className="h-10 w-10 rounded-full bg-card/10 hover:bg-black transition-colors flex items-center justify-center text-white shadow-sm hover:-translate-y-1 duration-300">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
               <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
             </svg>
@@ -203,7 +208,7 @@ const TECH_LOGOS = [
   { name: "Python", url: "https://www.vectorlogo.zone/logos/python/python-icon.svg" },
 ];
 export const LogoMarquee = () => (
-  <section className="py-12 border-y border-[color:var(--border)] bg-white">
+  <section className="py-12 border-y border-[color:var(--border)] bg-card">
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
       <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground mb-8">
         Technologies & outils enseignés dans nos formations
@@ -254,7 +259,7 @@ export const WhyChoose = () => (
           <motion.div key={w.title}
             initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }} transition={{ delay: i * 0.08 }}
-            className="group p-7 rounded-3xl bg-white border border-[color:var(--border)] hover:border-[color:var(--primary)]/30 hover:shadow-elegant transition-all">
+            className="group p-7 rounded-3xl bg-card border border-[color:var(--border)] hover:border-[color:var(--primary)]/30 hover:shadow-elegant transition-all">
             <div className="h-14 w-14 rounded-2xl bg-primary-gradient grid place-items-center text-white mb-5 group-hover:scale-110 transition-transform shadow-glow">
               <w.icon className="h-7 w-7" />
             </div>
@@ -279,7 +284,7 @@ const FAQ_ITEMS = [
 export const FaqSection = () => {
   const [open, setOpen] = useState<number | null>(0);
   return (
-    <section id="faq" className="py-24 bg-white">
+    <section id="faq" className="py-24 bg-card">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         <SectionHead kicker="Questions fréquentes"
           title={<>On répond à <span className="text-gradient">tout ce que vous vous demandez</span>.</>} />
@@ -325,7 +330,7 @@ export const PaymentSecurity = ({ logos }: { logos?: PaymentLogo[] }) => {
     { icon: CreditCard, label: "Anti-fraude" },
   ];
   return (
-    <section className="py-20 sm:py-24 bg-white">
+    <section className="py-20 sm:py-24 bg-card">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         {/* Heading */}
         <div className="text-center max-w-2xl mx-auto mb-12">
@@ -362,7 +367,7 @@ export const PaymentSecurity = ({ logos }: { logos?: PaymentLogo[] }) => {
               <div
                 key={i}
                 title={p.name}
-                className="group h-20 w-32 sm:h-24 sm:w-40 rounded-2xl bg-white border border-[color:var(--border)] grid place-items-center px-4 shrink-0 shadow-soft hover:shadow-elegant hover:-translate-y-0.5 hover:border-[color:var(--primary)]/30 transition-all"
+                className="group h-20 w-32 sm:h-24 sm:w-40 rounded-2xl bg-card border border-[color:var(--border)] grid place-items-center px-4 shrink-0 shadow-soft hover:shadow-elegant hover:-translate-y-0.5 hover:border-[color:var(--primary)]/30 transition-all"
               >
                 <img
                   src={p.logoUrl}
@@ -403,7 +408,7 @@ const REVIEWS = [
 export const Reviews = () => {
   const loop = [...REVIEWS, ...REVIEWS];
   return (
-    <section className="py-24 bg-white overflow-hidden">
+    <section className="py-24 bg-card overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHead kicker="Avis vérifiés"
           title={<>Ce que nos <span className="text-gradient">2000+ apprenants</span> en pensent.</>} />
@@ -460,7 +465,7 @@ export const CourseCard = ({ c, i = 0 }: { c: Course; i?: number }) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: i * 0.05 }}
-      className="group relative flex flex-col overflow-hidden rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+      className="group relative flex flex-col overflow-hidden rounded-2xl bg-card border border-border shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
     >
       {/* Cover image — shows in its natural dimensions */}
       <div className="relative w-full overflow-hidden bg-gray-100">
@@ -485,12 +490,12 @@ export const CourseCard = ({ c, i = 0 }: { c: Course; i?: number }) => {
 
       {/* Body */}
       <div className="flex flex-1 flex-col p-3.5 sm:p-4">
-        <h3 className="mb-1.5 text-[14px] font-bold leading-snug text-gray-900 line-clamp-2 sm:text-[15px] group-hover:text-[#004DB8] transition-colors">
+        <h3 className="mb-1.5 text-[14px] font-bold leading-snug text-foreground line-clamp-2 sm:text-[15px] group-hover:text-[#004DB8] transition-colors">
           {c.title}
         </h3>
 
         {/* Rating */}
-        <div className="mb-3 flex items-center gap-1 text-[12px] text-gray-500">
+        <div className="mb-3 flex items-center gap-1 text-[12px] text-muted-foreground">
           <ThumbsUp className="h-3 w-3 shrink-0" />
           <span>100% (1 Avis)</span>
         </div>
@@ -500,7 +505,7 @@ export const CourseCard = ({ c, i = 0 }: { c: Course; i?: number }) => {
           {/* Pricing */}
           <div className="mb-3 flex items-baseline gap-2">
             {c.oldPrice && (
-              <span className="text-[12px] text-gray-400 line-through">{c.oldPrice}</span>
+              <span className="text-[12px] text-muted-foreground/60 line-through">{c.oldPrice}</span>
             )}
             <span className="text-[15px] font-extrabold text-[#D31626] sm:text-[16px]">
               {c.price}
@@ -538,7 +543,7 @@ export const Benefits = () => (
           <motion.div key={b.n}
             initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
             transition={{ delay: i * 0.08 }}
-            className="relative p-7 rounded-3xl bg-white border border-[color:var(--border)] overflow-hidden hover:shadow-elegant transition">
+            className="relative p-7 rounded-3xl bg-card border border-[color:var(--border)] overflow-hidden hover:shadow-elegant transition">
             <div className="text-6xl font-display font-extrabold text-[color:var(--primary)]/10 absolute top-3 right-4">{b.n}</div>
             <CreditCard className="h-8 w-8 text-[color:var(--primary)] mb-4" />
             <h3 className="font-display font-bold text-lg">{b.t}</h3>

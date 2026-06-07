@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search, Sparkles, Shield, Lock, BadgeCheck, Fingerprint, ChevronDown } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -30,6 +30,13 @@ const CATEGORIES = ["Toutes", "Sécurité", "Data", "Intelligence Artificielle",
 function FormationsPage() {
   const [filter, setFilter] = useState("Toutes");
   const [search, setSearch] = useState("");
+  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+
+  useEffect(() => {
+    const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
+    window.addEventListener("technova_lang_changed", handleLangChange);
+    return () => window.removeEventListener("technova_lang_changed", handleLangChange);
+  }, []);
 
   const { data: dbProducts = [] } = useQuery({
     queryKey: ["public_products"],
@@ -55,10 +62,10 @@ function FormationsPage() {
         title: p.title,
         cover: p.image_url || "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=800",
         category: p.category,
-        level: "Tous niveaux",
+        level: lang === "fr" ? "Tous niveaux" : "All levels",
         price: `${p.price} FCFA`,
         oldPrice: p.crossed_price ? `${p.crossed_price} FCFA` : undefined,
-        duration: "Accès à vie"
+        duration: lang === "fr" ? "Accès à vie" : "Lifetime access"
       })) as Course[];
     }
   });
@@ -77,7 +84,7 @@ function FormationsPage() {
 
 
       {/* HERO MARKETPLACE — LOGO BACKGROUND */}
-      <section className="relative overflow-hidden bg-white">
+      <section className="relative overflow-hidden bg-background">
         {/* Logo as giant background watermark */}
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
           {/* Radial glow behind logo */}
@@ -90,8 +97,8 @@ function FormationsPage() {
           />
         </div>
         {/* Very subtle top and bottom fades */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-white to-transparent" />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-white to-transparent" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-background to-transparent" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-background to-transparent" />
 
         {/* content */}
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 sm:py-28 md:py-36 z-10">
@@ -113,12 +120,12 @@ function FormationsPage() {
               Choisissez votre prochaine compétence. Apprenez à votre rythme, payez en Mobile Money, recevez votre certificat reconnu.
             </p>
 
-            <div className="mx-auto max-w-2xl rounded-2xl border border-gray-200/60 bg-white/80 p-2 shadow-2xl backdrop-blur-xl sm:p-3">
-              <div className="flex items-center gap-1.5 sm:gap-2 bg-white rounded-xl border border-gray-100 p-1.5 sm:p-2 pl-4 sm:pl-5">
-                <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 flex-none" />
+            <div className="mx-auto max-w-2xl rounded-2xl border border-border/60 bg-card/80 p-2 shadow-2xl backdrop-blur-xl sm:p-3">
+              <div className="flex items-center gap-1.5 sm:gap-2 bg-card rounded-xl border border-border p-1.5 sm:p-2 pl-4 sm:pl-5">
+                <Search className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground/60 flex-none" />
                 <input value={search} onChange={(e) => setSearch(e.target.value)}
                   placeholder="Rechercher une formation..."
-                  className="flex-1 min-w-0 bg-transparent outline-none text-sm py-2 text-gray-700" />
+                  className="flex-1 min-w-0 bg-transparent outline-none text-sm py-2 text-foreground/80" />
                 <button aria-label="Chercher"
                   className="h-9 w-9 sm:h-11 sm:w-auto sm:px-6 rounded-lg bg-[#004DB8] hover:bg-[#003c91] transition-colors text-white text-sm font-semibold inline-flex items-center justify-center flex-none">
                   <Search className="h-4 w-4 sm:hidden" />
@@ -144,16 +151,16 @@ function FormationsPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.05 }}
-                className="flex items-center gap-2.5 rounded-xl border border-gray-100 bg-white/60 p-3 backdrop-blur sm:gap-3 sm:p-4 shadow-sm"
+                className="flex items-center gap-2.5 rounded-xl border border-border bg-card/60 p-3 backdrop-blur sm:gap-3 sm:p-4 shadow-sm"
               >
                 <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[color:var(--sky-soft)] sm:h-10 sm:w-10">
                   <b.icon className="h-4 w-4 text-[color:var(--primary)] sm:h-5 sm:w-5" />
                 </div>
                 <div className="min-w-0">
-                  <div className="truncate text-xs font-semibold text-gray-900 sm:text-sm">
+                  <div className="truncate text-xs font-semibold text-foreground sm:text-sm">
                     {b.label}
                   </div>
-                  <div className="truncate text-[10px] text-gray-500 sm:text-xs">
+                  <div className="truncate text-[10px] text-muted-foreground sm:text-xs">
                     {b.desc}
                   </div>
                 </div>
@@ -164,17 +171,17 @@ function FormationsPage() {
       </section>
 
       {/* MARKETPLACE TOOLBAR */}
-      <section className="bg-white border-b border-gray-100 sticky top-16 z-30">
+      <section className="bg-card border-b border-border sticky top-16 z-30">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
             {/* Search */}
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/60" />
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Rechercher une formation..."
-                className="w-full rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-10 pr-4 text-sm text-gray-800 placeholder-gray-400 outline-none focus:border-[#004DB8] focus:bg-white focus:ring-2 focus:ring-[#004DB8]/10 transition"
+                className="w-full rounded-xl border border-border bg-muted py-2.5 pl-10 pr-4 text-sm text-foreground placeholder-gray-400 outline-none focus:border-[#004DB8] focus:bg-card focus:ring-2 focus:ring-[#004DB8]/10 transition"
               />
             </div>
 
@@ -183,26 +190,26 @@ function FormationsPage() {
               <select
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}
-                className="appearance-none cursor-pointer rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-4 pr-10 text-sm text-gray-700 outline-none focus:border-[#004DB8] focus:bg-white focus:ring-2 focus:ring-[#004DB8]/10 transition w-full sm:w-48"
+                className="appearance-none cursor-pointer rounded-xl border border-border bg-muted py-2.5 pl-4 pr-10 text-sm text-foreground/80 outline-none focus:border-[#004DB8] focus:bg-card focus:ring-2 focus:ring-[#004DB8]/10 transition w-full sm:w-48"
               >
                 {CATEGORIES.map((cat) => (
                   <option key={cat} value={cat}>{cat}</option>
                 ))}
               </select>
-              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/60" />
             </div>
 
             {/* Sort dropdown */}
             <div className="relative">
               <select
-                className="appearance-none cursor-pointer rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-4 pr-10 text-sm text-gray-700 outline-none focus:border-[#004DB8] focus:bg-white focus:ring-2 focus:ring-[#004DB8]/10 transition w-full sm:w-44"
+                className="appearance-none cursor-pointer rounded-xl border border-border bg-muted py-2.5 pl-4 pr-10 text-sm text-foreground/80 outline-none focus:border-[#004DB8] focus:bg-card focus:ring-2 focus:ring-[#004DB8]/10 transition w-full sm:w-44"
               >
                 <option>Plus récents</option>
                 <option>Prix croissant</option>
                 <option>Prix décroissant</option>
                 <option>Mieux notés</option>
               </select>
-              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/60" />
             </div>
           </div>
         </div>
@@ -213,8 +220,8 @@ function FormationsPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {/* Count + label */}
           <div className="flex items-center justify-between mb-6">
-            <p className="text-sm text-gray-500">
-              <span className="font-bold text-gray-900">{filtered.length}</span>{" "}
+            <p className="text-sm text-muted-foreground">
+              <span className="font-bold text-foreground">{filtered.length}</span>{" "}
               formation{filtered.length > 1 ? "s" : ""} disponible{filtered.length > 1 ? "s" : ""}
             </p>
             {filter !== "Toutes" && (
@@ -232,8 +239,8 @@ function FormationsPage() {
               <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-[#EEF2FF]">
                 <Search className="h-8 w-8 text-[#004DB8]" />
               </div>
-              <p className="text-lg font-semibold text-gray-800">Aucune formation trouvée</p>
-              <p className="mt-1 text-sm text-gray-500">Essayez un autre mot-clé ou catégorie.</p>
+              <p className="text-lg font-semibold text-foreground">Aucune formation trouvée</p>
+              <p className="mt-1 text-sm text-muted-foreground">Essayez un autre mot-clé ou catégorie.</p>
               <button onClick={() => { setSearch(""); setFilter("Toutes"); }}
                 className="mt-4 rounded-lg bg-[#004DB8] px-5 py-2 text-sm font-medium text-white hover:bg-[#003c91] transition">
                 Voir toutes les formations
