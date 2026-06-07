@@ -375,42 +375,82 @@ export type Course = {
   slug: string; title: string; cover: string; category: string;
   level: string; price: string; oldPrice?: string; duration: string;
 };
-export const CourseCard = ({ c, i = 0 }: { c: Course; i?: number }) => (
-  <motion.article
-    initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }} transition={{ delay: i * 0.06 }}
-    className="group rounded-[14px] bg-white border border-gray-100 overflow-hidden hover:shadow-lg transition-all flex flex-col p-3 pb-4">
-    
-    <div className="relative aspect-[1/1] overflow-hidden rounded-xl mb-3">
-      <img src={c.cover} alt={c.title} loading="lazy"
-           className="absolute inset-0 h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" />
-    </div>
-    
-    <div className="flex flex-col flex-1 px-1">
-      <h3 className="font-sans font-bold text-[15px] leading-snug text-gray-900 mb-2 line-clamp-2">
-        {c.title}
-      </h3>
-      
-      <div className="flex items-center text-gray-500 text-[13px] mb-4">
-        <ThumbsUp className="w-3.5 h-3.5 mr-1.5" /> 100% (1 Avis)
+export const CourseCard = ({ c, i = 0 }: { c: Course; i?: number }) => {
+  // Calculate discount percentage if both prices available
+  const discount = (() => {
+    if (!c.oldPrice) return null;
+    const oldVal = parseFloat(c.oldPrice.replace(/\D/g, ""));
+    const newVal = parseFloat(c.price.replace(/\D/g, ""));
+    if (!oldVal || !newVal) return null;
+    return Math.round((1 - newVal / oldVal) * 100);
+  })();
+
+  return (
+    <motion.article
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: i * 0.05 }}
+      className="group relative flex flex-col overflow-hidden rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+    >
+      {/* Cover image — shows in its natural dimensions */}
+      <div className="relative w-full overflow-hidden bg-gray-100">
+        <img
+          src={c.cover}
+          alt={c.title}
+          loading="lazy"
+          className="w-full object-cover group-hover:scale-105 transition-transform duration-500"
+          style={{ maxHeight: "280px", minHeight: "160px", objectFit: "cover", width: "100%", display: "block" }}
+        />
+        {/* Discount badge */}
+        {discount && (
+          <span className="absolute top-2.5 left-2.5 rounded-full bg-red-500 px-2.5 py-0.5 text-[11px] font-bold text-white shadow">
+            -{discount}%
+          </span>
+        )}
+        {/* Category chip */}
+        <span className="absolute bottom-2.5 right-2.5 rounded-full bg-black/40 backdrop-blur px-2.5 py-0.5 text-[10px] font-semibold text-white">
+          {c.category}
+        </span>
       </div>
-      
-      <div className="mt-auto">
-        <div className="flex items-center gap-2 mb-4">
-          {c.oldPrice && (
-            <span className="text-gray-400 line-through text-[13px]">{c.oldPrice}</span>
-          )}
-          <span className="text-[#D31626] font-bold text-[15px]">{c.price}</span>
+
+      {/* Body */}
+      <div className="flex flex-1 flex-col p-3.5 sm:p-4">
+        <h3 className="mb-1.5 text-[14px] font-bold leading-snug text-gray-900 line-clamp-2 sm:text-[15px] group-hover:text-[#004DB8] transition-colors">
+          {c.title}
+        </h3>
+
+        {/* Rating */}
+        <div className="mb-3 flex items-center gap-1 text-[12px] text-gray-500">
+          <ThumbsUp className="h-3 w-3 shrink-0" />
+          <span>100% (1 Avis)</span>
         </div>
-        
-        <Link to="/product/$id" params={{ id: c.slug }}
-           className="w-full bg-[#004DB8] hover:bg-[#003c91] text-white text-center py-2.5 rounded-[8px] text-[14px] font-medium transition-colors block">
-          Acheter maintenant
-        </Link>
+
+        {/* Spacer */}
+        <div className="mt-auto">
+          {/* Pricing */}
+          <div className="mb-3 flex items-baseline gap-2">
+            {c.oldPrice && (
+              <span className="text-[12px] text-gray-400 line-through">{c.oldPrice}</span>
+            )}
+            <span className="text-[15px] font-extrabold text-[#D31626] sm:text-[16px]">
+              {c.price}
+            </span>
+          </div>
+
+          {/* CTA button */}
+          <Link
+            to="/product/$id"
+            params={{ id: c.slug }}
+            className="block w-full rounded-xl bg-[#004DB8] py-2.5 text-center text-[13px] font-semibold text-white transition-all hover:bg-[#003c91] hover:shadow-lg active:scale-[0.97] sm:text-sm"
+          >
+            Acheter maintenant
+          </Link>
+        </div>
       </div>
-    </div>
-  </motion.article>
-);
+    </motion.article>
+  );
+};
 
 /* ---------- Benefits Strip ---------- */
 const BENEFITS = [

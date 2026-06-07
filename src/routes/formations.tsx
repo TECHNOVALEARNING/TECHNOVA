@@ -159,36 +159,84 @@ function FormationsPage() {
         </div>
       </section>
 
-      {/* FILTERS */}
-      <section className="py-4 bg-white border-b border-gray-100 sticky top-16 z-30 backdrop-blur bg-white/90">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:justify-center sm:px-0 sm:pb-0 scrollbar-hide">
-            {CATEGORIES.map((cat) => (
-              <button key={cat} onClick={() => setFilter(cat)}
-                className={`flex shrink-0 items-center gap-1.5 rounded-full border px-4 py-2 text-[13px] font-semibold transition-colors sm:text-sm ${
-                  filter === cat
-                    ? "bg-[#004DB8] border-[#004DB8] text-white shadow-md"
-                    : "bg-white border-gray-200 text-gray-700 hover:border-[#004DB8] hover:text-[#004DB8]"
-                }`}>
-                {cat === "Toutes" && "✨ "} {cat}
-              </button>
-            ))}
+      {/* MARKETPLACE TOOLBAR */}
+      <section className="bg-white border-b border-gray-100 sticky top-16 z-30">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+            {/* Search */}
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Rechercher une formation..."
+                className="w-full rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-10 pr-4 text-sm text-gray-800 placeholder-gray-400 outline-none focus:border-[#004DB8] focus:bg-white focus:ring-2 focus:ring-[#004DB8]/10 transition"
+              />
+            </div>
+
+            {/* Category dropdown */}
+            <div className="relative">
+              <select
+                value={filter}
+                onChange={(e) => setFilter(e.target.value)}
+                className="appearance-none cursor-pointer rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-4 pr-10 text-sm text-gray-700 outline-none focus:border-[#004DB8] focus:bg-white focus:ring-2 focus:ring-[#004DB8]/10 transition w-full sm:w-48"
+              >
+                {CATEGORIES.map((cat) => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
+              </select>
+              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            </div>
+
+            {/* Sort dropdown */}
+            <div className="relative">
+              <select
+                className="appearance-none cursor-pointer rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-4 pr-10 text-sm text-gray-700 outline-none focus:border-[#004DB8] focus:bg-white focus:ring-2 focus:ring-[#004DB8]/10 transition w-full sm:w-44"
+              >
+                <option>Plus récents</option>
+                <option>Prix croissant</option>
+                <option>Prix décroissant</option>
+                <option>Mieux notés</option>
+              </select>
+              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            </div>
           </div>
         </div>
       </section>
 
       {/* GRID */}
-      <section className="py-16 bg-white">
+      <section className="py-10 bg-[#F7F8FC] min-h-[60vh]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between mb-8">
-            <p className="text-sm text-muted-foreground">
-              <span className="font-bold text-foreground">{filtered.length}</span> formation{filtered.length > 1 ? "s" : ""} disponible{filtered.length > 1 ? "s" : ""}
+          {/* Count + label */}
+          <div className="flex items-center justify-between mb-6">
+            <p className="text-sm text-gray-500">
+              <span className="font-bold text-gray-900">{filtered.length}</span>{" "}
+              formation{filtered.length > 1 ? "s" : ""} disponible{filtered.length > 1 ? "s" : ""}
             </p>
+            {filter !== "Toutes" && (
+              <button
+                onClick={() => setFilter("Toutes")}
+                className="text-xs text-[#004DB8] font-semibold hover:underline"
+              >
+                ✕ Effacer le filtre
+              </button>
+            )}
           </div>
+
           {filtered.length === 0 ? (
-            <div className="text-center py-20 text-muted-foreground">Aucune formation ne correspond à votre recherche.</div>
+            <div className="flex flex-col items-center justify-center py-32 text-center">
+              <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-[#EEF2FF]">
+                <Search className="h-8 w-8 text-[#004DB8]" />
+              </div>
+              <p className="text-lg font-semibold text-gray-800">Aucune formation trouvée</p>
+              <p className="mt-1 text-sm text-gray-500">Essayez un autre mot-clé ou catégorie.</p>
+              <button onClick={() => { setSearch(""); setFilter("Toutes"); }}
+                className="mt-4 rounded-lg bg-[#004DB8] px-5 py-2 text-sm font-medium text-white hover:bg-[#003c91] transition">
+                Voir toutes les formations
+              </button>
+            </div>
           ) : (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
               {filtered.map((c, i) => <CourseCard key={c.slug} c={c} i={i} />)}
             </div>
           )}
