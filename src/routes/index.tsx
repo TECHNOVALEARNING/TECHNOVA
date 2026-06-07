@@ -67,7 +67,7 @@ function HomePage() {
       const active = (data || []).filter((p: any) => {
         try { const f = typeof p.features === "string" ? JSON.parse(p.features) : (p.features || {}); return f.status !== "draft"; } catch { return true; }
       });
-      return active.map((p: any) => ({
+      return active.slice(0, 4).map((p: any) => ({
         slug: p.id, title: p.title,
         cover: p.image_url || "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=800",
         category: p.category, level: lang === "fr" ? "Tous niveaux" : "All levels",
