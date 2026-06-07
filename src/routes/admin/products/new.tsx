@@ -864,7 +864,7 @@ Ne fais aucune introduction. Génère directement le contenu HTML final prêt à
             
             <div className="space-y-8">
               <div>
-                <label className="block text-[13px] font-medium text-slate-900 mb-2">Ajouter une vignette <span className="text-slate-400 font-normal">ⓘ</span></label>
+                <label className="block text-[13px] font-medium text-slate-900 mb-2">Ajouter une image de couverture (Vignette) <span className="text-slate-400 font-normal">ⓘ</span></label>
                 
                 <input 
                   type="file" 
@@ -890,18 +890,7 @@ Ne fais aucune introduction. Génère directement le contenu HTML final prêt à
                   )}
                 </div>
                 <p className="text-[12px] text-slate-500 mt-3 leading-relaxed max-w-[350px]">
-                  Créez une vignette mémorable qui représente votre produit. Utilisez une image carrée (minimum 600x600px) au format JPG ou PNG pour de meilleurs résultats.
-                </p>
-              </div>
-
-              {/* Banner Mock */}
-              <div>
-                <label className="block text-[13px] font-medium text-slate-900 mb-2">Ajouter une bannière <span className="text-slate-400 font-normal">ⓘ</span></label>
-                <div className="w-full h-[160px] border border-[#E5E7EB] bg-[#F9FAFB] rounded-xl flex items-center justify-center border-dashed cursor-pointer hover:bg-slate-50 transition-colors shadow-sm">
-                  <ImageIcon className="w-6 h-6 text-slate-400" strokeWidth={1.5} />
-                </div>
-                <p className="text-[12px] text-slate-500 mt-3 leading-relaxed max-w-lg">
-                  Créez une bannière attrayante qui met en valeur votre produit. Utilisez une image rectangulaire de haute qualité (minimum 709x260px) au format JPG ou PNG pour de meilleurs résultats.
+                  Créez une image mémorable qui représente votre produit. Utilisez une image carrée (minimum 600x600px) au format JPG ou PNG pour de meilleurs résultats.
                 </p>
               </div>
             </div>
