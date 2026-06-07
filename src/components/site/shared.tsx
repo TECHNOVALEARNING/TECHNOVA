@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import {
   ArrowRight, Check, ChevronDown, Shield, Headphones, Wallet,
-  GraduationCap, Sparkles, Star, Mail, MapPin, Phone, Lock, CreditCard,
+  GraduationCap, Sparkles, Star, Mail, MapPin, Phone, Lock, CreditCard, ThumbsUp,
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import siteLogo from "@/assets/logo.png";
@@ -379,35 +379,33 @@ export const CourseCard = ({ c, i = 0 }: { c: Course; i?: number }) => (
   <motion.article
     initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }} transition={{ delay: i * 0.06 }}
-    className="group rounded-3xl bg-white border border-[color:var(--border)] overflow-hidden hover:shadow-elegant hover:-translate-y-1 transition-all">
-    <div className="relative aspect-[16/10] overflow-hidden">
+    className="group rounded-[14px] bg-white border border-gray-100 overflow-hidden hover:shadow-lg transition-all flex flex-col p-3 pb-4">
+    
+    <div className="relative aspect-[1/1] overflow-hidden rounded-xl mb-3">
       <img src={c.cover} alt={c.title} loading="lazy"
-           className="absolute inset-0 h-full w-full object-cover group-hover:scale-110 transition-transform duration-700" />
-      <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-white/95 text-[10px] font-bold uppercase tracking-wider text-[color:var(--primary)]">
-        {c.category}
-      </div>
-      <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-[color:var(--accent)] text-[10px] font-bold uppercase tracking-wider text-[color:var(--navy)]">
-        {c.duration}
-      </div>
+           className="absolute inset-0 h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" />
     </div>
-    <div className="p-5">
-      <h3 className="font-display font-bold text-lg leading-snug group-hover:text-[color:var(--primary)] transition-colors">
+    
+    <div className="flex flex-col flex-1 px-1">
+      <h3 className="font-sans font-bold text-[15px] leading-snug text-gray-900 mb-2 line-clamp-2">
         {c.title}
       </h3>
-      <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
-        <span>Niveau · {c.level}</span>
-        <div className="flex gap-0.5 text-[color:var(--accent)]">
-          {Array.from({ length: 5 }).map((_, j) => <Star key={j} className="h-3 w-3 fill-current" />)}
-        </div>
+      
+      <div className="flex items-center text-gray-500 text-[13px] mb-4">
+        <ThumbsUp className="w-3.5 h-3.5 mr-1.5" /> 100% (1 Avis)
       </div>
-      <div className="mt-4 pt-4 border-t border-[color:var(--border)] flex items-center justify-between">
-        <div>
-          <span className="font-display font-bold text-xl text-[color:var(--primary)]">{c.price}</span>
-          {c.oldPrice && <span className="ml-2 text-xs text-muted-foreground line-through">{c.oldPrice}</span>}
+      
+      <div className="mt-auto">
+        <div className="flex items-center gap-2 mb-4">
+          {c.oldPrice && (
+            <span className="text-gray-400 line-through text-[13px]">{c.oldPrice}</span>
+          )}
+          <span className="text-[#D31626] font-bold text-[15px]">{c.price}</span>
         </div>
+        
         <Link to="/product/$id" params={{ id: c.slug }}
-           className="inline-flex items-center gap-1 text-xs font-semibold text-[color:var(--primary)] hover:gap-2 transition-all">
-          Obtenir <ArrowRight className="h-3 w-3" />
+           className="w-full bg-[#004DB8] hover:bg-[#003c91] text-white text-center py-2.5 rounded-[8px] text-[14px] font-medium transition-colors block">
+          Acheter maintenant
         </Link>
       </div>
     </div>
