@@ -135,7 +135,7 @@ export const Footer = () => {
         <div className="sm:col-span-2">
           <Logo className="mb-2" />
           <p className="mt-4 text-white/70 max-w-md leading-relaxed text-sm sm:text-base">
-            {lang === 'fr' ? 'TECHNOVA Learning : la plateforme africaine de formations & produits numériques à petit prix. Cybersécurité, IA, marketing, entrepreneuriat — apprenez ce que les entreprises recherchent vraiment.' : 'TECHNOVA Learning: the African platform for digital courses & products at low prices. Cybersecurity, AI, marketing, entrepreneurship — learn what companies are really looking for.'}
+            {lang === 'fr' ? 'TECHNOVA Learning : la plateforme de formations & produits numériques à petit prix. Cybersécurité, IA, marketing, entrepreneuriat — apprenez ce que les entreprises recherchent vraiment.' : 'TECHNOVA Learning: the ultimate platform for digital courses & products at low prices. Cybersecurity, AI, marketing, entrepreneurship — learn what companies are really looking for.'}
           </p>
         <div className="mt-6 flex flex-wrap gap-3">
           <a href="#" className="h-10 w-10 rounded-full bg-card/10 hover:bg-[#1877F2] transition-colors flex items-center justify-center text-white shadow-sm hover:-translate-y-1 duration-300">
