@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useRouter } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import {
   ArrowRight, Check, ChevronDown, Shield, Headphones, Wallet,
@@ -26,15 +26,23 @@ export const Header = () => {
   const [theme, setTheme] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_theme") || "light") : "light");
   const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
 
+  const router = useRouter();
+  const isHome = router.state.location.pathname === "/";
+
   useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
-    if (theme === "dark") {
-      document.documentElement.classList.add("dark");
+    if (isHome) {
+      document.documentElement.setAttribute("data-theme", theme);
+      if (theme === "dark") {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
     } else {
+      document.documentElement.setAttribute("data-theme", "light");
       document.documentElement.classList.remove("dark");
     }
     localStorage.setItem("technova_theme", theme);
-  }, [theme]);
+  }, [theme, isHome]);
 
   useEffect(() => {
     localStorage.setItem("technova_lang", lang);
