@@ -87,6 +87,35 @@
   --shadow-elegant: 0 30px 60px -25px oklch(0.22 0.04 264 / 0.25);
 }
 
+.dark, [data-theme="dark"] {
+  --background: oklch(0.1 0 0);
+  --foreground: oklch(0.95 0 0);
+
+  --card: oklch(0.15 0 0);
+  --card-foreground: oklch(0.95 0 0);
+
+  --primary: oklch(0.6 0.2 264);
+  --primary-foreground: oklch(0.99 0 0);
+  --primary-glow: oklch(0.6 0.2 264);
+
+  --secondary: oklch(0.2 0 0);
+  --secondary-foreground: oklch(0.95 0 0);
+
+  --accent: oklch(0.78 0.16 75);
+  --accent-foreground: oklch(0.1 0 0);
+
+  --muted: oklch(0.2 0 0);
+  --muted-foreground: oklch(0.7 0 0);
+
+  --border: oklch(0.25 0 0);
+  --input: oklch(0.25 0 0);
+  --ring: oklch(0.6 0.2 264);
+  
+  --gradient-hero: radial-gradient(1200px 600px at 80% 0%, oklch(0.2 0.05 245 / 0.4), transparent 60%),
+                    radial-gradient(900px 500px at 10% 90%, oklch(0.25 0.05 75 / 0.3), transparent 60%),
+                    linear-gradient(180deg, oklch(0.1 0 0) 0%, oklch(0.15 0 0) 100%);
+}
+
 @layer base {
   * { border-color: var(--color-border); }
   body {
