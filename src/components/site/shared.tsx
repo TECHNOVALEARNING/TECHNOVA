@@ -18,16 +18,34 @@ export const Logo = ({ className = "" }: { className?: string }) => (
 );
 
 /* ---------- Header ---------- */
+import { useEffect } from "react";
+import { Moon, Sun, Globe } from "lucide-react";
+
 export const Header = () => {
   const [open, setOpen] = useState(false);
+  const [theme, setTheme] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_theme") || "light") : "light");
+  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("technova_theme", theme);
+  }, [theme]);
+
+  useEffect(() => {
+    localStorage.setItem("technova_lang", lang);
+    // Dispath event so other components can re-render if needed
+    window.dispatchEvent(new Event("technova_lang_changed"));
+  }, [lang]);
+
   const links = [
-    { to: "/", label: "Accueil" },
-    { to: "/formations", label: "Nos formations" },
-    { to: "/#pourquoi", label: "Pourquoi nous" },
+    { to: "/", label: lang === "fr" ? "Accueil" : "Home" },
+    { to: "/formations", label: lang === "fr" ? "Nos formations" : "Courses" },
+    { to: "/#pourquoi", label: lang === "fr" ? "Pourquoi nous" : "Why us" },
     { to: "/#faq", label: "FAQ" },
   ];
+
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/75 border-b border-[color:var(--border)]/60">
+    <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/75 dark:bg-slate-900/80 border-b border-[color:var(--border)]/60" style={{ background: "var(--surface)", color: "var(--text)" }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <Logo />
         <nav className="hidden lg:flex items-center gap-8 text-sm font-medium">
@@ -37,30 +55,48 @@ export const Header = () => {
             </Link>
           ))}
         </nav>
-        <div className="hidden lg:flex items-center gap-3">
+        <div className="hidden lg:flex items-center gap-4">
+          {/* Toggles */}
+          <button onClick={() => setLang(l => l === "fr" ? "en" : "fr")} className="flex items-center gap-1.5 text-sm font-bold opacity-80 hover:opacity-100 transition-opacity">
+            <Globe className="h-4 w-4" /> {lang.toUpperCase()}
+          </button>
+          <button onClick={() => setTheme(t => t === "light" ? "dark" : "light")} className="opacity-80 hover:opacity-100 transition-opacity">
+            {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+          </button>
+          
           <Link to="/login"
              className="inline-flex items-center gap-2 h-10 px-5 rounded-full bg-primary-gradient text-white text-sm font-semibold shadow-glow hover:scale-[1.03] transition-transform">
-            COMMENCER <ArrowRight className="h-4 w-4" />
+            {lang === "fr" ? "COMMENCER" : "START"} <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
-        <button onClick={() => setOpen(!open)} className="lg:hidden p-2" aria-label="menu">
-          <div className="space-y-1.5">
-            <span className={`block h-0.5 w-6 bg-foreground transition-transform ${open && "translate-y-2 rotate-45"}`} />
-            <span className={`block h-0.5 w-6 bg-foreground transition-opacity ${open && "opacity-0"}`} />
-            <span className={`block h-0.5 w-6 bg-foreground transition-transform ${open && "-translate-y-2 -rotate-45"}`} />
-          </div>
-        </button>
+        <div className="lg:hidden flex items-center gap-3">
+          <button onClick={() => setTheme(t => t === "light" ? "dark" : "light")} className="p-1 opacity-80 hover:opacity-100 transition-opacity">
+            {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+          </button>
+          <button onClick={() => setOpen(!open)} className="p-2" aria-label="menu">
+            <div className="space-y-1.5">
+              <span className={`block h-0.5 w-6 transition-transform ${open && "translate-y-2 rotate-45"}`} style={{background:"currentColor"}} />
+              <span className={`block h-0.5 w-6 transition-opacity ${open && "opacity-0"}`} style={{background:"currentColor"}} />
+              <span className={`block h-0.5 w-6 transition-transform ${open && "-translate-y-2 -rotate-45"}`} style={{background:"currentColor"}} />
+            </div>
+          </button>
+        </div>
       </div>
       {open && (
-        <div className="lg:hidden border-t border-[color:var(--border)] bg-white">
+        <div className="lg:hidden border-t border-[color:var(--border)]" style={{ background: "var(--card)" }}>
           <div className="px-4 py-4 flex flex-col gap-3">
+            <div className="flex justify-end mb-2">
+              <button onClick={() => setLang(l => l === "fr" ? "en" : "fr")} className="flex items-center gap-1.5 text-sm font-bold opacity-80 hover:opacity-100 transition-opacity">
+                <Globe className="h-4 w-4" /> {lang.toUpperCase()}
+              </button>
+            </div>
             {links.map((l) => (
               <Link key={l.to} to={l.to} onClick={() => setOpen(false)}
                     className="py-2 font-medium">{l.label}</Link>
             ))}
             <Link to="/login" onClick={() => setOpen(false)}
                className="mt-2 text-center h-11 grid place-items-center rounded-full bg-primary-gradient text-white font-semibold">
-              COMMENCER
+              {lang === "fr" ? "COMMENCER" : "START"}
             </Link>
           </div>
         </div>

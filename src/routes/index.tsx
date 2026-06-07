@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, Check } from "lucide-react";
@@ -46,6 +47,14 @@ const TESTIMONIALS = [
 ];
 
 function HomePage() {
+  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+
+  useEffect(() => {
+    const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
+    window.addEventListener("technova_lang_changed", handleLangChange);
+    return () => window.removeEventListener("technova_lang_changed", handleLangChange);
+  }, []);
+
   const { data: dbProducts = [] } = useQuery({
     queryKey: ["public_products_home"],
     queryFn: async () => {
@@ -61,18 +70,19 @@ function HomePage() {
       return active.map((p: any) => ({
         slug: p.id, title: p.title,
         cover: p.image_url || "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=800",
-        category: p.category, level: "Tous niveaux",
+        category: p.category, level: lang === "fr" ? "Tous niveaux" : "All levels",
         price: `${p.price} FCFA`,
         oldPrice: p.crossed_price ? `${p.crossed_price} FCFA` : undefined,
-        duration: "Accès à vie",
+        duration: lang === "fr" ? "Accès à vie" : "Lifetime access",
       })) as Course[];
     },
   });
 
   return (
-    <div className="min-h-screen overflow-x-hidden" style={{ background: "var(--bg, #f2f2f7)", color: "var(--text, #1d1d1f)", fontFamily: "'Manrope', -apple-system, sans-serif" }}>
+    <div className="min-h-screen overflow-x-hidden transition-colors duration-300" style={{ background: "var(--bg, #f2f2f7)", color: "var(--text, #1d1d1f)", fontFamily: "'Manrope', -apple-system, sans-serif" }}>
       {/* Font import via style tag */}
       <style>{`
+
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Manrope:wght@300;400;500;600&display=swap');
         @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
         :root {
@@ -83,6 +93,18 @@ function HomePage() {
           --divider: rgba(0,0,0,0.08); --glass-blur: blur(24px) saturate(180%);
           --shadow-sm: 0 2px 16px rgba(0,0,0,0.06); --shadow-md: 0 8px 40px rgba(0,0,0,0.09);
           --shadow-lg: 0 20px 60px rgba(0,0,0,0.12); --radius: 20px; --radius-sm: 12px; --radius-lg: 28px;
+        }
+        [data-theme="dark"] {
+          --bg: #000000;
+          --surface: rgba(28,28,30,0.82);
+          --surface-strong: rgba(44,44,46,0.92);
+          --card: rgba(28,28,30,0.72);
+          --card-border: rgba(255,255,255,0.1);
+          --text: #f5f5f7;
+          --text-secondary: #98989d;
+          --divider: rgba(255,255,255,0.08);
+          --shadow-sm: 0 2px 16px rgba(0,0,0,0.3);
+          --shadow-md: 0 8px 40px rgba(0,0,0,0.4);
         }
         .tn-card { background: var(--card); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border: 1px solid var(--card-border); }
         .tn-hero-title { font-family:'Outfit',sans-serif; font-size:clamp(2.6rem,5vw,4.2rem); font-weight:800; line-height:1.08; letter-spacing:-0.04em; }
