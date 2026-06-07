@@ -9,12 +9,12 @@ import siteLogo from "@/assets/logo.png";
 
 /* ---------- Logo ---------- */
 export const Logo = ({ className = "" }: { className?: string }) => (
-  <Link to="/" className={`flex items-center gap-2.5 ${className}`}>
+  <a href="/" className={`flex items-center gap-2.5 ${className}`}>
     <img src={siteLogo} alt="Logo" className="h-10 sm:h-12 w-auto object-contain" />
     <span className="font-display text-xl sm:text-2xl font-black tracking-tight text-[color:var(--primary)]">
       TECHNOVA
     </span>
-  </Link>
+  </a>
 );
 
 /* ---------- Header ---------- */
@@ -53,9 +53,25 @@ export const Header = () => {
   const links = [
     { to: "/", label: lang === "fr" ? "Accueil" : "Home" },
     { to: "/formations", label: lang === "fr" ? "Nos formations" : "Courses" },
-    { to: "/#pourquoi", label: lang === "fr" ? "Pourquoi nous" : "Why us" },
-    { to: "/#faq", label: "FAQ" },
+    { to: "/#features", label: lang === "fr" ? "Pourquoi nous" : "Why us" },
+    { to: "/#about", label: lang === "fr" ? "À propos" : "About" },
   ];
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, to: string) => {
+    if (to.startsWith("/#") && isHome) {
+      e.preventDefault();
+      const targetId = to.substring(2);
+      const targetElement = document.getElementById(targetId);
+      if (targetElement) {
+        targetElement.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        router.navigate({ to: to as any });
+      }
+    } else if (to === "/" && isHome) {
+       e.preventDefault();
+       window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
   return (
     <header className="fixed w-full top-0 z-50 backdrop-blur-md bg-background/80 border-b border-border shadow-sm">
@@ -63,7 +79,7 @@ export const Header = () => {
         <Logo />
         <nav className="hidden lg:flex items-center gap-8 text-sm font-medium">
           {links.map((l) => (
-            <Link key={l.to} to={l.to} className="hover:text-[color:var(--primary)] transition-colors story-link">
+            <Link key={l.to} to={l.to} onClick={(e) => handleNavClick(e, l.to)} className="hover:text-[color:var(--primary)] transition-colors story-link">
               {l.label}
             </Link>
           ))}
@@ -104,7 +120,7 @@ export const Header = () => {
               </button>
             </div>
             {links.map((l) => (
-              <Link key={l.to} to={l.to} onClick={() => setOpen(false)}
+              <Link key={l.to} to={l.to} onClick={(e) => { setOpen(false); handleNavClick(e, l.to); }}
                     className="py-2 font-medium">{l.label}</Link>
             ))}
             <Link to="/login" onClick={() => setOpen(false)}
