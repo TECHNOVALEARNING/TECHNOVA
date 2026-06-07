@@ -9,7 +9,7 @@ import {
   Course
 } from "@/components/site/shared";
 import { supabase } from "@/lib/supabase";
-import heroImage from "@/assets/hero-bg.png";
+import heroImage from "@/assets/logo.png";
 
 export const Route = createFileRoute("/formations")({
   component: FormationsPage,
@@ -76,21 +76,26 @@ function FormationsPage() {
     <div className="min-h-screen bg-background overflow-x-hidden">
       <Header />
 
-      {/* HERO MARKETPLACE — IMAGE BANNER */}
+
+      {/* HERO MARKETPLACE — LOGO BACKGROUND */}
       <section className="relative overflow-hidden bg-white">
-        <div className="relative">
+        {/* Logo as giant background watermark */}
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+          {/* Radial glow behind logo */}
+          <div className="absolute h-[500px] w-[500px] rounded-full bg-gradient-radial from-blue-100/80 via-purple-50/40 to-transparent sm:h-[700px] sm:w-[700px]" />
           <img
             src={heroImage}
-            alt="Marketplace de formations"
-            className="h-[340px] w-full object-cover sm:h-[440px] md:h-[560px]"
+            alt=""
+            aria-hidden="true"
+            className="relative h-[280px] w-[280px] object-contain opacity-[0.12] sm:h-[400px] sm:w-[400px] md:h-[520px] md:w-[520px] select-none"
           />
-          {/* gradient overlays for legibility */}
-          <div className="absolute inset-0 bg-gradient-to-t from-white via-white/70 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/50 to-white/20" />
         </div>
+        {/* Very subtle top and bottom fades */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-white to-transparent" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-white to-transparent" />
 
-        {/* floating search & ctas */}
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 -mt-32 sm:-mt-40 md:-mt-56 z-10">
+        {/* content */}
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 sm:py-28 md:py-36 z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
