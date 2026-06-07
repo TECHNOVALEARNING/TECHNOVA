@@ -9,7 +9,7 @@ import {
   Course
 } from "@/components/site/shared";
 import { supabase } from "@/lib/supabase";
-import heroImage from "@/assets/marketplace-hero.jpg";
+import heroImage from "@/assets/hero-bg.png";
 
 export const Route = createFileRoute("/formations")({
   component: FormationsPage,
