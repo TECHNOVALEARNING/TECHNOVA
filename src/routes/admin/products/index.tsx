@@ -3,7 +3,7 @@ import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { 
   Search, Filter, MoreVertical, FileText, ChevronLeft, ChevronRight, 
   Loader2, PackageOpen, Edit2, Link as LinkIcon, Trash2, Plus,
-  Eye, Copy, Share2, Pin, Globe, Circle, AlertCircle
+  Eye, Copy, Share2, Pin, Globe, Circle, AlertCircle, GraduationCap, ShoppingBag
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { adminSupabase } from '@/lib/supabase';
@@ -232,11 +232,15 @@ function AdminProducts() {
             filteredProducts.map((product, idx) => {
               let status = 'active';
               let isPinned = false;
+              let pType = 'fichier';
               try {
                 const feats = typeof product.features === 'string' ? JSON.parse(product.features) : product.features;
                 if (feats?.status) status = feats.status;
                 if (feats?.is_pinned) isPinned = true;
+                if (feats?.type) pType = feats.type;
               } catch (e) {}
+
+              const TypeIcon = pType === 'formation' ? GraduationCap : pType === 'service' ? ShoppingBag : FileText;
 
               return (
                 <div key={product.id} className="grid grid-cols-[2.5fr_1fr_1fr_80px] items-center px-6 py-3 hover:bg-slate-50/80 transition-colors border-b border-slate-50 group">
@@ -255,9 +259,10 @@ function AdminProducts() {
                     <div className="flex items-center gap-1.5 min-w-0">
                       <h4 className="font-medium text-[14px] text-slate-900 truncate">{product.title}</h4>
                       {isPinned && <Pin className="w-3 h-3 text-blue-500 shrink-0 fill-blue-500" />}
-                      <FileText 
-                        className="w-3.5 h-3.5 text-slate-300 shrink-0 cursor-pointer hover:text-slate-600 transition-colors ml-1" 
+                      <TypeIcon 
+                        className="w-3.5 h-3.5 text-slate-400 shrink-0 cursor-pointer hover:text-slate-600 transition-colors ml-1" 
                         onClick={(e) => { e.stopPropagation(); handleCopyLink(product.id); }} 
+                        title={`Type: ${pType}`}
                       />
                     </div>
                   </div>
