@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { Search, Sparkles, Shield, Lock, BadgeCheck, Fingerprint } from "lucide-react";
+import { Search, Sparkles, Shield, Lock, BadgeCheck, Fingerprint, ChevronDown } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import {
   Header, Footer, CourseCard, SectionHead, Benefits,
