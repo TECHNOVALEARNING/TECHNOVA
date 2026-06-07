@@ -10,7 +10,7 @@ export default async function handler(req, res) {
     // 1. Verifier la signature du webhook (Fortement recommandé en production)
     // Moneroo envoie un header 'x-moneroo-signature'
     const signature = req.headers['x-moneroo-signature'];
-    const secret = process.env.MONEROO_SECRET_KEY;
+    const secret = process.env.MONEROO_WEBHOOK_SECRET; // Utilisation du Hash Secret du Webhook
     
     if (signature && secret) {
       const payload = JSON.stringify(req.body);
