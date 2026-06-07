@@ -320,13 +320,13 @@ function HomePage() {
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1.4fr", gap: 48, alignItems: "center" }} className="max-lg:!grid-cols-1">
             <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&h=600&fit=crop" alt="Team" style={{ borderRadius: 16, boxShadow: "var(--shadow-lg)", width: "100%" }} />
             <div>
-              <span className="tn-eyebrow">À propos</span>
-              <h2 className="tn-section-title" style={{ color: "var(--text)", marginBottom: 16 }}>Qui Sommes-Nous ?</h2>
-              <p style={{ fontSize: "1rem", color: "var(--text-secondary)", marginBottom: 32, lineHeight: 1.6 }}>TECHNOVA est née d'une vision simple : rendre l'éducation technologique accessible à tous en Afrique et au-delà. Nous croyons que chacun mérite d'avoir accès aux compétences du futur.</p>
+              <span className="tn-eyebrow">{lang === 'fr' ? 'À propos' : 'About'}</span>
+              <h2 className="tn-section-title" style={{ color: "var(--text)", marginBottom: 16 }}>{lang === 'fr' ? 'Qui Sommes-Nous ?' : 'About Us'}</h2>
+              <p style={{ fontSize: "1rem", color: "var(--text-secondary)", marginBottom: 32, lineHeight: 1.6 }}>{lang === 'fr' ? "TECHNOVA est née d'une vision simple : rendre l'éducation technologique accessible à tous en Afrique et au-delà. Nous croyons que chacun mérite d'avoir accès aux compétences du futur." : "TECHNOVA was born from a simple vision: to make technological education accessible to everyone in Africa and beyond. We believe everyone deserves access to the skills of the future."}</p>
               {[
-                { icon: "fas fa-bullseye", title: "Notre Vision", desc: "Devenir la plateforme de référence pour l'apprentissage tech en Afrique d'ici 2030." },
-                { icon: "fas fa-heart", title: "Nos Valeurs", desc: "Excellence, accessibilité, innovation et accompagnement personnalisé." },
-                { icon: "fas fa-award", title: "Nos Résultats", desc: "+10,000 étudiants formés, 95% de taux de satisfaction, 500+ entreprises partenaires." },
+                { icon: "fas fa-bullseye", title: lang === 'fr' ? "Notre Vision" : "Our Vision", desc: lang === 'fr' ? "Devenir la plateforme de référence pour l'apprentissage tech en Afrique d'ici 2030." : "Become the reference platform for tech learning in Africa by 2030." },
+                { icon: "fas fa-heart", title: lang === 'fr' ? "Nos Valeurs" : "Our Values", desc: lang === 'fr' ? "Excellence, accessibilité, innovation et accompagnement personnalisé." : "Excellence, accessibility, innovation, and personalized support." },
+                { icon: "fas fa-award", title: lang === 'fr' ? "Nos Résultats" : "Our Results", desc: lang === 'fr' ? "+10,000 étudiants formés, 95% de taux de satisfaction, 500+ entreprises partenaires." : "10,000+ students trained, 95% satisfaction rate, 500+ partner companies." },
               ].map((item, i) => (
                 <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 18, marginBottom: 24 }}>
                   <div className="tn-about-ico"><i className={item.icon} /></div>
@@ -345,8 +345,8 @@ function HomePage() {
       <section id="avis" style={{ position: "relative", zIndex: 1, padding: "100px 0" }}>
         <div className="mx-auto" style={{ maxWidth: 1280, padding: "0 24px" }}>
           <div style={{ textAlign: "center", marginBottom: 48 }}>
-            <span className="tn-eyebrow">Témoignages</span>
-            <h2 className="tn-section-title" style={{ color: "var(--text)" }}>Ils ont réussi avec nous</h2>
+            <span className="tn-eyebrow">{lang === 'fr' ? 'Témoignages' : 'Testimonials'}</span>
+            <h2 className="tn-section-title" style={{ color: "var(--text)" }}>{lang === 'fr' ? 'Ils ont réussi avec nous' : 'They succeeded with us'}</h2>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
             {TESTIMONIALS.map((t, i) => (
@@ -369,8 +369,8 @@ function HomePage() {
       {/* ============ PAYMENT ============ */}
       <section style={{ position: "relative", zIndex: 1, padding: "60px 0", background: "var(--section-alt)" }}>
         <div className="mx-auto" style={{ maxWidth: 1280, padding: "0 24px", textAlign: "center" }}>
-          <span className="tn-eyebrow">Moyens de paiement</span>
-          <h2 className="tn-section-title" style={{ color: "var(--text)", marginBottom: 24 }}>Payez facilement</h2>
+          <span className="tn-eyebrow">{lang === 'fr' ? 'Moyens de paiement' : 'Payment Methods'}</span>
+          <h2 className="tn-section-title" style={{ color: "var(--text)", marginBottom: 24 }}>{lang === 'fr' ? 'Payez facilement' : 'Pay easily'}</h2>
           <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 8 }}>
             <span className="pay-badge pay-mtn">MTN MoMo</span>
             <span className="pay-badge pay-moov">Moov Money</span>
@@ -385,10 +385,10 @@ function HomePage() {
       <section style={{ position: "relative", zIndex: 1, padding: "80px 0" }}>
         <div className="mx-auto" style={{ maxWidth: 1280, padding: "0 24px" }}>
           <div className="tn-cta-wrap">
-            <h2 style={{ fontSize: "clamp(1.8rem,3vw,2.5rem)", fontWeight: 800, color: "white", letterSpacing: "-0.03em", marginBottom: 16 }}>Prêt à changer de vie ?</h2>
-            <p style={{ color: "rgba(255,255,255,0.82)", fontSize: "1rem", marginBottom: 36 }}>Rejoignez la communauté TECHNOVA aujourd'hui.</p>
+            <h2 style={{ fontSize: "clamp(1.8rem,3vw,2.5rem)", fontWeight: 800, color: "white", letterSpacing: "-0.03em", marginBottom: 16 }}>{lang === 'fr' ? 'Prêt à changer de vie ?' : 'Ready to change your life?'}</h2>
+            <p style={{ color: "rgba(255,255,255,0.82)", fontSize: "1rem", marginBottom: 36 }}>{lang === 'fr' ? "Rejoignez la communauté TECHNOVA aujourd'hui." : "Join the TECHNOVA community today."}</p>
             <Link to="/formations" style={{ background: "white", color: "var(--blue)", fontWeight: 700, fontSize: "0.95rem", padding: "14px 32px", borderRadius: 50, textDecoration: "none", display: "inline-block", transition: "all 0.25s", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
-              Choisir ma formation
+              {lang === 'fr' ? 'Choisir ma formation' : 'Choose my course'}
             </Link>
           </div>
         </div>
