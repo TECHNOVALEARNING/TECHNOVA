@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   Sparkles, Rocket, Languages, CheckCheck, 
-  Bold, Italic, Underline, Strikethrough, List, ListOrdered, Link as LinkIcon, Image as ImageIcon2, Video
+  Bold, Italic, Underline, Strikethrough, List, ListOrdered, Link as LinkIcon, Image as ImageIcon2, Video, Loader2
 } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface RichTextEditorProps {
   value: string;
@@ -31,6 +32,72 @@ export function RichTextEditor({ value, onChange, label, withAI = false }: RichT
   // AI Assistant State
   const [showIADropdown, setShowIADropdown] = useState(false);
   const [showIAImproveModal, setShowIAImproveModal] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [iaKeywords, setIaKeywords] = useState('');
+  const [iaTone, setIaTone] = useState('Professionnel & Sérieux');
+
+  const generateIADescription = async () => {
+    setIsGenerating(true);
+    
+    try {
+      const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+      if (!apiKey) {
+        toast.error("La clé API Gemini n'est pas configurée ! Ajoutez VITE_GEMINI_API_KEY dans votre fichier .env");
+        setIsGenerating(false);
+        return;
+      }
+
+      const promptText = `
+Tu es un copywriter expert et vendeur d'élite.
+Génère ou améliore une description de produit hautement persuasive à partir de ce texte/contexte :
+"${value || 'Un produit numérique'}"
+
+Détails de la demande :
+- Mots-clés à inclure absolument : ${iaKeywords || 'Aucun mot-clé imposé'}
+- Tonalité : ${iaTone}
+
+Contraintes de format (Très important) :
+Renvoie UNIQUEMENT le code HTML, sans balise \`\`\`html, sans <html> ni <body>.
+Utilise exclusivement ces balises HTML pour la mise en forme :
+- <h2> pour les sous-titres
+- <h3> pour mettre en avant un bénéfice
+- <p> pour les paragraphes
+- <ul> et <li> pour les listes à puces
+- <strong> pour mettre en gras les mots importants
+Ne fais aucune introduction. Génère directement le contenu HTML final prêt à être affiché dans l'éditeur de texte.`;
+
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: promptText }] }]
+        })
+      });
+
+      if (!response.ok) {
+        let errorMsg = 'Erreur de communication avec Google AI';
+        try {
+          const errData = await response.json();
+          errorMsg = errData.error?.message || errorMsg;
+        } catch (e) {}
+        throw new Error(errorMsg);
+      }
+
+      const data = await response.json();
+      let generatedHTML = data.candidates[0].content.parts[0].text;
+      
+      generatedHTML = generatedHTML.replace(/^```html\n?/, '').replace(/\n?```$/, '').trim();
+
+      onChange(generatedHTML);
+      setShowIAImproveModal(false);
+      toast.success("Description améliorée avec succès !");
+    } catch (err: any) {
+      console.error(err);
+      toast.error("Erreur lors de la génération IA : " + err.message);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   // Sync internal editable div only when needed
   useEffect(() => {
@@ -422,11 +489,11 @@ export function RichTextEditor({ value, onChange, label, withAI = false }: RichT
               <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
                 <div>
                   <label className="block text-[13px] font-semibold text-slate-700 mb-1">Mots-clés (optionnel)</label>
-                  <input type="text" placeholder="Ex: SEO, débutants, formation complète..." className="w-full bg-white border border-[#D1D5DB] rounded-md px-3 py-2 text-[13px] outline-none focus:border-blue-500" />
+                  <input type="text" value={iaKeywords} onChange={(e) => setIaKeywords(e.target.value)} placeholder="Ex: SEO, débutants, formation complète..." className="w-full bg-white border border-[#D1D5DB] rounded-md px-3 py-2 text-[13px] outline-none focus:border-blue-500" />
                 </div>
                 <div>
                   <label className="block text-[13px] font-semibold text-slate-700 mb-1">Ton souhaité</label>
-                  <select className="w-full bg-white border border-[#D1D5DB] rounded-md px-3 py-2 text-[13px] outline-none focus:border-blue-500">
+                  <select value={iaTone} onChange={(e) => setIaTone(e.target.value)} className="w-full bg-white border border-[#D1D5DB] rounded-md px-3 py-2 text-[13px] outline-none focus:border-blue-500">
                     <option>Persuasif & Vendeur</option>
                     <option>Professionnel & Sérieux</option>
                     <option>Énergique & Enthousiaste</option>
@@ -436,8 +503,9 @@ export function RichTextEditor({ value, onChange, label, withAI = false }: RichT
             </div>
             <div className="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-end gap-3">
               <button onClick={() => setShowIAImproveModal(false)} className="px-4 py-2 text-[13px] font-semibold text-slate-600 hover:bg-slate-200 rounded-lg">Annuler</button>
-              <button className="bg-[#6B46C1] hover:bg-[#553C9A] text-white font-bold px-6 py-2 rounded-lg text-[13px] transition-colors shadow-sm flex items-center gap-2">
-                <Sparkles className="w-4 h-4" /> Générer
+              <button disabled={isGenerating} onClick={generateIADescription} className="bg-[#6B46C1] hover:bg-[#553C9A] disabled:opacity-50 text-white font-bold px-6 py-2 rounded-lg text-[13px] transition-colors shadow-sm flex items-center gap-2">
+                {isGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+                {isGenerating ? 'Génération...' : 'Générer'}
               </button>
             </div>
           </div>
