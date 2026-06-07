@@ -9,6 +9,7 @@ import {
   Course
 } from "@/components/site/shared";
 import { supabase } from "@/lib/supabase";
+import heroImage from "@/assets/marketplace-hero.jpg";
 
 export const Route = createFileRoute("/formations")({
   component: FormationsPage,
@@ -79,7 +80,7 @@ function FormationsPage() {
       <section className="relative overflow-hidden bg-white">
         <div className="relative">
           <img
-            src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2070&auto=format&fit=crop"
+            src={heroImage}
             alt="Marketplace de formations"
             className="h-[340px] w-full object-cover sm:h-[440px] md:h-[560px]"
           />
