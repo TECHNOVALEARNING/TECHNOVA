@@ -119,17 +119,24 @@ export const Header = () => {
 };
 
 /* ---------- Footer ---------- */
-export const Footer = () => (
-  <footer className="mt-24 sm:mt-32 bg-[color:var(--navy)] text-white">
-    <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8 py-12 sm:py-16 grid gap-10 sm:gap-12 sm:grid-cols-2 lg:grid-cols-4">
-      {/* Brand */}
-      <div className="sm:col-span-2">
-        <Logo className="mb-2" />
-        <p className="mt-4 text-white/70 max-w-md leading-relaxed text-sm sm:text-base">
-          TECHNOVA Learning : la plateforme africaine de formations &amp; produits numériques
-          à petit prix. Cybersécurité, IA, marketing, entrepreneuriat — apprenez ce que les
-          entreprises recherchent vraiment.
-        </p>
+export const Footer = () => {
+  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+
+  useEffect(() => {
+    const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
+    window.addEventListener("technova_lang_changed", handleLangChange);
+    return () => window.removeEventListener("technova_lang_changed", handleLangChange);
+  }, []);
+
+  return (
+    <footer className="mt-24 sm:mt-32 bg-[color:var(--navy)] text-white">
+      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8 py-12 sm:py-16 grid gap-10 sm:gap-12 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Brand */}
+        <div className="sm:col-span-2">
+          <Logo className="mb-2" />
+          <p className="mt-4 text-white/70 max-w-md leading-relaxed text-sm sm:text-base">
+            {lang === 'fr' ? 'TECHNOVA Learning : la plateforme africaine de formations & produits numériques à petit prix. Cybersécurité, IA, marketing, entrepreneuriat — apprenez ce que les entreprises recherchent vraiment.' : 'TECHNOVA Learning: the African platform for digital courses & products at low prices. Cybersecurity, AI, marketing, entrepreneurship — learn what companies are really looking for.'}
+          </p>
         <div className="mt-6 flex flex-wrap gap-3">
           <a href="#" className="h-10 w-10 rounded-full bg-card/10 hover:bg-[#1877F2] transition-colors flex items-center justify-center text-white shadow-sm hover:-translate-y-1 duration-300">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
@@ -153,7 +160,7 @@ export const Footer = () => (
 
       {/* Contact */}
       <div>
-        <h4 className="font-display font-bold text-sm uppercase tracking-widest mb-5 text-white">Nous Contacter</h4>
+        <h4 className="font-display font-bold text-sm uppercase tracking-widest mb-5 text-white">{lang === 'fr' ? 'Nous Contacter' : 'Contact Us'}</h4>
         <ul className="space-y-3 text-white/70 text-sm">
           <li className="flex gap-2.5 items-start">
             <Mail className="h-4 w-4 mt-0.5 flex-none text-[color:var(--primary)]" />
@@ -182,13 +189,13 @@ export const Footer = () => (
 
       {/* Quick Links */}
       <div>
-        <h4 className="font-display font-bold text-sm uppercase tracking-widest mb-5 text-white">Liens Rapides</h4>
+        <h4 className="font-display font-bold text-sm uppercase tracking-widest mb-5 text-white">{lang === 'fr' ? 'Liens Rapides' : 'Quick Links'}</h4>
         <ul className="space-y-2.5 text-white/70 text-sm">
           {[
-            { label: "Formations", href: "/formations" },
+            { label: lang === 'fr' ? "Formations" : "Courses", href: "/formations" },
             { label: "E-Shopping", href: "/#eshop" },
             { label: "Blog", href: "/#blog" },
-            { label: "À propos", href: "/#about" },
+            { label: lang === 'fr' ? "À propos" : "About", href: "/#about" },
             { label: "www.technovalearning.com", href: "https://technovalearning.com" },
           ].map((lnk) => (
             <li key={lnk.label} className="flex items-center gap-2">
@@ -200,10 +207,11 @@ export const Footer = () => (
       </div>
     </div>
     <div className="border-t border-white/10 py-5 px-4 text-center text-white/50 text-xs">
-      © {new Date().getFullYear()} TECHNOVA Learning — Tous droits réservés.
+      © {new Date().getFullYear()} TECHNOVA Learning — {lang === 'fr' ? 'Tous droits réservés.' : 'All rights reserved.'}
     </div>
   </footer>
-);
+  );
+};
 
 
 
