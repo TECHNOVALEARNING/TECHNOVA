@@ -258,35 +258,6 @@ function HomePage() {
         </div>
       </section>
 
-      {/* ============ APPS ============ */}
-      <section id="apps" style={{ position: "relative", zIndex: 1, padding: "100px 0", background: "rgba(0,0,0,0.018)" }}>
-        <div className="mx-auto" style={{ maxWidth: 1280, padding: "0 24px" }}>
-          <div style={{ background: "linear-gradient(135deg,rgba(0,113,227,0.12),rgba(64,156,255,0.08))", backdropFilter: "blur(24px) saturate(180%)", border: "1px solid rgba(0,113,227,0.2)", borderRadius: "var(--radius-lg)", padding: "56px 48px", overflow: "hidden", position: "relative" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "center" }} className="max-lg:!grid-cols-1">
-              <div>
-                <div style={{ width: 72, height: 72, background: "linear-gradient(135deg,#0071e3,#409cff)", borderRadius: 18, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "2rem", color: "white", marginBottom: 28, boxShadow: "0 10px 30px rgba(0,113,227,0.4)" }}>
-                  <i className="fas fa-graduation-cap" />
-                </div>
-                <span className="tn-eyebrow" style={{ color: "rgba(255,255,255,0.7)" }}>Nos Applications</span>
-                <h2 className="tn-section-title" style={{ color: "white" }}>TECHNOVA Mobile</h2>
-                <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.95rem", marginBottom: 32 }}>Accédez à tous vos cours depuis votre smartphone. Téléchargez vos leçons et apprenez hors ligne.</p>
-                <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-                  <a href="#" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 22px", borderRadius: 14, fontWeight: 600, fontSize: "0.88rem", textDecoration: "none", background: "white", color: "#1d1d1f", boxShadow: "0 4px 16px rgba(0,0,0,0.1)", transition: "all 0.25s" }}>
-                    <i className="fab fa-google-play" /> Google Play
-                  </a>
-                  <a href="#" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 22px", borderRadius: 14, fontWeight: 600, fontSize: "0.88rem", textDecoration: "none", background: "transparent", color: "white", border: "1.5px solid rgba(255,255,255,0.5)", transition: "all 0.25s" }}>
-                    <i className="fab fa-apple" /> App Store
-                  </a>
-                </div>
-              </div>
-              <div style={{ textAlign: "center" }}>
-                <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=500&h=600&fit=crop" alt="Mobile App" style={{ maxHeight: 460, borderRadius: 16, boxShadow: "0 24px 60px rgba(0,0,0,0.3)", maxWidth: "100%" }} />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* ============ BLOG ============ */}
       <section id="blog" style={{ position: "relative", zIndex: 1, padding: "100px 0" }}>
         <div className="mx-auto" style={{ maxWidth: 1280, padding: "0 24px" }}>
