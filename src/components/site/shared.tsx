@@ -222,8 +222,12 @@ export const Footer = () => {
         </ul>
       </div>
     </div>
-    <div className="border-t border-white/10 py-5 px-4 text-center text-white/50 text-xs">
-      © {new Date().getFullYear()} TECHNOVA Learning — {lang === 'fr' ? 'Tous droits réservés.' : 'All rights reserved.'}
+    <div className="border-t border-white/10 py-5 px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-white/50 text-xs">
+      <p>© {new Date().getFullYear()} TECHNOVA Learning — {lang === 'fr' ? 'Tous droits réservés.' : 'All rights reserved.'}</p>
+      <div className="flex items-center gap-4">
+        <Link to="/confidentialite" className="hover:text-white transition-colors">{lang === 'fr' ? 'Politique de confidentialité' : 'Privacy Policy'}</Link>
+        <Link to="/conditions" className="hover:text-white transition-colors">{lang === 'fr' ? "Conditions d'utilisation" : 'Terms of Service'}</Link>
+      </div>
     </div>
   </footer>
   );
