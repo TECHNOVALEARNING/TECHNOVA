@@ -88,7 +88,7 @@ function FormationsPage() {
         {/* Logo as giant background watermark */}
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
           {/* Radial glow behind logo */}
-          <div className="absolute h-[500px] w-[500px] rounded-full bg-gradient-radial from-blue-100/80 via-purple-50/40 to-transparent sm:h-[700px] sm:w-[700px]" />
+          <div className="absolute h-[500px] w-[500px] rounded-full bg-gradient-radial from-primary/10 via-primary/5 to-transparent sm:h-[700px] sm:w-[700px]" />
           <img
             src={heroImage}
             alt=""
@@ -107,7 +107,7 @@ function FormationsPage() {
             animate={{ opacity: 1, y: 0 }}
             className="mx-auto max-w-3xl text-center"
           >
-            <span className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-[color:var(--accent)]/40 bg-[color:var(--accent)]/10 px-3 py-1 text-[11px] font-semibold text-[color:var(--navy)] backdrop-blur sm:text-xs">
+            <span className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-[color:var(--accent)]/40 bg-[color:var(--accent)]/10 px-3 py-1 text-[11px] font-semibold text-foreground backdrop-blur sm:text-xs">
               <Sparkles className="h-3 w-3 text-[color:var(--accent)]" /> La référence des formations numériques
             </span>
             <h1 className="mb-4 text-3xl font-display font-extrabold leading-[1.05] tracking-tight text-[color:var(--navy)] sm:text-5xl md:text-6xl">
@@ -153,8 +153,8 @@ function FormationsPage() {
                 transition={{ delay: i * 0.05 }}
                 className="flex items-center gap-2.5 rounded-xl border border-border bg-card/60 p-3 backdrop-blur sm:gap-3 sm:p-4 shadow-sm"
               >
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[color:var(--sky-soft)] sm:h-10 sm:w-10">
-                  <b.icon className="h-4 w-4 text-[color:var(--primary)] sm:h-5 sm:w-5" />
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-muted sm:h-10 sm:w-10">
+                  <b.icon className="h-4 w-4 text-primary sm:h-5 sm:w-5" />
                 </div>
                 <div className="min-w-0">
                   <div className="truncate text-xs font-semibold text-foreground sm:text-sm">
@@ -181,7 +181,7 @@ function FormationsPage() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Rechercher une formation..."
-                className="w-full rounded-xl border border-border bg-muted py-2.5 pl-10 pr-4 text-sm text-foreground placeholder-gray-400 outline-none focus:border-[#004DB8] focus:bg-card focus:ring-2 focus:ring-[#004DB8]/10 transition"
+                className="w-full rounded-xl border border-border bg-muted py-2.5 pl-10 pr-4 text-sm text-foreground placeholder-muted-foreground outline-none focus:border-primary focus:bg-card focus:ring-2 focus:ring-primary/10 transition"
               />
             </div>
 
@@ -190,7 +190,7 @@ function FormationsPage() {
               <select
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}
-                className="appearance-none cursor-pointer rounded-xl border border-border bg-muted py-2.5 pl-4 pr-10 text-sm text-foreground/80 outline-none focus:border-[#004DB8] focus:bg-card focus:ring-2 focus:ring-[#004DB8]/10 transition w-full sm:w-48"
+                className="appearance-none cursor-pointer rounded-xl border border-border bg-muted py-2.5 pl-4 pr-10 text-sm text-foreground/80 outline-none focus:border-primary focus:bg-card focus:ring-2 focus:ring-primary/10 transition w-full sm:w-48"
               >
                 {CATEGORIES.map((cat) => (
                   <option key={cat} value={cat}>{cat}</option>
@@ -202,7 +202,7 @@ function FormationsPage() {
             {/* Sort dropdown */}
             <div className="relative">
               <select
-                className="appearance-none cursor-pointer rounded-xl border border-border bg-muted py-2.5 pl-4 pr-10 text-sm text-foreground/80 outline-none focus:border-[#004DB8] focus:bg-card focus:ring-2 focus:ring-[#004DB8]/10 transition w-full sm:w-44"
+                className="appearance-none cursor-pointer rounded-xl border border-border bg-muted py-2.5 pl-4 pr-10 text-sm text-foreground/80 outline-none focus:border-primary focus:bg-card focus:ring-2 focus:ring-primary/10 transition w-full sm:w-44"
               >
                 <option>Plus récents</option>
                 <option>Prix croissant</option>
@@ -216,7 +216,7 @@ function FormationsPage() {
       </section>
 
       {/* GRID */}
-      <section className="py-10 bg-[#F7F8FC] min-h-[60vh]">
+      <section className="py-10 bg-background min-h-[60vh]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {/* Count + label */}
           <div className="flex items-center justify-between mb-6">
@@ -227,7 +227,7 @@ function FormationsPage() {
             {filter !== "Toutes" && (
               <button
                 onClick={() => setFilter("Toutes")}
-                className="text-xs text-[#004DB8] font-semibold hover:underline"
+                className="text-xs text-primary font-semibold hover:underline"
               >
                 ✕ Effacer le filtre
               </button>
@@ -235,14 +235,14 @@ function FormationsPage() {
           </div>
 
           {filtered.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-32 text-center">
-              <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-[#EEF2FF]">
-                <Search className="h-8 w-8 text-[#004DB8]" />
+            <div className="flex flex-col items-center justify-center py-16 text-center">
+              <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-muted">
+                <Search className="h-8 w-8 text-muted-foreground" />
               </div>
               <p className="text-lg font-semibold text-foreground">Aucune formation trouvée</p>
               <p className="mt-1 text-sm text-muted-foreground">Essayez un autre mot-clé ou catégorie.</p>
               <button onClick={() => { setSearch(""); setFilter("Toutes"); }}
-                className="mt-4 rounded-lg bg-[#004DB8] px-5 py-2 text-sm font-medium text-white hover:bg-[#003c91] transition">
+                className="mt-4 rounded-lg bg-primary px-5 py-2 text-sm font-medium text-white hover:bg-primary/90 transition">
                 Voir toutes les formations
               </button>
             </div>
