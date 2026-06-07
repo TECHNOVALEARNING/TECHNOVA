@@ -79,6 +79,20 @@ function RootComponent() {
   const location = useRouter().state.location;
 
   useEffect(() => {
+    const hostname = window.location.hostname;
+    
+    // Si on est sur le sous-domaine admin mais pas sur la route /admin, on redirige
+    if (hostname.startsWith('admin.') && !location.pathname.startsWith('/admin')) {
+      window.location.replace('/admin');
+      return;
+    }
+    
+    // Si on est sur le domaine principal et qu'on essaie d'accéder à /admin, on redirige vers le sous-domaine
+    if ((hostname === 'technovalearning.com' || hostname === 'www.technovalearning.com') && location.pathname.startsWith('/admin')) {
+      window.location.replace(`https://admin.technovalearning.com${location.pathname}`);
+      return;
+    }
+
     if (!location.pathname.startsWith('/admin')) {
       trackEvent('PageView');
     }
