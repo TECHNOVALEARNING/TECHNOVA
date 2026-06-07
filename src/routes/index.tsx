@@ -1,24 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
-import { 
-  ArrowRight, BookOpen, Star, PlayCircle, Clock, Zap, Target, BarChart as BarChartIcon, 
-  Users, CheckCircle2, Award, Shield, Check, Lock, CreditCard, ChevronRight,
-  Calendar, Activity, Play, TrendingUp
-} from "lucide-react";
-import { AreaChart, Area, ResponsiveContainer, Tooltip, XAxis, YAxis, CartesianGrid } from "recharts";
-import hero from "@/assets/hero-new-white.png";
-import {
-  Header, Footer, LogoMarquee, WhyChoose, FaqSection,
-  PaymentSecurity, Reviews, Benefits, CourseCard, SectionHead,
-} from "@/components/site/shared";
-import { getPawapayLogos } from "@/lib/pawapay.functions";
+import { ArrowRight, Check } from "lucide-react";
+import { Header, Footer, CourseCard, Course } from "@/components/site/shared";
+import { supabase } from "@/lib/supabase";
+import logoImg from "@/assets/logo.png";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/")(({
   component: HomePage,
   head: () => ({
     meta: [
-      { title: "TECHNOVA Learning — Formations digitales à petit prix" },
+      { title: "TECHNOVA — Formations Professionnelles" },
       { name: "description", content: "Cybersécurité, IA, marketing, entrepreneuriat. Formations & ebooks pratiques, payez en Mobile Money. 2000+ apprenants nous font confiance." },
       { property: "og:title", content: "TECHNOVA Learning — Apprenez la tech à petit prix" },
       { property: "og:description", content: "Formations 100% pratiques, paiement Mobile Money, support 7j/7." },
@@ -27,289 +19,384 @@ export const Route = createFileRoute("/")({
     ],
     links: [{ rel: "canonical", href: "/" }],
   }),
-});
+}) as any);
 
-/* Evolution data – digital usage in Africa */
-const DIGITAL_DATA = [
-  { year: "2018", digital: 22, infopreneur: 8, entrepreneur: 14 },
-  { year: "2019", digital: 31, infopreneur: 13, entrepreneur: 19 },
-  { year: "2020", digital: 48, infopreneur: 22, entrepreneur: 27 },
-  { year: "2021", digital: 60, infopreneur: 34, entrepreneur: 39 },
-  { year: "2022", digital: 72, infopreneur: 49, entrepreneur: 52 },
-  { year: "2023", digital: 84, infopreneur: 67, entrepreneur: 64 },
-  { year: "2024", digital: 92, infopreneur: 81, entrepreneur: 75 },
-  { year: "2025", digital: 98, infopreneur: 94, entrepreneur: 88 },
+const PARTNERS = [
+  { icon: "fab fa-google", name: "Google" },
+  { icon: "fab fa-microsoft", name: "Microsoft" },
+  { icon: "fab fa-aws", name: "Amazon AWS" },
+  { icon: "fab fa-python", name: "Python" },
+  { icon: "fab fa-meta", name: "Meta" },
+  { icon: "fab fa-apple", name: "Apple" },
+  { icon: "fab fa-salesforce", name: "Salesforce" },
+  { icon: "fab fa-github", name: "GitHub" },
+  { icon: "fab fa-docker", name: "Docker" },
+  { icon: "fab fa-linux", name: "Linux Foundation" },
+  { icon: "fab fa-react", name: "React" },
+  { icon: "fab fa-node-js", name: "Node.js" },
 ];
 
-const CustomTooltip = ({ active, payload, label }: any) => {
-  if (active && payload && payload.length) {
-    return (
-      <div className="bg-white border border-slate-100 p-4 rounded-xl shadow-lg min-w-[150px]">
-        <p className="font-display font-bold text-slate-800 mb-3 pb-2 border-b border-slate-100">
-          {label}
-        </p>
-        <div className="space-y-3">
-          {payload.map((entry: any, index: number) => {
-            const color = entry.dataKey === 'digital' ? '#3b82f6' : entry.dataKey === 'infopreneur' ? '#f59e0b' : '#10b981';
-            const name = entry.dataKey === 'digital' ? 'digital' : entry.dataKey === 'infopreneur' ? 'infopreneur' : 'entrepreneur';
-            return (
-              <div key={index} className="flex items-center justify-between gap-6">
-                <span className="text-sm font-medium" style={{ color }}>{name} :</span>
-                <span className="font-bold text-sm" style={{ color }}>{entry.value}</span>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    );
-  }
-  return null;
-};
+const TESTIMONIALS = [
+  { stars: 5, text: "\"La formation Cybersécurité m'a permis de décrocher un poste de consultant. Le paiement par Mobile Money est très pratique.\"", name: "Koffi Jean-Marc", loc: "Abidjan, Côte d'Ivoire", img: "https://i.pinimg.com/1200x/a2/09/d6/a209d6e66859493e14c59bc92e5b2e02.jpg" },
+  { stars: 5, text: "\"J'adore le pack Design Graphique. Les vidéos sont claires et le certificat Technova a boosté mon profil LinkedIn.\"", name: "Aminata Diallo", loc: "Cotonou, Bénin", img: "https://i.pinimg.com/736x/7d/e4/c4/7de4c4c91b6a68c6f4f59065e3efc700.jpg" },
+  { stars: 5, text: "\"Le cours sur l'IA Premium est une mine d'or. Je recommande vivement Technova pour la qualité du contenu.\"", name: "Patrick Nguema", loc: "Libreville, Gabon", img: "https://i.pinimg.com/1200x/1f/c9/6e/1fc96e1619b913eade6eb6533f72cf83.jpg" },
+  { stars: 5, text: "\"En 3 semaines j'ai appris Excel de A à Z grâce à Technova. Mon employeur a immédiatement remarqué la différence.\"", name: "Fatou Coulibaly", loc: "Bamako, Mali", img: "https://randomuser.me/api/portraits/women/68.jpg" },
+  { stars: 5, text: "\"Le pack 200 formations est incroyable rapport qualité-prix. J'ai lancé mon agence digitale 2 mois après ma formation.\"", name: "Moussa Traoré", loc: "Ouagadougou, Burkina Faso", img: "https://randomuser.me/api/portraits/men/41.jpg" },
+  { stars: 5, text: "\"Formation Data Science très complète. Le support WhatsApp répond en moins de 2h. Vraiment professionnel.\"", name: "Adaeze Okonkwo", loc: "Lagos, Nigeria", img: "https://randomuser.me/api/portraits/women/29.jpg" },
+];
 
 function HomePage() {
-  const { data: pay } = useQuery({
-    queryKey: ["pawapay-logos-v11"],
-    queryFn: () => getPawapayLogos(),
-    staleTime: 60 * 60 * 1000,
+  const { data: dbProducts = [] } = useQuery({
+    queryKey: ["public_products_home"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(8);
+      if (error) throw error;
+      const active = (data || []).filter((p: any) => {
+        try { const f = typeof p.features === "string" ? JSON.parse(p.features) : (p.features || {}); return f.status !== "draft"; } catch { return true; }
+      });
+      return active.map((p: any) => ({
+        slug: p.id, title: p.title,
+        cover: p.image_url || "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=800",
+        category: p.category, level: "Tous niveaux",
+        price: `${p.price} FCFA`,
+        oldPrice: p.crossed_price ? `${p.crossed_price} FCFA` : undefined,
+        duration: "Accès à vie",
+      })) as Course[];
+    },
   });
+
   return (
-    <div className="min-h-screen bg-background overflow-x-hidden">
+    <div className="min-h-screen overflow-x-hidden" style={{ background: "var(--bg, #f2f2f7)", color: "var(--text, #1d1d1f)", fontFamily: "'Manrope', -apple-system, sans-serif" }}>
+      {/* Font import via style tag */}
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Manrope:wght@300;400;500;600&display=swap');
+        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+        :root {
+          --blue: #0071e3; --blue-light: #409cff; --blue-soft: rgba(0,113,227,0.08);
+          --accent: #f5a623; --bg: #f2f2f7; --surface: rgba(255,255,255,0.75);
+          --surface-strong: rgba(255,255,255,0.92); --card: rgba(255,255,255,0.68);
+          --card-border: rgba(255,255,255,0.55); --text: #1d1d1f; --text-secondary: #6e6e73;
+          --divider: rgba(0,0,0,0.08); --glass-blur: blur(24px) saturate(180%);
+          --shadow-sm: 0 2px 16px rgba(0,0,0,0.06); --shadow-md: 0 8px 40px rgba(0,0,0,0.09);
+          --shadow-lg: 0 20px 60px rgba(0,0,0,0.12); --radius: 20px; --radius-sm: 12px; --radius-lg: 28px;
+        }
+        .tn-card { background: var(--card); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border: 1px solid var(--card-border); }
+        .tn-hero-title { font-family:'Outfit',sans-serif; font-size:clamp(2.6rem,5vw,4.2rem); font-weight:800; line-height:1.08; letter-spacing:-0.04em; }
+        .tn-hero-span { background:linear-gradient(135deg,var(--blue),var(--blue-light)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+        .tn-section-title { font-family:'Outfit',sans-serif; font-size:clamp(1.8rem,3vw,2.8rem); font-weight:800; letter-spacing:-0.03em; line-height:1.1; }
+        .tn-eyebrow { font-size:0.72rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--blue); display:block; margin-bottom:12px; }
+        .tn-btn-primary { display:inline-flex; align-items:center; gap:10px; background:var(--blue); color:white; font-family:'Outfit',sans-serif; font-weight:600; font-size:0.95rem; padding:14px 28px; border-radius:50px; text-decoration:none; transition:all 0.3s ease; box-shadow:0 8px 24px rgba(0,113,227,0.35); }
+        .tn-btn-primary:hover { background:#0077ed; color:white; transform:translateY(-2px); box-shadow:0 12px 32px rgba(0,113,227,0.45); }
+        .tn-feature-card { background:var(--card); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur); border:1px solid var(--card-border); border-radius:var(--radius); padding:36px 32px; transition:all 0.3s ease; box-shadow:var(--shadow-sm); }
+        .tn-feature-card:hover { transform:translateY(-6px); box-shadow:var(--shadow-md); border-color:rgba(0,113,227,0.2); }
+        .tn-feature-icon { width:52px; height:52px; background:var(--blue-soft); border:1px solid rgba(0,113,227,0.15); border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:1.3rem; color:var(--blue); margin-bottom:24px; }
+        .partners-track { display:flex; gap:48px; align-items:center; animation:scrollPartners 30s linear infinite; width:max-content; }
+        .partners-track:hover { animation-play-state:paused; }
+        @keyframes scrollPartners { from { transform:translateX(0); } to { transform:translateX(-50%); } }
+        .partner-item { display:flex; align-items:center; gap:10px; opacity:0.38; transition:opacity 0.3s; white-space:nowrap; cursor:default; }
+        .partner-item:hover { opacity:0.8; }
+        .tn-testi-card { background:var(--card); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur); border:1px solid var(--card-border); border-radius:var(--radius); padding:32px 28px; height:100%; box-shadow:var(--shadow-sm); transition:all 0.3s; }
+        .tn-testi-card:hover { transform:translateY(-5px); box-shadow:var(--shadow-md); }
+        .tn-cta-wrap { background:linear-gradient(135deg,#0071e3,#409cff); border-radius:var(--radius-lg); padding:72px 48px; text-align:center; position:relative; overflow:hidden; }
+        .tn-blog-card { background:var(--card); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur); border:1px solid var(--card-border); border-radius:var(--radius); overflow:hidden; height:100%; transition:all 0.3s; box-shadow:var(--shadow-sm); }
+        .tn-blog-card:hover { transform:translateY(-6px); box-shadow:var(--shadow-md); }
+        .tn-about-ico { width:46px; height:46px; min-width:46px; background:var(--blue); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; color:white; }
+        @keyframes orbFloat { 0%,100% { transform:translateY(0) scale(1); } 33% { transform:translateY(-30px) scale(1.04); } 66% { transform:translateY(20px) scale(0.97); } }
+        .bg-orb { position:fixed; border-radius:50%; filter:blur(120px); pointer-events:none; z-index:0; opacity:0.35; transition:opacity 0.5s; animation:orbFloat 12s ease-in-out infinite; }
+        .orb-1 { width:600px; height:600px; background:radial-gradient(circle,#0071e3,transparent); top:-200px; left:-200px; }
+        .orb-2 { width:500px; height:500px; background:radial-gradient(circle,#409cff,transparent); bottom:20%; right:-150px; animation-delay:-4s; }
+        .orb-3 { width:400px; height:400px; background:radial-gradient(circle,#f5a623,transparent); top:50%; left:40%; animation-delay:-8s; }
+        @keyframes heroImageFloat { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-12px); } }
+        @keyframes heroCardFloat { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-8px); } }
+        .pay-badge { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:8px; font-weight:800; font-size:0.82rem; margin:4px; }
+        .pay-mtn { background:#ffcc00; color:#000; }
+        .pay-moov { background:#0066cc; color:#fff; }
+        .pay-orange { background:#FF6B00; color:white; }
+        .pay-wave { background:#1A73E8; color:white; }
+        .pay-visa { background:white; border:1px solid rgba(0,0,0,0.12); color:#1a1f71; font-style:italic; }
+      `}</style>
+
+      {/* BG Orbs */}
+      <div className="bg-orb orb-1" />
+      <div className="bg-orb orb-2" />
+      <div className="bg-orb orb-3" />
+
       <Header />
 
-      {/* ============== HERO ============== */}
-      <section className="relative bg-hero overflow-hidden">
-        {/* decorative blobs */}
-        <div className="absolute top-10 left-10 w-72 h-72 bg-[color:var(--primary)]/10 animate-blob" />
-        <div className="absolute bottom-0 right-20 w-96 h-96 bg-[color:var(--accent)]/10 animate-blob" style={{ animationDelay: "3s" }} />
-        <div className="absolute inset-0 grid-bg opacity-50" />
-
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-12 pb-24 lg:pt-20 lg:pb-32 grid lg:grid-cols-2 gap-10 items-center">
-          {/* left */}
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white shadow-soft text-[color:var(--primary)] text-xs font-mono-display uppercase tracking-wider">
-              <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--accent)] animate-pulse" /> L'excellence digitale pour tous
-            </div>
-            <h1 className="mt-5 text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-display font-bold leading-[1.05]">
-              <span className="bg-gradient-to-r from-[color:var(--primary)] to-blue-400 bg-clip-text text-transparent italic font-black pr-2 tracking-tight drop-shadow-sm">Apprenez sur la tech</span><br />
-              sans aucune limite
-            </h1>
-            <p className="mt-5 text-base sm:text-lg text-muted-foreground max-w-lg leading-relaxed">
-              Des formations et produits numériques de haute qualité pour propulser votre carrière, où que vous soyez. Cybersécurité, IA, marketing, entrepreneuriat — accessibles à tous et à petit prix.
-            </p>
-            <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm">
-              {["Certificat inclus", "Compétences pro", "Accès à vie"].map((f) => (
-                <li key={f} className="flex items-center gap-2">
-                  <span className="h-5 w-5 rounded-full bg-[color:var(--primary)]/10 grid place-items-center">
-                    <Check className="h-3 w-3 text-[color:var(--primary)]" />
-                  </span>
-                  <span className="font-medium">{f}</span>
-                </li>
-              ))}
-            </ul>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link to="/formations"
-                className="inline-flex items-center gap-2 h-12 px-6 rounded-full bg-primary-gradient text-white text-sm font-semibold shadow-glow hover:scale-[1.03] transition-transform">
-                Commencer maintenant <ArrowRight className="h-4 w-4" />
-              </Link>
-              <a href="#evolution"
-                className="inline-flex items-center gap-2 h-12 px-6 rounded-full bg-[color:var(--navy)] text-white text-sm font-semibold hover:bg-[color:var(--navy)]/90 transition">
-                <Play className="h-4 w-4" /> Pourquoi maintenant
-              </a>
-            </div>
-          </motion.div>
-
-          {/* right — hero illustration */}
-          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative w-full max-w-[320px] sm:max-w-[420px] lg:max-w-[500px] mx-auto mt-8 lg:mt-0">
-            {/* big blue circle behind */}
-            <div className="absolute -inset-6 sm:-inset-10 rounded-full border-[2px] sm:border-[3px] border-[color:var(--primary)]/30 border-dashed animate-spin-slow" style={{ animationDuration: '40s' }} />
-            <div className="absolute inset-0 rounded-[2.5rem] bg-[color:var(--primary)]/10 rotate-3 transform-gpu" />
-            
-            <div className="relative aspect-[3/4] sm:aspect-[4/5] rounded-[2rem] overflow-hidden shadow-2xl border-[4px] sm:border-[6px] border-[color:var(--primary)] z-10 bg-white">
-              <img src={hero} alt="Étudiant TECHNOVA" 
-                   className="absolute inset-0 h-full w-full object-cover object-top hover:scale-105 transition-transform duration-700" />
-            </div>
-
-            {/* floating stat card – top */}
-            <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.6 }}
-              className="absolute top-4 sm:top-10 -left-4 sm:-left-8 bg-white/95 backdrop-blur rounded-2xl shadow-xl px-3 py-2 sm:px-5 sm:py-4 flex items-center gap-3 sm:gap-4 z-30">
-              <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl bg-[color:var(--primary)] grid place-items-center text-white">
-                <Users className="h-4 w-4 sm:h-5 sm:w-5" />
-              </div>
-              <div>
-                <div className="font-display font-bold text-base sm:text-lg leading-none">2 000+</div>
-                <div className="text-[10px] sm:text-xs text-muted-foreground">Apprenants actifs</div>
-              </div>
-            </motion.div>
-            {/* floating stat card – bottom */}
-            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.8 }}
-              className="absolute bottom-6 sm:bottom-12 -right-4 sm:-right-8 bg-white/95 backdrop-blur rounded-2xl shadow-xl px-3 py-2 sm:px-5 sm:py-4 flex items-center gap-3 sm:gap-4 z-30" style={{ animationDelay: "2s" }}>
-              <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl bg-[color:var(--accent)] grid place-items-center text-[color:var(--navy)]">
-                <BookOpen className="h-4 w-4 sm:h-5 sm:w-5" />
-              </div>
-              <div>
-                <div className="font-display font-bold text-base sm:text-lg leading-none">50+</div>
-                <div className="text-[10px] sm:text-xs text-muted-foreground">Produits numériques</div>
-
-              </div>
-            </motion.div>
-          </motion.div>
+      {/* ============ HERO ============ */}
+      <section id="home" style={{ position: "relative", zIndex: 1, padding: "140px 0 100px", overflow: "hidden" }}>
+        {/* Shapes */}
+        <div style={{ position: "absolute", inset: 0, pointerEvents: "none", overflow: "hidden" }}>
+          {[
+            { cls: "500px", bg: "var(--blue)", top: "-100px", right: "0" },
+            { cls: "300px", bg: "var(--accent)", bottom: "0", left: "10%" },
+          ].map((s, i) => (
+            <div key={i} style={{ position: "absolute", width: s.cls, height: s.cls, background: s.bg, borderRadius: "50%", opacity: 0.06, animation: "heroImageFloat 8s ease-in-out infinite", ...(s.top ? { top: s.top } : { bottom: s.bottom }), ...(s.right ? { right: s.right } : { left: s.left }) }} />
+          ))}
         </div>
 
-        {/* stat bar — marquee on mobile, grid on desktop */}
-        <div className="relative mx-auto max-w-7xl sm:px-6 lg:px-8 pb-10">
-          {/* Mobile : marquee */}
-          <div className="sm:hidden relative overflow-hidden bg-white rounded-none shadow-soft py-4">
-            <div className="flex gap-6 animate-marquee w-max items-center">
-              {[
-                { icon: BookOpen, l: "50+ Formations" },
-                { icon: Users, l: "Support 7j/7" },
-                { icon: Award, l: "Certificat reconnu" },
-                { icon: Zap, l: "Accès instantané" },
-                { icon: BookOpen, l: "50+ Formations" },
-                { icon: Users, l: "Support 7j/7" },
-                { icon: Award, l: "Certificat reconnu" },
-                { icon: Zap, l: "Accès instantané" },
-              ].map((s, i) => (
-                <div key={i} className="flex items-center gap-2.5 px-3 shrink-0">
-                  <div className="h-9 w-9 rounded-full bg-[color:var(--primary)]/10 grid place-items-center">
-                    <s.icon className="h-4 w-4 text-[color:var(--primary)]" />
-                  </div>
-                  <span className="text-sm font-semibold whitespace-nowrap">{s.l}</span>
-                </div>
-              ))}
-            </div>
-            <div className="pointer-events-none absolute inset-y-0 left-0 w-10 bg-gradient-to-r from-white to-transparent" />
-            <div className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-white to-transparent" />
-          </div>
-          {/* Desktop : grid */}
-          <div className="hidden sm:grid grid-cols-4 gap-6 bg-white rounded-3xl shadow-soft p-6 mx-4 sm:mx-0">
-            {[
-              { icon: BookOpen, l: "50+ Formations" },
-              { icon: Users, l: "Support 7j/7" },
-              { icon: Award, l: "Certificat reconnu" },
-              { icon: Zap, l: "Accès instantané" },
-            ].map((s) => (
-              <div key={s.l} className="flex items-center gap-3 px-2">
-                <div className="h-10 w-10 rounded-full bg-[color:var(--primary)]/10 grid place-items-center">
-                  <s.icon className="h-5 w-5 text-[color:var(--primary)]" />
-                </div>
-                <span className="text-sm font-semibold">{s.l}</span>
+        <div className="container mx-auto" style={{ maxWidth: 1280, padding: "0 24px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "48px", alignItems: "center" }} className="max-lg:!grid-cols-1">
+            {/* Left */}
+            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
+              <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: "0.78rem", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--blue)", background: "var(--blue-soft)", border: "1px solid rgba(0,113,227,0.15)", padding: "6px 14px", borderRadius: 20, marginBottom: 28 }}>
+                <i className="fas fa-rocket" /> <span>Plateforme #1 en Afrique</span>
               </div>
+              <h1 className="tn-hero-title" style={{ marginBottom: 24, color: "var(--text)" }}>
+                Maîtrisez la Tech de <span className="tn-hero-span">Demain</span>.
+              </h1>
+              <p style={{ fontSize: "1.05rem", color: "var(--text-secondary)", lineHeight: 1.7, maxWidth: 520, marginBottom: 40 }}>
+                TECHNOVA Courses est la plateforme ultime pour apprendre le développement, la data science et le design. Formez-vous aux compétences recherchées par les recruteurs.
+              </p>
+              <div style={{ display: "flex", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 36 }}>
+                <Link to="/formations" className="tn-btn-primary">
+                  Explorer les cours <i className="fas fa-arrow-right" />
+                </Link>
+                <Link to="/formations" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 28px", borderRadius: 50, border: "1.5px solid var(--blue)", color: "var(--blue)", fontWeight: 600, fontSize: "0.88rem", textDecoration: "none", transition: "all 0.25s" }}>
+                  Voir les formations
+                </Link>
+              </div>
+              {/* Social proof */}
+              <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                <div style={{ display: "flex" }}>
+                  {["https://randomuser.me/api/portraits/men/32.jpg", "https://randomuser.me/api/portraits/women/44.jpg", "https://randomuser.me/api/portraits/men/85.jpg"].map((src, i) => (
+                    <img key={i} src={src} alt="" style={{ width: 36, height: 36, borderRadius: "50%", border: "2px solid var(--bg)", objectFit: "cover", marginLeft: i === 0 ? 0 : -10 }} />
+                  ))}
+                </div>
+                <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", margin: 0 }}>
+                  <strong style={{ color: "var(--text)" }}>+10k</strong> étudiants nous font confiance
+                </p>
+              </div>
+            </motion.div>
+
+            {/* Right */}
+            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 0.2 }} style={{ position: "relative" }}>
+              <img
+                src="https://images.unsplash.com/photo-1531482615713-2afd69097998?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                alt="Students learning"
+                style={{ width: "100%", borderRadius: "var(--radius-lg)", boxShadow: "var(--shadow-lg)", animation: "heroImageFloat 6s ease-in-out infinite" }}
+              />
+              {/* Stat card */}
+              <div style={{ position: "absolute", bottom: 28, left: -24, background: "rgba(255,255,255,0.92)", backdropFilter: "blur(24px) saturate(180%)", border: "1px solid rgba(255,255,255,0.55)", borderRadius: "var(--radius)", padding: "16px 22px", boxShadow: "var(--shadow-md)", minWidth: 180, animation: "heroCardFloat 7s ease-in-out infinite", animationDelay: "-2s" }}>
+                <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: "1.6rem", fontWeight: 800, color: "var(--blue)", letterSpacing: "-0.03em" }}>95%</div>
+                <div style={{ fontSize: "0.78rem", color: "var(--text-secondary)", marginTop: 2 }}>Taux de satisfaction</div>
+              </div>
+              {/* Badge */}
+              <div style={{ position: "absolute", top: 24, right: -16, background: "linear-gradient(135deg,#0071e3,#409cff)", borderRadius: "var(--radius)", padding: "14px 18px", textAlign: "center", color: "white", boxShadow: "var(--shadow-md)", minWidth: 110, animation: "heroCardFloat 9s ease-in-out infinite", animationDelay: "-4s" }}>
+                <div style={{ fontSize: "1.4rem", fontWeight: 800, fontFamily: "'Outfit',sans-serif" }}>500+</div>
+                <div style={{ fontSize: "0.7rem", opacity: 0.85 }}>Entreprises</div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* ============ PARTNERS MARQUEE ============ */}
+      <div style={{ position: "relative", zIndex: 1, background: "rgba(255,255,255,0.75)", backdropFilter: "blur(24px) saturate(180%)", borderTop: "1px solid var(--divider)", borderBottom: "1px solid var(--divider)", padding: "28px 0", overflow: "hidden" }}>
+        <p style={{ textAlign: "center", fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--text-secondary)", marginBottom: 16 }}>NOS PARTENAIRES TECHNOLOGIQUES</p>
+        <div className="partners-track">
+          {[...PARTNERS, ...PARTNERS].map((p, i) => (
+            <div key={i} className="partner-item">
+              <i className={p.icon} style={{ fontSize: "1.5rem", color: "var(--text)" }} />
+              <span style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--text)", fontFamily: "'Outfit',sans-serif" }}>{p.name}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ============ FEATURES ============ */}
+      <section id="features" style={{ position: "relative", zIndex: 1, padding: "100px 0" }}>
+        <div className="mx-auto" style={{ maxWidth: 1280, padding: "0 24px" }}>
+          <div style={{ marginBottom: 48 }}>
+            <span className="tn-eyebrow">Pourquoi TECHNOVA</span>
+            <h2 className="tn-section-title" style={{ color: "var(--text)" }}>Pourquoi choisir TECHNOVA ?</h2>
+            <p style={{ fontSize: "1rem", color: "var(--text-secondary)", maxWidth: 480, lineHeight: 1.6 }}>Une pédagogie adaptée au marché de l'emploi local et international.</p>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 24 }}>
+            {[
+              { icon: "fas fa-laptop-code", title: "100% Pratique", desc: "Des projets concrets pour construire votre portfolio professionnel dès la première semaine." },
+              { icon: "fas fa-headset", title: "Support Dédié", desc: "Un accompagnement personnalisé via WhatsApp pour répondre à toutes vos questions." },
+              { icon: "fas fa-mobile-alt", title: "Paiement Local", desc: "Payez facilement via MTN MoMo, Moov Money, Orange Money, Wave ou Carte Visa." },
+            ].map((f, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="tn-feature-card">
+                <div className="tn-feature-icon"><i className={f.icon} /></div>
+                <h4 style={{ fontSize: "1.05rem", fontWeight: 700, marginBottom: 10, color: "var(--text)" }}>{f.title}</h4>
+                <p style={{ fontSize: "0.88rem", color: "var(--text-secondary)", lineHeight: 1.65, margin: 0 }}>{f.desc}</p>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
+      {/* ============ COURSES ============ */}
+      <section id="courses" style={{ position: "relative", zIndex: 1, padding: "100px 0", background: "rgba(0,0,0,0.018)" }}>
+        <div className="mx-auto" style={{ maxWidth: 1280, padding: "0 24px" }}>
+          <div style={{ marginBottom: 48 }}>
+            <span className="tn-eyebrow">Formations</span>
+            <h2 className="tn-section-title" style={{ color: "var(--text)" }}>Nos Formations Phares</h2>
+            <p style={{ fontSize: "1rem", color: "var(--text-secondary)", maxWidth: 480, lineHeight: 1.6 }}>Investissez dans votre avenir à petit prix.</p>
+          </div>
+          {dbProducts.length > 0 ? (
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 20 }}>
+              {dbProducts.map((c, i) => <CourseCard key={c.slug} c={c} i={i} />)}
+            </div>
+          ) : (
+            <div style={{ textAlign: "center", padding: "48px 0", color: "var(--text-secondary)" }}>
+              <i className="fas fa-graduation-cap" style={{ fontSize: "3rem", marginBottom: 16, display: "block", color: "var(--blue)" }} />
+              <p>Les formations sont en cours de chargement...</p>
+            </div>
+          )}
+          <div style={{ textAlign: "center", marginTop: 40 }}>
+            <Link to="/formations" className="tn-btn-primary">
+              Voir toutes les formations <i className="fas fa-arrow-right" />
+            </Link>
+          </div>
+        </div>
+      </section>
 
-      <LogoMarquee />
-
-      {/* ============== EVOLUTION GRAPH ============== */}
-      <section id="evolution" className="py-24 bg-white">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionHead kicker="Pourquoi maintenant"
-            title={<>Le digital, l'infopreneuriat & l'entreprenariat <span className="text-gradient">explosent</span></>}
-            sub="Ne soyez pas spectateur. L'adoption des compétences numériques en Afrique a triplé en 5 ans. Ceux qui apprennent aujourd'hui gagnent demain." />
-
-          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            className="rounded-3xl bg-[#f0f7ff] border border-blue-100 p-6 sm:p-10 shadow-sm relative group">
-            
-            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-6 mb-10">
+      {/* ============ APPS ============ */}
+      <section id="apps" style={{ position: "relative", zIndex: 1, padding: "100px 0", background: "rgba(0,0,0,0.018)" }}>
+        <div className="mx-auto" style={{ maxWidth: 1280, padding: "0 24px" }}>
+          <div style={{ background: "linear-gradient(135deg,rgba(0,113,227,0.12),rgba(64,156,255,0.08))", backdropFilter: "blur(24px) saturate(180%)", border: "1px solid rgba(0,113,227,0.2)", borderRadius: "var(--radius-lg)", padding: "56px 48px", overflow: "hidden", position: "relative" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "center" }} className="max-lg:!grid-cols-1">
               <div>
-                <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Adoption (%)</p>
-                <h3 className="font-display font-semibold text-xl sm:text-3xl text-slate-900 tracking-tight">
-                  Évolution 2018 &rarr; 2025
-                </h3>
+                <div style={{ width: 72, height: 72, background: "linear-gradient(135deg,#0071e3,#409cff)", borderRadius: 18, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "2rem", color: "white", marginBottom: 28, boxShadow: "0 10px 30px rgba(0,113,227,0.4)" }}>
+                  <i className="fas fa-graduation-cap" />
+                </div>
+                <span className="tn-eyebrow" style={{ color: "rgba(255,255,255,0.7)" }}>Nos Applications</span>
+                <h2 className="tn-section-title" style={{ color: "white" }}>TECHNOVA Mobile</h2>
+                <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.95rem", marginBottom: 32 }}>Accédez à tous vos cours depuis votre smartphone. Téléchargez vos leçons et apprenez hors ligne.</p>
+                <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+                  <a href="#" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 22px", borderRadius: 14, fontWeight: 600, fontSize: "0.88rem", textDecoration: "none", background: "white", color: "#1d1d1f", boxShadow: "0 4px 16px rgba(0,0,0,0.1)", transition: "all 0.25s" }}>
+                    <i className="fab fa-google-play" /> Google Play
+                  </a>
+                  <a href="#" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 22px", borderRadius: 14, fontWeight: 600, fontSize: "0.88rem", textDecoration: "none", background: "transparent", color: "white", border: "1.5px solid rgba(255,255,255,0.5)", transition: "all 0.25s" }}>
+                    <i className="fab fa-apple" /> App Store
+                  </a>
+                </div>
               </div>
-              <div className="flex flex-wrap gap-5 text-sm font-semibold">
-                <span className="flex items-center gap-2 text-slate-700"><span className="h-3 w-3 rounded-full bg-[#3b82f6]" />Digital</span>
-                <span className="flex items-center gap-2 text-slate-700"><span className="h-3 w-3 rounded-full bg-[#f59e0b]" />Infopreneuriat</span>
-                <span className="flex items-center gap-2 text-slate-700"><span className="h-3 w-3 rounded-full bg-[#10b981]" />Entreprenariat</span>
+              <div style={{ textAlign: "center" }}>
+                <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=500&h=600&fit=crop" alt="Mobile App" style={{ maxHeight: 460, borderRadius: 16, boxShadow: "0 24px 60px rgba(0,0,0,0.3)", maxWidth: "100%" }} />
               </div>
             </div>
-            
-            <div className="h-[300px] sm:h-[400px] w-full mt-2">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={DIGITAL_DATA} margin={{ left: -20, right: 10, top: 10, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="gBlue" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.0} />
-                    </linearGradient>
-                    <linearGradient id="gAmber" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="#f59e0b" stopOpacity={0.0} />
-                    </linearGradient>
-                    <linearGradient id="gGreen" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="#10b981" stopOpacity={0.0} />
-                    </linearGradient>
-                  </defs>
-                  
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.05)" horizontal={true} vertical={false} />
-                  
-                  <XAxis dataKey="year" stroke="#94a3b8" fontSize={12} fontFamily="Inter, sans-serif" tickLine={false} axisLine={false} dy={15} />
-                  <YAxis stroke="#94a3b8" fontSize={12} fontFamily="Inter, sans-serif" tickLine={false} axisLine={false} dx={-10} />
-                  
-                  <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'rgba(0,0,0,0.1)', strokeWidth: 1 }} />
-                  
-                  <Area type="monotone" dataKey="digital" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#gBlue)" />
-                  <Area type="monotone" dataKey="infopreneur" stroke="#f59e0b" strokeWidth={3} fillOpacity={1} fill="url(#gAmber)" />
-                  <Area type="monotone" dataKey="entrepreneur" stroke="#10b981" strokeWidth={3} fillOpacity={1} fill="url(#gGreen)" />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
+          </div>
+        </div>
+      </section>
 
-            {/* Statistics Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-10">
+      {/* ============ BLOG ============ */}
+      <section id="blog" style={{ position: "relative", zIndex: 1, padding: "100px 0" }}>
+        <div className="mx-auto" style={{ maxWidth: 1280, padding: "0 24px" }}>
+          <div style={{ marginBottom: 48 }}>
+            <span className="tn-eyebrow">Blog & Actualités</span>
+            <h2 className="tn-section-title" style={{ color: "var(--text)" }}>Informez-vous</h2>
+            <p style={{ fontSize: "1rem", color: "var(--text-secondary)", maxWidth: 480 }}>Actualités et conseils tech</p>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 24 }}>
+            {[
+              { img: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=600&h=350&fit=crop", date: "15 Jan 2026", title: "L'IA générative en 2026", desc: "Découvrez les dernières avancées en intelligence artificielle et leur impact sur le marché du travail." },
+              { img: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=350&fit=crop", date: "12 Jan 2026", title: "Cybersécurité : Les tendances", desc: "Protégez vos données avec les meilleures pratiques de sécurité en 2026." },
+              { img: "https://images.unsplash.com/photo-1551434678-e076c223a692?w=600&h=350&fit=crop", date: "08 Jan 2026", title: "Devenir développeur Full Stack", desc: "Le guide complet pour maîtriser le développement web moderne." },
+            ].map((b, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="tn-blog-card">
+                <div style={{ height: 200, overflow: "hidden" }}>
+                  <img src={b.img} alt={b.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.5s" }} />
+                </div>
+                <div style={{ padding: 22 }}>
+                  <div style={{ fontSize: "0.75rem", fontWeight: 600, color: "var(--blue)", marginBottom: 10, display: "flex", alignItems: "center", gap: 6 }}>
+                    <i className="far fa-calendar" /> {b.date}
+                  </div>
+                  <h5 style={{ fontSize: "0.98rem", fontWeight: 700, marginBottom: 10, color: "var(--text)" }}>{b.title}</h5>
+                  <p style={{ fontSize: "0.84rem", color: "var(--text-secondary)", marginBottom: 16, lineHeight: 1.6 }}>{b.desc}</p>
+                  <a href="#" style={{ fontSize: "0.82rem", fontWeight: 600, color: "var(--blue)", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 4 }}>
+                    Lire plus <i className="fas fa-arrow-right fa-xs" />
+                  </a>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============ ABOUT ============ */}
+      <section id="about" style={{ position: "relative", zIndex: 1, padding: "100px 0", background: "rgba(0,0,0,0.018)" }}>
+        <div className="mx-auto" style={{ maxWidth: 1280, padding: "0 24px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1.4fr", gap: 48, alignItems: "center" }} className="max-lg:!grid-cols-1">
+            <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&h=600&fit=crop" alt="Team" style={{ borderRadius: 16, boxShadow: "var(--shadow-lg)", width: "100%" }} />
+            <div>
+              <span className="tn-eyebrow">À propos</span>
+              <h2 className="tn-section-title" style={{ color: "var(--text)", marginBottom: 16 }}>Qui Sommes-Nous ?</h2>
+              <p style={{ fontSize: "1rem", color: "var(--text-secondary)", marginBottom: 32, lineHeight: 1.6 }}>TECHNOVA est née d'une vision simple : rendre l'éducation technologique accessible à tous en Afrique et au-delà. Nous croyons que chacun mérite d'avoir accès aux compétences du futur.</p>
               {[
-                { title: "Croissance digitale 2018-2025", value: "+346%", color: "text-blue-600" },
-                { title: "Boom infopreneuriat", value: "+1075%", color: "text-amber-500" },
-                { title: "Nouveaux entrepreneurs", value: "+528%", color: "text-emerald-500" }
-              ].map((stat, idx) => (
-                <div key={idx} className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col justify-center">
-                  <div className="flex items-center gap-1.5 text-emerald-600 font-semibold text-sm mb-2">
-                    <TrendingUp className="w-4 h-4" /> En forte hausse
-                  </div>
-                  <div className={`text-4xl font-display font-bold mb-1 ${stat.color}`}>
-                    {stat.value}
-                  </div>
-                  <div className="text-slate-500 font-medium text-sm">
-                    {stat.title}
+                { icon: "fas fa-bullseye", title: "Notre Vision", desc: "Devenir la plateforme de référence pour l'apprentissage tech en Afrique d'ici 2030." },
+                { icon: "fas fa-heart", title: "Nos Valeurs", desc: "Excellence, accessibilité, innovation et accompagnement personnalisé." },
+                { icon: "fas fa-award", title: "Nos Résultats", desc: "+10,000 étudiants formés, 95% de taux de satisfaction, 500+ entreprises partenaires." },
+              ].map((item, i) => (
+                <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 18, marginBottom: 24 }}>
+                  <div className="tn-about-ico"><i className={item.icon} /></div>
+                  <div>
+                    <h5 style={{ fontSize: "0.95rem", fontWeight: 700, marginBottom: 4, color: "var(--text)" }}>{item.title}</h5>
+                    <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", margin: 0, lineHeight: 1.6 }}>{item.desc}</p>
                   </div>
                 </div>
               ))}
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
-      <WhyChoose />
+      {/* ============ TESTIMONIALS ============ */}
+      <section id="avis" style={{ position: "relative", zIndex: 1, padding: "100px 0" }}>
+        <div className="mx-auto" style={{ maxWidth: 1280, padding: "0 24px" }}>
+          <div style={{ textAlign: "center", marginBottom: 48 }}>
+            <span className="tn-eyebrow">Témoignages</span>
+            <h2 className="tn-section-title" style={{ color: "var(--text)" }}>Ils ont réussi avec nous</h2>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
+            {TESTIMONIALS.map((t, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }} className="tn-testi-card">
+                <div style={{ color: "#f5a623", fontSize: "0.8rem", marginBottom: 16, letterSpacing: 2 }}>{"★".repeat(t.stars)}</div>
+                <p style={{ fontSize: "0.9rem", color: "var(--text)", lineHeight: 1.7, marginBottom: 24, fontStyle: "italic" }}>{t.text}</p>
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <img src={t.img} alt={t.name} style={{ width: 44, height: 44, borderRadius: "50%", objectFit: "cover", border: "2px solid var(--blue-soft)" }} />
+                  <div>
+                    <div style={{ fontSize: "0.88rem", fontWeight: 700, color: "var(--text)" }}>{t.name}</div>
+                    <div style={{ fontSize: "0.75rem", color: "var(--text-secondary)" }}>{t.loc}</div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-      <Benefits />
-      <PaymentSecurity logos={pay?.logos} />
-      <Reviews />
-      <FaqSection />
+      {/* ============ PAYMENT ============ */}
+      <section style={{ position: "relative", zIndex: 1, padding: "60px 0", background: "rgba(0,0,0,0.018)" }}>
+        <div className="mx-auto" style={{ maxWidth: 1280, padding: "0 24px", textAlign: "center" }}>
+          <span className="tn-eyebrow">Moyens de paiement</span>
+          <h2 className="tn-section-title" style={{ color: "var(--text)", marginBottom: 24 }}>Payez facilement</h2>
+          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 8 }}>
+            <span className="pay-badge pay-mtn">MTN MoMo</span>
+            <span className="pay-badge pay-moov">Moov Money</span>
+            <span className="pay-badge pay-orange">Orange Money</span>
+            <span className="pay-badge pay-wave">Wave</span>
+            <span className="pay-badge pay-visa"><i className="fab fa-cc-visa" style={{ marginRight: 4 }} />VISA</span>
+          </div>
+        </div>
+      </section>
 
-      {/* ============== CTA ============== */}
-      <section className="py-20 bg-white">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <div className="relative rounded-3xl bg-primary-gradient p-10 sm:p-16 text-white text-center overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-full opacity-20 dotted-bg" />
-            <h2 className="relative font-display font-bold text-3xl sm:text-5xl leading-tight">
-              Prêt à transformer votre carrière ?
-            </h2>
-            <p className="relative mt-4 text-white/85 max-w-2xl mx-auto">
-              Rejoignez plus de 2000 apprenants à travers le monde. Une formation aujourd'hui, des compétences pour toute la vie.
-            </p>
-            <div className="relative mt-8 flex flex-wrap gap-3 justify-center">
-              <Link to="/formations" className="inline-flex items-center gap-2 h-12 px-7 rounded-full bg-white text-[color:var(--primary)] font-semibold hover:scale-105 transition">
-                Voir les formations <ArrowRight className="h-4 w-4" />
-              </Link>
-              <a href="https://web.facebook.com" target="_blank" rel="noopener" className="inline-flex items-center gap-2 h-12 px-7 rounded-full bg-white/15 border border-white/30 text-white font-semibold hover:bg-white/25 transition">
-                Suivre sur Facebook
-              </a>
-            </div>
+      {/* ============ CTA ============ */}
+      <section style={{ position: "relative", zIndex: 1, padding: "80px 0" }}>
+        <div className="mx-auto" style={{ maxWidth: 1280, padding: "0 24px" }}>
+          <div className="tn-cta-wrap">
+            <h2 style={{ fontSize: "clamp(1.8rem,3vw,2.5rem)", fontWeight: 800, color: "white", letterSpacing: "-0.03em", marginBottom: 16 }}>Prêt à changer de vie ?</h2>
+            <p style={{ color: "rgba(255,255,255,0.82)", fontSize: "1rem", marginBottom: 36 }}>Rejoignez la communauté TECHNOVA aujourd'hui.</p>
+            <Link to="/formations" style={{ background: "white", color: "var(--blue)", fontWeight: 700, fontSize: "0.95rem", padding: "14px 32px", borderRadius: 50, textDecoration: "none", display: "inline-block", transition: "all 0.25s", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
+              Choisir ma formation
+            </Link>
           </div>
         </div>
       </section>
