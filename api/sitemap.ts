@@ -8,9 +8,12 @@ export default async function handler(req, res) {
 
     const { data: products, error } = await supabase
       .from('products')
-      .select('id, updated_at');
+      .select('id');
 
-    if (error) throw error;
+    if (error) {
+      console.error('Erreur Supabase:', error);
+      throw error;
+    }
 
     const domain = 'https://technovalearning.com';
     
@@ -38,7 +41,7 @@ export default async function handler(req, res) {
   ${products.map(product => `
   <url>
     <loc>${domain}/product/${product.id}</loc>
-    <lastmod>${new Date(product.updated_at || new Date()).toISOString()}</lastmod>
+    <lastmod>${new Date().toISOString()}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
