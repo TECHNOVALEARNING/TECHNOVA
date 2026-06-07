@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SuccessRouteImport } from './routes/success'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as FormationsRouteImport } from './routes/formations'
 import { Route as DashboardRouteImport } from './routes/dashboard'
@@ -31,6 +32,11 @@ import { Route as AdminProductsNewRouteImport } from './routes/admin/products/ne
 import { Route as AdminProductsCreateRouteImport } from './routes/admin/products/create'
 import { Route as AdminProductsProductIdRouteImport } from './routes/admin/products/$productId'
 
+const SuccessRoute = SuccessRouteImport.update({
+  id: '/success',
+  path: '/success',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -145,6 +151,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/formations': typeof FormationsRoute
   '/login': typeof LoginRoute
+  '/success': typeof SuccessRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/customers': typeof AdminCustomersRoute
   '/admin/earnings': typeof AdminEarningsRoute
@@ -167,6 +174,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/formations': typeof FormationsRoute
   '/login': typeof LoginRoute
+  '/success': typeof SuccessRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/customers': typeof AdminCustomersRoute
   '/admin/earnings': typeof AdminEarningsRoute
@@ -191,6 +199,7 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/formations': typeof FormationsRoute
   '/login': typeof LoginRoute
+  '/success': typeof SuccessRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/customers': typeof AdminCustomersRoute
   '/admin/earnings': typeof AdminEarningsRoute
@@ -216,6 +225,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/formations'
     | '/login'
+    | '/success'
     | '/admin/analytics'
     | '/admin/customers'
     | '/admin/earnings'
@@ -238,6 +248,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/formations'
     | '/login'
+    | '/success'
     | '/admin/analytics'
     | '/admin/customers'
     | '/admin/earnings'
@@ -261,6 +272,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/formations'
     | '/login'
+    | '/success'
     | '/admin/analytics'
     | '/admin/customers'
     | '/admin/earnings'
@@ -285,12 +297,20 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   FormationsRoute: typeof FormationsRoute
   LoginRoute: typeof LoginRoute
+  SuccessRoute: typeof SuccessRoute
   HistoryIdRoute: typeof HistoryIdRoute
   ProductIdRoute: typeof ProductIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/success': {
+      id: '/success'
+      path: '/success'
+      fullPath: '/success'
+      preLoaderRoute: typeof SuccessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -481,6 +501,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   FormationsRoute: FormationsRoute,
   LoginRoute: LoginRoute,
+  SuccessRoute: SuccessRoute,
   HistoryIdRoute: HistoryIdRoute,
   ProductIdRoute: ProductIdRoute,
 }

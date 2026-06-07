@@ -56,8 +56,41 @@ function ProductPage() {
     }
   };
 
-  const handleBuy = () => {
-    toast.info('Le module de paiement sera bientôt disponible.');
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
+
+  const handleBuy = async () => {
+    try {
+      setIsCheckingOut(true);
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast.error('Veuillez vous connecter pour acheter.');
+        window.location.href = '/login';
+        return;
+      }
+
+      const res = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          productId: id,
+          userId: user.id,
+          email: user.email,
+          firstName: user.user_metadata?.full_name?.split(' ')[0] || '',
+          lastName: user.user_metadata?.full_name?.split(' ').slice(1).join(' ') || ''
+        })
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Erreur de paiement');
+      
+      if (data.checkout_url) {
+        window.location.href = data.checkout_url;
+      }
+    } catch (error: any) {
+      toast.error(error.message || 'Erreur lors de la création du paiement');
+    } finally {
+      setIsCheckingOut(false);
+    }
   };
 
   /* ── Loading ── */
@@ -328,9 +361,10 @@ function ProductPage() {
                 {/* CTA */}
                 <button
                   onClick={handleBuy}
-                  className="w-full text-base font-bold py-4 rounded-xl text-white transition-all hover:opacity-95 hover:scale-[1.01] active:scale-[0.99] shadow-lg"
+                  disabled={isCheckingOut}
+                  className="w-full text-base font-bold py-4 rounded-xl text-white transition-all hover:opacity-95 hover:scale-[1.01] active:scale-[0.99] shadow-lg flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed disabled:scale-100"
                   style={{ backgroundColor: BRAND_COLOR, boxShadow: `0 8px 24px -8px ${BRAND_COLOR}80` }}>
-                  Acheter maintenant
+                  {isCheckingOut ? <Loader2 className="h-5 w-5 animate-spin" /> : 'Acheter maintenant'}
                 </button>
 
                 {/* Quick benefits */}
@@ -425,9 +459,10 @@ function ProductPage() {
           </div>
           <button
             onClick={handleBuy}
-            className="flex-shrink-0 px-6 py-3 rounded-xl text-white text-sm font-bold shadow-lg transition-all active:scale-95"
+            disabled={isCheckingOut}
+            className="flex-shrink-0 px-6 py-3 rounded-xl text-white text-sm font-bold shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed disabled:scale-100"
             style={{ backgroundColor: BRAND_COLOR, boxShadow: `0 6px 20px -6px ${BRAND_COLOR}` }}>
-            Acheter
+            {isCheckingOut ? <Loader2 className="h-5 w-5 animate-spin" /> : 'Acheter'}
           </button>
         </div>
       </div>
