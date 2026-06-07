@@ -50,7 +50,7 @@ export const Header = () => {
   ];
 
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-xl bg-card/75 dark:bg-slate-900/80 border-b border-[color:var(--border)]/60" style={{ background: "var(--surface)", color: "var(--text)" }}>
+    <header className="fixed w-full top-0 z-50 backdrop-blur-md bg-background/80 border-b border-border shadow-sm">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <Logo />
         <nav className="hidden lg:flex items-center gap-8 text-sm font-medium">

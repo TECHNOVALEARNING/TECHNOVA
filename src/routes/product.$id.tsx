@@ -116,7 +116,7 @@ function ProductPage() {
     <div className="min-h-screen bg-gray-50/40 flex flex-col">
       <Header />
 
-      <main className="flex-1 pb-24 lg:pb-8">
+      <main className="flex-1 pt-16 pb-24 lg:pb-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
 
           {/* Breadcrumb */}
