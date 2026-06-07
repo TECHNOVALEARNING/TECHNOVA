@@ -81,8 +81,8 @@ function RootComponent() {
   useEffect(() => {
     const hostname = window.location.hostname;
     
-    // Si on est sur le sous-domaine admin mais pas sur la route /admin, on redirige
-    if (hostname.startsWith('admin.') && !location.pathname.startsWith('/admin')) {
+    // Si on est sur le sous-domaine admin mais pas sur la route /admin ni /login, on redirige
+    if (hostname.startsWith('admin.') && !location.pathname.startsWith('/admin') && !location.pathname.startsWith('/login')) {
       window.location.replace('/admin');
       return;
     }
