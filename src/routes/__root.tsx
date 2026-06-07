@@ -81,15 +81,15 @@ function RootComponent() {
   useEffect(() => {
     const hostname = window.location.hostname;
     
-    // Si on est sur le sous-domaine admin mais pas sur la route /admin ni /login, on redirige
-    if (hostname.startsWith('admin.') && !location.pathname.startsWith('/admin') && !location.pathname.startsWith('/login')) {
+    // Si on est sur le sous-domaine HQ (admin) mais pas sur la route /admin ni /login, on redirige
+    if (hostname.startsWith('hq.') && !location.pathname.startsWith('/admin') && !location.pathname.startsWith('/login')) {
       window.location.replace('/admin');
       return;
     }
     
-    // Si on est sur le domaine principal et qu'on essaie d'accéder à /admin, on redirige vers le sous-domaine
+    // Si on est sur le domaine principal et qu'on essaie d'accéder à /admin, on redirige vers le sous-domaine secret
     if ((hostname === 'technovalearning.com' || hostname === 'www.technovalearning.com') && location.pathname.startsWith('/admin')) {
-      window.location.replace(`https://admin.technovalearning.com${location.pathname}`);
+      window.location.replace(`https://hq.technovalearning.com${location.pathname}`);
       return;
     }
 

@@ -76,7 +76,7 @@ function Login() {
 
   const handleGoogleAuth = async () => {
     try {
-      const isSubdomain = window.location.hostname.startsWith('admin.');
+      const isSubdomain = window.location.hostname.startsWith('hq.');
       await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: { 
