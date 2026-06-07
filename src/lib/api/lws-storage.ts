@@ -1,6 +1,6 @@
 export const uploadFileToLWS = async (file: File): Promise<string> => {
   // Remplacez par l'URL de votre script PHP sur LWS
-  const UPLOAD_URL = 'https://technovalearning.com/upload.php';
+  const UPLOAD_URL = 'https://hq.technovalearning.com/upload.php';
 
   const formData = new FormData();
   formData.append('file', file);
