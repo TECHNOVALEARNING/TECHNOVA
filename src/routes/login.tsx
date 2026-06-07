@@ -76,9 +76,14 @@ function Login() {
 
   const handleGoogleAuth = async () => {
     try {
+      const isSubdomain = window.location.hostname.startsWith('admin.');
       await supabase.auth.signInWithOAuth({
         provider: 'google',
-        options: { redirectTo: window.location.origin + '/admin/' }
+        options: { 
+          redirectTo: isSubdomain 
+            ? window.location.origin + '/admin' 
+            : window.location.origin + '/dashboard' 
+        }
       });
     } catch (err: any) {
       setErrorMsg("Erreur lors de la connexion Google.");
