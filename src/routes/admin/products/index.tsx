@@ -262,7 +262,6 @@ function AdminProducts() {
                       <TypeIcon 
                         className="w-3.5 h-3.5 text-slate-400 shrink-0 cursor-pointer hover:text-slate-600 transition-colors ml-1" 
                         onClick={(e) => { e.stopPropagation(); handleCopyLink(product.id); }} 
-                        title={`Type: ${pType}`}
                       />
                     </div>
                   </div>
