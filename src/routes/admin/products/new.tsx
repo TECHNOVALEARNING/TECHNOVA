@@ -73,15 +73,15 @@ function NewProduct() {
   const [courseContentType, setCourseContentType] = useState('mixed');
   const [lessons, setLessons] = useState<Lesson[]>([]);
 
-  const priceNum = parseFloat(price) || 0;
-  const originalPriceNum = parseFloat(originalPrice) || 0;
-  const priceError = price && priceNum > 0 && priceNum < 100 ? "Le prix minimum est de 100 FCFA" : "";
-  const originalPriceError = originalPrice && originalPriceNum > 0 && originalPriceNum <= priceNum
-    ? "Le prix barré doit être supérieur au prix de vente" : "";
+  const priceNum = pricingModel === 'free' ? 0 : parseFloat(price) || 0;
+  const originalPriceNum = pricingModel === 'free' ? 0 : parseFloat(originalPrice) || 0;
+  const priceError = pricingModel === 'one_time' && priceNum < 100 ? "Le prix minimum est de 100 FCFA" : "";
+  const originalPriceError = pricingModel === 'one_time' && originalPrice && originalPriceNum > 0 && originalPriceNum <= priceNum
+    ? "Le prix barré doit être strictement supérieur au prix de vente" : "";
 
   const canNext = () => {
     switch (step) {
-      case 1: return !!title.trim() && !!price && priceNum >= 100 && !priceError && !originalPriceError;
+      case 1: return !!title.trim() && (pricingModel === 'free' || (priceNum >= 100 && !priceError && !originalPriceError));
       case 2: return !!description.replace(/<[^>]*>/g, '').trim();
       case 3: return true;
       case 4:
@@ -136,6 +136,7 @@ function NewProduct() {
         title: title.trim(),
         description: description.trim() || null,
         category: category || null,
+        pricing_model: pricingModel, // make sure we save the pricing model if needed by schema, but let's just save price=0 for free.
         price: priceNum,
         original_price: originalPriceNum > 0 ? originalPriceNum : null,
         type: selectedType,
@@ -277,34 +278,35 @@ function NewProduct() {
                   className="w-full h-11 px-3 text-[14px] border border-slate-200 rounded-xl focus:outline-none focus:border-[#1E293B]"
                 >
                   <option value="one_time">Paiement unique</option>
-                  <option value="subscription">Abonnement</option>
                   <option value="free">Gratuit</option>
                 </select>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-[13px] font-semibold text-slate-800 mb-1.5">Prix (FCFA) <span className="text-red-500">*</span></label>
-                  <input
-                    type="number"
-                    value={price}
-                    onChange={e => setPrice(e.target.value)}
-                    className="w-full h-11 px-3 text-[14px] border border-slate-200 rounded-xl focus:outline-none focus:border-[#1E293B]"
-                    placeholder="Min 100"
-                  />
-                  {priceError && <p className="text-[11px] text-red-500 mt-1">{priceError}</p>}
+              {pricingModel === 'one_time' && (
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-[13px] font-semibold text-slate-800 mb-1.5">Prix (FCFA) <span className="text-red-500">*</span></label>
+                    <input
+                      type="number"
+                      value={price}
+                      onChange={e => setPrice(e.target.value)}
+                      className="w-full h-11 px-3 text-[14px] border border-slate-200 rounded-xl focus:outline-none focus:border-[#1E293B]"
+                      placeholder="Min 100"
+                    />
+                    {priceError && <p className="text-[11px] text-red-500 mt-1">{priceError}</p>}
+                  </div>
+                  <div>
+                    <label className="block text-[13px] font-semibold text-slate-800 mb-1.5">Prix barré (FCFA)</label>
+                    <input
+                      type="number"
+                      value={originalPrice}
+                      onChange={e => setOriginalPrice(e.target.value)}
+                      className="w-full h-11 px-3 text-[14px] border border-slate-200 rounded-xl focus:outline-none focus:border-[#1E293B]"
+                    />
+                    {originalPriceError && <p className="text-[11px] text-red-500 mt-1">{originalPriceError}</p>}
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-[13px] font-semibold text-slate-800 mb-1.5">Prix barré (FCFA)</label>
-                  <input
-                    type="number"
-                    value={originalPrice}
-                    onChange={e => setOriginalPrice(e.target.value)}
-                    className="w-full h-11 px-3 text-[14px] border border-slate-200 rounded-xl focus:outline-none focus:border-[#1E293B]"
-                  />
-                  {originalPriceError && <p className="text-[11px] text-red-500 mt-1">{originalPriceError}</p>}
-                </div>
-              </div>
+              )}
 
             </div>
           )}

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Loader2, Gift, Tag, ChevronDown, ChevronUp, HelpCircle, Search } from 'lucide-react';
 import { toast } from 'sonner';
 import { COUNTRIES } from '@/lib/countries';
+import { adminSupabase } from '@/lib/supabase';
 
 interface CheckoutDrawerProps {
   isOpen: boolean;
@@ -65,6 +66,53 @@ export function CheckoutDrawer({ isOpen, onClose, product }: CheckoutDrawerProps
     }
 
     const fullPhone = `${selectedCountry.dialCode}${phone.replace(/^0+/, '')}`;
+
+    if (product.price === 0) {
+      setIsSubmitting(true);
+      try {
+        // 1. Find or create buyer
+        const emailLower = email.trim().toLowerCase();
+        let { data: buyer } = await adminSupabase.from('buyers').select('*').eq('email', emailLower).single();
+        
+        if (!buyer) {
+          const { data: newBuyer, error: buyerError } = await adminSupabase.from('buyers').insert({
+            email: emailLower,
+            first_name: firstName,
+            last_name: lastName,
+            phone: fullPhone
+          }).select().single();
+          if (buyerError) throw buyerError;
+          buyer = newBuyer;
+        }
+
+        // 2. Create paid order for free
+        const { data: order, error: orderError } = await adminSupabase.from('orders').insert({
+          buyer_id: buyer.id,
+          product_id: product.id,
+          amount: 0,
+          status: 'paid',
+          payment_method: 'free',
+          customer_name: `${firstName} ${lastName}`.trim()
+        }).select().single();
+        if (orderError) throw orderError;
+
+        // 3. Log user in locally
+        localStorage.setItem('buyer_session', JSON.stringify({
+          email: emailLower,
+          customerId: buyer.id,
+          customerName: buyer.first_name,
+          authenticatedAt: Date.now()
+        }));
+
+        toast.success('Accès débloqué avec succès !');
+        window.location.href = `/mes-achats/${order.id}`;
+      } catch (err: any) {
+        toast.error("Erreur lors de l'accès au produit gratuit : " + err.message);
+      } finally {
+        setIsSubmitting(false);
+      }
+      return;
+    }
 
     try {
       setIsSubmitting(true);
@@ -273,7 +321,7 @@ export function CheckoutDrawer({ isOpen, onClose, product }: CheckoutDrawerProps
                       Résumé 
                       {isSummaryOpen ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
                     </div>
-                    <span>{product.price.toLocaleString('fr-FR')} FCFA</span>
+                    <span>{product.price > 0 ? `${product.price.toLocaleString('fr-FR')} FCFA` : 'Gratuit'}</span>
                   </button>
 
                   <AnimatePresence>
@@ -305,7 +353,7 @@ export function CheckoutDrawer({ isOpen, onClose, product }: CheckoutDrawerProps
 
                           <div className="flex justify-between items-center text-[13px] text-gray-600">
                             <span>Sous-total</span>
-                            <span className="font-semibold text-gray-900">{product.price.toLocaleString('fr-FR')} FCFA</span>
+                            <span className="font-semibold text-gray-900">{product.price > 0 ? `${product.price.toLocaleString('fr-FR')} FCFA` : 'Gratuit'}</span>
                           </div>
                         </div>
                       </motion.div>
@@ -314,7 +362,7 @@ export function CheckoutDrawer({ isOpen, onClose, product }: CheckoutDrawerProps
 
                   <div className="flex justify-between items-center py-4 border-t border-gray-100 mt-2">
                     <span className="text-lg font-bold text-gray-900">Total</span>
-                    <span className="text-xl font-black text-gray-900">{product.price.toLocaleString('fr-FR')} FCFA</span>
+                    <span className="text-xl font-black text-gray-900">{product.price > 0 ? `${product.price.toLocaleString('fr-FR')} FCFA` : 'Gratuit'}</span>
                   </div>
                 </div>
 
@@ -330,14 +378,14 @@ export function CheckoutDrawer({ isOpen, onClose, product }: CheckoutDrawerProps
                   {isSubmitting ? (
                     <>
                       <Loader2 className="w-5 h-5 animate-spin" />
-                      Redirection...
+                      Patientez...
                     </>
                   ) : (
-                    'Payer maintenant'
+                    product.price > 0 ? 'Payer maintenant' : 'Obtenir gratuitement'
                   )}
                 </button>
                 <p className="text-center mt-3 text-[11px] text-gray-500 leading-relaxed px-4">
-                  En cliquant sur le bouton « Payer maintenant », vous acceptez nos <a href="#" className="underline hover:text-gray-700">termes et conditions</a> et la <a href="#" className="underline hover:text-gray-700">politique de confidentialité</a>.
+                  En cliquant sur le bouton « {product.price > 0 ? 'Payer maintenant' : 'Obtenir gratuitement'} », vous acceptez nos <a href="#" className="underline hover:text-gray-700">termes et conditions</a> et la <a href="#" className="underline hover:text-gray-700">politique de confidentialité</a>.
                 </p>
               </div>
             </div>

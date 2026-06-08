@@ -214,7 +214,7 @@ function ProductPage() {
                 <h1 className="text-2xl font-extrabold text-gray-900 leading-tight">{product.title}</h1>
                 <div className="mt-3 flex items-baseline gap-2 flex-wrap">
                   <span className="text-2xl font-extrabold" style={{ color: BRAND_COLOR }}>
-                    {currentPrice.toLocaleString()} FCFA
+                    {currentPrice > 0 ? `${currentPrice.toLocaleString()} FCFA` : 'Gratuit'}
                   </span>
                   {oldPrice && oldPrice > currentPrice && (
                     <span className="text-sm text-gray-400 line-through">
@@ -346,7 +346,7 @@ function ProductPage() {
                 <div>
                   <div className="flex items-baseline gap-2 flex-wrap">
                     <span className="text-3xl sm:text-4xl font-extrabold" style={{ color: BRAND_COLOR }}>
-                      {currentPrice.toLocaleString()} FCFA
+                      {currentPrice > 0 ? `${currentPrice.toLocaleString()} FCFA` : 'Gratuit'}
                     </span>
                     {oldPrice && oldPrice > currentPrice && (
                       <span className="text-base text-gray-400 line-through">
@@ -369,7 +369,7 @@ function ProductPage() {
                   onClick={handleBuy}
                   className="w-full text-base font-bold py-4 rounded-xl text-white transition-all hover:opacity-95 hover:scale-[1.01] active:scale-[0.99] shadow-lg flex items-center justify-center gap-2"
                   style={{ backgroundColor: BRAND_COLOR, boxShadow: `0 8px 24px -8px ${BRAND_COLOR}80` }}>
-                  Acheter maintenant
+                  {currentPrice > 0 ? 'Acheter maintenant' : 'Obtenir gratuitement'}
                 </button>
 
                 {/* Quick benefits */}
@@ -455,7 +455,7 @@ function ProductPage() {
             <div className="text-[10px] text-gray-400 uppercase tracking-wide">Prix</div>
             <div className="flex items-baseline gap-1.5">
               <span className="text-lg font-extrabold truncate" style={{ color: BRAND_COLOR }}>
-                {currentPrice.toLocaleString()} FCFA
+                {currentPrice > 0 ? `${currentPrice.toLocaleString()} FCFA` : 'Gratuit'}
               </span>
               {discount && (
                 <span className="text-[10px] font-bold text-emerald-600">-{discount}%</span>
@@ -466,7 +466,7 @@ function ProductPage() {
             onClick={handleBuy}
             className="flex-shrink-0 px-6 py-3 rounded-xl text-white text-sm font-bold shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2"
             style={{ backgroundColor: BRAND_COLOR, boxShadow: `0 6px 20px -6px ${BRAND_COLOR}` }}>
-            Acheter
+            {currentPrice > 0 ? 'Acheter' : 'Obtenir'}
           </button>
         </div>
       </div>

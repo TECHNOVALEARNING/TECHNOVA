@@ -75,6 +75,7 @@ function EditProduct() {
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('');
   const [description, setDescription] = useState('');
+  const [pricingModel, setPricingModel] = useState('one_time');
   const [price, setPrice] = useState('');
   const [originalPrice, setOriginalPrice] = useState('');
   const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
@@ -157,6 +158,7 @@ function EditProduct() {
       setTitle(data.title || '');
       setCategory(data.category || '');
       setDescription(data.description || '');
+      setPricingModel(data.pricing_model || (data.price === 0 ? 'free' : 'one_time'));
       setPrice(String(data.price || ''));
       setOriginalPrice(data.original_price ? String(data.original_price) : '');
       setProductType(data.type || 'file');
@@ -248,12 +250,23 @@ function EditProduct() {
       if (downloadFile) newDownload = await uploadFile(downloadFile, 'downloads');
       if (seoImageFile) newSeoImg = await uploadFile(seoImageFile, 'seo-images');
 
+      const priceNum = pricingModel === 'free' ? 0 : parseFloat(price) || 0;
+      const originalPriceNum = pricingModel === 'free' ? 0 : parseFloat(originalPrice) || 0;
+
+      if (pricingModel === 'one_time') {
+        if (priceNum < 100) { toast.error("Le prix minimum est de 100 FCFA"); setSaving(false); return; }
+        if (originalPriceNum > 0 && originalPriceNum <= priceNum) {
+          toast.error("Le prix barré doit être strictement supérieur au prix de vente"); setSaving(false); return;
+        }
+      }
+
       const updateData: any = {
         title: title.trim(),
         description: description.trim() || null,
         category: category || null,
-        price: parseFloat(price) || 0,
-        original_price: originalPrice ? parseFloat(originalPrice) : null,
+        pricing_model: pricingModel,
+        price: priceNum,
+        original_price: originalPriceNum > 0 ? originalPriceNum : null,
         thumbnail_url: newThumb,
         download_url: newDownload,
         seo_title: seoTitle.trim() || null,
@@ -618,9 +631,23 @@ function EditProduct() {
             {activeTab === 'tarification' && (
               <div className="space-y-6">
                 <h2 className="text-[18px] font-bold text-slate-900">Tarification</h2>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-[13px] font-semibold text-slate-800 mb-1.5">Prix</label>
+                
+                <div>
+                  <label className="block text-[13px] font-semibold text-slate-800 mb-1.5">Modèle de tarification</label>
+                  <select
+                    value={pricingModel}
+                    onChange={e => setPricingModel(e.target.value)}
+                    className="w-full h-11 px-3 text-[14px] border border-slate-200 rounded-xl focus:outline-none focus:border-[#1E293B]"
+                  >
+                    <option value="one_time">Paiement unique</option>
+                    <option value="free">Gratuit</option>
+                  </select>
+                </div>
+
+                {pricingModel === 'one_time' && (
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-[13px] font-semibold text-slate-800 mb-1.5">Prix</label>
                     <div className="relative">
                       <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[13px] text-slate-400">FCFA</span>
                       <input
@@ -645,13 +672,14 @@ function EditProduct() {
                         placeholder="0"
                       />
                     </div>
-                    {originalPrice && parseFloat(originalPrice) > parseFloat(price || '0') && (
-                      <p className="text-[11px] text-emerald-600 mt-1">
-                        Réduction de {Math.round(((parseFloat(originalPrice) - parseFloat(price)) / parseFloat(originalPrice)) * 100)}%
-                      </p>
-                    )}
+                      {originalPrice && parseFloat(originalPrice) > parseFloat(price || '0') && (
+                        <p className="text-[11px] text-emerald-600 mt-1">
+                          Réduction de {Math.round(((parseFloat(originalPrice) - parseFloat(price)) / parseFloat(originalPrice)) * 100)}%
+                        </p>
+                      )}
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             )}
 
