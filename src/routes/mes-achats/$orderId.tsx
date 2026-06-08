@@ -66,7 +66,8 @@ function OrderDetail() {
       setStore({ store_name: 'Technova' });
   
       // 3. Fetch lessons if course
-      if (productData?.type === 'course') {
+      const productType = typeof productData.features === 'string' ? JSON.parse(productData.features).type : productData.features?.type;
+      if (productType === 'course') {
         const { data: lessData } = await supabase
           .from('course_lessons')
           .select('*')
@@ -161,11 +162,11 @@ function OrderDetail() {
           {/* Main Card */}
           <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
              <div className="aspect-[16/9] bg-slate-100 relative">
-               {product.thumbnail_url ? (
-                 <img src={product.thumbnail_url} alt="" className="w-full h-full object-cover" />
+               {product.image_url ? (
+                 <img src={product.image_url} alt="" className="w-full h-full object-cover" />
                ) : (
                  <div className="w-full h-full flex items-center justify-center text-slate-300">
-                    {product.type === 'course' ? <GraduationCap className="w-20 h-20" /> : <Package className="w-20 h-20" />}
+                    {(typeof product.features === 'string' ? JSON.parse(product.features).type : product.features?.type) === 'course' ? <GraduationCap className="w-20 h-20" /> : <Package className="w-20 h-20" />}
                  </div>
                )}
              </div>
@@ -175,9 +176,12 @@ function OrderDetail() {
                  <p className="text-[13px] text-slate-500 mt-1">Vous avez un accès à vie à ce produit.</p>
                </div>
                
-               {product.type === 'file' && product.download_url ? (
+               {(() => {
+                 const pType = typeof product.features === 'string' ? JSON.parse(product.features).type : product.features?.type;
+                 const pFileUrl = typeof product.features === 'string' ? JSON.parse(product.features).file_url : product.features?.file_url;
+                 return pType === 'file' && pFileUrl ? (
                   <a
-                    href={product.download_url}
+                    href={pFileUrl}
                     target="_blank"
                     rel="noreferrer"
                     className="flex items-center gap-2 px-6 py-3 bg-amber-500 text-white text-[15px] font-bold rounded-xl hover:bg-amber-600 transition-colors shadow-sm w-full sm:w-auto justify-center"
@@ -193,7 +197,8 @@ function OrderDetail() {
                     <Play className="w-5 h-5" />
                     Accéder à la formation
                   </button>
-               )}
+               )
+               })()}
              </div>
           </div>
 
@@ -290,17 +295,19 @@ function OrderDetail() {
             <div className="bg-white border border-slate-200 rounded-2xl p-6">
                <h3 className="text-[16px] font-bold text-slate-900 mb-4">Du même vendeur</h3>
                <div className="space-y-3">
-                 {recommendations.map(rec => (
-                   <div key={rec.id} className="flex items-center gap-3 group cursor-pointer" onClick={() => window.open(`/product/${rec.id}`, '_blank')}>
-                      <div className="w-12 h-12 rounded-lg bg-slate-100 border border-slate-200 overflow-hidden shrink-0">
-                        {rec.thumbnail_url ? <img src={rec.thumbnail_url} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-slate-300"><Package className="w-5 h-5"/></div>}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-[13px] font-bold text-slate-900 truncate group-hover:text-blue-600 transition-colors">{rec.title}</p>
-                        <p className="text-[11px] text-slate-500 uppercase font-semibold">{rec.type === 'course' ? 'Formation' : 'Fichier'}</p>
-                      </div>
-                   </div>
-                 ))}
+                  {recommendations.map(rec => {
+                    const recType = typeof rec.features === 'string' ? JSON.parse(rec.features).type : rec.features?.type;
+                    return (
+                    <div key={rec.id} className="flex items-center gap-3 group cursor-pointer" onClick={() => window.open(`/product/${rec.id}`, '_blank')}>
+                       <div className="w-12 h-12 rounded-lg bg-slate-100 border border-slate-200 overflow-hidden shrink-0">
+                         {rec.image_url ? <img src={rec.image_url} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-slate-300"><Package className="w-5 h-5"/></div>}
+                       </div>
+                       <div className="flex-1 min-w-0">
+                         <p className="text-[13px] font-bold text-slate-900 truncate group-hover:text-blue-600 transition-colors">{rec.title}</p>
+                         <p className="text-[11px] text-slate-500 uppercase font-semibold">{recType === 'course' ? 'Formation' : 'Fichier'}</p>
+                       </div>
+                    </div>
+                  )})}
                </div>
             </div>
           )}
@@ -310,7 +317,7 @@ function OrderDetail() {
       </div>
 
       {/* CONTENT MODAL (FOR COURSES) */}
-      {showContentModal && product.type === 'course' && (
+      {showContentModal && (typeof product.features === 'string' ? JSON.parse(product.features).type : product.features?.type) === 'course' && (
         <div className="fixed inset-0 bg-slate-900 z-50 flex flex-col md:flex-row">
           {/* Main Video Area */}
           <div className="flex-1 bg-black flex flex-col">
