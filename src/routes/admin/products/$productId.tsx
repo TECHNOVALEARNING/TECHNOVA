@@ -224,7 +224,19 @@ function EditProduct() {
     setLessonContent('');
   };
 
-  const tabs = [
+  if (loading) {
+    return <div className="flex items-center justify-center h-[50vh]"><Loader2 className="w-8 h-8 animate-spin text-blue-600" /></div>;
+  }
+
+  if (!product) {
+    return <div className="p-8 text-center text-slate-500">Produit introuvable</div>;
+  }
+
+  const features = typeof product.features === 'string' ? JSON.parse(product.features) : (product.features || {});
+  const productType = features.type || 'fichier';
+  const chapters = features.chapters || [];
+
+  const allTabs = [
     { id: 'informations', label: 'Informations', icon: LayoutDashboard },
     { id: 'tarification', label: 'Tarification', icon: DollarSign },
     { id: 'course', label: 'Contenu du cours', icon: Folder },
@@ -236,16 +248,10 @@ function EditProduct() {
     { id: 'avance', label: 'Avancé', icon: Settings },
   ];
 
-  if (loading) {
-    return <div className="flex items-center justify-center h-[50vh]"><Loader2 className="w-8 h-8 animate-spin text-blue-600" /></div>;
-  }
-
-  if (!product) {
-    return <div className="p-8 text-center text-slate-500">Produit introuvable</div>;
-  }
-
-  const features = typeof product.features === 'string' ? JSON.parse(product.features) : (product.features || {});
-  const chapters = features.chapters || [];
+  const tabs = allTabs.filter(tab => {
+    if (productType !== 'formation' && tab.id === 'course') return false;
+    return true;
+  });
 
   return (
     <div className="flex flex-col min-h-screen bg-[#F9FAFB]">
