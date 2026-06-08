@@ -44,7 +44,7 @@ export default async function handler(req, res) {
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     const { error } = await supabase
-      .from('purchases')
+      .from('orders')
       .update({ 
         status: 'completed', 
         moneroo_transaction_id: data?.id || data?.transaction?.id 

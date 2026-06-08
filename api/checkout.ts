@@ -41,15 +41,17 @@ export default async function handler(req, res) {
     });
   }
 
-  // Generate pending purchase
+  // Generate pending order
   const { data: purchase, error: purchaseError } = await supabase
-    .from('purchases')
+    .from('orders')
     .insert({
       user_id: userId || null,
       product_id: product.id,
       amount: product.price,
       currency: 'XOF',
-      status: 'pending'
+      status: 'pending',
+      customer_email: email,
+      customer_name: `${firstName || ''} ${lastName || ''}`.trim() || 'Client Technova'
     })
     .select()
     .single();
