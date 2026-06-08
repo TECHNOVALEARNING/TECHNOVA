@@ -68,9 +68,19 @@ function ProductPage() {
         return;
       }
 
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        toast.error('Session expirée. Veuillez vous reconnecter.');
+        window.location.href = '/login';
+        return;
+      }
+
       const res = await fetch('/api/checkout', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`
+        },
         body: JSON.stringify({
           productId: id,
           userId: user.id,
