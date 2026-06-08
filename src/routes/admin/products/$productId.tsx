@@ -861,6 +861,8 @@ function EditProduct() {
                   onChange={setDescription}
                   label="Description"
                   withAI={true}
+                  productTitle={title}
+                  productType={productType}
                 />
               </div>
             )}

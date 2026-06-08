@@ -313,7 +313,7 @@ function NewProduct() {
 
           {step === 2 && (
             <div className="space-y-6">
-              <RichTextEditor value={description} onChange={setDescription} label="Décrivez votre produit" withAI={true} />
+              <RichTextEditor value={description} onChange={setDescription} label="Décrivez votre produit" withAI={true} productTitle={title} productType={selectedType || 'fichier'} />
             </div>
           )}
 

@@ -23,6 +23,8 @@ interface RichTextEditorProps {
   placeholder?: string;
   label?: string;
   withAI?: boolean;
+  productTitle?: string;
+  productType?: string;
 }
 
 const MenuButton = ({
@@ -43,11 +45,11 @@ const MenuButton = ({
     onClick={onClick}
     title={title}
     disabled={disabled}
-    className={`h-7 w-7 rounded flex items-center justify-center transition-colors ${
+    className={`h-8 w-8 rounded flex items-center justify-center transition-colors ${
       disabled ? 'opacity-50 cursor-not-allowed' :
       isActive
-        ? 'bg-blue-50 text-blue-600'
-        : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900'
+        ? 'bg-blue-100 text-blue-700'
+        : 'text-slate-600 hover:bg-slate-200 hover:text-slate-900'
     }`}
   >
     {children}
@@ -98,7 +100,7 @@ function getVideoEmbedUrl(url: string): string | null {
   return null;
 }
 
-export function RichTextEditor({ value, onChange, placeholder, label, withAI = false }: RichTextEditorProps) {
+export function RichTextEditor({ value, onChange, placeholder, label, withAI = false, productTitle, productType }: RichTextEditorProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
 
@@ -280,23 +282,30 @@ export function RichTextEditor({ value, onChange, placeholder, label, withAI = f
       }
 
       const promptText = `
-Tu es un copywriter expert et vendeur d'élite.
-Génère ou améliore une description de produit hautement persuasive à partir de ce texte/contexte :
-"${editor.getText() || 'Un produit numérique'}"
+Tu es un copywriter expert et vendeur d'élite spécialisé dans le domaine du commerce numérique.
+Ta mission est de générer ou d'améliorer une description de produit HAUTEMENT PERSUASIVE.
 
-Détails de la demande :
-- Mots-clés à inclure absolument : ${iaKeywords || 'Aucun mot-clé imposé'}
-- Tonalité : ${iaTone}
+CONTEXTE DU PRODUIT :
+- Titre du produit : "${productTitle || 'Produit sans titre'}"
+- Catégorie / Type : "${productType || 'Produit générique'}"
+
+CONTENU ACTUEL DE LA DESCRIPTION :
+"${editor.getText() || 'Rédige une description complète, vendeuse et attrayante pour ce produit en partant de zéro.'}"
+
+Demande spécifique de l'utilisateur :
+- Mots-clés à inclure absolument : ${iaKeywords || 'Aucun'}
+- Tonalité souhaitée : ${iaTone}
 
 Contraintes de format (Très important) :
 Renvoie UNIQUEMENT le code HTML, sans balise \`\`\`html, sans <html> ni <body>.
 Utilise exclusivement ces balises HTML pour la mise en forme :
-- <h2> pour les sous-titres
-- <h3> pour mettre en avant un bénéfice
-- <p> pour les paragraphes
+- <h2> pour les grands sous-titres
+- <h3> pour mettre en avant des bénéfices
+- <p> pour les paragraphes textuels
 - <ul> et <li> pour les listes à puces
 - <strong> pour mettre en gras les mots importants
-Ne fais aucune introduction. Génère directement le contenu HTML final prêt à être affiché dans l'éditeur de texte.`;
+Fais une description détaillée et très vendeuse. 
+Ne fais aucune introduction textuelle du type "Voici votre texte...", génère directement le contenu HTML final.`;
 
       const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`, {
         method: 'POST',
