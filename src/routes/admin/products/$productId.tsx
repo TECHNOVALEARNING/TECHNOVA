@@ -1,1011 +1,1083 @@
-import { createFileRoute, useNavigate, Link } from '@tanstack/react-router';
-import { 
-  ChevronLeft, LayoutDashboard, DollarSign, Folder, FileText, 
-  Image as ImageIcon, HelpCircle, Search as SearchIcon, Settings,
-  Eye, Plus, ChevronUp, ChevronDown, MoreHorizontal, Video, Headphones,
-  AlignLeft, PlayCircle, Loader2, List, ListOrdered, Check, X
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import {
+  ArrowLeft, Eye, EyeOff, Save, Loader2,
+  FileText, DollarSign, Upload, AlignLeft, Image as ImageIcon,
+  HelpCircle, Search as SearchIcon, Settings, Package, Lock,
+  Fingerprint, BarChart3, MapPin, Sparkles, Plus, Trash2, Globe,
+  GraduationCap, ShoppingCart, Check, X, Video, BookOpen, Layers,
+  MoreVertical, Link2, Folder
 } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { adminSupabase } from '@/lib/supabase';
 import { RichTextEditor } from '@/components/RichTextEditor';
 import { toast } from 'sonner';
 
-// Define the search params type
-type ProductSearch = {
-  tab?: string;
-};
+type TabKey = 'informations' | 'tarification' | 'fichiers' | 'description' | 'visuel' | 'faq' | 'seo' | 'cours';
 
 export const Route = createFileRoute('/admin/products/$productId')({
   component: EditProduct,
-  validateSearch: (search: Record<string, unknown>): ProductSearch => {
-    return {
-      tab: search.tab as string | undefined,
-    };
-  },
 });
 
-const ToggleBlock = ({ enabled, onChange, title, description, children }: any) => (
-  <div className="bg-[#F8F9FA] rounded-xl p-4 flex flex-col gap-3 mb-4">
-    <div className="flex items-center gap-3">
-      <button 
-        onClick={() => onChange(!enabled)}
-        className={`w-11 h-6 rounded-full flex items-center transition-colors px-1 shrink-0 ${enabled ? 'bg-[#1E293B]' : 'bg-[#E2E8F0]'}`}
+// ─── Toggle Row Component ─────────────────────────────────────────────────────
+const ToggleRow = ({
+  title, description, enabled, onToggle, children,
+}: {
+  title: string; description: string; enabled: boolean;
+  onToggle: (v: boolean) => void; children?: React.ReactNode;
+}) => (
+  <div className="py-4 border-b border-slate-100 last:border-0">
+    <div className="flex items-start gap-3">
+      <button
+        type="button"
+        onClick={() => onToggle(!enabled)}
+        className={`mt-0.5 w-11 h-6 rounded-full flex items-center transition-colors px-1 shrink-0 ${enabled ? 'bg-[#1E293B]' : 'bg-[#E2E8F0]'}`}
       >
         <div className={`w-4 h-4 rounded-full bg-white flex items-center justify-center transition-transform ${enabled ? 'translate-x-5' : 'translate-x-0'}`}>
-           {enabled ? <Check className="w-3 h-3 text-[#1E293B] stroke-[3]" /> : <X className="w-3 h-3 text-[#94A3B8] stroke-[3]" />}
+          {enabled
+            ? <Check className="w-3 h-3 text-[#1E293B]" strokeWidth={3} />
+            : <X className="w-3 h-3 text-[#94A3B8]" strokeWidth={3} />
+          }
         </div>
       </button>
-      <div>
-        <div className="text-[14px] font-bold text-slate-900">{title}</div>
-        <div className="text-[13px] text-slate-400 font-medium leading-tight">{description}</div>
+      <div className="flex-1 min-w-0">
+        <p className="text-[14px] font-semibold text-slate-900">{title}</p>
+        <p className="text-[13px] text-slate-500 leading-tight">{description}</p>
+        {children && enabled && <div className="mt-3">{children}</div>}
       </div>
     </div>
-    {children && enabled && (
-      <div className="ml-[56px]">
-        {children}
-      </div>
-    )}
   </div>
 );
 
+// ─── Lesson type ──────────────────────────────────────────────────────────────
+interface Lesson {
+  id?: string;
+  title: string;
+  video_type: 'youtube' | 'vimeo' | 'upload' | 'text';
+  video_url: string;
+  duration_minutes: number;
+  description: string;
+  position: number;
+  file?: File;
+}
+
 function EditProduct() {
   const { productId } = Route.useParams();
-  const searchParams = Route.useSearch();
-  const activeTab = searchParams.tab || 'informations';
   const navigate = useNavigate();
-
-  const [product, setProduct] = useState<any>(null);
+  const [activeTab, setActiveTab] = useState<TabKey>('informations');
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [productType, setProductType] = useState<string>('file');
+  const [isPublished, setIsPublished] = useState(false);
+  const [showMore, setShowMore] = useState(false);
+  const moreRef = useRef<HTMLDivElement>(null);
 
-  // Lesson Panel State
-  const [selectedChapter, setSelectedChapter] = useState<any>(null);
-  const [showAddLesson, setShowAddLesson] = useState(false);
-
-  // Lesson Form State
-  const [lessonTitle, setLessonTitle] = useState('');
-  const [lessonDesc, setLessonDesc] = useState('');
-  const [lessonType, setLessonType] = useState('Vidéo');
-  const [lessonUrl, setLessonUrl] = useState('');
-  const [lessonContent, setLessonContent] = useState('');
-
-  // Chapter Modal State
-  const [showAddChapter, setShowAddChapter] = useState(false);
-  const [newChapterTitle, setNewChapterTitle] = useState('');
-
-  // Product Fields State
+  // ── Core fields ─────────────────────────────────────────────────────────────
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('');
-  const [price, setPrice] = useState('');
-  const [crossedPrice, setCrossedPrice] = useState('');
-  const [pricingModel, setPricingModel] = useState('Paiement unique');
   const [description, setDescription] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
+  const [price, setPrice] = useState('');
+  const [originalPrice, setOriginalPrice] = useState('');
+  const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
+  const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
+  const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
+  const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+  const [downloadFile, setDownloadFile] = useState<File | null>(null);
 
-  // Additional Product Fields State
-  const [postPurchaseInstructions, setPostPurchaseInstructions] = useState('');
-  const [productUrl, setProductUrl] = useState('');
-  const [autoDiscount, setAutoDiscount] = useState(false);
-  const [buyButtonText, setBuyButtonText] = useState('Profiter de l\'offre');
-  const [enableBuyButtonText, setEnableBuyButtonText] = useState(true);
-  const [passwordProtect, setPasswordProtect] = useState(false);
-  const [watermarks, setWatermarks] = useState(true);
-  const [limitSales, setLimitSales] = useState(false);
+  // ── Toggles ─────────────────────────────────────────────────────────────────
+  const [enableCustomButton, setEnableCustomButton] = useState(false);
+  const [customButtonText, setCustomButtonText] = useState('Acheter maintenant');
+  const [enableFilePassword, setEnableFilePassword] = useState(false);
+  const [filePassword, setFilePassword] = useState('');
+  const [watermarkEnabled, setWatermarkEnabled] = useState(false);
+  const [enableSalesLimit, setEnableSalesLimit] = useState(false);
+  const [salesLimit, setSalesLimit] = useState('');
   const [hideFromStore, setHideFromStore] = useState(false);
-  const [hideSalesCount, setHideSalesCount] = useState(true);
-  const [collectShipping, setCollectShipping] = useState(false);
+  const [hideSalesCount, setHideSalesCount] = useState(false);
+  const [collectShippingAddress, setCollectShippingAddress] = useState(false);
 
-  const [saving, setSaving] = useState(false);
+  // ── FAQ ─────────────────────────────────────────────────────────────────────
+  const [faqs, setFaqs] = useState<{ id?: string; question: string; answer: string; position: number }[]>([]);
 
+  // ── SEO ─────────────────────────────────────────────────────────────────────
+  const [seoTitle, setSeoTitle] = useState('');
+  const [seoDescription, setSeoDescription] = useState('');
+  const [seoKeywords, setSeoKeywords] = useState('');
+  const [seoImageUrl, setSeoImageUrl] = useState<string | null>(null);
+  const [seoImageFile, setSeoImageFile] = useState<File | null>(null);
+  const [seoImagePreview, setSeoImagePreview] = useState<string | null>(null);
+
+  // ── Course lessons ───────────────────────────────────────────────────────────
+  const [lessons, setLessons] = useState<Lesson[]>([]);
+  const [courseContentType, setCourseContentType] = useState('mixed');
+
+  // ── AI ───────────────────────────────────────────────────────────────────────
+  const [aiRewriting, setAiRewriting] = useState(false);
+
+  // ─── Build tabs dynamically ──────────────────────────────────────────────────
+  const allTabs: { key: TabKey; label: string; icon: React.ElementType }[] = [
+    { key: 'informations', label: 'Informations', icon: FileText },
+    { key: 'tarification', label: 'Tarification', icon: DollarSign },
+    ...(productType === 'course' ? [{ key: 'cours' as TabKey, label: 'Contenu du cours', icon: Folder }] : []),
+    { key: 'fichiers', label: 'Fichiers', icon: Upload },
+    { key: 'description', label: 'Description', icon: AlignLeft },
+    { key: 'visuel', label: 'Visuel & Design', icon: ImageIcon },
+    { key: 'faq', label: 'Questions fréquentes', icon: HelpCircle },
+    { key: 'seo', label: 'SEO', icon: SearchIcon },
+    { key: 'seo', label: 'Avancé', icon: Settings },
+  ].filter((t, i, arr) => arr.findIndex(x => x.key === t.key) === i);
+
+  // Remove duplicate seo/avancé
+  const tabs = [
+    { key: 'informations' as TabKey, label: 'Informations', icon: FileText },
+    { key: 'tarification' as TabKey, label: 'Tarification', icon: DollarSign },
+    ...(productType === 'course' ? [{ key: 'cours' as TabKey, label: 'Contenu du cours', icon: Folder }] : []),
+    { key: 'fichiers' as TabKey, label: 'Fichiers', icon: Upload },
+    { key: 'description' as TabKey, label: 'Description', icon: AlignLeft },
+    { key: 'visuel' as TabKey, label: 'Visuel & Design', icon: ImageIcon },
+    { key: 'faq' as TabKey, label: 'Questions fréquentes', icon: HelpCircle },
+    { key: 'seo' as TabKey, label: 'SEO', icon: SearchIcon },
+  ];
+
+  // ─── Load product ────────────────────────────────────────────────────────────
   useEffect(() => {
     const fetchProduct = async () => {
+      setLoading(true);
       const { data, error } = await adminSupabase
         .from('products')
         .select('*')
         .eq('id', productId)
         .single();
-      
-      if (data) {
-        setProduct(data);
-        setTitle(data.title || '');
-        setCategory(data.category || '');
-        setPrice(data.price?.toString() || '');
-        setDescription(data.description || '');
-        setImageUrl(data.image_url || '');
-        try {
-           const feats = typeof data.features === 'string' ? JSON.parse(data.features) : (data.features || {});
-           if (feats.pricing_model) setPricingModel(feats.pricing_model);
-           if (feats.crossed_price) setCrossedPrice(feats.crossed_price.toString());
-           if (feats.postPurchaseInstructions) setPostPurchaseInstructions(feats.postPurchaseInstructions);
-           if (feats.productUrl) setProductUrl(feats.productUrl);
-           if (feats.autoDiscount !== undefined) setAutoDiscount(feats.autoDiscount);
-           if (feats.buyButtonText) setBuyButtonText(feats.buyButtonText);
-           if (feats.passwordProtect !== undefined) setPasswordProtect(feats.passwordProtect);
-           if (feats.watermarks !== undefined) setWatermarks(feats.watermarks);
-           if (feats.limitSales !== undefined) setLimitSales(feats.limitSales);
-           if (feats.hideFromStore !== undefined) setHideFromStore(feats.hideFromStore);
-           if (feats.hideSalesCount !== undefined) setHideSalesCount(feats.hideSalesCount);
-           if (feats.collectShipping !== undefined) setCollectShipping(feats.collectShipping);
-        } catch(e) {}
+
+      if (error || !data) {
+        toast.error('Produit introuvable');
+        navigate({ to: '/admin/products' });
+        return;
       }
+
+      setTitle(data.title || '');
+      setCategory(data.category || '');
+      setDescription(data.description || '');
+      setPrice(String(data.price || ''));
+      setOriginalPrice(data.original_price ? String(data.original_price) : '');
+      setProductType(data.type || 'file');
+      setIsPublished(data.is_published || false);
+      setThumbnailUrl(data.thumbnail_url || null);
+      setThumbnailPreview(data.thumbnail_url || null);
+      setDownloadUrl(data.download_url || null);
+      setCourseContentType(data.course_content_type || 'mixed');
+
+      // SEO
+      setSeoTitle((data as any).seo_title || '');
+      setSeoDescription((data as any).seo_description || '');
+      setSeoKeywords((data as any).seo_keywords || '');
+      setSeoImageUrl((data as any).seo_image_url || null);
+      setSeoImagePreview((data as any).seo_image_url || null);
+
+      // Advanced toggles
+      const d = data as any;
+      setEnableFilePassword(!!d.file_password);
+      setFilePassword(d.file_password || '');
+      setWatermarkEnabled(!!d.watermark_enabled);
+      setEnableSalesLimit(!!d.sales_limit);
+      setSalesLimit(d.sales_limit ? String(d.sales_limit) : '');
+      setHideFromStore(!!d.hide_from_store);
+      setHideSalesCount(!!d.hide_sales_count);
+      setCollectShippingAddress(!!d.collect_shipping_address);
+      setEnableCustomButton(!!d.custom_button_text);
+      setCustomButtonText(d.custom_button_text || 'Acheter maintenant');
+
+      // Load course lessons
+      if (data.type === 'course') {
+        const { data: lessonsData } = await adminSupabase
+          .from('course_lessons')
+          .select('*')
+          .eq('product_id', productId)
+          .order('position');
+        if (lessonsData) {
+          setLessons(lessonsData.map((l: any) => ({
+            id: l.id,
+            title: l.title || '',
+            video_type: l.video_type || 'youtube',
+            video_url: l.video_url || '',
+            duration_minutes: l.duration_minutes || 0,
+            description: l.description || '',
+            position: l.position,
+          })));
+        }
+      }
+
+      // Load FAQs
+      const { data: faqData } = await adminSupabase
+        .from('product_faqs')
+        .select('*')
+        .eq('product_id', productId)
+        .order('position');
+      if (faqData) {
+        setFaqs(faqData.map((f: any) => ({
+          id: f.id,
+          question: f.question,
+          answer: f.answer,
+          position: f.position,
+        })));
+      }
+
       setLoading(false);
     };
     fetchProduct();
   }, [productId]);
 
-  const handleSaveProduct = async () => {
+  // ─── Upload helper ────────────────────────────────────────────────────────────
+  const uploadFile = async (file: File, folder: string): Promise<string | null> => {
+    const ext = file.name.split('.').pop();
+    const path = `${folder}/${Date.now()}.${ext}`;
+    const { error } = await adminSupabase.storage.from('product-assets').upload(path, file);
+    if (error) { toast.error('Erreur upload: ' + error.message); return null; }
+    const { data } = adminSupabase.storage.from('product-assets').getPublicUrl(path);
+    return data.publicUrl;
+  };
+
+  // ─── Save ─────────────────────────────────────────────────────────────────────
+  const handleSave = async () => {
     setSaving(true);
     try {
-      const features = typeof product.features === 'string' ? JSON.parse(product.features) : (product.features || {});
-      const updatedFeatures = { 
-        ...features, 
-        pricing_model: pricingModel, 
-        crossed_price: crossedPrice ? parseInt(crossedPrice) : null,
-        postPurchaseInstructions,
-        productUrl,
-        autoDiscount,
-        buyButtonText,
-        passwordProtect,
-        watermarks,
-        limitSales,
-        hideFromStore,
-        hideSalesCount,
-        collectShipping
+      let newThumb = thumbnailUrl;
+      let newDownload = downloadUrl;
+      let newSeoImg = seoImageUrl;
+
+      if (thumbnailFile) newThumb = await uploadFile(thumbnailFile, 'thumbnails');
+      if (downloadFile) newDownload = await uploadFile(downloadFile, 'downloads');
+      if (seoImageFile) newSeoImg = await uploadFile(seoImageFile, 'seo-images');
+
+      const updateData: any = {
+        title: title.trim(),
+        description: description.trim() || null,
+        category: category || null,
+        price: parseFloat(price) || 0,
+        original_price: originalPrice ? parseFloat(originalPrice) : null,
+        thumbnail_url: newThumb,
+        download_url: newDownload,
+        seo_title: seoTitle.trim() || null,
+        seo_description: seoDescription.trim() || null,
+        seo_keywords: seoKeywords.trim() || null,
+        seo_image_url: newSeoImg,
+        file_password: enableFilePassword && filePassword.trim() ? filePassword.trim() : null,
+        watermark_enabled: watermarkEnabled,
+        sales_limit: enableSalesLimit && salesLimit ? parseInt(salesLimit) : null,
+        hide_from_store: hideFromStore,
+        collect_shipping_address: collectShippingAddress,
+        hide_sales_count: hideSalesCount,
+        custom_button_text: enableCustomButton ? customButtonText : null,
+        course_content_type: productType === 'course' ? courseContentType : undefined,
       };
-      
-      const updateData = {
-         title,
-         category,
-         price: price ? parseInt(price) : 0,
-         description,
-         image_url: imageUrl,
-         features: JSON.stringify(updatedFeatures)
-      };
 
-      const { error } = await adminSupabase
-        .from('products')
-        .update(updateData)
-        .eq('id', product.id);
-
+      const { error } = await adminSupabase.from('products').update(updateData).eq('id', productId);
       if (error) throw error;
-      setProduct({ ...product, ...updateData, features: JSON.stringify(updatedFeatures) });
-      toast.error('Produit mis à jour avec succès !');
-    } catch(err) {
-      console.error(err);
-      toast.error('Erreur lors de la sauvegarde');
-    } finally {
-      setSaving(false);
-    }
-  };
 
-  const handleSaveChapters = async (newChapters: any[]) => {
-    setSaving(true);
-    try {
-      const features = typeof product.features === 'string' ? JSON.parse(product.features) : (product.features || {});
-      const updatedFeatures = { ...features, chapters: newChapters };
-      
-      const { error } = await adminSupabase
-        .from('products')
-        .update({ features: JSON.stringify(updatedFeatures) })
-        .eq('id', product.id);
-
-      if (error) throw error;
-      setProduct({ ...product, features: JSON.stringify(updatedFeatures) });
-    } catch(err) {
-      console.error(err);
-      toast.error('Erreur lors de la sauvegarde');
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const handleAddChapter = () => {
-    if (!newChapterTitle) return;
-    const features = typeof product.features === 'string' ? JSON.parse(product.features) : (product.features || {});
-    const existingChapters = features.chapters || [];
-    
-    const newChapter = {
-      id: Math.random().toString(36).substring(2, 9),
-      title: newChapterTitle,
-      status: 'active',
-      lessons: []
-    };
-    handleSaveChapters([...existingChapters, newChapter]);
-    setShowAddChapter(false);
-    setNewChapterTitle('');
-  };
-
-  const handleAddLesson = () => {
-    if (!lessonTitle) {
-       toast.error("Le titre est requis");
-       return;
-    }
-    const features = typeof product.features === 'string' ? JSON.parse(product.features) : (product.features || {});
-    const existingChapters = features.chapters || [];
-    
-    const newLesson = {
-      id: Math.random().toString(36).substring(2, 9),
-      title: lessonTitle,
-      description: lessonDesc,
-      type: lessonType,
-      url: lessonUrl,
-      content: lessonContent
-    };
-
-    const updatedChapters = existingChapters.map((c: any) => {
-      if (c.id === selectedChapter.id) {
-        return { ...c, lessons: [...(c.lessons || []), newLesson] };
+      // Save course lessons
+      if (productType === 'course') {
+        await adminSupabase.from('course_lessons').delete().eq('product_id', productId);
+        if (lessons.length > 0) {
+          const toInsert = [];
+          for (const lesson of lessons) {
+            let videoUrl = lesson.video_url;
+            if (lesson.video_type === 'upload' && lesson.file) {
+              const uploaded = await uploadFile(lesson.file, 'course-videos');
+              if (uploaded) videoUrl = uploaded;
+            }
+            toInsert.push({
+              product_id: productId,
+              title: lesson.title || `Leçon ${lesson.position + 1}`,
+              description: lesson.description || null,
+              video_url: videoUrl || null,
+              video_type: lesson.video_type,
+              duration_minutes: lesson.duration_minutes,
+              position: lesson.position,
+            });
+          }
+          await adminSupabase.from('course_lessons').insert(toInsert);
+        }
       }
-      return c;
-    });
 
-    handleSaveChapters(updatedChapters);
-    setSelectedChapter(updatedChapters.find((c: any) => c.id === selectedChapter.id));
-    
-    setShowAddLesson(false);
-    setLessonTitle('');
-    setLessonDesc('');
-    setLessonType('Vidéo');
-    setLessonUrl('');
-    setLessonContent('');
+      // Save FAQs
+      await adminSupabase.from('product_faqs').delete().eq('product_id', productId);
+      if (faqs.length > 0) {
+        await adminSupabase.from('product_faqs').insert(
+          faqs.map((f, i) => ({ product_id: productId, question: f.question, answer: f.answer, position: i }))
+        );
+      }
+
+      toast.success('Produit mis à jour !');
+    } catch (err: any) {
+      toast.error(err.message || 'Erreur lors de la mise à jour');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // ─── Publish ─────────────────────────────────────────────────────────────────
+  const togglePublish = async () => {
+    const { error } = await adminSupabase
+      .from('products')
+      .update({ is_published: !isPublished })
+      .eq('id', productId);
+    if (error) { toast.error(error.message); return; }
+    setIsPublished(!isPublished);
+    toast.success(isPublished ? 'Produit dépublié' : 'Produit publié !');
+  };
+
+  // ─── Add lesson ───────────────────────────────────────────────────────────────
+  const addLesson = () => {
+    setLessons([...lessons, {
+      title: '',
+      video_type: 'youtube',
+      video_url: '',
+      duration_minutes: 0,
+      description: '',
+      position: lessons.length,
+    }]);
+  };
+
+  const updateLesson = (index: number, field: string, value: any) => {
+    const updated = [...lessons];
+    (updated[index] as any)[field] = value;
+    setLessons(updated);
+  };
+
+  const removeLesson = (index: number) => {
+    setLessons(lessons.filter((_, i) => i !== index).map((l, i) => ({ ...l, position: i })));
+  };
+
+  // ─── AI rewrite ───────────────────────────────────────────────────────────────
+  const rewriteDescription = async () => {
+    if (!title.trim()) { toast.error('Entrez d\'abord un titre'); return; }
+    setAiRewriting(true);
+    try {
+      const { data, error } = await adminSupabase.functions.invoke('rewrite-description', {
+        body: { title, description, productType },
+      });
+      if (error) throw error;
+      if (data?.description) {
+        setDescription(data.description);
+        toast.success('Description réécrite par l\'IA !');
+      }
+    } catch (err: any) {
+      toast.error('Erreur IA: ' + (err.message || 'Réessayez'));
+    } finally {
+      setAiRewriting(false);
+    }
   };
 
   if (loading) {
-    return <div className="flex items-center justify-center h-[50vh]"><Loader2 className="w-8 h-8 animate-spin text-blue-600" /></div>;
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <Loader2 className="w-8 h-8 animate-spin text-slate-400" />
+      </div>
+    );
   }
-
-  if (!product) {
-    return <div className="p-8 text-center text-slate-500">Produit introuvable</div>;
-  }
-
-  const features = typeof product.features === 'string' ? JSON.parse(product.features) : (product.features || {});
-  const productType = features.type || 'fichier';
-  const chapters = features.chapters || [];
-
-  const allTabs = [
-    { id: 'informations', label: 'Informations', icon: LayoutDashboard },
-    { id: 'tarification', label: 'Tarification', icon: DollarSign },
-    { id: 'course', label: 'Contenu du cours', icon: Folder },
-    { id: 'fichiers', label: 'Fichiers', icon: FileText },
-    { id: 'description', label: 'Description', icon: AlignLeft },
-    { id: 'design', label: 'Visuel & Design', icon: ImageIcon },
-    { id: 'faq', label: 'Questions fréquentes', icon: HelpCircle },
-    { id: 'seo', label: 'SEO', icon: SearchIcon },
-    { id: 'avance', label: 'Avancé', icon: Settings },
-  ];
-
-  const tabs = allTabs.filter(tab => {
-    if (productType !== 'formation' && tab.id === 'course') return false;
-    return true;
-  });
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#F9FAFB]">
-      {/* Top Navigation */}
-      <div className="bg-white border-b border-slate-200 px-6 py-3 flex items-center justify-between sticky top-0 z-30">
-        <button 
-          onClick={() => navigate({ to: '/admin/products' })}
-          className="flex items-center gap-2 text-[14px] font-medium text-slate-600 hover:text-slate-900 transition-colors"
-        >
-          <ChevronLeft className="w-4 h-4" /> Mettre à jour le produit
-        </button>
+    <div className="min-h-screen bg-[#F8FAFC]">
+      {/* ── Header ── */}
+      <div className="bg-white border-b border-slate-200 sticky top-0 z-30">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3 min-w-0">
+            <button
+              onClick={() => navigate({ to: '/admin/products' })}
+              className="p-2 rounded-lg hover:bg-slate-100 transition-colors shrink-0"
+            >
+              <ArrowLeft className="w-5 h-5 text-slate-600" />
+            </button>
+            <div className="min-w-0">
+              <h1 className="text-[15px] font-bold text-slate-900 truncate">{title || 'Produit sans titre'}</h1>
+              <span className="text-[12px] text-slate-400 capitalize">
+                {productType === 'file' ? 'Fichier' : productType === 'course' ? 'Formation' : productType}
+              </span>
+            </div>
+          </div>
 
-        <div className="flex items-center gap-3">
-          <button className="flex items-center gap-2 text-[13px] font-medium text-slate-600 border border-slate-200 rounded-lg px-4 py-2 hover:bg-slate-50 transition-colors">
-            <Eye className="w-4 h-4" /> Voir
-          </button>
-          <button onClick={handleSaveProduct} disabled={saving} className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-2 rounded-lg text-[13px] transition-colors shadow-sm disabled:opacity-50">
-            {saving ? 'Enregistrement...' : 'Enregistrer'}
-          </button>
-          <button className="flex items-center gap-1 text-[13px] font-medium text-slate-600 border border-slate-200 rounded-lg px-3 py-2 hover:bg-slate-50 transition-colors">
-            Plus <ChevronDown className="w-4 h-4" />
-          </button>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={() => window.open(`/product/${productId}`, '_blank')}
+              className="hidden sm:flex items-center gap-1.5 px-3 py-2 text-[13px] font-medium text-slate-600 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors"
+            >
+              <Eye className="w-4 h-4" />
+              Voir
+            </button>
+
+            <button
+              onClick={togglePublish}
+              className={`flex items-center gap-1.5 px-3 py-2 text-[13px] font-medium rounded-lg transition-colors ${
+                isPublished
+                  ? 'bg-red-50 text-red-600 border border-red-200 hover:bg-red-100'
+                  : 'bg-blue-600 text-white hover:bg-blue-700'
+              }`}
+            >
+              {isPublished
+                ? <><EyeOff className="w-4 h-4" /> Dépublier</>
+                : <><Eye className="w-4 h-4" /> Publier</>
+              }
+            </button>
+
+            <div className="relative" ref={moreRef}>
+              <button
+                onClick={() => setShowMore(!showMore)}
+                className="p-2 rounded-lg hover:bg-slate-100 transition-colors border border-slate-200"
+              >
+                <MoreVertical className="w-4 h-4 text-slate-600" />
+              </button>
+              {showMore && (
+                <div className="absolute right-0 top-full mt-1 w-48 bg-white rounded-xl shadow-lg border border-slate-200 py-1 z-50">
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(`${window.location.origin}/product/${productId}`);
+                      toast.success('Lien copié !');
+                      setShowMore(false);
+                    }}
+                    className="w-full flex items-center gap-2 px-4 py-2.5 text-[13px] text-slate-700 hover:bg-slate-50 transition-colors"
+                  >
+                    <Link2 className="w-4 h-4" /> Copier le lien
+                  </button>
+                  <hr className="border-slate-100 my-1" />
+                  <button
+                    onClick={async () => {
+                      if (!confirm('Supprimer ce produit définitivement ?')) return;
+                      await adminSupabase.from('products').delete().eq('id', productId);
+                      toast.success('Produit supprimé');
+                      navigate({ to: '/admin/products' });
+                    }}
+                    className="w-full flex items-center gap-2 px-4 py-2.5 text-[13px] text-red-600 hover:bg-red-50 transition-colors"
+                  >
+                    <Trash2 className="w-4 h-4" /> Supprimer
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="flex flex-1 overflow-hidden">
-        {/* Left Column (Main Form) */}
-        <div className="flex-1 overflow-y-auto relative">
-          <div className="max-w-[1000px] mx-auto px-8 py-8 flex gap-12">
-            
-            {/* Sidebar Tabs */}
-            <div className="w-[240px] shrink-0">
-              <div className="flex items-center gap-2 mb-8 px-4">
-                <h1 className="text-[20px] font-bold text-slate-900 truncate">{product.title}</h1>
-                <FileText className="w-4 h-4 text-slate-400 shrink-0" />
-              </div>
+      {/* ── Layout ── */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 flex flex-col md:flex-row gap-6">
+        {/* Sidebar nav */}
+        <nav className="md:w-52 md:shrink-0">
+          <div className="flex md:flex-col gap-1 overflow-x-auto pb-2 md:pb-0 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
+            {tabs.map((tab) => {
+              const Icon = tab.icon;
+              return (
+                <button
+                  key={tab.key}
+                  onClick={() => setActiveTab(tab.key)}
+                  className={`flex items-center gap-2 px-3 py-2.5 rounded-xl text-[13px] font-medium transition-colors text-left whitespace-nowrap shrink-0 ${
+                    activeTab === tab.key
+                      ? 'bg-[#1E293B] text-white shadow-sm'
+                      : 'text-slate-500 hover:bg-white hover:text-slate-900 hover:shadow-sm'
+                  }`}
+                >
+                  <Icon className="w-4 h-4 shrink-0" />
+                  <span className="md:inline">{tab.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        </nav>
 
-              <div className="flex flex-col gap-1">
-                {tabs.map((tab) => {
-                  const Icon = tab.icon;
-                  const isActive = activeTab === tab.id;
-                  return (
+        {/* Content */}
+        <div className="flex-1 min-w-0">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+
+            {/* ── INFORMATIONS ── */}
+            {activeTab === 'informations' && (
+              <div className="space-y-6">
+                <h2 className="text-[18px] font-bold text-slate-900">Détails du produit</h2>
+
+                <div>
+                  <label className="block text-[13px] font-semibold text-slate-800 mb-1.5">
+                    Nom du produit <span className="text-red-500">*</span>
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      value={title}
+                      onChange={e => setTitle(e.target.value)}
+                      className="flex-1 h-11 px-3 text-[14px] bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#1E293B]/20 focus:border-[#1E293B] transition-colors"
+                    />
                     <button
-                      key={tab.id}
-                      onClick={() => navigate({ to: `/admin/products/${productId}`, search: { tab: tab.id } })}
-                      className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-[13px] font-medium transition-colors ${
-                        isActive 
-                          ? 'bg-slate-900 text-white' 
-                          : 'text-slate-600 hover:bg-slate-100'
-                      }`}
+                      onClick={rewriteDescription}
+                      disabled={aiRewriting || !title.trim()}
+                      title="Améliorer avec l'IA"
+                      className="w-11 h-11 rounded-xl border border-slate-200 flex items-center justify-center hover:bg-amber-50 hover:border-amber-300 transition-colors disabled:opacity-40"
                     >
-                      <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-slate-400'}`} />
-                      {tab.label}
+                      {aiRewriting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4 text-amber-500" />}
                     </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Tab Content */}
-            <div className="flex-1 pt-2 pb-24">
-              
-              {activeTab === 'informations' && (
-                <div className="animate-in fade-in slide-in-from-bottom-2">
-                  <h2 className="text-[18px] font-bold text-slate-900 mb-6">Informations générales</h2>
-                  <div className="space-y-6 max-w-2xl">
-                    <div>
-                      <label className="block text-[13px] font-medium text-[#111827] mb-1.5">Nom du produit <span className="text-red-500">*</span></label>
-                      <input 
-                        type="text" 
-                        value={title}
-                        onChange={e => setTitle(e.target.value)}
-                        className="w-full bg-white border border-[#D1D5DB] rounded-md px-3 py-2 text-[14px] text-slate-900 focus:outline-none focus:border-blue-500 transition-colors"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[13px] font-medium text-[#111827] mb-1.5">Catégorie <span className="text-red-500">*</span></label>
-                      <select 
-                        value={category}
-                        onChange={e => setCategory(e.target.value)}
-                        className="w-full bg-white border border-[#D1D5DB] rounded-md px-3 py-2 text-[14px] text-slate-900 focus:outline-none focus:border-blue-500 transition-colors"
-                      >
-                        <option value="Éducation & Apprentissage">Éducation & Apprentissage</option>
-                        <option value="Marketing Digital">Marketing Digital</option>
-                        <option value="Tech & Programmation">Tech & Programmation</option>
-                        <option value="Business & Entrepreneuriat">Business & Entrepreneuriat</option>
-                        <option value="Design">Design</option>
-                      </select>
-                    </div>
                   </div>
+                </div>
 
-                  <div className="mt-8 space-y-4 max-w-2xl">
-                    <div className="flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded-xl">
-                      <div className="flex items-start gap-3">
-                        <div className="w-6 h-6 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center shrink-0 mt-0.5">
-                           <DollarSign className="w-3.5 h-3.5" />
-                        </div>
-                        <div>
-                          <div className="text-[14px] font-bold text-slate-900">Réduction automatique <span className="text-orange-500">⚡</span></div>
-                          <div className="text-[13px] text-slate-500">Offrez des réductions automatiques aux clients lors du 3ème rappel d'abandon.</div>
-                        </div>
-                      </div>
-                      <button 
-                        onClick={() => setAutoDiscount(!autoDiscount)}
-                        className={`w-11 h-6 rounded-full flex items-center transition-colors px-1 shrink-0 ${autoDiscount ? 'bg-slate-900' : 'bg-slate-200'}`}
-                      >
-                        <div className={`w-4 h-4 rounded-full bg-white transition-transform ${autoDiscount ? 'translate-x-5' : 'translate-x-0'}`}></div>
-                      </button>
-                    </div>
+                <div>
+                  <label className="block text-[13px] font-semibold text-slate-800 mb-1.5">Catégorie</label>
+                  <select
+                    value={category}
+                    onChange={e => setCategory(e.target.value)}
+                    className="w-full h-11 px-3 text-[14px] bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#1E293B]/20 focus:border-[#1E293B] transition-colors"
+                  >
+                    <option value="">Sélectionner une catégorie</option>
+                    <option value="marketing">📈 Marketing Digital</option>
+                    <option value="design">🎨 Design & Créativité</option>
+                    <option value="dev">💻 Développement</option>
+                    <option value="business">💼 Business & Finance</option>
+                    <option value="education">🎓 Éducation & Apprentissage</option>
+                    <option value="lifestyle">🌿 Lifestyle</option>
+                    <option value="other">✨ Autre</option>
+                  </select>
+                </div>
 
-                    <div className="flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded-xl">
-                      <div className="flex items-start gap-3">
-                        <div className="w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 mt-0.5">
-                           <SearchIcon className="w-3.5 h-3.5" />
-                        </div>
-                        <div>
-                          <div className="text-[14px] font-bold text-slate-900">URL du produit</div>
-                          <div className="text-[13px] text-slate-500">Créez un lien personnalisé facile à retenir</div>
-                        </div>
-                      </div>
-                      <button 
-                        onClick={() => {}}
-                        className={`w-11 h-6 rounded-full flex items-center transition-colors px-1 shrink-0 bg-slate-200 opacity-50 cursor-not-allowed`}
-                      >
-                        <div className={`w-4 h-4 rounded-full bg-white transition-transform translate-x-0`}></div>
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="mt-8 max-w-2xl bg-white border border-slate-200 rounded-xl overflow-hidden">
-                    <div className="p-4 border-b border-slate-200 bg-slate-50">
-                       <div className="flex items-center gap-2 mb-1">
-                          <button className={`w-8 h-4 rounded-full flex items-center transition-colors px-1 bg-slate-900`}>
-                            <div className={`w-2.5 h-2.5 rounded-full bg-white transition-transform translate-x-3.5`}></div>
-                          </button>
-                          <span className="text-[14px] font-bold text-slate-900">Instructions après achat</span>
-                       </div>
-                       <p className="text-[12px] text-slate-500 ml-10">Guidez vos nouveaux clients pour maximiser leur satisfaction</p>
-                    </div>
-                    <div className="p-4">
-                      <RichTextEditor 
-                        value={postPurchaseInstructions} 
-                        onChange={setPostPurchaseInstructions} 
-                        label=""
-                        withAI={false}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="mt-12">
-                    <ToggleBlock 
-                      enabled={enableBuyButtonText} 
-                      onChange={setEnableBuyButtonText} 
-                      title="Texte du bouton d'achat" 
+                {/* Toggles */}
+                <div className="border border-slate-200 rounded-xl divide-y divide-slate-100">
+                  <div className="px-4">
+                    <ToggleRow
+                      title="Texte du bouton d'achat"
                       description="Personnalisez le texte du bouton d'achat sur votre page produit"
+                      enabled={enableCustomButton}
+                      onToggle={setEnableCustomButton}
                     >
-                      <select 
-                        value={buyButtonText}
-                        onChange={e => setBuyButtonText(e.target.value)}
-                        className="w-full bg-white border border-[#D1D5DB] rounded-md px-3 py-3 text-[14px] text-slate-900 focus:outline-none focus:border-blue-500 transition-colors"
+                      <select
+                        value={customButtonText}
+                        onChange={e => setCustomButtonText(e.target.value)}
+                        className="w-full h-10 px-3 text-[13px] bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-[#1E293B]"
                       >
-                        <option value="Profiter de l'offre">Profiter de l'offre</option>
-                        <option value="Acheter maintenant">Acheter maintenant</option>
-                        <option value="Accéder au produit">Accéder au produit</option>
-                        <option value="Télécharger">Télécharger</option>
+                        <option>Acheter maintenant</option>
+                        <option>Télécharger maintenant</option>
+                        <option>Obtenir l'accès</option>
+                        <option>S'inscrire</option>
+                        <option>Profiter de l'offre</option>
                       </select>
-                    </ToggleBlock>
+                    </ToggleRow>
 
-                    <ToggleBlock enabled={passwordProtect} onChange={setPasswordProtect} title="Protégez vos fichiers avec un mot de passe" description="Sécurisez votre contenu premium avec protection par mot de passe" />
-                    <ToggleBlock enabled={watermarks} onChange={setWatermarks} title="Ajoutez des filigranes à vos fichiers" description="Ajoutez automatiquement des filigranes avec les détails du client pour décourager le partage non autorisé (Nous nous en chargeons pour vous)" />
-                    <ToggleBlock enabled={limitSales} onChange={setLimitSales} title="Limite de ventes" description="Rendez votre produit exclusif en limitant le nombre d'acheteurs" />
-                    <ToggleBlock enabled={hideFromStore} onChange={setHideFromStore} title="Masquer sur la boutique" description="Gardez ce produit privé - uniquement accessible avec un lien direct" />
-                    <ToggleBlock enabled={hideSalesCount} onChange={setHideSalesCount} title="Masquer le nombre d'achats" description="Gardez vos statistiques de vente confidentielles" />
-                    <ToggleBlock enabled={collectShipping} onChange={setCollectShipping} title="Collecter les adresses de livraison" description="Récupérez les adresses clients pour vos produits physiques" />
-                  </div>
+                    <ToggleRow
+                      title="Protégez vos fichiers avec un mot de passe"
+                      description="Sécurisez votre contenu premium avec protection par mot de passe"
+                      enabled={enableFilePassword}
+                      onToggle={setEnableFilePassword}
+                    >
+                      <input
+                        type="text"
+                        value={filePassword}
+                        onChange={e => setFilePassword(e.target.value)}
+                        placeholder="Mot de passe à communiquer à l'acheteur"
+                        className="w-full h-10 px-3 text-[13px] bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-[#1E293B]"
+                      />
+                    </ToggleRow>
 
-                </div>
-              )}
+                    <ToggleRow
+                      title="Ajoutez des filigranes à vos fichiers"
+                      description="Affiche les détails de l'acheteur sur la page de téléchargement pour décourager le partage non autorisé"
+                      enabled={watermarkEnabled}
+                      onToggle={setWatermarkEnabled}
+                    />
 
-              {activeTab === 'tarification' && (
-                <div className="animate-in fade-in slide-in-from-bottom-2">
-                  <h2 className="text-[18px] font-bold text-slate-900 mb-6">Tarification</h2>
-                  <div className="space-y-6 max-w-2xl">
-                    <div>
-                      <label className="block text-[13px] font-medium text-[#111827] mb-1.5">Modèle de tarification <span className="text-red-500">*</span></label>
-                      <select 
-                        value={pricingModel}
-                        onChange={e => setPricingModel(e.target.value)}
-                        className="w-full bg-white border border-[#D1D5DB] rounded-md px-3 py-2 text-[14px] text-slate-900 focus:outline-none focus:border-blue-500 transition-colors"
-                      >
-                        <option value="Paiement unique">Paiement unique</option>
-                        <option value="Abonnement mensuel">Abonnement mensuel</option>
-                        <option value="Abonnement annuel">Abonnement annuel</option>
-                        <option value="Gratuit">Gratuit</option>
-                      </select>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-[13px] font-medium text-[#111827] mb-1.5">Prix</label>
-                        <div className="relative">
-                          <input 
-                            type="number" 
-                            value={price}
-                            onChange={e => setPrice(e.target.value)}
-                            className="w-full bg-white border border-[#D1D5DB] rounded-md pl-3 pr-12 py-2 text-[14px] text-slate-900 focus:outline-none focus:border-blue-500 transition-colors"
-                          />
-                          <div className="absolute right-3 top-1/2 -translate-y-1/2 text-[13px] text-slate-400">FCFA</div>
-                        </div>
-                      </div>
-                      <div>
-                        <label className="block text-[13px] font-medium text-[#111827] mb-1.5">Prix promotionnel</label>
-                        <div className="relative">
-                          <input 
-                            type="number" 
-                            value={crossedPrice}
-                            onChange={e => setCrossedPrice(e.target.value)}
-                            className="w-full bg-white border border-[#D1D5DB] rounded-md pl-3 pr-12 py-2 text-[14px] text-slate-900 focus:outline-none focus:border-blue-500 transition-colors"
-                          />
-                          <div className="absolute right-3 top-1/2 -translate-y-1/2 text-[13px] text-slate-400">FCFA</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
+                    <ToggleRow
+                      title="Limite de ventes"
+                      description="Rendez votre produit exclusif en limitant le nombre d'acheteurs"
+                      enabled={enableSalesLimit}
+                      onToggle={setEnableSalesLimit}
+                    >
+                      <input
+                        type="number"
+                        min={1}
+                        value={salesLimit}
+                        onChange={e => setSalesLimit(e.target.value)}
+                        placeholder="Nombre maximum de ventes"
+                        className="w-full h-10 px-3 text-[13px] bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-[#1E293B]"
+                      />
+                    </ToggleRow>
 
-              {activeTab === 'description' && (
-                <div className="animate-in fade-in slide-in-from-bottom-2">
-                  <div className="max-w-4xl">
-                    <RichTextEditor 
-                      value={description} 
-                      onChange={setDescription} 
-                      label="Description du produit"
-                      withAI={true}
+                    <ToggleRow
+                      title="Masquer sur la boutique"
+                      description="Gardez ce produit privé - uniquement accessible avec un lien direct"
+                      enabled={hideFromStore}
+                      onToggle={setHideFromStore}
+                    />
+
+                    <ToggleRow
+                      title="Masquer le nombre de ventes"
+                      description="Cache le compteur de ventes sur la page produit publique"
+                      enabled={hideSalesCount}
+                      onToggle={setHideSalesCount}
+                    />
+
+                    <ToggleRow
+                      title="Collecter les adresses de livraison"
+                      description="Demande l'adresse postale lors du paiement (utile pour les produits physiques)"
+                      enabled={collectShippingAddress}
+                      onToggle={setCollectShippingAddress}
                     />
                   </div>
                 </div>
-              )}
+              </div>
+            )}
 
-              {activeTab === 'visuel' && (
-                <div className="animate-in fade-in slide-in-from-bottom-2">
-                  <h2 className="text-[18px] font-bold text-slate-900 mb-6">Visuel & Design</h2>
-                  <div className="max-w-2xl">
-                    <label className="block text-[13px] font-medium text-[#111827] mb-1.5">Image de couverture</label>
-                    {imageUrl ? (
-                      <div className="relative rounded-xl overflow-hidden mb-4 group border border-slate-200">
-                        <img src={imageUrl} alt="Cover" className="w-full h-48 object-cover" />
-                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                          <button onClick={() => setImageUrl('')} className="bg-white text-red-600 font-medium px-4 py-2 rounded-lg text-[13px] shadow-sm">
-                            Supprimer l'image
-                          </button>
-                        </div>
-                      </div>
-                    ) : (
-                      <label className="border-2 border-dashed border-[#D1D5DB] rounded-xl bg-[#F9FAFB] flex flex-col items-center justify-center py-12 px-6 text-center hover:bg-slate-50 transition-colors cursor-pointer mb-4 relative">
-                        <input 
-                          type="file" 
-                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" 
-                          accept="image/*"
-                          onChange={async (e) => {
-                            const file = e.target.files?.[0];
-                            if (file) {
-                              try {
-                                const { uploadFileToLWS } = await import('@/lib/api/lws-storage');
-                                const url = await uploadFileToLWS(file);
-                                setImageUrl(url);
-                              } catch (err) {
-                                toast.error("Erreur lors du téléversement: " + err);
-                              }
-                            }
-                          }}
-                        />
-                        <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mb-3">
-                          <ImageIcon className="w-6 h-6" />
-                        </div>
-                        <h3 className="text-[15px] font-bold text-slate-900 mb-1">Téléverser une image</h3>
-                        <p className="text-[13px] text-slate-500 max-w-[250px]">
-                          JPG, PNG, GIF. Taille max 5MB. Ratio recommandé 16:9.
-                        </p>
-                      </label>
+            {/* ── TARIFICATION ── */}
+            {activeTab === 'tarification' && (
+              <div className="space-y-6">
+                <h2 className="text-[18px] font-bold text-slate-900">Tarification</h2>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-[13px] font-semibold text-slate-800 mb-1.5">Prix</label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[13px] text-slate-400">FCFA</span>
+                      <input
+                        type="number"
+                        value={price}
+                        onChange={e => setPrice(e.target.value)}
+                        className="w-full h-11 pl-14 pr-3 text-[14px] bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#1E293B]/20 focus:border-[#1E293B] transition-colors"
+                        placeholder="0"
+                      />
+                    </div>
+                    <p className="text-[11px] text-slate-400 mt-1">Min : 100 FCFA</p>
+                  </div>
+                  <div>
+                    <label className="block text-[13px] font-semibold text-slate-800 mb-1.5">Prix barré</label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[13px] text-slate-400">FCFA</span>
+                      <input
+                        type="number"
+                        value={originalPrice}
+                        onChange={e => setOriginalPrice(e.target.value)}
+                        className="w-full h-11 pl-14 pr-3 text-[14px] bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#1E293B]/20 focus:border-[#1E293B] transition-colors"
+                        placeholder="0"
+                      />
+                    </div>
+                    {originalPrice && parseFloat(originalPrice) > parseFloat(price || '0') && (
+                      <p className="text-[11px] text-emerald-600 mt-1">
+                        Réduction de {Math.round(((parseFloat(originalPrice) - parseFloat(price)) / parseFloat(originalPrice)) * 100)}%
+                      </p>
                     )}
-                    <label className="block text-[13px] font-medium text-[#111827] mb-1.5">URL de l'image (alternative)</label>
-                    <input 
-                      type="text" 
-                      value={imageUrl}
-                      onChange={e => setImageUrl(e.target.value)}
-                      placeholder="https://"
-                      className="w-full bg-white border border-[#D1D5DB] rounded-md px-3 py-2 text-[14px] text-slate-900 focus:outline-none focus:border-blue-500 transition-colors"
-                    />
                   </div>
                 </div>
-              )}
+              </div>
+            )}
 
-              {activeTab === 'course' && (
-                <div className="animate-in fade-in slide-in-from-bottom-2">
-                  <div className="flex items-center justify-between mb-8">
-                    <h2 className="text-[18px] font-bold text-slate-900">Contenu du cours</h2>
-                    <button onClick={() => setShowAddChapter(true)} disabled={saving} className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded-lg text-[13px] transition-colors flex items-center gap-2 shadow-sm disabled:opacity-50">
-                      {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />} Ajouter un chapitre
-                    </button>
+            {/* ── COURS (formation only) ── */}
+            {activeTab === 'cours' && productType === 'course' && (
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-[18px] font-bold text-slate-900">Contenu de la formation</h2>
+                    <p className="text-[13px] text-slate-500">Gérez les leçons de votre formation</p>
                   </div>
+                </div>
 
-                  {chapters.length > 0 && (
-                    <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 text-[12px] font-semibold text-slate-500 mb-4">
-                      <div className="flex items-center gap-4 flex-1">
-                        <span className="w-8">#</span>
-                        <span>Titre</span>
+                {/* Content type selector */}
+                <div>
+                  <label className="block text-[13px] font-semibold text-slate-800 mb-3">Type de contenu</label>
+                  <div className="grid grid-cols-3 gap-3">
+                    {[
+                      { value: 'video', label: 'Vidéo', icon: Video, desc: 'Cours en vidéo' },
+                      { value: 'text', label: 'Texte', icon: BookOpen, desc: 'Contenu écrit' },
+                      { value: 'mixed', label: 'Mixte', icon: Layers, desc: 'Vidéo + texte' },
+                    ].map(ct => (
+                      <button
+                        key={ct.value}
+                        type="button"
+                        onClick={() => setCourseContentType(ct.value)}
+                        className={`p-4 rounded-xl border-2 text-center transition-all ${
+                          courseContentType === ct.value
+                            ? 'border-blue-400 bg-blue-50'
+                            : 'border-slate-200 hover:border-slate-300'
+                        }`}
+                      >
+                        <ct.icon className="w-6 h-6 mx-auto mb-2 text-blue-500" />
+                        <p className="text-[13px] font-semibold text-slate-900">{ct.label}</p>
+                        <p className="text-[11px] text-slate-500">{ct.desc}</p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Lessons list */}
+                <div className="space-y-3">
+                  {lessons.map((lesson, index) => (
+                    <div key={index} className="bg-slate-50 rounded-xl p-4 border border-slate-200">
+                      <div className="flex items-start gap-3 mb-3">
+                        <span className="w-7 h-7 rounded-full bg-[#1E293B] text-white flex items-center justify-center text-[12px] font-bold shrink-0">
+                          {index + 1}
+                        </span>
+                        <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <input
+                            value={lesson.title}
+                            onChange={e => updateLesson(index, 'title', e.target.value)}
+                            placeholder="Titre de la leçon"
+                            className="h-10 px-3 text-[13px] bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-[#1E293B]"
+                          />
+                          <input
+                            type="number"
+                            value={lesson.duration_minutes || ''}
+                            onChange={e => updateLesson(index, 'duration_minutes', parseInt(e.target.value) || 0)}
+                            placeholder="Durée (minutes)"
+                            className="h-10 px-3 text-[13px] bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-[#1E293B]"
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => removeLesson(index)}
+                          className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
                       </div>
-                      <div className="flex items-center gap-12 pr-[140px]">
-                        <span>Statut</span>
-                        <span>Actions</span>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 ml-10">
+                        <select
+                          value={lesson.video_type}
+                          onChange={e => updateLesson(index, 'video_type', e.target.value)}
+                          className="h-10 px-3 text-[13px] bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-[#1E293B]"
+                        >
+                          <option value="youtube">YouTube URL</option>
+                          <option value="vimeo">Vimeo URL</option>
+                          <option value="upload">Upload vidéo</option>
+                          <option value="text">Texte uniquement</option>
+                        </select>
+                        {lesson.video_type !== 'text' && lesson.video_type !== 'upload' && (
+                          <input
+                            value={lesson.video_url}
+                            onChange={e => updateLesson(index, 'video_url', e.target.value)}
+                            placeholder={lesson.video_type === 'youtube' ? 'https://youtube.com/watch?v=...' : 'https://vimeo.com/...'}
+                            className="sm:col-span-2 h-10 px-3 text-[13px] bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-[#1E293B]"
+                          />
+                        )}
+                        {lesson.video_type === 'upload' && (
+                          <div className="sm:col-span-2">
+                            <label className="flex items-center gap-2 h-10 px-3 bg-white border border-slate-200 rounded-lg cursor-pointer hover:border-[#1E293B] transition-colors">
+                              <Upload className="w-4 h-4 text-slate-400" />
+                              <span className="text-[13px] text-slate-500">
+                                {lesson.file ? lesson.file.name : 'Choisir une vidéo'}
+                              </span>
+                              <input
+                                type="file"
+                                accept="video/*"
+                                className="hidden"
+                                onChange={e => {
+                                  const f = e.target.files?.[0];
+                                  if (f) updateLesson(index, 'file', f);
+                                }}
+                              />
+                            </label>
+                          </div>
+                        )}
                       </div>
                     </div>
+                  ))}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={addLesson}
+                  className="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-slate-300 rounded-xl text-[13px] font-medium text-slate-500 hover:border-[#1E293B] hover:text-[#1E293B] transition-colors"
+                >
+                  <Plus className="w-4 h-4" />
+                  Ajouter une leçon
+                </button>
+              </div>
+            )}
+
+            {/* ── FICHIERS ── */}
+            {activeTab === 'fichiers' && (
+              <div className="space-y-6">
+                <h2 className="text-[18px] font-bold text-slate-900">Fichier du produit</h2>
+
+                {downloadUrl && !downloadFile && (
+                  <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                    <Package className="w-5 h-5 text-slate-400 shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[13px] font-medium text-slate-700">Fichier actuel</p>
+                      <a
+                        href={downloadUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[12px] text-blue-600 hover:underline truncate block"
+                      >
+                        {downloadUrl.split('/').pop()}
+                      </a>
+                    </div>
+                  </div>
+                )}
+
+                <div
+                  className="rounded-xl border-2 border-dashed border-slate-300 p-12 text-center cursor-pointer hover:border-[#1E293B] transition-colors"
+                  onClick={() => document.getElementById('edit-download-input')?.click()}
+                >
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center">
+                      <Upload className="w-6 h-6 text-amber-600" />
+                    </div>
+                    <p className="text-[14px] font-medium text-slate-700">
+                      {downloadUrl ? 'Remplacer le fichier' : 'Choisir un fichier'}
+                    </p>
+                    <p className="text-[12px] text-slate-400">PDF, ZIP, MP3, MP4, DOCX… Max 500 MB</p>
+                  </div>
+                  {downloadFile && (
+                    <p className="text-[13px] font-medium text-slate-700 mt-4">📎 {downloadFile.name}</p>
                   )}
+                  <input
+                    id="edit-download-input"
+                    type="file"
+                    className="hidden"
+                    onChange={e => setDownloadFile(e.target.files?.[0] || null)}
+                  />
+                </div>
+              </div>
+            )}
 
+            {/* ── DESCRIPTION ── */}
+            {activeTab === 'description' && (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-[18px] font-bold text-slate-900">Description</h2>
+                  <button
+                    onClick={rewriteDescription}
+                    disabled={aiRewriting || !title.trim()}
+                    className="flex items-center gap-1.5 px-3 py-2 text-[13px] font-medium bg-amber-50 text-amber-700 border border-amber-200 rounded-xl hover:bg-amber-100 transition-colors disabled:opacity-40"
+                  >
+                    {aiRewriting ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
+                    Assistant IA
+                  </button>
+                </div>
+                <RichTextEditor
+                  value={description}
+                  onChange={setDescription}
+                  label=""
+                  withAI={false}
+                />
+              </div>
+            )}
+
+            {/* ── VISUEL ── */}
+            {activeTab === 'visuel' && (
+              <div className="space-y-6">
+                <h2 className="text-[18px] font-bold text-slate-900">Visuel & Design</h2>
+                <div>
+                  <label className="block text-[13px] font-semibold text-slate-800 mb-3">Vignette du produit</label>
+                  <div
+                    className="relative w-48 h-48 rounded-xl bg-slate-100 border-2 border-dashed border-slate-300 hover:border-[#1E293B] transition-colors cursor-pointer flex items-center justify-center overflow-hidden"
+                    onClick={() => document.getElementById('edit-thumb-input')?.click()}
+                  >
+                    {thumbnailPreview
+                      ? <img src={thumbnailPreview} alt="Vignette" className="h-full w-full object-cover" />
+                      : <Package className="w-12 h-12 text-slate-300" />
+                    }
+                    <input
+                      id="edit-thumb-input"
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={e => {
+                        const f = e.target.files?.[0];
+                        if (f) {
+                          setThumbnailFile(f);
+                          const reader = new FileReader();
+                          reader.onload = ev => setThumbnailPreview(ev.target?.result as string);
+                          reader.readAsDataURL(f);
+                        }
+                      }}
+                    />
+                  </div>
+                  <p className="text-[12px] text-slate-400 mt-2">Image carrée JPG ou PNG. Min 600×600px recommandé.</p>
+                </div>
+              </div>
+            )}
+
+            {/* ── FAQ ── */}
+            {activeTab === 'faq' && (
+              <div className="space-y-6">
+                <div className="flex flex-col items-center text-center mb-2">
+                  <div className="w-14 h-14 rounded-full bg-slate-100 flex items-center justify-center mb-4">
+                    <HelpCircle className="w-6 h-6 text-slate-400" />
+                  </div>
+                  <h2 className="text-[18px] font-bold text-slate-900">Questions fréquentes</h2>
+                  <p className="text-[13px] text-slate-500 mt-1 max-w-md">
+                    Répondez aux questions fréquemment posées par vos clients pour rassurer et convertir.
+                  </p>
+                </div>
+
+                {faqs.length > 0 && (
                   <div className="space-y-3">
-                    {chapters.length === 0 && (
-                       <div className="text-center py-10 text-slate-500 text-[14px]">Aucun chapitre.</div>
-                    )}
-                    {chapters.map((chapter: any, index: number) => (
-                      <div 
-                        key={chapter.id} 
-                        onClick={() => setSelectedChapter(chapter)}
-                        className={`flex items-center justify-between px-4 py-3 bg-white border rounded-xl shadow-sm hover:border-slate-300 transition-colors cursor-pointer ${selectedChapter?.id === chapter.id ? 'border-blue-500 ring-1 ring-blue-500' : 'border-slate-200'}`}
-                      >
-                        <div className="flex items-center gap-4 flex-1">
-                          <span className="w-8 text-[13px] text-slate-400 font-medium">{(index + 1).toString().padStart(2, '0')}</span>
-                          <div className="flex items-center gap-3">
-                            <Folder className="w-4 h-4 text-slate-700" />
-                            <span className="text-[14px] font-bold text-slate-900 uppercase">{chapter.title}</span>
+                    {faqs.map((faq, index) => (
+                      <div key={index} className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-3">
+                        <div className="flex items-start gap-2">
+                          <div className="flex-1 space-y-3">
+                            <div>
+                              <label className="text-[11px] font-semibold text-slate-400 uppercase mb-1 block">Question</label>
+                              <input
+                                value={faq.question}
+                                onChange={e => {
+                                  const updated = [...faqs];
+                                  updated[index].question = e.target.value;
+                                  setFaqs(updated);
+                                }}
+                                placeholder="Ex: Comment accéder au contenu ?"
+                                className="w-full h-10 px-3 text-[13px] bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-[#1E293B]"
+                              />
+                            </div>
+                            <div>
+                              <label className="text-[11px] font-semibold text-slate-400 uppercase mb-1 block">Réponse</label>
+                              <textarea
+                                value={faq.answer}
+                                onChange={e => {
+                                  const updated = [...faqs];
+                                  updated[index].answer = e.target.value;
+                                  setFaqs(updated);
+                                }}
+                                placeholder="Votre réponse..."
+                                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-[13px] min-h-[80px] resize-y focus:outline-none focus:border-[#1E293B]"
+                              />
+                            </div>
                           </div>
-                        </div>
-                        
-                        <div className="flex items-center gap-8">
-                          <button className={`w-11 h-6 rounded-full flex items-center transition-colors px-1 ${chapter.status === 'active' ? 'bg-slate-900' : 'bg-slate-200'}`}>
-                            <div className={`w-4 h-4 rounded-full bg-white transition-transform ${chapter.status === 'active' ? 'translate-x-5' : 'translate-x-0'}`}></div>
+                          <button
+                            type="button"
+                            onClick={() => setFaqs(faqs.filter((_, i) => i !== index))}
+                            className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors shrink-0"
+                          >
+                            <Trash2 className="w-4 h-4" />
                           </button>
-                          
-                          <div className="flex items-center gap-2" onClick={e => e.stopPropagation()}>
-                            <button className="w-8 h-8 rounded-lg border border-slate-200 flex items-center justify-center hover:bg-slate-50 transition-colors">
-                              <ChevronUp className="w-4 h-4 text-slate-600" />
-                            </button>
-                            <button className="w-8 h-8 rounded-lg border border-slate-200 flex items-center justify-center hover:bg-slate-50 transition-colors">
-                              <ChevronDown className="w-4 h-4 text-slate-600" />
-                            </button>
-                            <button className="w-8 h-8 rounded-lg border border-slate-200 flex items-center justify-center hover:bg-slate-50 transition-colors">
-                              <MoreHorizontal className="w-4 h-4 text-slate-600" />
-                            </button>
-                          </div>
                         </div>
                       </div>
                     ))}
                   </div>
+                )}
+
+                <div className="flex justify-center">
+                  <button
+                    type="button"
+                    onClick={() => setFaqs([...faqs, { question: '', answer: '', position: faqs.length }])}
+                    className="flex items-center gap-2 px-4 py-2.5 text-[13px] font-medium border-2 border-dashed border-slate-300 rounded-xl text-slate-500 hover:border-[#1E293B] hover:text-[#1E293B] transition-colors"
+                  >
+                    <Plus className="w-4 h-4" />
+                    Ajouter une question
+                  </button>
                 </div>
-              )}
+              </div>
+            )}
 
-              {activeTab === 'fichiers' && (
-                <div className="flex items-center justify-center h-64 text-slate-400 text-[14px]">
-                  Fichiers: téléversez vos documents ici.
-                </div>
-              )}
-              {activeTab === 'faq' && (
-                <div className="flex items-center justify-center h-64 text-slate-400 text-[14px]">
-                  Module de Questions fréquentes en cours de développement
-                </div>
-              )}
-              {activeTab === 'seo' && (
-                <div className="flex items-center justify-center h-64 text-slate-400 text-[14px]">
-                  Paramètres SEO en cours de développement
-                </div>
-              )}
-              {activeTab === 'avance' && (
-                <div className="flex items-center justify-center h-64 text-slate-400 text-[14px]">
-                  Paramètres avancés en cours de développement
-                </div>
-              )}
-            </div>
-          </div>
-
-        </div>
-
-        {/* Slide-over panel for Lessons */}
-        {selectedChapter && (
-          <>
-            {/* Backdrop */}
-            <div className="fixed inset-0 bg-slate-900/60 z-[50] animate-in fade-in duration-200" onClick={() => setSelectedChapter(null)} />
-            
-            {/* The Panel */}
-            <div className="fixed right-0 top-0 w-1/2 min-w-[600px] bg-white flex flex-col z-[60] h-screen animate-in slide-in-from-right duration-300 shadow-[0_0_40px_rgba(0,0,0,0.2)]">
-              
-              {!showAddLesson ? (
-                // State: Empty / List of lessons
-                <div className="flex flex-col h-full">
-                  <div className="px-6 py-4 flex items-center justify-between border-b border-slate-100">
-                    <button onClick={() => setSelectedChapter(null)} className="p-2 hover:bg-slate-50 rounded-lg transition-colors">
-                      <ChevronLeft className="w-5 h-5 text-slate-600" />
-                    </button>
-                    <h3 className="text-[15px] font-bold text-slate-900 uppercase">{selectedChapter.title}</h3>
-                    <button 
-                      onClick={() => setShowAddLesson(true)}
-                      className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded-lg text-[13px] transition-colors flex items-center gap-2 shadow-sm"
-                    >
-                      <Plus className="w-4 h-4" /> Ajouter une leçon
-                    </button>
-                  </div>
-
-                  <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
-                    <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-6">
-                      <PlayCircle className="w-8 h-8 text-slate-600" />
-                    </div>
-                    
-                    {(!selectedChapter.lessons || selectedChapter.lessons.length === 0) ? (
-                      <>
-                        <h3 className="text-[20px] font-bold text-slate-900 mb-2">Créez votre première leçon</h3>
-                        <p className="text-slate-500 text-[14px] mb-8 max-w-[300px]">
-                          Ajoutez des vidéos, textes ou fichiers pour enrichir ce chapitre.
-                        </p>
-                      </>
-                    ) : (
-                      <>
-                        <h3 className="text-[20px] font-bold text-slate-900 mb-2">{selectedChapter.lessons.length} leçon(s) dans ce chapitre</h3>
-                        <p className="text-slate-500 text-[14px] mb-8 max-w-[300px]">
-                          Continuez à ajouter du contenu ou modifiez l'existant.
-                        </p>
-                        
-                        <div className="w-full text-left mb-8 space-y-2">
-                          {selectedChapter.lessons.map((lesson: any, i: number) => (
-                            <div key={lesson.id} className="bg-slate-50 border border-slate-200 p-3 rounded-lg flex items-center justify-between">
-                              <div className="flex items-center gap-3">
-                                {lesson.type === 'Vidéo' && <Video className="w-4 h-4 text-blue-600" />}
-                                {lesson.type === 'Audio' && <Headphones className="w-4 h-4 text-purple-600" />}
-                                {lesson.type === 'Texte' && <FileText className="w-4 h-4 text-emerald-600" />}
-                                <span className="text-[14px] font-medium text-slate-900">{lesson.title}</span>
-                              </div>
-                              <button className="text-slate-400 hover:text-slate-600">
-                                <MoreHorizontal className="w-4 h-4" />
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-                      </>
-                    )}
-
-                    <div className="flex items-center gap-3">
-                      <button 
-                        onClick={() => setShowAddLesson(true)}
-                        className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2.5 rounded-lg text-[14px] transition-colors flex items-center gap-2 shadow-sm"
-                      >
-                        <Plus className="w-4 h-4" /> Ajouter une leçon
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                // State: Add Lesson Form
-                <div className="flex flex-col h-full">
-                  <div className="px-6 py-4 flex items-center gap-3 border-b border-slate-100">
-                    <button onClick={() => setShowAddLesson(false)} className="p-2 hover:bg-slate-50 rounded-lg transition-colors">
-                      <ChevronLeft className="w-5 h-5 text-slate-600" />
-                    </button>
-                    <h3 className="text-[15px] font-bold text-slate-900">Ajouter une leçon</h3>
-                  </div>
-
-                  <div className="flex-1 overflow-y-auto p-8 space-y-8">
-                    <div>
-                      <label className="block text-[14px] font-medium text-slate-900 mb-2">Titre <span className="text-red-500">*</span></label>
-                      <input 
-                        type="text" 
-                        value={lessonTitle}
-                        onChange={(e) => setLessonTitle(e.target.value)}
-                        className="w-full bg-white border border-[#E5E7EB] rounded-2xl px-4 py-3.5 text-[14px] text-slate-900 focus:outline-none focus:border-slate-400 transition-colors shadow-sm"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-[14px] font-medium text-slate-900 mb-2">Description <span className="text-red-500">*</span></label>
-                      <div className="relative">
-                        <textarea 
-                          value={lessonDesc}
-                          onChange={(e) => {
-                            if (e.target.value.length <= 160) {
-                              setLessonDesc(e.target.value);
-                            }
-                          }}
-                          rows={4}
-                          className="w-full bg-white border border-[#E5E7EB] rounded-2xl px-4 py-3.5 text-[14px] text-slate-900 focus:outline-none focus:border-slate-400 transition-colors shadow-sm resize-none"
-                        />
-                        <div className="absolute bottom-3 right-4 text-[12px] font-medium text-emerald-500">
-                          {lessonDesc.length}/160
-                        </div>
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-[14px] font-medium text-slate-900 mb-3">Type de contenu</label>
-                      <div className="grid grid-cols-3 gap-3">
-                        <button 
-                          onClick={() => setLessonType('Vidéo')}
-                          className={`flex items-center justify-center gap-2 py-3.5 rounded-[24px] border text-[14px] font-semibold transition-colors ${lessonType === 'Vidéo' ? 'bg-[#3A3B40] border-[#3A3B40] text-white' : 'bg-white border-[#E5E7EB] text-slate-700 hover:bg-slate-50'}`}
-                        >
-                          {lessonType === 'Vidéo' && (
-                            <div className="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center mr-1">
-                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                            </div>
-                          )}
-                          <Video className="w-4 h-4" /> Vidéo
-                        </button>
-                        <button 
-                          onClick={() => setLessonType('Audio')}
-                          className={`flex items-center justify-center gap-2 py-3.5 rounded-[24px] border text-[14px] font-semibold transition-colors ${lessonType === 'Audio' ? 'bg-[#3A3B40] border-[#3A3B40] text-white' : 'bg-white border-[#E5E7EB] text-slate-700 hover:bg-slate-50'}`}
-                        >
-                          {lessonType === 'Audio' && (
-                            <div className="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center mr-1">
-                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                            </div>
-                          )}
-                          <Headphones className="w-4 h-4" /> Audio
-                        </button>
-                        <button 
-                          onClick={() => setLessonType('Texte')}
-                          className={`flex items-center justify-center gap-2 py-3.5 rounded-[24px] border text-[14px] font-semibold transition-colors ${lessonType === 'Texte' ? 'bg-[#3A3B40] border-[#3A3B40] text-white' : 'bg-white border-[#E5E7EB] text-slate-700 hover:bg-slate-50'}`}
-                        >
-                          {lessonType === 'Texte' && (
-                            <div className="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center mr-1">
-                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                            </div>
-                          )}
-                          <FileText className="w-4 h-4" /> Texte
-                        </button>
-                      </div>
-                    </div>
-
-                    {lessonType === 'Vidéo' && (
-                      <div className="space-y-4">
-                        <div className="flex gap-4">
-                          <div className="flex-1">
-                            <label className="block text-[14px] font-medium text-slate-900 mb-2">Méthode d'intégration</label>
-                            <select className="w-full bg-white border border-[#E5E7EB] rounded-[24px] px-4 py-3.5 text-[14px] text-slate-900 focus:outline-none focus:border-slate-400 transition-colors shadow-sm appearance-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239CA3AF'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`, backgroundPosition: 'right 1rem center', backgroundRepeat: 'no-repeat', backgroundSize: '1em 1em' }}>
-                              <option>URL de la vidéo</option>
-                              <option>Code d'intégration</option>
-                            </select>
-                          </div>
-                          
-                          <div className="flex-1">
-                            <label className="block text-[14px] font-medium text-slate-900 mb-2">Ou téléverser une vidéo</label>
-                            <label className="flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 w-full rounded-[24px] px-4 py-3.5 text-[14px] font-medium transition-colors cursor-pointer relative">
-                              <input 
-                                type="file" 
-                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" 
-                                accept="video/*"
-                                onChange={async (e) => {
-                                  const file = e.target.files?.[0];
-                                  if (file) {
-                                    try {
-                                      const { uploadFileToLWS } = await import('@/lib/api/lws-storage');
-                                      const url = await uploadFileToLWS(file);
-                                      setLessonUrl(url);
-                                    } catch (err) {
-                                      toast.error("Erreur lors du téléversement: " + err);
-                                    }
-                                  }
-                                }}
-                              />
-                              <Video className="w-4 h-4" />
-                              Choisir un fichier...
-                            </label>
-                          </div>
-                        </div>
-                        
-                        <div className="bg-[#FFFBEB] border border-[#FEF3C7] text-[#D97706] px-4 py-3 rounded-2xl text-[13px] flex gap-2 items-center">
-                          <HelpCircle className="w-4 h-4 shrink-0" />
-                          <span>YouTube, Vimeo, etc.</span>
-                        </div>
-
-                        <div>
-                          <label className="block text-[14px] font-medium text-slate-900 mb-2">URL de la vidéo <span className="text-red-500">*</span></label>
-                          <input 
-                            type="text" 
-                            value={lessonUrl}
-                            onChange={(e) => setLessonUrl(e.target.value)}
-                            className="w-full bg-white border border-[#E5E7EB] rounded-2xl px-4 py-3.5 text-[14px] text-slate-900 focus:outline-none focus:border-slate-400 transition-colors shadow-sm"
-                          />
-                        </div>
-                      </div>
-                    )}
-
-                    {lessonType === 'Audio' && (
-                      <div className="space-y-4">
-                        <div className="flex gap-4">
-                          <div className="flex-1">
-                            <label className="block text-[14px] font-medium text-slate-900 mb-2">Téléverser un fichier audio</label>
-                            <label className="flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 w-full rounded-[24px] px-4 py-3.5 text-[14px] font-medium transition-colors cursor-pointer relative">
-                              <input 
-                                type="file" 
-                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" 
-                                accept="audio/*"
-                                onChange={async (e) => {
-                                  const file = e.target.files?.[0];
-                                  if (file) {
-                                    try {
-                                      const { uploadFileToLWS } = await import('@/lib/api/lws-storage');
-                                      const url = await uploadFileToLWS(file);
-                                      setLessonUrl(url);
-                                    } catch (err) {
-                                      toast.error("Erreur lors du téléversement: " + err);
-                                    }
-                                  }
-                                }}
-                              />
-                              <Headphones className="w-4 h-4" />
-                              Choisir un fichier...
-                            </label>
-                          </div>
-                        </div>
-
-                        <div>
-                          <label className="block text-[14px] font-medium text-slate-900 mb-2">URL du fichier audio (générée ou manuelle)</label>
-                          <input 
-                            type="text" 
-                            value={lessonUrl}
-                            onChange={(e) => setLessonUrl(e.target.value)}
-                            className="w-full bg-white border border-[#E5E7EB] rounded-2xl px-4 py-3.5 text-[14px] text-slate-900 focus:outline-none focus:border-slate-400 transition-colors shadow-sm"
-                          />
-                        </div>
-                      </div>
-                    )}
-
-                    {lessonType === 'Texte' && (
-                      <div className="space-y-4">
-                        <div className="flex gap-4">
-                          <div className="flex-1">
-                            <label className="block text-[14px] font-medium text-slate-900 mb-2">Téléverser un fichier (PDF, Word, etc.)</label>
-                            <label className="flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 w-full rounded-[24px] px-4 py-3.5 text-[14px] font-medium transition-colors cursor-pointer relative">
-                              <input 
-                                type="file" 
-                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" 
-                                accept=".pdf,.doc,.docx,.txt"
-                                onChange={async (e) => {
-                                  const file = e.target.files?.[0];
-                                  if (file) {
-                                    try {
-                                      const { uploadFileToLWS } = await import('@/lib/api/lws-storage');
-                                      const url = await uploadFileToLWS(file);
-                                      setLessonUrl(url);
-                                    } catch (err) {
-                                      toast.error("Erreur lors du téléversement: " + err);
-                                    }
-                                  }
-                                }}
-                              />
-                              <FileText className="w-4 h-4" />
-                              Choisir un fichier...
-                            </label>
-                          </div>
-                        </div>
-
-                        <div>
-                          <label className="block text-[14px] font-medium text-slate-900 mb-2">URL du document (générée ou manuelle)</label>
-                          <input 
-                            type="text" 
-                            value={lessonUrl}
-                            onChange={(e) => setLessonUrl(e.target.value)}
-                            className="w-full bg-white border border-[#E5E7EB] rounded-2xl px-4 py-3.5 text-[14px] text-slate-900 focus:outline-none focus:border-slate-400 transition-colors shadow-sm"
-                          />
-                        </div>
-                      </div>
-                    )}
-
-                    <div className="mt-4">
-                      <RichTextEditor 
-                        value={lessonContent} 
-                        onChange={setLessonContent} 
-                        label="Contenu de la leçon"
-                        withAI={true}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="p-6 border-t border-slate-100 flex justify-end bg-white relative z-10">
-                    <button onClick={handleAddLesson} disabled={saving} className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-3.5 rounded-[24px] text-[14px] transition-colors flex items-center gap-2 shadow-sm disabled:opacity-50">
-                      {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-                      Ajouter une leçon
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          </>
-        )}
-
-      </div>
-
-      {showAddChapter && (
-        <div className="fixed inset-0 bg-slate-900/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200">
-            <div className="p-6">
-              <h3 className="text-[18px] font-bold text-slate-900 mb-4">Nouveau chapitre</h3>
-              <div className="space-y-4">
+            {/* ── SEO ── */}
+            {activeTab === 'seo' && (
+              <div className="space-y-8">
+                {/* Google preview */}
                 <div>
-                  <label className="block text-[13px] font-medium text-slate-900 mb-1.5">Titre du chapitre <span className="text-red-500">*</span></label>
-                  <input 
-                    type="text" 
-                    value={newChapterTitle}
-                    onChange={(e) => setNewChapterTitle(e.target.value)}
-                    placeholder="Ex: Introduction au design"
-                    className="w-full bg-white border border-[#D1D5DB] rounded-md px-3 py-2 text-[14px] text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors shadow-sm"
+                  <h2 className="text-[18px] font-bold text-slate-900 mb-1">Aperçu Google</h2>
+                  <div className="rounded-xl border border-slate-200 bg-slate-50 p-5 flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-lg border border-slate-200 bg-white flex items-center justify-center shrink-0">
+                      <Globe className="w-5 h-5 text-slate-300" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-[14px] font-semibold text-blue-700 truncate">
+                        {seoTitle || title || 'Titre de la page'}
+                      </p>
+                      <p className="text-[12px] text-green-700 truncate">
+                        {window.location.origin}/product/{productId}
+                      </p>
+                      <p className="text-[12px] text-slate-500 mt-0.5 line-clamp-2">
+                        {seoDescription || 'Meta description de votre produit...'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Title & description */}
+                <div>
+                  <h3 className="text-[15px] font-bold text-slate-900 mb-1">Titre et Meta description</h3>
+                  <p className="text-[13px] text-slate-500 mb-4">
+                    Optimisez votre référencement dans les moteurs de recherche.
+                  </p>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-[13px] font-semibold text-slate-800 mb-1.5">Titre SEO</label>
+                      <input
+                        value={seoTitle}
+                        onChange={e => setSeoTitle(e.target.value)}
+                        placeholder={title || 'Ajouter un titre SEO'}
+                        className="w-full h-11 px-3 text-[14px] bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#1E293B]"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[13px] font-semibold text-slate-800 mb-1.5">Meta description</label>
+                      <textarea
+                        value={seoDescription}
+                        onChange={e => setSeoDescription(e.target.value)}
+                        placeholder="Décrivez votre produit pour les moteurs de recherche..."
+                        className="w-full rounded-xl border border-slate-200 bg-white px-3 py-3 text-[13px] min-h-[100px] resize-y focus:outline-none focus:border-[#1E293B]"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* SEO image */}
+                <div>
+                  <h3 className="text-[15px] font-bold text-slate-900 mb-1">Image de partage</h3>
+                  <p className="text-[13px] text-slate-500 mb-4">
+                    Image affichée lors du partage sur les réseaux. Format recommandé : 1200×627px.
+                  </p>
+                  <div
+                    className="rounded-xl border-2 border-dashed border-slate-300 h-48 flex items-center justify-center cursor-pointer hover:border-[#1E293B] transition-colors overflow-hidden"
+                    onClick={() => document.getElementById('seo-image-input')?.click()}
+                  >
+                    {seoImagePreview
+                      ? <img src={seoImagePreview} alt="SEO" className="h-full w-full object-cover" />
+                      : (
+                        <div className="flex flex-col items-center gap-2 text-slate-400">
+                          <ImageIcon className="w-10 h-10" />
+                          <p className="text-[13px]">Cliquer pour ajouter une image</p>
+                        </div>
+                      )
+                    }
+                    <input
+                      id="seo-image-input"
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={e => {
+                        const f = e.target.files?.[0];
+                        if (f) {
+                          setSeoImageFile(f);
+                          const reader = new FileReader();
+                          reader.onload = ev => setSeoImagePreview(ev.target?.result as string);
+                          reader.readAsDataURL(f);
+                        }
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Keywords */}
+                <div>
+                  <h3 className="text-[15px] font-bold text-slate-900 mb-1">Mots-clés</h3>
+                  <p className="text-[13px] text-slate-500 mb-4">Séparés par des virgules.</p>
+                  <input
+                    value={seoKeywords}
+                    onChange={e => setSeoKeywords(e.target.value)}
+                    placeholder="marketing digital, formation, facebook ads..."
+                    className="w-full h-11 px-3 text-[14px] bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#1E293B]"
                   />
                 </div>
               </div>
-            </div>
-            <div className="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-end gap-3">
-              <button 
-                onClick={() => { setShowAddChapter(false); setNewChapterTitle(''); }}
-                className="px-4 py-2 text-[13px] font-semibold text-slate-600 hover:bg-slate-200 rounded-lg transition-colors"
-              >
-                Annuler
-              </button>
-              <button 
-                onClick={handleAddChapter}
-                disabled={!newChapterTitle || saving}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded-lg text-[13px] transition-colors shadow-sm disabled:opacity-50"
-              >
-                Créer le chapitre
-              </button>
-            </div>
+            )}
+
+          </div>
+
+          {/* ── Save button ── */}
+          <div className="flex justify-end mt-4">
+            <button
+              onClick={handleSave}
+              disabled={saving}
+              className="flex items-center gap-2 px-6 py-3 bg-[#1E293B] text-white text-[14px] font-semibold rounded-xl hover:bg-[#0F172A] transition-colors disabled:opacity-50 shadow-sm"
+            >
+              {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+              Enregistrer
+            </button>
           </div>
         </div>
+      </div>
+
+      {/* Click outside to close more menu */}
+      {showMore && (
+        <div className="fixed inset-0 z-20" onClick={() => setShowMore(false)} />
       )}
     </div>
   );
 }
-

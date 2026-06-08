@@ -1,1286 +1,590 @@
-import { toast } from 'sonner';
-import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
-import { useState, useRef, useEffect } from 'react';
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { adminSupabase } from '@/lib/supabase';
+import { RichTextEditor } from '@/components/RichTextEditor';
+import { toast } from 'sonner';
+import { useState, useEffect } from 'react';
 import { 
-  Loader2, 
-  Sparkles, 
-  Image as ImageIcon, 
-  File, 
-  CheckCircle2, 
-  Box, 
-  PlayCircle,
-  Bold, Italic, Underline, Strikethrough, List, ListOrdered, Link as LinkIcon, Image as ImageIcon2, Video,
-  Rocket, Languages, CheckCheck, X, GraduationCap, Folder, ChevronUp, ChevronDown, MoreHorizontal, Plus
+  FileText, GraduationCap, Check, ArrowLeft, Upload, 
+  Image as ImageIcon, Package, Loader2, Sparkles, Video, 
+  BookOpen, Layers, Shield, Plus, Trash2, X 
 } from 'lucide-react';
 
 export const Route = createFileRoute('/admin/products/new')({
-  component: AdminNewProductWizard,
+  component: NewProduct,
 });
 
-function AdminNewProductWizard() {
+type ProductType = 'file' | 'course' | 'license';
+
+interface Lesson {
+  title: string;
+  video_type: 'youtube' | 'vimeo' | 'upload' | 'text';
+  video_url: string;
+  duration_minutes: number;
+  file?: File;
+}
+
+function NewProduct() {
   const navigate = useNavigate();
-  const search: any = useSearch({ strict: false });
-  const productType = search?.type || 'fichier';
-
   const [step, setStep] = useState(1);
-  const totalSteps = productType === 'formation' ? 4 : 5;
+  const [saving, setSaving] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
 
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-
-  // State
-  const [title, setTitle] = useState('');
-  const [category, setCategory] = useState('');
-  const [pricingModel, setPricingModel] = useState('Paiement unique');
-  const [price, setPrice] = useState('');
-  const [crossedPrice, setCrossedPrice] = useState('');
-  
-  const [description, setDescription] = useState('');
-  
-  const [coverImage, setCoverImage] = useState<File | null>(null);
-  const [coverPreview, setCoverPreview] = useState<string | null>(null);
-  
-  const [productFile, setProductFile] = useState<File | null>(null);
-
-  const imageInputRef = useRef<HTMLInputElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const editorRef = useRef<HTMLDivElement>(null);
-  const isPublishing = useRef(false);
-
-  // Popups State for Rich Text Editor
-  const [showFormatPopup, setShowFormatPopup] = useState(false);
-  const [currentFormat, setCurrentFormat] = useState('Normal');
-
-  const [showVideoPopup, setShowVideoPopup] = useState(false);
-  const [videoUrlInput, setVideoUrlInput] = useState('');
-  
-  const [showImagePopup, setShowImagePopup] = useState(false);
-  const [imageUrlInput, setImageUrlInput] = useState('');
-
-  const [showLinkPopup, setShowLinkPopup] = useState(false);
-  const [linkUrlInput, setLinkUrlInput] = useState('');
-
-  const [savedRange, setSavedRange] = useState<Range | null>(null);
-
-  // AI Assistant State
-  const [showIADropdown, setShowIADropdown] = useState(false);
-  const [showIAImproveModal, setShowIAImproveModal] = useState(false);
-  const [iaKeywords, setIaKeywords] = useState('');
-  const [iaInstructions, setIaInstructions] = useState('');
-  const [iaTone, setIaTone] = useState('Persuasif');
-  const [isGenerating, setIsGenerating] = useState(false);
-
-  // Chapters State (for Formation)
-  type Chapter = { id: string; title: string; description: string; status: 'active' | 'draft'; order: number };
-  const [chapters, setChapters] = useState<Chapter[]>([]);
-  const [showAddChapterModal, setShowAddChapterModal] = useState(false);
-  const [newChapterTitle, setNewChapterTitle] = useState('');
-  const [newChapterDesc, setNewChapterDesc] = useState('');
-
-  const draftId = search?.id || null;
-  const [productId, setProductId] = useState<string | null>(draftId);
-
-  // Load draft on mount if ID is in URL
   useEffect(() => {
-    if (productId) {
-      const loadDraft = async () => {
-        const { data } = await adminSupabase.from('products').select('*').eq('id', productId).single();
-        if (data) {
-          setTitle(data.title);
-          setDescription(data.description);
-          if (data.price) setPrice(data.price.toString());
-          if (data.category) setCategory(data.category);
-          if (data.image_url && data.image_url !== 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=800') {
-             setCoverPreview(data.image_url);
-          }
-          try {
-            const feats = typeof data.features === 'string' ? JSON.parse(data.features) : data.features;
-            if (feats) {
-              if (feats.pricing_model) setPricingModel(feats.pricing_model);
-              if (feats.crossed_price) setCrossedPrice(feats.crossed_price.toString());
-            }
-          } catch(e) {}
-        }
-      };
-      loadDraft();
-    }
+    adminSupabase.auth.getUser().then(({ data }) => setUserId(data.user?.id || null));
   }, []);
 
-  // Save Draft Function
-  const saveDraft = async () => {
-    if (isPublishing.current || (!title && !description)) return;
-    
+  // Step 1 - Product type
+  const [selectedType, setSelectedType] = useState<ProductType | null>(null);
+
+  // Step 2 - Details
+  const [title, setTitle] = useState('');
+  const [category, setCategory] = useState('');
+  const [pricingModel, setPricingModel] = useState('one_time');
+  const [price, setPrice] = useState('');
+  const [originalPrice, setOriginalPrice] = useState('');
+
+  // Step 3 - Description
+  const [description, setDescription] = useState('');
+  const [aiRewriting, setAiRewriting] = useState(false);
+
+  // Step 4 - Images
+  const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
+  const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
+  const [bannerFile, setBannerFile] = useState<File | null>(null);
+  const [bannerPreview, setBannerPreview] = useState<string | null>(null);
+
+  // Step 5 - Content
+  const [downloadFile, setDownloadFile] = useState<File | null>(null);
+  const [courseContentType, setCourseContentType] = useState('mixed');
+  const [lessons, setLessons] = useState<Lesson[]>([]);
+
+  const priceNum = parseFloat(price) || 0;
+  const originalPriceNum = parseFloat(originalPrice) || 0;
+  const priceError = price && priceNum > 0 && priceNum < 100 ? "Le prix minimum est de 100 FCFA" : "";
+  const originalPriceError = originalPrice && originalPriceNum > 0 && originalPriceNum <= priceNum
+    ? "Le prix barré doit être supérieur au prix de vente" : "";
+
+  const canNext = () => {
+    switch (step) {
+      case 1: return !!selectedType;
+      case 2: return !!title.trim() && !!price && priceNum >= 100 && !priceError && !originalPriceError;
+      case 3: return !!description.replace(/<[^>]*>/g, '').trim();
+      case 4: return true;
+      case 5:
+        if (selectedType === 'file') return !!downloadFile;
+        if (selectedType === 'course') return lessons.length > 0;
+        return true;
+      default: return false;
+    }
+  };
+
+  const rewriteDescription = async () => {
+    if (!title.trim()) { toast.error('Entrez d\'abord un titre'); return; }
+    setAiRewriting(true);
     try {
-      const features = {
-        crossed_price: crossedPrice ? parseInt(crossedPrice) : null,
-        pricing_model: pricingModel,
-        status: 'draft',
-        type: productType,
-      };
+      const { data, error } = await adminSupabase.functions.invoke('rewrite-description', {
+        body: { title, description, productType: selectedType },
+      });
+      if (error) throw error;
+      if (data?.description) {
+        setDescription(data.description);
+        toast.success('Description réécrite par l\'IA !');
+      }
+    } catch (err: any) {
+      toast.error('Erreur IA: ' + (err.message || 'Réessayez'));
+    } finally {
+      setAiRewriting(false);
+    }
+  };
+
+  const uploadFile = async (file: File, folder: string): Promise<string | null> => {
+    if (!userId) return null;
+    const ext = file.name.split('.').pop();
+    const path = `${folder}/${userId}/${Date.now()}.${ext}`;
+    const { error } = await adminSupabase.storage.from('product-assets').upload(path, file);
+    if (error) { toast.error('Erreur upload: ' + error.message); return null; }
+    const { data } = adminSupabase.storage.from('product-assets').getPublicUrl(path);
+    return data.publicUrl;
+  };
+
+  const handleSubmit = async () => {
+    if (!userId) return;
+    setSaving(true);
+    try {
+      let thumbnailUrl = null;
+      let downloadUrl = null;
+
+      if (thumbnailFile) thumbnailUrl = await uploadFile(thumbnailFile, 'thumbnails');
+      if (bannerFile) await uploadFile(bannerFile, 'banners'); // Or store bannerUrl if you added the column
+      if (downloadFile) downloadUrl = await uploadFile(downloadFile, 'downloads');
 
       const productData = {
-        title: title || 'Brouillon sans titre',
-        description: description || '',
-        price: parseInt(price || '0'),
-        category: category || 'Éducation & Apprentissage',
-        image_url: coverPreview && !coverPreview.startsWith('blob:') ? coverPreview : 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=800',
-        features: JSON.stringify(features),
-        status: 'draft'
+        title: title.trim(),
+        description: description.trim() || null,
+        category: category || null,
+        price: priceNum,
+        original_price: originalPriceNum > 0 ? originalPriceNum : null,
+        type: selectedType,
+        thumbnail_url: thumbnailUrl,
+        download_url: downloadUrl,
+        creator_id: userId,
+        is_published: true, // Auto publish for now
       };
 
-      if (productId) {
-        await adminSupabase.from('products').update(productData).eq('id', productId);
-      } else {
-        const { data } = await adminSupabase.from('products').insert([productData]).select('id').single();
-        if (data && data.id) {
-          setProductId(data.id);
-          navigate({ to: '/admin/products/new', search: { type: productType, id: data.id }, replace: true });
+      const { data: product, error } = await adminSupabase.from('products').insert(productData).select().single();
+      if (error) throw error;
+
+      if (selectedType === 'course' && lessons.length > 0) {
+        const toInsert = [];
+        for (let i = 0; i < lessons.length; i++) {
+          const lesson = lessons[i];
+          let videoUrl = lesson.video_url;
+          if (lesson.video_type === 'upload' && lesson.file) {
+            const uploaded = await uploadFile(lesson.file, 'course-videos');
+            if (uploaded) videoUrl = uploaded;
+          }
+          toInsert.push({
+            product_id: product.id,
+            title: lesson.title || `Leçon ${i + 1}`,
+            video_url: videoUrl || null,
+            video_type: lesson.video_type,
+            duration_minutes: lesson.duration_minutes,
+            position: i,
+          });
+        }
+        if (toInsert.length > 0) {
+            await adminSupabase.from('course_lessons').insert(toInsert);
         }
       }
-    } catch (e) {
-      console.error("Erreur auto-save", e);
-    }
-  };
 
-  // Auto-save effect (every 2s on changes)
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      saveDraft();
-    }, 2000);
-    return () => clearTimeout(timer);
-  }, [title, description, price, category, pricingModel, crossedPrice]);
+      toast.success('Produit créé avec succès !');
+      navigate({ to: '/admin/products' });
 
-  // Sync editor content when returning to step 2
-  useEffect(() => {
-    if (step === 2 && editorRef.current) {
-      if (editorRef.current.innerHTML !== description) {
-        editorRef.current.innerHTML = description;
-      }
-    }
-  }, [step]);
-
-  // Type config
-  const typeConfig = {
-    fichier: { color: 'text-blue-600', icon: File, title: 'Créez un produit téléchargeable', subtitle: 'Vendez des fichiers numériques livrés instantanément après achat.' },
-    formation: { color: 'text-purple-600', icon: PlayCircle, title: 'Créez une formation', subtitle: 'Structurez vos leçons et modules dans un espace membre privé.' },
-    service: { color: 'text-emerald-600', icon: Box, title: 'Créez un service', subtitle: 'Proposez vos prestations et consultations sur mesure.' },
-  }[productType as 'fichier'|'formation'|'service'] || { color: 'text-blue-600', icon: File, title: 'Création de produit', subtitle: 'Paramétrez votre nouvelle offre.' };
-
-  const TypeIcon = typeConfig.icon;
-
-  const nextStep = () => setStep(prev => Math.min(prev + 1, totalSteps));
-  const prevStep = () => setStep(prev => Math.max(prev - 1, 1));
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setCoverImage(file);
-      setCoverPreview(URL.createObjectURL(file));
-    }
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setProductFile(file);
-    }
-  };
-
-  const handleFormat = (e: React.MouseEvent, command: string, value?: string) => {
-    e.preventDefault(); 
-    document.execCommand(command, false, value);
-    if (editorRef.current) {
-      setDescription(editorRef.current.innerHTML);
-    }
-  };
-
-  const generateIADescription = async () => {
-    setIsGenerating(true);
-    
-    try {
-      const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-      if (!apiKey) {
-        toast.error("La clé API Gemini n'est pas configurée ! Ajoutez VITE_GEMINI_API_KEY dans votre fichier .env");
-        setIsGenerating(false);
-        return;
-      }
-
-      const productName = title || 'un produit numérique';
-      const promptText = `
-Tu es un copywriter expert et vendeur d'élite.
-Génère une description de produit hautement persuasive pour un produit nommé : "${productName}".
-
-Détails de la demande :
-- Mots-clés à inclure absolument : ${iaKeywords || 'Aucun mot-clé imposé'}
-- Instructions spéciales : ${iaInstructions || 'Aucune instruction spéciale'}
-- Tonalité : ${iaTone}
-
-Contraintes de format (Très important) :
-Renvoie UNIQUEMENT le code HTML, sans balise \`\`\`html, sans <html> ni <body>.
-Utilise exclusivement ces balises HTML pour la mise en forme :
-- <h1> pour le titre principal accrocheur (un seul)
-- <h2> pour les sous-titres (ex: Ce que vous apprendrez, etc.)
-- <h3> pour mettre en avant une garantie ou un bénéfice précis
-- <p> pour les paragraphes
-- <ul> et <li> pour les listes à puces (très important pour la lisibilité)
-- <strong> pour mettre en gras les bénéfices et mots importants
-
-Ne fais aucune introduction. Génère directement le contenu HTML final prêt à être affiché dans l'éditeur de texte.`;
-
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: promptText }] }]
-        })
-      });
-
-      if (!response.ok) {
-        let errorMsg = 'Erreur de communication avec Google AI';
-        try {
-          const errData = await response.json();
-          errorMsg = errData.error?.message || errorMsg;
-        } catch (e) {}
-        throw new Error(errorMsg);
-      }
-
-      const data = await response.json();
-      let generatedHTML = data.candidates[0].content.parts[0].text;
-      
-      // Clean up markdown block if the AI still adds it
-      generatedHTML = generatedHTML.replace(/```html/gi, '').replace(/```/g, '').trim();
-
-      setDescription(generatedHTML);
-      if (editorRef.current) {
-        editorRef.current.innerHTML = generatedHTML;
-      }
-      
-      setShowIAImproveModal(false);
-    } catch (err: any) {
-      console.error(err);
-      toast.error("Erreur lors de la génération IA : " + err.message);
+    } catch (error: any) {
+      toast.error(error.message || 'Erreur lors de la création');
     } finally {
-      setIsGenerating(false);
+      setSaving(false);
     }
   };
 
-  const handlePublish = async () => {
-    isPublishing.current = true;
-    setLoading(true);
-    try {
-      let coverImageUrl = coverPreview && !coverPreview.startsWith('blob:') ? coverPreview : '';
-      let fileUrl = '';
-
-      // Import dynamique de la fonction d'upload LWS
-      const { uploadFileToLWS } = await import('@/lib/api/lws-storage');
-
-      if (coverImage) {
-        coverImageUrl = await uploadFileToLWS(coverImage);
-      }
-
-      if (productFile) {
-        fileUrl = await uploadFileToLWS(productFile);
-      }
-
-      const features = {
-        crossed_price: crossedPrice ? parseInt(crossedPrice) : null,
-        pricing_model: pricingModel,
-        status: 'active',
-        type: productType,
-        file_url: fileUrl,
-        chapters: productType === 'formation' ? chapters : undefined
-      };
-
-      const productData = {
-        title,
-        description,
-        price: parseInt(price || '0'),
-        category,
-        image_url: coverImageUrl || 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=800',
-        features: JSON.stringify(features),
-        status: 'active'
-      };
-
-      if (productId) {
-        const { error: dbError } = await adminSupabase
-          .from('products')
-          .update(productData)
-          .eq('id', productId);
-        if (dbError) throw dbError;
-      } else {
-        const { data, error: dbError } = await adminSupabase
-          .from('products')
-          .insert([productData])
-          .select()
-          .single();
-        if (dbError) throw dbError;
-        if (data) setProductId(data.id);
-      }
-
-      setSuccess(true);
-      
-      if (productType !== 'formation') {
-        setTimeout(() => {
-          navigate({ to: '/admin/products' });
-        }, 2000);
-      }
-
-    } catch (err: any) {
-      console.error(err);
-      toast.error("Erreur lors de la publication: " + err.message);
-      isPublishing.current = false;
-    } finally {
-      setLoading(false);
-    }
+  const addLesson = () => {
+    setLessons([...lessons, {
+      title: '',
+      video_type: 'youtube',
+      video_url: '',
+      duration_minutes: 0,
+    }]);
   };
 
-  if (success && productType === 'formation') {
-    return (
-      <div className="flex flex-col items-center justify-center py-16 px-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
-        <div className="w-full max-w-[500px] bg-[#F9FAFB] rounded-3xl p-10 flex flex-col items-center text-center shadow-sm">
-          <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mb-6">
-            <CheckCircle2 className="w-8 h-8 text-emerald-500" />
-          </div>
-          <h2 className="text-[28px] font-serif text-slate-900 mb-3">Formation créée</h2>
-          <p className="text-slate-500 text-[15px] mb-8 leading-relaxed">Votre formation est prête. Complétez la avec des leçons, puis publiez la.</p>
-          
-          <div className="w-full bg-white border border-slate-200 rounded-2xl p-5 flex items-center gap-5 mb-6 shadow-sm">
-            <div className="w-14 h-14 bg-slate-100 rounded-xl flex items-center justify-center shrink-0">
-               <GraduationCap className="w-7 h-7 text-slate-400" />
-            </div>
-            <div className="text-left flex-1">
-              <div className="font-bold text-slate-900 text-[16px] mb-1">{title}</div>
-              <div className="text-slate-500 text-[14px]">{price} FCFA</div>
-            </div>
-          </div>
+  const updateLesson = (index: number, field: string, value: any) => {
+    const updated = [...lessons];
+    (updated[index] as any)[field] = value;
+    setLessons(updated);
+  };
 
-          <div className="w-full bg-blue-50 border border-blue-100 rounded-xl p-5 flex gap-3 text-left mb-8">
-            <div className="w-6 h-6 bg-blue-200 rounded-full flex items-center justify-center shrink-0 mt-0.5">
-              <span className="text-blue-700 text-[12px] font-bold">i</span>
-            </div>
-            <div>
-              <div className="text-[14px] font-semibold text-blue-800 mb-1">Prochaine étape</div>
-              <div className="text-[13px] text-blue-600 leading-relaxed">Ajoutez des leçons à vos chapitres : vidéos, textes, fichiers téléchargeables.</div>
-            </div>
-          </div>
+  const removeLesson = (index: number) => {
+    setLessons(lessons.filter((_, i) => i !== index));
+  };
 
-          <button 
-            onClick={() => navigate({ to: `/admin/products/${productId}?tab=course` })}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm"
-          >
-            Ajouter des leçons <span className="text-lg leading-none">&rarr;</span>
+
+  return (
+    <div className="min-h-screen bg-[#F8FAFC] flex flex-col">
+      {/* Header & Progress */}
+      <div className="bg-white border-b border-slate-200 py-4 px-6">
+        <div className="max-w-3xl mx-auto">
+          <div className="flex gap-2 mb-6">
+            {[1, 2, 3, 4, 5].map(i => (
+              <div key={i} className={`h-2 flex-1 rounded-full ${i <= step ? 'bg-[#1E293B]' : 'bg-slate-100'}`} />
+            ))}
+          </div>
+          <button onClick={() => navigate({ to: '/admin/products' })} className="text-[13px] text-slate-500 hover:text-slate-900 flex items-center gap-1">
+            <ArrowLeft className="w-4 h-4" /> Retour aux produits
           </button>
         </div>
       </div>
-    );
-  }
 
-  if (success && productType !== 'formation') {
-    return (
-      <div className="flex flex-col items-center justify-center h-[70vh] animate-in fade-in zoom-in duration-500">
-        <div className="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mb-6 relative">
-          <CheckCircle2 className="w-12 h-12 text-blue-600" />
-        </div>
-        <h2 className="text-3xl font-display font-bold text-slate-900 mb-2">Produit publié avec succès !</h2>
-        <p className="text-slate-500">Redirection vers votre catalogue...</p>
-      </div>
-    );
-  }
+      {/* Main Content */}
+      <div className="flex-1 overflow-y-auto p-6">
+        <div className="max-w-3xl mx-auto bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
+          
+          {step === 1 && (
+            <div className="space-y-6">
+              <h1 className="text-[24px] font-bold text-slate-900 text-center">Quel type de produit souhaitez-vous créer ?</h1>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+                
+                <button
+                  onClick={() => setSelectedType('file')}
+                  className={`p-6 rounded-2xl border-2 text-left transition-all ${
+                    selectedType === 'file' ? 'border-amber-500 bg-amber-50' : 'border-slate-200 hover:border-slate-300'
+                  }`}
+                >
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center">
+                      <FileText className="w-6 h-6 text-amber-600" />
+                    </div>
+                    {selectedType === 'file' && <Check className="w-5 h-5 text-amber-600" />}
+                  </div>
+                  <h3 className="text-[18px] font-bold text-slate-900 mb-2">Fichier</h3>
+                  <p className="text-[13px] text-slate-500 mb-4">E-books, templates, PDF, audio : vos clients téléchargent instantanément</p>
+                  <ul className="space-y-2">
+                    {["Tous formats (PDF, ZIP, MP3…)", "Livraison automatique", "Téléchargement sécurisé"].map(f => (
+                      <li key={f} className="flex items-center gap-2 text-[12px] font-medium text-slate-700">
+                        <Check className="w-4 h-4 text-amber-500" /> {f}
+                      </li>
+                    ))}
+                  </ul>
+                </button>
 
-  const isStepValid = () => {
-    if (step === 1) return title.trim() !== '' && category !== '' && price !== '';
-    if (step === 2) return true; 
-    if (step === 3) return true; 
-    if (step === 4) return true; 
-    return true;
-  };
+                <button
+                  onClick={() => setSelectedType('course')}
+                  className={`p-6 rounded-2xl border-2 text-left transition-all ${
+                    selectedType === 'course' ? 'border-blue-500 bg-blue-50' : 'border-slate-200 hover:border-slate-300'
+                  }`}
+                >
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center">
+                      <GraduationCap className="w-6 h-6 text-blue-600" />
+                    </div>
+                    {selectedType === 'course' && <Check className="w-5 h-5 text-blue-600" />}
+                  </div>
+                  <h3 className="text-[18px] font-bold text-slate-900 mb-2">Formation</h3>
+                  <p className="text-[13px] text-slate-500 mb-4">Créez des formations structurées avec vidéo, texte et contenu téléchargeable</p>
+                  <ul className="space-y-2">
+                    {["Contenu vidéo YouTube/Vimeo", "Upload direct de vidéos", "Modules et leçons structurés"].map(f => (
+                      <li key={f} className="flex items-center gap-2 text-[12px] font-medium text-slate-700">
+                        <Check className="w-4 h-4 text-blue-500" /> {f}
+                      </li>
+                    ))}
+                  </ul>
+                </button>
 
-  return (
-    <div className="max-w-[700px] mx-auto pb-24 pt-8 font-sans">
-      
-      {/* Header & Progress */}
-      <div className="mb-10 flex flex-col items-center text-center">
-        <div className="flex items-center justify-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-lg bg-blue-600 text-white flex items-center justify-center">
-             <TypeIcon className="w-5 h-5" />
-          </div>
-          <div className="text-left">
-            <h1 className="text-[17px] font-bold text-slate-900">{typeConfig.title}</h1>
-            <p className="text-[13px] text-slate-500">{typeConfig.subtitle}</p>
-          </div>
-        </div>
+              </div>
+            </div>
+          )}
 
-        {/* Progress Bar */}
-        <div className="flex gap-[4px] w-full max-w-[500px] mx-auto mb-10">
-          {Array.from({ length: totalSteps }).map((_, i) => (
-            <div 
-              key={i} 
-              className={`h-[4px] flex-1 rounded-full transition-all duration-300 ${i < step ? 'bg-blue-600' : 'bg-slate-200'}`}
-            ></div>
-          ))}
-        </div>
-      </div>
-
-      {/* Main Form Area */}
-      <div className="max-w-[560px] mx-auto">
-        
-        {/* STEP 1: Details */}
-        {step === 1 && (
-          <div className="animate-in fade-in slide-in-from-bottom-2">
-            <h2 className="text-[22px] font-medium text-slate-900 mb-6">Détails du produit</h2>
-            
-            <div className="space-y-5">
+          {step === 2 && (
+            <div className="space-y-6">
+              <h1 className="text-[24px] font-bold text-slate-900 mb-8">Détails du produit</h1>
+              
               <div>
-                <label className="block text-[13px] font-medium text-[#111827] mb-1.5">Nom du produit <span className="text-red-500">*</span></label>
-                <input 
-                  type="text" 
-                  value={title}
-                  onChange={e => setTitle(e.target.value)}
-                  placeholder="Ex: Guide complet Facebook Ads 2026" 
-                  className="w-full bg-white border border-[#D1D5DB] rounded-md px-3 py-2 text-[14px] text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors shadow-sm"
-                />
+                <label className="block text-[13px] font-semibold text-slate-800 mb-1.5">Nom du produit <span className="text-red-500">*</span></label>
+                <div className="flex gap-2">
+                  <input
+                    value={title}
+                    onChange={e => setTitle(e.target.value)}
+                    className="flex-1 h-11 px-3 text-[14px] border border-slate-200 rounded-xl focus:outline-none focus:border-[#1E293B]"
+                  />
+                  <button
+                    onClick={rewriteDescription}
+                    disabled={aiRewriting || !title.trim()}
+                    className="w-11 h-11 flex items-center justify-center border border-slate-200 rounded-xl hover:bg-amber-50"
+                  >
+                    {aiRewriting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4 text-amber-500" />}
+                  </button>
+                </div>
               </div>
 
               <div>
-                <label className="block text-[13px] font-medium text-[#111827] mb-1.5">Catégorie <span className="text-red-500">*</span></label>
-                <select 
+                <label className="block text-[13px] font-semibold text-slate-800 mb-1.5">Catégorie</label>
+                <select
                   value={category}
                   onChange={e => setCategory(e.target.value)}
-                  className="w-full bg-white border border-[#D1D5DB] rounded-md px-3 py-2 text-[14px] text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors shadow-sm appearance-none cursor-pointer"
-                  style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239CA3AF'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`, backgroundPosition: 'right 0.75rem center', backgroundRepeat: 'no-repeat', backgroundSize: '1em 1em' }}
+                  className="w-full h-11 px-3 text-[14px] border border-slate-200 rounded-xl focus:outline-none focus:border-[#1E293B]"
                 >
-                  <option value="">Dans quelle catégorie classer ce produit ?</option>
-                  <option value="Éducation & Apprentissage">Éducation & Apprentissage</option>
-                  <option value="Marketing Digital">Marketing Digital</option>
-                  <option value="Tech & Programmation">Tech & Programmation</option>
-                  <option value="Business & Entrepreneuriat">Business & Entrepreneuriat</option>
-                  <option value="Design">Design</option>
+                  <option value="">Sélectionner une catégorie</option>
+                  <option value="marketing">Marketing Digital</option>
+                  <option value="design">Design & Créativité</option>
+                  <option value="dev">Développement</option>
+                  <option value="business">Business & Finance</option>
+                  <option value="education">Éducation</option>
+                  <option value="other">Autre</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-[13px] font-medium text-[#111827] mb-1.5">Modèle de tarification <span className="text-red-500">*</span></label>
-                <select 
+                <label className="block text-[13px] font-semibold text-slate-800 mb-1.5">Modèle de tarification</label>
+                <select
                   value={pricingModel}
                   onChange={e => setPricingModel(e.target.value)}
-                  className="w-full bg-white border border-[#D1D5DB] rounded-md px-3 py-2 text-[14px] text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors shadow-sm appearance-none cursor-pointer"
-                  style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239CA3AF'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`, backgroundPosition: 'right 0.75rem center', backgroundRepeat: 'no-repeat', backgroundSize: '1em 1em' }}
+                  className="w-full h-11 px-3 text-[14px] border border-slate-200 rounded-xl focus:outline-none focus:border-[#1E293B]"
                 >
-                  <option value="Paiement unique">Paiement unique</option>
-                  <option value="Abonnement mensuel">Abonnement mensuel</option>
-                  <option value="Abonnement annuel">Abonnement annuel</option>
-                  <option value="Gratuit">Gratuit</option>
+                  <option value="one_time">Paiement unique</option>
+                  <option value="subscription">Abonnement</option>
+                  <option value="free">Gratuit</option>
                 </select>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[13px] font-medium text-[#111827] mb-1.5">Prix</label>
-                  <div className="relative">
-                    <input 
-                      type="number" 
-                      value={price}
-                      onChange={e => setPrice(e.target.value)}
-                      placeholder="" 
-                      className="w-full bg-white border border-[#D1D5DB] rounded-md pl-3 pr-12 py-2 text-[14px] text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors shadow-sm"
-                    />
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2 text-[13px] text-slate-400">FCFA</div>
-                  </div>
+                  <label className="block text-[13px] font-semibold text-slate-800 mb-1.5">Prix (FCFA) <span className="text-red-500">*</span></label>
+                  <input
+                    type="number"
+                    value={price}
+                    onChange={e => setPrice(e.target.value)}
+                    className="w-full h-11 px-3 text-[14px] border border-slate-200 rounded-xl focus:outline-none focus:border-[#1E293B]"
+                    placeholder="Min 100"
+                  />
+                  {priceError && <p className="text-[11px] text-red-500 mt-1">{priceError}</p>}
                 </div>
                 <div>
-                  <label className="block text-[13px] font-medium text-[#111827] mb-1.5">Prix promotionnel</label>
-                  <div className="relative">
-                    <input 
-                      type="number" 
-                      value={crossedPrice}
-                      onChange={e => setCrossedPrice(e.target.value)}
-                      placeholder="" 
-                      className="w-full bg-white border border-[#D1D5DB] rounded-md pl-3 pr-12 py-2 text-[14px] text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors shadow-sm"
-                    />
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2 text-[13px] text-slate-400">FCFA</div>
-                  </div>
+                  <label className="block text-[13px] font-semibold text-slate-800 mb-1.5">Prix barré (FCFA)</label>
+                  <input
+                    type="number"
+                    value={originalPrice}
+                    onChange={e => setOriginalPrice(e.target.value)}
+                    className="w-full h-11 px-3 text-[14px] border border-slate-200 rounded-xl focus:outline-none focus:border-[#1E293B]"
+                  />
+                  {originalPriceError && <p className="text-[11px] text-red-500 mt-1">{originalPriceError}</p>}
                 </div>
               </div>
+
             </div>
-          </div>
-        )}
-
-        {/* STEP 2: Description (Working Rich Text Editor) */}
-        {step === 2 && (
-          <div className="animate-in fade-in slide-in-from-bottom-2">
-            <h2 className="text-[22px] font-medium text-slate-900 mb-6">Ajouter la description du produit</h2>
-            
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <label className="block text-[14px] font-medium text-slate-900">Décrivez votre produit <span className="text-red-500">*</span></label>
-                
-                {/* Assistant IA Dropdown Component */}
-                <div className="relative">
-                  <button 
-                    onClick={() => setShowIADropdown(!showIADropdown)}
-                    className="flex items-center gap-1.5 px-4 py-1.5 rounded-[8px] border border-[#E9D8FD] bg-gradient-to-r from-[#F0F5FF] to-[#FAF5FF] text-slate-800 text-[13px] font-bold hover:shadow-sm transition-all"
-                  >
-                    <Sparkles className="w-3.5 h-3.5 text-[#6B46C1]" />
-                    Assistant IA
-                  </button>
-
-                  {showIADropdown && (
-                    <div className="absolute top-[120%] right-0 bg-white border border-[#E5E7EB] shadow-xl rounded-xl py-2 min-w-[240px] z-[60] animate-in slide-in-from-top-2 duration-200">
-                      <button 
-                        onClick={() => { setShowIADropdown(false); setShowIAImproveModal(true); }}
-                        className="w-full text-left px-4 py-2.5 hover:bg-slate-50 flex items-center gap-3 text-slate-700 text-[14px] transition-colors"
-                      >
-                        <Rocket className="w-4 h-4 text-slate-600" />
-                        Améliorer la description
-                      </button>
-                      <button 
-                        className="w-full text-left px-4 py-2.5 hover:bg-slate-50 flex items-center gap-3 text-slate-700 text-[14px] transition-colors"
-                      >
-                        <Languages className="w-4 h-4 text-slate-600" />
-                        Traduire la description
-                      </button>
-                      <button 
-                        className="w-full text-left px-4 py-2.5 hover:bg-slate-50 flex items-center gap-3 text-slate-700 text-[14px] transition-colors"
-                      >
-                        <CheckCheck className="w-4 h-4 text-slate-600" />
-                        Vérifier la grammaire
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-              
-              <div className="border border-[#D1D5DB] rounded-lg bg-white shadow-sm flex flex-col h-[320px]">
-                {/* Working Toolbar */}
-                <div className="flex items-center gap-2 px-3 py-2 border-b border-[#E5E7EB] bg-[#F9FAFB] overflow-x-visible shrink-0 relative rounded-t-lg">
-                  
-                  {/* Format Dropdown (Custom like Chariow) */}
-                  <div className="relative flex items-center">
-                    <button 
-                      onMouseDown={(e) => {
-                        e.preventDefault();
-                        setShowFormatPopup(!showFormatPopup);
-                        setShowLinkPopup(false);
-                        setShowImagePopup(false);
-                        setShowVideoPopup(false);
-                      }} 
-                      className={`text-[13px] flex items-center gap-1.5 bg-transparent text-slate-700 font-medium py-1.5 px-2 rounded-md hover:bg-slate-200 transition-colors ${showFormatPopup ? 'bg-slate-200' : ''}`}
-                    >
-                      {currentFormat}
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                    </button>
-
-                    {showFormatPopup && (
-                      <div className="absolute top-[120%] left-0 bg-white border border-[#D1D5DB] shadow-lg flex flex-col z-[50] min-w-[150px] py-1.5 rounded-[4px]">
-                        <button 
-                          onMouseDown={(e) => {
-                            e.preventDefault();
-                            document.execCommand('formatBlock', false, 'H1');
-                            setCurrentFormat('Heading 1');
-                            setShowFormatPopup(false);
-                            if (editorRef.current) setDescription(editorRef.current.innerHTML);
-                          }}
-                          className="text-left px-4 py-2 hover:bg-slate-50 text-slate-800 text-[22px] font-bold transition-colors"
-                        >
-                          Heading 1
-                        </button>
-                        <button 
-                          onMouseDown={(e) => {
-                            e.preventDefault();
-                            document.execCommand('formatBlock', false, 'H2');
-                            setCurrentFormat('Heading 2');
-                            setShowFormatPopup(false);
-                            if (editorRef.current) setDescription(editorRef.current.innerHTML);
-                          }}
-                          className="text-left px-4 py-2 hover:bg-slate-50 text-slate-800 text-[18px] font-bold transition-colors"
-                        >
-                          Heading 2
-                        </button>
-                        <button 
-                          onMouseDown={(e) => {
-                            e.preventDefault();
-                            document.execCommand('formatBlock', false, 'H3');
-                            setCurrentFormat('Heading 3');
-                            setShowFormatPopup(false);
-                            if (editorRef.current) setDescription(editorRef.current.innerHTML);
-                          }}
-                          className="text-left px-4 py-2 hover:bg-slate-50 text-slate-800 text-[15px] font-bold transition-colors"
-                        >
-                          Heading 3
-                        </button>
-                        <button 
-                          onMouseDown={(e) => {
-                            e.preventDefault();
-                            document.execCommand('formatBlock', false, 'P');
-                            setCurrentFormat('Normal');
-                            setShowFormatPopup(false);
-                            if (editorRef.current) setDescription(editorRef.current.innerHTML);
-                          }}
-                          className="text-left px-4 py-2 hover:bg-slate-50 text-slate-800 text-[13px] font-medium transition-colors"
-                        >
-                          Normal
-                        </button>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="w-px h-5 bg-slate-200 mx-1"></div>
-                  <button onMouseDown={(e) => handleFormat(e, 'bold')} className="p-1.5 text-slate-600 hover:bg-slate-200 rounded-md transition-colors"><Bold className="w-4 h-4" strokeWidth={2.5} /></button>
-                  <button onMouseDown={(e) => handleFormat(e, 'italic')} className="p-1.5 text-slate-600 hover:bg-slate-200 rounded-md transition-colors"><Italic className="w-4 h-4" strokeWidth={2.5} /></button>
-                  <button onMouseDown={(e) => handleFormat(e, 'underline')} className="p-1.5 text-slate-600 hover:bg-slate-200 rounded-md transition-colors"><Underline className="w-4 h-4" strokeWidth={2.5} /></button>
-                  <button onMouseDown={(e) => handleFormat(e, 'strikeThrough')} className="p-1.5 text-slate-600 hover:bg-slate-200 rounded-md transition-colors"><Strikethrough className="w-4 h-4" strokeWidth={2.5} /></button>
-                  <div className="w-px h-5 bg-slate-200 mx-1"></div>
-                  <button onMouseDown={(e) => handleFormat(e, 'insertUnorderedList')} className="p-1.5 text-slate-600 hover:bg-slate-200 rounded-md transition-colors"><List className="w-4 h-4" strokeWidth={2.5} /></button>
-                  <button onMouseDown={(e) => handleFormat(e, 'insertOrderedList')} className="p-1.5 text-slate-600 hover:bg-slate-200 rounded-md transition-colors"><ListOrdered className="w-4 h-4" strokeWidth={2.5} /></button>
-                  <div className="w-px h-5 bg-slate-200 mx-1"></div>
-                  
-                  {/* Link Popover Button */}
-                  <div className="relative flex items-center">
-                    <button 
-                      onMouseDown={(e) => {
-                        e.preventDefault();
-                        const selection = window.getSelection();
-                        if (selection && selection.rangeCount > 0) {
-                          setSavedRange(selection.getRangeAt(0));
-                        }
-                        setShowLinkPopup(!showLinkPopup);
-                        setShowImagePopup(false);
-                        setShowVideoPopup(false);
-                        setShowFormatPopup(false);
-                      }} 
-                      className={`p-1.5 rounded-md transition-colors ${showLinkPopup ? 'bg-blue-50 text-blue-600' : 'text-slate-600 hover:bg-slate-200'}`}
-                    >
-                      <LinkIcon className="w-4 h-4" strokeWidth={2.5} />
-                    </button>
-
-                    {showLinkPopup && (
-                      <div className="absolute top-[120%] left-0 bg-white border border-[#D1D5DB] shadow-lg rounded-md p-1.5 flex items-center gap-2 z-[50] w-[320px]">
-                        <span className="text-[13px] text-slate-700 font-medium pl-1 whitespace-nowrap">Enter link:</span>
-                        <input 
-                          type="text" 
-                          placeholder="URL" 
-                          value={linkUrlInput}
-                          onChange={e => setLinkUrlInput(e.target.value)}
-                          className="flex-1 border border-[#D1D5DB] rounded-[4px] px-2 py-1.5 text-[13px] outline-none focus:border-blue-500 transition-colors"
-                          autoFocus
-                        />
-                        <button 
-                          onMouseDown={(e) => {
-                            e.preventDefault();
-                            if (!linkUrlInput) return;
-                            
-                            if (savedRange) {
-                              const selection = window.getSelection();
-                              selection?.removeAllRanges();
-                              selection?.addRange(savedRange);
-                            }
-
-                            document.execCommand('createLink', false, linkUrlInput);
-                            if (editorRef.current) setDescription(editorRef.current.innerHTML);
-                            
-                            setShowLinkPopup(false);
-                            setLinkUrlInput('');
-                          }}
-                          className="text-blue-600 text-[13px] font-medium px-2 hover:text-blue-700 cursor-pointer"
-                        >
-                          Save
-                        </button>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Image Popover Button */}
-                  <div className="relative flex items-center">
-                    <button 
-                      onMouseDown={(e) => {
-                        e.preventDefault();
-                        const selection = window.getSelection();
-                        if (selection && selection.rangeCount > 0) {
-                          setSavedRange(selection.getRangeAt(0));
-                        }
-                        setShowImagePopup(!showImagePopup);
-                        setShowLinkPopup(false);
-                        setShowVideoPopup(false);
-                        setShowFormatPopup(false);
-                      }} 
-                      className={`p-1.5 rounded-md transition-colors ${showImagePopup ? 'bg-blue-50 text-blue-600' : 'text-slate-600 hover:bg-slate-200'}`}
-                    >
-                      <ImageIcon2 className="w-4 h-4" strokeWidth={2.5} />
-                    </button>
-
-                    {showImagePopup && (
-                      <div className="absolute top-[120%] left-0 bg-white border border-[#D1D5DB] shadow-lg rounded-md p-1.5 flex items-center gap-2 z-[50] w-[320px]">
-                        <span className="text-[13px] text-slate-700 font-medium pl-1 whitespace-nowrap">Enter image:</span>
-                        <input 
-                          type="text" 
-                          placeholder="Image URL" 
-                          value={imageUrlInput}
-                          onChange={e => setImageUrlInput(e.target.value)}
-                          className="flex-1 border border-[#D1D5DB] rounded-[4px] px-2 py-1.5 text-[13px] outline-none focus:border-blue-500 transition-colors"
-                          autoFocus
-                        />
-                        <button 
-                          onMouseDown={(e) => {
-                            e.preventDefault();
-                            if (!imageUrlInput) return;
-                            
-                            if (savedRange) {
-                              const selection = window.getSelection();
-                              selection?.removeAllRanges();
-                              selection?.addRange(savedRange);
-                            }
-
-                            const html = `<div style="margin: 16px 0; text-align: center;"><img src="${imageUrlInput}" style="max-width: 100%; height: auto; border-radius: 8px;" /></div><p><br></p>`;
-                            document.execCommand('insertHTML', false, html);
-                            if (editorRef.current) setDescription(editorRef.current.innerHTML);
-                            
-                            setShowImagePopup(false);
-                            setImageUrlInput('');
-                          }}
-                          className="text-blue-600 text-[13px] font-medium px-2 hover:text-blue-700 cursor-pointer"
-                        >
-                          Save
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                  
-                  {/* Video Popover Button */}
-                  <div className="relative flex items-center">
-                    <button 
-                      onMouseDown={(e) => {
-                        e.preventDefault();
-                        const selection = window.getSelection();
-                        if (selection && selection.rangeCount > 0) {
-                          setSavedRange(selection.getRangeAt(0));
-                        }
-                        setShowVideoPopup(!showVideoPopup);
-                        setShowLinkPopup(false);
-                        setShowImagePopup(false);
-                        setShowFormatPopup(false);
-                      }} 
-                      className={`p-1.5 rounded-md transition-colors ${showVideoPopup ? 'bg-blue-50 text-blue-600' : 'text-slate-600 hover:bg-slate-200'}`}
-                    >
-                      <Video className="w-4 h-4" strokeWidth={2.5} />
-                    </button>
-
-                    {showVideoPopup && (
-                      <div className="absolute top-[120%] left-0 bg-white border border-[#D1D5DB] shadow-lg rounded-md p-1.5 flex items-center gap-2 z-[50] w-[320px]">
-                        <span className="text-[13px] text-slate-700 font-medium pl-1 whitespace-nowrap">Enter video:</span>
-                        <input 
-                          type="text" 
-                          placeholder="Embed URL" 
-                          value={videoUrlInput}
-                          onChange={e => setVideoUrlInput(e.target.value)}
-                          className="flex-1 border border-[#D1D5DB] rounded-[4px] px-2 py-1.5 text-[13px] outline-none focus:border-blue-500 transition-colors"
-                          autoFocus
-                        />
-                        <button 
-                          onMouseDown={(e) => {
-                            e.preventDefault();
-                            if (!videoUrlInput) return;
-                            
-                            if (savedRange) {
-                              const selection = window.getSelection();
-                              selection?.removeAllRanges();
-                              selection?.addRange(savedRange);
-                            }
-
-                            let embedUrl = videoUrlInput;
-                            const iframeMatch = videoUrlInput.match(/src="([^"]+)"/);
-                            if (iframeMatch) {
-                              embedUrl = iframeMatch[1];
-                            } else if (videoUrlInput.includes('youtube.com/watch?v=')) {
-                              embedUrl = `https://www.youtube.com/embed/${videoUrlInput.split('v=')[1].split('&')[0]}`;
-                            } else if (videoUrlInput.includes('youtu.be/')) {
-                              embedUrl = `https://www.youtube.com/embed/${videoUrlInput.split('youtu.be/')[1].split('?')[0]}`;
-                            } else if (videoUrlInput.includes('vimeo.com/')) {
-                              embedUrl = `https://player.vimeo.com/video/${videoUrlInput.split('vimeo.com/')[1].split('?')[0]}`;
-                            }
-
-                            const html = `<div contenteditable="false" style="margin: 16px 0; text-align: center;"><iframe src="${embedUrl}" width="100%" height="315" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="border-radius: 8px; max-width: 100%;"></iframe></div><p><br></p>`;
-                            
-                            document.execCommand('insertHTML', false, html);
-                            if (editorRef.current) setDescription(editorRef.current.innerHTML);
-                            
-                            setShowVideoPopup(false);
-                            setVideoUrlInput('');
-                          }}
-                          className="text-blue-600 text-[13px] font-medium px-2 hover:text-blue-700 cursor-pointer"
-                        >
-                          Save
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                
-                <style>{`
-                  .custom-editor h1 {
-                    font-size: 36px !important;
-                    font-weight: 800 !important;
-                    letter-spacing: -0.025em !important;
-                    line-height: 1.2 !important;
-                    margin-top: 0.5em !important;
-                    margin-bottom: 0.25em !important;
-                  }
-                  .custom-editor h2 {
-                    font-size: 26px !important;
-                    font-weight: 700 !important;
-                    margin-top: 0.5em !important;
-                    margin-bottom: 0.25em !important;
-                  }
-                  .custom-editor h3 {
-                    font-size: 20px !important;
-                    font-weight: 700 !important;
-                    margin-top: 0.5em !important;
-                    margin-bottom: 0.25em !important;
-                  }
-                  .custom-editor > *:first-child {
-                    margin-top: 0 !important;
-                  }
-                `}</style>
-                <div 
-                  ref={editorRef}
-                  contentEditable
-                  onInput={() => {
-                    if (editorRef.current) {
-                      setDescription(editorRef.current.innerHTML);
-                    }
-                  }}
-                  className="custom-editor flex-1 p-4 text-[14px] text-slate-900 focus:outline-none overflow-y-auto prose prose-sm max-w-none prose-p:my-1"
-                  style={{ minHeight: '200px' }}
-                />
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* STEP 3: Customize Page (Thumbnail) - For Fichier/Service */}
-        {step === 3 && productType !== 'formation' && (
-          <div className="animate-in fade-in slide-in-from-bottom-2">
-            <h2 className="text-[22px] font-medium text-slate-900 mb-6">Personnaliser la page produit</h2>
-            
-            <div className="space-y-8">
-              <div>
-                <label className="block text-[13px] font-medium text-slate-900 mb-2">Ajouter une image de couverture (Vignette) <span className="text-slate-400 font-normal">ⓘ</span></label>
-                
-                <input 
-                  type="file" 
-                  accept="image/*" 
-                  ref={imageInputRef} 
-                  onChange={handleImageChange} 
-                  className="hidden" 
-                />
-
-                <div 
-                  onClick={() => imageInputRef.current?.click()}
-                  className="w-[200px] h-[200px] border border-[#E5E7EB] bg-[#F9FAFB] rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-slate-50 transition-colors relative overflow-hidden group shadow-sm"
-                >
-                  {coverPreview ? (
-                    <>
-                      <img src={coverPreview} alt="Thumbnail" className="w-full h-full object-cover" />
-                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                         <span className="text-white text-sm font-medium">Changer</span>
-                      </div>
-                    </>
-                  ) : (
-                    <ImageIcon className="w-8 h-8 text-slate-400" strokeWidth={1.5} />
-                  )}
-                </div>
-                <p className="text-[12px] text-slate-500 mt-3 leading-relaxed max-w-[350px]">
-                  Créez une image mémorable qui représente votre produit. Utilisez une image carrée (minimum 600x600px) au format JPG ou PNG pour de meilleurs résultats.
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* STEP 3: Content Builder (For Formation) */}
-        {step === 3 && productType === 'formation' && (
-          <div className="animate-in fade-in slide-in-from-bottom-2">
-            <h2 className="text-[22px] font-medium text-slate-900 mb-6 text-center">Ajouter le contenu de la formation</h2>
-            
-            {chapters.length === 0 ? (
-              <div className="flex flex-col items-center justify-center text-center py-10">
-                <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-6">
-                  <GraduationCap className="w-8 h-8 text-slate-600" />
-                </div>
-                <h3 className="text-[20px] font-bold text-slate-900 mb-2">Construisez votre programme</h3>
-                <p className="text-slate-500 text-[14px] max-w-[400px] mb-8 leading-relaxed">
-                  Créez des chapitres et ajoutez-y des leçons : vidéos, textes ou fichiers téléchargeables.
-                </p>
-                <button 
-                  onClick={() => setShowAddChapterModal(true)}
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-lg text-[14px] transition-colors flex items-center gap-2 shadow-sm"
-                >
-                  <Plus className="w-4 h-4" /> Ajouter un chapitre
-                </button>
-              </div>
-            ) : (
-              <div>
-                <div className="flex items-center justify-between mb-8">
-                  <h3 className="text-[16px] font-bold text-slate-900">Contenu du cours</h3>
-                  <button 
-                    onClick={() => setShowAddChapterModal(true)}
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg text-[13px] transition-colors flex items-center gap-2 shadow-sm"
-                  >
-                    <Plus className="w-4 h-4" /> Ajouter un chapitre
-                  </button>
-                </div>
-
-                <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 text-[12px] font-semibold text-slate-500 mb-4">
-                  <div className="flex items-center gap-4 flex-1">
-                    <span className="w-8">#</span>
-                    <span>Titre</span>
-                  </div>
-                  <div className="flex items-center gap-12 pr-[140px]">
-                    <span>Statut</span>
-                    <span>Actions</span>
-                  </div>
-                </div>
-
-                <div className="space-y-3">
-                  {chapters.map((chapter, index) => (
-                    <div key={chapter.id} className="flex items-center justify-between px-4 py-3 bg-white border border-slate-200 rounded-xl shadow-sm hover:border-slate-300 transition-colors">
-                      <div className="flex items-center gap-4 flex-1">
-                        <span className="w-8 text-[13px] text-slate-400 font-medium">{(index + 1).toString().padStart(2, '0')}</span>
-                        <div className="flex items-center gap-3">
-                          <Folder className="w-4 h-4 text-slate-700" />
-                          <span className="text-[14px] font-bold text-slate-900">{chapter.title}</span>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-center gap-8">
-                        <button 
-                          className={`w-11 h-6 rounded-full flex items-center transition-colors px-1 ${chapter.status === 'active' ? 'bg-slate-900' : 'bg-slate-200'}`}
-                          onClick={() => {
-                            setChapters(chapters.map(c => c.id === chapter.id ? { ...c, status: c.status === 'active' ? 'draft' : 'active' } : c));
-                          }}
-                        >
-                          <div className={`w-4 h-4 rounded-full bg-white transition-transform ${chapter.status === 'active' ? 'translate-x-5' : 'translate-x-0'}`}></div>
-                        </button>
-                        
-                        <div className="flex items-center gap-2">
-                          <button 
-                            onClick={() => {
-                              if (index > 0) {
-                                const newChapters = [...chapters];
-                                const temp = newChapters[index - 1];
-                                newChapters[index - 1] = newChapters[index];
-                                newChapters[index] = temp;
-                                setChapters(newChapters);
-                              }
-                            }}
-                            className="w-8 h-8 rounded-lg border border-slate-200 flex items-center justify-center hover:bg-slate-50 transition-colors"
-                          >
-                            <ChevronUp className="w-4 h-4 text-slate-600" />
-                          </button>
-                          <button 
-                            onClick={() => {
-                              if (index < chapters.length - 1) {
-                                const newChapters = [...chapters];
-                                const temp = newChapters[index + 1];
-                                newChapters[index + 1] = newChapters[index];
-                                newChapters[index] = temp;
-                                setChapters(newChapters);
-                              }
-                            }}
-                            className="w-8 h-8 rounded-lg border border-slate-200 flex items-center justify-center hover:bg-slate-50 transition-colors"
-                          >
-                            <ChevronDown className="w-4 h-4 text-slate-600" />
-                          </button>
-                          <button className="w-8 h-8 rounded-lg border border-slate-200 flex items-center justify-center hover:bg-slate-50 transition-colors">
-                            <MoreHorizontal className="w-4 h-4 text-slate-600" />
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* STEP 4: Content Upload (For Fichier/Service) */}
-        {step === 4 && productType !== 'formation' && (
-          <div className="animate-in fade-in slide-in-from-bottom-2">
-            <h2 className="text-[22px] font-medium text-slate-900 mb-6">Ajoutez le contenu du produit</h2>
-            
-            <div>
-              <label className="block text-[14px] font-medium text-slate-900 mb-3">Télécharger le contenu du produit</label>
-              
-              <input 
-                type="file" 
-                ref={fileInputRef} 
-                onChange={handleFileChange} 
-                className="hidden" 
-              />
-
-              <div className="w-full border border-[#E5E7EB] bg-[#F9FAFB] border-dashed rounded-xl p-8 flex flex-col items-center justify-center text-center shadow-sm">
-                
-                {productFile ? (
-                  <div className="flex flex-col items-center">
-                    <div className="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mb-3">
-                      <CheckCircle2 className="w-5 h-5" />
-                    </div>
-                    <div className="font-semibold text-slate-900 text-[14px]">{productFile.name}</div>
-                    <div className="text-[12px] text-slate-500 mt-1 mb-4">{(productFile.size / 1024 / 1024).toFixed(2)} MB</div>
-                    <button 
-                      onClick={() => setProductFile(null)}
-                      className="text-[13px] font-medium text-red-500 hover:text-red-600"
-                    >
-                      Supprimer et choisir un autre fichier
-                    </button>
-                  </div>
-                ) : (
-                  <>
-                    <button 
-                      onClick={() => fileInputRef.current?.click()}
-                      className="bg-[#F59E0B] hover:bg-[#D97706] text-white px-5 py-2 rounded-md text-[13px] font-semibold transition-colors flex items-center gap-2 mb-3"
-                    >
-                      <UploadIcon /> Choisir un fichier
-                    </button>
-                    <p className="text-[12px] text-slate-500 max-w-[280px]">
-                      Ajoutez des fichiers à votre produit pour que les clients puissent les télécharger après l'achat.
-                    </p>
-                  </>
-                )}
-
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* STEP 4/5: Review and Publish */}
-        {((step === 5 && productType !== 'formation') || (step === 4 && productType === 'formation')) && (
-          <div className="animate-in fade-in slide-in-from-bottom-2">
-            <h2 className="text-[22px] font-medium text-slate-900 mb-6">Vérifier et publier</h2>
-            
-            <div className="bg-[#F9FAFB] rounded-xl p-5 border border-[#E5E7EB] mb-6 shadow-sm">
-              <h3 className="text-[15px] font-bold text-slate-900 mb-4">Résumé du produit</h3>
-              
-              <div className="space-y-2">
-                <div className="bg-white rounded-lg p-3 border border-[#E5E7EB]">
-                  <div className="text-[11px] text-slate-500 font-semibold mb-0.5 uppercase tracking-wide">Nom du produit</div>
-                  <div className="text-[14px] font-medium text-slate-900">{title || 'Non renseigné'}</div>
-                </div>
-                <div className="bg-white rounded-lg p-3 border border-[#E5E7EB]">
-                  <div className="text-[11px] text-slate-500 font-semibold mb-0.5 uppercase tracking-wide">Catégorie</div>
-                  <div className="text-[14px] font-medium text-slate-900">{category || 'Non renseignée'}</div>
-                </div>
-                <div className="bg-white rounded-lg p-3 border border-[#E5E7EB]">
-                  <div className="text-[11px] text-slate-500 font-semibold mb-0.5 uppercase tracking-wide">Modèle de tarification</div>
-                  <div className="text-[14px] font-medium text-slate-900">{pricingModel}</div>
-                </div>
-                <div className="bg-white rounded-lg p-3 border border-[#E5E7EB]">
-                  <div className="text-[11px] text-slate-500 font-semibold mb-0.5 uppercase tracking-wide">Prix</div>
-                  <div className="text-[14px] font-medium text-slate-900">{price || '0'} FCFA</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-[#ECFDF5] border border-[#A7F3D0] rounded-lg p-3 flex items-center gap-3">
-               <div className="w-5 h-5 rounded-full bg-[#10B981] flex items-center justify-center text-white shrink-0">
-                 <CheckCircle2 className="w-3.5 h-3.5" />
-               </div>
-               <div>
-                 <div className="text-[13px] font-bold text-[#065F46]">Prêt à publier</div>
-                 <div className="text-[12px] text-[#047857]">Votre produit sera disponible dans votre boutique une fois publié.</div>
-               </div>
-            </div>
-
-          </div>
-        )}
-
-        {/* Footer Navigation Buttons */}
-        <div className="mt-8 flex items-center justify-center gap-3">
-          {step > 1 ? (
-            <button 
-              onClick={prevStep}
-              className="px-5 py-2 rounded-md text-[13px] font-semibold text-slate-700 bg-white border border-[#D1D5DB] hover:bg-slate-50 transition-colors shadow-sm"
-            >
-              Retour
-            </button>
-          ) : (
-            <button 
-              onClick={() => navigate({ to: '/admin/products/create' })}
-              className="px-5 py-2 rounded-md text-[13px] font-semibold text-slate-700 bg-white border border-[#D1D5DB] hover:bg-slate-50 transition-colors shadow-sm"
-            >
-              Annuler
-            </button>
           )}
 
-          {step < totalSteps ? (
-            <button 
-              onClick={nextStep}
-              disabled={!isStepValid()}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md text-[13px] font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+          {step === 3 && (
+            <div className="space-y-6">
+              <div className="flex justify-between items-center mb-6">
+                <h1 className="text-[24px] font-bold text-slate-900">Décrivez votre produit</h1>
+                <button
+                  onClick={rewriteDescription}
+                  disabled={aiRewriting}
+                  className="flex items-center gap-2 px-3 py-2 bg-amber-50 text-amber-700 border border-amber-200 rounded-lg text-[13px] font-medium"
+                >
+                  {aiRewriting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+                  Assistant IA
+                </button>
+              </div>
+              <RichTextEditor value={description} onChange={setDescription} label="" withAI={false} />
+            </div>
+          )}
+
+          {step === 4 && (
+            <div className="space-y-8">
+              <h1 className="text-[24px] font-bold text-slate-900 mb-6">Personnaliser la page produit</h1>
+              
+              <div>
+                <label className="block text-[13px] font-semibold text-slate-800 mb-3">Vignette (carrée)</label>
+                <div
+                  className="w-48 h-48 border-2 border-dashed border-slate-300 rounded-xl flex items-center justify-center cursor-pointer hover:border-[#1E293B] overflow-hidden"
+                  onClick={() => document.getElementById('thumb-upload')?.click()}
+                >
+                  {thumbnailPreview ? (
+                    <img src={thumbnailPreview} alt="thumb" className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="text-center text-slate-400">
+                      <ImageIcon className="w-8 h-8 mx-auto mb-2" />
+                      <p className="text-[12px]">Min 600×600px</p>
+                    </div>
+                  )}
+                  <input
+                    id="thumb-upload"
+                    type="file"
+                    className="hidden"
+                    accept="image/*"
+                    onChange={e => {
+                      const f = e.target.files?.[0];
+                      if (f) {
+                        setThumbnailFile(f);
+                        const r = new FileReader();
+                        r.onload = ev => setThumbnailPreview(ev.target?.result as string);
+                        r.readAsDataURL(f);
+                      }
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[13px] font-semibold text-slate-800 mb-3">Bannière (optionnel)</label>
+                <div
+                  className="w-full h-48 border-2 border-dashed border-slate-300 rounded-xl flex items-center justify-center cursor-pointer hover:border-[#1E293B] overflow-hidden"
+                  onClick={() => document.getElementById('banner-upload')?.click()}
+                >
+                  {bannerPreview ? (
+                    <img src={bannerPreview} alt="banner" className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="text-center text-slate-400">
+                      <ImageIcon className="w-8 h-8 mx-auto mb-2" />
+                      <p className="text-[12px]">1200×400px recommandé</p>
+                    </div>
+                  )}
+                  <input
+                    id="banner-upload"
+                    type="file"
+                    className="hidden"
+                    accept="image/*"
+                    onChange={e => {
+                      const f = e.target.files?.[0];
+                      if (f) {
+                        setBannerFile(f);
+                        const r = new FileReader();
+                        r.onload = ev => setBannerPreview(ev.target?.result as string);
+                        r.readAsDataURL(f);
+                      }
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {step === 5 && (
+            <div className="space-y-6">
+              <h1 className="text-[24px] font-bold text-slate-900 mb-6">Contenu du produit</h1>
+
+              {selectedType === 'file' && (
+                <div className="space-y-6">
+                  <div
+                    className="w-full p-12 border-2 border-dashed border-slate-300 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:border-[#1E293B]"
+                    onClick={() => document.getElementById('file-upload')?.click()}
+                  >
+                    <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mb-4">
+                      <Upload className="w-8 h-8 text-amber-600" />
+                    </div>
+                    <p className="text-[14px] font-bold text-slate-900 mb-1">
+                      {downloadFile ? 'Remplacer le fichier' : 'Cliquez pour uploader'}
+                    </p>
+                    <p className="text-[13px] text-slate-500 text-center">
+                      Tous les formats : PDF, ZIP, MP3, MP4, etc.<br/>Taille max 500 MB
+                    </p>
+                    {downloadFile && (
+                      <p className="mt-4 text-[13px] font-bold text-[#1E293B]">📎 {downloadFile.name}</p>
+                    )}
+                    <input
+                      id="file-upload"
+                      type="file"
+                      className="hidden"
+                      onChange={e => setDownloadFile(e.target.files?.[0] || null)}
+                    />
+                  </div>
+                  <div className="flex items-center gap-2 p-3 bg-amber-50 text-amber-800 rounded-lg text-[13px] font-medium">
+                    <Shield className="w-5 h-5 text-amber-600" />
+                    Téléchargement sécurisé avec liens temporaires
+                  </div>
+                </div>
+              )}
+
+              {selectedType === 'course' && (
+                <div className="space-y-8">
+                  <div>
+                    <label className="block text-[13px] font-semibold text-slate-800 mb-3">Type de contenu</label>
+                    <div className="grid grid-cols-3 gap-3">
+                      {[
+                        { value: 'video', label: 'Vidéo', icon: Video },
+                        { value: 'text', label: 'Texte', icon: BookOpen },
+                        { value: 'mixed', label: 'Mixte', icon: Layers },
+                      ].map(ct => (
+                        <button
+                          key={ct.value}
+                          onClick={() => setCourseContentType(ct.value)}
+                          className={`p-4 rounded-xl border-2 text-center ${courseContentType === ct.value ? 'border-blue-500 bg-blue-50' : 'border-slate-200'}`}
+                        >
+                          <ct.icon className="w-6 h-6 mx-auto mb-2 text-blue-500" />
+                          <p className="text-[13px] font-semibold text-slate-900">{ct.label}</p>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <label className="block text-[13px] font-semibold text-slate-800">Leçons</label>
+                    {lessons.map((lesson, idx) => (
+                      <div key={idx} className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
+                        <div className="flex gap-2">
+                          <input
+                            value={lesson.title}
+                            onChange={e => updateLesson(idx, 'title', e.target.value)}
+                            placeholder="Titre de la leçon"
+                            className="flex-1 h-10 px-3 text-[13px] border border-slate-200 rounded-lg"
+                          />
+                          <button onClick={() => removeLesson(idx)} className="w-10 h-10 flex items-center justify-center text-red-500 hover:bg-red-50 rounded-lg">
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                        <div className="flex gap-2">
+                          <select
+                            value={lesson.video_type}
+                            onChange={e => updateLesson(idx, 'video_type', e.target.value)}
+                            className="w-1/3 h-10 px-3 text-[13px] border border-slate-200 rounded-lg"
+                          >
+                            <option value="youtube">YouTube</option>
+                            <option value="vimeo">Vimeo</option>
+                            <option value="upload">Upload vidéo</option>
+                            <option value="text">Texte</option>
+                          </select>
+                          {lesson.video_type !== 'text' && lesson.video_type !== 'upload' && (
+                            <input
+                              value={lesson.video_url}
+                              onChange={e => updateLesson(idx, 'video_url', e.target.value)}
+                              placeholder="URL vidéo"
+                              className="flex-1 h-10 px-3 text-[13px] border border-slate-200 rounded-lg"
+                            />
+                          )}
+                          {lesson.video_type === 'upload' && (
+                             <div className="flex-1">
+                                <input
+                                  type="file"
+                                  accept="video/*"
+                                  onChange={e => updateLesson(idx, 'file', e.target.files?.[0])}
+                                  className="w-full text-[13px]"
+                                />
+                             </div>
+                          )}
+                          <input
+                            type="number"
+                            value={lesson.duration_minutes || ''}
+                            onChange={e => updateLesson(idx, 'duration_minutes', parseInt(e.target.value) || 0)}
+                            placeholder="Min"
+                            className="w-20 h-10 px-3 text-[13px] border border-slate-200 rounded-lg"
+                          />
+                        </div>
+                      </div>
+                    ))}
+                    <button
+                      onClick={addLesson}
+                      className="w-full py-3 border-2 border-dashed border-slate-300 text-slate-500 text-[13px] font-medium rounded-xl flex items-center justify-center gap-2 hover:border-[#1E293B] hover:text-[#1E293B]"
+                    >
+                      <Plus className="w-4 h-4" /> Ajouter une leçon
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+        </div>
+      </div>
+
+      {/* Footer / Actions */}
+      <div className="bg-white border-t border-slate-200 p-4">
+        <div className="max-w-3xl mx-auto flex justify-between items-center">
+          <button
+            onClick={() => setStep(Math.max(1, step - 1))}
+            className={`px-6 py-2.5 text-[14px] font-medium rounded-xl text-slate-700 hover:bg-slate-100 ${step === 1 ? 'invisible' : ''}`}
+          >
+            Retour
+          </button>
+
+          {step < 5 ? (
+            <button
+              onClick={() => setStep(step + 1)}
+              disabled={!canNext()}
+              className="px-6 py-2.5 bg-[#1E293B] text-white text-[14px] font-bold rounded-xl hover:bg-[#0F172A] disabled:opacity-50"
             >
               Continuer
             </button>
           ) : (
-            <button 
-              onClick={handlePublish}
-              disabled={loading}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md text-[13px] font-semibold flex items-center gap-2 transition-colors disabled:opacity-70 shadow-sm"
+            <button
+              onClick={handleSubmit}
+              disabled={!canNext() || saving}
+              className="px-6 py-2.5 bg-blue-600 text-white text-[14px] font-bold rounded-xl hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2"
             >
-              {loading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
-              Publier
+              {saving ? <><Loader2 className="w-4 h-4 animate-spin"/> Publication...</> : 'Publier le produit'}
             </button>
           )}
         </div>
-
       </div>
 
-      {/* IA Modal */}
-      {showIAImproveModal && (
-        <div className="fixed inset-0 bg-black/40 z-[100] flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl shadow-2xl w-full max-w-[500px] overflow-hidden animate-in zoom-in-95 duration-200">
-            <div className="flex items-center justify-between px-5 py-4 border-b border-[#E5E7EB]">
-              <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-fuchsia-500" />
-                <h3 className="font-bold text-[15px] text-slate-900">Améliorer la description</h3>
-              </div>
-              <button onClick={() => setShowIAImproveModal(false)} className="text-slate-400 hover:text-slate-600">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div className="p-5 space-y-5">
-              <div>
-                <label className="block text-[13px] font-medium text-slate-700 mb-1.5">Mots-clés</label>
-                <input 
-                  type="text" 
-                  value={iaKeywords}
-                  onChange={(e) => setIaKeywords(e.target.value)}
-                  className="w-full border border-[#D1D5DB] rounded-lg px-3 py-2 text-[13px] outline-none focus:border-blue-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[13px] font-medium text-slate-700 mb-1.5 flex items-center gap-2">
-                  <div className="w-4 h-4 rounded-full bg-slate-100 flex items-center justify-center text-[10px] text-slate-500 font-bold border border-slate-200">x</div>
-                  Instructions spéciales
-                </label>
-                <input 
-                  type="text" 
-                  value={iaInstructions}
-                  onChange={(e) => setIaInstructions(e.target.value)}
-                  placeholder="Ajoutez des exigences spécifiques ou des points d'attention"
-                  className="w-full border border-[#D1D5DB] rounded-lg px-3 py-2 text-[13px] outline-none focus:border-blue-500 placeholder:text-slate-400"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[13px] font-medium text-slate-700 mb-1.5">Tonalité de la description</label>
-                <select 
-                  value={iaTone}
-                  onChange={(e) => setIaTone(e.target.value)}
-                  className="w-full border border-[#D1D5DB] rounded-lg px-3 py-2 text-[13px] outline-none focus:border-blue-500 appearance-none bg-white"
-                  style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239CA3AF'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`, backgroundPosition: 'right 0.75rem center', backgroundRepeat: 'no-repeat', backgroundSize: '1em 1em' }}
-                >
-                  <option value="Persuasif">Persuasif</option>
-                  <option value="Convaincant">Convaincant</option>
-                  <option value="Professionnel">Professionnel</option>
-                  <option value="Amical">Amical</option>
-                </select>
-              </div>
-
-              <div className="flex justify-end pt-2">
-                <button 
-                  onClick={generateIADescription}
-                  disabled={isGenerating}
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded-lg text-[13px] transition-colors flex items-center gap-2 disabled:opacity-70 shadow-sm"
-                >
-                  {isGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-                  Générer
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Add Chapter Modal */}
-      {showAddChapterModal && (
-        <div className="fixed inset-0 bg-slate-900/40 z-[100] flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-[500px] overflow-hidden animate-in zoom-in-95 duration-200">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
-              <h3 className="font-bold text-[16px] text-slate-900">Ajouter un chapitre</h3>
-              <button onClick={() => setShowAddChapterModal(false)} className="text-slate-400 hover:text-slate-600 transition-colors">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div className="p-6 space-y-5">
-              <div>
-                <label className="block text-[13px] font-medium text-slate-900 mb-1.5">Titre <span className="text-red-500">*</span></label>
-                <input 
-                  type="text" 
-                  value={newChapterTitle}
-                  onChange={(e) => setNewChapterTitle(e.target.value)}
-                  className="w-full bg-white border border-[#D1D5DB] rounded-md px-3 py-2 text-[14px] text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors shadow-sm"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[13px] font-medium text-slate-900 mb-1.5">Description</label>
-                <div className="relative">
-                  <textarea 
-                    value={newChapterDesc}
-                    onChange={(e) => {
-                      if (e.target.value.length <= 160) {
-                        setNewChapterDesc(e.target.value);
-                      }
-                    }}
-                    rows={4}
-                    className="w-full bg-white border border-[#D1D5DB] rounded-md px-3 py-2 text-[14px] text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors shadow-sm resize-none"
-                  />
-                  <div className="absolute bottom-2 right-2 text-[11px] font-medium text-emerald-500">
-                    {newChapterDesc.length}/160
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex justify-end pt-2">
-                <button 
-                  onClick={() => {
-                    if (!newChapterTitle.trim()) return;
-                    setChapters([...chapters, {
-                      id: Math.random().toString(36).substr(2, 9),
-                      title: newChapterTitle,
-                      description: newChapterDesc,
-                      status: 'active',
-                      order: chapters.length
-                    }]);
-                    setNewChapterTitle('');
-                    setNewChapterDesc('');
-                    setShowAddChapterModal(false);
-                  }}
-                  disabled={!newChapterTitle.trim()}
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded-lg text-[13px] transition-colors disabled:opacity-50 shadow-sm"
-                >
-                  Ajouter
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
     </div>
-  );
-}
-
-function UploadIcon() {
-  return (
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-      <polyline points="17 8 12 3 7 8" />
-      <line x1="12" y1="3" x2="12" y2="15" />
-    </svg>
   );
 }

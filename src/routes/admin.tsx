@@ -41,6 +41,8 @@ function AdminLayout() {
     if (currentPath.startsWith('/admin/customers')) return 'Clients';
     if (currentPath.startsWith('/admin/earnings')) return 'Revenus';
     if (currentPath.startsWith('/admin/analytics')) return 'Analytiques';
+    if (currentPath.startsWith('/admin/marketing')) return 'Marketing';
+    if (currentPath.startsWith('/admin/automatisations')) return 'Automatisations';
     if (currentPath.startsWith('/admin/settings')) return 'Paramètres';
     return 'Dashboard';
   };
@@ -97,18 +99,18 @@ function AdminLayout() {
             <BarChart2 className={`w-[18px] h-[18px] ${isActive('/admin/analytics') ? 'text-slate-900' : 'text-slate-400'}`} />
             <span className="text-[14px]">Analytiques</span>
           </Link>
-          <div className="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-50 font-medium cursor-pointer">
-            <Megaphone className="w-[18px] h-[18px] text-slate-400" />
+          <Link to="/admin/marketing" className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors group ${isActive('/admin/marketing') ? 'bg-slate-100 text-slate-900 font-semibold' : 'text-slate-600 hover:bg-slate-50 font-medium'}`}>
+            <Megaphone className={`w-[18px] h-[18px] ${isActive('/admin/marketing') ? 'text-slate-900' : 'text-slate-400'}`} />
             <span className="text-[14px]">Marketing</span>
-          </div>
+          </Link>
           <div className="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-50 font-medium cursor-pointer">
             <Share2 className="w-[18px] h-[18px] text-slate-400" />
             <span className="text-[14px]">Affiliation</span>
           </div>
-          <div className="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-50 font-medium cursor-pointer">
-            <Zap className="w-[18px] h-[18px] text-slate-400" />
+          <Link to="/admin/automatisations" className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors group ${isActive('/admin/automatisations') ? 'bg-slate-100 text-slate-900 font-semibold' : 'text-slate-600 hover:bg-slate-50 font-medium'}`}>
+            <Zap className={`w-[18px] h-[18px] ${isActive('/admin/automatisations') ? 'text-slate-900' : 'text-slate-400'}`} />
             <span className="text-[14px]">Automatisations</span>
-          </div>
+          </Link>
           <div className="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-50 font-medium cursor-pointer">
             <Plus className="w-[18px] h-[18px] text-slate-400" />
             <span className="text-[14px]">Plus</span>
@@ -153,6 +155,8 @@ function AdminLayout() {
               <Link to="/admin/products" className="flex items-center gap-4 text-slate-700 font-medium text-[15px]"><Package className="w-5 h-5 text-slate-400"/> Produits</Link>
               <Link to="/admin/customers" className="flex items-center gap-4 text-slate-700 font-medium text-[15px]"><Users className="w-5 h-5 text-slate-400"/> Clients</Link>
               <Link to="/admin/earnings" className="flex items-center gap-4 text-slate-700 font-medium text-[15px]"><CircleDollarSign className="w-5 h-5 text-slate-400"/> Revenus</Link>
+              <Link to="/admin/marketing" className="flex items-center gap-4 text-slate-700 font-medium text-[15px]"><Megaphone className="w-5 h-5 text-slate-400"/> Marketing</Link>
+              <Link to="/admin/automatisations" className="flex items-center gap-4 text-slate-700 font-medium text-[15px]"><Zap className="w-5 h-5 text-slate-400"/> Automatisations</Link>
               <div className="h-px bg-slate-100 my-4"></div>
               <Link to="/admin/settings" className="flex items-center gap-4 text-slate-700 font-medium text-[15px]"><Settings className="w-5 h-5 text-slate-400"/> Paramètres</Link>
             </nav>

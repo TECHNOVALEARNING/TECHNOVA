@@ -10,19 +10,25 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SuccessRouteImport } from './routes/success'
+import { Route as MesAchatsRouteImport } from './routes/mes-achats'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as FormationsRouteImport } from './routes/formations'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ConfidentialiteRouteImport } from './routes/confidentialite'
 import { Route as ConditionsRouteImport } from './routes/conditions'
+import { Route as BuyerLoginRouteImport } from './routes/buyer-login'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as MesAchatsIndexRouteImport } from './routes/mes-achats/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
+import { Route as MesAchatsOrderIdRouteImport } from './routes/mes-achats/$orderId'
 import { Route as HistoryIdRouteImport } from './routes/history.$id'
 import { Route as AdminSalesRouteImport } from './routes/admin/sales'
+import { Route as AdminMarketingRouteImport } from './routes/admin/marketing'
 import { Route as AdminEarningsRouteImport } from './routes/admin/earnings'
 import { Route as AdminCustomersRouteImport } from './routes/admin/customers'
+import { Route as AdminAutomatisationsRouteImport } from './routes/admin/automatisations'
 import { Route as AdminAnalyticsRouteImport } from './routes/admin/analytics'
 import { Route as AdminSettingsIndexRouteImport } from './routes/admin/settings/index'
 import { Route as AdminProductsIndexRouteImport } from './routes/admin/products/index'
@@ -35,6 +41,11 @@ import { Route as AdminProductsProductIdRouteImport } from './routes/admin/produ
 const SuccessRoute = SuccessRouteImport.update({
   id: '/success',
   path: '/success',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MesAchatsRoute = MesAchatsRouteImport.update({
+  id: '/mes-achats',
+  path: '/mes-achats',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -62,6 +73,11 @@ const ConditionsRoute = ConditionsRouteImport.update({
   path: '/conditions',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BuyerLoginRoute = BuyerLoginRouteImport.update({
+  id: '/buyer-login',
+  path: '/buyer-login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -71,6 +87,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const MesAchatsIndexRoute = MesAchatsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MesAchatsRoute,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
@@ -82,6 +103,11 @@ const ProductIdRoute = ProductIdRouteImport.update({
   path: '/product/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MesAchatsOrderIdRoute = MesAchatsOrderIdRouteImport.update({
+  id: '/$orderId',
+  path: '/$orderId',
+  getParentRoute: () => MesAchatsRoute,
+} as any)
 const HistoryIdRoute = HistoryIdRouteImport.update({
   id: '/history/$id',
   path: '/history/$id',
@@ -92,6 +118,11 @@ const AdminSalesRoute = AdminSalesRouteImport.update({
   path: '/sales',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminMarketingRoute = AdminMarketingRouteImport.update({
+  id: '/marketing',
+  path: '/marketing',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminEarningsRoute = AdminEarningsRouteImport.update({
   id: '/earnings',
   path: '/earnings',
@@ -100,6 +131,11 @@ const AdminEarningsRoute = AdminEarningsRouteImport.update({
 const AdminCustomersRoute = AdminCustomersRouteImport.update({
   id: '/customers',
   path: '/customers',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAutomatisationsRoute = AdminAutomatisationsRouteImport.update({
+  id: '/automatisations',
+  path: '/automatisations',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminAnalyticsRoute = AdminAnalyticsRouteImport.update({
@@ -146,19 +182,25 @@ const AdminProductsProductIdRoute = AdminProductsProductIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/buyer-login': typeof BuyerLoginRoute
   '/conditions': typeof ConditionsRoute
   '/confidentialite': typeof ConfidentialiteRoute
   '/dashboard': typeof DashboardRoute
   '/formations': typeof FormationsRoute
   '/login': typeof LoginRoute
+  '/mes-achats': typeof MesAchatsRouteWithChildren
   '/success': typeof SuccessRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/automatisations': typeof AdminAutomatisationsRoute
   '/admin/customers': typeof AdminCustomersRoute
   '/admin/earnings': typeof AdminEarningsRoute
+  '/admin/marketing': typeof AdminMarketingRoute
   '/admin/sales': typeof AdminSalesRoute
   '/history/$id': typeof HistoryIdRoute
+  '/mes-achats/$orderId': typeof MesAchatsOrderIdRoute
   '/product/$id': typeof ProductIdRoute
   '/admin/': typeof AdminIndexRoute
+  '/mes-achats/': typeof MesAchatsIndexRoute
   '/admin/products/$productId': typeof AdminProductsProductIdRoute
   '/admin/products/create': typeof AdminProductsCreateRoute
   '/admin/products/new': typeof AdminProductsNewRoute
@@ -169,6 +211,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/buyer-login': typeof BuyerLoginRoute
   '/conditions': typeof ConditionsRoute
   '/confidentialite': typeof ConfidentialiteRoute
   '/dashboard': typeof DashboardRoute
@@ -176,12 +219,16 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/success': typeof SuccessRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/automatisations': typeof AdminAutomatisationsRoute
   '/admin/customers': typeof AdminCustomersRoute
   '/admin/earnings': typeof AdminEarningsRoute
+  '/admin/marketing': typeof AdminMarketingRoute
   '/admin/sales': typeof AdminSalesRoute
   '/history/$id': typeof HistoryIdRoute
+  '/mes-achats/$orderId': typeof MesAchatsOrderIdRoute
   '/product/$id': typeof ProductIdRoute
   '/admin': typeof AdminIndexRoute
+  '/mes-achats': typeof MesAchatsIndexRoute
   '/admin/products/$productId': typeof AdminProductsProductIdRoute
   '/admin/products/create': typeof AdminProductsCreateRoute
   '/admin/products/new': typeof AdminProductsNewRoute
@@ -194,19 +241,25 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/buyer-login': typeof BuyerLoginRoute
   '/conditions': typeof ConditionsRoute
   '/confidentialite': typeof ConfidentialiteRoute
   '/dashboard': typeof DashboardRoute
   '/formations': typeof FormationsRoute
   '/login': typeof LoginRoute
+  '/mes-achats': typeof MesAchatsRouteWithChildren
   '/success': typeof SuccessRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/automatisations': typeof AdminAutomatisationsRoute
   '/admin/customers': typeof AdminCustomersRoute
   '/admin/earnings': typeof AdminEarningsRoute
+  '/admin/marketing': typeof AdminMarketingRoute
   '/admin/sales': typeof AdminSalesRoute
   '/history/$id': typeof HistoryIdRoute
+  '/mes-achats/$orderId': typeof MesAchatsOrderIdRoute
   '/product/$id': typeof ProductIdRoute
   '/admin/': typeof AdminIndexRoute
+  '/mes-achats/': typeof MesAchatsIndexRoute
   '/admin/products/$productId': typeof AdminProductsProductIdRoute
   '/admin/products/create': typeof AdminProductsCreateRoute
   '/admin/products/new': typeof AdminProductsNewRoute
@@ -220,19 +273,25 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/buyer-login'
     | '/conditions'
     | '/confidentialite'
     | '/dashboard'
     | '/formations'
     | '/login'
+    | '/mes-achats'
     | '/success'
     | '/admin/analytics'
+    | '/admin/automatisations'
     | '/admin/customers'
     | '/admin/earnings'
+    | '/admin/marketing'
     | '/admin/sales'
     | '/history/$id'
+    | '/mes-achats/$orderId'
     | '/product/$id'
     | '/admin/'
+    | '/mes-achats/'
     | '/admin/products/$productId'
     | '/admin/products/create'
     | '/admin/products/new'
@@ -243,6 +302,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/buyer-login'
     | '/conditions'
     | '/confidentialite'
     | '/dashboard'
@@ -250,12 +310,16 @@ export interface FileRouteTypes {
     | '/login'
     | '/success'
     | '/admin/analytics'
+    | '/admin/automatisations'
     | '/admin/customers'
     | '/admin/earnings'
+    | '/admin/marketing'
     | '/admin/sales'
     | '/history/$id'
+    | '/mes-achats/$orderId'
     | '/product/$id'
     | '/admin'
+    | '/mes-achats'
     | '/admin/products/$productId'
     | '/admin/products/create'
     | '/admin/products/new'
@@ -267,19 +331,25 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/admin'
+    | '/buyer-login'
     | '/conditions'
     | '/confidentialite'
     | '/dashboard'
     | '/formations'
     | '/login'
+    | '/mes-achats'
     | '/success'
     | '/admin/analytics'
+    | '/admin/automatisations'
     | '/admin/customers'
     | '/admin/earnings'
+    | '/admin/marketing'
     | '/admin/sales'
     | '/history/$id'
+    | '/mes-achats/$orderId'
     | '/product/$id'
     | '/admin/'
+    | '/mes-achats/'
     | '/admin/products/$productId'
     | '/admin/products/create'
     | '/admin/products/new'
@@ -292,11 +362,13 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
+  BuyerLoginRoute: typeof BuyerLoginRoute
   ConditionsRoute: typeof ConditionsRoute
   ConfidentialiteRoute: typeof ConfidentialiteRoute
   DashboardRoute: typeof DashboardRoute
   FormationsRoute: typeof FormationsRoute
   LoginRoute: typeof LoginRoute
+  MesAchatsRoute: typeof MesAchatsRouteWithChildren
   SuccessRoute: typeof SuccessRoute
   HistoryIdRoute: typeof HistoryIdRoute
   ProductIdRoute: typeof ProductIdRoute
@@ -309,6 +381,13 @@ declare module '@tanstack/react-router' {
       path: '/success'
       fullPath: '/success'
       preLoaderRoute: typeof SuccessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mes-achats': {
+      id: '/mes-achats'
+      path: '/mes-achats'
+      fullPath: '/mes-achats'
+      preLoaderRoute: typeof MesAchatsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -346,6 +425,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConditionsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/buyer-login': {
+      id: '/buyer-login'
+      path: '/buyer-login'
+      fullPath: '/buyer-login'
+      preLoaderRoute: typeof BuyerLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin': {
       id: '/admin'
       path: '/admin'
@@ -359,6 +445,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/mes-achats/': {
+      id: '/mes-achats/'
+      path: '/'
+      fullPath: '/mes-achats/'
+      preLoaderRoute: typeof MesAchatsIndexRouteImport
+      parentRoute: typeof MesAchatsRoute
     }
     '/admin/': {
       id: '/admin/'
@@ -374,6 +467,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/mes-achats/$orderId': {
+      id: '/mes-achats/$orderId'
+      path: '/$orderId'
+      fullPath: '/mes-achats/$orderId'
+      preLoaderRoute: typeof MesAchatsOrderIdRouteImport
+      parentRoute: typeof MesAchatsRoute
+    }
     '/history/$id': {
       id: '/history/$id'
       path: '/history/$id'
@@ -388,6 +488,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSalesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/marketing': {
+      id: '/admin/marketing'
+      path: '/marketing'
+      fullPath: '/admin/marketing'
+      preLoaderRoute: typeof AdminMarketingRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/earnings': {
       id: '/admin/earnings'
       path: '/earnings'
@@ -400,6 +507,13 @@ declare module '@tanstack/react-router' {
       path: '/customers'
       fullPath: '/admin/customers'
       preLoaderRoute: typeof AdminCustomersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/automatisations': {
+      id: '/admin/automatisations'
+      path: '/automatisations'
+      fullPath: '/admin/automatisations'
+      preLoaderRoute: typeof AdminAutomatisationsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/analytics': {
@@ -463,8 +577,10 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteChildren {
   AdminAnalyticsRoute: typeof AdminAnalyticsRoute
+  AdminAutomatisationsRoute: typeof AdminAutomatisationsRoute
   AdminCustomersRoute: typeof AdminCustomersRoute
   AdminEarningsRoute: typeof AdminEarningsRoute
+  AdminMarketingRoute: typeof AdminMarketingRoute
   AdminSalesRoute: typeof AdminSalesRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminProductsProductIdRoute: typeof AdminProductsProductIdRoute
@@ -478,8 +594,10 @@ interface AdminRouteChildren {
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAnalyticsRoute: AdminAnalyticsRoute,
+  AdminAutomatisationsRoute: AdminAutomatisationsRoute,
   AdminCustomersRoute: AdminCustomersRoute,
   AdminEarningsRoute: AdminEarningsRoute,
+  AdminMarketingRoute: AdminMarketingRoute,
   AdminSalesRoute: AdminSalesRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminProductsProductIdRoute: AdminProductsProductIdRoute,
@@ -493,14 +611,30 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface MesAchatsRouteChildren {
+  MesAchatsOrderIdRoute: typeof MesAchatsOrderIdRoute
+  MesAchatsIndexRoute: typeof MesAchatsIndexRoute
+}
+
+const MesAchatsRouteChildren: MesAchatsRouteChildren = {
+  MesAchatsOrderIdRoute: MesAchatsOrderIdRoute,
+  MesAchatsIndexRoute: MesAchatsIndexRoute,
+}
+
+const MesAchatsRouteWithChildren = MesAchatsRoute._addFileChildren(
+  MesAchatsRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
+  BuyerLoginRoute: BuyerLoginRoute,
   ConditionsRoute: ConditionsRoute,
   ConfidentialiteRoute: ConfidentialiteRoute,
   DashboardRoute: DashboardRoute,
   FormationsRoute: FormationsRoute,
   LoginRoute: LoginRoute,
+  MesAchatsRoute: MesAchatsRouteWithChildren,
   SuccessRoute: SuccessRoute,
   HistoryIdRoute: HistoryIdRoute,
   ProductIdRoute: ProductIdRoute,
