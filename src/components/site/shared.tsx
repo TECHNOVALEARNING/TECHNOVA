@@ -92,11 +92,6 @@ export const Header = () => {
           <button onClick={() => setTheme(t => t === "light" ? "dark" : "light")} className="opacity-80 hover:opacity-100 transition-opacity">
             {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
           </button>
-          
-          <Link to="/login"
-             className="inline-flex items-center gap-2 h-10 px-5 rounded-full bg-primary-gradient text-white text-sm font-semibold shadow-glow hover:scale-[1.03] transition-transform">
-            {lang === "fr" ? "MES ACHATS" : "MY PURCHASES"} <ArrowRight className="h-4 w-4" />
-          </Link>
         </div>
         <div className="lg:hidden flex items-center gap-3">
           <button onClick={() => setTheme(t => t === "light" ? "dark" : "light")} className="p-1 opacity-80 hover:opacity-100 transition-opacity">
@@ -123,10 +118,6 @@ export const Header = () => {
               <Link key={l.to} to={l.to} onClick={(e) => { setOpen(false); handleNavClick(e, l.to); }}
                     className="py-2 font-medium">{l.label}</Link>
             ))}
-            <Link to="/login" onClick={() => setOpen(false)}
-               className="mt-2 text-center h-11 grid place-items-center rounded-full bg-primary-gradient text-white font-semibold">
-              {lang === "fr" ? "MES ACHATS" : "MY PURCHASES"}
-            </Link>
           </div>
         </div>
       )}

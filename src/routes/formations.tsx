@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Search, Sparkles, Shield, Lock, BadgeCheck, Fingerprint, ChevronDown } from "lucide-react";
@@ -116,9 +116,16 @@ function FormationsPage() {
                 Apprenez sans limite.
               </span>
             </h1>
-            <p className="mx-auto mb-8 max-w-xl text-sm text-slate-600 sm:text-base md:text-lg">
+            <p className="mx-auto mb-6 max-w-xl text-sm text-slate-600 sm:text-base md:text-lg">
               {lang === 'fr' ? "Passez au niveau supérieur avec nos programmes conçus par des experts de l'industrie." : "Take it to the next level with our industry expert-designed programs."}
             </p>
+
+            <div className="flex justify-center mb-10">
+               <Link to="/login" className="inline-flex items-center gap-2.5 h-12 px-8 rounded-full bg-primary-gradient text-white text-sm font-semibold shadow-glow hover:scale-[1.03] transition-transform">
+                  <BadgeCheck className="h-5 w-5" />
+                  {lang === 'fr' ? 'Accéder à mes achats' : 'Access my purchases'}
+               </Link>
+            </div>
 
             <div className="mx-auto max-w-2xl rounded-2xl border border-border/60 bg-card/80 p-2 shadow-2xl backdrop-blur-xl sm:p-3">
               <div className="flex items-center gap-1.5 sm:gap-2 bg-card rounded-xl border border-border p-1.5 sm:p-2 pl-4 sm:pl-5">
