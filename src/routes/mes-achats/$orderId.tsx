@@ -37,10 +37,10 @@ function OrderDetail() {
     if (!s) return;
     const parsed = JSON.parse(s);
     setSession(parsed);
-    loadOrderDetails(parsed.customerId, parsed.customerName);
+    loadOrderDetails(parsed.email, parsed.customerName);
   }, [orderId]);
 
-  const loadOrderDetails = async (customerId: string, customerName: string) => {
+  const loadOrderDetails = async (customerEmail: string, customerName: string) => {
     setLoading(true);
     
     // 1. Fetch order
@@ -48,7 +48,7 @@ function OrderDetail() {
       .from('orders')
       .select('*')
       .eq('id', orderId)
-      .eq('customer_id', customerId)
+      .eq('customer_email', customerEmail)
       .single();
 
     if (orderError || !orderData) {
@@ -57,53 +57,37 @@ function OrderDetail() {
     }
     setOrder(orderData);
 
-    // 2. Fetch product & store
-    const [prodRes, storeRes] = await Promise.all([
-      supabase.from('products').select('*').eq('id', orderData.product_id).single(),
-      supabase.from('profiles').select('id, store_name').eq('id', orderData.store_owner_id).single()
-    ]);
-
-    const productData = prodRes.data;
-    setProduct(productData);
-    setStore(storeRes.data);
-
-    // 3. Fetch lessons if course
-    if (productData?.type === 'course') {
-      const { data: lessData } = await supabase
-        .from('course_lessons')
-        .select('*')
-        .eq('product_id', productData.id)
-        .order('position');
-      setLessons(lessData || []);
-      if (lessData && lessData.length > 0) setActiveLesson(lessData[0]);
-    }
-
-    // 4. Fetch existing review
-    const { data: revData } = await supabase
-      .from('product_reviews')
-      .select('*')
-      .eq('product_id', orderData.product_id)
-      .eq('customer_id', customerId)
-      .single();
-
-    if (revData) {
-      setReview(revData);
-      setReviewRating(revData.sentiment);
-      setReviewTitle(revData.title || '');
-      setReviewComment(revData.comment || '');
-    }
-
-    // 5. Fetch recommendations (same store, different product)
-    const { data: recData } = await supabase
-      .from('products')
-      .select('id, title, type, thumbnail_url')
-      .eq('creator_id', orderData.store_owner_id)
-      .neq('id', orderData.product_id)
-      .limit(4);
-    
-    setRecommendations(recData || []);
-
-    setLoading(false);
+      // 2. Fetch product & store
+      const { data: prodData } = await supabase.from('products').select('*').eq('id', orderData.product_id).single();
+      const productData = prodData;
+      setProduct(productData);
+      
+      // We don't have store_owner_id on orders anymore, so just set store to null or fetch admin
+      setStore({ store_name: 'Technova' });
+  
+      // 3. Fetch lessons if course
+      if (productData?.type === 'course') {
+        const { data: lessData } = await supabase
+          .from('course_lessons')
+          .select('*')
+          .eq('product_id', productData.id)
+          .order('position');
+        setLessons(lessData || []);
+        if (lessData && lessData.length > 0) setActiveLesson(lessData[0]);
+      }
+  
+      // 4. Skip product_reviews since the table doesn't exist yet
+      setReview(null);
+  
+      // 5. Fetch recommendations (same store, different product)
+      const { data: recData } = await supabase
+        .from('products')
+        .select('id, title, type, image_url, price, features')
+        .neq('id', orderData.product_id)
+        .limit(4);
+      
+      setRecommendations(recData || []);
+      setLoading(false);
   };
 
   const saveReview = async () => {

@@ -24,17 +24,17 @@ function MesAchatsList() {
     }
     const parsed = JSON.parse(s);
     setSession(parsed);
-    loadPurchases(parsed.customerId);
+    loadPurchases(parsed.email);
   }, [navigate]);
 
-  const loadPurchases = async (customerId: string) => {
+  const loadPurchases = async (customerEmail: string) => {
     setLoading(true);
     
     // Fetch orders
     const { data: orders, error: ordersError } = await supabase
       .from('orders')
-      .select('id, amount, status, created_at, product_id, store_owner_id')
-      .eq('customer_id', customerId)
+      .select('id, amount, status, created_at, product_id')
+      .eq('customer_email', customerEmail)
       .eq('status', 'paid')
       .order('created_at', { ascending: false });
 
@@ -44,29 +44,21 @@ function MesAchatsList() {
       return;
     }
 
-    // Extract unique product IDs and store owner IDs
+    // Extract unique product IDs
     const productIds = [...new Set(orders.map(o => o.product_id))];
-    const ownerIds = [...new Set(orders.map(o => o.store_owner_id))];
 
     // Fetch products
     const { data: products } = await supabase
       .from('products')
-      .select('id, title, type, thumbnail_url')
+      .select('id, title, type, image_url')
       .in('id', productIds);
 
-    // Fetch profiles (store owners)
-    const { data: profiles } = await supabase
-      .from('profiles')
-      .select('id, store_name')
-      .in('id', ownerIds);
-
     const productMap = new Map(products?.map(p => [p.id, p]));
-    const profileMap = new Map(profiles?.map(p => [p.id, p]));
 
     const enrichedPurchases = orders.map(order => ({
       ...order,
       product: productMap.get(order.product_id),
-      store: profileMap.get(order.store_owner_id)
+      store: { store_name: 'Technova' }
     })).filter(p => p.product); // Filter out orders if product was deleted
 
     setPurchases(enrichedPurchases);
@@ -143,8 +135,8 @@ function MesAchatsList() {
             return (
               <div key={purchase.id} className="bg-white border border-slate-200 rounded-2xl overflow-hidden hover:shadow-lg hover:border-slate-300 transition-all group flex flex-col">
                 <div className="aspect-[4/3] bg-slate-100 relative overflow-hidden">
-                  {product.thumbnail_url ? (
-                    <img src={product.thumbnail_url} alt={product.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  {product.image_url ? (
+                    <img src={product.image_url} alt={product.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-slate-300 group-hover:scale-105 transition-transform duration-500">
                       {product.type === 'course' ? <GraduationCap className="w-16 h-16" /> : <Package className="w-16 h-16" />}
