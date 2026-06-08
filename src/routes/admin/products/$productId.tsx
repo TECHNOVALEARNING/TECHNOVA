@@ -230,12 +230,13 @@ function EditProduct() {
 
   // ─── Upload helper ────────────────────────────────────────────────────────────
   const uploadFile = async (file: File, folder: string): Promise<string | null> => {
-    const ext = file.name.split('.').pop();
-    const path = `${folder}/${Date.now()}.${ext}`;
-    const { error } = await adminSupabase.storage.from('product-assets').upload(path, file);
-    if (error) { toast.error('Erreur upload: ' + error.message); return null; }
-    const { data } = adminSupabase.storage.from('product-assets').getPublicUrl(path);
-    return data.publicUrl;
+    try {
+      const { uploadFileToLWS } = await import('@/lib/api/lws-storage');
+      return await uploadFileToLWS(file);
+    } catch (e: any) {
+      toast.error('Erreur upload: ' + e.message);
+      return null;
+    }
   };
 
   // ─── Save ─────────────────────────────────────────────────────────────────────
