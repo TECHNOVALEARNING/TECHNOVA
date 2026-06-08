@@ -57,6 +57,18 @@ function EditProduct() {
   const [description, setDescription] = useState('');
   const [imageUrl, setImageUrl] = useState('');
 
+  // Additional Product Fields State
+  const [postPurchaseInstructions, setPostPurchaseInstructions] = useState('');
+  const [productUrl, setProductUrl] = useState('');
+  const [autoDiscount, setAutoDiscount] = useState(false);
+  const [buyButtonText, setBuyButtonText] = useState('Profiter de l\'offre');
+  const [passwordProtect, setPasswordProtect] = useState(false);
+  const [watermarks, setWatermarks] = useState(true);
+  const [limitSales, setLimitSales] = useState(false);
+  const [hideFromStore, setHideFromStore] = useState(false);
+  const [hideSalesCount, setHideSalesCount] = useState(true);
+  const [collectShipping, setCollectShipping] = useState(false);
+
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -78,6 +90,16 @@ function EditProduct() {
            const feats = typeof data.features === 'string' ? JSON.parse(data.features) : (data.features || {});
            if (feats.pricing_model) setPricingModel(feats.pricing_model);
            if (feats.crossed_price) setCrossedPrice(feats.crossed_price.toString());
+           if (feats.postPurchaseInstructions) setPostPurchaseInstructions(feats.postPurchaseInstructions);
+           if (feats.productUrl) setProductUrl(feats.productUrl);
+           if (feats.autoDiscount !== undefined) setAutoDiscount(feats.autoDiscount);
+           if (feats.buyButtonText) setBuyButtonText(feats.buyButtonText);
+           if (feats.passwordProtect !== undefined) setPasswordProtect(feats.passwordProtect);
+           if (feats.watermarks !== undefined) setWatermarks(feats.watermarks);
+           if (feats.limitSales !== undefined) setLimitSales(feats.limitSales);
+           if (feats.hideFromStore !== undefined) setHideFromStore(feats.hideFromStore);
+           if (feats.hideSalesCount !== undefined) setHideSalesCount(feats.hideSalesCount);
+           if (feats.collectShipping !== undefined) setCollectShipping(feats.collectShipping);
         } catch(e) {}
       }
       setLoading(false);
@@ -92,7 +114,17 @@ function EditProduct() {
       const updatedFeatures = { 
         ...features, 
         pricing_model: pricingModel, 
-        crossed_price: crossedPrice ? parseInt(crossedPrice) : null 
+        crossed_price: crossedPrice ? parseInt(crossedPrice) : null,
+        postPurchaseInstructions,
+        productUrl,
+        autoDiscount,
+        buyButtonText,
+        passwordProtect,
+        watermarks,
+        limitSales,
+        hideFromStore,
+        hideSalesCount,
+        collectShipping
       };
       
       const updateData = {
@@ -304,6 +336,65 @@ function EditProduct() {
                       </select>
                     </div>
                   </div>
+
+                  <div className="mt-8 space-y-4 max-w-2xl">
+                    <div className="flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded-xl">
+                      <div className="flex items-start gap-3">
+                        <div className="w-6 h-6 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center shrink-0 mt-0.5">
+                           <DollarSign className="w-3.5 h-3.5" />
+                        </div>
+                        <div>
+                          <div className="text-[14px] font-bold text-slate-900">Réduction automatique <span className="text-orange-500">⚡</span></div>
+                          <div className="text-[13px] text-slate-500">Offrez des réductions automatiques aux clients lors du 3ème rappel d'abandon.</div>
+                        </div>
+                      </div>
+                      <button 
+                        onClick={() => setAutoDiscount(!autoDiscount)}
+                        className={`w-11 h-6 rounded-full flex items-center transition-colors px-1 shrink-0 ${autoDiscount ? 'bg-slate-900' : 'bg-slate-200'}`}
+                      >
+                        <div className={`w-4 h-4 rounded-full bg-white transition-transform ${autoDiscount ? 'translate-x-5' : 'translate-x-0'}`}></div>
+                      </button>
+                    </div>
+
+                    <div className="flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded-xl">
+                      <div className="flex items-start gap-3">
+                        <div className="w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 mt-0.5">
+                           <SearchIcon className="w-3.5 h-3.5" />
+                        </div>
+                        <div>
+                          <div className="text-[14px] font-bold text-slate-900">URL du produit</div>
+                          <div className="text-[13px] text-slate-500">Créez un lien personnalisé facile à retenir</div>
+                        </div>
+                      </div>
+                      <button 
+                        onClick={() => {}}
+                        className={`w-11 h-6 rounded-full flex items-center transition-colors px-1 shrink-0 bg-slate-200 opacity-50 cursor-not-allowed`}
+                      >
+                        <div className={`w-4 h-4 rounded-full bg-white transition-transform translate-x-0`}></div>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="mt-8 max-w-2xl bg-white border border-slate-200 rounded-xl overflow-hidden">
+                    <div className="p-4 border-b border-slate-200 bg-slate-50">
+                       <div className="flex items-center gap-2 mb-1">
+                          <button className={`w-8 h-4 rounded-full flex items-center transition-colors px-1 bg-slate-900`}>
+                            <div className={`w-2.5 h-2.5 rounded-full bg-white transition-transform translate-x-3.5`}></div>
+                          </button>
+                          <span className="text-[14px] font-bold text-slate-900">Instructions après achat</span>
+                       </div>
+                       <p className="text-[12px] text-slate-500 ml-10">Guidez vos nouveaux clients pour maximiser leur satisfaction</p>
+                    </div>
+                    <div className="p-4">
+                      <RichTextEditor 
+                        value={postPurchaseInstructions} 
+                        onChange={setPostPurchaseInstructions} 
+                        label=""
+                        withAI={false}
+                      />
+                    </div>
+                  </div>
+
                 </div>
               )}
 
@@ -500,8 +591,101 @@ function EditProduct() {
                 </div>
               )}
               {activeTab === 'avance' && (
-                <div className="flex items-center justify-center h-64 text-slate-400 text-[14px]">
-                  Paramètres avancés en cours de développement
+                <div className="animate-in fade-in slide-in-from-bottom-2 max-w-2xl">
+                  <div className="mb-6">
+                    <label className="block text-[14px] font-bold text-slate-900 mb-1">Texte du bouton d'achat</label>
+                    <p className="text-[13px] text-slate-500 mb-3">Personnalisez le texte du bouton d'achat sur votre page produit</p>
+                    <select 
+                      value={buyButtonText}
+                      onChange={e => setBuyButtonText(e.target.value)}
+                      className="w-full bg-white border border-[#D1D5DB] rounded-md px-3 py-3 text-[14px] text-slate-900 focus:outline-none focus:border-blue-500 transition-colors"
+                    >
+                      <option value="Profiter de l'offre">Profiter de l'offre</option>
+                      <option value="Acheter maintenant">Acheter maintenant</option>
+                      <option value="Accéder au produit">Accéder au produit</option>
+                      <option value="Télécharger">Télécharger</option>
+                    </select>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded-xl">
+                      <div>
+                        <div className="text-[14px] font-bold text-slate-900">Protégez vos fichiers avec un mot de passe</div>
+                        <div className="text-[13px] text-slate-500">Sécurisez votre contenu premium avec protection par mot de passe</div>
+                      </div>
+                      <button 
+                        onClick={() => setPasswordProtect(!passwordProtect)}
+                        className={`w-11 h-6 rounded-full flex items-center transition-colors px-1 shrink-0 ${passwordProtect ? 'bg-slate-900' : 'bg-slate-200'}`}
+                      >
+                        <div className={`w-4 h-4 rounded-full bg-white transition-transform ${passwordProtect ? 'translate-x-5' : 'translate-x-0'}`}></div>
+                      </button>
+                    </div>
+
+                    <div className="flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded-xl">
+                      <div>
+                        <div className="text-[14px] font-bold text-slate-900">Ajoutez des filigranes à vos fichiers</div>
+                        <div className="text-[13px] text-slate-500">Ajoutez automatiquement des filigranes avec les détails du client pour décourager le partage non autorisé (Nous nous en chargeons pour vous)</div>
+                      </div>
+                      <button 
+                        onClick={() => setWatermarks(!watermarks)}
+                        className={`w-11 h-6 rounded-full flex items-center transition-colors px-1 shrink-0 ${watermarks ? 'bg-slate-900' : 'bg-slate-200'}`}
+                      >
+                        <div className={`w-4 h-4 rounded-full bg-white transition-transform ${watermarks ? 'translate-x-5' : 'translate-x-0'}`}></div>
+                      </button>
+                    </div>
+
+                    <div className="flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded-xl">
+                      <div>
+                        <div className="text-[14px] font-bold text-slate-900">Limite de ventes</div>
+                        <div className="text-[13px] text-slate-500">Rendez votre produit exclusif en limitant le nombre d'acheteurs</div>
+                      </div>
+                      <button 
+                        onClick={() => setLimitSales(!limitSales)}
+                        className={`w-11 h-6 rounded-full flex items-center transition-colors px-1 shrink-0 ${limitSales ? 'bg-slate-900' : 'bg-slate-200'}`}
+                      >
+                        <div className={`w-4 h-4 rounded-full bg-white transition-transform ${limitSales ? 'translate-x-5' : 'translate-x-0'}`}></div>
+                      </button>
+                    </div>
+
+                    <div className="flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded-xl">
+                      <div>
+                        <div className="text-[14px] font-bold text-slate-900">Masquer sur la boutique</div>
+                        <div className="text-[13px] text-slate-500">Gardez ce produit privé - uniquement accessible avec un lien direct</div>
+                      </div>
+                      <button 
+                        onClick={() => setHideFromStore(!hideFromStore)}
+                        className={`w-11 h-6 rounded-full flex items-center transition-colors px-1 shrink-0 ${hideFromStore ? 'bg-slate-900' : 'bg-slate-200'}`}
+                      >
+                        <div className={`w-4 h-4 rounded-full bg-white transition-transform ${hideFromStore ? 'translate-x-5' : 'translate-x-0'}`}></div>
+                      </button>
+                    </div>
+
+                    <div className="flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded-xl">
+                      <div>
+                        <div className="text-[14px] font-bold text-slate-900">Masquer le nombre d'achats</div>
+                        <div className="text-[13px] text-slate-500">Gardez vos statistiques de vente confidentielles</div>
+                      </div>
+                      <button 
+                        onClick={() => setHideSalesCount(!hideSalesCount)}
+                        className={`w-11 h-6 rounded-full flex items-center transition-colors px-1 shrink-0 ${hideSalesCount ? 'bg-slate-900' : 'bg-slate-200'}`}
+                      >
+                        <div className={`w-4 h-4 rounded-full bg-white transition-transform ${hideSalesCount ? 'translate-x-5' : 'translate-x-0'}`}></div>
+                      </button>
+                    </div>
+
+                    <div className="flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded-xl">
+                      <div>
+                        <div className="text-[14px] font-bold text-slate-900">Collecter les adresses de livraison</div>
+                        <div className="text-[13px] text-slate-500">Récupérez les adresses clients pour vos produits physiques</div>
+                      </div>
+                      <button 
+                        onClick={() => setCollectShipping(!collectShipping)}
+                        className={`w-11 h-6 rounded-full flex items-center transition-colors px-1 shrink-0 ${collectShipping ? 'bg-slate-900' : 'bg-slate-200'}`}
+                      >
+                        <div className={`w-4 h-4 rounded-full bg-white transition-transform ${collectShipping ? 'translate-x-5' : 'translate-x-0'}`}></div>
+                      </button>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
