@@ -12,8 +12,11 @@ import {
 export const Route = createFileRoute('/admin/products/new')({
   component: NewProduct,
   validateSearch: (search: Record<string, unknown>) => {
+    let t = search.type as string;
+    if (t === 'fichier') t = 'file';
+    if (t === 'formation') t = 'course';
     return {
-      type: search.type as ProductType | undefined,
+      type: t as ProductType | undefined,
     };
   },
 });

@@ -6,11 +6,11 @@ export const Route = createFileRoute('/admin/products/create')({
   component: CreateProductTypePage,
 });
 
-type ProductType = 'fichier' | 'formation' | 'service';
+type ProductType = 'file' | 'course' | 'service';
 
 const productTypes = [
   {
-    id: 'fichier' as ProductType,
+    id: 'file' as ProductType,
     title: 'Fichiers',
     image: '/file_icon.png',
     color: '#FFB800', 
@@ -23,7 +23,7 @@ const productTypes = [
     ]
   },
   {
-    id: 'formation' as ProductType,
+    id: 'course' as ProductType,
     title: 'Formations',
     image: '/course_icon.png',
     color: '#3B82F6', 
@@ -64,7 +64,7 @@ function FileTextIcon(props: any) {
 }
 
 function CreateProductTypePage() {
-  const [selectedType, setSelectedType] = useState<ProductType>('fichier');
+  const [selectedType, setSelectedType] = useState<ProductType>('file');
   const navigate = useNavigate();
 
   const handleContinue = () => {

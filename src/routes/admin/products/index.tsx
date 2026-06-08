@@ -232,15 +232,14 @@ function AdminProducts() {
             filteredProducts.map((product, idx) => {
               let status = 'active';
               let isPinned = false;
-              let pType = 'fichier';
+              let pType = product.type || 'file';
               try {
                 const feats = typeof product.features === 'string' ? JSON.parse(product.features) : product.features;
                 if (feats?.status) status = feats.status;
                 if (feats?.is_pinned) isPinned = true;
-                if (feats?.type) pType = feats.type;
               } catch (e) {}
 
-              const TypeIcon = pType === 'formation' ? GraduationCap : pType === 'service' ? ShoppingBag : FileText;
+              const TypeIcon = pType === 'course' ? GraduationCap : pType === 'service' ? ShoppingBag : FileText;
 
               return (
                 <div key={product.id} className="grid grid-cols-[2.5fr_1fr_1fr_80px] items-center px-6 py-3 hover:bg-slate-50/80 transition-colors border-b border-slate-50 group">
@@ -303,13 +302,8 @@ function AdminProducts() {
                       >
                         <button 
                           onClick={() => {
-                            const pType = (() => {
-                              try {
-                                const f = typeof product.features === 'string' ? JSON.parse(product.features) : (product.features || {});
-                                return f.type || 'fichier';
-                              } catch { return 'fichier'; }
-                            })();
-                            if (pType === 'formation') {
+                            const pType = product.type || 'file';
+                            if (pType === 'course') {
                               navigate({ to: `/admin/products/${product.id}`, search: { tab: 'course' } as any });
                             } else {
                               navigate({ to: `/admin/products/${product.id}`, search: { tab: 'informations' } as any });
