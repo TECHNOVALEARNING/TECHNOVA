@@ -2,25 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Loader2, Gift, Tag, ChevronDown, ChevronUp, HelpCircle, Search } from 'lucide-react';
 import { toast } from 'sonner';
-
-const COUNTRIES = [
-  { code: 'BJ', name: 'Bénin', dialCode: '+229', flag: '🇧🇯' },
-  { code: 'CI', name: 'Côte d\'Ivoire', dialCode: '+225', flag: '🇨🇮' },
-  { code: 'SN', name: 'Sénégal', dialCode: '+221', flag: '🇸🇳' },
-  { code: 'TG', name: 'Togo', dialCode: '+228', flag: '🇹🇬' },
-  { code: 'ML', name: 'Mali', dialCode: '+223', flag: '🇲🇱' },
-  { code: 'BF', name: 'Burkina Faso', dialCode: '+226', flag: '🇧🇫' },
-  { code: 'NE', name: 'Niger', dialCode: '+227', flag: '🇳🇪' },
-  { code: 'CM', name: 'Cameroun', dialCode: '+237', flag: '🇨🇲' },
-  { code: 'CD', name: 'Rép. Dém. Congo', dialCode: '+243', flag: '🇨🇩' },
-  { code: 'CG', name: 'Congo', dialCode: '+242', flag: '🇨🇬' },
-  { code: 'GA', name: 'Gabon', dialCode: '+241', flag: '🇬🇦' },
-  { code: 'FR', name: 'France', dialCode: '+33', flag: '🇫🇷' },
-  { code: 'BE', name: 'Belgique', dialCode: '+32', flag: '🇧🇪' },
-  { code: 'CH', name: 'Suisse', dialCode: '+41', flag: '🇨🇭' },
-  { code: 'CA', name: 'Canada', dialCode: '+1', flag: '🇨🇦' },
-  { code: 'US', name: 'États-Unis', dialCode: '+1', flag: '🇺🇸' },
-];
+import { COUNTRIES } from '@/lib/countries';
 
 interface CheckoutDrawerProps {
   isOpen: boolean;
@@ -40,7 +22,7 @@ export function CheckoutDrawer({ isOpen, onClose, product }: CheckoutDrawerProps
   
   // Phone state
   const [phone, setPhone] = useState('');
-  const [selectedCountry, setSelectedCountry] = useState(COUNTRIES[0]);
+  const [selectedCountry, setSelectedCountry] = useState(COUNTRIES.find(c => c.code === 'BJ') || COUNTRIES[0]);
   const [isCountrySelectOpen, setIsCountrySelectOpen] = useState(false);
   const [countrySearch, setCountrySearch] = useState('');
   
@@ -52,6 +34,7 @@ export function CheckoutDrawer({ isOpen, onClose, product }: CheckoutDrawerProps
   const [isSubmitting, setIsSubmitting] = useState(false);
   const countrySelectRef = useRef<HTMLDivElement>(null);
 
+  // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (countrySelectRef.current && !countrySelectRef.current.contains(event.target as Node)) {
@@ -61,6 +44,18 @@ export function CheckoutDrawer({ isOpen, onClose, product }: CheckoutDrawerProps
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Prevent body scroll when drawer is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -185,7 +180,13 @@ export function CheckoutDrawer({ isOpen, onClose, product }: CheckoutDrawerProps
                       onClick={() => setIsCountrySelectOpen(!isCountrySelectOpen)}
                       className="flex items-center gap-1.5 pl-3.5 pr-2 py-2.5 bg-gray-50 border-r border-gray-200 hover:bg-gray-100 rounded-l-lg transition-colors"
                     >
-                      <span className="text-lg leading-none">{selectedCountry.flag}</span>
+                      <img 
+                        src={`https://flagcdn.com/w20/${selectedCountry.code.toLowerCase()}.png`}
+                        srcSet={`https://flagcdn.com/w40/${selectedCountry.code.toLowerCase()}.png 2x`}
+                        width="20"
+                        alt={selectedCountry.name}
+                        className="rounded-sm shrink-0"
+                      />
                       <ChevronDown className="w-4 h-4 text-gray-500" />
                     </button>
                     <input
@@ -231,8 +232,15 @@ export function CheckoutDrawer({ isOpen, onClose, product }: CheckoutDrawerProps
                               }}
                               className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-gray-50 transition-colors text-left"
                             >
-                              <span className="text-xl leading-none">{country.flag}</span>
-                              <span className="flex-1 text-sm text-gray-700">{country.name}</span>
+                              <img 
+                                src={`https://flagcdn.com/w20/${country.code.toLowerCase()}.png`}
+                                srcSet={`https://flagcdn.com/w40/${country.code.toLowerCase()}.png 2x`}
+                                width="20"
+                                alt={country.name}
+                                className="rounded-sm shrink-0"
+                              />
+                              <span className="w-6 text-sm font-semibold text-gray-900">{country.code}</span>
+                              <span className="flex-1 text-sm text-gray-600 truncate">{country.name}</span>
                               <span className="text-xs text-gray-400 font-medium">{country.dialCode}</span>
                             </button>
                           ))}
