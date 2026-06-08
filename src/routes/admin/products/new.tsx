@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import { adminSupabase } from '@/lib/supabase';
+import { adminSupabase, supabase } from '@/lib/supabase';
 import { RichTextEditor } from '@/components/RichTextEditor';
 import { toast } from 'sonner';
 import { useState, useEffect } from 'react';
@@ -38,7 +38,7 @@ function NewProduct() {
   const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
-    adminSupabase.auth.getUser().then(({ data }) => setUserId(data.user?.id || null));
+    supabase.auth.getUser().then(({ data }) => setUserId(data.user?.id || null));
   }, []);
 
   const { type } = Route.useSearch();
@@ -125,7 +125,10 @@ function NewProduct() {
   };
 
   const handleSubmit = async () => {
-    if (!userId) return;
+    if (!userId) {
+      toast.error('Erreur: Impossible de vous identifier. Veuillez vous reconnecter.');
+      return;
+    }
     setSaving(true);
     try {
       let thumbnailUrl = null;
