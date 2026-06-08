@@ -70,37 +70,21 @@ export function CheckoutDrawer({ isOpen, onClose, product }: CheckoutDrawerProps
     if (product.price === 0) {
       setIsSubmitting(true);
       try {
-        // 1. Find or create buyer
-        const emailLower = email.trim().toLowerCase();
-        let { data: buyer } = await adminSupabase.from('buyers').select('*').eq('email', emailLower).single();
-        
-        if (!buyer) {
-          const { data: newBuyer, error: buyerError } = await adminSupabase.from('buyers').insert({
-            email: emailLower,
-            first_name: firstName,
-            last_name: lastName,
-            phone: fullPhone
-          }).select().single();
-          if (buyerError) throw buyerError;
-          buyer = newBuyer;
-        }
-
-        // 2. Create paid order for free
+        // 1. Create paid order for free
         const { data: order, error: orderError } = await adminSupabase.from('orders').insert({
-          buyer_id: buyer.id,
           product_id: product.id,
           amount: 0,
+          currency: 'XOF',
           status: 'paid',
-          payment_method: 'free',
-          customer_name: `${firstName} ${lastName}`.trim()
+          customer_name: `${firstName} ${lastName}`.trim(),
+          customer_email: emailLower
         }).select().single();
         if (orderError) throw orderError;
 
-        // 3. Log user in locally
+        // 2. Log user in locally
         localStorage.setItem('buyer_session', JSON.stringify({
           email: emailLower,
-          customerId: buyer.id,
-          customerName: buyer.first_name,
+          customerName: `${firstName} ${lastName}`.trim(),
           authenticatedAt: Date.now()
         }));
 
