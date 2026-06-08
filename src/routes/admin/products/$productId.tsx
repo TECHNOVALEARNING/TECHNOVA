@@ -3,7 +3,7 @@ import {
   ChevronLeft, LayoutDashboard, DollarSign, Folder, FileText, 
   Image as ImageIcon, HelpCircle, Search as SearchIcon, Settings,
   Eye, Plus, ChevronUp, ChevronDown, MoreHorizontal, Video, Headphones,
-  AlignLeft, PlayCircle, Loader2, List, ListOrdered
+  AlignLeft, PlayCircle, Loader2, List, ListOrdered, Check, X
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { adminSupabase } from '@/lib/supabase';
@@ -23,6 +23,30 @@ export const Route = createFileRoute('/admin/products/$productId')({
     };
   },
 });
+
+const ToggleBlock = ({ enabled, onChange, title, description, children }: any) => (
+  <div className="bg-[#F8F9FA] rounded-xl p-4 flex flex-col gap-3 mb-4">
+    <div className="flex items-center gap-3">
+      <button 
+        onClick={() => onChange(!enabled)}
+        className={`w-11 h-6 rounded-full flex items-center transition-colors px-1 shrink-0 ${enabled ? 'bg-[#1E293B]' : 'bg-[#E2E8F0]'}`}
+      >
+        <div className={`w-4 h-4 rounded-full bg-white flex items-center justify-center transition-transform ${enabled ? 'translate-x-5' : 'translate-x-0'}`}>
+           {enabled ? <Check className="w-3 h-3 text-[#1E293B] stroke-[3]" /> : <X className="w-3 h-3 text-[#94A3B8] stroke-[3]" />}
+        </div>
+      </button>
+      <div>
+        <div className="text-[14px] font-bold text-slate-900">{title}</div>
+        <div className="text-[13px] text-slate-400 font-medium leading-tight">{description}</div>
+      </div>
+    </div>
+    {children && enabled && (
+      <div className="ml-[56px]">
+        {children}
+      </div>
+    )}
+  </div>
+);
 
 function EditProduct() {
   const { productId } = Route.useParams();
@@ -62,6 +86,7 @@ function EditProduct() {
   const [productUrl, setProductUrl] = useState('');
   const [autoDiscount, setAutoDiscount] = useState(false);
   const [buyButtonText, setBuyButtonText] = useState('Profiter de l\'offre');
+  const [enableBuyButtonText, setEnableBuyButtonText] = useState(true);
   const [passwordProtect, setPasswordProtect] = useState(false);
   const [watermarks, setWatermarks] = useState(true);
   const [limitSales, setLimitSales] = useState(false);
@@ -401,6 +426,33 @@ function EditProduct() {
                     </div>
                   </div>
 
+                  <div className="mt-12">
+                    <ToggleBlock 
+                      enabled={enableBuyButtonText} 
+                      onChange={setEnableBuyButtonText} 
+                      title="Texte du bouton d'achat" 
+                      description="Personnalisez le texte du bouton d'achat sur votre page produit"
+                    >
+                      <select 
+                        value={buyButtonText}
+                        onChange={e => setBuyButtonText(e.target.value)}
+                        className="w-full bg-white border border-[#D1D5DB] rounded-md px-3 py-3 text-[14px] text-slate-900 focus:outline-none focus:border-blue-500 transition-colors"
+                      >
+                        <option value="Profiter de l'offre">Profiter de l'offre</option>
+                        <option value="Acheter maintenant">Acheter maintenant</option>
+                        <option value="Accéder au produit">Accéder au produit</option>
+                        <option value="Télécharger">Télécharger</option>
+                      </select>
+                    </ToggleBlock>
+
+                    <ToggleBlock enabled={passwordProtect} onChange={setPasswordProtect} title="Protégez vos fichiers avec un mot de passe" description="Sécurisez votre contenu premium avec protection par mot de passe" />
+                    <ToggleBlock enabled={watermarks} onChange={setWatermarks} title="Ajoutez des filigranes à vos fichiers" description="Ajoutez automatiquement des filigranes avec les détails du client pour décourager le partage non autorisé (Nous nous en chargeons pour vous)" />
+                    <ToggleBlock enabled={limitSales} onChange={setLimitSales} title="Limite de ventes" description="Rendez votre produit exclusif en limitant le nombre d'acheteurs" />
+                    <ToggleBlock enabled={hideFromStore} onChange={setHideFromStore} title="Masquer sur la boutique" description="Gardez ce produit privé - uniquement accessible avec un lien direct" />
+                    <ToggleBlock enabled={hideSalesCount} onChange={setHideSalesCount} title="Masquer le nombre d'achats" description="Gardez vos statistiques de vente confidentielles" />
+                    <ToggleBlock enabled={collectShipping} onChange={setCollectShipping} title="Collecter les adresses de livraison" description="Récupérez les adresses clients pour vos produits physiques" />
+                  </div>
+
                 </div>
               )}
 
@@ -597,101 +649,8 @@ function EditProduct() {
                 </div>
               )}
               {activeTab === 'avance' && (
-                <div className="animate-in fade-in slide-in-from-bottom-2 max-w-2xl">
-                  <div className="mb-6">
-                    <label className="block text-[14px] font-bold text-slate-900 mb-1">Texte du bouton d'achat</label>
-                    <p className="text-[13px] text-slate-500 mb-3">Personnalisez le texte du bouton d'achat sur votre page produit</p>
-                    <select 
-                      value={buyButtonText}
-                      onChange={e => setBuyButtonText(e.target.value)}
-                      className="w-full bg-white border border-[#D1D5DB] rounded-md px-3 py-3 text-[14px] text-slate-900 focus:outline-none focus:border-blue-500 transition-colors"
-                    >
-                      <option value="Profiter de l'offre">Profiter de l'offre</option>
-                      <option value="Acheter maintenant">Acheter maintenant</option>
-                      <option value="Accéder au produit">Accéder au produit</option>
-                      <option value="Télécharger">Télécharger</option>
-                    </select>
-                  </div>
-
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded-xl">
-                      <div>
-                        <div className="text-[14px] font-bold text-slate-900">Protégez vos fichiers avec un mot de passe</div>
-                        <div className="text-[13px] text-slate-500">Sécurisez votre contenu premium avec protection par mot de passe</div>
-                      </div>
-                      <button 
-                        onClick={() => setPasswordProtect(!passwordProtect)}
-                        className={`w-11 h-6 rounded-full flex items-center transition-colors px-1 shrink-0 ${passwordProtect ? 'bg-slate-900' : 'bg-slate-200'}`}
-                      >
-                        <div className={`w-4 h-4 rounded-full bg-white transition-transform ${passwordProtect ? 'translate-x-5' : 'translate-x-0'}`}></div>
-                      </button>
-                    </div>
-
-                    <div className="flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded-xl">
-                      <div>
-                        <div className="text-[14px] font-bold text-slate-900">Ajoutez des filigranes à vos fichiers</div>
-                        <div className="text-[13px] text-slate-500">Ajoutez automatiquement des filigranes avec les détails du client pour décourager le partage non autorisé (Nous nous en chargeons pour vous)</div>
-                      </div>
-                      <button 
-                        onClick={() => setWatermarks(!watermarks)}
-                        className={`w-11 h-6 rounded-full flex items-center transition-colors px-1 shrink-0 ${watermarks ? 'bg-slate-900' : 'bg-slate-200'}`}
-                      >
-                        <div className={`w-4 h-4 rounded-full bg-white transition-transform ${watermarks ? 'translate-x-5' : 'translate-x-0'}`}></div>
-                      </button>
-                    </div>
-
-                    <div className="flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded-xl">
-                      <div>
-                        <div className="text-[14px] font-bold text-slate-900">Limite de ventes</div>
-                        <div className="text-[13px] text-slate-500">Rendez votre produit exclusif en limitant le nombre d'acheteurs</div>
-                      </div>
-                      <button 
-                        onClick={() => setLimitSales(!limitSales)}
-                        className={`w-11 h-6 rounded-full flex items-center transition-colors px-1 shrink-0 ${limitSales ? 'bg-slate-900' : 'bg-slate-200'}`}
-                      >
-                        <div className={`w-4 h-4 rounded-full bg-white transition-transform ${limitSales ? 'translate-x-5' : 'translate-x-0'}`}></div>
-                      </button>
-                    </div>
-
-                    <div className="flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded-xl">
-                      <div>
-                        <div className="text-[14px] font-bold text-slate-900">Masquer sur la boutique</div>
-                        <div className="text-[13px] text-slate-500">Gardez ce produit privé - uniquement accessible avec un lien direct</div>
-                      </div>
-                      <button 
-                        onClick={() => setHideFromStore(!hideFromStore)}
-                        className={`w-11 h-6 rounded-full flex items-center transition-colors px-1 shrink-0 ${hideFromStore ? 'bg-slate-900' : 'bg-slate-200'}`}
-                      >
-                        <div className={`w-4 h-4 rounded-full bg-white transition-transform ${hideFromStore ? 'translate-x-5' : 'translate-x-0'}`}></div>
-                      </button>
-                    </div>
-
-                    <div className="flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded-xl">
-                      <div>
-                        <div className="text-[14px] font-bold text-slate-900">Masquer le nombre d'achats</div>
-                        <div className="text-[13px] text-slate-500">Gardez vos statistiques de vente confidentielles</div>
-                      </div>
-                      <button 
-                        onClick={() => setHideSalesCount(!hideSalesCount)}
-                        className={`w-11 h-6 rounded-full flex items-center transition-colors px-1 shrink-0 ${hideSalesCount ? 'bg-slate-900' : 'bg-slate-200'}`}
-                      >
-                        <div className={`w-4 h-4 rounded-full bg-white transition-transform ${hideSalesCount ? 'translate-x-5' : 'translate-x-0'}`}></div>
-                      </button>
-                    </div>
-
-                    <div className="flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded-xl">
-                      <div>
-                        <div className="text-[14px] font-bold text-slate-900">Collecter les adresses de livraison</div>
-                        <div className="text-[13px] text-slate-500">Récupérez les adresses clients pour vos produits physiques</div>
-                      </div>
-                      <button 
-                        onClick={() => setCollectShipping(!collectShipping)}
-                        className={`w-11 h-6 rounded-full flex items-center transition-colors px-1 shrink-0 ${collectShipping ? 'bg-slate-900' : 'bg-slate-200'}`}
-                      >
-                        <div className={`w-4 h-4 rounded-full bg-white transition-transform ${collectShipping ? 'translate-x-5' : 'translate-x-0'}`}></div>
-                      </button>
-                    </div>
-                  </div>
+                <div className="flex items-center justify-center h-64 text-slate-400 text-[14px]">
+                  Paramètres avancés en cours de développement
                 </div>
               )}
             </div>
