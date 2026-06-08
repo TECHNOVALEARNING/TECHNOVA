@@ -1,36 +1,24 @@
-import { adminSupabase } from '../supabase';
-
 export const uploadFileToLWS = async (file: File): Promise<string> => {
+  const UPLOAD_URL = 'https://stockage.technovalearning.com/upload.php';
+
+  const formData = new FormData();
+  formData.append('file', file);
+
   try {
-    const ext = file.name.split('.').pop();
-    const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${ext}`;
-    
-    // Determine bucket based on file type
-    const isImage = file.type.startsWith('image/');
-    const bucket = isImage ? 'product_images' : 'product_files';
-    
-    const { data, error } = await adminSupabase.storage
-      .from(bucket)
-      .upload(fileName, file, {
-        cacheControl: '3600',
-        upsert: false
-      });
+    const response = await fetch(UPLOAD_URL, {
+      method: 'POST',
+      body: formData,
+    });
 
-    if (error) {
-      throw error;
+    const result = await response.json();
+
+    if (!response.ok || result.error || !result.url) {
+      throw new Error(result.error || 'Erreur lors du téléversement vers LWS (Vérifiez votre dossier uploads ou vos permissions LWS)');
     }
 
-    if (isImage) {
-      const { data: publicUrlData } = adminSupabase.storage.from(bucket).getPublicUrl(data.path);
-      return publicUrlData.publicUrl;
-    } else {
-      // For files, we might return the path or signed url later.
-      // But let's return the full URL structure just in case the system expects an absolute URL
-      const { data: publicUrlData } = adminSupabase.storage.from(bucket).getPublicUrl(data.path);
-      return publicUrlData.publicUrl;
-    }
+    return result.url;
   } catch (error) {
-    console.error('Erreur Upload Supabase:', error);
-    throw new Error('Erreur lors du téléversement du fichier. ' + (error as Error).message);
+    console.error('Erreur Upload LWS:', error);
+    throw error;
   }
 };
