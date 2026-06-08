@@ -11,6 +11,11 @@ import {
 
 export const Route = createFileRoute('/admin/products/new')({
   component: NewProduct,
+  validateSearch: (search: Record<string, unknown>) => {
+    return {
+      type: search.type as ProductType | undefined,
+    };
+  },
 });
 
 type ProductType = 'file' | 'course' | 'license';
@@ -33,8 +38,18 @@ function NewProduct() {
     adminSupabase.auth.getUser().then(({ data }) => setUserId(data.user?.id || null));
   }, []);
 
-  // Step 1 - Product type
-  const [selectedType, setSelectedType] = useState<ProductType | null>(null);
+  const { type } = Route.useSearch();
+  
+  useEffect(() => {
+    if (!type) {
+      navigate({ to: '/admin/products/create' });
+    }
+  }, [type, navigate]);
+
+  // Product type
+  const [selectedType, setSelectedType] = useState<ProductType | null>(type || 'file');
+
+  // Step 1 - Details
 
   // Step 2 - Details
   const [title, setTitle] = useState('');
@@ -43,17 +58,17 @@ function NewProduct() {
   const [price, setPrice] = useState('');
   const [originalPrice, setOriginalPrice] = useState('');
 
-  // Step 3 - Description
+  // Step 2 - Description
   const [description, setDescription] = useState('');
   const [aiRewriting, setAiRewriting] = useState(false);
 
-  // Step 4 - Images
+  // Step 3 - Images
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
   const [bannerFile, setBannerFile] = useState<File | null>(null);
   const [bannerPreview, setBannerPreview] = useState<string | null>(null);
 
-  // Step 5 - Content
+  // Step 4 - Content
   const [downloadFile, setDownloadFile] = useState<File | null>(null);
   const [courseContentType, setCourseContentType] = useState('mixed');
   const [lessons, setLessons] = useState<Lesson[]>([]);
@@ -66,11 +81,10 @@ function NewProduct() {
 
   const canNext = () => {
     switch (step) {
-      case 1: return !!selectedType;
-      case 2: return !!title.trim() && !!price && priceNum >= 100 && !priceError && !originalPriceError;
-      case 3: return !!description.replace(/<[^>]*>/g, '').trim();
-      case 4: return true;
-      case 5:
+      case 1: return !!title.trim() && !!price && priceNum >= 100 && !priceError && !originalPriceError;
+      case 2: return !!description.replace(/<[^>]*>/g, '').trim();
+      case 3: return true;
+      case 4:
         if (selectedType === 'file') return !!downloadFile;
         if (selectedType === 'course') return lessons.length > 0;
         return true;
@@ -157,6 +171,15 @@ function NewProduct() {
         }
       }
 
+      // Moderation Edge Function invocation
+      try {
+        await adminSupabase.functions.invoke('analyze-product-moderation', {
+          body: { productId: product.id },
+        });
+      } catch (modErr) {
+        console.warn('Moderation error:', modErr);
+      }
+
       toast.success('Produit créé avec succès !');
       navigate({ to: '/admin/products' });
 
@@ -193,12 +216,12 @@ function NewProduct() {
       <div className="bg-white border-b border-slate-200 py-4 px-6">
         <div className="max-w-3xl mx-auto">
           <div className="flex gap-2 mb-6">
-            {[1, 2, 3, 4, 5].map(i => (
+            {[1, 2, 3, 4].map(i => (
               <div key={i} className={`h-2 flex-1 rounded-full ${i <= step ? 'bg-[#1E293B]' : 'bg-slate-100'}`} />
             ))}
           </div>
-          <button onClick={() => navigate({ to: '/admin/products' })} className="text-[13px] text-slate-500 hover:text-slate-900 flex items-center gap-1">
-            <ArrowLeft className="w-4 h-4" /> Retour aux produits
+          <button onClick={() => navigate({ to: '/admin/products/create' })} className="text-[13px] text-slate-500 hover:text-slate-900 flex items-center gap-1">
+            <ArrowLeft className="w-4 h-4" /> Retour aux choix du produit
           </button>
         </div>
       </div>
@@ -208,61 +231,6 @@ function NewProduct() {
         <div className="max-w-3xl mx-auto bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
           
           {step === 1 && (
-            <div className="space-y-6">
-              <h1 className="text-[24px] font-bold text-slate-900 text-center">Quel type de produit souhaitez-vous créer ?</h1>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
-                
-                <button
-                  onClick={() => setSelectedType('file')}
-                  className={`p-6 rounded-2xl border-2 text-left transition-all ${
-                    selectedType === 'file' ? 'border-amber-500 bg-amber-50' : 'border-slate-200 hover:border-slate-300'
-                  }`}
-                >
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center">
-                      <FileText className="w-6 h-6 text-amber-600" />
-                    </div>
-                    {selectedType === 'file' && <Check className="w-5 h-5 text-amber-600" />}
-                  </div>
-                  <h3 className="text-[18px] font-bold text-slate-900 mb-2">Fichier</h3>
-                  <p className="text-[13px] text-slate-500 mb-4">E-books, templates, PDF, audio : vos clients téléchargent instantanément</p>
-                  <ul className="space-y-2">
-                    {["Tous formats (PDF, ZIP, MP3…)", "Livraison automatique", "Téléchargement sécurisé"].map(f => (
-                      <li key={f} className="flex items-center gap-2 text-[12px] font-medium text-slate-700">
-                        <Check className="w-4 h-4 text-amber-500" /> {f}
-                      </li>
-                    ))}
-                  </ul>
-                </button>
-
-                <button
-                  onClick={() => setSelectedType('course')}
-                  className={`p-6 rounded-2xl border-2 text-left transition-all ${
-                    selectedType === 'course' ? 'border-blue-500 bg-blue-50' : 'border-slate-200 hover:border-slate-300'
-                  }`}
-                >
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center">
-                      <GraduationCap className="w-6 h-6 text-blue-600" />
-                    </div>
-                    {selectedType === 'course' && <Check className="w-5 h-5 text-blue-600" />}
-                  </div>
-                  <h3 className="text-[18px] font-bold text-slate-900 mb-2">Formation</h3>
-                  <p className="text-[13px] text-slate-500 mb-4">Créez des formations structurées avec vidéo, texte et contenu téléchargeable</p>
-                  <ul className="space-y-2">
-                    {["Contenu vidéo YouTube/Vimeo", "Upload direct de vidéos", "Modules et leçons structurés"].map(f => (
-                      <li key={f} className="flex items-center gap-2 text-[12px] font-medium text-slate-700">
-                        <Check className="w-4 h-4 text-blue-500" /> {f}
-                      </li>
-                    ))}
-                  </ul>
-                </button>
-
-              </div>
-            </div>
-          )}
-
-          {step === 2 && (
             <div className="space-y-6">
               <h1 className="text-[24px] font-bold text-slate-900 mb-8">Détails du produit</h1>
               
@@ -341,7 +309,7 @@ function NewProduct() {
             </div>
           )}
 
-          {step === 3 && (
+          {step === 2 && (
             <div className="space-y-6">
               <div className="flex justify-between items-center mb-6">
                 <h1 className="text-[24px] font-bold text-slate-900">Décrivez votre produit</h1>
@@ -358,7 +326,7 @@ function NewProduct() {
             </div>
           )}
 
-          {step === 4 && (
+          {step === 3 && (
             <div className="space-y-8">
               <h1 className="text-[24px] font-bold text-slate-900 mb-6">Personnaliser la page produit</h1>
               
@@ -428,7 +396,7 @@ function NewProduct() {
             </div>
           )}
 
-          {step === 5 && (
+          {step === 4 && (
             <div className="space-y-6">
               <h1 className="text-[24px] font-bold text-slate-900 mb-6">Contenu du produit</h1>
 
@@ -565,7 +533,7 @@ function NewProduct() {
             Retour
           </button>
 
-          {step < 5 ? (
+          {step < 4 ? (
             <button
               onClick={() => setStep(step + 1)}
               disabled={!canNext()}

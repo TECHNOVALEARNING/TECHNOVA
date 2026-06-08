@@ -166,11 +166,17 @@ function Marketing() {
   };
 
   const sendCampaign = async (id: string) => {
-    toast.info('L\'envoi de campagnes nécessite la configuration du backend (Edge Function).', {
-        description: 'Mock d\'envoi effectué.'
-    });
-    // Update local state temporarily to show it works visually
-    setCampaigns(campaigns.map(c => c.id === id ? { ...c, status: 'sent', sent_count: 5 } : c));
+    try {
+      const { error } = await adminSupabase.functions.invoke('send-campaign', {
+        body: { campaignId: id },
+      });
+      if (error) throw error;
+      
+      toast.success("Campagne envoyée !");
+      setCampaigns(campaigns.map(c => c.id === id ? { ...c, status: 'sent', sent_count: 5 } : c));
+    } catch (err: any) {
+      toast.error(err.message || "Erreur lors de l'envoi");
+    }
   };
 
 

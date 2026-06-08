@@ -34,8 +34,19 @@ function BuyerLogin() {
          return;
       }
 
-      // 2. Mock OTP send (in real app, use Edge Function `send-buyer-otp`)
-      toast.success(`Code envoyé à ${email} ! (Mock: entrez 123456)`);
+      // 2. Send actual OTP via Edge Function
+      const { data, error } = await supabase.functions.invoke('send-buyer-otp', {
+        body: { email: email.trim().toLowerCase() },
+      });
+      
+      if (error) throw error;
+      if (data?.error) {
+        toast.error(data.error);
+        setLoading(false);
+        return;
+      }
+
+      toast.success(`Un code a été envoyé à ${email}.`);
       setStep(2);
 
     } catch (err: any) {
@@ -51,11 +62,24 @@ function BuyerLogin() {
 
     setLoading(true);
     try {
-      // Mock OTP verification
-      if (otp !== '123456') {
-        toast.error("Code incorrect");
+      // Real OTP verification via Edge Function
+      const { data, error } = await supabase.functions.invoke('verify-buyer-otp', {
+        body: { email: email.trim().toLowerCase(), code: otp.trim() },
+      });
+      
+      if (error) throw error;
+      if (data?.error) {
+        toast.error(data.error);
         setLoading(false);
         return;
+      }
+
+      // Establish real Supabase auth session if returned
+      if (data.session?.access_token && data.session?.refresh_token) {
+         await supabase.auth.setSession({
+            access_token: data.session.access_token,
+            refresh_token: data.session.refresh_token,
+         });
       }
 
       // Find customer info
@@ -66,18 +90,18 @@ function BuyerLogin() {
         .limit(1)
         .single();
 
-      if (orderData) {
+      if (orderData || data.customer?.id) {
         localStorage.setItem('buyer_session', JSON.stringify({
-          email,
-          customerId: orderData.customer_id,
-          customerName: orderData.customer_name,
+          email: email.trim().toLowerCase(),
+          customerId: data.customer?.id || orderData?.customer_id,
+          customerName: data.customer?.name || orderData?.customer_name,
           authenticatedAt: Date.now()
         }));
         
         toast.success("Connexion réussie !");
         navigate({ to: '/mes-achats' });
       } else {
-         toast.error("Erreur lors de la récupération du compte");
+         toast.error("Erreur lors de la récupération de votre profil.");
       }
 
     } catch (err: any) {
@@ -157,7 +181,7 @@ function BuyerLogin() {
                    <div>
                      <h1 className="text-[24px] font-bold text-slate-900 mb-2">Vérifiez vos emails</h1>
                      <p className="text-[14px] text-slate-500">
-                       Nous avons envoyé un code de connexion à <span className="font-semibold text-slate-900">{email}</span>. (Mock: 123456)
+                       Nous avons envoyé un code de connexion à <span className="font-semibold text-slate-900">{email}</span>.
                      </p>
                    </div>
 
