@@ -61,32 +61,37 @@ function ProductPage() {
   const handleBuy = async () => {
     try {
       setIsCheckingOut(true);
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        toast.error('Veuillez vous connecter pour acheter.');
-        window.location.href = '/login';
-        return;
-      }
-
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        toast.error('Session expirée. Veuillez vous reconnecter.');
-        window.location.href = '/login';
-        return;
+      const user = session?.user;
+      
+      let email = user?.email;
+      let firstName = user?.user_metadata?.full_name?.split(' ')[0] || '';
+      let lastName = user?.user_metadata?.full_name?.split(' ').slice(1).join(' ') || '';
+
+      if (!user || !email) {
+        const guestEmail = window.prompt("Veuillez entrer votre adresse e-mail pour recevoir le produit après paiement :");
+        if (!guestEmail || !guestEmail.includes('@')) {
+          toast.error("L'adresse e-mail est obligatoire pour procéder à l'achat.");
+          setIsCheckingOut(false);
+          return;
+        }
+        email = guestEmail;
+        firstName = "Client";
+        lastName = "Technova";
       }
 
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.access_token}`
+          ...(session?.access_token ? { 'Authorization': `Bearer ${session.access_token}` } : {})
         },
         body: JSON.stringify({
           productId: id,
-          userId: user.id,
-          email: user.email,
-          firstName: user.user_metadata?.full_name?.split(' ')[0] || '',
-          lastName: user.user_metadata?.full_name?.split(' ').slice(1).join(' ') || ''
+          userId: user?.id || null,
+          email: email,
+          firstName: firstName,
+          lastName: lastName
         })
       });
 

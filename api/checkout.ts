@@ -12,24 +12,17 @@ export default async function handler(req, res) {
   }
 
   const supabaseUrl = process.env.VITE_SUPABASE_URL;
-  const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY; // Using anon key, but we have server-side so we could use SERVICE_ROLE_KEY if needed. But anon is fine for simple reads and inserts if policies allow.
+  // Use service_role_key if available, else anon key
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY; 
   
-  // Actually, since we need to insert a purchase record and we are on the server, 
-  // it's better to use the service_role key to bypass RLS, OR pass the user's token.
-  // Since we don't have the user token easily here, let's use service_role key if available, else anon.
-  // Wait, I didn't set up a SERVICE_ROLE_KEY. The anon key will fail the insert if RLS is enabled and policies don't allow it.
-  // Let's check RLS on purchases. I created a SELECT policy, but no INSERT policy.
-  // So anon key will fail.
-  // I need to use the service role key or add an INSERT policy.
-  // Let's use service_role key. I'll ask the user to add SUPABASE_SERVICE_ROLE_KEY to Vercel, or I can add an INSERT policy.
-  // Actually, Vercel allows us to inject env variables. 
-  // Let's just create an INSERT policy on public.purchases so authenticated users can insert their own purchases.
+  const headers: any = {};
+  if (req.headers.authorization && req.headers.authorization !== 'Bearer undefined') {
+    headers.Authorization = req.headers.authorization;
+  }
   
   const supabase = createClient(supabaseUrl, supabaseKey, {
     global: {
-      headers: {
-        Authorization: `Bearer ${req.headers.authorization?.replace('Bearer ', '')}`
-      }
+      headers: headers
     }
   });
 
@@ -48,7 +41,7 @@ export default async function handler(req, res) {
   const { data: purchase, error: purchaseError } = await supabase
     .from('purchases')
     .insert({
-      user_id: userId,
+      user_id: userId || null,
       product_id: product.id,
       amount: product.price,
       currency: 'XOF',
@@ -93,7 +86,7 @@ export default async function handler(req, res) {
         metadata: {
           purchase_id: purchase.id,
           product_id: product.id,
-          user_id: userId
+          user_id: userId || 'guest'
         }
       })
     });
