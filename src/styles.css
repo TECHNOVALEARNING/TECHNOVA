@@ -118,6 +118,11 @@
 
 @layer base {
   * { border-color: var(--color-border); }
+  
+  /* Scale down slightly on desktop for a less bulky UI */
+  html { font-size: 16px; }
+  @media (min-width: 1024px) { html { font-size: 14.5px; } }
+  
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
