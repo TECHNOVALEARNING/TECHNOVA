@@ -34,7 +34,7 @@ export default async function handler(req, res) {
     .single();
 
   if (productError || !product) {
-    return res.status(404).json({ error: 'Product not found' });
+    return res.status(404).json({ error: 'Product not found', details: productError });
   }
 
   // Generate pending purchase
@@ -52,7 +52,7 @@ export default async function handler(req, res) {
 
   if (purchaseError) {
     console.error('Purchase insert error:', purchaseError);
-    return res.status(500).json({ error: 'Failed to create purchase record' });
+    return res.status(500).json({ error: 'Failed to create purchase record', details: purchaseError });
   }
 
   // Call Moneroo

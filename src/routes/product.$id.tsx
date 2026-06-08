@@ -96,7 +96,7 @@ function ProductPage() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Erreur de paiement');
+      if (!res.ok) throw new Error((data.error || 'Erreur de paiement') + (data.details ? ' - ' + JSON.stringify(data.details) : ''));
       
       if (data.checkout_url) {
         window.location.href = data.checkout_url;
