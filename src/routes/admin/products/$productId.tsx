@@ -825,7 +825,7 @@ function EditProduct() {
               <div className="space-y-6">
                 <h2 className="text-[18px] font-bold text-slate-900">Fichier du produit</h2>
 
-                {downloadUrl && !downloadFile && (
+                {downloadUrl && (
                   <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
                     <Package className="w-5 h-5 text-slate-400 shrink-0" />
                     <div className="flex-1 min-w-0">
@@ -1109,8 +1109,17 @@ function EditProduct() {
               disabled={saving}
               className="flex items-center gap-2 px-6 py-3 bg-[#1E293B] text-white text-[14px] font-semibold rounded-xl hover:bg-[#0F172A] transition-colors disabled:opacity-50 shadow-sm"
             >
-              {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-              Enregistrer
+              {saving ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Enregistrement (patientez...)
+                </>
+              ) : (
+                <>
+                  <Save className="w-4 h-4" />
+                  Enregistrer
+                </>
+              )}
             </button>
           </div>
         </div>
