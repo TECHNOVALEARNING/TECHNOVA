@@ -71,6 +71,7 @@ export function CheckoutDrawer({ isOpen, onClose, product }: CheckoutDrawerProps
       setIsSubmitting(true);
       try {
         // 1. Create paid order for free
+        const emailLower = email.trim().toLowerCase();
         const { data: order, error: orderError } = await adminSupabase.from('orders').insert({
           product_id: product.id,
           amount: 0,
