@@ -313,18 +313,7 @@ function NewProduct() {
 
           {step === 2 && (
             <div className="space-y-6">
-              <div className="flex justify-between items-center mb-6">
-                <h1 className="text-[24px] font-bold text-slate-900">Décrivez votre produit</h1>
-                <button
-                  onClick={rewriteDescription}
-                  disabled={aiRewriting}
-                  className="flex items-center gap-2 px-3 py-2 bg-amber-50 text-amber-700 border border-amber-200 rounded-lg text-[13px] font-medium"
-                >
-                  {aiRewriting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
-                  Assistant IA
-                </button>
-              </div>
-              <RichTextEditor value={description} onChange={setDescription} label="" withAI={false} />
+              <RichTextEditor value={description} onChange={setDescription} label="Décrivez votre produit" withAI={true} />
             </div>
           )}
 

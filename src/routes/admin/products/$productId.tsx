@@ -856,22 +856,11 @@ function EditProduct() {
             {/* ── DESCRIPTION ── */}
             {activeTab === 'description' && (
               <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-[18px] font-bold text-slate-900">Description</h2>
-                  <button
-                    onClick={rewriteDescription}
-                    disabled={aiRewriting || !title.trim()}
-                    className="flex items-center gap-1.5 px-3 py-2 text-[13px] font-medium bg-amber-50 text-amber-700 border border-amber-200 rounded-xl hover:bg-amber-100 transition-colors disabled:opacity-40"
-                  >
-                    {aiRewriting ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
-                    Assistant IA
-                  </button>
-                </div>
                 <RichTextEditor
                   value={description}
                   onChange={setDescription}
-                  label=""
-                  withAI={false}
+                  label="Description"
+                  withAI={true}
                 />
               </div>
             )}
