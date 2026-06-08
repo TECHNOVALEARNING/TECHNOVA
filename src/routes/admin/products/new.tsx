@@ -115,13 +115,13 @@ function NewProduct() {
   };
 
   const uploadFile = async (file: File, folder: string): Promise<string | null> => {
-    if (!userId) return null;
-    const ext = file.name.split('.').pop();
-    const path = `${folder}/${userId}/${Date.now()}.${ext}`;
-    const { error } = await adminSupabase.storage.from('product-assets').upload(path, file);
-    if (error) { toast.error('Erreur upload: ' + error.message); return null; }
-    const { data } = adminSupabase.storage.from('product-assets').getPublicUrl(path);
-    return data.publicUrl;
+    try {
+      const { uploadFileToLWS } = await import('@/lib/api/lws-storage');
+      return await uploadFileToLWS(file);
+    } catch (e: any) {
+      toast.error('Erreur upload: ' + e.message);
+      return null;
+    }
   };
 
   const handleSubmit = async () => {
@@ -138,45 +138,52 @@ function NewProduct() {
       if (bannerFile) await uploadFile(bannerFile, 'banners'); // Or store bannerUrl if you added the column
       if (downloadFile) downloadUrl = await uploadFile(downloadFile, 'downloads');
 
+      // Pour le type de cours, on uploade d'abord les vidéos si nécessaire
+      let courseChapters = undefined;
+      if (selectedType === 'course' && lessons.length > 0) {
+        for (let i = 0; i < lessons.length; i++) {
+          const lesson = lessons[i];
+          if (lesson.video_type === 'upload' && lesson.file) {
+            const uploaded = await uploadFile(lesson.file, 'course-videos');
+            if (uploaded) lesson.video_url = uploaded;
+          }
+        }
+        courseChapters = [{
+          id: 1,
+          title: 'Module 1',
+          lessons: lessons.map((l, i) => ({
+            id: i + 1,
+            title: l.title || `Leçon ${i + 1}`,
+            videoUrl: l.video_url || null,
+            duration: `${l.duration_minutes || 0}:00`,
+            type: l.video_type === 'text' ? 'text' : 'video'
+          }))
+        }];
+      }
+
+      const features = {
+        crossed_price: originalPriceNum > 0 ? originalPriceNum : null,
+        pricing_model: pricingModel,
+        status: 'active',
+        type: selectedType,
+        file_url: downloadUrl,
+        chapters: courseChapters
+      };
+
       const productData = {
         title: title.trim(),
         description: description.trim() || null,
         category: category || null,
-        pricing_model: pricingModel, // make sure we save the pricing model if needed by schema, but let's just save price=0 for free.
         price: priceNum,
-        original_price: originalPriceNum > 0 ? originalPriceNum : null,
-        type: selectedType,
-        thumbnail_url: thumbnailUrl,
-        download_url: downloadUrl,
-        creator_id: userId,
-        is_published: true, // Auto publish for now
+        image_url: thumbnailUrl || 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=800',
+        features: JSON.stringify(features),
+        status: 'active'
       };
 
       const { data: product, error } = await adminSupabase.from('products').insert(productData).select().single();
       if (error) throw error;
 
-      if (selectedType === 'course' && lessons.length > 0) {
-        const toInsert = [];
-        for (let i = 0; i < lessons.length; i++) {
-          const lesson = lessons[i];
-          let videoUrl = lesson.video_url;
-          if (lesson.video_type === 'upload' && lesson.file) {
-            const uploaded = await uploadFile(lesson.file, 'course-videos');
-            if (uploaded) videoUrl = uploaded;
-          }
-          toInsert.push({
-            product_id: product.id,
-            title: lesson.title || `Leçon ${i + 1}`,
-            video_url: videoUrl || null,
-            video_type: lesson.video_type,
-            duration_minutes: lesson.duration_minutes,
-            position: i,
-          });
-        }
-        if (toInsert.length > 0) {
-            await adminSupabase.from('course_lessons').insert(toInsert);
-        }
-      }
+
 
       // Moderation Edge Function invocation
       try {
