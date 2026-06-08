@@ -155,41 +155,49 @@ function EditProduct() {
         return;
       }
 
+      let featuresData: any = {};
+      try {
+        if (typeof data.features === 'string') {
+          featuresData = JSON.parse(data.features || '{}');
+        } else if (data.features) {
+          featuresData = data.features;
+        }
+      } catch (e) {}
+
       setTitle(data.title || '');
       setCategory(data.category || '');
       setDescription(data.description || '');
-      setPricingModel(data.pricing_model || (data.price === 0 ? 'free' : 'one_time'));
+      setPricingModel(featuresData.pricing_model || (data.price === 0 ? 'free' : 'one_time'));
       setPrice(String(data.price || ''));
-      setOriginalPrice(data.original_price ? String(data.original_price) : '');
-      setProductType(data.type || 'file');
-      setIsPublished(data.is_published || false);
-      setThumbnailUrl(data.thumbnail_url || null);
-      setThumbnailPreview(data.thumbnail_url || null);
-      setDownloadUrl(data.download_url || null);
-      setCourseContentType(data.course_content_type || 'mixed');
+      setOriginalPrice(data.crossed_price ? String(data.crossed_price) : '');
+      setProductType(featuresData.type || 'file');
+      setIsPublished(data.status === 'active');
+      setThumbnailUrl(data.image_url || null);
+      setThumbnailPreview(data.image_url || null);
+      setDownloadUrl(featuresData.file_url || null);
+      setCourseContentType(featuresData.course_content_type || 'mixed');
 
       // SEO
-      setSeoTitle((data as any).seo_title || '');
-      setSeoDescription((data as any).seo_description || '');
-      setSeoKeywords((data as any).seo_keywords || '');
-      setSeoImageUrl((data as any).seo_image_url || null);
-      setSeoImagePreview((data as any).seo_image_url || null);
+      setSeoTitle(featuresData.seo_title || '');
+      setSeoDescription(featuresData.seo_description || '');
+      setSeoKeywords(featuresData.seo_keywords || '');
+      setSeoImageUrl(featuresData.seo_image_url || null);
+      setSeoImagePreview(featuresData.seo_image_url || null);
 
       // Advanced toggles
-      const d = data as any;
-      setEnableFilePassword(!!d.file_password);
-      setFilePassword(d.file_password || '');
-      setWatermarkEnabled(!!d.watermark_enabled);
-      setEnableSalesLimit(!!d.sales_limit);
-      setSalesLimit(d.sales_limit ? String(d.sales_limit) : '');
-      setHideFromStore(!!d.hide_from_store);
-      setHideSalesCount(!!d.hide_sales_count);
-      setCollectShippingAddress(!!d.collect_shipping_address);
-      setEnableCustomButton(!!d.custom_button_text);
-      setCustomButtonText(d.custom_button_text || 'Acheter maintenant');
+      setEnableFilePassword(!!featuresData.file_password);
+      setFilePassword(featuresData.file_password || '');
+      setWatermarkEnabled(!!featuresData.watermark_enabled);
+      setEnableSalesLimit(!!featuresData.sales_limit);
+      setSalesLimit(featuresData.sales_limit ? String(featuresData.sales_limit) : '');
+      setHideFromStore(!!featuresData.hide_from_store);
+      setHideSalesCount(!!featuresData.hide_sales_count);
+      setCollectShippingAddress(!!featuresData.collect_shipping_address);
+      setEnableCustomButton(!!featuresData.custom_button_text);
+      setCustomButtonText(featuresData.custom_button_text || 'Acheter maintenant');
 
       // Load course lessons
-      if (data.type === 'course') {
+      if (featuresData.type === 'course') {
         const { data: lessonsData } = await adminSupabase
           .from('course_lessons')
           .select('*')
@@ -261,15 +269,10 @@ function EditProduct() {
         }
       }
 
-      const updateData: any = {
-        title: title.trim(),
-        description: description.trim() || null,
-        category: category || null,
+      const features: any = {
         pricing_model: pricingModel,
-        price: priceNum,
-        original_price: originalPriceNum > 0 ? originalPriceNum : null,
-        thumbnail_url: newThumb,
-        download_url: newDownload,
+        type: productType,
+        file_url: newDownload,
         seo_title: seoTitle.trim() || null,
         seo_description: seoDescription.trim() || null,
         seo_keywords: seoKeywords.trim() || null,
@@ -278,10 +281,20 @@ function EditProduct() {
         watermark_enabled: watermarkEnabled,
         sales_limit: enableSalesLimit && salesLimit ? parseInt(salesLimit) : null,
         hide_from_store: hideFromStore,
-        collect_shipping_address: collectShippingAddress,
         hide_sales_count: hideSalesCount,
+        collect_shipping_address: collectShippingAddress,
         custom_button_text: enableCustomButton ? customButtonText : null,
         course_content_type: productType === 'course' ? courseContentType : undefined,
+      };
+
+      const updateData: any = {
+        title: title.trim(),
+        description: description.trim() || null,
+        category: category || null,
+        price: priceNum,
+        crossed_price: originalPriceNum > 0 ? originalPriceNum : null,
+        image_url: newThumb,
+        features: JSON.stringify(features)
       };
 
       const { error } = await adminSupabase.from('products').update(updateData).eq('id', productId);
@@ -330,9 +343,10 @@ function EditProduct() {
 
   // ─── Publish ─────────────────────────────────────────────────────────────────
   const togglePublish = async () => {
+    const newStatus = isPublished ? 'draft' : 'active';
     const { error } = await adminSupabase
       .from('products')
-      .update({ is_published: !isPublished })
+      .update({ status: newStatus })
       .eq('id', productId);
     if (error) { toast.error(error.message); return; }
     setIsPublished(!isPublished);
