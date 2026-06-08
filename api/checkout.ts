@@ -5,7 +5,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { productId, userId, email, firstName, lastName } = req.body;
+  const { productId, userId, email, firstName, lastName, phone } = req.body;
 
   if (!productId || !email) {
     return res.status(400).json({ error: 'Missing productId or email' });
@@ -41,6 +41,8 @@ export default async function handler(req, res) {
     });
   }
 
+  const custName = `${firstName || ''} ${lastName || ''}`.trim() || 'Client Technova';
+
   // Generate pending order
   const { data: purchase, error: purchaseError } = await supabase
     .from('orders')
@@ -51,7 +53,7 @@ export default async function handler(req, res) {
       currency: 'XOF',
       status: 'pending',
       customer_email: email,
-      customer_name: `${firstName || ''} ${lastName || ''}`.trim() || 'Client Technova'
+      customer_name: custName
     })
     .select()
     .single();
@@ -86,7 +88,8 @@ export default async function handler(req, res) {
         customer: {
           email: email,
           first_name: firstName || 'Client',
-          last_name: lastName || 'Technova'
+          last_name: lastName || 'Technova',
+          phone: phone || ''
         },
         return_url: returnUrl,
         metadata: {

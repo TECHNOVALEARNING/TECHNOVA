@@ -2,6 +2,7 @@ import { createFileRoute, Link } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 import { Header, Footer } from '@/components/site/shared';
+import { CheckoutDrawer } from '@/components/site/CheckoutDrawer';
 import { motion } from 'framer-motion';
 import {
   Download, BookOpen, Key, Package, ShoppingBag, Share2,
@@ -56,56 +57,10 @@ function ProductPage() {
     }
   };
 
-  const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const handleBuy = async () => {
-    try {
-      setIsCheckingOut(true);
-      const { data: { session } } = await supabase.auth.getSession();
-      const user = session?.user;
-      
-      let email = user?.email;
-      let firstName = user?.user_metadata?.full_name?.split(' ')[0] || '';
-      let lastName = user?.user_metadata?.full_name?.split(' ').slice(1).join(' ') || '';
-
-      if (!user || !email) {
-        const guestEmail = window.prompt("Veuillez entrer votre adresse e-mail pour recevoir le produit après paiement :");
-        if (!guestEmail || !guestEmail.includes('@')) {
-          toast.error("L'adresse e-mail est obligatoire pour procéder à l'achat.");
-          setIsCheckingOut(false);
-          return;
-        }
-        email = guestEmail;
-        firstName = "Client";
-        lastName = "Technova";
-      }
-
-      const res = await fetch('/api/checkout', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          ...(session?.access_token ? { 'Authorization': `Bearer ${session.access_token}` } : {})
-        },
-        body: JSON.stringify({
-          productId: id,
-          userId: user?.id || null,
-          email: email,
-          firstName: firstName,
-          lastName: lastName
-        })
-      });
-
-      const data = await res.json();
-      if (!res.ok) throw new Error((data.error || 'Erreur de paiement') + (data.details ? ' - ' + JSON.stringify(data.details) : ''));
-      
-      if (data.checkout_url) {
-        window.location.href = data.checkout_url;
-      }
-    } catch (error: any) {
-      toast.error(error.message || 'Erreur lors de la création du paiement');
-    } finally {
-      setIsCheckingOut(false);
-    }
+    setIsDrawerOpen(true);
   };
 
   /* ── Loading ── */
@@ -188,6 +143,17 @@ function ProductPage() {
     <div className="min-h-screen bg-gray-50/40 flex flex-col">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }} />
       <Header />
+      
+      <CheckoutDrawer 
+        isOpen={isDrawerOpen} 
+        onClose={() => setIsDrawerOpen(false)} 
+        product={{
+          id: product.id,
+          title: product.title,
+          price: currentPrice,
+          image_url: product.image_url || 'https://images.unsplash.com/photo-1498050108023-c5249f4df085'
+        }} 
+      />
 
       <main className="flex-1 pt-16 pb-24 lg:pb-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
@@ -401,10 +367,9 @@ function ProductPage() {
                 {/* CTA */}
                 <button
                   onClick={handleBuy}
-                  disabled={isCheckingOut}
-                  className="w-full text-base font-bold py-4 rounded-xl text-white transition-all hover:opacity-95 hover:scale-[1.01] active:scale-[0.99] shadow-lg flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed disabled:scale-100"
+                  className="w-full text-base font-bold py-4 rounded-xl text-white transition-all hover:opacity-95 hover:scale-[1.01] active:scale-[0.99] shadow-lg flex items-center justify-center gap-2"
                   style={{ backgroundColor: BRAND_COLOR, boxShadow: `0 8px 24px -8px ${BRAND_COLOR}80` }}>
-                  {isCheckingOut ? <Loader2 className="h-5 w-5 animate-spin" /> : 'Acheter maintenant'}
+                  Acheter maintenant
                 </button>
 
                 {/* Quick benefits */}
@@ -499,10 +464,9 @@ function ProductPage() {
           </div>
           <button
             onClick={handleBuy}
-            disabled={isCheckingOut}
-            className="flex-shrink-0 px-6 py-3 rounded-xl text-white text-sm font-bold shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed disabled:scale-100"
+            className="flex-shrink-0 px-6 py-3 rounded-xl text-white text-sm font-bold shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2"
             style={{ backgroundColor: BRAND_COLOR, boxShadow: `0 6px 20px -6px ${BRAND_COLOR}` }}>
-            {isCheckingOut ? <Loader2 className="h-5 w-5 animate-spin" /> : 'Acheter'}
+            Acheter
           </button>
         </div>
       </div>
