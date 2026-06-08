@@ -12,19 +12,14 @@ export default async function handler(req, res) {
   }
 
   const supabaseUrl = process.env.VITE_SUPABASE_URL;
-  // Use service_role_key if available, else anon key
+  // Prefer service role key, fallback to anon key
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY; 
   
-  const headers: any = {};
-  if (req.headers.authorization && req.headers.authorization !== 'Bearer undefined') {
-    headers.Authorization = req.headers.authorization;
+  if (!supabaseUrl || !supabaseKey) {
+    return res.status(500).json({ error: 'Supabase configuration is missing on the server' });
   }
-  
-  const supabase = createClient(supabaseUrl, supabaseKey, {
-    global: {
-      headers: headers
-    }
-  });
+
+  const supabase = createClient(supabaseUrl, supabaseKey);
 
   // Fetch product
   const { data: product, error: productError } = await supabase
@@ -34,7 +29,16 @@ export default async function handler(req, res) {
     .single();
 
   if (productError || !product) {
-    return res.status(404).json({ error: 'Product not found', details: productError });
+    return res.status(404).json({ 
+      error: 'Product not found', 
+      details: productError,
+      debug: {
+        productId,
+        hasUrl: !!supabaseUrl,
+        hasServiceRole: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
+        keyLength: supabaseKey?.length
+      }
+    });
   }
 
   // Generate pending purchase
