@@ -27,22 +27,50 @@ function Dashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchPurchases = async () => {
       try {
-        const { data, error } = await supabase
-          .from('products')
-          .select('*')
-          .eq('status', 'active');
-        if (error) throw error;
-        setProducts(data || []);
+        const email = session?.user?.email;
+        if (!email) {
+          setLoading(false);
+          return;
+        }
+
+        // 1. Fetch completed orders for this email
+        const { data: ordersData, error: ordersError } = await supabase
+          .from('orders')
+          .select('*, products(*)')
+          .eq('customer_email', email)
+          .eq('status', 'completed');
+          
+        if (ordersError) throw ordersError;
+
+        // 2. Extract unique products from orders
+        const uniqueProducts = new Map();
+        (ordersData || []).forEach(order => {
+           if (order.products) {
+              const p = order.products;
+              // Filtrer les anciens produits de test Lumézia
+              let type = '';
+              try {
+                const feats = typeof p.features === 'string' ? JSON.parse(p.features) : p.features;
+                if (feats?.type) type = feats.type;
+              } catch(e) {}
+              
+              if (['fichier', 'formation', 'service', 'pdf', 'ebook'].includes(type)) {
+                uniqueProducts.set(p.id, p);
+              }
+           }
+        });
+        
+        setProducts(Array.from(uniqueProducts.values()));
       } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error('Error fetching purchases:', error);
       } finally {
         setLoading(false);
       }
     };
-    fetchProducts();
-  }, []);
+    fetchPurchases();
+  }, [session?.user?.email]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();

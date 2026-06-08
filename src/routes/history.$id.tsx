@@ -26,6 +26,7 @@ function ProductDetail() {
   const navigate = useNavigate();
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [activeModuleIndex, setActiveModuleIndex] = useState(0);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -114,39 +115,154 @@ function ProductDetail() {
           {/* Left Column */}
           <div className="lg:col-span-2 space-y-8">
             
-            {/* Fichiers Section */}
-            <div>
-              <h2 className="text-lg font-semibold mb-4 text-slate-700">Fichiers</h2>
-              <div className="bg-white rounded-2xl border border-slate-200 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center text-slate-500">
-                    <FileText className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-slate-900">Accès {product.title}</h3>
-                    <p className="text-sm text-slate-500">PDF - Accès immédiat</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <button className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-700 font-medium rounded-xl hover:bg-slate-50 transition-colors">
-                    <Eye className="w-4 h-4" />
-                    Aperçu
-                  </button>
-                  <button className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-700 font-medium rounded-xl hover:bg-slate-50 transition-colors">
-                    <Download className="w-4 h-4" />
-                    Télécharger
-                  </button>
-                </div>
-              </div>
-            </div>
+            {(() => {
+              let type = 'fichier';
+              let chapters: any[] = [];
+              try {
+                const feats = typeof product.features === 'string' ? JSON.parse(product.features) : product.features;
+                if (feats?.type) type = feats.type;
+                if (feats?.chapters && Array.isArray(feats.chapters)) chapters = feats.chapters;
+              } catch(e) {}
 
-            {/* Instructions Section */}
-            <div>
-              <h2 className="text-lg font-semibold mb-4 text-slate-700">Instructions</h2>
-              <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm prose prose-slate max-w-none prose-a:text-blue-600 prose-headings:font-bold">
-                <div dangerouslySetInnerHTML={{ __html: product.description }} />
-              </div>
-            </div>
+              // Extract all lessons across all chapters into a flat list for the player
+              const allLessons: any[] = [];
+              chapters.forEach((chapter, chapterIndex) => {
+                (chapter.lessons || []).forEach((lesson: any) => {
+                   allLessons.push({
+                     ...lesson,
+                     chapterTitle: chapter.title,
+                     chapterIndex
+                   });
+                });
+              });
+
+              if (type === 'formation' || chapters.length > 0) {
+                const activeModule = allLessons[activeModuleIndex] || null;
+                return (
+                  <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm flex flex-col md:flex-row h-[500px]">
+                    {/* Video Area */}
+                    <div className="flex-1 bg-black relative flex flex-col">
+                      {activeModule ? (
+                        activeModule.type === 'Vidéo' ? (
+                          <iframe 
+                            src={activeModule.url} 
+                            title={activeModule.title}
+                            className="w-full h-full border-0 flex-1"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                          ></iframe>
+                        ) : activeModule.type === 'Audio' ? (
+                          <div className="w-full h-full flex flex-col items-center justify-center bg-slate-900 flex-1 px-8">
+                            <audio controls src={activeModule.url} className="w-full max-w-md" />
+                            <div className="mt-4 text-white font-medium">{activeModule.title}</div>
+                          </div>
+                        ) : activeModule.type === 'Texte' ? (
+                          <div className="w-full h-full bg-white flex-1 p-8 overflow-y-auto">
+                            <h2 className="text-2xl font-bold mb-4">{activeModule.title}</h2>
+                            <p className="text-slate-600 mb-6">{activeModule.description}</p>
+                            {activeModule.url && (
+                              <a href={activeModule.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700">
+                                Télécharger le document
+                              </a>
+                            )}
+                          </div>
+                        ) : null
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-slate-500 bg-slate-100 flex-1">
+                          Aucune leçon disponible
+                        </div>
+                      )}
+                      {activeModule && activeModule.type !== 'Texte' && (
+                        <div className="p-4 bg-white border-t border-slate-200">
+                          <h2 className="text-xl font-bold text-slate-900">{activeModule.title}</h2>
+                          <p className="text-sm text-slate-500 mt-1">{activeModule.description}</p>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Playlist Sidebar */}
+                    <div className="w-full md:w-80 bg-slate-50 border-l border-slate-200 flex flex-col h-full overflow-y-auto">
+                      <div className="p-4 bg-white border-b border-slate-200 sticky top-0 z-10">
+                        <h3 className="font-bold text-slate-900">Contenu du cours</h3>
+                        <p className="text-sm text-slate-500">{chapters.length} chapitre{chapters.length > 1 ? 's' : ''}</p>
+                      </div>
+                      <div className="space-y-1">
+                        {chapters.map((chapter, cIdx) => (
+                          <div key={cIdx} className="border-b border-slate-200 last:border-0">
+                            <div className="px-4 py-3 bg-slate-100 font-semibold text-sm text-slate-800">
+                              {chapter.title}
+                            </div>
+                            <div className="p-2 space-y-1">
+                              {chapter.lessons?.map((lesson: any, lIdx: number) => {
+                                // Find global index
+                                const globalIndex = allLessons.findIndex(l => l.id === lesson.id);
+                                const isActive = activeModuleIndex === globalIndex;
+                                return (
+                                  <button 
+                                    key={lesson.id || lIdx}
+                                    onClick={() => setActiveModuleIndex(globalIndex)}
+                                    className={`w-full text-left p-3 rounded-xl flex items-start gap-3 transition-colors ${isActive ? 'bg-blue-50 border border-blue-100 text-blue-700' : 'hover:bg-slate-100 text-slate-700'}`}
+                                  >
+                                    <PlayCircle className={`w-5 h-5 mt-0.5 shrink-0 ${isActive ? 'text-blue-600' : 'text-slate-400'}`} />
+                                    <div className="flex-1">
+                                      <div className="font-medium text-sm line-clamp-2">{lesson.title}</div>
+                                    </div>
+                                  </button>
+                                );
+                              })}
+                              {(!chapter.lessons || chapter.lessons.length === 0) && (
+                                <div className="px-4 py-2 text-xs text-slate-400">Aucune leçon</div>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                        {chapters.length === 0 && (
+                          <div className="p-4 text-sm text-slate-500 text-center">Aucun contenu ajouté.</div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
+
+              return (
+                <>
+                  {/* Fichiers Section */}
+                  <div>
+                    <h2 className="text-lg font-semibold mb-4 text-slate-700">Fichiers</h2>
+                    <div className="bg-white rounded-2xl border border-slate-200 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center text-slate-500">
+                          <FileText className="w-6 h-6" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-slate-900">Accès {product.title}</h3>
+                          <p className="text-sm text-slate-500">PDF - Accès immédiat</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-700 font-medium rounded-xl hover:bg-slate-50 transition-colors">
+                          <Eye className="w-4 h-4" />
+                          Aperçu
+                        </button>
+                        <a href={product.file_url || '#'} target="_blank" rel="noreferrer" className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-700 font-medium rounded-xl hover:bg-slate-50 transition-colors">
+                          <Download className="w-4 h-4" />
+                          Télécharger
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Instructions Section */}
+                  <div>
+                    <h2 className="text-lg font-semibold mb-4 text-slate-700">Instructions</h2>
+                    <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm prose prose-slate max-w-none prose-a:text-blue-600 prose-headings:font-bold">
+                      <div dangerouslySetInnerHTML={{ __html: product.description }} />
+                    </div>
+                  </div>
+                </>
+              );
+            })()}
 
           </div>
 

@@ -95,7 +95,7 @@ export const Header = () => {
           
           <Link to="/login"
              className="inline-flex items-center gap-2 h-10 px-5 rounded-full bg-primary-gradient text-white text-sm font-semibold shadow-glow hover:scale-[1.03] transition-transform">
-            {lang === "fr" ? "COMMENCER" : "START"} <ArrowRight className="h-4 w-4" />
+            {lang === "fr" ? "MES ACHATS" : "MY PURCHASES"} <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
         <div className="lg:hidden flex items-center gap-3">
@@ -125,7 +125,7 @@ export const Header = () => {
             ))}
             <Link to="/login" onClick={() => setOpen(false)}
                className="mt-2 text-center h-11 grid place-items-center rounded-full bg-primary-gradient text-white font-semibold">
-              {lang === "fr" ? "COMMENCER" : "START"}
+              {lang === "fr" ? "MES ACHATS" : "MY PURCHASES"}
             </Link>
           </div>
         </div>
