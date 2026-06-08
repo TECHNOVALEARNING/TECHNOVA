@@ -839,6 +839,14 @@ function EditProduct() {
                         {downloadUrl.split('/').pop()}
                       </a>
                     </div>
+                    <button
+                      type="button"
+                      onClick={() => setDownloadUrl(null)}
+                      className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors shrink-0"
+                      title="Supprimer ce fichier"
+                    >
+                      <Trash2 className="w-5 h-5" />
+                    </button>
                   </div>
                 )}
 
