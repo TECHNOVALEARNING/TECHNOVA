@@ -125,7 +125,7 @@ const Register = () => {
             Lancez votre boutique en 5 minutes
           </h2>
           <p className="text-background/50 text-lg max-w-md">
-            Fichiers, formations et licences — vendez vos produits digitaux avec DUKAIO.
+            Fichiers, formations et licences — vendez vos produits digitaux avec TECHNOVA.
           </p>
         </div>
       </div>

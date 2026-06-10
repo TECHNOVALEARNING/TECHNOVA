@@ -12,9 +12,9 @@ interface SEOHeadProps {
 
 const SITE_NAME = "TECHNOVA";
 const SITE_URL = "https://technova.com";
-const DEFAULT_DESCRIPTION = "DUKAIO est la plateforme pour vendre vos produits digitaux en Afrique : fichiers, formations et licences. Créez votre boutique et encaissez via Mobile Money ou carte.";
+const DEFAULT_DESCRIPTION = "TECHNOVA est la plateforme pour vendre vos produits digitaux en Afrique : fichiers, formations et licences. Créez votre boutique et encaissez via Mobile Money ou carte.";
 const DEFAULT_IMAGE = `${SITE_URL}/og-image.jpg?v=technova-20260505`;
-const DEFAULT_KEYWORDS = "DUKAIO, technova, vente produits digitaux, marketplace afrique, vendre en ligne, cours en ligne, fichiers numériques, licences digitales, boutique digitale, mobile money, ecommerce afrique";
+const DEFAULT_KEYWORDS = "TECHNOVA, technova, vente produits digitaux, marketplace afrique, vendre en ligne, cours en ligne, fichiers numériques, licences digitales, boutique digitale, mobile money, ecommerce afrique";
 
 const SEOHead = ({
   title,
