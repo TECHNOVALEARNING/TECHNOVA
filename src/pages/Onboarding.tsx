@@ -76,7 +76,7 @@ const Onboarding = () => {
       .replace(/\s+/g, "-")
       .replace(/-+/g, "-");
 
-    const { error } = await supabase.from("profiles").update({
+    const { error: profileError } = await supabase.from("profiles").update({
       display_name: storeName.trim(),
       store_slug: slug,
       store_brand_color: brandColor,
@@ -87,10 +87,20 @@ const Onboarding = () => {
       updated_at: new Date().toISOString(),
     } as any).eq("id", user.id);
 
+    // Create the first store in the stores table to ensure dashboard settings work
+    const { error: storeError } = await supabase.from("stores").insert([{
+      owner_id: user.id,
+      name: storeName.trim(),
+      slug: slug,
+      description: description.trim() || null,
+      brand_color: brandColor,
+      keywords: keywords.trim() || null
+    }]);
+
     setSaving(false);
 
-    if (error) {
-      if (error.message.includes("unique")) {
+    if (profileError || storeError) {
+      if (profileError?.message?.includes("unique") || storeError?.message?.includes("unique")) {
         toast.error("Ce nom de boutique est déjà pris, essayez un autre");
       } else {
         toast.error("Erreur lors de la configuration");
