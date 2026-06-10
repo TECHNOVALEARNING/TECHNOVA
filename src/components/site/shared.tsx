@@ -1,4 +1,4 @@
-import { Link, useRouter } from "@tanstack/react-router";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   ArrowRight, Check, ChevronDown, Shield, Headphones, Wallet,
@@ -26,8 +26,9 @@ export const Header = () => {
   const [theme, setTheme] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_theme") || "light") : "light");
   const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
 
-  const router = useRouter();
-  const isHome = router.state.location.pathname === "/";
+  const navigate = useNavigate();
+  const location = useLocation();
+  const isHome = location.pathname === "/";
 
   useEffect(() => {
     if (isHome) {
@@ -65,7 +66,7 @@ export const Header = () => {
       if (targetElement) {
         targetElement.scrollIntoView({ behavior: 'smooth' });
       } else {
-        router.navigate({ to: to as any });
+        navigate(to as any);
       }
     } else if (to === "/" && isHome) {
        e.preventDefault();
@@ -92,6 +93,9 @@ export const Header = () => {
           <button onClick={() => setTheme(t => t === "light" ? "dark" : "light")} className="opacity-80 hover:opacity-100 transition-opacity">
             {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
           </button>
+          <Link to="/register" className="ml-2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-[#0071e3] text-white hover:bg-[#0071e3]/90 h-10 px-4 py-2">
+            Devenir vendeur
+          </Link>
         </div>
         <div className="lg:hidden flex items-center gap-3">
           <button onClick={() => setTheme(t => t === "light" ? "dark" : "light")} className="p-1 opacity-80 hover:opacity-100 transition-opacity">
@@ -216,8 +220,8 @@ export const Footer = () => {
     <div className="border-t border-white/10 py-5 px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-white/50 text-xs">
       <p>© {new Date().getFullYear()} TECHNOVA Learning — {lang === 'fr' ? 'Tous droits réservés.' : 'All rights reserved.'}</p>
       <div className="flex items-center gap-4">
-        <Link to="/confidentialite" className="hover:text-white transition-colors">{lang === 'fr' ? 'Politique de confidentialité' : 'Privacy Policy'}</Link>
-        <Link to="/conditions" className="hover:text-white transition-colors">{lang === 'fr' ? "Conditions d'utilisation" : 'Terms of Service'}</Link>
+        <Link to="/legal/privacy" className="hover:text-white transition-colors">{lang === 'fr' ? 'Politique de confidentialité' : 'Privacy Policy'}</Link>
+        <Link to="/legal/terms" className="hover:text-white transition-colors">{lang === 'fr' ? "Conditions d'utilisation" : 'Terms of Service'}</Link>
       </div>
     </div>
   </footer>
@@ -541,8 +545,7 @@ export const CourseCard = ({ c, i = 0 }: { c: Course; i?: number }) => {
 
           {/* CTA button */}
           <Link
-            to="/product/$id"
-            params={{ id: c.slug }}
+            to={`/product/${c.slug}`}
             className="block w-full rounded-xl bg-[#004DB8] py-2.5 text-center text-[13px] font-semibold text-white transition-all hover:bg-[#003c91] hover:shadow-lg active:scale-[0.97] sm:text-sm"
           >
             Acheter maintenant
