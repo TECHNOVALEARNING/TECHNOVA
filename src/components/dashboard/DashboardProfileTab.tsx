@@ -20,6 +20,7 @@ const DashboardProfileTab = () => {
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [improving, setImproving] = useState(false);
+  const [customDomain, setCustomDomain] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImproveDescription = async () => {
@@ -53,6 +54,16 @@ const DashboardProfileTab = () => {
       setStoreSlug(activeStore.slug || "");
       setStoreDescription((activeStore as any).description || "");
       setLogoUrl(activeStore.logo_url || null);
+      
+      const fetchDomain = async () => {
+        const { data } = await supabase
+          .from("custom_domains")
+          .select("domain")
+          .eq("store_id", activeStore.id)
+          .maybeSingle();
+        setCustomDomain(data?.domain || null);
+      };
+      fetchDomain();
     }
     // Contact stays on profile level
     if (profile) {
@@ -229,16 +240,35 @@ const DashboardProfileTab = () => {
             <Input className="rounded-l-none" value={storeSlug} onChange={(e) => setStoreSlug(e.target.value)} placeholder="ma-boutique" />
           </div>
           {storeSlug && (
-            <div className="mt-1.5 flex items-center gap-2">
-              <p className="text-xs text-muted-foreground">Lien de votre boutique :</p>
-              <a
-                href={`https://technova.com/store/${storeSlug.trim().toLowerCase().replace(/[^a-z0-9-]/g, "-")}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs font-medium text-primary hover:underline"
-              >
-                https://technova.com/store/{storeSlug.trim().toLowerCase().replace(/[^a-z0-9-]/g, "-")}
-              </a>
+            <div className="mt-2 flex flex-col gap-2">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                <p className="text-xs text-muted-foreground min-w-[140px]">Lien par défaut :</p>
+                <a
+                  href={`https://technovalearning.com/store/${storeSlug.trim().toLowerCase().replace(/[^a-z0-9-]/g, "-")}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs font-medium text-muted-foreground hover:text-foreground hover:underline truncate"
+                >
+                  https://technovalearning.com/store/{storeSlug.trim().toLowerCase().replace(/[^a-z0-9-]/g, "-")}
+                </a>
+              </div>
+              
+              {customDomain && (
+                <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 bg-primary/5 p-2 rounded-md border border-primary/10">
+                  <p className="text-xs font-bold text-primary min-w-[140px] flex items-center gap-1.5">
+                    <Globe className="h-3.5 w-3.5" />
+                    Votre domaine :
+                  </p>
+                  <a
+                    href={`https://${customDomain}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs font-bold text-primary hover:underline truncate"
+                  >
+                    https://{customDomain}
+                  </a>
+                </div>
+              )}
             </div>
           )}
         </div>
