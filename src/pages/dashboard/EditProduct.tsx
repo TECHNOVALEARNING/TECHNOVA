@@ -88,7 +88,6 @@ const EditProduct = () => {
   const [licenseValidityDays, setLicenseValidityDays] = useState("");
 
   // Course
-  const [courseContentType, setCourseContentType] = useState("mixed");
   const [courseModules, setCourseModules] = useState<Module[]>([]);
 
 
@@ -165,7 +164,7 @@ const EditProduct = () => {
       }
       setLicenseMaxActivations(data.license_max_activations ? String(data.license_max_activations) : "");
       setLicenseValidityDays(data.license_validity_days ? String(data.license_validity_days) : "");
-      setCourseContentType(data.course_content_type || "mixed");
+      setLicenseValidityDays(data.license_validity_days ? String(data.license_validity_days) : "");
 
       // Functional product options
       const d: any = data;
@@ -296,9 +295,7 @@ const EditProduct = () => {
         updateData.license_max_activations = licenseMaxActivations ? parseInt(licenseMaxActivations) : null;
         updateData.license_validity_days = licenseValidityDays ? parseInt(licenseValidityDays) : null;
       }
-      if (type === "course") {
-        updateData.course_content_type = courseContentType;
-      }
+      // Course content type removed
 
       const { error } = await supabase.from("products").update(updateData as any).eq("id", id);
       if (error) throw error;

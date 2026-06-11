@@ -96,8 +96,7 @@ const CreateProduct = () => {
   const [licenseMaxActivations, setLicenseMaxActivations] = useState("");
   const [licenseValidityDays, setLicenseValidityDays] = useState("");
 
-  // Course-specific
-  const [courseContentType, setCourseContentType] = useState("mixed");
+  // Course
 
   // Step 3 - Description
   const [description, setDescription] = useState("");
@@ -251,12 +250,7 @@ const CreateProduct = () => {
         productData.license_validity_days = licenseValidityDays ? parseInt(licenseValidityDays) : null;
       }
 
-      if (selectedType === "course") {
-        productData.course_content_type = courseContentType;
-      }
-
-
-      const { data: productResult, error } = await supabase
+      // Course content type removed      const { data: productResult, error } = await supabase
         .from("products")
         .insert(productData as any)
         .select("id")
@@ -469,32 +463,20 @@ const CreateProduct = () => {
       case "course":
         return (
           <div>
-            <h2 className="text-2xl font-bold text-foreground mb-2">Contenu de la formation</h2>
+            <h2 className="text-2xl font-bold text-foreground mb-2">Structure de la formation</h2>
             <p className="text-sm text-muted-foreground mb-6">
-              Structurez votre formation en leçons. Ajoutez des vidéos via lien externe ou upload direct.
+              Construisez votre programme. Ajoutez des modules, et pour chaque leçon intégrez des vidéos, du texte riche et des fichiers téléchargeables.
             </p>
 
-            <div className="space-y-4 mb-6">
-              <div className="grid grid-cols-3 gap-3">
-                {[
-                  { value: "video", label: "Vidéo", icon: Video, desc: "Cours en vidéo" },
-                  { value: "text", label: "Texte", icon: BookOpen, desc: "Contenu écrit" },
-                  { value: "mixed", label: "Mixte", icon: Layers, desc: "Vidéo + texte + fichiers" },
-                ].map((ct) => (
-                  <button
-                    key={ct.value}
-                    onClick={() => setCourseContentType(ct.value)}
-                    className={`p-4 rounded-xl border-2 text-center transition-all ${
-                      courseContentType === ct.value
-                        ? "border-blue-400 bg-blue-50/50 dark:bg-blue-900/10"
-                        : "border-border hover:border-muted-foreground/30"
-                    }`}
-                  >
-                    <ct.icon className="h-6 w-6 mx-auto mb-2 text-blue-500" />
-                    <p className="text-sm font-semibold text-foreground">{ct.label}</p>
-                    <p className="text-xs text-muted-foreground">{ct.desc}</p>
-                  </button>
-                ))}
+            <div className="mb-6 p-4 rounded-xl bg-blue-50 dark:bg-blue-900/10 border border-blue-200 dark:border-blue-800 flex items-start gap-3">
+              <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-800 shrink-0">
+                <Layers className="h-5 w-5 text-blue-600 dark:text-blue-300" />
+              </div>
+              <div>
+                <h4 className="font-semibold text-blue-900 dark:text-blue-100 text-sm">Écosystème d'apprentissage complet</h4>
+                <p className="text-xs text-blue-700 dark:text-blue-300 mt-1">
+                  Chaque leçon est un écosystème en soi : ajoutez-y une vidéo (lien Drive/Youtube), rédigez le cours complet, et joignez un fichier ressource si besoin. L'interface d'apprentissage s'adaptera automatiquement !
+                </p>
               </div>
             </div>
 
