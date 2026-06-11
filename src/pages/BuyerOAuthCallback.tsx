@@ -23,19 +23,29 @@ const BuyerOAuthCallback = () => {
           return;
         }
 
-        const { data, error } = await supabase.functions.invoke("buyer-oauth-check");
-        if (error || data?.error) {
-          toast.error(data?.error || "Aucun achat trouvé pour ce compte");
-          await supabase.auth.signOut();
-          navigate("/buyer-login", { replace: true });
-          return;
+        let customerName = session.user?.user_metadata?.full_name || session.user?.email?.split("@")[0] || "Client";
+        let customerEmail = session.user?.email || "";
+        let customerId = session.user?.id || "";
+        let orders = [];
+
+        try {
+          const { data, error } = await supabase.functions.invoke("buyer-oauth-check");
+          if (!error && !data?.error && data?.customer) {
+            customerName = data.customer.name || customerName;
+            customerEmail = data.customer.email || customerEmail;
+            customerId = data.customer.id || customerId;
+            orders = data.orders || [];
+          }
+        } catch (err) {
+          console.error("buyer-oauth-check error:", err);
+          // Proceed with empty orders
         }
 
         sessionStorage.setItem("buyer_session", JSON.stringify({
-          email: data.customer.email,
-          customerName: data.customer.name,
-          customerId: data.customer.id,
-          orders: data.orders || [],
+          email: customerEmail,
+          customerName: customerName,
+          customerId: customerId,
+          orders: orders,
           authenticatedAt: Date.now(),
         }));
 
