@@ -44,9 +44,10 @@ export default async function handler(req: any, res: any) {
 
     } else if (method === "GET") {
       const domain = req.query.domain;
-      const url = domain ? `${VERCEL_API_URL}/${domain}` : VERCEL_API_URL;
       
-      const response = await fetch(url, {
+      // We fetch the full list of domains for the project because the /domains/:domain
+      // endpoint doesn't always return the DNS `error` object (e.g. invalid_configuration).
+      const response = await fetch(VERCEL_API_URL, {
         method: "GET",
         headers: {
           "Authorization": `Bearer ${VERCEL_TOKEN}`
@@ -55,6 +56,15 @@ export default async function handler(req: any, res: any) {
 
       const data = await response.json();
       if (!response.ok) return res.status(response.status).json(data);
+      
+      if (domain) {
+        const domainData = data.domains?.find((d: any) => d.name === domain);
+        if (!domainData) {
+          return res.status(404).json({ error: "Domain not found" });
+        }
+        return res.status(200).json(domainData);
+      }
+      
       return res.status(200).json(data);
 
     } else {
