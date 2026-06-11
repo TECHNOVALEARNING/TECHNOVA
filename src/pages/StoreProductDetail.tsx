@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   ArrowLeft,
@@ -92,6 +92,7 @@ const typeLabels: Record<string, string> = {
 
 const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
   const { slug: urlSlug, productId } = useParams();
+  const navigate = useNavigate();
   const slug = customSlug || urlSlug;
   const [profile, setProfile] = useState<Profile | null>(null);
   const [product, setProduct] = useState<Product | null>(null);
@@ -255,7 +256,7 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
     });
     const storeRef = profile?.store_slug || slug;
     const url = `/checkout/${product.id}${storeRef ? `?store=${encodeURIComponent(storeRef)}` : ""}`;
-    window.open(url, "_blank", "noopener,noreferrer");
+    navigate(url);
   };
 
   return (
