@@ -7,6 +7,9 @@ import StoreProductDetail from "@/pages/StoreProductDetail";
 import StoreLegalPage from "@/pages/StoreLegalPage";
 import PaymentCallback from "@/pages/PaymentCallback";
 import CheckoutPage from "@/pages/CheckoutPage";
+import BuyerLogin from "@/pages/BuyerLogin";
+import BuyerDashboard from "@/pages/BuyerDashboard";
+import BuyerOrderDetail from "@/pages/BuyerOrderDetail";
 
 export const useCustomDomain = () => {
   const [storeSlug, setStoreSlug] = useState<string | null>(null);
@@ -63,6 +66,9 @@ export const CustomDomainApp = ({ storeSlug }: { storeSlug: string }) => {
         <Route path="/legal" element={<StoreLegalPage kind="legal" customSlug={storeSlug} />} />
         <Route path="/terms" element={<StoreLegalPage kind="terms" customSlug={storeSlug} />} />
         <Route path="/privacy" element={<StoreLegalPage kind="privacy" customSlug={storeSlug} />} />
+        <Route path="/buyer-login" element={<BuyerLogin />} />
+        <Route path="/mes-achats" element={<BuyerDashboard />} />
+        <Route path="/mes-achats/:orderId" element={<BuyerOrderDetail />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
