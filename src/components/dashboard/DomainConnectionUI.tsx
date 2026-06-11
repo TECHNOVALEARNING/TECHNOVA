@@ -128,40 +128,47 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
               </div>
 
               {!isFullyConfigured && (
-                <div className="space-y-3 pt-2">
-                  <div className="w-full overflow-x-auto pb-4 sm:pb-0 -mx-4 px-4 sm:mx-0 sm:px-0">
-                    <div className="min-w-[480px] space-y-3">
-                      <div className="grid grid-cols-[100px_1fr_1.5fr] gap-4 text-xs font-medium text-muted-foreground px-2">
-                        <span>Type</span>
-                        <span>Nom</span>
-                        <span>Valeur</span>
-                      </div>
-                      
-                      {isApex ? (
-                        <div className="grid grid-cols-[100px_1fr_1.5fr] gap-4">
-                          <div className="flex items-center justify-between px-3 py-2.5 bg-muted/30 rounded-lg border">
-                            <span className="text-sm font-mono">A</span>
-                            <button onClick={() => copyToClipboard('A', 'type1')} className="text-muted-foreground hover:text-foreground">
-                              {copiedField === 'type1' ? <CheckCircle2 className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
-                            </button>
-                          </div>
-                          <div className="flex items-center justify-between px-3 py-2.5 bg-muted/30 rounded-lg border">
-                            <span className="text-sm font-mono">@</span>
-                            <button onClick={() => copyToClipboard('@', 'name1')} className="text-muted-foreground hover:text-foreground">
-                              {copiedField === 'name1' ? <CheckCircle2 className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
-                            </button>
-                          </div>
-                          <div className="flex items-center justify-between px-3 py-2.5 bg-muted/30 rounded-lg border">
-                            <span className="text-sm font-mono">76.76.21.21</span>
-                            <button onClick={() => copyToClipboard('76.76.21.21', 'val1')} className="text-muted-foreground hover:text-foreground">
-                              {copiedField === 'val1' ? <CheckCircle2 className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
-                            </button>
-                          </div>
+                <div className="space-y-4 pt-2">
+                  <div className="hidden sm:grid sm:grid-cols-[100px_1fr_1.5fr] gap-4 text-xs font-medium text-muted-foreground px-2">
+                    <span>Type</span>
+                    <span>Nom</span>
+                    <span>Valeur</span>
+                  </div>
+                  
+                  {isApex ? (
+                    <div className="flex flex-col sm:grid sm:grid-cols-[100px_1fr_1.5fr] gap-2 sm:gap-4 bg-muted/10 sm:bg-transparent rounded-lg border sm:border-0 p-3 sm:p-0">
+                      <div className="flex flex-col sm:block">
+                        <span className="text-[10px] uppercase font-bold text-muted-foreground sm:hidden mb-1">Type</span>
+                        <div className="flex items-center justify-between px-3 py-2.5 bg-background sm:bg-muted/30 rounded-md sm:rounded-lg border">
+                          <span className="text-sm font-mono">A</span>
+                          <button onClick={() => copyToClipboard('A', 'type1')} className="text-muted-foreground hover:text-foreground shrink-0 ml-2">
+                            {copiedField === 'type1' ? <CheckCircle2 className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
+                          </button>
                         </div>
-                      ) : null}
+                      </div>
+                      <div className="flex flex-col sm:block">
+                        <span className="text-[10px] uppercase font-bold text-muted-foreground sm:hidden mb-1 mt-2 sm:mt-0">Nom</span>
+                        <div className="flex items-center justify-between px-3 py-2.5 bg-background sm:bg-muted/30 rounded-md sm:rounded-lg border overflow-hidden">
+                          <span className="text-sm font-mono truncate">@</span>
+                          <button onClick={() => copyToClipboard('@', 'name1')} className="text-muted-foreground hover:text-foreground shrink-0 ml-2">
+                            {copiedField === 'name1' ? <CheckCircle2 className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
+                          </button>
+                        </div>
+                      </div>
+                      <div className="flex flex-col sm:block">
+                        <span className="text-[10px] uppercase font-bold text-muted-foreground sm:hidden mb-1 mt-2 sm:mt-0">Valeur</span>
+                        <div className="flex items-center justify-between px-3 py-2.5 bg-background sm:bg-muted/30 rounded-md sm:rounded-lg border overflow-hidden">
+                          <span className="text-sm font-mono truncate">76.76.21.21</span>
+                          <button onClick={() => copyToClipboard('76.76.21.21', 'val1')} className="text-muted-foreground hover:text-foreground shrink-0 ml-2">
+                            {copiedField === 'val1' ? <CheckCircle2 className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ) : null}
 
                   {vercelData?.verification && vercelData.verification.length > 0 && (
-                    <div className="space-y-3">
+                    <div className="space-y-4">
                       <div className="bg-yellow-500/10 border border-yellow-500/20 p-3 rounded-lg flex gap-3">
                         <AlertCircle className="h-5 w-5 text-yellow-600 shrink-0" />
                         <div className="text-sm text-yellow-600 dark:text-yellow-500">
@@ -169,50 +176,66 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
                         </div>
                       </div>
                       {vercelData.verification.map((record: any, idx: number) => (
-                        <div key={`verification-${idx}`} className="grid grid-cols-[100px_1fr_1.5fr] gap-4">
-                          <div className="flex items-center justify-between px-3 py-2.5 bg-yellow-500/5 rounded-lg border border-yellow-500/20">
-                            <span className="text-sm font-mono text-yellow-700 dark:text-yellow-400">{record.type}</span>
-                            <button onClick={() => copyToClipboard(record.type, `vtype-${idx}`)} className="text-yellow-600/70 hover:text-yellow-600">
-                              {copiedField === `vtype-${idx}` ? <CheckCircle2 className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
-                            </button>
+                        <div key={`verification-${idx}`} className="flex flex-col sm:grid sm:grid-cols-[100px_1fr_1.5fr] gap-2 sm:gap-4 bg-yellow-500/5 sm:bg-transparent rounded-lg border border-yellow-500/20 sm:border-0 p-3 sm:p-0">
+                          <div className="flex flex-col sm:block">
+                            <span className="text-[10px] uppercase font-bold text-yellow-700/70 sm:hidden mb-1">Type</span>
+                            <div className="flex items-center justify-between px-3 py-2.5 bg-background/50 sm:bg-yellow-500/5 rounded-md sm:rounded-lg border sm:border-yellow-500/20">
+                              <span className="text-sm font-mono text-yellow-700 dark:text-yellow-400">{record.type}</span>
+                              <button onClick={() => copyToClipboard(record.type, `vtype-${idx}`)} className="text-yellow-600/70 hover:text-yellow-600 shrink-0 ml-2">
+                                {copiedField === `vtype-${idx}` ? <CheckCircle2 className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+                              </button>
+                            </div>
                           </div>
-                          <div className="flex items-center justify-between px-3 py-2.5 bg-yellow-500/5 rounded-lg border border-yellow-500/20 overflow-hidden">
-                            <span className="text-sm font-mono text-yellow-700 dark:text-yellow-400 truncate">{record.domain}</span>
-                            <button onClick={() => copyToClipboard(record.domain, `vname-${idx}`)} className="text-yellow-600/70 hover:text-yellow-600 shrink-0 ml-2">
-                              {copiedField === `vname-${idx}` ? <CheckCircle2 className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
-                            </button>
+                          <div className="flex flex-col sm:block">
+                            <span className="text-[10px] uppercase font-bold text-yellow-700/70 sm:hidden mb-1 mt-2 sm:mt-0">Nom</span>
+                            <div className="flex items-center justify-between px-3 py-2.5 bg-background/50 sm:bg-yellow-500/5 rounded-md sm:rounded-lg border sm:border-yellow-500/20 overflow-hidden">
+                              <span className="text-sm font-mono text-yellow-700 dark:text-yellow-400 truncate">{record.domain}</span>
+                              <button onClick={() => copyToClipboard(record.domain, `vname-${idx}`)} className="text-yellow-600/70 hover:text-yellow-600 shrink-0 ml-2">
+                                {copiedField === `vname-${idx}` ? <CheckCircle2 className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+                              </button>
+                            </div>
                           </div>
-                          <div className="flex items-center justify-between px-3 py-2.5 bg-yellow-500/5 rounded-lg border border-yellow-500/20 overflow-hidden">
-                            <span className="text-sm font-mono text-yellow-700 dark:text-yellow-400 truncate">{record.value}</span>
-                            <button onClick={() => copyToClipboard(record.value, `vval-${idx}`)} className="text-yellow-600/70 hover:text-yellow-600 shrink-0 ml-2">
-                              {copiedField === `vval-${idx}` ? <CheckCircle2 className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
-                            </button>
+                          <div className="flex flex-col sm:block">
+                            <span className="text-[10px] uppercase font-bold text-yellow-700/70 sm:hidden mb-1 mt-2 sm:mt-0">Valeur</span>
+                            <div className="flex items-center justify-between px-3 py-2.5 bg-background/50 sm:bg-yellow-500/5 rounded-md sm:rounded-lg border sm:border-yellow-500/20 overflow-hidden">
+                              <span className="text-sm font-mono text-yellow-700 dark:text-yellow-400 truncate">{record.value}</span>
+                              <button onClick={() => copyToClipboard(record.value, `vval-${idx}`)} className="text-yellow-600/70 hover:text-yellow-600 shrink-0 ml-2">
+                                {copiedField === `vval-${idx}` ? <CheckCircle2 className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+                              </button>
+                            </div>
                           </div>
                         </div>
                       ))}
                     </div>
                   )}
 
-                  <div className="grid grid-cols-[100px_1fr_1.5fr] gap-4">
-                    <div className="flex items-center justify-between px-3 py-2.5 bg-muted/30 rounded-lg border">
-                      <span className="text-sm font-mono">CNAME</span>
-                      <button onClick={() => copyToClipboard('CNAME', 'type2')} className="text-muted-foreground hover:text-foreground">
-                        {copiedField === 'type2' ? <CheckCircle2 className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
-                      </button>
+                  <div className="flex flex-col sm:grid sm:grid-cols-[100px_1fr_1.5fr] gap-2 sm:gap-4 bg-muted/10 sm:bg-transparent rounded-lg border sm:border-0 p-3 sm:p-0">
+                    <div className="flex flex-col sm:block">
+                      <span className="text-[10px] uppercase font-bold text-muted-foreground sm:hidden mb-1">Type</span>
+                      <div className="flex items-center justify-between px-3 py-2.5 bg-background sm:bg-muted/30 rounded-md sm:rounded-lg border">
+                        <span className="text-sm font-mono">CNAME</span>
+                        <button onClick={() => copyToClipboard('CNAME', 'type2')} className="text-muted-foreground hover:text-foreground shrink-0 ml-2">
+                          {copiedField === 'type2' ? <CheckCircle2 className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
+                        </button>
+                      </div>
                     </div>
-                    <div className="flex items-center justify-between px-3 py-2.5 bg-muted/30 rounded-lg border overflow-hidden">
-                      <span className="text-sm font-mono truncate">{isApex ? 'www' : domainRecord.domain.split('.')[0]}</span>
-                      <button onClick={() => copyToClipboard(isApex ? 'www' : domainRecord.domain.split('.')[0], 'name2')} className="text-muted-foreground hover:text-foreground shrink-0 ml-2">
-                        {copiedField === 'name2' ? <CheckCircle2 className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
-                      </button>
+                    <div className="flex flex-col sm:block">
+                      <span className="text-[10px] uppercase font-bold text-muted-foreground sm:hidden mb-1 mt-2 sm:mt-0">Nom</span>
+                      <div className="flex items-center justify-between px-3 py-2.5 bg-background sm:bg-muted/30 rounded-md sm:rounded-lg border overflow-hidden">
+                        <span className="text-sm font-mono truncate">{isApex ? 'www' : domainRecord.domain.split('.')[0]}</span>
+                        <button onClick={() => copyToClipboard(isApex ? 'www' : domainRecord.domain.split('.')[0], 'name2')} className="text-muted-foreground hover:text-foreground shrink-0 ml-2">
+                          {copiedField === 'name2' ? <CheckCircle2 className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
+                        </button>
+                      </div>
                     </div>
-                    <div className="flex items-center justify-between px-3 py-2.5 bg-muted/30 rounded-lg border overflow-hidden">
-                      <span className="text-sm font-mono truncate">cname.vercel-dns.com</span>
-                      <button onClick={() => copyToClipboard('cname.vercel-dns.com', 'val2')} className="text-muted-foreground hover:text-foreground shrink-0 ml-2">
-                        {copiedField === 'val2' ? <CheckCircle2 className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
-                      </button>
-                    </div>
-                  </div>
+                    <div className="flex flex-col sm:block">
+                      <span className="text-[10px] uppercase font-bold text-muted-foreground sm:hidden mb-1 mt-2 sm:mt-0">Valeur</span>
+                      <div className="flex items-center justify-between px-3 py-2.5 bg-background sm:bg-muted/30 rounded-md sm:rounded-lg border overflow-hidden">
+                        <span className="text-sm font-mono truncate">cname.vercel-dns.com</span>
+                        <button onClick={() => copyToClipboard('cname.vercel-dns.com', 'val2')} className="text-muted-foreground hover:text-foreground shrink-0 ml-2">
+                          {copiedField === 'val2' ? <CheckCircle2 className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
+                        </button>
+                      </div>
                     </div>
                   </div>
 
