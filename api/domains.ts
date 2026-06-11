@@ -45,27 +45,37 @@ export default async function handler(req: any, res: any) {
     } else if (method === "GET") {
       const domain = req.query.domain;
       
-      // We fetch the full list of domains for the project because the /domains/:domain
-      // endpoint doesn't always return the DNS `error` object (e.g. invalid_configuration).
-      const response = await fetch(VERCEL_API_URL, {
-        method: "GET",
-        headers: {
-          "Authorization": `Bearer ${VERCEL_TOKEN}`
-        }
-      });
-
-      const data = await response.json();
-      if (!response.ok) return res.status(response.status).json(data);
-      
-      if (domain) {
-        const domainData = data.domains?.find((d: any) => d.name === domain);
-        if (!domainData) {
-          return res.status(404).json({ error: "Domain not found" });
-        }
-        return res.status(200).json(domainData);
+      if (!domain) {
+        const response = await fetch(VERCEL_API_URL, {
+          method: "GET",
+          headers: { "Authorization": `Bearer ${VERCEL_TOKEN}` }
+        });
+        const data = await response.json();
+        if (!response.ok) return res.status(response.status).json(data);
+        return res.status(200).json(data);
       }
       
-      return res.status(200).json(data);
+      // 1. Get project domain details (for ownership verified status and verification TXT challenges)
+      const domainRes = await fetch(`${VERCEL_API_URL}/${domain}`, {
+        method: "GET",
+        headers: { "Authorization": `Bearer ${VERCEL_TOKEN}` }
+      });
+      const domainData = await domainRes.json();
+      
+      if (!domainRes.ok) return res.status(domainRes.status).json(domainData);
+
+      // 2. Get true DNS configuration status
+      const configRes = await fetch(`https://api.vercel.com/v6/domains/${domain}/config`, {
+        method: "GET",
+        headers: { "Authorization": `Bearer ${VERCEL_TOKEN}` }
+      });
+      const configData = await configRes.json();
+
+      // Merge data so frontend knows both ownership status and DNS config status
+      return res.status(200).json({
+        ...domainData,
+        misconfigured: configData.misconfigured
+      });
 
     } else {
       return res.status(405).json({ error: "Method not allowed" });
