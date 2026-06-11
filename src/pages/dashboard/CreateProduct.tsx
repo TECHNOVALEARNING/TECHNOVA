@@ -250,7 +250,8 @@ const CreateProduct = () => {
         productData.license_validity_days = licenseValidityDays ? parseInt(licenseValidityDays) : null;
       }
 
-      // Course content type removed      const { data: productResult, error } = await supabase
+      // Course content type removed
+      const { data: productResult, error } = await supabase
         .from("products")
         .insert(productData as any)
         .select("id")
