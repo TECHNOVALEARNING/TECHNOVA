@@ -50,7 +50,7 @@ async function aiReply(history: { role: "user" | "assistant"; content: string }[
     method: "POST",
     headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
     body: JSON.stringify({
-      model: "google/gemini-2.5-flash",
+      model: "gemini-2.5-flash",
       messages: [{ role: "system", content: SYSTEM_PROMPT }, ...history.slice(-10)],
       max_tokens: 600,
     }),

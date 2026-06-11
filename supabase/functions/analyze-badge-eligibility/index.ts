@@ -118,7 +118,7 @@ Réponds en JSON strict: {"score": <0-100>, "is_eligible": <bool>, "reasoning": 
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              model: "google/gemini-2.5-flash",
+              model: "gemini-2.5-flash",
               messages: [{ role: "user", content: prompt }],
               tools: [
                 {
