@@ -2,10 +2,12 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   ArrowRight, Check, ChevronDown, Shield, Headphones, Wallet,
-  GraduationCap, Sparkles, Star, Mail, MapPin, Phone, Lock, CreditCard, ThumbsUp, ChevronRight
+  GraduationCap, Sparkles, Star, Mail, MapPin, Phone, Lock, CreditCard, ThumbsUp, ChevronRight,
+  Store, ShoppingBag
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import siteLogo from "@/assets/logo.png";
+import { useAuth } from "@/contexts/AuthContext";
 
 /* ---------- Logo ---------- */
 export const Logo = ({ className = "" }: { className?: string }) => (
