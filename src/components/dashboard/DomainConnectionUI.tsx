@@ -159,6 +159,39 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
                     </div>
                   ) : null}
 
+                  {vercelData?.verification && vercelData.verification.length > 0 && (
+                    <div className="mb-4 space-y-3">
+                      <div className="bg-yellow-500/10 border border-yellow-500/20 p-3 rounded-lg flex gap-3">
+                        <AlertCircle className="h-5 w-5 text-yellow-600 shrink-0" />
+                        <div className="text-sm text-yellow-600 dark:text-yellow-500">
+                          <strong>Vérification requise :</strong> Ce domaine est lié à un autre compte. Ajoutez cet enregistrement TXT pour prouver que vous en êtes le propriétaire.
+                        </div>
+                      </div>
+                      {vercelData.verification.map((record: any, idx: number) => (
+                        <div key={`verification-${idx}`} className="grid grid-cols-3 gap-4">
+                          <div className="flex items-center justify-between px-3 py-2.5 bg-yellow-500/5 rounded-lg border border-yellow-500/20">
+                            <span className="text-sm font-mono text-yellow-700 dark:text-yellow-400">{record.type}</span>
+                            <button onClick={() => copyToClipboard(record.type, `vtype-${idx}`)} className="text-yellow-600/70 hover:text-yellow-600">
+                              {copiedField === `vtype-${idx}` ? <CheckCircle2 className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+                            </button>
+                          </div>
+                          <div className="flex items-center justify-between px-3 py-2.5 bg-yellow-500/5 rounded-lg border border-yellow-500/20 overflow-hidden">
+                            <span className="text-sm font-mono text-yellow-700 dark:text-yellow-400 truncate">{record.domain}</span>
+                            <button onClick={() => copyToClipboard(record.domain, `vname-${idx}`)} className="text-yellow-600/70 hover:text-yellow-600 shrink-0 ml-2">
+                              {copiedField === `vname-${idx}` ? <CheckCircle2 className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+                            </button>
+                          </div>
+                          <div className="flex items-center justify-between px-3 py-2.5 bg-yellow-500/5 rounded-lg border border-yellow-500/20 overflow-hidden">
+                            <span className="text-sm font-mono text-yellow-700 dark:text-yellow-400 truncate">{record.value}</span>
+                            <button onClick={() => copyToClipboard(record.value, `vval-${idx}`)} className="text-yellow-600/70 hover:text-yellow-600 shrink-0 ml-2">
+                              {copiedField === `vval-${idx}` ? <CheckCircle2 className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
                   <div className="grid grid-cols-3 gap-4">
                     <div className="flex items-center justify-between px-3 py-2.5 bg-muted/30 rounded-lg border">
                       <span className="text-sm font-mono">CNAME</span>
@@ -166,15 +199,15 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
                         {copiedField === 'type2' ? <CheckCircle2 className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
                       </button>
                     </div>
-                    <div className="flex items-center justify-between px-3 py-2.5 bg-muted/30 rounded-lg border">
-                      <span className="text-sm font-mono">{isApex ? 'www' : domainRecord.domain.split('.')[0]}</span>
-                      <button onClick={() => copyToClipboard(isApex ? 'www' : domainRecord.domain.split('.')[0], 'name2')} className="text-muted-foreground hover:text-foreground">
+                    <div className="flex items-center justify-between px-3 py-2.5 bg-muted/30 rounded-lg border overflow-hidden">
+                      <span className="text-sm font-mono truncate">{isApex ? 'www' : domainRecord.domain.split('.')[0]}</span>
+                      <button onClick={() => copyToClipboard(isApex ? 'www' : domainRecord.domain.split('.')[0], 'name2')} className="text-muted-foreground hover:text-foreground shrink-0 ml-2">
                         {copiedField === 'name2' ? <CheckCircle2 className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
                       </button>
                     </div>
-                    <div className="flex items-center justify-between px-3 py-2.5 bg-muted/30 rounded-lg border">
-                      <span className="text-sm font-mono text-ellipsis overflow-hidden">cname.vercel-dns.com</span>
-                      <button onClick={() => copyToClipboard('cname.vercel-dns.com', 'val2')} className="text-muted-foreground hover:text-foreground shrink-0">
+                    <div className="flex items-center justify-between px-3 py-2.5 bg-muted/30 rounded-lg border overflow-hidden">
+                      <span className="text-sm font-mono truncate">cname.vercel-dns.com</span>
+                      <button onClick={() => copyToClipboard('cname.vercel-dns.com', 'val2')} className="text-muted-foreground hover:text-foreground shrink-0 ml-2">
                         {copiedField === 'val2' ? <CheckCircle2 className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
                       </button>
                     </div>
