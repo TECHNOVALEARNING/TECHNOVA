@@ -1,4 +1,4 @@
-﻿import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -35,9 +35,12 @@ Deno.serve(async (req) => {
     const event = JSON.parse(body);
     console.log('Didit webhook event:', JSON.stringify(event));
 
-    const sessionId = event.session_id || event.id;
-    const status = event.status; // Approved, Declined, In Review, Not Started, etc.
-    const vendorData = event.vendor_data; // user_id we passed
+    // Support both direct object and payload wrapper (V2 standard)
+    const payload = event.payload?.session || event.payload || event;
+
+    const sessionId = payload.session_id || payload.id;
+    const status = payload.status; // Approved, Declined, In Review, Not Started, etc.
+    const vendorData = payload.vendor_data; // user_id we passed
 
     const admin = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
 
@@ -50,8 +53,8 @@ Deno.serve(async (req) => {
     } else if (status === 'In Review') newStatus = 'pending';
 
     // Extract identity fields if available
-    const idv = event.decision?.id_verification ?? event.id_verification ?? {};
-    const kyc = event.decision?.kyc ?? {};
+    const idv = payload.decision?.id_verification ?? payload.id_verification ?? {};
+    const kyc = payload.decision?.kyc ?? {};
     const documentNumber: string | null = idv.document_number || kyc.document_number || null;
     const fullName: string | null = idv.full_name || kyc.full_name || null;
     const country: string | null = idv.issuing_state || idv.nationality || kyc.country || null;

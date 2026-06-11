@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Shield, CheckCircle2, Clock, XCircle, Loader2, AlertTriangle, ExternalLink, ScanFace } from "lucide-react";
+import { Shield, CheckCircle2, Clock, XCircle, Loader2, AlertTriangle, ExternalLink, ScanFace, RefreshCw } from "lucide-react";
 
 interface Verification {
   id: string;
@@ -60,6 +60,25 @@ const DashboardAccountTab = () => {
       .subscribe();
     return () => { supabase.removeChannel(channel); };
   }, [user]);
+
+  const checkStatusManually = async () => {
+    try {
+      const { data, error } = await supabase.functions.invoke("didit-check-status", { body: {} });
+      if (error) throw error;
+      
+      if (data?.newStatus === "approved") {
+        toast.success("Votre identité a été vérifiée avec succès !");
+      } else if (data?.newStatus === "rejected") {
+        toast.error("Vérification refusée par Didit.");
+      } else {
+        toast.info("Vérification toujours en attente chez Didit.");
+      }
+      refetch();
+    } catch (err) {
+      console.error(err);
+      toast.error("Erreur lors de la vérification du statut.");
+    }
+  };
 
   // After Didit redirect callback, refresh verification (webhook may take a few seconds)
   useEffect(() => {
@@ -161,10 +180,16 @@ const DashboardAccountTab = () => {
               )}
 
               {verification?.status === "pending" && verification.didit_session_url && (
-                <Button variant="outline" onClick={() => window.location.href = verification.didit_session_url!} className="w-full gap-2">
-                  <ExternalLink className="h-4 w-4" />
-                  Reprendre la vérification
-                </Button>
+                <div className="space-y-3">
+                  <Button variant="outline" onClick={() => window.location.href = verification.didit_session_url!} className="w-full gap-2">
+                    <ExternalLink className="h-4 w-4" />
+                    Reprendre la vérification Didit
+                  </Button>
+                  <Button variant="secondary" onClick={checkStatusManually} className="w-full gap-2">
+                    <RefreshCw className="h-4 w-4" />
+                    Forcer l'actualisation du statut
+                  </Button>
+                </div>
               )}
 
               {canRestart && (
