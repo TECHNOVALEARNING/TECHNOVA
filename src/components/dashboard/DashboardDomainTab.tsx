@@ -3,13 +3,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Globe, Info, Trash2, Copy, CheckCircle2, Clock, AlertCircle, Loader2 } from "lucide-react";
+import { Globe, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useActiveStore } from "@/hooks/useActiveStore";
 import { toast } from "sonner";
+import DomainConnectionUI from "./DomainConnectionUI";
 
 interface CustomDomain {
   id: string;
@@ -19,18 +18,6 @@ interface CustomDomain {
   created_at: string;
 }
 
-const getDnsRecords = (domain: string) => {
-  const parts = domain.split('.');
-  const isSubdomain = parts.length > 2 && parts[0] !== 'www';
-  
-  if (isSubdomain) {
-    return [{ type: "CNAME", name: parts[0], value: "cname.vercel-dns.com" }];
-  }
-  return [
-    { type: "A", name: "@", value: "76.76.21.21" },
-    { type: "CNAME", name: "www", value: "cname.vercel-dns.com" }
-  ];
-};
 
 const DashboardDomainTab = () => {
   const { user } = useAuth();
@@ -40,7 +27,6 @@ const DashboardDomainTab = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
-  const [copiedField, setCopiedField] = useState<string | null>(null);
 
   useEffect(() => {
     if (activeStore?.id) fetchDomain();
@@ -126,17 +112,7 @@ const DashboardDomainTab = () => {
     }
   };
 
-  const copyToClipboard = (value: string, field: string) => {
-    navigator.clipboard.writeText(value);
-    setCopiedField(field);
-    setTimeout(() => setCopiedField(null), 2000);
-  };
 
-  const statusConfig: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline"; icon: typeof CheckCircle2 }> = {
-    active: { label: "Actif", variant: "default", icon: CheckCircle2 },
-    pending: { label: "En attente", variant: "secondary", icon: Clock },
-    failed: { label: "Échec", variant: "destructive", icon: AlertCircle },
-  };
 
   if (loading) {
     return (
@@ -160,75 +136,11 @@ const DashboardDomainTab = () => {
         </CardHeader>
         <CardContent className="space-y-6">
           {customDomain ? (
-            <>
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                <div className="flex-1">
-                  <Label className="text-sm text-muted-foreground">Nom de domaine</Label>
-                  <div className="flex items-center gap-3 mt-1.5">
-                    <div className="flex items-center gap-2 px-4 py-2.5 bg-muted/50 rounded-lg border flex-1">
-                      <span className="text-sm text-muted-foreground">https://</span>
-                      <span className="text-sm font-medium">{customDomain.domain}</span>
-                    </div>
-                    {(() => {
-                      const config = statusConfig[customDomain.status] || statusConfig.pending;
-                      const Icon = config.icon;
-                      return (
-                        <Badge variant={config.variant} className="gap-1 shrink-0">
-                          <Icon className="h-3 w-3" />
-                          {config.label}
-                        </Badge>
-                      );
-                    })()}
-                  </div>
-                </div>
-                <Button
-                  variant="destructive"
-                  onClick={handleDelete}
-                  disabled={deleting}
-                  className="shrink-0 mt-5 sm:mt-0"
-                >
-                  {deleting ? <Loader2 className="h-4 w-4 animate-spin mr-1.5" /> : <Trash2 className="h-4 w-4 mr-1.5" />}
-                  Supprimer
-                </Button>
-              </div>
-
-              <Alert className="bg-primary/5 border-primary/20">
-                <Info className="h-4 w-4 text-primary" />
-                <AlertDescription className="text-sm">
-                  Assurez-vous d'avoir correctement configuré les enregistrements DNS auprès de votre fournisseur de nom de domaine. La propagation DNS peut prendre jusqu'à une heure.
-                </AlertDescription>
-              </Alert>
-
-              <div className="space-y-3">
-                <div className="grid grid-cols-3 gap-4 text-sm font-medium text-muted-foreground px-2">
-                  <span>Type</span>
-                  <span>Noms</span>
-                  <span>Valeur</span>
-                </div>
-                {getDnsRecords(customDomain.domain).map((record, i) => (
-                  <div key={i} className="grid grid-cols-3 gap-4">
-                    <div className="flex items-center gap-2 px-3 py-2.5 bg-muted/30 rounded-lg border">
-                      <span className="text-sm font-mono">{record.type}</span>
-                      <button onClick={() => copyToClipboard(record.type, `type-${i}`)} className="text-muted-foreground hover:text-foreground transition-colors">
-                        {copiedField === `type-${i}` ? <CheckCircle2 className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
-                      </button>
-                    </div>
-                    <div className="flex items-center gap-2 px-3 py-2.5 bg-muted/30 rounded-lg border">
-                      <span className="text-sm font-mono">{record.name}</span>
-                      <button onClick={() => copyToClipboard(record.name, `name-${i}`)} className="text-muted-foreground hover:text-foreground transition-colors">
-                        {copiedField === `name-${i}` ? <CheckCircle2 className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
-                      </button>
-                    </div>
-                    <div className="flex items-center gap-2 px-3 py-2.5 bg-muted/30 rounded-lg border">
-                      <span className="text-sm font-mono">{record.value}</span>
-                      <button onClick={() => copyToClipboard(record.value, `value-${i}`)} className="text-muted-foreground hover:text-foreground transition-colors">
-                        {copiedField === `value-${i}` ? <CheckCircle2 className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </>
+            <DomainConnectionUI 
+              domainRecord={customDomain} 
+              onDelete={handleDelete} 
+              brandColor={activeStore?.brand_color || "#2563EB"} 
+            />
           ) : (
             <div className="space-y-4">
               <div>
