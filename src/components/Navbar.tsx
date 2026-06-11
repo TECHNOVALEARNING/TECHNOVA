@@ -102,7 +102,7 @@ const Navbar = () => {
       </div>
 
       {mobileOpen && (
-        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="lg:hidden border-t border-border bg-background px-6 py-4 space-y-2">
+        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="lg:hidden border-t border-border bg-background px-6 py-4 space-y-2 max-h-[calc(100vh-72px)] overflow-y-auto">
           <button onClick={() => setProductsOpen(!productsOpen)} className="flex items-center justify-between w-full py-2 text-sm font-medium text-foreground">
             Produits <ChevronDown className={`h-4 w-4 transition-transform ${productsOpen ? "rotate-180" : ""}`} />
           </button>
@@ -135,7 +135,7 @@ const Navbar = () => {
                 </Link>
                 <Link to="/register" onClick={() => setMobileOpen(false)} className="flex-1">
                   <Button className="w-full gap-2" size="sm">
-                    <Store className="h-4 w-4" /> Vendeur
+                    <Store className="h-4 w-4" /> Devenir vendeur
                   </Button>
                 </Link>
               </>

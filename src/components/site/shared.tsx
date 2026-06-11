@@ -23,6 +23,7 @@ import { Moon, Sun, Globe } from "lucide-react";
 
 export const Header = () => {
   const [open, setOpen] = useState(false);
+  const { user, signOut } = useAuth();
   const [theme, setTheme] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_theme") || "light") : "light");
   const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
 
@@ -93,9 +94,15 @@ export const Header = () => {
           <button onClick={() => setTheme(t => t === "light" ? "dark" : "light")} className="opacity-80 hover:opacity-100 transition-opacity">
             {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
           </button>
-          <Link to="/register" className="ml-2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-[#0071e3] text-white hover:bg-[#0071e3]/90 h-10 px-4 py-2">
-            Devenir vendeur
-          </Link>
+          {user ? (
+            <Link to="/dashboard" className="ml-2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-[#0071e3] text-white hover:bg-[#0071e3]/90 h-10 px-4 py-2">
+              Dashboard
+            </Link>
+          ) : (
+            <Link to="/register" className="ml-2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-[#0071e3] text-white hover:bg-[#0071e3]/90 h-10 px-4 py-2">
+              Devenir vendeur
+            </Link>
+          )}
         </div>
         <div className="lg:hidden flex items-center gap-3">
           <button onClick={() => setTheme(t => t === "light" ? "dark" : "light")} className="p-1 opacity-80 hover:opacity-100 transition-opacity">
@@ -111,7 +118,7 @@ export const Header = () => {
         </div>
       </div>
       {open && (
-        <div className="lg:hidden border-t border-[color:var(--border)]" style={{ background: "var(--card)" }}>
+        <div className="lg:hidden border-t border-[color:var(--border)] max-h-[calc(100vh-64px)] overflow-y-auto" style={{ background: "var(--card)" }}>
           <div className="px-4 py-4 flex flex-col gap-3">
             <div className="flex justify-end mb-2">
               <button onClick={() => setLang(l => l === "fr" ? "en" : "fr")} className="flex items-center gap-1.5 text-sm font-bold opacity-80 hover:opacity-100 transition-opacity">
@@ -120,8 +127,33 @@ export const Header = () => {
             </div>
             {links.map((l) => (
               <Link key={l.to} to={l.to} onClick={(e) => { setOpen(false); handleNavClick(e, l.to); }}
-                    className="py-2 font-medium">{l.label}</Link>
+                    className="py-3 font-medium border-b border-border/50 text-base">{l.label}</Link>
             ))}
+            
+            <div className="mt-2 flex flex-col gap-3 pb-4">
+              {user ? (
+                <>
+                  <Link to="/dashboard" onClick={() => setOpen(false)} className="w-full text-center inline-flex items-center justify-center rounded-md text-base font-medium bg-[#0071e3] text-white hover:bg-[#0071e3]/90 h-12 px-4 py-2">
+                    Dashboard
+                  </Link>
+                  <button onClick={() => { signOut(); setOpen(false); }} className="w-full text-center inline-flex items-center justify-center rounded-md text-base font-medium border border-[color:var(--border)] hover:bg-muted/50 h-12 px-4 py-2">
+                    Déconnexion
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link to="/register" onClick={() => setOpen(false)} className="w-full text-center inline-flex items-center justify-center rounded-md text-base font-medium bg-[#0071e3] text-white hover:bg-[#0071e3]/90 h-12 px-4 py-2">
+                    <Store className="h-5 w-5 mr-2" /> Devenir vendeur
+                  </Link>
+                  <Link to="/login" onClick={() => setOpen(false)} className="w-full text-center inline-flex items-center justify-center rounded-md text-base font-medium border border-[color:var(--border)] hover:bg-muted/50 h-12 px-4 py-2">
+                    Connexion
+                  </Link>
+                  <Link to="/buyer-login" onClick={() => setOpen(false)} className="w-full text-center inline-flex items-center justify-center rounded-md text-base font-medium border border-[color:var(--border)] hover:bg-muted/50 h-12 px-4 py-2 mt-2">
+                    <ShoppingBag className="h-5 w-5 mr-2" /> Mes achats
+                  </Link>
+                </>
+              )}
+            </div>
           </div>
         </div>
       )}
