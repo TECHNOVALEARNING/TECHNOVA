@@ -76,8 +76,8 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
       <div className="bg-muted/30 border rounded-xl p-6 sm:p-10 flex flex-col items-center justify-center relative overflow-hidden">
         <div className="flex items-center gap-6 sm:gap-10 relative z-10">
           {/* Logo Technova */}
-          <div className="h-16 w-16 sm:h-20 sm:w-20 bg-primary text-primary-foreground rounded-2xl flex items-center justify-center shadow-lg">
-            <span className="text-2xl sm:text-3xl font-bold">T</span>
+          <div className="h-16 w-16 sm:h-20 sm:w-20 bg-primary/5 border border-primary/20 rounded-2xl flex items-center justify-center shadow-lg p-2 overflow-hidden bg-white">
+            <img src="/favicon.png" alt="TECHNOVA" className="w-full h-full object-contain" />
           </div>
 
           <ArrowRightLeft className="h-6 w-6 sm:h-8 sm:w-8 text-muted-foreground opacity-50" />
@@ -87,10 +87,11 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
             {detecting ? (
               <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
             ) : provider ? (
-              <img src={provider.logoUrl} alt={provider.name} className="h-10 w-10 sm:h-12 sm:w-12 object-contain" />
+              <img src={provider.logoUrl} alt={provider.name} className="h-10 w-10 sm:h-12 sm:w-12 object-contain" onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextElementSibling?.classList.remove('hidden'); }} />
             ) : (
               <Globe className="h-8 w-8 text-muted-foreground" />
             )}
+            {provider && <Globe className="h-8 w-8 text-muted-foreground hidden" />}
           </div>
         </div>
 

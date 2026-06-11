@@ -9,61 +9,61 @@ export const DNS_PROVIDERS: DnsProvider[] = [
   {
     name: "Cloudflare",
     nsMatches: ["cloudflare.com"],
-    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/4/4b/Cloudflare_Logo.svg",
+    logoUrl: "https://logo.clearbit.com/cloudflare.com",
     loginUrl: "https://dash.cloudflare.com/login"
   },
   {
     name: "Hostinger",
     nsMatches: ["hostinger.com", "dns-parking.com"],
-    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/1/14/Hostinger_logo_with_name_2021.svg",
+    logoUrl: "https://logo.clearbit.com/hostinger.com",
     loginUrl: "https://hpanel.hostinger.com/login"
   },
   {
     name: "OVH",
     nsMatches: ["ovh.net", "ovh.com", "anycast.me"],
-    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/e/eb/OVHcloud_logo_2019.svg",
+    logoUrl: "https://logo.clearbit.com/ovh.com",
     loginUrl: "https://www.ovh.com/manager/"
   },
   {
     name: "GoDaddy",
     nsMatches: ["domaincontrol.com"],
-    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/a/ab/GoDaddy_logo.svg",
+    logoUrl: "https://logo.clearbit.com/godaddy.com",
     loginUrl: "https://sso.godaddy.com/"
   },
   {
     name: "Namecheap",
     nsMatches: ["namecheaphosting.com", "registrar-servers.com"],
-    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/0/05/Namecheap_logo.svg",
+    logoUrl: "https://logo.clearbit.com/namecheap.com",
     loginUrl: "https://www.namecheap.com/myaccount/login/"
   },
   {
     name: "Ionos / 1&1",
     nsMatches: ["ui-dns.com", "1and1-dns.com", "1and1-dns.de", "1and1-dns.org", "ionos.com"],
-    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/9/91/IONOS_logo.svg",
+    logoUrl: "https://logo.clearbit.com/ionos.com",
     loginUrl: "https://login.ionos.fr/"
   },
   {
     name: "LWS",
     nsMatches: ["lws-hosting.com", "lwsdns.com"],
-    logoUrl: "https://www.lws.fr/assets/images/logo-lws-n.svg",
+    logoUrl: "https://logo.clearbit.com/lws.fr",
     loginUrl: "https://panel.lws.fr/"
   },
   {
     name: "O2Switch",
     nsMatches: ["o2switch.net"],
-    logoUrl: "https://www.o2switch.fr/images/logo-o2switch.svg",
+    logoUrl: "https://logo.clearbit.com/o2switch.fr",
     loginUrl: "https://www.o2switch.fr/espace-client/"
   },
   {
     name: "HostGator",
     nsMatches: ["hostgator.com"],
-    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/5/5e/HostGator_logo.svg",
+    logoUrl: "https://logo.clearbit.com/hostgator.com",
     loginUrl: "https://portal.hostgator.com/"
   },
   {
     name: "Bluehost",
     nsMatches: ["bluehost.com"],
-    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/1/18/Bluehost_Logo.svg",
+    logoUrl: "https://logo.clearbit.com/bluehost.com",
     loginUrl: "https://my.bluehost.com/"
   }
 ];
