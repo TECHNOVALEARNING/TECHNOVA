@@ -61,24 +61,7 @@ const DashboardAccountTab = () => {
     return () => { supabase.removeChannel(channel); };
   }, [user]);
 
-  const checkStatusManually = async () => {
-    try {
-      const { data, error } = await supabase.functions.invoke("didit-check-status", { body: {} });
-      if (error) throw error;
-      
-      if (data?.newStatus === "approved") {
-        toast.success("Votre identité a été vérifiée avec succès !");
-      } else if (data?.newStatus === "rejected") {
-        toast.error("Vérification refusée par Didit.");
-      } else {
-        toast.info("Vérification toujours en attente chez Didit.");
-      }
-      refetch();
-    } catch (err) {
-      console.error(err);
-      toast.error("Erreur lors de la vérification du statut.");
-    }
-  };
+
 
   // After Didit redirect callback, refresh verification (webhook may take a few seconds)
   useEffect(() => {
@@ -122,7 +105,7 @@ const DashboardAccountTab = () => {
 
   const st = verification ? statusConfig[verification.status] : null;
   const StatusIcon = st?.icon;
-  const canRestart = !verification || verification.status === "rejected";
+  const canRestart = !verification || verification.status === "rejected" || verification.status === "pending";
 
   return (
     <div className="max-w-2xl space-y-8">
@@ -156,9 +139,7 @@ const DashboardAccountTab = () => {
                   </div>
                   {verification.status === "pending" && (
                     <p className="text-xs text-muted-foreground mt-2">
-                      {verification.didit_session_url
-                        ? "Vous pouvez reprendre la vérification si vous l'avez quittée."
-                        : "Vos documents sont en cours d'examen."}
+                      Vos documents sont en cours d'examen ou vous n'avez pas finalisé la vérification. Vous pouvez en redémarrer une nouvelle ci-dessous si nécessaire.
                     </p>
                   )}
                   {verification.status === "approved" && verification.full_name && (
@@ -179,18 +160,7 @@ const DashboardAccountTab = () => {
                 </div>
               )}
 
-              {verification?.status === "pending" && verification.didit_session_url && (
-                <div className="space-y-3">
-                  <Button variant="outline" onClick={() => window.location.href = verification.didit_session_url!} className="w-full gap-2">
-                    <ExternalLink className="h-4 w-4" />
-                    Reprendre la vérification Didit
-                  </Button>
-                  <Button variant="secondary" onClick={checkStatusManually} className="w-full gap-2">
-                    <RefreshCw className="h-4 w-4" />
-                    Forcer l'actualisation du statut
-                  </Button>
-                </div>
-              )}
+
 
               {canRestart && (
                 <div className="space-y-3">
