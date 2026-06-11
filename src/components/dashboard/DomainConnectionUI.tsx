@@ -111,7 +111,7 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
                {isFullyConfigured ? <CheckCircle2 className="h-4 w-4" /> : <Loader2 className="h-4 w-4 animate-spin" />}
             </div>
             <div className="flex-1 space-y-4">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
                   <h4 className="font-medium">Configuration des DNS</h4>
                   <p className="text-sm text-muted-foreground">
@@ -119,7 +119,7 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
                   </p>
                 </div>
                 {provider && !isFullyConfigured && (
-                  <Button variant="outline" size="sm" asChild>
+                  <Button variant="outline" size="sm" className="w-full sm:w-auto" asChild>
                     <a href={provider.loginUrl} target="_blank" rel="noopener noreferrer">
                       Se connecter à {provider.name}
                     </a>
@@ -129,37 +129,39 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
 
               {!isFullyConfigured && (
                 <div className="space-y-3 pt-2">
-                  <div className="grid grid-cols-3 gap-4 text-xs font-medium text-muted-foreground px-2">
-                    <span>Type</span>
-                    <span>Nom</span>
-                    <span>Valeur</span>
-                  </div>
-                  
-                  {isApex ? (
-                    <div className="grid grid-cols-3 gap-4">
-                      <div className="flex items-center justify-between px-3 py-2.5 bg-muted/30 rounded-lg border">
-                        <span className="text-sm font-mono">A</span>
-                        <button onClick={() => copyToClipboard('A', 'type1')} className="text-muted-foreground hover:text-foreground">
-                          {copiedField === 'type1' ? <CheckCircle2 className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
-                        </button>
+                  <div className="w-full overflow-x-auto pb-4 sm:pb-0 -mx-4 px-4 sm:mx-0 sm:px-0">
+                    <div className="min-w-[480px] space-y-3">
+                      <div className="grid grid-cols-[100px_1fr_1.5fr] gap-4 text-xs font-medium text-muted-foreground px-2">
+                        <span>Type</span>
+                        <span>Nom</span>
+                        <span>Valeur</span>
                       </div>
-                      <div className="flex items-center justify-between px-3 py-2.5 bg-muted/30 rounded-lg border">
-                        <span className="text-sm font-mono">@</span>
-                        <button onClick={() => copyToClipboard('@', 'name1')} className="text-muted-foreground hover:text-foreground">
-                          {copiedField === 'name1' ? <CheckCircle2 className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
-                        </button>
-                      </div>
-                      <div className="flex items-center justify-between px-3 py-2.5 bg-muted/30 rounded-lg border">
-                        <span className="text-sm font-mono">76.76.21.21</span>
-                        <button onClick={() => copyToClipboard('76.76.21.21', 'val1')} className="text-muted-foreground hover:text-foreground">
-                          {copiedField === 'val1' ? <CheckCircle2 className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
-                        </button>
-                      </div>
-                    </div>
-                  ) : null}
+                      
+                      {isApex ? (
+                        <div className="grid grid-cols-[100px_1fr_1.5fr] gap-4">
+                          <div className="flex items-center justify-between px-3 py-2.5 bg-muted/30 rounded-lg border">
+                            <span className="text-sm font-mono">A</span>
+                            <button onClick={() => copyToClipboard('A', 'type1')} className="text-muted-foreground hover:text-foreground">
+                              {copiedField === 'type1' ? <CheckCircle2 className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
+                            </button>
+                          </div>
+                          <div className="flex items-center justify-between px-3 py-2.5 bg-muted/30 rounded-lg border">
+                            <span className="text-sm font-mono">@</span>
+                            <button onClick={() => copyToClipboard('@', 'name1')} className="text-muted-foreground hover:text-foreground">
+                              {copiedField === 'name1' ? <CheckCircle2 className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
+                            </button>
+                          </div>
+                          <div className="flex items-center justify-between px-3 py-2.5 bg-muted/30 rounded-lg border">
+                            <span className="text-sm font-mono">76.76.21.21</span>
+                            <button onClick={() => copyToClipboard('76.76.21.21', 'val1')} className="text-muted-foreground hover:text-foreground">
+                              {copiedField === 'val1' ? <CheckCircle2 className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
+                            </button>
+                          </div>
+                        </div>
+                      ) : null}
 
                   {vercelData?.verification && vercelData.verification.length > 0 && (
-                    <div className="mb-4 space-y-3">
+                    <div className="space-y-3">
                       <div className="bg-yellow-500/10 border border-yellow-500/20 p-3 rounded-lg flex gap-3">
                         <AlertCircle className="h-5 w-5 text-yellow-600 shrink-0" />
                         <div className="text-sm text-yellow-600 dark:text-yellow-500">
@@ -167,7 +169,7 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
                         </div>
                       </div>
                       {vercelData.verification.map((record: any, idx: number) => (
-                        <div key={`verification-${idx}`} className="grid grid-cols-3 gap-4">
+                        <div key={`verification-${idx}`} className="grid grid-cols-[100px_1fr_1.5fr] gap-4">
                           <div className="flex items-center justify-between px-3 py-2.5 bg-yellow-500/5 rounded-lg border border-yellow-500/20">
                             <span className="text-sm font-mono text-yellow-700 dark:text-yellow-400">{record.type}</span>
                             <button onClick={() => copyToClipboard(record.type, `vtype-${idx}`)} className="text-yellow-600/70 hover:text-yellow-600">
@@ -191,7 +193,7 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
                     </div>
                   )}
 
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="grid grid-cols-[100px_1fr_1.5fr] gap-4">
                     <div className="flex items-center justify-between px-3 py-2.5 bg-muted/30 rounded-lg border">
                       <span className="text-sm font-mono">CNAME</span>
                       <button onClick={() => copyToClipboard('CNAME', 'type2')} className="text-muted-foreground hover:text-foreground">
@@ -209,6 +211,8 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
                       <button onClick={() => copyToClipboard('cname.vercel-dns.com', 'val2')} className="text-muted-foreground hover:text-foreground shrink-0 ml-2">
                         {copiedField === 'val2' ? <CheckCircle2 className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
                       </button>
+                    </div>
+                  </div>
                     </div>
                   </div>
 
