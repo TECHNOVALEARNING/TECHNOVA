@@ -245,7 +245,7 @@ const StorePage = ({ customSlug }: { customSlug?: string }) => {
       {/* ─── HEADER ─── */}
       <header className="sticky top-0 z-50 border-b border-gray-100 bg-white">
         <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 h-14">
-          <Link to={`/store/${slug}`} className="flex items-center gap-3">
+          <Link to={customSlug ? `/` : `/store/${slug}`} className="flex items-center gap-3">
             {logoUrl ? (
               <img src={logoUrl} alt={storeName} className="h-8 w-8 rounded-lg object-cover" />
             ) : (
@@ -395,7 +395,7 @@ const StorePage = ({ customSlug }: { customSlug?: string }) => {
                         transition={{ delay: i * 0.04 }}
                         className="group bg-white border border-gray-100 rounded-xl overflow-hidden hover:shadow-lg hover:shadow-gray-100/80 transition-all duration-300"
                       >
-                        <Link to={`/store/${slug}/${product.id}`}>
+                        <Link to={customSlug ? `/${product.id}` : `/store/${slug}/${product.id}`}>
                           <div className="relative aspect-square overflow-hidden bg-gray-50">
                             {product.thumbnail_url ? (
                               <img
@@ -419,7 +419,7 @@ const StorePage = ({ customSlug }: { customSlug?: string }) => {
                           </div>
                         </Link>
                         <div className="p-4 space-y-2">
-                          <Link to={`/store/${slug}/${product.id}`}>
+                          <Link to={customSlug ? `/${product.id}` : `/store/${slug}/${product.id}`}>
                             <h3 className="text-sm font-semibold text-gray-900 line-clamp-2 hover:opacity-70 transition-opacity">
                               {product.title}
                             </h3>
@@ -509,17 +509,17 @@ const StorePage = ({ customSlug }: { customSlug?: string }) => {
               <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-400">Légal</h3>
               <ul className="space-y-2.5">
                 <li>
-                  <Link to={`/store/${slug}/legal`} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+                  <Link to={customSlug ? `/legal` : `/store/${slug}/legal`} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
                     Mentions légales
                   </Link>
                 </li>
                 <li>
-                  <Link to={`/store/${slug}/terms`} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+                  <Link to={customSlug ? `/terms` : `/store/${slug}/terms`} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
                     Conditions générales
                   </Link>
                 </li>
                 <li>
-                  <Link to={`/store/${slug}/privacy`} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+                  <Link to={customSlug ? `/privacy` : `/store/${slug}/privacy`} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
                     Politique de confidentialité
                   </Link>
                 </li>
