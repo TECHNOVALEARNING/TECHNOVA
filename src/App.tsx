@@ -34,6 +34,7 @@ import StoreLegalPage from "./pages/StoreLegalPage";
 import PaymentCallback from "./pages/PaymentCallback";
 import CheckoutPage from "./pages/CheckoutPage";
 import BuyerLogin from "./pages/BuyerLogin";
+import BuyerOAuthCallback from "./pages/BuyerOAuthCallback";
 import BuyerDashboard from "./pages/BuyerDashboard";
 import BuyerOrderDetail from "./pages/BuyerOrderDetail";
 
@@ -124,6 +125,7 @@ const AppContent = () => {
           <Route path="/payment-callback" element={<PaymentCallback />} />
           <Route path="/checkout/:productId" element={<CheckoutPage />} />
           <Route path="/buyer-login" element={<BuyerLogin />} />
+          <Route path="/buyer-auth/callback" element={<BuyerOAuthCallback />} />
           <Route path="/mes-achats" element={<BuyerDashboard />} />
           <Route path="/mes-achats/:orderId" element={<BuyerOrderDetail />} />
           

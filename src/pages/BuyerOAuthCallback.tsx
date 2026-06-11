@@ -3,11 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import {
-  setBuyerSession,
-  setBuyerOtpVerified,
-  BUYER_OTP_VALIDITY_MS,
-} from "@/lib/buyerSession";
+
 
 const BuyerOAuthCallback = () => {
   const navigate = useNavigate();
@@ -35,25 +31,16 @@ const BuyerOAuthCallback = () => {
           return;
         }
 
-        setBuyerSession({
+        sessionStorage.setItem("buyer_session", JSON.stringify({
           email: data.customer.email,
           customerName: data.customer.name,
           customerId: data.customer.id,
+          orders: data.orders || [],
           authenticatedAt: Date.now(),
-        });
+        }));
 
-        const lastOtp = data.last_otp_verified_at
-          ? new Date(data.last_otp_verified_at).getTime()
-          : 0;
-
-        if (!lastOtp || Date.now() - lastOtp > BUYER_OTP_VALIDITY_MS) {
-          // Force OTP
-          navigate("/buyer-verify-otp", { replace: true });
-        } else {
-          setBuyerOtpVerified(lastOtp);
-          toast.success("Connexion réussie");
-          navigate("/mes-achats", { replace: true });
-        }
+        toast.success("Connexion réussie");
+        navigate("/mes-achats", { replace: true });
       } catch (e: any) {
         console.error(e);
         toast.error("Erreur de connexion");
