@@ -115,10 +115,15 @@ const BuyerLogin = () => {
                 onClick={async () => {
                   try {
                     setLoading(true);
+                    const isLocal = window.location.hostname.includes("localhost") || window.location.hostname.includes("127.0.0.1");
+                    const redirectUrl = isLocal 
+                      ? `${window.location.origin}/buyer-auth/callback`
+                      : "https://technovalearning.com/buyer-auth/callback";
+                      
                     const { error } = await supabase.auth.signInWithOAuth({
                       provider: "google",
                       options: {
-                        redirectTo: `${window.location.origin}/buyer-auth/callback`,
+                        redirectTo: redirectUrl,
                       },
                     });
                     if (error) throw error;

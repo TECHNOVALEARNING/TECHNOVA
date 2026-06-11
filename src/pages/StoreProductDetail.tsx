@@ -278,12 +278,12 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
             <Link to={customSlug ? `/` : `/store/${slug}`} className="hidden sm:block">
               <Button variant="ghost" size="sm" className="text-xs text-gray-600">Boutique</Button>
             </Link>
-            <Link to="/buyer-login">
+            <a href="https://technovalearning.com/buyer-login">
               <Button variant="outline" size="sm" className="text-xs gap-1.5 border-gray-200">
                 <ShoppingBag className="h-3.5 w-3.5" />
                 <span className="hidden sm:inline">Mes Achats</span>
               </Button>
-            </Link>
+            </a>
           </div>
         </div>
       </header>
