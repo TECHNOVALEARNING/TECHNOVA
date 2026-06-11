@@ -18,11 +18,14 @@ interface Product {
   collect_shipping_address: boolean | null;
 }
 
-const CheckoutPage = () => {
+const CheckoutPage = ({ customSlug }: { customSlug?: string }) => {
   const { productId } = useParams();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const storeSlugFromQuery = searchParams.get('store');
+  const storeSlug = customSlug || storeSlugFromQuery;
+  
   const navigate = useNavigate();
-  const [params] = useSearchParams();
-  const storeSlug = params.get("store");
   const [product, setProduct] = useState<Product | null>(null);
   const [brandColor, setBrandColor] = useState<string | undefined>();
   const [storeName, setStoreName] = useState<string>("TECHNOVA");

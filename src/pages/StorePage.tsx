@@ -71,8 +71,9 @@ const typeLabels: Record<string, string> = {
 
 type StoreTab = "products" | "about" | "contact" | "reviews";
 
-const StorePage = () => {
-  const { slug } = useParams();
+const StorePage = ({ customSlug }: { customSlug?: string }) => {
+  const { slug: urlSlug } = useParams();
+  const slug = customSlug || urlSlug;
   const [store, setStore] = useState<StoreInfo | null>(null);
   const [ownerProfile, setOwnerProfile] = useState<OwnerProfile | null>(null);
   const [products, setProducts] = useState<Product[]>([]);

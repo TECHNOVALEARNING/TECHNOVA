@@ -23,8 +23,9 @@ const META: Record<LegalKind, { title: string; icon: any; field: keyof StoreLega
   privacy: { title: "Politique de confidentialité", icon: Shield, field: "privacy_policy" },
 };
 
-const StoreLegalPage = ({ kind }: { kind: LegalKind }) => {
-  const { slug } = useParams();
+const StoreLegalPage = ({ kind, customSlug }: { kind: LegalKind, customSlug?: string }) => {
+  const { slug: urlSlug } = useParams();
+  const slug = customSlug || urlSlug;
   const [store, setStore] = useState<StoreLegal | null>(null);
   const [loading, setLoading] = useState(true);
 

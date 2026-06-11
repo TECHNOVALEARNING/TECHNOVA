@@ -90,8 +90,9 @@ const typeLabels: Record<string, string> = {
   bundle: "Bundle",
 };
 
-const StoreProductDetail = () => {
-  const { slug, productId } = useParams();
+const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
+  const { slug: urlSlug, productId } = useParams();
+  const slug = customSlug || urlSlug;
   const [profile, setProfile] = useState<Profile | null>(null);
   const [product, setProduct] = useState<Product | null>(null);
   const [storeInfo, setStoreInfo] = useState<StoreInfo | null>(null);

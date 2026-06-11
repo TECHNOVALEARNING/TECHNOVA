@@ -66,85 +66,112 @@ import DashboardSupport from "./pages/dashboard/DashboardSupport";
 import Onboarding from "./pages/Onboarding";
 import NotFound from "./pages/NotFound";
 import SupportChatbot from "./components/SupportChatbot";
+import { useCustomDomain, CustomDomainApp } from "./components/CustomDomainRouter";
+import { Loader2 } from "lucide-react";
 
 const queryClient = new QueryClient();
+
+const AppContent = () => {
+  const { isCustomDomain, storeSlug, loading } = useCustomDomain();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (isCustomDomain && storeSlug) {
+    return <CustomDomainApp storeSlug={storeSlug} />;
+  }
+
+  return (
+    <BrowserRouter>
+      <ScrollToTop />
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/search" element={<SearchPage />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/fichiers" element={<Fichiers />} />
+          <Route path="/licences" element={<LicencesPage />} />
+          
+          <Route path="/about" element={<About />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="/pricing" element={<Pricing />} />
+          <Route path="/partners" element={<Partners />} />
+          <Route path="/documentation" element={<Documentation />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/faq" element={<FAQ />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/legal" element={<LegalNotice />} />
+          <Route path="/refund-policy" element={<RefundPolicy />} />
+          <Route path="/store/:slug" element={<StorePage />} />
+          <Route path="/store/:slug/legal" element={<StoreLegalPage kind="legal" />} />
+          <Route path="/store/:slug/terms" element={<StoreLegalPage kind="terms" />} />
+          <Route path="/store/:slug/privacy" element={<StoreLegalPage kind="privacy" />} />
+          <Route path="/store/:slug/:productId" element={<StoreProductDetail />} />
+          <Route path="/payment-callback" element={<PaymentCallback />} />
+          <Route path="/checkout/:productId" element={<CheckoutPage />} />
+          
+          <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
+          <Route path="/dashboard" element={<ProtectedRoute><DashboardOverview /></ProtectedRoute>} />
+          <Route path="/dashboard/products" element={<ProtectedRoute><DashboardProducts /></ProtectedRoute>} />
+          <Route path="/dashboard/profile" element={<ProtectedRoute><DashboardSettings /></ProtectedRoute>} />
+          <Route path="/dashboard/settings" element={<ProtectedRoute><DashboardSettings /></ProtectedRoute>} />
+          <Route path="/dashboard/products/new" element={<ProtectedRoute><CreateProduct /></ProtectedRoute>} />
+          <Route path="/dashboard/products/:id/edit" element={<ProtectedRoute><EditProduct /></ProtectedRoute>} />
+          <Route path="/dashboard/sales" element={<ProtectedRoute><DashboardSales /></ProtectedRoute>} />
+          <Route path="/dashboard/clients" element={<ProtectedRoute><DashboardClients /></ProtectedRoute>} />
+          <Route path="/dashboard/licenses" element={<ProtectedRoute><DashboardLicenses /></ProtectedRoute>} />
+          <Route path="/dashboard/revenue" element={<ProtectedRoute><DashboardRevenue /></ProtectedRoute>} />
+          <Route path="/dashboard/analytics" element={<ProtectedRoute><DashboardAnalytics /></ProtectedRoute>} />
+          <Route path="/dashboard/marketing" element={<ProtectedRoute><DashboardMarketing /></ProtectedRoute>} />
+          <Route path="/dashboard/affiliation" element={<ProtectedRoute><DashboardAffiliation /></ProtectedRoute>} />
+          <Route path="/dashboard/automations" element={<ProtectedRoute><DashboardAutomations /></ProtectedRoute>} />
+          <Route path="/dashboard/withdrawals" element={<ProtectedRoute><DashboardWithdrawals /></ProtectedRoute>} />
+          <Route path="/dashboard/withdrawals/new" element={<ProtectedRoute><WithdrawNew /></ProtectedRoute>} />
+          <Route path="/dashboard/wallet" element={<ProtectedRoute><Wallet /></ProtectedRoute>} />
+          <Route path="/dashboard/webhooks" element={<ProtectedRoute><DashboardWebhooks /></ProtectedRoute>} />
+          <Route path="/dashboard/appearance" element={<ProtectedRoute><DashboardSettings /></ProtectedRoute>} />
+          <Route path="/dashboard/domain" element={<ProtectedRoute><DashboardSettings /></ProtectedRoute>} />
+          <Route path="/dashboard/pixels" element={<ProtectedRoute><DashboardSettings /></ProtectedRoute>} />
+          <Route path="/dashboard/account" element={<ProtectedRoute><DashboardSettings /></ProtectedRoute>} />
+          <Route path="/dashboard/telegram" element={<ProtectedRoute><DashboardSettings /></ProtectedRoute>} />
+          <Route path="/dashboard/stores" element={<ProtectedRoute><DashboardStores /></ProtectedRoute>} />
+          <Route path="/dashboard/support" element={<ProtectedRoute><DashboardSupport /></ProtectedRoute>} />
+          
+          <Route path="/admin" element={<ProtectedRoute requireAdmin><AdminDashboard /></ProtectedRoute>} />
+          <Route path="/admin/kyc" element={<ProtectedRoute requireAdmin><AdminKYC /></ProtectedRoute>} />
+          <Route path="/admin/users" element={<ProtectedRoute requireAdmin><AdminUsers /></ProtectedRoute>} />
+          <Route path="/admin/withdrawals" element={<ProtectedRoute requireAdmin><AdminWithdrawals /></ProtectedRoute>} />
+          <Route path="/admin/support" element={<ProtectedRoute requireAdmin><AdminSupport /></ProtectedRoute>} />
+          <Route path="/admin/moderation" element={<ProtectedRoute requireAdmin><AdminModeration /></ProtectedRoute>} />
+          
+          <Route path="/dashboard/badge" element={<ProtectedRoute><DashboardBadge /></ProtectedRoute>} />
+          <Route path="/admin/badges" element={<ProtectedRoute requireAdmin><AdminBadges /></ProtectedRoute>} />
+
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+        <SupportChatbot />
+      </AuthProvider>
+    </BrowserRouter>
+  );
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
-        <ScrollToTop />
-        <AuthProvider>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/search" element={<SearchPage />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/fichiers" element={<Fichiers />} />
-            <Route path="/licences" element={<LicencesPage />} />
-            
-            <Route path="/about" element={<About />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/blog/:slug" element={<BlogPost />} />
-            <Route path="/pricing" element={<Pricing />} />
-            <Route path="/partners" element={<Partners />} />
-            <Route path="/documentation" element={<Documentation />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/faq" element={<FAQ />} />
-            <Route path="/terms" element={<Terms />} />
-            <Route path="/privacy" element={<Privacy />} />
-            <Route path="/legal" element={<LegalNotice />} />
-            <Route path="/refund-policy" element={<RefundPolicy />} />
-            <Route path="/store/:slug" element={<StorePage />} />
-            <Route path="/store/:slug/legal" element={<StoreLegalPage kind="legal" />} />
-            <Route path="/store/:slug/terms" element={<StoreLegalPage kind="terms" />} />
-            <Route path="/store/:slug/privacy" element={<StoreLegalPage kind="privacy" />} />
-            <Route path="/store/:slug/:productId" element={<StoreProductDetail />} />
-            <Route path="/payment-callback" element={<PaymentCallback />} />
-            <Route path="/checkout/:productId" element={<CheckoutPage />} />
-            
-            <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
-            <Route path="/dashboard" element={<ProtectedRoute><DashboardOverview /></ProtectedRoute>} />
-            <Route path="/dashboard/products" element={<ProtectedRoute><DashboardProducts /></ProtectedRoute>} />
-            <Route path="/dashboard/profile" element={<ProtectedRoute><DashboardSettings /></ProtectedRoute>} />
-            <Route path="/dashboard/settings" element={<ProtectedRoute><DashboardSettings /></ProtectedRoute>} />
-            <Route path="/dashboard/products/new" element={<ProtectedRoute><CreateProduct /></ProtectedRoute>} />
-            <Route path="/dashboard/products/:id/edit" element={<ProtectedRoute><EditProduct /></ProtectedRoute>} />
-            <Route path="/dashboard/sales" element={<ProtectedRoute><DashboardSales /></ProtectedRoute>} />
-            <Route path="/dashboard/clients" element={<ProtectedRoute><DashboardClients /></ProtectedRoute>} />
-            <Route path="/dashboard/licenses" element={<ProtectedRoute><DashboardLicenses /></ProtectedRoute>} />
-            <Route path="/dashboard/revenue" element={<ProtectedRoute><DashboardRevenue /></ProtectedRoute>} />
-            <Route path="/dashboard/analytics" element={<ProtectedRoute><DashboardAnalytics /></ProtectedRoute>} />
-            <Route path="/dashboard/marketing" element={<ProtectedRoute><DashboardMarketing /></ProtectedRoute>} />
-            <Route path="/dashboard/affiliation" element={<ProtectedRoute><DashboardAffiliation /></ProtectedRoute>} />
-            <Route path="/dashboard/automations" element={<ProtectedRoute><DashboardAutomations /></ProtectedRoute>} />
-            <Route path="/dashboard/withdrawals" element={<ProtectedRoute><DashboardWithdrawals /></ProtectedRoute>} />
-            <Route path="/dashboard/withdrawals/new" element={<ProtectedRoute><WithdrawNew /></ProtectedRoute>} />
-            <Route path="/dashboard/wallet" element={<ProtectedRoute><Wallet /></ProtectedRoute>} />
-            <Route path="/dashboard/webhooks" element={<ProtectedRoute><DashboardWebhooks /></ProtectedRoute>} />
-            <Route path="/dashboard/appearance" element={<ProtectedRoute><DashboardSettings /></ProtectedRoute>} />
-            <Route path="/dashboard/admin-kyc" element={<ProtectedRoute><AdminKYC /></ProtectedRoute>} />
-            <Route path="/dashboard/admin-users" element={<ProtectedRoute><AdminUsers /></ProtectedRoute>} />
-            <Route path="/dashboard/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
-            <Route path="/dashboard/admin-withdrawals" element={<ProtectedRoute><AdminWithdrawals /></ProtectedRoute>} />
-            <Route path="/dashboard/admin-support" element={<ProtectedRoute><AdminSupport /></ProtectedRoute>} />
-            <Route path="/dashboard/admin-moderation" element={<ProtectedRoute><AdminModeration /></ProtectedRoute>} />
-            <Route path="/dashboard/stores" element={<ProtectedRoute><DashboardStores /></ProtectedRoute>} />
-            
-            <Route path="/dashboard/badge" element={<ProtectedRoute><DashboardBadge /></ProtectedRoute>} />
-            <Route path="/dashboard/admin-badges" element={<ProtectedRoute><AdminBadges /></ProtectedRoute>} />
-            
-            <Route path="/dashboard/support" element={<ProtectedRoute><DashboardSupport /></ProtectedRoute>} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          <SupportChatbot />
-        </AuthProvider>
-      </BrowserRouter>
+      <AppContent />
     </TooltipProvider>
   </QueryClientProvider>
 );

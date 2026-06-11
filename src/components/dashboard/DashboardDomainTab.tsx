@@ -19,10 +19,18 @@ interface CustomDomain {
   created_at: string;
 }
 
-const DNS_RECORDS = [
-  { type: "A", name: "@", value: "185.158.133.1" },
-  { type: "A", name: "www", value: "185.158.133.1" },
-];
+const getDnsRecords = (domain: string) => {
+  const parts = domain.split('.');
+  const isSubdomain = parts.length > 2 && parts[0] !== 'www';
+  
+  if (isSubdomain) {
+    return [{ type: "CNAME", name: parts[0], value: "cname.vercel-dns.com" }];
+  }
+  return [
+    { type: "A", name: "@", value: "76.76.21.21" },
+    { type: "CNAME", name: "www", value: "cname.vercel-dns.com" }
+  ];
+};
 
 const DashboardDomainTab = () => {
   const { user } = useAuth();
@@ -58,32 +66,64 @@ const DashboardDomainTab = () => {
       return;
     }
     setSaving(true);
-    const { data, error } = await supabase
-      .from("custom_domains")
-      .insert({ domain: cleanDomain, store_id: activeStore.id, owner_id: user.id })
-      .select()
-      .single();
-    if (error) {
-      toast.error(error.message.includes("duplicate") ? "Ce domaine est déjà utilisé" : "Erreur lors de l'ajout du domaine");
-    } else {
-      setCustomDomain(data as CustomDomain);
-      setDomain("");
-      toast.success("Domaine ajouté ! Configurez vos enregistrements DNS.");
+    
+    try {
+      // 1. Ajouter le domaine sur Vercel via l'API proxy
+      const vercelRes = await fetch("/api/domains", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ domain: cleanDomain })
+      });
+      
+      if (!vercelRes.ok) {
+        const errorData = await vercelRes.json();
+        toast.error(errorData.error?.message || "Erreur de connexion avec le serveur de domaine.");
+        setSaving(false);
+        return;
+      }
+
+      // 2. Sauvegarder dans notre base de données
+      const { data, error } = await supabase
+        .from("custom_domains")
+        .insert({ domain: cleanDomain, store_id: activeStore.id, owner_id: user.id, status: "pending" })
+        .select()
+        .single();
+        
+      if (error) {
+        toast.error(error.message.includes("duplicate") ? "Ce domaine est déjà utilisé" : "Erreur lors de l'ajout du domaine");
+      } else {
+        setCustomDomain(data as CustomDomain);
+        setDomain("");
+        toast.success("Domaine connecté ! Configurez vos enregistrements DNS.");
+      }
+    } catch (err) {
+      toast.error("Erreur serveur lors de la connexion du domaine.");
+    } finally {
+      setSaving(false);
     }
-    setSaving(false);
   };
 
   const handleDelete = async () => {
     if (!customDomain) return;
     setDeleting(true);
-    const { error } = await supabase.from("custom_domains").delete().eq("id", customDomain.id);
-    if (error) {
-      toast.error("Erreur lors de la suppression");
-    } else {
-      setCustomDomain(null);
-      toast.success("Domaine supprimé");
+    
+    try {
+      // 1. Supprimer de Vercel
+      await fetch(`/api/domains?domain=${customDomain.domain}`, { method: "DELETE" });
+      
+      // 2. Supprimer de Supabase
+      const { error } = await supabase.from("custom_domains").delete().eq("id", customDomain.id);
+      if (error) {
+        toast.error("Erreur lors de la suppression de la base de données");
+      } else {
+        setCustomDomain(null);
+        toast.success("Domaine supprimé avec succès");
+      }
+    } catch (err) {
+      toast.error("Erreur lors de la suppression du domaine");
+    } finally {
+      setDeleting(false);
     }
-    setDeleting(false);
   };
 
   const copyToClipboard = (value: string, field: string) => {
@@ -165,7 +205,7 @@ const DashboardDomainTab = () => {
                   <span>Noms</span>
                   <span>Valeur</span>
                 </div>
-                {DNS_RECORDS.map((record, i) => (
+                {getDnsRecords(customDomain.domain).map((record, i) => (
                   <div key={i} className="grid grid-cols-3 gap-4">
                     <div className="flex items-center gap-2 px-3 py-2.5 bg-muted/30 rounded-lg border">
                       <span className="text-sm font-mono">{record.type}</span>
