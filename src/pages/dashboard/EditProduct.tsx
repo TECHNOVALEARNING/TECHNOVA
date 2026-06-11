@@ -16,7 +16,7 @@ import {
   DropdownMenuSeparator, DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import RichTextEditor from "@/components/RichTextEditor";
-import CourseLessonsManager, { type Lesson } from "@/components/dashboard/CourseLessonsManager";
+import CourseLessonsManager, { type Module } from "@/components/dashboard/CourseLessonsManager";
 import ProductModerationDialog, { type ProductModerationReview } from "@/components/dashboard/ProductModerationDialog";
 
 import { supabase } from "@/integrations/supabase/client";
@@ -89,7 +89,7 @@ const EditProduct = () => {
 
   // Course
   const [courseContentType, setCourseContentType] = useState("mixed");
-  const [courseLessons, setCourseLessons] = useState<Lesson[]>([]);
+  const [courseModules, setCourseModules] = useState<Module[]>([]);
 
 
 
@@ -187,22 +187,30 @@ const EditProduct = () => {
       setSeoImageUrl((data as any).seo_image_url || null);
       setSeoImagePreview((data as any).seo_image_url || null);
 
-      // Fetch lessons for courses
+      // Fetch modules and lessons for courses
       if (data.type === "course") {
-        const { data: lessons } = await supabase
-          .from("course_lessons")
-          .select("*")
+        const { data: modulesData } = await supabase
+          .from("course_modules")
+          .select("*, course_lessons(*)")
           .eq("product_id", id)
           .order("position");
-        if (lessons) {
-          setCourseLessons(lessons.map((l) => ({
-            id: l.id,
-            title: l.title,
-            description: l.description || "",
-            video_url: l.video_url || "",
-            video_type: (l.video_type as any) || "youtube",
-            duration_minutes: l.duration_minutes || 0,
-            position: l.position,
+          
+        if (modulesData) {
+          setCourseModules(modulesData.map((m: any) => ({
+            id: m.id,
+            title: m.title,
+            position: m.position,
+            lessons: m.course_lessons ? m.course_lessons.sort((a: any, b: any) => a.position - b.position).map((l: any) => ({
+              id: l.id,
+              module_id: l.module_id,
+              title: l.title,
+              description: l.description || "",
+              content: l.content || "",
+              video_url: l.video_url || "",
+              resource_url: l.resource_url || "",
+              duration_minutes: l.duration_minutes || 0,
+              position: l.position,
+            })) : []
           })));
         }
       }
@@ -296,26 +304,50 @@ const EditProduct = () => {
       if (error) throw error;
 
       if (type === "course") {
-        await supabase.from("course_lessons").delete().eq("product_id", id);
-        if (courseLessons.length > 0) {
-          const lessonsToInsert = [];
-          for (const lesson of courseLessons) {
-            let videoUrl = lesson.video_url;
-            if (lesson.video_type === "upload" && lesson.file) {
-              const uploaded = await uploadFile(lesson.file, "course-videos");
-              if (uploaded) videoUrl = uploaded;
+        // Simple strategy: delete existing modules (which cascades to lessons) and re-insert them
+        await supabase.from("course_modules").delete().eq("product_id", id);
+        
+        if (courseModules.length > 0) {
+          for (const module of courseModules) {
+            // insert module
+            const { data: modData, error: modError } = await supabase
+              .from("course_modules")
+              .insert({
+                product_id: id,
+                title: module.title || `Module ${module.position + 1}`,
+                position: module.position
+              })
+              .select("id")
+              .single();
+
+            if (modError || !modData) continue;
+
+            // insert lessons for this module
+            if (module.lessons.length > 0) {
+              const lessonsToInsert = [];
+              for (const lesson of module.lessons) {
+                let resourceUrl = lesson.resource_url;
+                if (lesson.resourceFile) {
+                  const uploaded = await uploadFile(lesson.resourceFile, "course-resources");
+                  if (uploaded) resourceUrl = uploaded;
+                }
+                
+                lessonsToInsert.push({
+                  product_id: id,
+                  module_id: modData.id,
+                  title: lesson.title || `Leçon ${lesson.position + 1}`,
+                  description: lesson.description || null,
+                  content: lesson.content || null,
+                  video_url: lesson.video_url || null,
+                  resource_url: resourceUrl || null,
+                  duration_minutes: lesson.duration_minutes,
+                  position: lesson.position,
+                });
+              }
+
+              await supabase.from("course_lessons").insert(lessonsToInsert);
             }
-            lessonsToInsert.push({
-              product_id: id,
-              title: lesson.title || `Leçon ${lesson.position + 1}`,
-              description: lesson.description || null,
-              video_url: videoUrl || null,
-              video_type: lesson.video_type,
-              duration_minutes: lesson.duration_minutes,
-              position: lesson.position,
-            });
           }
-          await supabase.from("course_lessons").insert(lessonsToInsert);
         }
       }
 
@@ -711,8 +743,8 @@ const EditProduct = () => {
 
                   {type === "course" ? (
                     <CourseLessonsManager
-                      lessons={courseLessons}
-                      onLessonsChange={setCourseLessons}
+                      modules={courseModules}
+                      onModulesChange={setCourseModules}
                     />
                   ) : (
                     <>

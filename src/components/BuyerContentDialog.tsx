@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Download, Play, FileText, Key, Copy, Check, ExternalLink, BookOpen, Layers } from "lucide-react";
 import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 interface BuyerContentDialogProps {
   open: boolean;
@@ -19,12 +20,20 @@ interface BuyerContentDialogProps {
   customerId: string;
 }
 
+interface CourseModule {
+  id: string;
+  title: string;
+  position: number;
+  lessons: CourseLesson[];
+}
+
 interface CourseLesson {
   id: string;
   title: string;
   description: string | null;
+  content: string | null;
   video_url: string | null;
-  video_type: string | null;
+  resource_url: string | null;
   position: number;
   duration_minutes: number | null;
 }
@@ -46,7 +55,7 @@ interface BundleProduct {
 }
 
 const BuyerContentDialog = ({ open, onOpenChange, product, customerId }: BuyerContentDialogProps) => {
-  const [lessons, setLessons] = useState<CourseLesson[]>([]);
+  const [modules, setModules] = useState<CourseModule[]>([]);
   const [licenses, setLicenses] = useState<LicenseInfo[]>([]);
   const [bundleProducts, setBundleProducts] = useState<BundleProduct[]>([]);
   const [loading, setLoading] = useState(true);
@@ -62,13 +71,24 @@ const BuyerContentDialog = ({ open, onOpenChange, product, customerId }: BuyerCo
     setLoading(true);
     try {
       if (product.type === "course") {
-        const { data } = await supabase
-          .from("course_lessons")
-          .select("id, title, description, video_url, video_type, position, duration_minutes")
+        const { data: modulesData } = await supabase
+          .from("course_modules")
+          .select("*, course_lessons(*)")
           .eq("product_id", product.id)
           .order("position");
-        setLessons((data as CourseLesson[]) || []);
-        if (data && data.length > 0) setActiveLesson(data[0] as CourseLesson);
+          
+        if (modulesData) {
+          const formattedModules = modulesData.map((m: any) => ({
+            id: m.id,
+            title: m.title,
+            position: m.position,
+            lessons: m.course_lessons ? m.course_lessons.sort((a: any, b: any) => a.position - b.position) : []
+          }));
+          setModules(formattedModules);
+          if (formattedModules.length > 0 && formattedModules[0].lessons.length > 0) {
+            setActiveLesson(formattedModules[0].lessons[0]);
+          }
+        }
       } else if (product.type === "license") {
         const { data } = await supabase
           .from("licenses")
@@ -139,56 +159,97 @@ const BuyerContentDialog = ({ open, onOpenChange, product, customerId }: BuyerCo
   );
 
   const renderCourseContent = () => (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {activeLesson && (
-        <div className="space-y-3">
+        <div className="space-y-4">
           {activeLesson.video_url ? (
-            <div className="aspect-video rounded-lg overflow-hidden bg-secondary border border-border">
+            <div className="aspect-[16/9] rounded-xl overflow-hidden bg-black border border-border shadow-sm">
               <iframe
                 src={getEmbedUrl(activeLesson) || ""}
-                className="w-full h-full"
+                className="w-full h-full border-0"
                 allowFullScreen
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allow="autoplay; fullscreen; picture-in-picture"
               />
             </div>
           ) : (
-            <div className="aspect-video rounded-lg bg-secondary flex items-center justify-center border border-border">
-              <p className="text-muted-foreground text-sm">Pas de vidéo pour cette leçon</p>
+            <div className="aspect-[16/9] rounded-xl bg-secondary flex flex-col items-center justify-center border border-border">
+              <BookOpen className="h-10 w-10 text-muted-foreground/30 mb-2" />
+              <p className="text-muted-foreground text-sm font-medium">Contenu textuel uniquement</p>
             </div>
           )}
-          <div>
-            <h3 className="font-semibold text-foreground">{activeLesson.title}</h3>
-            {activeLesson.description && (
-              <p className="text-sm text-muted-foreground mt-1">{activeLesson.description}</p>
+          
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-background p-1">
+            <div>
+              <h3 className="text-xl font-bold text-foreground">{activeLesson.title}</h3>
+              {activeLesson.description && (
+                <p className="text-sm text-muted-foreground mt-1">{activeLesson.description}</p>
+              )}
+            </div>
+            {activeLesson.resource_url && (
+              <a href={activeLesson.resource_url} target="_blank" rel="noopener noreferrer" className="shrink-0">
+                <Button size="sm" variant="outline" className="gap-2 w-full sm:w-auto">
+                  <Download className="h-4 w-4" /> Fichier joint
+                </Button>
+              </a>
             )}
           </div>
+
+          {activeLesson.content && activeLesson.content !== "<p></p>" && (
+            <div 
+              className="prose prose-sm sm:prose-base dark:prose-invert max-w-none bg-secondary/20 p-5 rounded-xl border border-border/50"
+              dangerouslySetInnerHTML={{ __html: activeLesson.content }}
+            />
+          )}
         </div>
       )}
+      
       <Separator />
-      <div className="space-y-1 max-h-60 overflow-y-auto">
-        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">
-          {lessons.length} leçon{lessons.length > 1 ? "s" : ""}
-        </p>
-        {lessons.map((lesson, i) => (
-          <button
-            key={lesson.id}
-            onClick={() => setActiveLesson(lesson)}
-            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm transition-colors ${
-              activeLesson?.id === lesson.id
-                ? "bg-primary/10 text-primary font-medium"
-                : "hover:bg-secondary text-foreground"
-            }`}
-          >
-            <span className="flex-shrink-0 w-6 h-6 rounded-full bg-secondary flex items-center justify-center text-xs font-medium">
-              {i + 1}
-            </span>
-            <span className="flex-1 line-clamp-1">{lesson.title}</span>
-            {lesson.video_url && <Play className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />}
-            {lesson.duration_minutes && (
-              <span className="text-xs text-muted-foreground flex-shrink-0">{lesson.duration_minutes} min</span>
-            )}
-          </button>
-        ))}
+      
+      <div>
+        <h4 className="text-sm font-bold text-foreground mb-3 flex items-center gap-2">
+          <Layers className="h-4 w-4 text-primary" /> Programme de la formation
+        </h4>
+        <div className="space-y-1 max-h-[350px] overflow-y-auto pr-2 custom-scrollbar">
+          <Accordion type="multiple" defaultValue={modules.map(m => m.id)} className="w-full">
+            {modules.map((module) => (
+              <AccordionItem key={module.id} value={module.id} className="border-b-0 mb-3 bg-card rounded-xl border border-border shadow-sm overflow-hidden">
+                <AccordionTrigger className="hover:no-underline py-3 px-4 bg-secondary/40">
+                  <span className="font-semibold text-sm">{module.title}</span>
+                </AccordionTrigger>
+                <AccordionContent className="pt-2 pb-3 px-2">
+                  <div className="space-y-1">
+                    {module.lessons.map((lesson, i) => (
+                      <button
+                        key={lesson.id}
+                        onClick={() => setActiveLesson(lesson)}
+                        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm transition-all ${
+                          activeLesson?.id === lesson.id
+                            ? "bg-primary/10 text-primary font-medium shadow-sm ring-1 ring-primary/20"
+                            : "hover:bg-secondary/80 text-foreground"
+                        }`}
+                      >
+                        <span className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold border ${
+                          activeLesson?.id === lesson.id ? 'bg-primary text-primary-foreground border-primary' : 'bg-background border-border text-muted-foreground'
+                        }`}>
+                          {i + 1}
+                        </span>
+                        <span className="flex-1 line-clamp-1">{lesson.title}</span>
+                        {lesson.video_url && <Play className="h-3.5 w-3.5 text-primary/70 flex-shrink-0" />}
+                        {lesson.resource_url && <FileText className="h-3.5 w-3.5 text-primary/70 flex-shrink-0" />}
+                        {lesson.duration_minutes && (
+                          <span className="text-xs text-muted-foreground flex-shrink-0">{lesson.duration_minutes} min</span>
+                        )}
+                      </button>
+                    ))}
+                    {module.lessons.length === 0 && (
+                      <p className="text-xs text-muted-foreground text-center py-2">Aucune leçon dans ce module</p>
+                    )}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
       </div>
     </div>
   );

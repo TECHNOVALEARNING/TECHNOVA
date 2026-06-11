@@ -6,7 +6,7 @@ import {
   Upload, Image as ImageIcon, Package, Link as LinkIcon, FileAudio, FileVideo, Video as YoutubeIcon,
   Shield, Clock, Hash, Percent, Video, BookOpen, Download, Loader2, Sparkles, File as PdfIcon
 } from "lucide-react";
-import CourseLessonsManager, { type Lesson } from "@/components/dashboard/CourseLessonsManager";
+import CourseLessonsManager, { type Module } from "@/components/dashboard/CourseLessonsManager";
 import RichTextEditor from "@/components/RichTextEditor";
 import ProductModerationDialog, { type ProductModerationReview } from "@/components/dashboard/ProductModerationDialog";
 import { Button } from "@/components/ui/button";
@@ -115,8 +115,8 @@ const CreateProduct = () => {
   const [fileFormat, setFileFormat] = useState<"audio" | "image" | "pdf" | "video" | null>(null);
   const [videoUrl, setVideoUrl] = useState("");
 
-  // Course lessons
-  const [courseLessons, setCourseLessons] = useState<Lesson[]>([]);
+  // Course modules
+  const [courseModules, setCourseModules] = useState<Module[]>([]);
 
 
   // Moderation
@@ -209,8 +209,8 @@ const CreateProduct = () => {
         return;
       }
     }
-    if (selectedType === "course" && courseLessons.length === 0) {
-      toast.error("Veuillez ajouter au moins une leçon à votre formation");
+    if (selectedType === "course" && courseModules.length === 0) {
+      toast.error("Veuillez ajouter au moins un module à votre formation");
       return;
     }
 
@@ -268,27 +268,52 @@ const CreateProduct = () => {
 
       createdProductId = productResult.id;
 
-      if (selectedType === "course" && courseLessons.length > 0) {
-        const lessonsToInsert = [];
-        for (const lesson of courseLessons) {
-          let videoUrl = lesson.video_url;
-          if (lesson.video_type === "upload" && lesson.file) {
-            const uploaded = await uploadFile(lesson.file, "course-videos");
-            if (uploaded) videoUrl = uploaded;
+      if (selectedType === "course" && courseModules.length > 0) {
+        for (const module of courseModules) {
+          // insert module
+          const { data: modData, error: modError } = await supabase
+            .from("course_modules")
+            .insert({
+              product_id: productResult.id,
+              title: module.title || `Module ${module.position + 1}`,
+              position: module.position
+            })
+            .select("id")
+            .single();
+
+          if (modError || !modData) {
+            toast.error("Erreur lors de la création d'un module: " + (modError?.message || ""));
+            continue;
           }
-          lessonsToInsert.push({
-            product_id: productResult.id,
-            title: lesson.title || `Leçon ${lesson.position + 1}`,
-            description: lesson.description || null,
-            video_url: videoUrl || null,
-            video_type: lesson.video_type,
-            duration_minutes: lesson.duration_minutes,
-            position: lesson.position,
-          });
-        }
-        const { error: lessonsError } = await supabase.from("course_lessons").insert(lessonsToInsert);
-        if (lessonsError) {
-          toast.error("Produit créé mais erreur sur les leçons: " + lessonsError.message);
+
+          // insert lessons for this module
+          if (module.lessons.length > 0) {
+            const lessonsToInsert = [];
+            for (const lesson of module.lessons) {
+              let resourceUrl = lesson.resource_url;
+              if (lesson.resourceFile) {
+                const uploaded = await uploadFile(lesson.resourceFile, "course-resources");
+                if (uploaded) resourceUrl = uploaded;
+              }
+              
+              lessonsToInsert.push({
+                product_id: productResult.id,
+                module_id: modData.id,
+                title: lesson.title || `Leçon ${lesson.position + 1}`,
+                description: lesson.description || null,
+                content: lesson.content || null,
+                video_url: lesson.video_url || null,
+                resource_url: resourceUrl || null,
+                duration_minutes: lesson.duration_minutes,
+                position: lesson.position,
+              });
+            }
+
+            const { error: lessonsError } = await supabase.from("course_lessons").insert(lessonsToInsert);
+            if (lessonsError) {
+              toast.error("Erreur sur les leçons d'un module: " + lessonsError.message);
+            }
+          }
         }
       }
 
@@ -473,9 +498,9 @@ const CreateProduct = () => {
               </div>
             </div>
 
-            <CourseLessonsManager
-              lessons={courseLessons}
-              onLessonsChange={setCourseLessons}
+            <CourseLessonsManager 
+              modules={courseModules} 
+              onModulesChange={setCourseModules} 
             />
 
             <div className="mt-4 p-3 rounded-lg bg-blue-50 dark:bg-blue-900/10 border border-blue-200 dark:border-blue-800">
