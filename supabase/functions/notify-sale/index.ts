@@ -40,10 +40,10 @@ Deno.serve(async (req) => {
       .single();
 
     const sellerName = profile?.display_name || "Vendeur";
-    const storeName = profile?.display_name || "Dukaio";
+    const storeName = profile?.display_name || "Technova";
     const isFree = amount === 0;
-    const logoUrl = "https://nexozjpjbhqfjplrogvz.supabase.co/storage/v1/object/public/store-assets/brand/dukaio-logo.png";
-    const logoHtml = `<img src="${logoUrl}" alt="Dukaio" width="48" height="48" style="display:block;margin:0 auto 12px;border-radius:10px;" />`;
+    const logoUrl = "https://nexozjpjbhqfjplrogvz.supabase.co/storage/v1/object/public/store-assets/brand/technova-logo.png";
+    const logoHtml = `<img src="${logoUrl}" alt="Technova" width="48" height="48" style="display:block;margin:0 auto 12px;border-radius:10px;" />`;
 
     const hasPromo = !!promo_code;
     const promoInfoHtml = hasPromo ? `
@@ -89,7 +89,7 @@ Deno.serve(async (req) => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "Dukaio <noreply@mail.dukaio.com>",
+        from: "Technova <noreply@mail.technova.com>",
         to: [user.email],
         subject: `🎉 Nouvelle vente : ${product_title}`,
         html: sellerEmailHtml,
@@ -140,7 +140,7 @@ Deno.serve(async (req) => {
             ` : ''}
 
             ${(() => {
-              const siteUrl = "https://dukaio.com";
+              const siteUrl = "https://technova.com";
               if (download_url) {
                 return `
                 <div style="text-align: center; margin: 24px 0;">
@@ -171,7 +171,7 @@ Deno.serve(async (req) => {
           Authorization: `Bearer ${RESEND_API_KEY}`,
         },
         body: JSON.stringify({
-          from: `${storeName} <noreply@mail.dukaio.com>`,
+          from: `${storeName} <noreply@mail.technova.com>`,
           to: [customer_email],
           subject: `Merci pour votre achat chez ${storeName} ! 🎉`,
           html: customerEmailHtml,

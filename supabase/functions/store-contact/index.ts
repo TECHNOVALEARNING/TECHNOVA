@@ -52,12 +52,12 @@ serve(async (req) => {
             Authorization: `Bearer ${RESEND_API_KEY}`,
           },
           body: JSON.stringify({
-            from: "Dukaio <noreply@mail.dukaio.com>",
+            from: "Technova <noreply@mail.technova.com>",
             to: [recipient_email],
             subject: `Réponse de ${ownerName} à votre message`,
             html: `
               <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
-                <div style="text-align:center;margin-bottom:16px;"><img src="https://nexozjpjbhqfjplrogvz.supabase.co/storage/v1/object/public/store-assets/brand/dukaio-logo.png" alt="Dukaio" width="48" height="48" style="border-radius:10px;" /></div>
+                <div style="text-align:center;margin-bottom:16px;"><img src="https://nexozjpjbhqfjplrogvz.supabase.co/storage/v1/object/public/store-assets/brand/technova-logo.png" alt="Technova" width="48" height="48" style="border-radius:10px;" /></div>
                 <h2 style="color:#1a1a1a;">${ownerName} vous a répondu</h2>
                 <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:12px;padding:20px;margin:16px 0;">
                   <p style="margin:0;color:#374151;white-space:pre-wrap;">${reply_message.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>")}</p>
@@ -66,7 +66,7 @@ serve(async (req) => {
                   <p style="margin:0 0 8px;color:#6b7280;font-size:12px;font-weight:600;">Votre message original :</p>
                   <p style="margin:0;color:#9ca3af;font-size:13px;">${(original_message || "").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>")}</p>
                 </div>
-                <p style="color:#6b7280;font-size:12px;margin-top:16px;">Cet email a été envoyé via Dukaio</p>
+                <p style="color:#6b7280;font-size:12px;margin-top:16px;">Cet email a été envoyé via Technova</p>
               </div>
             `,
             reply_to: ownerEmail || undefined,
@@ -117,12 +117,12 @@ serve(async (req) => {
           Authorization: `Bearer ${RESEND_API_KEY}`,
         },
         body: JSON.stringify({
-          from: "Dukaio <noreply@mail.dukaio.com>",
+          from: "Technova <noreply@mail.technova.com>",
           to: [ownerEmail],
           subject: `📩 Nouveau message de ${sender_name}`,
           html: `
             <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
-              <div style="text-align:center;margin-bottom:16px;"><img src="https://nexozjpjbhqfjplrogvz.supabase.co/storage/v1/object/public/store-assets/brand/dukaio-logo.png" alt="Dukaio" width="48" height="48" style="border-radius:10px;" /></div>
+              <div style="text-align:center;margin-bottom:16px;"><img src="https://nexozjpjbhqfjplrogvz.supabase.co/storage/v1/object/public/store-assets/brand/technova-logo.png" alt="Technova" width="48" height="48" style="border-radius:10px;" /></div>
               <h2 style="color:#1a1a1a;">Nouveau message client</h2>
               <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;padding:20px;margin:16px 0;">
                 <p style="margin:0 0 8px;"><strong>Nom :</strong> ${sender_name}</p>
@@ -131,7 +131,7 @@ serve(async (req) => {
                 <hr style="border:none;border-top:1px solid #e5e7eb;margin:12px 0;">
                 <p style="margin:0;color:#374151;">${message.replace(/\n/g, "<br>")}</p>
               </div>
-              <p style="color:#6b7280;font-size:13px;">Vous pouvez répondre directement depuis votre tableau de bord Dukaio</p>
+              <p style="color:#6b7280;font-size:13px;">Vous pouvez répondre directement depuis votre tableau de bord Technova</p>
             </div>
           `,
           reply_to: sender_email,

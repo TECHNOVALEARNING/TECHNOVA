@@ -52,12 +52,12 @@ Deno.serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "Dukaio <noreply@mail.ecom-revolt.com>",
+        from: "Technova <noreply@mail.ecom-revolt.com>",
         to: [user.email],
         subject: `Réinitialisation PIN Wallet : ${code}`,
         html: `
           <div style="font-family:-apple-system,Arial,sans-serif;max-width:480px;margin:0 auto;padding:40px 20px;background:#fff;">
-            <h1 style="margin:0 0 24px;font-size:26px;background:linear-gradient(135deg,#5b1ea3,#d4a017);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;">Dukaio</h1>
+            <h1 style="margin:0 0 24px;font-size:26px;background:linear-gradient(135deg,#5b1ea3,#d4a017);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;">Technova</h1>
             <h2 style="color:#1a1a1a;font-size:19px;margin:0 0 12px;">Réinitialisation de votre PIN Wallet</h2>
             <p style="color:#555;font-size:15px;line-height:1.6;">Vous avez demandé à réinitialiser votre PIN à 4 chiffres. Voici votre code de vérification :</p>
             <div style="text-align:center;margin:28px 0;">

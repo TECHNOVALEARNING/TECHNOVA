@@ -10,16 +10,16 @@ const ADMIN_EMAIL = "isidoreagonan@gmail.com";
 const MAX_RUNTIME_MS = 55_000;
 const MIN_REMAINING_MS = 5_000;
 
-const SYSTEM_PROMPT = `Tu es l'assistant officiel d'Dukaio sur Telegram.
+const SYSTEM_PROMPT = `Tu es l'assistant officiel d'Technova sur Telegram.
 
-Dukaio est une plateforme africaine permettant à des créateurs de vendre des produits numériques (fichiers, formations, licences) via leur boutique en ligne. Paiements via Mobile Money (MTN, Orange, Moov, Wave) et carte. Commission plateforme : 10%. Retrait minimum : 100 FCFA. Délai de maturité des fonds : 72h.
+Technova est une plateforme africaine permettant à des créateurs de vendre des produits numériques (fichiers, formations, licences) via leur boutique en ligne. Paiements via Mobile Money (MTN, Orange, Moov, Wave) et carte. Commission plateforme : 10%. Retrait minimum : 100 FCFA. Délai de maturité des fonds : 72h.
 
 RÈGLES :
 - Réponds toujours en français, ton chaleureux et professionnel
 - Sois concis : 2 à 5 phrases maximum (Telegram = court)
 - Tu peux utiliser du HTML simple : <b>gras</b>, <i>italique</i>, <code>code</code>
 - Pour les vendeurs liés (commande /link), tu peux les guider sur leur dashboard
-- Si un utilisateur demande à parler à un humain, dis-lui de se rendre sur https://dukaio.com/dashboard/support et termine ta réponse par [ESCALATE]
+- Si un utilisateur demande à parler à un humain, dis-lui de se rendre sur https://technova.com/dashboard/support et termine ta réponse par [ESCALATE]
 - Ne révèle jamais d'infos techniques internes (clés API, noms de tables, etc.)
 - Si tu ne sais pas, dis-le honnêtement`;
 
@@ -85,7 +85,7 @@ async function handleCommand(ctx: CommandCtx): Promise<boolean> {
     case "/start":
       await send(
         chatId,
-        `👋 <b>Bienvenue sur Dukaio !</b>\n\nJe suis l'assistant IA officiel.\n\n🔗 <b>Lier ton compte vendeur</b> : connecte-toi sur <a href="https://dukaio.com/dashboard/settings">ton dashboard</a>, génère un code, puis envoie-moi :\n<code>/link TON_CODE</code>\n\n💬 Tu peux aussi me poser n'importe quelle question sur la plateforme.\n\nTape /help pour voir les commandes.`,
+        `👋 <b>Bienvenue sur Technova !</b>\n\nJe suis l'assistant IA officiel.\n\n🔗 <b>Lier ton compte vendeur</b> : connecte-toi sur <a href="https://technova.com/dashboard/settings">ton dashboard</a>, génère un code, puis envoie-moi :\n<code>/link TON_CODE</code>\n\n💬 Tu peux aussi me poser n'importe quelle question sur la plateforme.\n\nTape /help pour voir les commandes.`,
       );
       return true;
 
@@ -99,7 +99,7 @@ async function handleCommand(ctx: CommandCtx): Promise<boolean> {
     case "/link": {
       const token = args[0]?.toUpperCase();
       if (!token) {
-        await send(chatId, "❌ Usage : <code>/link CODE</code>\n\nGénère un code depuis ton dashboard Dukaio → Réglages → Telegram.");
+        await send(chatId, "❌ Usage : <code>/link CODE</code>\n\nGénère un code depuis ton dashboard Technova → Réglages → Telegram.");
         return true;
       }
       const { data: tk } = await supabase
@@ -178,7 +178,7 @@ async function handleCommand(ctx: CommandCtx): Promise<boolean> {
       const total = paid.reduce((s: number, o: any) => s + Number(o.amount ?? 0), 0);
       await send(
         chatId,
-        `📊 <b>Tes 30 derniers jours</b>\n\n💰 Revenus : <b>${total.toLocaleString("fr-FR")} FCFA</b>\n🛒 Ventes : <b>${paid.length}</b>\n📦 Commandes totales : <b>${orders?.length ?? 0}</b>\n\n👉 <a href="https://dukaio.com/dashboard">Ouvrir le dashboard</a>`,
+        `📊 <b>Tes 30 derniers jours</b>\n\n💰 Revenus : <b>${total.toLocaleString("fr-FR")} FCFA</b>\n🛒 Ventes : <b>${paid.length}</b>\n📦 Commandes totales : <b>${orders?.length ?? 0}</b>\n\n👉 <a href="https://technova.com/dashboard">Ouvrir le dashboard</a>`,
       );
       return true;
     }

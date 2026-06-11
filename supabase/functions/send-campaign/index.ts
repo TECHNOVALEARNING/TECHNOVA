@@ -59,8 +59,8 @@ serve(async (req) => {
       .eq("id", user.id)
       .single();
 
-    const senderName = profile?.display_name || "Dukaio";
-    const logoUrl = "https://nexozjpjbhqfjplrogvz.supabase.co/storage/v1/object/public/store-assets/brand/dukaio-logo.png";
+    const senderName = profile?.display_name || "Technova";
+    const logoUrl = "https://nexozjpjbhqfjplrogvz.supabase.co/storage/v1/object/public/store-assets/brand/technova-logo.png";
 
     let query = supabase
       .from("orders")
@@ -93,7 +93,7 @@ serve(async (req) => {
       const html = `
         <div style="font-family:Arial,sans-serif;max-width:620px;margin:0 auto;padding:24px;background:#f8fafc;">
           <div style="background:#111827;border-radius:20px;padding:28px 24px;text-align:center;">
-            <img src="${logoUrl}" alt="Dukaio" width="52" height="52" style="display:block;margin:0 auto 14px;border-radius:14px;" />
+            <img src="${logoUrl}" alt="Technova" width="52" height="52" style="display:block;margin:0 auto 14px;border-radius:14px;" />
             <p style="margin:0 0 6px;color:#cbd5e1;font-size:12px;letter-spacing:.08em;text-transform:uppercase;">Campagne personnalisée</p>
             <h1 style="margin:0;color:#ffffff;font-size:28px;line-height:1.2;">${escapeHtml(campaign.subject)}</h1>
           </div>
@@ -101,7 +101,7 @@ serve(async (req) => {
             <p style="margin:0 0 16px;color:#111827;font-size:16px;">Bonjour <strong>${escapeHtml(customerName)}</strong>,</p>
             <div style="color:#374151;font-size:15px;line-height:1.7;">${campaign.content}</div>
             <div style="margin-top:24px;padding-top:20px;border-top:1px solid #e5e7eb;">
-              <p style="margin:0;color:#6b7280;font-size:13px;">Message envoyé par <strong>${escapeHtml(senderName)}</strong> depuis sa boutique Dukaio.</p>
+              <p style="margin:0;color:#6b7280;font-size:13px;">Message envoyé par <strong>${escapeHtml(senderName)}</strong> depuis sa boutique Technova.</p>
             </div>
           </div>
         </div>
@@ -114,7 +114,7 @@ serve(async (req) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: `${senderName} <noreply@mail.dukaio.com>`,
+          from: `${senderName} <noreply@mail.technova.com>`,
           to: [customer.email],
           subject: campaign.subject,
           html,

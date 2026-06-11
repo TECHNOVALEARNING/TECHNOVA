@@ -127,11 +127,11 @@ Deno.serve(async (req) => {
     const payload = {
       amount: Math.round(Number(amount)),
       currency: corridor.currency,
-      description: `Dukaio retrait`,
+      description: `Technova retrait`,
       method: corridor.method,
       customer: {
         first_name: wallet.holder_first_name || "Client",
-        last_name: wallet.holder_last_name || "Dukaio",
+        last_name: wallet.holder_last_name || "Technova",
         email: user.email,
         phone: `+${cleanPhone}`,
         country: corridor.iso2,
@@ -141,7 +141,7 @@ Deno.serve(async (req) => {
         phone_number: `+${cleanPhone}`,
         country: corridor.iso2,
         first_name: wallet.holder_first_name || "Client",
-        last_name: wallet.holder_last_name || "Dukaio",
+        last_name: wallet.holder_last_name || "Technova",
         email: user.email,
         address: "N/A",
         city: "N/A",

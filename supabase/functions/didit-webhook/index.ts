@@ -78,7 +78,7 @@ Deno.serve(async (req) => {
         .maybeSingle();
       if (dup) {
         newStatus = 'rejected';
-        rejectionReason = 'Ce document a déjà été utilisé pour vérifier un autre compte Dukaio. Une personne ne peut vérifier qu\'un seul compte.';
+        rejectionReason = 'Ce document a déjà été utilisé pour vérifier un autre compte Technova. Une personne ne peut vérifier qu\'un seul compte.';
         console.warn('Duplicate KYC document detected', { documentNumber, attemptedUser: userId, existingUser: dup.user_id });
       }
     }

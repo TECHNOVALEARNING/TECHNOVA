@@ -6,7 +6,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const LOGO_URL = "https://nexozjpjbhqfjplrogvz.supabase.co/storage/v1/object/public/store-assets/brand/dukaio-logo.png";
+const LOGO_URL = "https://nexozjpjbhqfjplrogvz.supabase.co/storage/v1/object/public/store-assets/brand/technova-logo.png";
 
 const escapeHtml = (value: string) =>
   value
@@ -93,13 +93,13 @@ serve(async (req) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: "Dukaio <noreply@mail.dukaio.com>",
+          from: "Technova <noreply@mail.technova.com>",
           to: [ownerEmail],
           subject: sentiment === "positive" ? "Nouvel avis positif sur votre boutique" : "Nouvel avis négatif sur votre boutique",
           html: `
             <div style="font-family:Arial,sans-serif;max-width:620px;margin:0 auto;padding:24px;background:#f8fafc;">
               <div style="background:${sentiment === "positive" ? "linear-gradient(135deg,#059669,#10b981)" : "linear-gradient(135deg,#b91c1c,#ef4444)"};border-radius:20px;padding:28px 24px;text-align:center;">
-                <img src="${LOGO_URL}" alt="Dukaio" width="52" height="52" style="display:block;margin:0 auto 14px;border-radius:14px;" />
+                <img src="${LOGO_URL}" alt="Technova" width="52" height="52" style="display:block;margin:0 auto 14px;border-radius:14px;" />
                 <h1 style="margin:0;color:#ffffff;font-size:28px;line-height:1.2;">${sentiment === "positive" ? "Nouvel avis positif" : "Nouvel avis négatif"}</h1>
               </div>
               <div style="background:#ffffff;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 20px 20px;padding:28px 24px;">

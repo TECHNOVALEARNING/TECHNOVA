@@ -58,8 +58,8 @@ Deno.serve(async (req) => {
     const { data: wallet } = await admin.from("wallets").select("*").eq("id", wallet_id).eq("user_id", user.id).maybeSingle();
     if (!wallet) return j({ error: "Wallet introuvable" }, 404);
 
-    // Compute available NET balance (after Dukaio commission)
-    const { data: feeRow } = await admin.from("platform_fees").select("value_pct").eq("key", "dukaio_commission_pct").maybeSingle();
+    // Compute available NET balance (after Technova commission)
+    const { data: feeRow } = await admin.from("platform_fees").select("value_pct").eq("key", "technova_commission_pct").maybeSingle();
     const commissionPct = Number(feeRow?.value_pct ?? 10) / 100;
 
     const cutoff = new Date(Date.now() - 72 * 60 * 60 * 1000).toISOString();
@@ -106,7 +106,7 @@ Deno.serve(async (req) => {
         type: "MMO",
         accountDetails: { phoneNumber: cleanPhone, provider: wallet.provider_code },
       },
-      customerMessage: `Dukaio retrait`.slice(0, 22),
+      customerMessage: `Technova retrait`.slice(0, 22),
       metadata: [
         { withdrawal_id: withdrawal.id },
         { user_id: user.id },

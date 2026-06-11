@@ -190,7 +190,7 @@ Décision attendue :
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            from: "Dukaio <noreply@mail.dukaio.com>",
+            from: "Technova <noreply@mail.technova.com>",
             to: ["isidoreagonan@gmail.com"],
             subject: `⚠️ Modération IA — Produit à vérifier : ${product.title}`,
             html: `

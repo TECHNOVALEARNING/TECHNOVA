@@ -29,7 +29,7 @@ Deno.serve(async (req) => {
     const apiKey = Deno.env.get('DIDIT_API_KEY')!;
     const workflowId = Deno.env.get('DIDIT_WORKFLOW_ID')!;
 
-    const origin = req.headers.get('origin') || 'https://dukaio.com';
+    const origin = req.headers.get('origin') || 'https://technova.com';
     const callback = `${origin}/dashboard/settings?tab=account&kyc=callback`;
 
     const diditRes = await fetch('https://verification.didit.me/v2/session/', {

@@ -154,14 +154,14 @@ serve(async (req) => {
           const { data: { user: sellerUser } } = await supabaseAdmin.auth.admin.getUserById(w.user_id);
           const { data: profile } = await supabaseAdmin.from("profiles").select("display_name").eq("id", w.user_id).single();
           const sellerName = profile?.display_name || "Créateur";
-          const logoUrl = "https://nexozjpjbhqfjplrogvz.supabase.co/storage/v1/object/public/store-assets/brand/dukaio-logo.png";
+          const logoUrl = "https://nexozjpjbhqfjplrogvz.supabase.co/storage/v1/object/public/store-assets/brand/technova-logo.png";
 
           if (sellerUser?.email) {
             const isApproved = status === "completed";
             const emailHtml = `
               <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
                 <div style="background: linear-gradient(135deg, ${isApproved ? '#10b981, #059669' : '#ef4444, #dc2626'}); padding: 30px; border-radius: 12px 12px 0 0; text-align: center;">
-                  <img src="${logoUrl}" alt="Dukaio" width="48" height="48" style="display:block;margin:0 auto 12px;border-radius:10px;" />
+                  <img src="${logoUrl}" alt="Technova" width="48" height="48" style="display:block;margin:0 auto 12px;border-radius:10px;" />
                   <h1 style="color: #ffffff; margin: 0; font-size: 24px;">${isApproved ? '✅ Retrait approuvé' : '❌ Retrait rejeté'}</h1>
                 </div>
                 <div style="background: #ffffff; padding: 30px; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 12px 12px;">
@@ -176,7 +176,7 @@ serve(async (req) => {
                     <p style="margin: 5px 0; color: #374151;"><strong>Opérateur :</strong> ${w.operator.toUpperCase()}</p>
                     <p style="margin: 5px 0; color: #374151;"><strong>Numéro :</strong> ${w.phone_number}</p>
                   </div>
-                  <p style="color: #6b7280; font-size: 14px;">— L'équipe Dukaio</p>
+                  <p style="color: #6b7280; font-size: 14px;">— L'équipe Technova</p>
                 </div>
               </div>
             `;
@@ -185,7 +185,7 @@ serve(async (req) => {
               method: "POST",
               headers: { "Content-Type": "application/json", Authorization: `Bearer ${RESEND_API_KEY}` },
               body: JSON.stringify({
-                from: "Dukaio <noreply@mail.dukaio.com>",
+                from: "Technova <noreply@mail.technova.com>",
                 to: [sellerUser.email],
                 subject: isApproved ? `✅ Retrait de ${w.net_amount} FCFA approuvé` : `❌ Retrait de ${w.net_amount} FCFA rejeté`,
                 html: emailHtml,

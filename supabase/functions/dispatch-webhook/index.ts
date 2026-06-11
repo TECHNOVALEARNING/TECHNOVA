@@ -85,7 +85,7 @@ serve(async (req) => {
       filteredWebhooks.map(async (wh: any) => {
         const headers: Record<string, string> = {
           "Content-Type": "application/json",
-          "User-Agent": "Dukaio-Webhook/1.0",
+          "User-Agent": "Technova-Webhook/1.0",
           "X-Webhook-Event": event,
         };
 

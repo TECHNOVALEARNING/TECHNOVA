@@ -73,14 +73,14 @@ Deno.serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "Dukaio <noreply@mail.dukaio.com>",
+        from: "Technova <noreply@mail.technova.com>",
         to: [email],
         subject: `Votre code de connexion : ${code}`,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 40px 20px;">
             <div style="text-align: center; margin-bottom: 30px;">
-              <img src="https://nexozjpjbhqfjplrogvz.supabase.co/storage/v1/object/public/store-assets/brand/dukaio-logo.png" alt="Dukaio" width="48" height="48" style="display:block;margin:0 auto;border-radius:10px;" />
-              <h2 style="margin: 10px 0 0; color: #1a1a1a;">Dukaio</h2>
+              <img src="https://nexozjpjbhqfjplrogvz.supabase.co/storage/v1/object/public/store-assets/brand/technova-logo.png" alt="Technova" width="48" height="48" style="display:block;margin:0 auto;border-radius:10px;" />
+              <h2 style="margin: 10px 0 0; color: #1a1a1a;">Technova</h2>
             </div>
             <p style="color: #555; font-size: 15px;">Bonjour,</p>
             <p style="color: #555; font-size: 15px;">Voici votre code de connexion pour accéder à vos achats :</p>

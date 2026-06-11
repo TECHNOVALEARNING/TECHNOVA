@@ -79,7 +79,7 @@ Deno.serve(async (req) => {
         type: "MMO",
         accountDetails: { phoneNumber: cleanPhone, provider },
       },
-      customerMessage: `Dukaio retrait`.slice(0, 22),
+      customerMessage: `Technova retrait`.slice(0, 22),
       metadata: [
         { withdrawal_id: withdrawal.id },
         { user_id: user.id },

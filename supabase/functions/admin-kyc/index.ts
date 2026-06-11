@@ -7,7 +7,7 @@ const corsHeaders = {
 };
 
 const ADMIN_EMAIL = "isidoreagonan@gmail.com";
-const LOGO_URL = "https://nexozjpjbhqfjplrogvz.supabase.co/storage/v1/object/public/store-assets/brand/dukaio-logo.png";
+const LOGO_URL = "https://nexozjpjbhqfjplrogvz.supabase.co/storage/v1/object/public/store-assets/brand/technova-logo.png";
 
 const getAuthenticatedUser = async (req: Request, supabaseUrl: string, anonKey: string) => {
   const authHeader = req.headers.get("Authorization");
@@ -51,7 +51,7 @@ const sendEmail = async ({
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from: "Dukaio <noreply@mail.dukaio.com>",
+      from: "Technova <noreply@mail.technova.com>",
       to: [to],
       subject,
       html,
@@ -113,7 +113,7 @@ serve(async (req) => {
           html: `
             <div style="font-family:Arial,sans-serif;max-width:620px;margin:0 auto;padding:24px;background:#f8fafc;">
               <div style="background:#111827;border-radius:20px;padding:28px 24px;text-align:center;">
-                <img src="${LOGO_URL}" alt="Dukaio" width="52" height="52" style="display:block;margin:0 auto 14px;border-radius:14px;" />
+                <img src="${LOGO_URL}" alt="Technova" width="52" height="52" style="display:block;margin:0 auto 14px;border-radius:14px;" />
                 <p style="margin:0;color:#cbd5e1;font-size:12px;letter-spacing:.08em;text-transform:uppercase;">Alerte admin</p>
                 <h1 style="margin:8px 0 0;color:#ffffff;font-size:28px;line-height:1.2;">Nouvelle soumission KYC</h1>
               </div>
@@ -197,7 +197,7 @@ serve(async (req) => {
           html: `
             <div style="font-family:Arial,sans-serif;max-width:620px;margin:0 auto;padding:24px;background:#f8fafc;">
               <div style="background:linear-gradient(135deg,#059669,#10b981);border-radius:20px;padding:28px 24px;text-align:center;">
-                <img src="${LOGO_URL}" alt="Dukaio" width="52" height="52" style="display:block;margin:0 auto 14px;border-radius:14px;" />
+                <img src="${LOGO_URL}" alt="Technova" width="52" height="52" style="display:block;margin:0 auto 14px;border-radius:14px;" />
                 <h1 style="margin:0;color:#ffffff;font-size:28px;line-height:1.2;">KYC approuvé</h1>
               </div>
               <div style="background:#ffffff;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 20px 20px;padding:28px 24px;">
@@ -240,7 +240,7 @@ serve(async (req) => {
         html: `
           <div style="font-family:Arial,sans-serif;max-width:620px;margin:0 auto;padding:24px;background:#f8fafc;">
             <div style="background:linear-gradient(135deg,#b91c1c,#ef4444);border-radius:20px;padding:28px 24px;text-align:center;">
-              <img src="${LOGO_URL}" alt="Dukaio" width="52" height="52" style="display:block;margin:0 auto 14px;border-radius:14px;" />
+              <img src="${LOGO_URL}" alt="Technova" width="52" height="52" style="display:block;margin:0 auto 14px;border-radius:14px;" />
               <h1 style="margin:0;color:#ffffff;font-size:28px;line-height:1.2;">KYC à corriger</h1>
             </div>
             <div style="background:#ffffff;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 20px 20px;padding:28px 24px;">

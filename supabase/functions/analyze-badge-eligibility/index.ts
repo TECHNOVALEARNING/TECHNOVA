@@ -93,7 +93,7 @@ Deno.serve(async (req) => {
       let isEligible = false;
 
       if (computedGrade && kycVerified && GEMINI_API_KEY) {
-        const prompt = `Tu es un système de vérification anti-fraude pour la plateforme Dukaio. Analyse ce vendeur et donne un score de confiance de 0 à 100.
+        const prompt = `Tu es un système de vérification anti-fraude pour la plateforme Technova. Analyse ce vendeur et donne un score de confiance de 0 à 100.
 
 Données vendeur:
 - Chiffre d'affaires total: ${totalRevenue} FCFA

@@ -7,7 +7,7 @@ const corsHeaders = {
 };
 
 const ADMIN_EMAIL = "isidoreagonan@gmail.com";
-const LOGO_URL = "https://nexozjpjbhqfjplrogvz.supabase.co/storage/v1/object/public/store-assets/brand/dukaio-logo.png";
+const LOGO_URL = "https://nexozjpjbhqfjplrogvz.supabase.co/storage/v1/object/public/store-assets/brand/technova-logo.png";
 
 const escapeHtml = (value: string) =>
   value
@@ -51,7 +51,7 @@ serve(async (req) => {
       const html = `
         <div style="font-family:Arial,sans-serif;max-width:620px;margin:0 auto;padding:24px;background:#f8fafc;">
           <div style="background:#111827;border-radius:20px;padding:28px 24px;text-align:center;">
-            <img src="${LOGO_URL}" alt="Dukaio" width="52" height="52" style="display:block;margin:0 auto 14px;border-radius:14px;" />
+            <img src="${LOGO_URL}" alt="Technova" width="52" height="52" style="display:block;margin:0 auto 14px;border-radius:14px;" />
             <p style="margin:0;color:#cbd5e1;font-size:12px;letter-spacing:.08em;text-transform:uppercase;">Support</p>
             <h1 style="margin:8px 0 0;color:#ffffff;font-size:28px;line-height:1.2;">Nouveau ticket client</h1>
           </div>
@@ -73,7 +73,7 @@ serve(async (req) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: "Dukaio <noreply@mail.dukaio.com>",
+          from: "Technova <noreply@mail.technova.com>",
           to: [ADMIN_EMAIL],
           reply_to: userEmail || undefined,
           subject: `Nouveau ticket support • ${subject || "Support"}`,
@@ -95,7 +95,7 @@ serve(async (req) => {
       const html = `
         <div style="font-family:Arial,sans-serif;max-width:620px;margin:0 auto;padding:24px;background:#f8fafc;">
           <div style="background:linear-gradient(135deg,#1d4ed8,#3b82f6);border-radius:20px;padding:28px 24px;text-align:center;">
-            <img src="${LOGO_URL}" alt="Dukaio" width="52" height="52" style="display:block;margin:0 auto 14px;border-radius:14px;" />
+            <img src="${LOGO_URL}" alt="Technova" width="52" height="52" style="display:block;margin:0 auto 14px;border-radius:14px;" />
             <h1 style="margin:0;color:#ffffff;font-size:28px;line-height:1.2;">Réponse du support</h1>
           </div>
           <div style="background:#ffffff;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 20px 20px;padding:28px 24px;">
@@ -115,7 +115,7 @@ serve(async (req) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: "Dukaio Support <noreply@mail.dukaio.com>",
+          from: "Technova Support <noreply@mail.technova.com>",
           to: [recipientEmail],
           subject: `Réponse du support • ${subject || "Votre ticket"}`,
           html,

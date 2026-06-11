@@ -80,8 +80,8 @@ Deno.serve(async (req) => {
     const amountStr = Math.round(Number(body.amount)).toString();
 
     // Build customer message (max 22 chars, alphanumeric+space)
-    const rawMsg = (body.metadata.product_title || "Achat Dukaio").replace(/[^A-Za-z0-9 ]/g, "");
-    const statementDescription = rawMsg.slice(0, 22) || "Dukaio";
+    const rawMsg = (body.metadata.product_title || "Achat Technova").replace(/[^A-Za-z0-9 ]/g, "");
+    const statementDescription = rawMsg.slice(0, 22) || "Technova";
 
     const payload = {
       depositId,

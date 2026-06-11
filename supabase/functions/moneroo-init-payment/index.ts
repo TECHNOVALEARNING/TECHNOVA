@@ -21,7 +21,7 @@ function sanitizeMetadata(meta: Record<string, any>): Record<string, string | nu
 }
 
 function withOrderReturnUrl(returnUrl: string | undefined, orderId: string): string {
-  const base = returnUrl || "https://dukaio.com/payment-callback";
+  const base = returnUrl || "https://technova.com/payment-callback";
   try {
     const url = new URL(base);
     url.searchParams.set("order_id", orderId);
@@ -83,11 +83,11 @@ Deno.serve(async (req) => {
     const payload = {
       amount: Math.round(Number(amount)),
       currency,
-      description: (description || `Achat ${metadata?.product_title || "Dukaio"}`).slice(0, 100),
+      description: (description || `Achat ${metadata?.product_title || "Technova"}`).slice(0, 100),
       customer: {
         email: customer.email,
         first_name: customer.first_name || fullName.split(" ")[0] || "Client",
-        last_name: customer.last_name || fullName.split(" ").slice(1).join(" ") || "Dukaio",
+        last_name: customer.last_name || fullName.split(" ").slice(1).join(" ") || "Technova",
         phone: customer.phone || undefined,
       },
       return_url: withOrderReturnUrl(return_url, order.id),

@@ -66,13 +66,13 @@ Deno.serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'Dukaio <noreply@mail.ecom-revolt.com>',
+        from: 'Technova <noreply@mail.ecom-revolt.com>',
         to: [user.email],
         subject: `Votre code de connexion : ${code}`,
         html: `
           <div style="font-family: -apple-system, Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 40px 20px; background: #ffffff;">
             <div style="text-align: center; margin-bottom: 32px;">
-              <h1 style="margin: 0; font-size: 28px; background: linear-gradient(135deg, #5b1ea3, #d4a017); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Dukaio</h1>
+              <h1 style="margin: 0; font-size: 28px; background: linear-gradient(135deg, #5b1ea3, #d4a017); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Technova</h1>
             </div>
             <h2 style="color: #1a1a1a; font-size: 20px; margin: 0 0 12px;">Connexion sécurisée</h2>
             <p style="color: #555; font-size: 15px; line-height: 1.6;">
