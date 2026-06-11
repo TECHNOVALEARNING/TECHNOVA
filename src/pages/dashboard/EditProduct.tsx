@@ -4,7 +4,8 @@ import {
   ArrowLeft, Eye, EyeOff, MoreVertical, Save, Loader2,
   FileText, DollarSign, Upload, AlignLeft, Palette, HelpCircle, Search, Settings,
   Package, Shield, Link2, MessageSquare, ShoppingCart, Lock, Fingerprint,
-  BarChart3, EyeOff as EyeOffIcon, MapPin, Sparkles, Plus, Trash2, Globe, Image as ImageIcon
+  BarChart3, EyeOff as EyeOffIcon, MapPin, Sparkles, Plus, Trash2, Globe, Image as ImageIcon,
+  FileAudio, FileVideo, Video as YoutubeIcon, File as PdfIcon, Link as LinkIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -70,6 +71,8 @@ const EditProduct = () => {
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
   const [downloadFile, setDownloadFile] = useState<File | null>(null);
+  const [fileFormat, setFileFormat] = useState<"audio" | "image" | "pdf" | "video" | null>(null);
+  const [videoUrl, setVideoUrl] = useState("");
 
   // FAQ
   const [faqs, setFaqs] = useState<{ id?: string; question: string; answer: string; position: number }[]>([]);
@@ -129,6 +132,10 @@ const EditProduct = () => {
       setThumbnailUrl(data.thumbnail_url);
       setThumbnailPreview(data.thumbnail_url);
       setDownloadUrl(data.download_url);
+      setFileFormat((data as any).file_format || null);
+      if ((data as any).file_format === "video") {
+        setVideoUrl(data.download_url || "");
+      }
       setLicenseMaxActivations(data.license_max_activations ? String(data.license_max_activations) : "");
       setLicenseValidityDays(data.license_validity_days ? String(data.license_validity_days) : "");
       setCourseContentType(data.course_content_type || "mixed");
@@ -219,8 +226,10 @@ const EditProduct = () => {
       if (thumbnailFile) {
         newThumbnailUrl = await uploadFile(thumbnailFile, "thumbnails");
       }
-      if (downloadFile) {
+      if (downloadFile && fileFormat !== "video") {
         newDownloadUrl = await uploadFile(downloadFile, "downloads");
+      } else if (fileFormat === "video" && videoUrl) {
+        newDownloadUrl = videoUrl;
       }
 
       let newSeoImageUrl = seoImageUrl;
@@ -235,6 +244,7 @@ const EditProduct = () => {
         original_price: originalPrice ? parseFloat(originalPrice) : null,
         thumbnail_url: newThumbnailUrl,
         download_url: newDownloadUrl,
+        file_format: fileFormat,
         seo_title: seoTitle.trim() || null,
         seo_description: seoDescription.trim() || null,
         seo_keywords: seoKeywords.trim() || null,
@@ -679,40 +689,85 @@ const EditProduct = () => {
                     />
                   ) : (
                     <>
-                      {downloadUrl && !downloadFile && (
-                        <div className="p-4 rounded-lg border border-border bg-secondary/30 flex items-center gap-3">
-                          <Package className="h-5 w-5 text-muted-foreground" />
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-foreground truncate">Fichier actuel</p>
-                            <a href={downloadUrl} target="_blank" rel="noreferrer" className="text-xs text-primary hover:underline truncate block">
-                              {downloadUrl.split("/").pop()}
-                            </a>
-                          </div>
-                        </div>
-                      )}
-                      <div
-                        className="rounded-xl border-2 border-dashed border-border bg-secondary/30 p-12 text-center cursor-pointer hover:border-primary/50 transition-colors"
-                        onClick={() => document.getElementById("edit-download-input")?.click()}
-                      >
-                        <div className="flex flex-col items-center gap-3">
-                          <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center">
-                            <Upload className="h-6 w-6 text-primary" />
-                          </div>
-                          <Button variant="outline" className="gap-2 rounded-full pointer-events-none">
-                            <Upload className="h-4 w-4" /> {downloadUrl ? "Remplacer le fichier" : "Choisir un fichier"}
-                          </Button>
-                          <p className="text-xs text-muted-foreground">PDF, ZIP, MP3, MP4, DOCX… Max 500 MB</p>
-                        </div>
-                        {downloadFile && (
-                          <p className="text-sm font-medium text-foreground mt-4">📎 {downloadFile.name}</p>
-                        )}
-                        <input
-                          id="edit-download-input"
-                          type="file"
-                          className="hidden"
-                          onChange={(e) => setDownloadFile(e.target.files?.[0] || null)}
-                        />
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+                        {[
+                          { id: "pdf", label: "Document (PDF)", icon: PdfIcon, color: "text-red-500", border: "border-red-200", bg: "bg-red-50" },
+                          { id: "audio", label: "Audio (MP3)", icon: FileAudio, color: "text-purple-500", border: "border-purple-200", bg: "bg-purple-50" },
+                          { id: "image", label: "Image (PNG/JPG)", icon: ImageIcon, color: "text-green-500", border: "border-green-200", bg: "bg-green-50" },
+                          { id: "video", label: "Vidéo (Lien)", icon: FileVideo, color: "text-blue-500", border: "border-blue-200", bg: "bg-blue-50" }
+                        ].map((fmt) => (
+                          <button
+                            key={fmt.id}
+                            onClick={() => setFileFormat(fmt.id as any)}
+                            className={`p-4 rounded-xl border-2 text-center transition-all ${
+                              fileFormat === fmt.id
+                                ? `${fmt.border} ${fmt.bg} dark:bg-opacity-10 shadow-sm`
+                                : "border-border hover:border-muted-foreground/30"
+                            }`}
+                          >
+                            <fmt.icon className={`h-6 w-6 mx-auto mb-2 ${fmt.color}`} />
+                            <p className="text-sm font-semibold text-foreground">{fmt.label}</p>
+                          </button>
+                        ))}
                       </div>
+
+                      {fileFormat === "video" ? (
+                        <div className="p-6 rounded-xl border border-blue-200 bg-blue-50/50 dark:bg-blue-900/10 dark:border-blue-800 animate-in fade-in">
+                          <label className="text-sm font-medium text-foreground mb-1.5 block">
+                            Lien vers la vidéo (Google Drive, YouTube, Vimeo)
+                          </label>
+                          <div className="flex gap-2">
+                            <div className="bg-white dark:bg-background border border-border flex items-center px-3 rounded-md">
+                              <LinkIcon className="h-4 w-4 text-muted-foreground" />
+                            </div>
+                            <Input
+                              value={videoUrl}
+                              onChange={(e) => setVideoUrl(e.target.value)}
+                              placeholder="https://drive.google.com/file/d/..."
+                              className="flex-1 bg-white dark:bg-background"
+                            />
+                          </div>
+                        </div>
+                      ) : (
+                        fileFormat && (
+                          <>
+                            {downloadUrl && !downloadFile && (
+                              <div className="p-4 rounded-lg border border-border bg-secondary/30 flex items-center gap-3 mb-6">
+                                <Package className="h-5 w-5 text-muted-foreground" />
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-sm font-medium text-foreground truncate">Fichier actuel</p>
+                                  <a href={downloadUrl} target="_blank" rel="noreferrer" className="text-xs text-primary hover:underline truncate block">
+                                    {downloadUrl.split("/").pop()}
+                                  </a>
+                                </div>
+                              </div>
+                            )}
+                            <div
+                              className="rounded-xl border-2 border-dashed border-border bg-secondary/30 p-12 text-center cursor-pointer hover:border-primary/50 transition-colors animate-in fade-in"
+                              onClick={() => document.getElementById("edit-download-input")?.click()}
+                            >
+                              <div className="flex flex-col items-center gap-3">
+                                <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center">
+                                  <Upload className="h-6 w-6 text-primary" />
+                                </div>
+                                <Button variant="outline" className="gap-2 rounded-full pointer-events-none">
+                                  <Upload className="h-4 w-4" /> {downloadUrl ? "Remplacer le fichier" : `Uploader le fichier ${fileFormat.toUpperCase()}`}
+                                </Button>
+                                <p className="text-xs text-muted-foreground">Taille max: 500 MB</p>
+                              </div>
+                              {downloadFile && (
+                                <p className="text-sm font-medium text-foreground mt-4">📎 {downloadFile.name}</p>
+                              )}
+                              <input
+                                id="edit-download-input"
+                                type="file"
+                                className="hidden"
+                                onChange={(e) => setDownloadFile(e.target.files?.[0] || null)}
+                              />
+                            </div>
+                          </>
+                        )
+                      )}
                     </>
                   )}
                 </div>

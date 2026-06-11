@@ -41,6 +41,7 @@ interface ProductRow {
   thumbnail_url: string | null;
   download_url: string | null;
   description: string | null;
+  file_format?: string | null;
 }
 interface StoreRow {
   display_name: string | null;
@@ -49,6 +50,33 @@ interface StoreRow {
 }
 
 const SESSION_DURATION = 30 * 60 * 1000;
+
+const getEmbedUrl = (url: string) => {
+  if (!url) return "";
+  try {
+    if (url.includes("drive.google.com/file/d/")) {
+      const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+      if (match && match[1]) {
+        return `https://drive.google.com/file/d/${match[1]}/preview`;
+      }
+    }
+    if (url.includes("youtube.com/watch")) {
+      const urlObj = new URL(url);
+      return `https://www.youtube.com/embed/${urlObj.searchParams.get("v")}`;
+    }
+    if (url.includes("youtu.be")) {
+      const id = url.split("youtu.be/")[1]?.split("?")[0];
+      return `https://www.youtube.com/embed/${id}`;
+    }
+    if (url.includes("vimeo.com")) {
+      const id = url.split("vimeo.com/")[1]?.split("/")[0]?.split("?")[0];
+      return `https://player.vimeo.com/video/${id}`;
+    }
+    return url;
+  } catch {
+    return url;
+  }
+};
 
 const BuyerOrderDetail = () => {
   const { orderId } = useParams();
@@ -95,7 +123,7 @@ const BuyerOrderDetail = () => {
       setOrder(o as OrderRow);
 
       const [{ data: p }, { data: s }] = await Promise.all([
-        supabase.from("products").select("id, title, type, thumbnail_url, download_url, description").eq("id", (o as any).product_id).maybeSingle(),
+        supabase.from("products").select("id, title, type, thumbnail_url, download_url, description, file_format").eq("id", (o as any).product_id).maybeSingle(),
         supabase.from("profiles").select("display_name, store_slug, contact").eq("id", (o as any).store_owner_id).maybeSingle(),
       ]);
       if (p) setProduct(p as ProductRow);
@@ -105,7 +133,7 @@ const BuyerOrderDetail = () => {
       if (p) {
         const { data: recs } = await supabase
           .from("products")
-          .select("id, title, type, thumbnail_url, download_url, description")
+          .select("id, title, type, thumbnail_url, download_url, description, file_format")
           .eq("creator_id", (o as any).store_owner_id)
           .eq("is_published", true)
           .neq("id", (p as any).id)
@@ -188,8 +216,15 @@ const BuyerOrderDetail = () => {
           {/* Left: content access + reviews */}
           <div className="lg:col-span-2 space-y-6">
             <div className="rounded-2xl border border-border bg-card overflow-hidden">
-              <div className="aspect-[16/7] bg-secondary">
-                {product.thumbnail_url ? (
+              <div className="aspect-[16/9] bg-secondary">
+                {product.type === "file" && product.file_format === "video" && product.download_url ? (
+                  <iframe 
+                    src={getEmbedUrl(product.download_url)} 
+                    className="w-full h-full border-0" 
+                    allow="autoplay; fullscreen; picture-in-picture"
+                    allowFullScreen 
+                  />
+                ) : product.thumbnail_url ? (
                   <img src={product.thumbnail_url} alt={product.title} className="h-full w-full object-cover" />
                 ) : (
                   <div className="h-full w-full flex items-center justify-center">
@@ -200,14 +235,19 @@ const BuyerOrderDetail = () => {
               <div className="p-5 space-y-3">
                 <div className="flex flex-wrap gap-2">
                   {product.type === "file" && product.download_url ? (
-                    <a href={product.download_url} target="_blank" rel="noopener noreferrer" className="flex-1 min-w-[180px]">
-                      <Button className="w-full gap-2"><Download className="h-4 w-4" /> Télécharger le fichier</Button>
-                    </a>
-                  ) : (
+                    <div className="flex flex-wrap flex-1 gap-2">
+                      <a href={product.download_url} target="_blank" rel="noopener noreferrer" className="flex-1 min-w-[180px]">
+                        <Button className="w-full gap-2">
+                          <Download className="h-4 w-4" /> 
+                          {product.file_format === "video" ? "Télécharger / Ouvrir le lien" : "Télécharger le fichier"}
+                        </Button>
+                      </a>
+                    </div>
+                  ) : product.type !== "file" ? (
                     <Button onClick={() => setContentOpen(true)} className="flex-1 min-w-[180px] gap-2">
                       <FileText className="h-4 w-4" /> Accéder au contenu
                     </Button>
-                  )}
+                  ) : null}
                   <Button variant="outline" onClick={downloadInvoice} className="gap-2">
                     <Receipt className="h-4 w-4" /> Facture PDF
                   </Button>

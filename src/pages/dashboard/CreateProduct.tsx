@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   FileText, GraduationCap, Key, Layers, Check, ArrowLeft,
-  Upload, Image as ImageIcon, Package,
-  Shield, Clock, Hash, Percent, Video, BookOpen, Download, Loader2, Sparkles
+  Upload, Image as ImageIcon, Package, Link as LinkIcon, FileAudio, FileVideo, Video as YoutubeIcon,
+  Shield, Clock, Hash, Percent, Video, BookOpen, Download, Loader2, Sparkles, File as PdfIcon
 } from "lucide-react";
 import CourseLessonsManager, { type Lesson } from "@/components/dashboard/CourseLessonsManager";
 import RichTextEditor from "@/components/RichTextEditor";
@@ -85,6 +85,8 @@ const CreateProduct = () => {
 
   // Step 5 - Download file
   const [downloadFile, setDownloadFile] = useState<File | null>(null);
+  const [fileFormat, setFileFormat] = useState<"audio" | "image" | "pdf" | "video" | null>(null);
+  const [videoUrl, setVideoUrl] = useState("");
 
   // Course lessons
   const [courseLessons, setCourseLessons] = useState<Lesson[]>([]);
@@ -118,7 +120,10 @@ const CreateProduct = () => {
       case 3: return !!description.replace(/<[^>]*>/g, "").trim();
       case 4: return true;
       case 5:
-        if (selectedType === "file") return !!downloadFile;
+        if (selectedType === "file") {
+          if (fileFormat === "video") return !!videoUrl.trim();
+          return !!downloadFile && !!fileFormat;
+        }
         if (selectedType === "course") return courseLessons.length > 0;
         return true;
       default: return false;
@@ -163,9 +168,19 @@ const CreateProduct = () => {
 
   const handleSubmit = async () => {
     if (!user || !selectedType || !title.trim()) return;
-    if (selectedType === "file" && !downloadFile) {
-      toast.error("Veuillez ajouter un fichier pour ce produit");
-      return;
+    if (selectedType === "file") {
+      if (!fileFormat) {
+        toast.error("Veuillez choisir le format du fichier");
+        return;
+      }
+      if (fileFormat === "video" && !videoUrl.trim()) {
+        toast.error("Veuillez entrer le lien de la vidéo");
+        return;
+      }
+      if (fileFormat !== "video" && !downloadFile) {
+        toast.error("Veuillez uploader le fichier");
+        return;
+      }
     }
     if (selectedType === "course" && courseLessons.length === 0) {
       toast.error("Veuillez ajouter au moins une leçon à votre formation");
@@ -182,8 +197,10 @@ const CreateProduct = () => {
       if (thumbnailFile) {
         thumbnailUrl = await uploadFile(thumbnailFile, "thumbnails");
       }
-      if (downloadFile) {
+      if (downloadFile && fileFormat !== "video") {
         downloadUrl = await uploadFile(downloadFile, "downloads");
+      } else if (fileFormat === "video" && videoUrl) {
+        downloadUrl = videoUrl;
       }
 
       const effectivePrice = parseFloat(price);
@@ -197,6 +214,7 @@ const CreateProduct = () => {
         type: selectedType,
         thumbnail_url: thumbnailUrl,
         download_url: downloadUrl,
+        file_format: fileFormat,
         creator_id: user.id,
         is_published: false,
       };
@@ -293,43 +311,93 @@ const CreateProduct = () => {
       case "file":
         return (
           <div>
-            <h2 className="text-2xl font-bold text-foreground mb-2">Téléchargez votre fichier</h2>
+            <h2 className="text-2xl font-bold text-foreground mb-2">Configurez votre produit numérique</h2>
             <p className="text-sm text-muted-foreground mb-6">
-              Tous les formats sont acceptés : PDF, ZIP, MP3, MP4, etc.
+              Choisissez d'abord le format de votre produit. Les vidéos sont hébergées via lien (Drive, YouTube).
             </p>
-            <div
-              className="rounded-xl border-2 border-dashed border-border bg-secondary/30 p-12 text-center cursor-pointer hover:border-primary/50 transition-colors"
-              onClick={() => document.getElementById("download-input")?.click()}
-            >
-              <div className="flex flex-col items-center gap-3">
-                <div className="h-14 w-14 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-                  <Upload className="h-6 w-6 text-amber-600" />
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+              {[
+                { id: "pdf", label: "Document (PDF)", icon: PdfIcon, color: "text-red-500", border: "border-red-200", bg: "bg-red-50" },
+                { id: "audio", label: "Audio (MP3)", icon: FileAudio, color: "text-purple-500", border: "border-purple-200", bg: "bg-purple-50" },
+                { id: "image", label: "Image (PNG/JPG)", icon: ImageIcon, color: "text-green-500", border: "border-green-200", bg: "bg-green-50" },
+                { id: "video", label: "Vidéo (Lien)", icon: FileVideo, color: "text-blue-500", border: "border-blue-200", bg: "bg-blue-50" }
+              ].map((fmt) => (
+                <button
+                  key={fmt.id}
+                  onClick={() => setFileFormat(fmt.id as any)}
+                  className={`p-4 rounded-xl border-2 text-center transition-all ${
+                    fileFormat === fmt.id
+                      ? `${fmt.border} ${fmt.bg} dark:bg-opacity-10 shadow-sm`
+                      : "border-border hover:border-muted-foreground/30"
+                  }`}
+                >
+                  <fmt.icon className={`h-6 w-6 mx-auto mb-2 ${fmt.color}`} />
+                  <p className="text-sm font-semibold text-foreground">{fmt.label}</p>
+                </button>
+              ))}
+            </div>
+
+            {fileFormat && fileFormat !== "video" && (
+              <div
+                className="rounded-xl border-2 border-dashed border-border bg-secondary/30 p-12 text-center cursor-pointer hover:border-primary/50 transition-colors animate-in fade-in"
+                onClick={() => document.getElementById("download-input")?.click()}
+              >
+                <div className="flex flex-col items-center gap-3">
+                  <div className="h-14 w-14 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+                    <Upload className="h-6 w-6 text-amber-600" />
+                  </div>
+                  <Button variant="outline" className="gap-2 rounded-full pointer-events-none">
+                    <Upload className="h-4 w-4" /> Uploader le fichier {fileFormat.toUpperCase()}
+                  </Button>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    Taille max: 500 MB. Stocké de façon sécurisée.
+                  </p>
                 </div>
-                <Button variant="outline" className="gap-2 rounded-full pointer-events-none">
-                  <Upload className="h-4 w-4" /> Choisir un fichier
-                </Button>
-                <p className="text-xs text-muted-foreground">
-                  PDF, ZIP, MP3, MP4, DOCX, XLSX… Taille max: 500 MB
+                {downloadFile && (
+                  <p className="text-sm font-medium text-foreground mt-4">
+                    📎 {downloadFile.name}
+                  </p>
+                )}
+                <input
+                  id="download-input"
+                  type="file"
+                  className="hidden"
+                  onChange={(e) => setDownloadFile(e.target.files?.[0] || null)}
+                />
+              </div>
+            )}
+
+            {fileFormat === "video" && (
+              <div className="p-6 rounded-xl border border-blue-200 bg-blue-50/50 dark:bg-blue-900/10 dark:border-blue-800 animate-in fade-in">
+                <label className="text-sm font-medium text-foreground mb-1.5 block">
+                  Lien vers la vidéo (Google Drive, YouTube, Vimeo)
+                </label>
+                <div className="flex gap-2">
+                  <div className="bg-white dark:bg-background border border-border flex items-center px-3 rounded-md">
+                    <LinkIcon className="h-4 w-4 text-muted-foreground" />
+                  </div>
+                  <Input
+                    value={videoUrl}
+                    onChange={(e) => setVideoUrl(e.target.value)}
+                    placeholder="https://drive.google.com/file/d/..."
+                    className="flex-1 bg-white dark:bg-background"
+                  />
+                </div>
+                <p className="text-xs text-muted-foreground mt-2">
+                  Le lecteur vidéo sera directement intégré sur la page pour vos acheteurs.
                 </p>
               </div>
-              {downloadFile && (
-                <p className="text-sm font-medium text-foreground mt-4">
-                  📎 {downloadFile.name}
-                </p>
-              )}
-              <input
-                id="download-input"
-                type="file"
-                className="hidden"
-                onChange={(e) => setDownloadFile(e.target.files?.[0] || null)}
-              />
-            </div>
-            <div className="mt-4 p-3 rounded-lg bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800">
-              <div className="flex items-center gap-2 text-sm text-amber-700 dark:text-amber-400">
-                <Shield className="h-4 w-4" />
-                <span>Téléchargement sécurisé avec liens temporaires</span>
+            )}
+
+            {fileFormat && (
+              <div className="mt-4 p-3 rounded-lg bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800 animate-in fade-in">
+                <div className="flex items-center gap-2 text-sm text-amber-700 dark:text-amber-400">
+                  <Shield className="h-4 w-4" />
+                  <span>Accès hautement sécurisé, réservé uniquement aux acheteurs vérifiés.</span>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         );
 
