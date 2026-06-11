@@ -49,6 +49,33 @@ const productTypes = [
 
 const TOTAL_STEPS = 5;
 
+const getEmbedUrl = (url: string) => {
+  if (!url) return "";
+  try {
+    if (url.includes("drive.google.com/file/d/")) {
+      const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+      if (match && match[1]) {
+        return `https://drive.google.com/file/d/${match[1]}/preview`;
+      }
+    }
+    if (url.includes("youtube.com/watch")) {
+      const urlObj = new URL(url);
+      return `https://www.youtube.com/embed/${urlObj.searchParams.get("v")}`;
+    }
+    if (url.includes("youtu.be")) {
+      const id = url.split("youtu.be/")[1]?.split("?")[0];
+      return `https://www.youtube.com/embed/${id}`;
+    }
+    if (url.includes("vimeo.com")) {
+      const id = url.split("vimeo.com/")[1]?.split("/")[0]?.split("?")[0];
+      return `https://player.vimeo.com/video/${id}`;
+    }
+    return url;
+  } catch {
+    return url;
+  }
+};
+
 const CreateProduct = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -369,24 +396,37 @@ const CreateProduct = () => {
             )}
 
             {fileFormat === "video" && (
-              <div className="p-6 rounded-xl border border-blue-200 bg-blue-50/50 dark:bg-blue-900/10 dark:border-blue-800 animate-in fade-in">
-                <label className="text-sm font-medium text-foreground mb-1.5 block">
-                  Lien vers la vidéo (Google Drive, YouTube, Vimeo)
-                </label>
-                <div className="flex gap-2">
-                  <div className="bg-white dark:bg-background border border-border flex items-center px-3 rounded-md">
-                    <LinkIcon className="h-4 w-4 text-muted-foreground" />
+              <div className="p-6 rounded-xl border border-blue-200 bg-blue-50/50 dark:bg-blue-900/10 dark:border-blue-800 animate-in fade-in space-y-4">
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-1.5 block">
+                    Lien vers la vidéo (Google Drive, YouTube, Vimeo)
+                  </label>
+                  <div className="flex gap-2">
+                    <div className="bg-white dark:bg-background border border-border flex items-center px-3 rounded-md">
+                      <LinkIcon className="h-4 w-4 text-muted-foreground" />
+                    </div>
+                    <Input
+                      value={videoUrl}
+                      onChange={(e) => setVideoUrl(e.target.value)}
+                      placeholder="https://drive.google.com/file/d/..."
+                      className="flex-1 bg-white dark:bg-background"
+                    />
                   </div>
-                  <Input
-                    value={videoUrl}
-                    onChange={(e) => setVideoUrl(e.target.value)}
-                    placeholder="https://drive.google.com/file/d/..."
-                    className="flex-1 bg-white dark:bg-background"
-                  />
+                  <p className="text-xs text-muted-foreground mt-2">
+                    Le lecteur vidéo sera directement intégré sur la page pour vos acheteurs.
+                  </p>
                 </div>
-                <p className="text-xs text-muted-foreground mt-2">
-                  Le lecteur vidéo sera directement intégré sur la page pour vos acheteurs.
-                </p>
+                
+                {videoUrl && videoUrl.trim().startsWith("http") && (
+                  <div className="aspect-[16/9] w-full rounded-lg overflow-hidden border border-border bg-black/5 mt-4">
+                    <iframe 
+                      src={getEmbedUrl(videoUrl)} 
+                      className="w-full h-full border-0" 
+                      allow="autoplay; fullscreen; picture-in-picture"
+                      allowFullScreen 
+                    />
+                  </div>
+                )}
               </div>
             )}
 
