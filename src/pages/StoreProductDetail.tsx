@@ -109,7 +109,10 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
     const fetchData = async () => {
       const { data: storeData } = await supabase
         .from("stores")
-        .select("owner_id, brand_color, logo_url, name, footer_disclaimer")
+        .select(`
+          owner_id, brand_color, logo_url, name, footer_disclaimer,
+          custom_domains ( domain )
+        `)
         .eq("slug", slug)
         .eq("is_archived", false)
         .maybeSingle();
@@ -117,6 +120,14 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
       let ownerId: string | null = null;
 
       if (storeData) {
+        // Redirect if accessed via default technova URL but has a custom domain
+        if (!customSlug && storeData.custom_domains && Array.isArray(storeData.custom_domains) && storeData.custom_domains.length > 0) {
+          const domain = storeData.custom_domains[0].domain;
+          if (domain) {
+            window.location.replace(`https://${domain}/${productId}`);
+            return;
+          }
+        }
         ownerId = storeData.owner_id;
         setStoreInfo(storeData as StoreInfo);
       }
@@ -128,6 +139,19 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
         .single();
 
       if (!prof) { setNotFound(true); setLoading(false); return; }
+      
+      // Redirect if accessed via default technova URL but has a custom domain
+      if (!customSlug) {
+        const { data: cDomain } = await supabase
+          .from("custom_domains")
+          .select("domain")
+          .eq("store_id", prof.id)
+          .maybeSingle();
+        if (cDomain?.domain) {
+          window.location.replace(`https://${cDomain.domain}/${productId}`);
+          return;
+        }
+      }
       setProfile(prof as Profile);
       ownerId = prof.id;
 

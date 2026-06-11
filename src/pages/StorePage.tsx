@@ -88,12 +88,23 @@ const StorePage = ({ customSlug }: { customSlug?: string }) => {
     const fetchStore = async () => {
       const { data: storeData } = await supabase
         .from("stores")
-        .select("*")
+        .select(`
+          *,
+          custom_domains ( domain )
+        `)
         .eq("slug", slug)
         .eq("is_archived", false)
         .maybeSingle();
 
       if (storeData) {
+        // Redirect if accessed via default technova URL but has a custom domain
+        if (!customSlug && storeData.custom_domains && Array.isArray(storeData.custom_domains) && storeData.custom_domains.length > 0) {
+          const domain = storeData.custom_domains[0].domain;
+          if (domain) {
+            window.location.replace(`https://${domain}`);
+            return;
+          }
+        }
         setStore(storeData as any);
         const { data: prof } = await supabase
           .from("profiles")
@@ -130,6 +141,19 @@ const StorePage = ({ customSlug }: { customSlug?: string }) => {
         .single();
 
       if (!prof) { setNotFound(true); setLoading(false); return; }
+
+      // Redirect if accessed via default technova URL but has a custom domain
+      if (!customSlug) {
+        const { data: cDomain } = await supabase
+          .from("custom_domains")
+          .select("domain")
+          .eq("store_id", prof.id)
+          .maybeSingle();
+        if (cDomain?.domain) {
+          window.location.replace(`https://${cDomain.domain}`);
+          return;
+        }
+      }
       const p = prof as any;
       setStore({
         id: p.id, owner_id: p.id, name: p.display_name || "Boutique", slug: p.store_slug,
