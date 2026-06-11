@@ -66,7 +66,7 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
   };
 
   const isOwnershipVerified = vercelData?.verified === true;
-  const hasError = !!vercelData?.error;
+  const hasError = vercelData?.misconfigured === true || !!vercelData?.error;
   const isFullyConfigured = isOwnershipVerified && !hasError && vercelData != null;
 
   return (
@@ -212,10 +212,10 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
                     </div>
                   </div>
 
-                  {hasError && vercelData?.error?.message && (
+                  {hasError && (
                     <div className="text-xs text-red-500 font-medium mt-2 flex items-center gap-1.5">
                       <AlertCircle className="h-3.5 w-3.5" />
-                      Erreur détectée : {vercelData.error.message}
+                      Erreur détectée : {vercelData?.error?.message || "La configuration DNS est invalide ou n'est pas encore propagée."}
                     </div>
                   )}
 
