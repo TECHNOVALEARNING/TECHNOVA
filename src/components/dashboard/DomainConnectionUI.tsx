@@ -65,10 +65,9 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
     setTimeout(() => setCopiedField(null), 2000);
   };
 
-  const isVerified = vercelData?.verified === true;
-  // Parfois vercelData.verified est true, mais il y a une erreur DNS.
-  // S'il n'y a pas d'erreur (ou si verified est vrai), c'rebon.
+  const isOwnershipVerified = vercelData?.verified === true;
   const hasError = !!vercelData?.error;
+  const isFullyConfigured = isOwnershipVerified && !hasError && vercelData != null;
 
   return (
     <div className="space-y-6">
@@ -106,10 +105,10 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
       {/* STEPPER */}
       <div className="space-y-4">
         {/* Step 1: Configuration DNS */}
-        <Card className={`p-5 transition-colors ${isVerified ? 'bg-muted/20 opacity-70' : 'border-primary shadow-sm'}`}>
+        <Card className={`p-5 transition-colors ${isFullyConfigured ? 'bg-muted/20 opacity-70' : 'border-primary shadow-sm'}`}>
           <div className="flex items-start gap-4">
-            <div className={`mt-0.5 h-6 w-6 rounded-full flex items-center justify-center shrink-0 ${isVerified ? 'bg-green-100 text-green-600' : 'bg-primary/10 text-primary'}`}>
-               {isVerified ? <CheckCircle2 className="h-4 w-4" /> : <Loader2 className="h-4 w-4 animate-spin" />}
+            <div className={`mt-0.5 h-6 w-6 rounded-full flex items-center justify-center shrink-0 ${isFullyConfigured ? 'bg-green-100 text-green-600' : 'bg-primary/10 text-primary'}`}>
+               {isFullyConfigured ? <CheckCircle2 className="h-4 w-4" /> : <Loader2 className="h-4 w-4 animate-spin" />}
             </div>
             <div className="flex-1 space-y-4">
               <div className="flex items-center justify-between">
@@ -119,7 +118,7 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
                     Connectez-vous à votre fournisseur et ajoutez ces enregistrements.
                   </p>
                 </div>
-                {provider && !isVerified && (
+                {provider && !isFullyConfigured && (
                   <Button variant="outline" size="sm" asChild>
                     <a href={provider.loginUrl} target="_blank" rel="noopener noreferrer">
                       Se connecter à {provider.name}
@@ -128,7 +127,7 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
                 )}
               </div>
 
-              {!isVerified && (
+              {!isFullyConfigured && (
                 <div className="space-y-3 pt-2">
                   <div className="grid grid-cols-3 gap-4 text-xs font-medium text-muted-foreground px-2">
                     <span>Type</span>
@@ -213,6 +212,13 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
                     </div>
                   </div>
 
+                  {hasError && vercelData?.error?.message && (
+                    <div className="text-xs text-red-500 font-medium mt-2 flex items-center gap-1.5">
+                      <AlertCircle className="h-3.5 w-3.5" />
+                      Erreur détectée : {vercelData.error.message}
+                    </div>
+                  )}
+
                   <div className="flex items-center gap-2 mt-4 text-xs text-muted-foreground bg-muted/50 py-2 px-3 rounded-lg w-max">
                     <RefreshCw className="h-3 w-3 animate-spin" />
                     Recherche des enregistrements DNS...
@@ -224,34 +230,34 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
         </Card>
 
         {/* Step 2: Propagation */}
-        <Card className={`p-5 transition-colors ${!isVerified ? 'opacity-50 grayscale' : 'border-primary shadow-sm'}`}>
+        <Card className={`p-5 transition-colors ${!isFullyConfigured ? 'opacity-50 grayscale' : 'border-primary shadow-sm'}`}>
           <div className="flex items-center gap-4">
-            <div className={`h-6 w-6 rounded-full flex items-center justify-center shrink-0 ${isVerified ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'}`}>
-               {!isVerified ? <Loader2 className="h-4 w-4" /> : <CheckCircle2 className="h-4 w-4 text-green-600" />}
+            <div className={`h-6 w-6 rounded-full flex items-center justify-center shrink-0 ${isFullyConfigured ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'}`}>
+               {!isFullyConfigured ? <Loader2 className="h-4 w-4" /> : <CheckCircle2 className="h-4 w-4 text-green-600" />}
             </div>
             <div>
               <h4 className="font-medium">Propagation DNS</h4>
               <p className="text-sm text-muted-foreground">
-                {isVerified ? "Les enregistrements ont été trouvés." : "En attente de vos enregistrements."}
+                {isFullyConfigured ? "Les enregistrements ont été trouvés." : "En attente de vos enregistrements."}
               </p>
             </div>
           </div>
         </Card>
 
         {/* Step 3: SSL */}
-        <Card className={`p-5 transition-colors ${!isVerified ? 'opacity-50 grayscale' : 'bg-green-50/50 border-green-200'}`}>
+        <Card className={`p-5 transition-colors ${!isFullyConfigured ? 'opacity-50 grayscale' : 'bg-green-50/50 border-green-200'}`}>
           <div className="flex items-center gap-4">
-            <div className={`h-6 w-6 rounded-full flex items-center justify-center shrink-0 ${isVerified ? 'bg-green-100 text-green-600' : 'bg-muted text-muted-foreground'}`}>
+            <div className={`h-6 w-6 rounded-full flex items-center justify-center shrink-0 ${isFullyConfigured ? 'bg-green-100 text-green-600' : 'bg-muted text-muted-foreground'}`}>
                <Lock className="h-3.5 w-3.5" />
             </div>
             <div className="flex-1 flex items-center justify-between">
               <div>
                 <h4 className="font-medium">Génération du certificat SSL</h4>
                 <p className="text-sm text-muted-foreground">
-                  {isVerified ? "Votre domaine est sécurisé et prêt !" : "En attente de la propagation."}
+                  {isFullyConfigured ? "Votre domaine est sécurisé et prêt !" : "En attente de la propagation."}
                 </p>
               </div>
-              {isVerified && (
+              {isFullyConfigured && (
                 <Badge variant="default" className="bg-green-500 hover:bg-green-600">Actif</Badge>
               )}
             </div>
