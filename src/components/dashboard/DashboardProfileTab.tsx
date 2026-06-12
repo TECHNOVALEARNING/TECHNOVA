@@ -32,7 +32,7 @@ const DashboardProfileTab = () => {
     setImproving(true);
     try {
       const { data, error } = await supabase.functions.invoke("improve-store-description", {
-        body: { description: storeDescription },
+        body: { description: storeDescription, storeName },
       });
       if (error) throw error;
       if ((data as any)?.error) throw new Error((data as any).error);
