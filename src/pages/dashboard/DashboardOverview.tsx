@@ -97,20 +97,21 @@ const DashboardOverview = () => {
           ].map((card) => (
             <div
               key={card.label}
-              className="relative rounded-[24px] p-6 bg-[#f7f8f9] flex flex-col justify-between min-h-[150px] sm:min-h-[160px]"
+              className="relative rounded-[24px] p-6 bg-gradient-to-br from-[#1e40af] to-[#4338ca] shadow-[0_10px_40px_-10px_rgba(37,99,235,0.4)] flex flex-col items-center justify-center text-center min-h-[150px] sm:min-h-[160px] border border-blue-500/30 overflow-hidden group hover:-translate-y-1 transition-all duration-300"
             >
-              <div className="mb-6">
-                <card.icon className="h-5 w-5 text-gray-400" strokeWidth={1.5} />
+              {/* Effet reflet 3D / Glass */}
+              <div className="absolute top-0 inset-x-0 h-1/2 bg-gradient-to-b from-white/15 to-transparent opacity-50 pointer-events-none" />
+              
+              <div className="mb-3 relative z-10">
+                <div className="h-12 w-12 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-md border border-white/20 shadow-inner">
+                  <card.icon className="h-5 w-5 text-white" strokeWidth={2} />
+                </div>
               </div>
-              <div>
-                <p className="text-2xl sm:text-[28px] font-bold tracking-tight text-[#111827] mb-1.5">
+              <div className="relative z-10">
+                <p className="text-2xl sm:text-[28px] font-bold tracking-tight text-white mb-1.5 drop-shadow-md">
                   {card.value}
                 </p>
-                <p className="text-[13px] text-gray-500 font-medium">{card.label}</p>
-              </div>
-              {/* Info Icon bottom right */}
-              <div className="absolute bottom-6 right-6 cursor-help hover:text-gray-600 transition-colors">
-                <HelpCircle className="h-4 w-4 text-gray-400" />
+                <p className="text-[13px] text-blue-100 font-medium tracking-wide">{card.label}</p>
               </div>
             </div>
           ))}
