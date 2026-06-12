@@ -62,6 +62,7 @@ import AdminWithdrawals from "./pages/dashboard/AdminWithdrawals";
 import AdminSupport from "./pages/dashboard/AdminSupport";
 import AdminModeration from "./pages/dashboard/AdminModeration";
 import DashboardStores from "./pages/dashboard/DashboardStores";
+import DashboardOthers from "./pages/dashboard/DashboardOthers";
 
 import DashboardBadge from "./pages/dashboard/DashboardBadge";
 import AdminBadges from "./pages/dashboard/AdminBadges";
@@ -139,6 +140,7 @@ const AppContent = () => {
           <Route path="/dashboard/sales" element={<ProtectedRoute><DashboardSales /></ProtectedRoute>} />
           <Route path="/dashboard/clients" element={<ProtectedRoute><DashboardClients /></ProtectedRoute>} />
           <Route path="/dashboard/licenses" element={<ProtectedRoute><DashboardLicenses /></ProtectedRoute>} />
+          <Route path="/dashboard/others" element={<ProtectedRoute><DashboardOthers /></ProtectedRoute>} />
           <Route path="/dashboard/revenue" element={<ProtectedRoute><DashboardRevenue /></ProtectedRoute>} />
           <Route path="/dashboard/analytics" element={<ProtectedRoute><DashboardAnalytics /></ProtectedRoute>} />
           <Route path="/dashboard/marketing" element={<ProtectedRoute><DashboardMarketing /></ProtectedRoute>} />

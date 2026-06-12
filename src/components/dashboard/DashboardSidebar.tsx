@@ -2,7 +2,7 @@ import {
   LayoutDashboard, Package, Key,
   Settings, LogOut, Store, ShoppingCart, Users, DollarSign,
   BarChart3, Megaphone, Link2, Zap, HelpCircle, Wallet, Shield, Webhook, MessageCircle,
-  ChevronsUpDown, Plus, Check, BadgeCheck
+  ChevronsUpDown, Plus, Check, BadgeCheck, LayoutGrid
 } from "lucide-react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import logo from "@/assets/logo.png";
@@ -24,20 +24,8 @@ const mainItems = [
   { title: "Accueil", url: "/dashboard", icon: LayoutDashboard },
   { title: "Produits", url: "/dashboard/products", icon: Package },
   { title: "Ventes", url: "/dashboard/sales", icon: ShoppingCart },
-  { title: "Clients", url: "/dashboard/clients", icon: Users },
-  { title: "Licences", url: "/dashboard/licenses", icon: Key },
-  { title: "Revenus", url: "/dashboard/revenue", icon: DollarSign },
-  { title: "Wallet", url: "/dashboard/wallet", icon: Wallet, external: true },
   { title: "Analytiques", url: "/dashboard/analytics", icon: BarChart3 },
-];
-
-const toolsItems = [
-  { title: "Badge Verify", url: "/dashboard/badge", icon: BadgeCheck },
-  { title: "Marketing", url: "/dashboard/marketing", icon: Megaphone },
-  { title: "Affiliation", url: "/dashboard/affiliation", icon: Link2 },
-  { title: "Automatisations", url: "/dashboard/automations", icon: Zap },
-  { title: "Webhooks", url: "/dashboard/webhooks", icon: Webhook },
-  { title: "Messages", url: "/dashboard/support", icon: MessageCircle },
+  { title: "Autres", url: "/dashboard/others", icon: LayoutGrid },
 ];
 
 export function DashboardSidebar() {
@@ -183,32 +171,7 @@ export function DashboardSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {!collapsed && <Separator className="my-1 bg-sidebar-border/50" />}
 
-        {/* Tools */}
-        <SidebarGroup className="py-0.5">
-          {!collapsed && <SidebarGroupLabel className="text-[10px] uppercase tracking-wider text-sidebar-foreground/30 px-2 mb-0 h-6">Outils</SidebarGroupLabel>}
-          <SidebarGroupContent>
-            <SidebarMenu className="gap-0">
-              {toolsItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={isActive(item.url)}
-                    className="dash-menu-item"
-                  >
-                    <NavLink to={item.url}>
-                      <item.icon className="h-3.5 w-3.5" />
-                      {!collapsed && <span>{item.title}</span>}
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        {!collapsed && <Separator className="my-1 bg-sidebar-border/50" />}
 
         {/* Settings & help */}
         <SidebarGroup className="py-0.5">
