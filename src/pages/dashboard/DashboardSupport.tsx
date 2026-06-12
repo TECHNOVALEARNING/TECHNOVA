@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import DashboardBuyerTicketsTab from "@/components/dashboard/DashboardBuyerTicketsTab";
 
 interface Conversation {
   id: string;
@@ -229,11 +230,19 @@ const DashboardSupport = () => {
                 </Badge>
               )}
             </TabsTrigger>
-            <TabsTrigger value="support" className="gap-2">
+            <TabsTrigger value="buyer_tickets" className="gap-2">
               <MessageCircle className="h-4 w-4" />
-              {isAdmin ? "Support Admin" : "Mes tickets"}
+              Tickets Commandes
+            </TabsTrigger>
+            <TabsTrigger value="support" className="gap-2">
+              <User className="h-4 w-4" />
+              {isAdmin ? "Support Admin" : "Support Technova"}
             </TabsTrigger>
           </TabsList>
+
+          <TabsContent value="buyer_tickets">
+            <DashboardBuyerTicketsTab />
+          </TabsContent>
 
           {/* ===== Contact Messages Tab ===== */}
           <TabsContent value="contact">
