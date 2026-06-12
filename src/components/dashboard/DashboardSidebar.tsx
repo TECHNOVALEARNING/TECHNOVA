@@ -44,100 +44,12 @@ export function DashboardSidebar() {
 
   return (
     <Sidebar collapsible="icon" className="dashboard-shell-scope border-r-0">
-      {/* Store Switcher Header */}
-      <SidebarHeader className="p-3 border-b border-sidebar-border/20">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button className="flex items-center gap-2.5 w-full rounded-xl p-2 hover:bg-sidebar-accent transition-colors text-left group">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/10 border border-white/20">
-                {activeStore?.logo_url ? (
-                  <img src={activeStore.logo_url} alt="" className="h-9 w-9 rounded-xl object-cover" />
-                ) : (
-                  <img src={logo} alt="TECHNOVA" className="h-5 w-5 object-contain brightness-0 invert" />
-                )}
-              </div>
-              {!collapsed && (
-                <>
-                  <div className="flex-1 min-w-0">
-                    <span className="text-sm font-bold text-sidebar-foreground block truncate">
-                      {activeStore?.name || "TECHNOVA"}
-                    </span>
-                    <span className="text-[10px] text-sidebar-foreground/40 leading-none uppercase tracking-wider">
-                      {activeStores.length} boutique{activeStores.length !== 1 ? "s" : ""}
-                    </span>
-                  </div>
-                  <ChevronsUpDown className="h-3.5 w-3.5 text-sidebar-foreground/30 group-hover:text-sidebar-foreground/70 transition-colors shrink-0" />
-                </>
-              )}
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            align="start"
-            side="bottom"
-            className="w-[--radix-dropdown-menu-trigger-width] min-w-[220px]"
-          >
-            <DropdownMenuLabel className="text-[10px] uppercase tracking-wider text-muted-foreground">
-              Vos boutiques
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            {activeStores.map((store) => (
-              <DropdownMenuItem
-                key={store.id}
-                onClick={() => setActiveStoreId(store.id)}
-                className="flex items-center gap-2.5 cursor-pointer"
-              >
-                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-primary/10 overflow-hidden">
-                  {store.logo_url ? (
-                    <img src={store.logo_url} alt="" className="h-6 w-6 object-cover" />
-                  ) : (
-                    <Store className="h-3.5 w-3.5 text-primary" />
-                  )}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate">{store.name}</p>
-                  <p className="text-[10px] text-muted-foreground truncate">{store.slug}.technova.app</p>
-                </div>
-                {store.id === activeStore?.id && (
-                  <Check className="h-4 w-4 text-primary shrink-0" />
-                )}
-              </DropdownMenuItem>
-            ))}
-            {stores.filter(s => s.is_archived).length > 0 && (
-              <>
-                <DropdownMenuSeparator />
-                <DropdownMenuLabel className="text-[10px] uppercase tracking-wider text-muted-foreground">
-                  Archivées
-                </DropdownMenuLabel>
-                {stores.filter(s => s.is_archived).map((store) => (
-                  <DropdownMenuItem
-                    key={store.id}
-                    onClick={() => setActiveStoreId(store.id)}
-                    className="flex items-center gap-2.5 cursor-pointer opacity-50"
-                  >
-                    <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-muted overflow-hidden">
-                      <Store className="h-3.5 w-3.5 text-muted-foreground" />
-                    </div>
-                    <p className="text-sm truncate">{store.name}</p>
-                  </DropdownMenuItem>
-                ))}
-              </>
-            )}
-            {activeStores.length < 3 && (
-              <>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={() => navigate("/dashboard/stores")}
-                  className="flex items-center gap-2.5 cursor-pointer text-primary"
-                >
-                  <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-dashed border-primary/40">
-                    <Plus className="h-3.5 w-3.5" />
-                  </div>
-                  <span className="text-sm font-medium">Créer une boutique</span>
-                </DropdownMenuItem>
-              </>
-            )}
-          </DropdownMenuContent>
-        </DropdownMenu>
+      {/* Logo Header */}
+      <SidebarHeader className="p-4 border-b border-sidebar-border/20 flex flex-row items-center justify-center min-h-[64px]">
+        <div className="flex items-center gap-2">
+          <img src={logo} alt="TECHNOVA" className="h-6 w-auto object-contain brightness-0 invert" />
+          {!collapsed && <span className="text-white font-bold text-xl tracking-tight">TECHNOVA</span>}
+        </div>
       </SidebarHeader>
 
       <SidebarContent className="py-1 px-1 overflow-y-auto">
@@ -231,35 +143,7 @@ export function DashboardSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="p-2 border-t border-sidebar-border">
-        <div className="flex items-center gap-2 p-1 rounded-lg hover:bg-sidebar-accent/50 transition-colors">
-          <Avatar className="h-7 w-7 shrink-0">
-            <AvatarImage src={profile?.avatar_url || ""} />
-            <AvatarFallback className="bg-sidebar-accent text-sidebar-accent-foreground text-[10px] font-medium">
-              {profile?.display_name?.charAt(0)?.toUpperCase() || "U"}
-            </AvatarFallback>
-          </Avatar>
-          {!collapsed && (
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-medium text-sidebar-foreground truncate leading-tight">
-                {profile?.display_name || "Créateur"}
-              </p>
-              <p className="text-[10px] text-sidebar-foreground/40 truncate leading-tight">
-                {user?.email}
-              </p>
-            </div>
-          )}
-          {!collapsed && (
-            <button
-              onClick={signOut}
-              className="text-sidebar-foreground/40 hover:text-sidebar-foreground transition-colors p-1 rounded-md hover:bg-sidebar-accent/50"
-              title="Déconnexion"
-            >
-              <LogOut className="h-3.5 w-3.5" />
-            </button>
-          )}
-        </div>
-      </SidebarFooter>
+      {/* Footer removed to move user profile to top bar */}
     </Sidebar>
   );
 }
