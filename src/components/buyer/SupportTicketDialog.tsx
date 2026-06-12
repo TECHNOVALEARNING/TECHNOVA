@@ -74,6 +74,23 @@ const SupportTicketDialog = ({ open, onOpenChange, orderId, productId, customerI
     if (open) void load();
   }, [open, orderId]);
 
+  useEffect(() => {
+    if (!ticket) return;
+    const channel = supabase
+      .channel(`buyer-ticket-msgs-${ticket.id}`)
+      .on("postgres_changes", {
+        event: "INSERT",
+        schema: "public",
+        table: "support_ticket_messages",
+        filter: `ticket_id=eq.${ticket.id}`,
+      }, (payload) => {
+        setMessages((prev) => [...prev, payload.new as Message]);
+      })
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [ticket]);
+
   const createTicket = async () => {
     if (!subject.trim() || !content.trim()) {
       toast.error("Sujet et message requis");
