@@ -12,6 +12,7 @@ import {
   DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useNavigate } from "react-router-dom";
+import logo from "@/assets/logo.png";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const isMobile = useIsMobile();
@@ -31,9 +32,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
               
               {/* Branding Mobile */}
               <div className="md:hidden flex items-center gap-2 ml-1">
-                <div className="h-7 w-7 rounded-[8px] bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center shadow-[0_2px_10px_rgba(37,99,235,0.2)]">
-                  <span className="text-white font-black text-[14px] font-sans">T</span>
-                </div>
+                <img src={logo} alt="TECHNOVA Logo" className="h-7 w-7 object-contain rounded-md" />
                 <span className="font-black text-[15px] tracking-[0.02em] bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
                   TECHNOVA
                 </span>
