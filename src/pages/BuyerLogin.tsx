@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,60 @@ const BuyerLogin = () => {
   const [loading, setLoading] = useState(false);
   const [customerName, setCustomerName] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if user is already logged in or if Supabase just parsed a token
+    const checkSession = async (session: any) => {
+      if (!session) return;
+      try {
+        setLoading(true);
+        let customerName = session.user?.user_metadata?.full_name || session.user?.email?.split("@")[0] || "Client";
+        let customerEmail = session.user?.email || "";
+        let customerId = session.user?.id || "";
+        let orders = [];
+
+        const { data, error } = await supabase.functions.invoke("buyer-oauth-check");
+        if (!error && !data?.error && data?.customer) {
+          customerName = data.customer.name || customerName;
+          customerEmail = data.customer.email || customerEmail;
+          customerId = data.customer.id || customerId;
+          orders = data.orders || [];
+        }
+
+        sessionStorage.setItem("buyer_session", JSON.stringify({
+          email: customerEmail,
+          customerName: customerName,
+          customerId: customerId,
+          orders: orders,
+          authenticatedAt: Date.now(),
+        }));
+        
+        navigate("/dashboard", { replace: true });
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session && !sessionStorage.getItem("buyer_session")) {
+        checkSession(session);
+      } else if (session && sessionStorage.getItem("buyer_session")) {
+        navigate("/dashboard", { replace: true });
+      }
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_IN" && session) {
+        checkSession(session);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [navigate]);
 
   const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
