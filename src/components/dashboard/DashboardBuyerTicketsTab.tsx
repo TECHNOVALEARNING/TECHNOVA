@@ -62,17 +62,47 @@ const DashboardBuyerTicketsTab = () => {
 
   const loadTickets = async () => {
     setLoading(true);
-    const { data, error } = await supabase
+    const { data: tickets, error } = await supabase
       .from("support_tickets")
-      .select("id, subject, status, created_at, customers(name, email)")
+      .select("id, subject, status, created_at, customer_id")
       .eq("store_owner_id", user?.id)
       .order("created_at", { ascending: false });
     
     if (error) {
       console.error("Error fetching tickets:", error);
-      toast.error("Erreur de chargement des tickets: " + error.message);
+      toast.error("Erreur: " + error.message);
+      setTickets([]);
+      setLoading(false);
+      return;
     }
-    setTickets((data as any) || []);
+
+    if (tickets && tickets.length > 0) {
+      const customerIds = [...new Set(tickets.map(t => t.customer_id))].filter(Boolean);
+      let customersMap: Record<string, any> = {};
+      
+      if (customerIds.length > 0) {
+        const { data: customers } = await supabase
+          .from("customers")
+          .select("id, name, email")
+          .in("id", customerIds);
+          
+        if (customers) {
+          customersMap = customers.reduce((acc, curr) => {
+            acc[curr.id] = curr;
+            return acc;
+          }, {} as Record<string, any>);
+        }
+      }
+
+      const ticketsWithCustomers = tickets.map(ticket => ({
+        ...ticket,
+        customers: customersMap[ticket.customer_id] || { name: "Client inconnu", email: "N/A" }
+      }));
+      setTickets(ticketsWithCustomers as any);
+    } else {
+      setTickets([]);
+    }
+    
     setLoading(false);
   };
 
