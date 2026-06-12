@@ -25,7 +25,7 @@ const mainItems = [
   { title: "Produits", url: "/dashboard/products", icon: Package },
   { title: "Ventes", url: "/dashboard/sales", icon: ShoppingCart },
   { title: "Analytiques", url: "/dashboard/analytics", icon: BarChart3 },
-  { title: "Autres", url: "/dashboard/others", icon: LayoutGrid },
+  { title: "Autres", url: "/dashboard/others", icon: LayoutGrid, badge: "New" },
 ];
 
 export function DashboardSidebar() {
@@ -43,17 +43,17 @@ export function DashboardSidebar() {
   };
 
   return (
-    <Sidebar collapsible="icon" className="dashboard-shell-scope border-r border-border bg-white">
+    <Sidebar collapsible="icon" className="dashboard-shell-scope border-r-0">
       {/* Store Switcher Header */}
-      <SidebarHeader className="p-3 border-b border-sidebar-border">
+      <SidebarHeader className="p-3 border-b border-sidebar-border/20">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className="flex items-center gap-2.5 w-full rounded-xl p-2 hover:bg-sidebar-accent transition-colors text-left group">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 border border-primary/20">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/10 border border-white/20">
                 {activeStore?.logo_url ? (
                   <img src={activeStore.logo_url} alt="" className="h-9 w-9 rounded-xl object-cover" />
                 ) : (
-                  <img src={logo} alt="TECHNOVA" className="h-5 w-5 object-contain" />
+                  <img src={logo} alt="TECHNOVA" className="h-5 w-5 object-contain brightness-0 invert" />
                 )}
               </div>
               {!collapsed && (
@@ -154,14 +154,23 @@ export function DashboardSidebar() {
                     className="dash-menu-item"
                   >
                     {item.external ? (
-                      <a href={item.url} target="_blank" rel="noopener noreferrer">
-                        <item.icon className="h-3.5 w-3.5" />
-                        {!collapsed && <span>{item.title}</span>}
+                      <a href={item.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between w-full">
+                        <div className="flex items-center gap-2">
+                          <item.icon className="h-4 w-4 shrink-0" />
+                          {!collapsed && <span>{item.title}</span>}
+                        </div>
                       </a>
                     ) : (
-                      <NavLink to={item.url} end={item.url === "/dashboard"}>
-                        <item.icon className="h-3.5 w-3.5" />
-                        {!collapsed && <span>{item.title}</span>}
+                      <NavLink to={item.url} end={item.url === "/dashboard"} className="flex items-center justify-between w-full">
+                        <div className="flex items-center gap-2">
+                          <item.icon className="h-4 w-4 shrink-0" />
+                          {!collapsed && <span>{item.title}</span>}
+                        </div>
+                        {!collapsed && item.badge && (
+                          <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-red-500 text-white ml-auto">
+                            {item.badge}
+                          </span>
+                        )}
                       </NavLink>
                     )}
                   </SidebarMenuButton>

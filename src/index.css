@@ -161,55 +161,52 @@
 
 /* ============= Sidebar Scope ============= */
 .dashboard-shell-scope {
-  --sidebar-background: 0 0% 100%;
-  --sidebar-foreground: 222 47% 40%;
-  --sidebar-accent: 210 40% 96%;
-  background-color: #ffffff;
+  --sidebar-background: 231 65% 48%; /* Deep modern blue */
+  --sidebar-foreground: 0 0% 100%; /* White text */
+  --sidebar-accent: 231 65% 55%; /* Lighter blue for hover */
+  background-color: hsl(var(--sidebar-background));
+  color: hsl(var(--sidebar-foreground));
+  border-right: none !important; /* Remove right border */
 }
 
 /* ============= Sidebar Menu Item — Clean Flat ============= */
 .dashboard-shell .dash-menu-item,
 .dashboard-shell-scope .dash-menu-item {
   position: relative;
-  border-radius: 0.5rem; /* Smaller radius */
-  height: 2rem; /* Compact size */
+  border-radius: 0.5rem;
+  height: 2.25rem;
   font-size: 13px;
+  font-weight: 500;
   color: hsl(var(--sidebar-foreground));
   transition: all 0.2s ease;
-  padding: 0 0.5rem;
+  padding: 0 0.75rem;
+  margin-bottom: 0.25rem;
 }
 
 @media (max-width: 767px) {
   .dashboard-shell-scope .dash-menu-item {
-    height: 2.25rem;
+    height: 2.5rem;
     font-size: 14px;
-    border-radius: 0.5rem;
   }
 }
 
 .dashboard-shell .dash-menu-item:hover,
 .dashboard-shell-scope .dash-menu-item:hover {
   background-color: hsl(var(--sidebar-accent));
-  color: hsl(222 47% 11%);
+  color: hsl(var(--sidebar-foreground));
 }
 
 .dashboard-shell .dash-menu-item[data-active="true"],
 .dashboard-shell-scope .dash-menu-item[data-active="true"] {
-  background-color: hsl(var(--primary) / 0.1);
-  color: hsl(var(--primary)) !important;
+  background-color: #ffffff;
+  color: hsl(var(--sidebar-background)) !important;
   font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 .dashboard-shell .dash-menu-item[data-active="true"]::before,
 .dashboard-shell-scope .dash-menu-item[data-active="true"]::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 15%;
-  bottom: 15%;
-  width: 3px;
-  border-radius: 0 4px 4px 0;
-  background-color: hsl(var(--primary));
+  display: none; /* No vertical bar needed */
 }
 
 /* Remove animated dots and 3D hero */
