@@ -102,12 +102,11 @@ const AppContent = () => {
       <BrowserRouter>
         <ScrollToTop />
         <Routes>
-          <Route path="/" element={<Navigate to="/mes-achats" replace />} />
-          <Route path="/buyer-login" element={<BuyerLogin />} />
-          <Route path="/buyer-auth/callback" element={<BuyerOAuthCallback />} />
-          <Route path="/mes-achats" element={<BuyerDashboard />} />
-          <Route path="/mes-achats/:orderId" element={<BuyerOrderDetail />} />
-          <Route path="*" element={<Navigate to="/buyer-login" replace />} />
+          <Route path="/" element={<BuyerLogin />} />
+          <Route path="/auth/callback" element={<BuyerOAuthCallback />} />
+          <Route path="/dashboard" element={<BuyerDashboard />} />
+          <Route path="/orders/:orderId" element={<BuyerOrderDetail />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
     );
@@ -147,10 +146,10 @@ const AppContent = () => {
           <Route path="/store/:slug/:productId" element={<StoreProductDetail />} />
           <Route path="/payment-callback" element={<PaymentCallback />} />
           <Route path="/checkout/:productId" element={<CheckoutPage />} />
-          <Route path="/buyer-login" element={<ExternalRedirect to="https://portal.technovalearning.com/buyer-login" />} />
-          <Route path="/buyer-auth/callback" element={<ExternalRedirect to="https://portal.technovalearning.com/buyer-auth/callback" />} />
-          <Route path="/mes-achats" element={<ExternalRedirect to="https://portal.technovalearning.com/mes-achats" />} />
-          <Route path="/mes-achats/:orderId" element={<ExternalRedirect to="https://portal.technovalearning.com/mes-achats" />} />
+          <Route path="/buyer-login" element={<ExternalRedirect to="https://portal.technovalearning.com/" />} />
+          <Route path="/buyer-auth/callback" element={<ExternalRedirect to="https://portal.technovalearning.com/auth/callback" />} />
+          <Route path="/mes-achats" element={<ExternalRedirect to="https://portal.technovalearning.com/dashboard" />} />
+          <Route path="/mes-achats/:orderId" element={<ExternalRedirect to="https://portal.technovalearning.com/dashboard" />} />
           
           <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
           <Route path="/dashboard" element={<ProtectedRoute><DashboardOverview /></ProtectedRoute>} />
