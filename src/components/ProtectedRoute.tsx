@@ -1,7 +1,7 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { Navigate, useLocation } from "react-router-dom";
 
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+const ProtectedRoute = ({ children, requireAdmin }: { children: React.ReactNode, requireAdmin?: boolean }) => {
   const { user, profile, loading } = useAuth();
   const location = useLocation();
 
@@ -14,6 +14,10 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   }
 
   if (!user) return <Navigate to="/login" replace />;
+
+  if (requireAdmin && user.email !== "isidoreagonan@gmail.com") {
+    return <Navigate to="/dashboard" replace />;
+  }
 
   // Redirect to onboarding if not completed (unless already on onboarding page)
   if (profile && !profile.onboarding_completed && location.pathname !== "/onboarding") {
