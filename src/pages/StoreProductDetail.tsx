@@ -744,7 +744,7 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
               <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-400">Liens</h3>
               <ul className="space-y-2.5">
                 <li>
-                  <a href="https://portal.technovalearning.com/mes-achats" className="inline-flex items-center gap-2 text-sm font-medium text-gray-900 hover:opacity-70">
+                  <a href="https://portal.technovalearning.com/dashboard" className="inline-flex items-center gap-2 text-sm font-medium text-gray-900 hover:opacity-70">
                     <ShoppingBag className="h-4 w-4" />
                     Voir mes commandes
                   </a>

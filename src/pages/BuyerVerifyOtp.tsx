@@ -64,7 +64,7 @@ const BuyerVerifyOtp = () => {
       if (data?.error) { toast.error(data.error); return; }
       setBuyerOtpVerified();
       toast.success("Vérification réussie !");
-      navigate("/mes-achats", { replace: true });
+      navigate("/dashboard", { replace: true });
     } catch (e: any) {
       toast.error(e.message || "Code invalide");
     } finally {

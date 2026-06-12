@@ -213,12 +213,12 @@ const BuyerDashboard = () => {
                   {o.store_owner?.store_slug && (
                     <p className="text-xs text-muted-foreground mb-3">
                       par{" "}
-                      <Link
-                        to={`/store/${o.store_owner.store_slug}`}
+                      <a
+                        href={`https://technovalearning.com/store/${o.store_owner.store_slug}`}
                         className="text-primary hover:underline"
                       >
                         {o.store_owner.display_name || o.store_owner.store_slug}
-                      </Link>
+                      </a>
                     </p>
                   )}
                   <Link to={`/orders/${o.id}`}>

@@ -117,7 +117,7 @@ const BuyerOrderDetail = () => {
         .maybeSingle();
       if (!o) {
         toast.error("Commande introuvable");
-        navigate("/mes-achats");
+        navigate("/dashboard");
         return;
       }
       setOrder(o as OrderRow);
@@ -181,7 +181,7 @@ const BuyerOrderDetail = () => {
             <img src={logo} alt="TECHNOVA" className="h-8 w-8 rounded-lg object-contain" />
             <span className="text-lg font-bold text-foreground">TECHNOVA</span>
           </Link>
-          <Link to="/mes-achats">
+          <Link to="/dashboard">
             <Button variant="ghost" size="sm" className="gap-1.5">
               <ArrowLeft className="h-4 w-4" /> Mes achats
             </Button>
@@ -205,9 +205,9 @@ const BuyerOrderDetail = () => {
           {store?.store_slug && (
             <p className="mt-1 text-sm text-muted-foreground">
               Vendu par{" "}
-              <Link to={`/store/${store.store_slug}`} className="text-primary hover:underline">
+              <a href={`https://technovalearning.com/store/${store.store_slug}`} className="text-primary hover:underline">
                 {store.display_name || store.store_slug}
-              </Link>
+              </a>
             </p>
           )}
         </motion.div>
@@ -297,8 +297,8 @@ const BuyerOrderDetail = () => {
                 <ul className="space-y-2">
                   {recommendations.map((r) => (
                     <li key={r.id}>
-                      <Link
-                        to={`/store/${store?.store_slug}/${r.id}`}
+                      <a
+                        href={`https://technovalearning.com/store/${store?.store_slug}/${r.id}`}
                         className="flex items-center gap-3 rounded-lg border border-border bg-secondary/30 p-2 hover:bg-secondary transition-colors"
                       >
                         {r.thumbnail_url ? (
@@ -313,7 +313,7 @@ const BuyerOrderDetail = () => {
                           <p className="text-[11px] text-muted-foreground capitalize">{r.type}</p>
                         </div>
                         <ExternalLink className="h-4 w-4 text-muted-foreground" />
-                      </Link>
+                      </a>
                     </li>
                   ))}
                 </ul>
