@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
+import { buyerSupabase as supabase } from "@/integrations/supabase/buyer-client";
 import { Download, Play, FileText, Key, Copy, Check, ExternalLink, BookOpen, Layers } from "lucide-react";
 import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";

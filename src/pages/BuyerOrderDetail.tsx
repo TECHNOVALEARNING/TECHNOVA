@@ -17,7 +17,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { supabase } from "@/integrations/supabase/client";
+import { buyerSupabase as supabase } from "@/integrations/supabase/buyer-client";
 import { toast } from "sonner";
 import logo from "@/assets/logo.png";
 

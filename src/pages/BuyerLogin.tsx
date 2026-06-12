@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ShoppingBag, Mail, ArrowLeft, Loader2 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { buyerSupabase as supabase } from "@/integrations/supabase/buyer-client";
 import { toast } from "sonner";
 import logo from "@/assets/logo.png";
 

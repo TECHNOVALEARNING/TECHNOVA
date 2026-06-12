@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { buyerSupabase as supabase } from "@/integrations/supabase/buyer-client";
 import { toast } from "sonner";
 
 

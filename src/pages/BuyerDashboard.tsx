@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import BuyerContentDialog from "@/components/BuyerContentDialog";
+import { buyerSupabase as supabase } from "@/integrations/supabase/buyer-client";
 
 interface OrderWithProduct {
   id: string;
@@ -70,6 +71,37 @@ const BuyerDashboard = () => {
       setCustomerName(session.customerName);
       setCustomerId(session.customerId);
       setOrders(session.orders || []);
+
+      // Fetch latest orders to make sure we don't miss new purchases
+      const fetchLatestOrders = async () => {
+        if (!session.customerId) return;
+        try {
+          const { data, error } = await supabase
+            .from("orders")
+            .select("id, amount, status, created_at, product:products(id, title, type, thumbnail_url, download_url), store_owner:profiles(id, display_name, store_slug)")
+            .eq("customer_id", session.customerId)
+            .order("created_at", { ascending: false });
+            
+          if (data && !error) {
+            const enriched = data.map((o: any) => ({
+              id: o.id,
+              amount: o.amount,
+              status: o.status,
+              created_at: o.created_at,
+              product: Array.isArray(o.product) ? o.product[0] : o.product,
+              store_owner: Array.isArray(o.store_owner) ? o.store_owner[0] : o.store_owner
+            }));
+            setOrders(enriched);
+            session.orders = enriched;
+            sessionStorage.setItem("buyer_session", JSON.stringify(session));
+          }
+        } catch (err) {
+          console.error("Failed to refresh orders", err);
+        }
+      };
+      
+      fetchLatestOrders();
+
     } catch {
       sessionStorage.removeItem("buyer_session");
       navigate("/buyer-login");
