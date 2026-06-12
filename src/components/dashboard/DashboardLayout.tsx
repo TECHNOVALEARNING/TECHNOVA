@@ -29,6 +29,16 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
             <div className="flex items-center gap-3 min-w-0 pl-1">
               <SidebarTrigger className="md:hidden" />
               
+              {/* Branding Mobile */}
+              <div className="md:hidden flex items-center gap-2 ml-1">
+                <div className="h-7 w-7 rounded-[8px] bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center shadow-[0_2px_10px_rgba(37,99,235,0.2)]">
+                  <span className="text-white font-black text-[14px] font-sans">T</span>
+                </div>
+                <span className="font-black text-[15px] tracking-[0.02em] bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+                  TECHNOVA
+                </span>
+              </div>
+              
               <button 
                 onClick={() => navigate('/dashboard/stores')}
                 className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-md border border-primary/20 text-primary bg-primary/5 hover:bg-primary/10 transition-colors"

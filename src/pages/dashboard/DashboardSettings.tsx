@@ -103,26 +103,23 @@ const DashboardSettings = () => {
             {SETTINGS_CATEGORIES.map((category) => (
               <div key={category.title}>
                 <h2 className="text-lg font-serif font-semibold text-foreground mb-4 pl-1">{category.title}</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
                   {category.items.map((item) => (
                     <div
                       key={item.id}
                       onClick={() => setSearchParams({ tab: item.id })}
-                      className="group cursor-pointer p-5 rounded-2xl bg-white border border-gray-100 shadow-[0_2px_10px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_30px_rgba(37,99,235,0.08)] hover:border-blue-100 transition-all duration-300 flex items-center gap-5"
+                      className="group cursor-pointer p-4 sm:p-5 rounded-2xl bg-white border border-gray-100 shadow-[0_2px_10px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_30px_rgba(37,99,235,0.08)] hover:border-blue-100 transition-all duration-300 flex flex-col items-center justify-center gap-2 sm:gap-3 text-center aspect-square sm:aspect-auto sm:min-h-[160px]"
                     >
-                      <div className="h-12 w-12 shrink-0 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-500 group-hover:bg-blue-50 group-hover:text-blue-600 group-hover:scale-105 transition-all duration-300">
-                        <item.icon className="h-6 w-6" strokeWidth={1.5} />
+                      <div className="h-10 w-10 sm:h-12 sm:w-12 shrink-0 rounded-xl sm:rounded-2xl bg-gray-50 flex items-center justify-center text-gray-500 group-hover:bg-blue-50 group-hover:text-blue-600 group-hover:scale-105 transition-all duration-300">
+                        <item.icon className="h-5 w-5 sm:h-6 sm:w-6" strokeWidth={1.5} />
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-[15px] text-gray-900 group-hover:text-blue-700 transition-colors truncate">
+                      <div className="w-full">
+                        <h3 className="font-semibold text-[13px] sm:text-[15px] text-gray-900 group-hover:text-blue-700 transition-colors leading-tight px-1">
                           {item.title}
                         </h3>
-                        <p className="text-[13px] text-gray-500 mt-0.5 leading-relaxed line-clamp-2">
+                        <p className="hidden sm:block text-[13px] text-gray-500 mt-1.5 leading-relaxed line-clamp-2">
                           {item.desc}
                         </p>
-                      </div>
-                      <div className="shrink-0 text-gray-300 group-hover:text-blue-500 group-hover:translate-x-1 transition-all">
-                        <ArrowRight className="h-5 w-5" />
                       </div>
                     </div>
                   ))}
