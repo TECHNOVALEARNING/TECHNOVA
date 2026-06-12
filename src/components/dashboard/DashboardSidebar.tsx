@@ -55,13 +55,13 @@ export function DashboardSidebar() {
   };
 
   return (
-    <Sidebar collapsible="icon" className="dashboard-shell-scope border-r border-sidebar-border bg-sidebar backdrop-blur-2xl">
+    <Sidebar collapsible="icon" className="dashboard-shell-scope border-r border-border bg-white">
       {/* Store Switcher Header */}
       <SidebarHeader className="p-3 border-b border-sidebar-border">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className="flex items-center gap-2.5 w-full rounded-xl p-2 hover:bg-sidebar-accent transition-colors text-left group">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[hsl(var(--blue-deep))] to-[hsl(var(--blue-bright))] shadow-[0_4px_16px_hsl(var(--amber-glow)/0.35)] ring-1 ring-white/10">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 border border-primary/20">
                 {activeStore?.logo_url ? (
                   <img src={activeStore.logo_url} alt="" className="h-9 w-9 rounded-xl object-cover" />
                 ) : (

@@ -112,332 +112,124 @@
 }
 
 /* ============================================
-   PREMIUM DASHBOARD SHELL — Cobalt + White 3D
-   Scoped via .dashboard-shell to avoid leaking
+   CLEAN DASHBOARD SHELL — White & Blue
+   Minimalist, professional, mobile-optimized
    ============================================ */
 .dashboard-shell {
-  --background: 220 40% 97%;
+  --background: 210 40% 98%; /* Very light gray/blue #F8FAFC */
   --foreground: 222 47% 11%;
-  --card: 0 0% 100%;
-  --card-foreground: 222 47% 11%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 222 47% 11%;
-  --primary: 221 83% 53%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 220 30% 94%;
-  --secondary-foreground: 222 47% 11%;
-  --muted: 220 30% 94%;
-  --muted-foreground: 220 14% 46%;
-  --accent: 221 83% 53%;
-  --accent-foreground: 0 0% 100%;
-  --destructive: 0 72% 51%;
-  --destructive-foreground: 0 0% 100%;
-  --border: 220 20% 88%;
-  --input: 220 20% 88%;
-  --ring: 221 83% 53%;
+  
   --sidebar-background: 0 0% 100%;
-  --sidebar-foreground: 222 47% 20%;
-  --sidebar-primary: 221 83% 53%;
-  --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 220 30% 96%;
-  --sidebar-accent-foreground: 221 83% 53%;
-  --sidebar-border: 220 20% 92%;
-  --sidebar-ring: 221 83% 53%;
+  --sidebar-foreground: 222 47% 30%;
+  --sidebar-accent: 210 40% 96%;
+  
+  --primary: 221 83% 53%; /* The brand blue */
+  --primary-foreground: 0 0% 100%;
 
-  /* Brand palette */
-  --blue-deep: 224 89% 38%;
-  --blue-core: 221 83% 53%;
-  --blue-bright: 213 94% 60%;
-  --blue-sky: 199 89% 64%;
-  --blue-ice: 210 100% 96%;
-  --neon-green: 145 80% 42%;
-
-  background:
-    radial-gradient(at 0% 0%, hsl(var(--blue-ice)) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, hsl(220 100% 95%) 0px, transparent 50%),
-    radial-gradient(at 50% 100%, hsl(199 100% 95%) 0px, transparent 50%),
-    hsl(var(--background));
+  background-color: hsl(var(--background));
   color: hsl(var(--foreground));
   position: relative;
-  isolation: isolate;
 }
 
-.dashboard-shell::before,
-.dashboard-shell::after {
-  content: "";
-  position: fixed;
-  pointer-events: none;
-  z-index: 0;
-  border-radius: 9999px;
-  filter: blur(140px);
-  animation: dash-float 18s ease-in-out infinite;
-}
-.dashboard-shell::before {
-  top: -15%;
-  left: 5%;
-  width: 700px;
-  height: 700px;
-  background: hsl(var(--blue-bright) / 0.28);
-}
-.dashboard-shell::after {
-  bottom: -10%;
-  right: -5%;
-  width: 600px;
-  height: 600px;
-  background: hsl(var(--blue-sky) / 0.22);
-  animation-delay: -9s;
+/* Glass surfaces replaced by clean white cards */
+.dash-glass, .dash-glass-strong, .dash-hero-3d {
+  background-color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 0.75rem; /* Smaller radius */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
 }
 
-@keyframes dash-float {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(40px, -30px) scale(1.08); }
+.dash-glass:hover, .dash-glass-strong:hover, .dash-hero-3d:hover {
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
 }
 
-.dashboard-shell > * { position: relative; z-index: 1; }
-
-/* Glass surfaces (light mode, 3D depth) */
-.dash-glass {
-  background: linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.75) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(20px);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.9) inset,
-    0 -1px 0 rgba(15, 23, 42, 0.04) inset,
-    0 10px 30px -12px rgba(15, 23, 42, 0.12),
-    0 4px 12px -4px rgba(15, 23, 42, 0.06);
-}
-.dash-glass-strong {
-  background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.92) 100%);
-  border: 1px solid rgba(255, 255, 255, 1);
-  backdrop-filter: blur(24px);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 1) inset,
-    0 20px 50px -20px rgba(30, 64, 175, 0.18);
+/* Remove gradient text, just use solid text */
+.dash-gradient-text, .dash-gradient-amber {
+  color: hsl(var(--foreground));
 }
 
-/* Gradient text */
-.dash-gradient-text {
-  background: linear-gradient(180deg, hsl(222 47% 11%) 0%, hsl(222 47% 35%) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-/* Kept name for back-compat — now BLUE gradient */
-.dash-gradient-amber {
-  background: linear-gradient(135deg, hsl(var(--blue-deep)) 0%, hsl(var(--blue-bright)) 50%, hsl(var(--blue-sky)) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-/* Glow / 3D shadows — kept name for back-compat */
-.dash-glow-amber {
-  box-shadow:
-    0 0 0 1px hsl(var(--blue-bright) / 0.2),
-    0 10px 40px hsl(var(--blue-bright) / 0.35),
-    0 4px 16px hsl(var(--blue-deep) / 0.2),
-    inset 0 1px 0 rgba(255,255,255,0.5);
-}
-.dash-glow-soft {
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.9) inset,
-    0 8px 24px -8px rgba(30, 64, 175, 0.15),
-    0 2px 8px -2px rgba(15, 23, 42, 0.05);
-  transition: box-shadow 0.4s cubic-bezier(0.25, 0.1, 0.25, 1), transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+/* Remove heavy glows */
+.dash-glow-amber, .dash-glow-soft {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+  transition: all 0.2s ease;
 }
 .dash-glow-soft:hover {
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 1) inset,
-    0 20px 40px -12px rgba(30, 64, 175, 0.25),
-    0 8px 16px -4px rgba(30, 64, 175, 0.1);
-  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+  transform: translateY(-1px);
 }
 
-/* ============= Sidebar Scope (desktop + mobile drawer) =============
-   Mobile drawer is rendered in a Portal outside .dashboard-shell,
-   so we apply the same brand tokens via .dashboard-shell-scope. */
+/* ============= Sidebar Scope ============= */
 .dashboard-shell-scope {
-  --blue-deep: 224 89% 38%;
-  --blue-core: 221 83% 53%;
-  --blue-bright: 213 94% 60%;
-  --blue-sky: 199 89% 64%;
-  --blue-ice: 210 100% 96%;
-  --neon-green: 145 80% 42%;
   --sidebar-background: 0 0% 100%;
-  --sidebar-foreground: 222 47% 20%;
-  --sidebar-accent: 220 30% 96%;
-  --sidebar-accent-foreground: 221 83% 53%;
-  --sidebar-border: 220 20% 92%;
-  --sidebar-ring: 221 83% 53%;
+  --sidebar-foreground: 222 47% 40%;
+  --sidebar-accent: 210 40% 96%;
+  background-color: #ffffff;
 }
 
-/* ============= Sidebar Menu Item — Premium Blue Gradient ============= */
+/* ============= Sidebar Menu Item — Clean Flat ============= */
 .dashboard-shell .dash-menu-item,
 .dashboard-shell-scope .dash-menu-item {
   position: relative;
-  border-radius: 0.625rem;
-  height: 2.25rem;
+  border-radius: 0.5rem; /* Smaller radius */
+  height: 2rem; /* Compact size */
   font-size: 13px;
-  color: hsl(var(--sidebar-foreground) / 0.7);
-  transition: all 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
-  overflow: hidden;
-  isolation: isolate;
+  color: hsl(var(--sidebar-foreground));
+  transition: all 0.2s ease;
+  padding: 0 0.5rem;
 }
-/* Bigger touch target on mobile drawer */
+
 @media (max-width: 767px) {
   .dashboard-shell-scope .dash-menu-item {
-    height: 2.75rem;
+    height: 2.25rem;
     font-size: 14px;
-    border-radius: 0.75rem;
-  }
-  .dashboard-shell-scope .dash-menu-item svg {
-    height: 1.05rem !important;
-    width: 1.05rem !important;
+    border-radius: 0.5rem;
   }
 }
-.dashboard-shell .dash-menu-item::before,
-.dashboard-shell-scope .dash-menu-item::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(
-    135deg,
-    hsl(var(--blue-deep)) 0%,
-    hsl(var(--blue-core)) 45%,
-    hsl(var(--blue-bright)) 100%
-  );
-  opacity: 0;
-  transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
-  z-index: -1;
+
+.dashboard-shell .dash-menu-item:hover,
+.dashboard-shell-scope .dash-menu-item:hover {
+  background-color: hsl(var(--sidebar-accent));
+  color: hsl(222 47% 11%);
 }
-.dashboard-shell .dash-menu-item::after,
-.dashboard-shell-scope .dash-menu-item::after {
+
+.dashboard-shell .dash-menu-item[data-active="true"],
+.dashboard-shell-scope .dash-menu-item[data-active="true"] {
+  background-color: hsl(var(--primary) / 0.1);
+  color: hsl(var(--primary)) !important;
+  font-weight: 600;
+}
+
+.dashboard-shell .dash-menu-item[data-active="true"]::before,
+.dashboard-shell-scope .dash-menu-item[data-active="true"]::before {
   content: "";
   position: absolute;
   left: 0;
-  top: 20%;
-  bottom: 20%;
+  top: 15%;
+  bottom: 15%;
   width: 3px;
   border-radius: 0 4px 4px 0;
-  background: linear-gradient(180deg, hsl(var(--blue-sky)), hsl(var(--blue-bright)));
-  transform: scaleY(0);
-  transform-origin: center;
-  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-  z-index: 1;
-}
-.dashboard-shell .dash-menu-item:hover,
-.dashboard-shell-scope .dash-menu-item:hover {
-  color: hsl(var(--blue-deep));
-  background: linear-gradient(
-    90deg,
-    hsl(var(--blue-bright) / 0.08) 0%,
-    hsl(var(--blue-sky) / 0.04) 100%
-  );
-}
-.dashboard-shell .dash-menu-item:active,
-.dashboard-shell-scope .dash-menu-item:active {
-  transform: scale(0.98);
-}
-.dashboard-shell .dash-menu-item[data-active="true"],
-.dashboard-shell-scope .dash-menu-item[data-active="true"] {
-  color: white !important;
-  font-weight: 600;
-  transform: translateX(2px);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.25) inset,
-    0 8px 20px -6px hsl(var(--blue-bright) / 0.55),
-    0 2px 6px -2px hsl(var(--blue-deep) / 0.35);
-}
-.dashboard-shell .dash-menu-item[data-active="true"]::before,
-.dashboard-shell-scope .dash-menu-item[data-active="true"]::before {
-  opacity: 1;
-}
-.dashboard-shell .dash-menu-item[data-active="true"]::after,
-.dashboard-shell-scope .dash-menu-item[data-active="true"]::after {
-  transform: scaleY(1);
-  background: white;
-  box-shadow: 0 0 8px hsl(var(--blue-sky) / 0.8);
-}
-.dashboard-shell .dash-menu-item[data-active="true"] svg,
-.dashboard-shell-scope .dash-menu-item[data-active="true"] svg {
-  filter: drop-shadow(0 0 4px hsl(var(--blue-sky) / 0.6));
+  background-color: hsl(var(--primary));
 }
 
-/* Mobile drawer container — branded blue/white surface */
-.dashboard-shell-scope {
-  background:
-    radial-gradient(at 0% 0%, hsl(var(--blue-ice)) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, hsl(199 100% 95%) 0px, transparent 50%),
-    hsl(0 0% 100%);
-  color: hsl(222 47% 20%);
-}
-
-/* Animate menu items entry on mobile drawer open */
-@media (max-width: 767px) {
-  .dashboard-shell-scope [data-sidebar="menu-item"] {
-    animation: dash-menu-rise 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) backwards;
-  }
-  .dashboard-shell-scope [data-sidebar="menu"] [data-sidebar="menu-item"]:nth-child(1) { animation-delay: 0.04s; }
-  .dashboard-shell-scope [data-sidebar="menu"] [data-sidebar="menu-item"]:nth-child(2) { animation-delay: 0.08s; }
-  .dashboard-shell-scope [data-sidebar="menu"] [data-sidebar="menu-item"]:nth-child(3) { animation-delay: 0.12s; }
-  .dashboard-shell-scope [data-sidebar="menu"] [data-sidebar="menu-item"]:nth-child(4) { animation-delay: 0.16s; }
-  .dashboard-shell-scope [data-sidebar="menu"] [data-sidebar="menu-item"]:nth-child(5) { animation-delay: 0.20s; }
-  .dashboard-shell-scope [data-sidebar="menu"] [data-sidebar="menu-item"]:nth-child(6) { animation-delay: 0.24s; }
-  .dashboard-shell-scope [data-sidebar="menu"] [data-sidebar="menu-item"]:nth-child(7) { animation-delay: 0.28s; }
-  .dashboard-shell-scope [data-sidebar="menu"] [data-sidebar="menu-item"]:nth-child(n+8) { animation-delay: 0.32s; }
-}
-
-@keyframes dash-menu-rise {
-  from { opacity: 0; transform: translateX(-12px); }
-  to { opacity: 1; transform: translateX(0); }
-}
-
-/* 3D Hero card — heavy blue gradient with shine */
-.dash-hero-3d {
-  background:
-    radial-gradient(at 80% 0%, hsl(var(--blue-sky)) 0%, transparent 50%),
-    linear-gradient(135deg, hsl(var(--blue-deep)) 0%, hsl(var(--blue-core)) 50%, hsl(var(--blue-bright)) 100%);
-  box-shadow:
-    0 1px 0 rgba(255,255,255,0.4) inset,
-    0 -1px 0 rgba(0,0,0,0.1) inset,
-    0 20px 50px -12px hsl(var(--blue-core) / 0.5),
-    0 8px 20px -8px hsl(var(--blue-deep) / 0.4);
-  position: relative;
-  overflow: hidden;
-}
-.dash-hero-3d::before {
-  content: "";
-  position: absolute;
-  top: -50%; left: -50%;
-  width: 200%; height: 200%;
-  background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.2) 50%, transparent 70%);
-  animation: dash-shine 6s ease-in-out infinite;
-  pointer-events: none;
-}
-@keyframes dash-shine {
-  0%, 100% { transform: translateX(-30%); }
-  50% { transform: translateX(30%); }
-}
-
-/* Animated dot */
+/* Remove animated dots and 3D hero */
 .dash-pulse-dot {
-  box-shadow: 0 0 12px hsl(var(--neon-green) / 0.8);
+  background-color: hsl(var(--primary));
 }
 
 /* Counter / number reveal */
 @keyframes dash-count-up {
-  0% { opacity: 0; transform: translateY(8px); filter: blur(4px); }
-  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+  0% { opacity: 0; transform: translateY(4px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
-.dash-count-up { animation: dash-count-up 0.6s cubic-bezier(0.25, 0.1, 0.25, 1) both; }
+.dash-count-up { animation: dash-count-up 0.4s ease-out both; }
 
 /* Stagger reveal */
 @keyframes dash-rise {
-  0% { opacity: 0; transform: translateY(20px) scale(0.96); }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
-.dash-rise { animation: dash-rise 0.6s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.dash-rise { animation: dash-rise 0.4s ease-out both; }
 
 /* TipTap Editor Styles */
 .tiptap {

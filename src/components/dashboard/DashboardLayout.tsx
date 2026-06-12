@@ -13,7 +13,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         <DashboardSidebar />
         <div className="flex-1 flex flex-col min-w-0">
           {/* Header */}
-          <header className="sticky top-0 z-30 h-14 flex items-center justify-between border-b border-white/60 px-3 sm:px-6 bg-white/70 backdrop-blur-2xl shadow-[0_1px_0_rgba(255,255,255,0.9)_inset,0_4px_16px_-8px_rgba(30,64,175,0.1)]">
+          <header className="sticky top-0 z-30 h-14 flex items-center justify-between border-b border-border/40 px-3 sm:px-6 bg-white shadow-sm">
             <div className="flex items-center gap-3 min-w-0">
               <SidebarTrigger className="shrink-0 h-8 w-8 text-foreground/60 hover:text-foreground hover:bg-[hsl(var(--blue-ice))]" />
               {!isMobile && (
@@ -21,8 +21,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
               )}
               <div className="flex items-center gap-2">
                 <span className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full rounded-full bg-[hsl(var(--neon-green))] opacity-75 animate-ping" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[hsl(var(--neon-green))] dash-pulse-dot" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-primary dash-pulse-dot" />
                 </span>
                 <span className="text-[11px] uppercase tracking-[0.2em] font-bold text-foreground/60">Console</span>
               </div>

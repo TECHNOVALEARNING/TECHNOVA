@@ -129,7 +129,6 @@ const DashboardOverview = () => {
       sub: `${stats.weekRevenue.toLocaleString()} F cette semaine`,
       icon: DollarSign,
       change: revenueChange,
-      isHero: true,
     },
     {
       label: "Ventes totales",
@@ -137,15 +136,6 @@ const DashboardOverview = () => {
       sub: `${stats.weekSales} cette semaine`,
       icon: ShoppingCart,
       change: null,
-      isHero: false,
-    },
-    {
-      label: "Visiteurs (30j)",
-      value: stats.visits.toLocaleString(),
-      sub: "Derniers 30 jours",
-      icon: Eye,
-      change: null,
-      isHero: false,
     },
     {
       label: "Clients uniques",
@@ -153,7 +143,6 @@ const DashboardOverview = () => {
       sub: `${stats.published} produits publiés`,
       icon: Users,
       change: null,
-      isHero: false,
     },
   ];
 
@@ -180,25 +169,25 @@ const DashboardOverview = () => {
   return (
     <DashboardLayout>
       <div className="space-y-5 max-w-[1400px]">
-        {/* Header */}
+        {/* Header & Actions */}
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3"
+          className="flex flex-col gap-4"
         >
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">
-              {getGreeting()}, {profile?.display_name || "Créateur"} 👋
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-foreground tracking-tight">
+              {getGreeting()}, {profile?.display_name || "Créateur"} 🌞
             </h1>
-            <p className="text-sm text-muted-foreground mt-0.5">
-              Vue d'ensemble de votre activité
+            <p className="text-sm text-muted-foreground mt-1">
+              Votre inspiration est précieuse, créez quelque chose de spécial aujourd'hui !
             </p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <Button
               size="sm"
               variant="outline"
-              className="rounded-full gap-1.5 text-xs h-8 border-border/60"
+              className="rounded-lg gap-1.5 text-xs h-9 border-border/60 hover:bg-muted/50"
               onClick={() => navigate("/dashboard/analytics")}
             >
               <BarChart3 className="h-3.5 w-3.5" />
@@ -206,17 +195,26 @@ const DashboardOverview = () => {
             </Button>
             <Button
               size="sm"
-              className="rounded-full gap-1.5 text-xs h-8"
+              className="rounded-lg gap-1.5 text-xs h-9 bg-primary text-white hover:bg-primary/90 shadow-sm"
               onClick={() => navigate("/dashboard/products/new")}
             >
               <Plus className="h-3.5 w-3.5" />
-              Nouveau produit
+              Ajouter un produit
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              className="rounded-lg gap-1.5 text-xs h-9 border-border/60 hover:bg-muted/50"
+              onClick={() => navigate("/dashboard/automations")}
+            >
+              <Workflow className="h-3.5 w-3.5" />
+              Créer un workflow
             </Button>
           </div>
         </motion.div>
 
         {/* KPI Cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
           {kpiCards.map((card, i) => (
             <motion.div
               key={card.label}
@@ -224,42 +222,28 @@ const DashboardOverview = () => {
               initial="hidden"
               animate="visible"
               variants={fadeUp}
-              className={`group relative rounded-3xl p-5 sm:p-6 overflow-hidden transition-all duration-500 ${
-                card.isHero
-                  ? "dash-hero-3d text-white"
-                  : "dash-glass dash-glow-soft"
-              }`}
+              className="group relative rounded-xl p-4 sm:p-5 dash-glass overflow-hidden"
             >
-              <div className="flex items-start justify-between mb-5 relative">
-                <div className={`h-11 w-11 rounded-2xl flex items-center justify-center transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3 ${
-                  card.isHero
-                    ? "bg-white/20 backdrop-blur-md text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.4)] border border-white/30"
-                    : "bg-gradient-to-br from-[hsl(var(--blue-bright))] to-[hsl(var(--blue-deep))] text-white shadow-[0_8px_20px_-4px_hsl(var(--blue-bright)/0.5),inset_0_1px_0_rgba(255,255,255,0.3)]"
-                }`}>
-                  <card.icon className="h-5 w-5" />
+              <div className="flex items-start justify-between mb-3">
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{card.label}</p>
+                <div className="h-8 w-8 rounded-lg flex items-center justify-center bg-primary/10 text-primary">
+                  <card.icon className="h-4 w-4" />
                 </div>
+              </div>
+              <div className="flex items-end gap-2 mb-1">
+                <p className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground tabular-nums leading-none">
+                  {card.value}
+                </p>
                 {card.change !== null && (
-                  <div className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold backdrop-blur-md ${
-                    card.isHero
-                      ? "bg-white/25 text-white border border-white/40"
-                      : card.change >= 0
-                        ? "bg-[hsl(var(--neon-green))]/10 text-[hsl(var(--neon-green))] border border-[hsl(var(--neon-green))]/30"
-                        : "bg-red-500/10 text-red-500 border border-red-500/20"
+                  <div className={`flex items-center gap-0.5 text-xs font-medium mb-0.5 ${
+                    card.change >= 0 ? "text-emerald-600" : "text-red-500"
                   }`}>
-                    {card.change >= 0 ? <ArrowUp className="h-2.5 w-2.5" /> : <ArrowDown className="h-2.5 w-2.5" />}
+                    {card.change >= 0 ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />}
                     {Math.abs(card.change)}%
                   </div>
                 )}
               </div>
-              <p className={`text-[10px] uppercase tracking-[0.18em] font-bold mb-2 ${
-                card.isHero ? "text-white/80" : "text-muted-foreground"
-              }`}>{card.label}</p>
-              <p className={`text-2xl sm:text-3xl font-extrabold tracking-tight tabular-nums leading-none dash-count-up ${
-                card.isHero ? "text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.2)]" : "dash-gradient-text"
-              }`}>{card.value}</p>
-              <p className={`text-[11px] mt-2 ${
-                card.isHero ? "text-white/70" : "text-muted-foreground"
-              }`}>{card.sub}</p>
+              <p className="text-xs text-muted-foreground">{card.sub}</p>
             </motion.div>
           ))}
         </div>
@@ -272,7 +256,7 @@ const DashboardOverview = () => {
             initial="hidden"
             animate="visible"
             variants={fadeUp}
-            className="lg:col-span-2 rounded-3xl dash-glass dash-glow-soft p-4 sm:p-5"
+            className="lg:col-span-2 rounded-xl dash-glass p-4 sm:p-5"
           >
             <div className="flex items-center justify-between mb-4">
               <div>
@@ -320,7 +304,7 @@ const DashboardOverview = () => {
             initial="hidden"
             animate="visible"
             variants={fadeUp}
-            className="rounded-3xl dash-glass dash-glow-soft p-4 sm:p-5"
+            className="rounded-xl dash-glass p-4 sm:p-5"
           >
             <div className="mb-4">
               <h3 className="text-sm sm:text-base font-semibold text-foreground">Visites</h3>
@@ -348,7 +332,7 @@ const DashboardOverview = () => {
             initial="hidden"
             animate="visible"
             variants={fadeUp}
-            className="rounded-3xl dash-glass dash-glow-soft"
+            className="rounded-xl dash-glass"
           >
             <div className="flex items-center justify-between p-4 sm:p-5 pb-2">
               <div>
@@ -408,7 +392,7 @@ const DashboardOverview = () => {
             initial="hidden"
             animate="visible"
             variants={fadeUp}
-            className="rounded-3xl dash-glass dash-glow-soft"
+            className="rounded-xl dash-glass"
           >
             <div className="flex items-center justify-between p-4 sm:p-5 pb-2">
               <div>
@@ -469,36 +453,7 @@ const DashboardOverview = () => {
           </motion.div>
         </div>
 
-        {/* Quick Actions */}
-        <motion.div
-          custom={8}
-          initial="hidden"
-          animate="visible"
-          variants={fadeUp}
-          className="flex gap-2 flex-wrap"
-        >
-          {[
-            { label: "Nouveau produit", icon: Plus, action: () => navigate("/dashboard/products/new") },
-            { label: "Automatisation", icon: Workflow, action: () => navigate("/dashboard/automations") },
-            { label: "Code promo", icon: Tag, action: () => navigate("/dashboard/marketing") },
-            {
-              label: profile?.store_slug ? "Voir ma boutique" : "Configurer boutique",
-              icon: ExternalLink,
-              action: () => profile?.store_slug ? window.open(`/store/${profile.store_slug}`, "_blank") : navigate("/dashboard/settings"),
-            },
-          ].map((a) => (
-            <Button
-              key={a.label}
-              variant="outline"
-              size="sm"
-              className="gap-1.5 rounded-full text-xs h-8 border-border/50 hover:bg-primary/5 hover:border-primary/30 transition-all"
-              onClick={a.action}
-            >
-              <a.icon className="h-3.5 w-3.5" />
-              {a.label}
-            </Button>
-          ))}
-        </motion.div>
+
       </div>
     </DashboardLayout>
   );
