@@ -1,4 +1,4 @@
-﻿import { corsHeaders } from "https://esm.sh/@supabase/supabase-js@2.98.0/cors";
+import { corsHeaders } from "https://esm.sh/@supabase/supabase-js@2.98.0/cors";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -6,48 +6,44 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { description } = await req.json();
+    const { description, storeName } = await req.json();
 
     if (!description || typeof description !== "string" || description.trim().length === 0) {
       return new Response(JSON.stringify({ error: "Description vide" }), {
-        status: 400,
+        status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
     if (description.length > 20000) {
       return new Response(JSON.stringify({ error: "Description trop longue (max 20 000 caractères)" }), {
-        status: 400,
+        status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
     const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
     if (!GEMINI_API_KEY) {
-      return new Response(JSON.stringify({ error: "AI key not configured" }), {
-        status: 500,
+      return new Response(JSON.stringify({ error: "Clé d'API IA non configurée sur le serveur" }), {
+        status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    const systemPrompt = `Tu es un expert en mise en page web pour des boutiques e-commerce.
-Tu reçois une description de boutique en HTML (potentiellement mal structurée).
-Ta mission : RÉORGANISER la mise en page UNIQUEMENT, sans rien changer au sens, ni au texte, ni aux emojis, ni aux liens, ni aux images.
+    const systemPrompt = `Tu es un expert en copywriting et marketing e-commerce d'élite.
+Le créateur de la boutique "${storeName || "inconnue"}" te fournit une description de sa boutique (qui peut être très courte, comme "vente de produits", ou mal rédigée).
+Ta mission : Transformer ce texte brut en une description de boutique ultra-professionnelle, vendeuse, engageante et parfaitement structurée en HTML.
 
 RÈGLES STRICTES :
-- NE JAMAIS modifier, traduire, résumer, ou reformuler les mots, phrases, slogans ou noms de marque
-- NE JAMAIS supprimer ou ajouter du contenu (texte, emoji, lien, image, vidéo)
-- Conserver TOUS les emojis exactement tels quels et à leur place logique
-- Conserver TOUTES les URLs (images, liens) à l'identique
-- Améliorer UNIQUEMENT la structure HTML : hiérarchie des titres (h1/h2/h3), paragraphes, listes <ul><li>, séparateurs <hr>, gras <strong>, italique <em>
-- Utiliser une seule balise <h1> en haut (titre principal), puis <h2> pour sections, <h3> pour sous-sections
-- Transformer les listes d'éléments séparés par ✅ ✔️ 🔥 💎 en vraies listes <ul><li> tout en GARDANT l'emoji au début de chaque <li>
-- Ajouter des <hr> entre les grandes sections pour aérer
-- Espacer le contenu avec des paragraphes <p> propres
-- Retirer les balises vides (<p></p>) et les attributs inutiles
-- Garder les images <img> avec leurs attributs src/class
+- Si le texte fourni est très court (ex: "vente de chaussure"), DÉVELOPPE-LE considérablement pour en faire un texte professionnel de présentation de boutique. Invente une structure pertinente (Qui sommes-nous, Nos garanties, Pourquoi nous choisir).
+- Si le texte est déjà long, AMÉLIORE la formulation, corrige les fautes de français, enrichis le vocabulaire et rends le texte plus accrocheur et persuasif.
+- Structure le contenu avec du HTML propre et sémantique : utilise <h1> pour le titre de bienvenue principal, <h2> pour les grandes sections, <p> pour les paragraphes, et <ul><li> pour les listes de bénéfices.
+- Ajoute des emojis pertinents avec parcimonie pour rendre le texte vivant, dynamique et dans l'air du temps.
+- Si l'utilisateur a mis des liens ou des images, conserve-les IMPÉRATIVEMENT.
+- Ne mentionne jamais que tu es une IA, agis comme le rédacteur pro de la boutique.
+- Ton but est que le visiteur de la boutique ait envie d'acheter après avoir lu cette description.
 
-RÉPONDS UNIQUEMENT AVEC LE HTML AMÉLIORÉ, sans markdown, sans \`\`\`, sans commentaire, sans explication.`;
+RÉPONDS UNIQUEMENT AVEC LE CODE HTML GÉNÉRÉ DE LA DESCRIPTION, sans markdown de code (pas de \`\`\`html), sans aucun commentaire avant ou après.`;
 
     const aiResponse = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
       method: "POST",
@@ -56,7 +52,7 @@ RÉPONDS UNIQUEMENT AVEC LE HTML AMÉLIORÉ, sans markdown, sans \`\`\`, sans co
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "gemini-2.5-flash",
+        model: "gemini-1.5-flash",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: description },
@@ -66,21 +62,21 @@ RÉPONDS UNIQUEMENT AVEC LE HTML AMÉLIORÉ, sans markdown, sans \`\`\`, sans co
 
     if (aiResponse.status === 429) {
       return new Response(JSON.stringify({ error: "Trop de requêtes, réessayez dans un instant." }), {
-        status: 429,
+        status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
     if (aiResponse.status === 402) {
       return new Response(JSON.stringify({ error: "Crédits IA épuisés. Contactez l'administrateur." }), {
-        status: 402,
+        status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
     if (!aiResponse.ok) {
       const t = await aiResponse.text();
       console.error("AI gateway error:", aiResponse.status, t);
-      return new Response(JSON.stringify({ error: "Erreur IA" }), {
-        status: 500,
+      return new Response(JSON.stringify({ error: `Erreur API IA (${aiResponse.status}): ${t.substring(0, 100)}` }), {
+        status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
@@ -96,19 +92,20 @@ RÉPONDS UNIQUEMENT AVEC LE HTML AMÉLIORÉ, sans markdown, sans \`\`\`, sans co
       .trim();
 
     if (!improved) {
-      return new Response(JSON.stringify({ error: "Réponse IA vide" }), {
-        status: 500,
+      return new Response(JSON.stringify({ error: "L'IA a renvoyé une réponse vide." }), {
+        status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
     return new Response(JSON.stringify({ improved }), {
+      status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e) {
     console.error("improve-store-description error:", e);
-    return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }), {
-      status: 500,
+    return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Erreur inconnue du serveur" }), {
+      status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
