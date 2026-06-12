@@ -27,6 +27,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
           {/* Header */}
           <header className="sticky top-0 z-30 h-16 flex items-center justify-between border-b border-border px-3 sm:px-6 bg-white shadow-sm">
             <div className="flex items-center gap-3 min-w-0 pl-1">
+              <SidebarTrigger className="md:hidden" />
               
               <button 
                 onClick={() => navigate('/dashboard/stores')}

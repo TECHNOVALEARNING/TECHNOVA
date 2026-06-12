@@ -97,18 +97,18 @@ const DashboardOverview = () => {
           ].map((card) => (
             <div
               key={card.label}
-              className="dash-hero-3d rounded-[24px] p-6 flex flex-col items-center justify-center text-center min-h-[150px] sm:min-h-[160px] group hover:-translate-y-1 transition-all duration-300 text-white"
+              className="dash-hero-3d rounded-[20px] sm:rounded-[24px] p-5 sm:p-6 flex flex-row sm:flex-col items-center sm:justify-center text-left sm:text-center min-h-[90px] sm:min-h-[160px] group hover:-translate-y-1 transition-all duration-300 text-white gap-4 sm:gap-0 shadow-sm"
             >
-              <div className="mb-4 relative z-10">
-                <div className="h-11 w-11 rounded-2xl flex items-center justify-center transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3 bg-white/20 backdrop-blur-md text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.4)] border border-white/30">
-                  <card.icon className="h-5 w-5" strokeWidth={2} />
+              <div className="relative z-10 shrink-0 sm:mb-4">
+                <div className="h-12 w-12 sm:h-11 sm:w-11 rounded-xl sm:rounded-2xl flex items-center justify-center transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3 bg-white/20 backdrop-blur-md text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.4)] border border-white/30">
+                  <card.icon className="h-6 w-6 sm:h-5 sm:w-5" strokeWidth={2} />
                 </div>
               </div>
-              <div className="relative z-10">
-                <p className="text-2xl sm:text-[28px] font-extrabold tracking-tight tabular-nums leading-none text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.2)] mb-1.5">
+              <div className="relative z-10 flex-1 min-w-0 flex flex-col sm:flex-col-reverse justify-center">
+                <p className="text-[13px] sm:text-[12px] uppercase tracking-[0.05em] sm:tracking-[0.1em] font-medium sm:font-bold text-white/80 mb-1 sm:mb-0 sm:mt-1.5">{card.label}</p>
+                <p className="text-2xl sm:text-[28px] font-extrabold tracking-tight tabular-nums leading-none text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.2)] truncate">
                   {card.value}
                 </p>
-                <p className="text-[12px] uppercase tracking-[0.1em] font-bold text-white/80">{card.label}</p>
               </div>
             </div>
           ))}
