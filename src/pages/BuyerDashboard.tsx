@@ -98,8 +98,9 @@ const BuyerDashboard = () => {
     }
   }, [navigate]);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     sessionStorage.removeItem("buyer_session");
+    await supabase.auth.signOut();
     navigate("/buyer-login");
   };
 
