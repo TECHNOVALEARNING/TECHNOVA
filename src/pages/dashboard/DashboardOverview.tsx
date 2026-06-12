@@ -97,18 +97,18 @@ const DashboardOverview = () => {
           ].map((card) => (
             <div
               key={card.label}
-              className="relative rounded-[24px] p-6 bg-white shadow-lg shadow-gray-200/50 border border-gray-100 flex flex-col items-center justify-center text-center min-h-[150px] sm:min-h-[160px] group hover:-translate-y-1 hover:shadow-xl hover:shadow-gray-200/80 transition-all duration-300"
+              className="dash-hero-3d rounded-[24px] p-6 flex flex-col items-center justify-center text-center min-h-[150px] sm:min-h-[160px] group hover:-translate-y-1 transition-all duration-300 text-white"
             >
-              <div className="mb-4 relative">
-                <div className="h-10 w-10 rounded-xl bg-blue-500/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <card.icon className="h-5 w-5 text-blue-600" strokeWidth={2} />
+              <div className="mb-4 relative z-10">
+                <div className="h-11 w-11 rounded-2xl flex items-center justify-center transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3 bg-white/20 backdrop-blur-md text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.4)] border border-white/30">
+                  <card.icon className="h-5 w-5" strokeWidth={2} />
                 </div>
               </div>
-              <div>
-                <p className="text-2xl sm:text-[28px] font-bold tracking-tight text-[#111827] mb-1.5">
+              <div className="relative z-10">
+                <p className="text-2xl sm:text-[28px] font-extrabold tracking-tight tabular-nums leading-none text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.2)] mb-1.5">
                   {card.value}
                 </p>
-                <p className="text-[13px] text-gray-500 font-medium">{card.label}</p>
+                <p className="text-[12px] uppercase tracking-[0.1em] font-bold text-white/80">{card.label}</p>
               </div>
             </div>
           ))}
