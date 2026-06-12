@@ -15,10 +15,13 @@ const BuyerOAuthCallback = () => {
 
     (async () => {
       try {
+        let timeoutId: NodeJS.Timeout;
+
         // In PKCE flow, getSession might not have exchanged the code yet. 
         // We listen to onAuthStateChange to wait for the session.
         const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
           if (event === "SIGNED_IN" && session) {
+            clearTimeout(timeoutId);
             subscription.unsubscribe();
             let customerName = session.user?.user_metadata?.full_name || session.user?.email?.split("@")[0] || "Client";
             let customerEmail = session.user?.email || "";
@@ -50,12 +53,10 @@ const BuyerOAuthCallback = () => {
           }
         });
 
-        // Also check getSession in case it's already exchanged or if it fails
-        const { data: { session }, error } = await supabase.auth.getSession();
-        
         // Give it a short timeout to let the event listener fire if it's currently exchanging
-        setTimeout(() => {
-          if (!session && !window.location.href.includes("code=")) {
+        timeoutId = setTimeout(async () => {
+          const { data: { session: currentSession } } = await supabase.auth.getSession();
+          if (!currentSession && !window.location.hash.includes("access_token=") && !window.location.search.includes("code=")) {
             subscription.unsubscribe();
             toast.error("Session non établie. Réessayez.");
             navigate("/", { replace: true });
