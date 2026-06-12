@@ -73,43 +73,6 @@ const DashboardOverview = () => {
             <h1 className="text-2xl sm:text-3xl md:text-[34px] font-semibold text-[#111827] tracking-tight">
               Bonjour {profile?.display_name || "Créateur"} ! 🌞
             </h1>
-            <div className="flex items-center gap-2 mt-3 text-[13px] text-gray-500 font-medium bg-blue-50/50 w-fit px-2 py-1 rounded-md border border-blue-100/50">
-              <TrendingUp className="h-3.5 w-3.5 text-blue-500" />
-              Vue d'ensemble de vos activités - suivez votre croissance.
-            </div>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-3">
-            <Button
-              variant="outline"
-              className="rounded-full gap-2 text-[13px] font-medium h-10 px-5 border-gray-200 text-gray-700 hover:bg-gray-50 shadow-sm"
-            >
-              <Zap className="h-4 w-4 text-blue-600" />
-              Assistant IA
-            </Button>
-            <Button
-              variant="outline"
-              className="rounded-full gap-2 text-[13px] font-medium h-10 px-5 border-gray-200 text-gray-700 hover:bg-gray-50 shadow-sm"
-              onClick={() => navigate("/dashboard/products/new")}
-            >
-              <Plus className="h-4 w-4 text-gray-500" />
-              Nouveau produit
-            </Button>
-            <Button
-              variant="outline"
-              className="rounded-full gap-2 text-[13px] font-medium h-10 px-5 border-gray-200 text-gray-700 hover:bg-gray-50 shadow-sm"
-              onClick={() => navigate("/dashboard/automations")}
-            >
-              <Workflow className="h-4 w-4 text-gray-500" />
-              Nouvelle automatisation
-            </Button>
-            <Button
-              variant="outline"
-              className="rounded-full gap-2 text-[13px] font-medium h-10 px-5 border-gray-200 text-gray-700 hover:bg-gray-50 shadow-sm"
-            >
-              <Tag className="h-4 w-4 text-gray-500" />
-              Créer un coupon
-            </Button>
           </div>
         </div>
 
