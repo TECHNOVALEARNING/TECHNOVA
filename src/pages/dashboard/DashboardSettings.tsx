@@ -1,5 +1,5 @@
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
-import { ArrowLeft, User, Palette, Settings, ExternalLink, Activity, Globe, Send, Scale, ArrowRight, ShieldCheck, CreditCard } from "lucide-react";
+import { ArrowLeft, User, Palette, Settings, ExternalLink, Activity, Globe, Send, Scale, ArrowRight, ShieldCheck, CreditCard, Search } from "lucide-react";
 import DashboardProfileTab from "@/components/dashboard/DashboardProfileTab";
 import DashboardAppearanceTab from "@/components/dashboard/DashboardAppearanceTab";
 import DashboardAccountTab from "@/components/dashboard/DashboardAccountTab";
@@ -7,6 +7,7 @@ import DashboardPixelsTab from "@/components/dashboard/DashboardPixelsTab";
 import DashboardDomainTab from "@/components/dashboard/DashboardDomainTab";
 import DashboardTelegramTab from "@/components/dashboard/DashboardTelegramTab";
 import DashboardLegalTab from "@/components/dashboard/DashboardLegalTab";
+import DashboardOrderLookupTab from "@/components/dashboard/DashboardOrderLookupTab";
 import { useActiveStore } from "@/hooks/useActiveStore";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -19,6 +20,7 @@ const SETTINGS_CATEGORIES = [
       { id: "appearance", title: "Apparence & Thème", desc: "Modifiez le thème, les couleurs et la mise en page.", icon: Palette },
       { id: "domain", title: "Nom de domaine", desc: "Connectez et personnalisez le domaine de votre boutique.", icon: Globe },
       { id: "legal", title: "Pages légales", desc: "Gérez vos mentions légales, politique de confidentialité, etc.", icon: Scale },
+      { id: "orders", title: "Recherche Commande", desc: "Recherchez et gérez les commandes via leur numéro.", icon: Search },
     ]
   },
   {
@@ -36,7 +38,7 @@ const SETTINGS_CATEGORIES = [
   }
 ];
 
-const VALID_TABS = ["profile", "appearance", "pixels", "account", "domain", "telegram", "legal"];
+const VALID_TABS = ["profile", "appearance", "pixels", "account", "domain", "telegram", "legal", "orders"];
 
 const DashboardSettings = () => {
   const { activeStore } = useActiveStore();
@@ -55,6 +57,7 @@ const DashboardSettings = () => {
       case "domain": return <DashboardDomainTab />;
       case "telegram": return <DashboardTelegramTab />;
       case "legal": return <DashboardLegalTab />;
+      case "orders": return <DashboardOrderLookupTab />;
       default: return null;
     }
   };

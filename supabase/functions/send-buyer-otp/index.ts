@@ -1,4 +1,4 @@
-﻿const corsHeaders = {
+const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
@@ -14,7 +14,6 @@ Deno.serve(async (req) => {
     const { email } = await req.json();
     if (!email) {
       return new Response(JSON.stringify({ error: "Email requis" }), {
-        status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
@@ -33,7 +32,6 @@ Deno.serve(async (req) => {
 
     if (!customer) {
       return new Response(JSON.stringify({ error: "Aucun achat trouvé pour cet email" }), {
-        status: 404,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
@@ -61,7 +59,6 @@ Deno.serve(async (req) => {
     if (!RESEND_API_KEY) {
       console.error("RESEND_API_KEY not configured");
       return new Response(JSON.stringify({ error: "Service email non configuré" }), {
-        status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
@@ -73,23 +70,28 @@ Deno.serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "Technova <noreply@mail.technova.com>",
+        from: "Technova <noreply@technovalearning.com>",
         to: [email],
         subject: `Votre code de connexion : ${code}`,
         html: `
-          <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 40px 20px;">
+          <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 40px 20px; background-color: #ffffff; border-radius: 16px; border: 1px solid #f0f0f0;">
             <div style="text-align: center; margin-bottom: 30px;">
-              <img src="https://nexozjpjbhqfjplrogvz.supabase.co/storage/v1/object/public/store-assets/brand/technova-logo.png" alt="Technova" width="48" height="48" style="display:block;margin:0 auto;border-radius:10px;" />
-              <h2 style="margin: 10px 0 0; color: #1a1a1a;">Technova</h2>
+              <img src="https://portal.technovalearning.com/favicon.png" alt="TECHNOVA" width="56" height="56" style="display:block;margin:0 auto;border-radius:12px; object-fit: contain;" />
+              <h2 style="margin: 16px 0 0; color: #0f172a; font-size: 24px; font-weight: 800; letter-spacing: -0.5px;">TECHNOVA</h2>
             </div>
-            <p style="color: #555; font-size: 15px;">Bonjour,</p>
-            <p style="color: #555; font-size: 15px;">Voici votre code de connexion pour accéder à vos achats :</p>
-            <div style="text-align: center; margin: 30px 0;">
-              <div style="display: inline-block; background: #f4f4f5; padding: 16px 32px; border-radius: 12px; font-size: 32px; font-weight: bold; letter-spacing: 8px; color: #1a1a1a; font-family: monospace;">${code}</div>
+            <p style="color: #334155; font-size: 16px; line-height: 24px;">Bonjour,</p>
+            <p style="color: #334155; font-size: 16px; line-height: 24px;">Voici votre code de connexion sécurisé pour accéder à votre tableau de bord et retrouver tous vos achats :</p>
+            <div style="text-align: center; margin: 36px 0;">
+              <div style="display: inline-block; background: #f8fafc; border: 1px solid #e2e8f0; padding: 20px 36px; border-radius: 16px; font-size: 36px; font-weight: 800; letter-spacing: 12px; color: #4f46e5; font-family: monospace; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+                ${code}
+              </div>
             </div>
-            <p style="color: #888; font-size: 13px; text-align: center;">Ce code expire dans 10 minutes.</p>
-            <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;" />
-            <p style="color: #aaa; font-size: 12px; text-align: center;">Si vous n'avez pas demandé ce code, ignorez cet email.</p>
+            <p style="color: #64748b; font-size: 14px; text-align: center; margin-bottom: 30px;">Ce code expire dans <strong>10 minutes</strong>.</p>
+            <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;" />
+            <p style="color: #94a3b8; font-size: 12px; text-align: center; line-height: 18px;">
+              Si vous n'avez pas demandé ce code, vous pouvez ignorer cet email en toute sécurité.<br/>
+              L'équipe TECHNOVA
+            </p>
           </div>
         `,
       }),
@@ -99,7 +101,6 @@ Deno.serve(async (req) => {
       const errBody = await emailRes.text();
       console.error("Resend error:", errBody);
       return new Response(JSON.stringify({ error: "Erreur d'envoi de l'email" }), {
-        status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
@@ -110,7 +111,6 @@ Deno.serve(async (req) => {
   } catch (error) {
     console.error("Error:", error);
     return new Response(JSON.stringify({ error: "Erreur serveur" }), {
-      status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }

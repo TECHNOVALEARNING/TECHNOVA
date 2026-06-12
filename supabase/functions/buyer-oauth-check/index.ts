@@ -1,4 +1,4 @@
-﻿// Verifies an OAuth-authenticated buyer has a customer record, returns last_otp_verified_at
+// Verifies an OAuth-authenticated buyer has a customer record, returns last_otp_verified_at
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
@@ -18,8 +18,8 @@ Deno.serve(async (req) => {
 
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) {
-      return new Response(JSON.stringify({ error: "Non authentifié" }), {
-        status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      return new Response(JSON.stringify({ error: "Missing authorization header" }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
@@ -29,7 +29,7 @@ Deno.serve(async (req) => {
     const { data: { user }, error: userErr } = await userClient.auth.getUser();
     if (userErr || !user || !user.email) {
       return new Response(JSON.stringify({ error: "Session invalide" }), {
-        status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
@@ -48,7 +48,7 @@ Deno.serve(async (req) => {
         error: "Aucun achat trouvé pour cet email. Effectuez un premier achat pour accéder au portail.",
         no_customer: true,
       }), {
-        status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
@@ -68,10 +68,10 @@ Deno.serve(async (req) => {
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
-  } catch (e) {
-    console.error("buyer-oauth-check error:", e);
-    return new Response(JSON.stringify({ error: "Erreur serveur" }), {
-      status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  } catch (error) {
+    console.error("Error:", error);
+    return new Response(JSON.stringify({ error: "Internal server error" }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 });
