@@ -52,7 +52,7 @@ RÉPONDS UNIQUEMENT AVEC LE CODE HTML GÉNÉRÉ DE LA DESCRIPTION, sans markdown
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "gemini-2.5-pro",
+        model: "gemini-2.0-flash",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: description },
