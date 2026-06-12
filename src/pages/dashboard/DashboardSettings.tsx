@@ -1,6 +1,5 @@
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { User, Palette, Settings, ExternalLink, Activity, Globe, Send, Scale } from "lucide-react";
+import { ArrowLeft, User, Palette, Settings, ExternalLink, Activity, Globe, Send, Scale, ArrowRight, ShieldCheck, CreditCard } from "lucide-react";
 import DashboardProfileTab from "@/components/dashboard/DashboardProfileTab";
 import DashboardAppearanceTab from "@/components/dashboard/DashboardAppearanceTab";
 import DashboardAccountTab from "@/components/dashboard/DashboardAccountTab";
@@ -9,7 +8,33 @@ import DashboardDomainTab from "@/components/dashboard/DashboardDomainTab";
 import DashboardTelegramTab from "@/components/dashboard/DashboardTelegramTab";
 import DashboardLegalTab from "@/components/dashboard/DashboardLegalTab";
 import { useActiveStore } from "@/hooks/useActiveStore";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+
+const SETTINGS_CATEGORIES = [
+  {
+    title: "Boutique",
+    items: [
+      { id: "profile", title: "Identité de la boutique", desc: "Définissez le nom, le logo et la description de votre boutique.", icon: User },
+      { id: "appearance", title: "Apparence & Thème", desc: "Modifiez le thème, les couleurs et la mise en page.", icon: Palette },
+      { id: "domain", title: "Nom de domaine", desc: "Connectez et personnalisez le domaine de votre boutique.", icon: Globe },
+      { id: "legal", title: "Pages légales", desc: "Gérez vos mentions légales, politique de confidentialité, etc.", icon: Scale },
+    ]
+  },
+  {
+    title: "Marketing & Communication",
+    items: [
+      { id: "pixels", title: "Pixels & Tracking", desc: "Connectez Facebook Pixel, GTM et ajoutez vos scripts de suivi.", icon: Activity },
+      { id: "telegram", title: "Notifications Telegram", desc: "Gérez les alertes pour suivre l'activité de votre boutique.", icon: Send },
+    ]
+  },
+  {
+    title: "Compte & Sécurité",
+    items: [
+      { id: "account", title: "Mon Profil & KYC", desc: "Gérez vos informations personnelles et vérifiez votre identité.", icon: ShieldCheck },
+    ]
+  }
+];
 
 const VALID_TABS = ["profile", "appearance", "pixels", "account", "domain", "telegram", "legal"];
 
@@ -17,83 +42,99 @@ const DashboardSettings = () => {
   const { activeStore } = useActiveStore();
   const [searchParams, setSearchParams] = useSearchParams();
   const tabParam = searchParams.get("tab");
-  const activeTab = tabParam && VALID_TABS.includes(tabParam) ? tabParam : "profile";
+  const navigate = useNavigate();
+  
+  const activeTab = tabParam && VALID_TABS.includes(tabParam) ? tabParam : null;
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case "profile": return <DashboardProfileTab />;
+      case "appearance": return <DashboardAppearanceTab />;
+      case "pixels": return <DashboardPixelsTab />;
+      case "account": return <DashboardAccountTab />;
+      case "domain": return <DashboardDomainTab />;
+      case "telegram": return <DashboardTelegramTab />;
+      case "legal": return <DashboardLegalTab />;
+      default: return null;
+    }
+  };
 
   return (
     <DashboardLayout>
-      <div className="space-y-6 max-w-5xl">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-foreground">Paramètres</h1>
-            <p className="text-xs sm:text-sm text-muted-foreground mt-1">Gérez votre boutique, apparence et compte</p>
+      <div className="max-w-[1200px] w-full pb-10">
+        
+        {/* Header Section */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+          <div className="flex items-center gap-3">
+            {activeTab && (
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="h-9 w-9 rounded-full bg-muted/50 hover:bg-muted shrink-0" 
+                onClick={() => setSearchParams({})}
+              >
+                <ArrowLeft className="h-4 w-4 text-foreground" />
+              </Button>
+            )}
+            <div>
+              <h1 className="text-2xl sm:text-[26px] font-bold text-foreground tracking-tight">Paramètres</h1>
+              <p className="text-sm text-muted-foreground mt-0.5">
+                {activeTab ? "Configuration détaillée" : "Gérez votre boutique, votre apparence et votre compte"}
+              </p>
+            </div>
           </div>
-          {activeStore?.slug && (
-            <a
-              href={`/store/${activeStore.slug}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium text-primary hover:underline shrink-0"
+
+          {activeStore?.slug && !activeTab && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-2 rounded-full shadow-sm"
+              onClick={() => window.open(`https://technovalearning.com/store/${activeStore.slug}`, '_blank')}
             >
-              <ExternalLink className="h-3.5 w-3.5" />
-              Visiter ma boutique
-            </a>
+              <ExternalLink className="h-4 w-4" />
+              Visiter la boutique
+            </Button>
           )}
         </div>
 
-        <Tabs value={activeTab} onValueChange={(v) => { const next = new URLSearchParams(searchParams); next.set("tab", v); setSearchParams(next, { replace: true }); }} className="w-full">
-          <TabsList className="h-auto flex-wrap gap-1 bg-muted/50 p-1 rounded-xl overflow-x-auto scrollbar-none">
-            <TabsTrigger value="profile" className="gap-1.5 rounded-lg text-xs sm:text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm">
-              <User className="h-3.5 w-3.5" />
-              <span className="hidden xs:inline">Profil &</span> Boutique
-            </TabsTrigger>
-            <TabsTrigger value="appearance" className="gap-1.5 rounded-lg text-xs sm:text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm">
-              <Palette className="h-3.5 w-3.5" />
-              Apparence
-            </TabsTrigger>
-            <TabsTrigger value="pixels" className="gap-1.5 rounded-lg text-xs sm:text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm">
-              <Activity className="h-3.5 w-3.5" />
-              <span className="hidden xs:inline">Pixels &</span> Tracking
-            </TabsTrigger>
-            <TabsTrigger value="account" className="gap-1.5 rounded-lg text-xs sm:text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm">
-              <Settings className="h-3.5 w-3.5" />
-              <span className="hidden xs:inline">Compte &</span> KYC
-            </TabsTrigger>
-            <TabsTrigger value="domain" className="gap-1.5 rounded-lg text-xs sm:text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm">
-              <Globe className="h-3.5 w-3.5" />
-              Domaine
-            </TabsTrigger>
-            <TabsTrigger value="telegram" className="gap-1.5 rounded-lg text-xs sm:text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm">
-              <Send className="h-3.5 w-3.5" />
-              Telegram
-            </TabsTrigger>
-            <TabsTrigger value="legal" className="gap-1.5 rounded-lg text-xs sm:text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm">
-              <Scale className="h-3.5 w-3.5" />
-              Mentions légales
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="profile" className="mt-5">
-            <DashboardProfileTab />
-          </TabsContent>
-          <TabsContent value="appearance" className="mt-5">
-            <DashboardAppearanceTab />
-          </TabsContent>
-          <TabsContent value="pixels" className="mt-5">
-            <DashboardPixelsTab />
-          </TabsContent>
-          <TabsContent value="account" className="mt-5">
-            <DashboardAccountTab />
-          </TabsContent>
-          <TabsContent value="domain" className="mt-5">
-            <DashboardDomainTab />
-          </TabsContent>
-          <TabsContent value="telegram" className="mt-5">
-            <DashboardTelegramTab />
-          </TabsContent>
-          <TabsContent value="legal" className="mt-5">
-            <DashboardLegalTab />
-          </TabsContent>
-        </Tabs>
+        {/* Dynamic Content */}
+        {!activeTab ? (
+          <div className="space-y-10 animate-in fade-in slide-in-from-bottom-2 duration-500">
+            {SETTINGS_CATEGORIES.map((category) => (
+              <div key={category.title}>
+                <h2 className="text-lg font-serif font-semibold text-foreground mb-4 pl-1">{category.title}</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {category.items.map((item) => (
+                    <div
+                      key={item.id}
+                      onClick={() => setSearchParams({ tab: item.id })}
+                      className="group cursor-pointer p-5 rounded-2xl bg-white border border-gray-100 shadow-[0_2px_10px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_30px_rgba(37,99,235,0.08)] hover:border-blue-100 transition-all duration-300 flex items-center gap-5"
+                    >
+                      <div className="h-12 w-12 shrink-0 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-500 group-hover:bg-blue-50 group-hover:text-blue-600 group-hover:scale-105 transition-all duration-300">
+                        <item.icon className="h-6 w-6" strokeWidth={1.5} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-[15px] text-gray-900 group-hover:text-blue-700 transition-colors truncate">
+                          {item.title}
+                        </h3>
+                        <p className="text-[13px] text-gray-500 mt-0.5 leading-relaxed line-clamp-2">
+                          {item.desc}
+                        </p>
+                      </div>
+                      <div className="shrink-0 text-gray-300 group-hover:text-blue-500 group-hover:translate-x-1 transition-all">
+                        <ArrowRight className="h-5 w-5" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="animate-in fade-in slide-in-from-right-2 duration-300">
+            {renderContent()}
+          </div>
+        )}
       </div>
     </DashboardLayout>
   );
