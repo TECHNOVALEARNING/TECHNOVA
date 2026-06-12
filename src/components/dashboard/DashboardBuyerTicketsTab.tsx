@@ -62,12 +62,16 @@ const DashboardBuyerTicketsTab = () => {
 
   const loadTickets = async () => {
     setLoading(true);
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("support_tickets")
       .select("id, subject, status, created_at, customers(name, email)")
       .eq("store_owner_id", user?.id)
       .order("created_at", { ascending: false });
     
+    if (error) {
+      console.error("Error fetching tickets:", error);
+      toast.error("Erreur de chargement des tickets: " + error.message);
+    }
     setTickets((data as any) || []);
     setLoading(false);
   };
