@@ -1,4 +1,4 @@
-﻿import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
@@ -73,7 +73,7 @@ serve(async (req) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: "Technova <noreply@mail.technova.com>",
+          from: "Technova <noreply@technovalearning.com>",
           to: [ADMIN_EMAIL],
           reply_to: userEmail || undefined,
           subject: `Nouveau ticket support • ${subject || "Support"}`,
@@ -115,7 +115,7 @@ serve(async (req) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: "Technova Support <noreply@mail.technova.com>",
+          from: "Technova <noreply@technovalearning.com>",
           to: [recipientEmail],
           subject: `Réponse du support • ${subject || "Votre ticket"}`,
           html,

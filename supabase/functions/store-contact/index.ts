@@ -1,4 +1,4 @@
-﻿import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
@@ -52,7 +52,7 @@ serve(async (req) => {
             Authorization: `Bearer ${RESEND_API_KEY}`,
           },
           body: JSON.stringify({
-            from: "Technova <noreply@mail.technova.com>",
+            from: "Technova <noreply@technovalearning.com>",
             to: [recipient_email],
             subject: `Réponse de ${ownerName} à votre message`,
             html: `
@@ -117,7 +117,7 @@ serve(async (req) => {
           Authorization: `Bearer ${RESEND_API_KEY}`,
         },
         body: JSON.stringify({
-          from: "Technova <noreply@mail.technova.com>",
+          from: "Technova <noreply@technovalearning.com>",
           to: [ownerEmail],
           subject: `📩 Nouveau message de ${sender_name}`,
           html: `
