@@ -135,24 +135,28 @@ const CheckoutDialog = ({ open, onOpenChange, product, storeSlug, brandColor, fu
   const handleFreeCheckout = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke("process-free-order", {
-        body: {
-          customer: { name: fullName, phone: fullPhone, email },
-          metadata: {
-            product_id: product.id,
-            product_title: product.title,
-            store_owner_id: product.creator_id,
-            promo_code: appliedPromo?.code || null,
-            original_price: appliedPromo ? effectivePrice : null,
-            shipping_address: shippingPayload,
-            download_url: product.download_url || null,
-            product_type: product.type || null,
-            store_slug: storeSlug || null,
-          }
-        }
+      const { data, error } = await supabase.rpc("process_free_order", {
+        p_name: fullName,
+        p_email: email,
+        p_phone: `+${fullPhone}`,
+        p_product_id: product.id,
+        p_store_owner_id: product.creator_id,
+        p_promo_code: appliedPromo?.code || null,
+        p_original_amount: appliedPromo ? effectivePrice : null,
+        p_shipping_address: shippingPayload
       });
+      
       if (error) throw new Error(error.message);
-      if (data?.error) throw new Error(data.error);
+
+      // Trigger notification sale email in the background
+      supabase.functions.invoke("notify-sale", { body: {
+        store_owner_id: product.creator_id, product_title: product.title, amount: 0,
+        customer_name: fullName, customer_email: email,
+        promo_code: appliedPromo?.code || null, original_price: appliedPromo ? effectivePrice : null,
+        product_id: product.id, download_url: product.download_url || null,
+        product_type: product.type || null, store_slug: storeSlug || null,
+        shipping_address: shippingPayload,
+      }}).catch(console.error);
 
       setFreeSuccess(true);
       toast.success("Produit obtenu !");
