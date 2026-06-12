@@ -11,7 +11,7 @@ import { useActiveStore } from "@/hooks/useActiveStore";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent,
   SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem,
-  SidebarHeader, SidebarFooter, useSidebar,
+  SidebarHeader, SidebarFooter, useSidebar, SidebarTrigger
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
@@ -45,11 +45,14 @@ export function DashboardSidebar() {
   return (
     <Sidebar collapsible="icon" className="dashboard-shell-scope border-r-0">
       {/* Logo Header */}
-      <SidebarHeader className="p-4 border-b border-sidebar-border/20 flex flex-row items-center justify-center min-h-[64px]">
-        <div className="flex items-center gap-2">
-          <img src={logo} alt="TECHNOVA" className="h-6 w-auto object-contain brightness-0 invert" />
-          {!collapsed && <span className="text-white font-bold text-xl tracking-tight">TECHNOVA</span>}
-        </div>
+      <SidebarHeader className={`p-4 border-b border-sidebar-border/20 flex flex-row items-center min-h-[64px] ${collapsed ? 'justify-center' : 'justify-between'}`}>
+        {!collapsed && (
+          <div className="flex items-center gap-2">
+            <img src={logo} alt="TECHNOVA" className="h-6 w-auto object-contain brightness-0 invert" />
+            <span className="text-white font-bold text-xl tracking-tight">TECHNOVA</span>
+          </div>
+        )}
+        <SidebarTrigger className="text-white/70 hover:text-white" />
       </SidebarHeader>
 
       <SidebarContent className="py-1 px-1 overflow-y-auto">

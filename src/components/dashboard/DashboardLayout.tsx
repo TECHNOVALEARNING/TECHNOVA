@@ -26,12 +26,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         <div className="flex-1 flex flex-col min-w-0">
           {/* Header */}
           <header className="sticky top-0 z-30 h-16 flex items-center justify-between border-b border-border px-3 sm:px-6 bg-white shadow-sm">
-            <div className="flex items-center gap-3 min-w-0">
-              <SidebarTrigger className="shrink-0 h-8 w-8 text-foreground/60 hover:text-foreground hover:bg-gray-100" />
-              
-              {!isMobile && (
-                <div className="h-5 w-px bg-border mx-1" />
-              )}
+            <div className="flex items-center gap-3 min-w-0 pl-1">
               
               <button 
                 onClick={() => navigate('/dashboard/stores')}
