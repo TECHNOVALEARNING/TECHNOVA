@@ -20,7 +20,7 @@ export const useCustomDomain = () => {
     const checkDomain = async () => {
       const hostname = window.location.hostname;
       
-      if (hostname.startsWith("client.")) {
+      if (hostname.startsWith("portal.")) {
         // Stop loading and let the app render
         // But we will intercept this in App.tsx
         setLoading(false);

@@ -92,7 +92,7 @@ const AppContent = () => {
   }
 
   const hostname = window.location.hostname;
-  if (hostname.startsWith("client.")) {
+  if (hostname.startsWith("portal.")) {
     return (
       <BrowserRouter>
         <ScrollToTop />
