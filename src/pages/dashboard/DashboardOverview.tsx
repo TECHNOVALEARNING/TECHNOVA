@@ -1,46 +1,30 @@
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
 import {
   Package, DollarSign, Users, Plus, Workflow, Tag, TrendingUp,
-  ExternalLink, ArrowUpRight, ShoppingCart, Eye, BarChart3,
-  ArrowUp, ArrowDown, Activity
+  ExternalLink, ShoppingCart, HelpCircle, Zap
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, CartesianGrid } from "recharts";
-import { format, subDays, eachDayOfInterval } from "date-fns";
-import { fr } from "date-fns/locale";
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 12 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { delay: i * 0.06, duration: 0.4, ease: [0.25, 0.1, 0.25, 1] as const },
-  }),
-};
+import { subDays } from "date-fns";
 
 const DashboardOverview = () => {
   const { user, profile } = useAuth();
   const navigate = useNavigate();
   const [stats, setStats] = useState({
     products: 0, published: 0, totalRevenue: 0, weekRevenue: 0,
-    prevWeekRevenue: 0, clients: 0, totalSales: 0, weekSales: 0, visits: 0,
+    clients: 0,
   });
   const [topProducts, setTopProducts] = useState<any[]>([]);
-  const [chartData, setChartData] = useState<any[]>([]);
-  const [recentOrders, setRecentOrders] = useState<any[]>([]);
 
   useEffect(() => {
     if (!user) return;
     const fetchStats = async () => {
-      const [productsRes, ordersRes, visitsRes] = await Promise.all([
+      const [productsRes, ordersRes] = await Promise.all([
         supabase.from("products").select("*", { count: "exact" }).eq("creator_id", user.id),
         supabase.from("orders").select("amount, created_at, customer_id, product_id, status").eq("store_owner_id", user.id).eq("status", "completed"),
-        supabase.from("store_visits").select("created_at").eq("store_owner_id", user.id).gte("created_at", subDays(new Date(), 30).toISOString()),
       ]);
 
       const products = productsRes.data || [];
@@ -49,11 +33,8 @@ const DashboardOverview = () => {
       const totalRevenue = orders.reduce((sum, o) => sum + Number(o.amount), 0);
 
       const weekAgo = subDays(new Date(), 7);
-      const twoWeeksAgo = subDays(new Date(), 14);
       const weekOrders = orders.filter(o => new Date(o.created_at) >= weekAgo);
-      const prevWeekOrders = orders.filter(o => new Date(o.created_at) >= twoWeeksAgo && new Date(o.created_at) < weekAgo);
       const weekRevenue = weekOrders.reduce((sum, o) => sum + Number(o.amount), 0);
-      const prevWeekRevenue = prevWeekOrders.reduce((sum, o) => sum + Number(o.amount), 0);
       const uniqueClients = new Set(orders.map(o => o.customer_id)).size;
 
       setStats({
@@ -61,28 +42,8 @@ const DashboardOverview = () => {
         published,
         totalRevenue,
         weekRevenue,
-        prevWeekRevenue,
         clients: uniqueClients,
-        totalSales: orders.length,
-        weekSales: weekOrders.length,
-        visits: visitsRes.data?.length || 0,
       });
-
-      // Chart data - 30 days
-      const interval = eachDayOfInterval({ start: subDays(new Date(), 29), end: new Date() });
-      const chart = interval.map(day => {
-        const dayStr = format(day, "yyyy-MM-dd");
-        const dayOrders = orders.filter(o => format(new Date(o.created_at), "yyyy-MM-dd") === dayStr);
-        const dayVisits = (visitsRes.data || []).filter((v: any) => format(new Date(v.created_at), "yyyy-MM-dd") === dayStr);
-        return {
-          date: format(day, "dd", { locale: fr }),
-          fullDate: format(day, "dd MMM", { locale: fr }),
-          revenue: dayOrders.reduce((s, o) => s + Number(o.amount), 0),
-          ventes: dayOrders.length,
-          visites: dayVisits.length,
-        };
-      });
-      setChartData(chart);
 
       // Top products
       const salesByProduct: Record<string, { total: number; count: number }> = {};
@@ -98,361 +59,156 @@ const DashboardOverview = () => {
       }));
       enriched.sort((a: any, b: any) => b.salesTotal - a.salesTotal);
       setTopProducts(enriched.slice(0, 5));
-
-      // Recent orders
-      const { data: recent } = await supabase
-        .from("orders")
-        .select("id, amount, status, created_at, products(title), customers(name)")
-        .eq("store_owner_id", user.id)
-        .order("created_at", { ascending: false })
-        .limit(5);
-      setRecentOrders(recent || []);
     };
     fetchStats();
   }, [user]);
 
-  const getGreeting = () => {
-    const h = new Date().getHours();
-    if (h < 12) return "Bonjour";
-    if (h < 18) return "Bon après-midi";
-    return "Bonsoir";
-  };
-
-  const revenueChange = stats.prevWeekRevenue > 0
-    ? Math.round(((stats.weekRevenue - stats.prevWeekRevenue) / stats.prevWeekRevenue) * 100)
-    : stats.weekRevenue > 0 ? 100 : 0;
-
-  const kpiCards = [
-    {
-      label: "Revenu total",
-      value: `${stats.totalRevenue.toLocaleString()} F`,
-      sub: `${stats.weekRevenue.toLocaleString()} F cette semaine`,
-      icon: DollarSign,
-      change: revenueChange,
-    },
-    {
-      label: "Ventes totales",
-      value: stats.totalSales.toString(),
-      sub: `${stats.weekSales} cette semaine`,
-      icon: ShoppingCart,
-      change: null,
-    },
-    {
-      label: "Clients uniques",
-      value: stats.clients.toString(),
-      sub: `${stats.published} produits publiés`,
-      icon: Users,
-      change: null,
-    },
-  ];
-
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (!active || !payload?.length) return null;
-    return (
-      <div className="rounded-xl border border-border bg-card/95 backdrop-blur-md shadow-lg p-3 min-w-[140px]">
-        <p className="text-xs font-medium text-muted-foreground mb-1.5">{payload[0]?.payload?.fullDate}</p>
-        {payload.map((entry: any) => (
-          <div key={entry.dataKey} className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-1.5">
-              <div className="h-2 w-2 rounded-full" style={{ backgroundColor: entry.color }} />
-              <span className="text-xs text-muted-foreground capitalize">{entry.dataKey}</span>
-            </div>
-            <span className="text-xs font-semibold text-foreground">
-              {entry.dataKey === "revenue" ? `${entry.value.toLocaleString()} F` : entry.value}
-            </span>
-          </div>
-        ))}
-      </div>
-    );
-  };
-
   return (
     <DashboardLayout>
-      <div className="space-y-5 max-w-[1400px]">
-        {/* Header & Actions */}
-        <motion.div
-          initial={{ opacity: 0, y: -8 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col gap-4"
-        >
+      <div className="max-w-[1200px] mx-auto pt-4 sm:pt-6 pb-12 space-y-8 px-2 sm:px-0">
+        
+        {/* Header Section */}
+        <div className="flex flex-col gap-5">
           <div>
-            <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-foreground tracking-tight">
-              {getGreeting()}, {profile?.display_name || "Créateur"} 🌞
+            <h1 className="text-2xl sm:text-3xl md:text-[34px] font-semibold text-[#111827] tracking-tight">
+              Bonjour {profile?.display_name || "Créateur"} ! 🌞
             </h1>
-            <p className="text-sm text-muted-foreground mt-1">
-              Votre inspiration est précieuse, créez quelque chose de spécial aujourd'hui !
-            </p>
+            <div className="flex items-center gap-2 mt-3 text-[13px] text-gray-500 font-medium bg-blue-50/50 w-fit px-2 py-1 rounded-md border border-blue-100/50">
+              <TrendingUp className="h-3.5 w-3.5 text-blue-500" />
+              Les premières ventes arrivent - suivez votre dynamique.
+            </div>
           </div>
-          <div className="flex flex-wrap gap-2">
+
+          <div className="flex flex-wrap items-center gap-3">
             <Button
-              size="sm"
               variant="outline"
-              className="rounded-lg gap-1.5 text-xs h-9 border-border/60 hover:bg-muted/50"
-              onClick={() => navigate("/dashboard/analytics")}
+              className="rounded-full gap-2 text-[13px] font-medium h-10 px-5 border-gray-200 text-gray-700 hover:bg-gray-50 shadow-sm"
             >
-              <BarChart3 className="h-3.5 w-3.5" />
-              Analytiques
+              <Zap className="h-4 w-4 text-purple-600" />
+              Demander à Intellia
             </Button>
             <Button
-              size="sm"
-              className="rounded-lg gap-1.5 text-xs h-9 bg-primary text-white hover:bg-primary/90 shadow-sm"
+              variant="outline"
+              className="rounded-full gap-2 text-[13px] font-medium h-10 px-5 border-gray-200 text-gray-700 hover:bg-gray-50 shadow-sm"
               onClick={() => navigate("/dashboard/products/new")}
             >
-              <Plus className="h-3.5 w-3.5" />
+              <Plus className="h-4 w-4 text-gray-500" />
               Ajouter un produit
             </Button>
             <Button
-              size="sm"
               variant="outline"
-              className="rounded-lg gap-1.5 text-xs h-9 border-border/60 hover:bg-muted/50"
+              className="rounded-full gap-2 text-[13px] font-medium h-10 px-5 border-gray-200 text-gray-700 hover:bg-gray-50 shadow-sm"
               onClick={() => navigate("/dashboard/automations")}
             >
-              <Workflow className="h-3.5 w-3.5" />
+              <Workflow className="h-4 w-4 text-gray-500" />
               Créer un workflow
             </Button>
+            <Button
+              variant="outline"
+              className="rounded-full gap-2 text-[13px] font-medium h-10 px-5 border-gray-200 text-gray-700 hover:bg-gray-50 shadow-sm"
+            >
+              <Tag className="h-4 w-4 text-gray-500" />
+              Créer une réduction
+            </Button>
           </div>
-        </motion.div>
+        </div>
 
         {/* KPI Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-          {kpiCards.map((card, i) => (
-            <motion.div
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {[
+            {
+              label: "Revenu total",
+              value: `${stats.totalRevenue.toLocaleString()} FCFA`,
+              icon: DollarSign,
+            },
+            {
+              label: "7 derniers jours",
+              value: `${stats.weekRevenue.toLocaleString()} FCFA`,
+              icon: ShoppingCart,
+            },
+            {
+              label: "Nombre total de clients",
+              value: stats.clients.toString(),
+              icon: Users,
+            },
+          ].map((card) => (
+            <div
               key={card.label}
-              custom={i}
-              initial="hidden"
-              animate="visible"
-              variants={fadeUp}
-              className="group relative rounded-xl p-4 sm:p-5 dash-glass overflow-hidden"
+              className="relative rounded-[24px] p-6 bg-[#f7f8f9] flex flex-col justify-between min-h-[150px] sm:min-h-[160px]"
             >
-              <div className="flex items-start justify-between mb-3">
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{card.label}</p>
-                <div className="h-8 w-8 rounded-lg flex items-center justify-center bg-primary/10 text-primary">
-                  <card.icon className="h-4 w-4" />
-                </div>
+              <div className="mb-6">
+                <card.icon className="h-5 w-5 text-gray-400" strokeWidth={1.5} />
               </div>
-              <div className="flex items-end gap-2 mb-1">
-                <p className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground tabular-nums leading-none">
+              <div>
+                <p className="text-2xl sm:text-[28px] font-bold tracking-tight text-[#111827] mb-1.5">
                   {card.value}
                 </p>
-                {card.change !== null && (
-                  <div className={`flex items-center gap-0.5 text-xs font-medium mb-0.5 ${
-                    card.change >= 0 ? "text-emerald-600" : "text-red-500"
-                  }`}>
-                    {card.change >= 0 ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />}
-                    {Math.abs(card.change)}%
-                  </div>
-                )}
+                <p className="text-[13px] text-gray-500 font-medium">{card.label}</p>
               </div>
-              <p className="text-xs text-muted-foreground">{card.sub}</p>
-            </motion.div>
+              {/* Info Icon bottom right */}
+              <div className="absolute bottom-6 right-6 cursor-help hover:text-gray-600 transition-colors">
+                <HelpCircle className="h-4 w-4 text-gray-400" />
+              </div>
+            </div>
           ))}
         </div>
 
-        {/* Charts Row */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
-          {/* Revenue chart - takes 2 cols */}
-          <motion.div
-            custom={4}
-            initial="hidden"
-            animate="visible"
-            variants={fadeUp}
-            className="lg:col-span-2 rounded-xl dash-glass p-4 sm:p-5"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h3 className="text-sm sm:text-base font-semibold text-foreground">Revenus & Ventes</h3>
-                <p className="text-[11px] text-muted-foreground">30 derniers jours</p>
-              </div>
-              <div className="flex items-center gap-3 text-[11px]">
-                <div className="flex items-center gap-1.5">
-                  <div className="h-2 w-2 rounded-full bg-primary" />
-                  <span className="text-muted-foreground">Revenu</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <div className="h-2 w-2 rounded-full bg-emerald-500" />
-                  <span className="text-muted-foreground">Ventes</span>
-                </div>
-              </div>
+        {/* Top Products */}
+        <div className="pt-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
+            <div>
+              <h3 className="text-lg font-bold text-[#111827]">Produits les plus vendus</h3>
+              <p className="text-[13px] text-gray-500 mt-0.5">Vos produits les plus vendus basés sur le total des ventes</p>
             </div>
-            <div className="h-[220px] sm:h-[260px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={chartData} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.2} />
-                      <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
-                    </linearGradient>
-                    <linearGradient id="salesGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.15} />
-                      <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" strokeOpacity={0.5} />
-                  <XAxis dataKey="date" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
-                  <YAxis tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Area type="monotone" dataKey="revenue" stroke="hsl(var(--primary))" strokeWidth={2} fill="url(#revGrad)" />
-                  <Area type="monotone" dataKey="ventes" stroke="#10b981" strokeWidth={2} fill="url(#salesGrad)" />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-          </motion.div>
+            <Button 
+              variant="outline" 
+              className="rounded-xl text-[13px] font-medium h-9 px-4 border-gray-200 shadow-sm w-full sm:w-auto" 
+              onClick={() => navigate("/dashboard/products")}
+            >
+              Voir tout
+            </Button>
+          </div>
 
-          {/* Visits mini chart */}
-          <motion.div
-            custom={5}
-            initial="hidden"
-            animate="visible"
-            variants={fadeUp}
-            className="rounded-xl dash-glass p-4 sm:p-5"
-          >
-            <div className="mb-4">
-              <h3 className="text-sm sm:text-base font-semibold text-foreground">Visites</h3>
-              <p className="text-[11px] text-muted-foreground">30 derniers jours</p>
-            </div>
-            <div className="h-[220px] sm:h-[260px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={chartData} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" strokeOpacity={0.5} />
-                  <XAxis dataKey="date" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
-                  <YAxis tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Bar dataKey="visites" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} opacity={0.8} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Bottom Row: Top Products + Recent Orders */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-          {/* Top Products */}
-          <motion.div
-            custom={6}
-            initial="hidden"
-            animate="visible"
-            variants={fadeUp}
-            className="rounded-xl dash-glass"
-          >
-            <div className="flex items-center justify-between p-4 sm:p-5 pb-2">
-              <div>
-                <h3 className="text-sm sm:text-base font-semibold text-foreground">Meilleurs produits</h3>
-                <p className="text-[11px] text-muted-foreground">Par chiffre d'affaires</p>
+          <div className="rounded-[24px] bg-[#f7f8f9] p-2 sm:p-3 overflow-hidden">
+            {topProducts.length === 0 ? (
+              <div className="text-center py-10">
+                <p className="text-sm font-medium text-[#111827] mb-1">Aucun produit vendu</p>
+                <p className="text-xs text-gray-500">Les statistiques de vos produits apparaîtront ici</p>
               </div>
-              <Button variant="ghost" size="sm" className="rounded-full text-xs h-7" onClick={() => navigate("/dashboard/products")}>
-                Voir tout
-              </Button>
-            </div>
-
-            <div className="px-4 sm:px-5 pb-4 sm:pb-5">
-              {topProducts.length === 0 ? (
-                <div className="text-center py-8">
-                  <div className="h-12 w-12 rounded-2xl bg-muted/50 flex items-center justify-center mx-auto mb-3">
-                    <Package className="h-5 w-5 text-muted-foreground/40" />
-                  </div>
-                  <p className="text-sm font-medium text-foreground mb-1">Aucun produit</p>
-                  <p className="text-xs text-muted-foreground mb-3">Créez votre premier produit</p>
-                  <Button size="sm" className="rounded-full gap-1.5 h-8 text-xs" onClick={() => navigate("/dashboard/products/new")}>
-                    <Plus className="h-3.5 w-3.5" /> Créer
-                  </Button>
-                </div>
-              ) : (
-                <div className="space-y-0.5">
-                  {topProducts.map((p, i) => (
-                    <div
-                      key={p.id}
-                      className="flex items-center gap-3 py-2.5 px-2 rounded-xl hover:bg-muted/40 transition-colors cursor-pointer group"
-                      onClick={() => navigate(`/dashboard/products/${p.id}/edit`)}
-                    >
-                      <span className="text-[11px] font-bold text-muted-foreground/50 w-4 text-center shrink-0">
-                        {i + 1}
-                      </span>
-                      <div className="h-9 w-9 rounded-lg bg-secondary flex items-center justify-center overflow-hidden shrink-0">
+            ) : (
+              <div className="space-y-1">
+                {topProducts.map((p) => (
+                  <div
+                    key={p.id}
+                    className="flex items-center justify-between p-3 sm:p-4 rounded-[16px] hover:bg-white/60 transition-colors cursor-pointer group"
+                    onClick={() => navigate(`/dashboard/products/${p.id}/edit`)}
+                  >
+                    <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+                      <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-xl bg-white border border-gray-100 flex items-center justify-center overflow-hidden shrink-0 shadow-sm">
                         {p.thumbnail_url ? (
                           <img src={p.thumbnail_url} alt={p.title} className="h-full w-full object-cover" />
                         ) : (
-                          <Package className="h-3.5 w-3.5 text-muted-foreground/40" />
+                          <Package className="h-5 w-5 text-gray-300" />
                         )}
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-foreground truncate group-hover:text-primary transition-colors">{p.title}</p>
-                        <p className="text-[11px] text-muted-foreground">{p.salesCount} vente{p.salesCount > 1 ? "s" : ""}</p>
+                      <div className="min-w-0 pr-2">
+                        <p className="text-[14px] sm:text-[15px] font-semibold text-[#111827] flex items-center gap-1.5 group-hover:text-primary transition-colors truncate">
+                          <span className="truncate">{p.title}</span>
+                          <ExternalLink className="h-3.5 w-3.5 text-gray-400 shrink-0" />
+                        </p>
+                        <p className="text-[12px] sm:text-[13px] text-gray-500 font-medium mt-0.5 truncate">{Number(p.price || 0).toLocaleString()} FCFA</p>
                       </div>
-                      <p className="text-sm font-bold text-foreground tabular-nums shrink-0">{p.salesTotal.toLocaleString()} F</p>
                     </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </motion.div>
-
-          {/* Recent Orders */}
-          <motion.div
-            custom={7}
-            initial="hidden"
-            animate="visible"
-            variants={fadeUp}
-            className="rounded-xl dash-glass"
-          >
-            <div className="flex items-center justify-between p-4 sm:p-5 pb-2">
-              <div>
-                <h3 className="text-sm sm:text-base font-semibold text-foreground">Dernières commandes</h3>
-                <p className="text-[11px] text-muted-foreground">Activité récente</p>
-              </div>
-              <Button variant="ghost" size="sm" className="rounded-full text-xs h-7" onClick={() => navigate("/dashboard/sales")}>
-                Voir tout
-              </Button>
-            </div>
-
-            <div className="px-4 sm:px-5 pb-4 sm:pb-5">
-              {recentOrders.length === 0 ? (
-                <div className="text-center py-8">
-                  <div className="h-12 w-12 rounded-2xl bg-muted/50 flex items-center justify-center mx-auto mb-3">
-                    <Activity className="h-5 w-5 text-muted-foreground/40" />
+                    <div className="text-right shrink-0">
+                      <p className="text-[14px] sm:text-[15px] font-bold text-[#111827]">{p.salesTotal.toLocaleString()} FCFA</p>
+                      <p className="text-[12px] sm:text-[13px] text-gray-500 font-medium mt-0.5">{p.salesCount} Vente{p.salesCount > 1 ? "s" : ""}</p>
+                    </div>
                   </div>
-                  <p className="text-sm font-medium text-foreground mb-1">Aucune commande</p>
-                  <p className="text-xs text-muted-foreground">Les commandes apparaîtront ici</p>
-                </div>
-              ) : (
-                <div className="space-y-0.5">
-                  {recentOrders.map((order: any) => (
-                    <div
-                      key={order.id}
-                      className="flex items-center gap-3 py-2.5 px-2 rounded-xl hover:bg-muted/40 transition-colors"
-                    >
-                      <div className={`h-9 w-9 rounded-lg flex items-center justify-center shrink-0 ${
-                        order.status === "completed" ? "bg-emerald-500/10" : "bg-amber-500/10"
-                      }`}>
-                        <ShoppingCart className={`h-3.5 w-3.5 ${
-                          order.status === "completed" ? "text-emerald-600" : "text-amber-600"
-                        }`} />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-foreground truncate">
-                          {order.products?.title || "Produit"}
-                        </p>
-                        <p className="text-[11px] text-muted-foreground">
-                          {order.customers?.name || "Client"} · {format(new Date(order.created_at), "dd MMM HH:mm", { locale: fr })}
-                        </p>
-                      </div>
-                      <div className="text-right shrink-0">
-                        <p className="text-sm font-bold text-foreground tabular-nums">
-                          {Number(order.amount).toLocaleString()} F
-                        </p>
-                        <span className={`text-[10px] font-medium ${
-                          order.status === "completed" ? "text-emerald-600" : "text-amber-600"
-                        }`}>
-                          {order.status === "completed" ? "Complétée" : "En attente"}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </motion.div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
-
 
       </div>
     </DashboardLayout>
