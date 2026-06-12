@@ -221,7 +221,7 @@ const BuyerDashboard = () => {
                       </Link>
                     </p>
                   )}
-                  <Link to={`/mes-achats/${o.id}`}>
+                  <Link to={`/orders/${o.id}`}>
                     <Button className="w-full text-sm" size="sm">
                       Voir la commande
                     </Button>
