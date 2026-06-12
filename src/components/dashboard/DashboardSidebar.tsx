@@ -122,13 +122,13 @@ export function DashboardSidebar() {
                   {!collapsed && <Separator className="my-1 bg-sidebar-border/50" />}
                   {!collapsed && <SidebarGroupLabel className="text-[10px] uppercase tracking-wider text-sidebar-foreground/30 px-2 mb-0 h-6">Administration</SidebarGroupLabel>}
                   {[
-                    { title: "Vue d'ensemble", url: "/dashboard/admin", icon: BarChart3 },
-                    { title: "Utilisateurs", url: "/dashboard/admin-users", icon: Users },
-                    { title: "Retraits", url: "/dashboard/admin-withdrawals", icon: Wallet },
-                    { title: "Support", url: "/dashboard/admin-support", icon: MessageCircle },
-                    { title: "Modération", url: "/dashboard/admin-moderation", icon: Package },
-                    { title: "KYC", url: "/dashboard/admin-kyc", icon: Shield },
-                    { title: "Badges Verify", url: "/dashboard/admin-badges", icon: BadgeCheck },
+                    { title: "Vue d'ensemble", url: "/admin", icon: BarChart3 },
+                    { title: "Utilisateurs", url: "/admin/users", icon: Users },
+                    { title: "Retraits", url: "/admin/withdrawals", icon: Wallet },
+                    { title: "Support", url: "/admin/support", icon: MessageCircle },
+                    { title: "Modération", url: "/admin/moderation", icon: Package },
+                    { title: "KYC", url: "/admin/kyc", icon: Shield },
+                    { title: "Badges Verify", url: "/admin/badges", icon: BadgeCheck },
                   ].map((item) => (
                     <SidebarMenuItem key={item.title}>
                       <SidebarMenuButton asChild isActive={isActive(item.url)} className="dash-menu-item">
