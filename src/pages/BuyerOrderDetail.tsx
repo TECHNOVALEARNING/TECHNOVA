@@ -312,7 +312,9 @@ const BuyerOrderDetail = () => {
                           <p className="text-sm font-medium text-foreground line-clamp-1">{r.title}</p>
                           <p className="text-[11px] text-muted-foreground capitalize">{r.type}</p>
                         </div>
-                        <ExternalLink className="h-4 w-4 text-muted-foreground" />
+                        <span className="text-xs font-medium text-primary flex items-center gap-1">
+                          Voir <ExternalLink className="h-3 w-3" />
+                        </span>
                       </a>
                     </li>
                   ))}
