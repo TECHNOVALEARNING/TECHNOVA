@@ -20,6 +20,13 @@ export const useCustomDomain = () => {
     const checkDomain = async () => {
       const hostname = window.location.hostname;
       
+      if (hostname.startsWith("client.")) {
+        // Stop loading and let the app render
+        // But we will intercept this in App.tsx
+        setLoading(false);
+        return;
+      }
+
       // Skip for main domains and local dev
       if (
         hostname === "localhost" || 

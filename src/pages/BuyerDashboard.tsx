@@ -76,23 +76,13 @@ const BuyerDashboard = () => {
       const fetchLatestOrders = async () => {
         if (!session.customerId) return;
         try {
-          const { data, error } = await supabase
-            .from("orders")
-            .select("id, amount, status, created_at, product:products(id, title, type, thumbnail_url, download_url), store_owner:profiles(id, display_name, store_slug)")
-            .eq("customer_id", session.customerId)
-            .order("created_at", { ascending: false });
+          const { data, error } = await supabase.rpc("get_buyer_orders", {
+            p_customer_id: session.customerId
+          });
             
           if (data && !error) {
-            const enriched = data.map((o: any) => ({
-              id: o.id,
-              amount: o.amount,
-              status: o.status,
-              created_at: o.created_at,
-              product: Array.isArray(o.product) ? o.product[0] : o.product,
-              store_owner: Array.isArray(o.store_owner) ? o.store_owner[0] : o.store_owner
-            }));
-            setOrders(enriched);
-            session.orders = enriched;
+            setOrders(data as any[]);
+            session.orders = data as any[];
             sessionStorage.setItem("buyer_session", JSON.stringify(session));
           }
         } catch (err) {

@@ -91,6 +91,23 @@ const AppContent = () => {
     return <CustomDomainApp storeSlug={storeSlug} />;
   }
 
+  const hostname = window.location.hostname;
+  if (hostname.startsWith("client.")) {
+    return (
+      <BrowserRouter>
+        <ScrollToTop />
+        <Routes>
+          <Route path="/" element={<Navigate to="/mes-achats" replace />} />
+          <Route path="/buyer-login" element={<BuyerLogin />} />
+          <Route path="/buyer-auth/callback" element={<BuyerOAuthCallback />} />
+          <Route path="/mes-achats" element={<BuyerDashboard />} />
+          <Route path="/mes-achats/:orderId" element={<BuyerOrderDetail />} />
+          <Route path="*" element={<Navigate to="/buyer-login" replace />} />
+        </Routes>
+      </BrowserRouter>
+    );
+  }
+
   return (
     <BrowserRouter>
       <ScrollToTop />
