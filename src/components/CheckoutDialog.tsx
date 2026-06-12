@@ -135,28 +135,29 @@ const CheckoutDialog = ({ open, onOpenChange, product, storeSlug, brandColor, fu
   const handleFreeCheckout = async () => {
     setLoading(true);
     try {
-      const { data: customer, error: custErr } = await supabase.from("customers")
-        .upsert({ name: fullName, phone: `+${fullPhone}`, email }, { onConflict: "email" }).select("id").single();
-      if (custErr) throw custErr;
-      const { error: orderErr } = await supabase.from("orders").insert({
-        customer_id: customer.id, product_id: product.id, store_owner_id: product.creator_id,
-        amount: 0, status: "completed",
-        promo_code: appliedPromo?.code || null, original_amount: appliedPromo ? effectivePrice : null,
-        shipping_address: shippingPayload,
-      } as any);
-      if (orderErr) throw orderErr;
-      supabase.functions.invoke("notify-sale", { body: {
-        store_owner_id: product.creator_id, product_title: product.title, amount: 0,
-        customer_name: fullName, customer_email: email,
-        promo_code: appliedPromo?.code || null, original_price: appliedPromo ? effectivePrice : null,
-        product_id: product.id, download_url: product.download_url || null,
-        product_type: product.type || null, store_slug: storeSlug || null,
-        shipping_address: shippingPayload,
-      }}).catch(console.error);
+      const { data, error } = await supabase.functions.invoke("process-free-order", {
+        body: {
+          customer: { name: fullName, phone: fullPhone, email },
+          metadata: {
+            product_id: product.id,
+            product_title: product.title,
+            store_owner_id: product.creator_id,
+            promo_code: appliedPromo?.code || null,
+            original_price: appliedPromo ? effectivePrice : null,
+            shipping_address: shippingPayload,
+            download_url: product.download_url || null,
+            product_type: product.type || null,
+            store_slug: storeSlug || null,
+          }
+        }
+      });
+      if (error) throw new Error(error.message);
+      if (data?.error) throw new Error(data.error);
+
       setFreeSuccess(true);
       toast.success("Produit obtenu !");
     } catch (err: any) {
-      toast.error(err.message || "Erreur");
+      toast.error(err.message || "Erreur lors de la validation");
     } finally { setLoading(false); }
   };
 
