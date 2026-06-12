@@ -15,46 +15,57 @@ const BuyerOAuthCallback = () => {
 
     (async () => {
       try {
-        // Wait for Supabase to process OAuth tokens
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session) {
-          toast.error("Session non établie. Réessayez.");
-          navigate("/buyer-login", { replace: true });
-          return;
-        }
+        // In PKCE flow, getSession might not have exchanged the code yet. 
+        // We listen to onAuthStateChange to wait for the session.
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+          if (event === "SIGNED_IN" && session) {
+            subscription.unsubscribe();
+            let customerName = session.user?.user_metadata?.full_name || session.user?.email?.split("@")[0] || "Client";
+            let customerEmail = session.user?.email || "";
+            let customerId = session.user?.id || "";
+            let orders = [];
 
-        let customerName = session.user?.user_metadata?.full_name || session.user?.email?.split("@")[0] || "Client";
-        let customerEmail = session.user?.email || "";
-        let customerId = session.user?.id || "";
-        let orders = [];
+            try {
+              const { data, error } = await supabase.functions.invoke("buyer-oauth-check");
+              if (!error && !data?.error && data?.customer) {
+                customerName = data.customer.name || customerName;
+                customerEmail = data.customer.email || customerEmail;
+                customerId = data.customer.id || customerId;
+                orders = data.orders || [];
+              }
+            } catch (err) {
+              console.error("buyer-oauth-check error:", err);
+            }
 
-        try {
-          const { data, error } = await supabase.functions.invoke("buyer-oauth-check");
-          if (!error && !data?.error && data?.customer) {
-            customerName = data.customer.name || customerName;
-            customerEmail = data.customer.email || customerEmail;
-            customerId = data.customer.id || customerId;
-            orders = data.orders || [];
+            sessionStorage.setItem("buyer_session", JSON.stringify({
+              email: customerEmail,
+              customerName: customerName,
+              customerId: customerId,
+              orders: orders,
+              authenticatedAt: Date.now(),
+            }));
+
+            toast.success("Connexion réussie");
+            navigate("/dashboard", { replace: true });
           }
-        } catch (err) {
-          console.error("buyer-oauth-check error:", err);
-          // Proceed with empty orders
-        }
+        });
 
-        sessionStorage.setItem("buyer_session", JSON.stringify({
-          email: customerEmail,
-          customerName: customerName,
-          customerId: customerId,
-          orders: orders,
-          authenticatedAt: Date.now(),
-        }));
+        // Also check getSession in case it's already exchanged or if it fails
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        // Give it a short timeout to let the event listener fire if it's currently exchanging
+        setTimeout(() => {
+          if (!session && !window.location.href.includes("code=")) {
+            subscription.unsubscribe();
+            toast.error("Session non établie. Réessayez.");
+            navigate("/", { replace: true });
+          }
+        }, 3000);
 
-        toast.success("Connexion réussie");
-        navigate("/mes-achats", { replace: true });
       } catch (e: any) {
         console.error(e);
         toast.error("Erreur de connexion");
-        navigate("/buyer-login", { replace: true });
+        navigate("/", { replace: true });
       }
     })();
   }, [navigate]);
