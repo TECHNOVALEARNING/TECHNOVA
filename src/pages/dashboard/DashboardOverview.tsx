@@ -97,21 +97,18 @@ const DashboardOverview = () => {
           ].map((card) => (
             <div
               key={card.label}
-              className="relative rounded-[24px] p-6 bg-gradient-to-br from-[#1e40af] to-[#4338ca] shadow-[0_10px_40px_-10px_rgba(37,99,235,0.4)] flex flex-col items-center justify-center text-center min-h-[150px] sm:min-h-[160px] border border-blue-500/30 overflow-hidden group hover:-translate-y-1 transition-all duration-300"
+              className="relative rounded-[24px] p-6 bg-white shadow-lg shadow-gray-200/50 border border-gray-100 flex flex-col items-center justify-center text-center min-h-[150px] sm:min-h-[160px] group hover:-translate-y-1 hover:shadow-xl hover:shadow-gray-200/80 transition-all duration-300"
             >
-              {/* Effet reflet 3D / Glass */}
-              <div className="absolute top-0 inset-x-0 h-1/2 bg-gradient-to-b from-white/15 to-transparent opacity-50 pointer-events-none" />
-              
-              <div className="mb-3 relative z-10">
-                <div className="h-12 w-12 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-md border border-white/20 shadow-inner">
-                  <card.icon className="h-5 w-5 text-white" strokeWidth={2} />
+              <div className="mb-4 relative">
+                <div className="h-10 w-10 rounded-xl bg-blue-500/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <card.icon className="h-5 w-5 text-blue-600" strokeWidth={2} />
                 </div>
               </div>
-              <div className="relative z-10">
-                <p className="text-2xl sm:text-[28px] font-bold tracking-tight text-white mb-1.5 drop-shadow-md">
+              <div>
+                <p className="text-2xl sm:text-[28px] font-bold tracking-tight text-[#111827] mb-1.5">
                   {card.value}
                 </p>
-                <p className="text-[13px] text-blue-100 font-medium tracking-wide">{card.label}</p>
+                <p className="text-[13px] text-gray-500 font-medium">{card.label}</p>
               </div>
             </div>
           ))}
