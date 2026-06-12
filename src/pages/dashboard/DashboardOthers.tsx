@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
+import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { useNavigate } from "react-router-dom";
 import {
   Users, Key, DollarSign, Wallet, BadgeCheck, Megaphone,
