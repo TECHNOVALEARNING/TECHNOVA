@@ -33,6 +33,8 @@ const SupportTicketDialog = ({ open, onOpenChange, orderId, productId, customerI
   const [loading, setLoading] = useState(true);
   const [subject, setSubject] = useState("");
   const [content, setContent] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [customerEmail, setCustomerEmail] = useState("");
   const [sending, setSending] = useState(false);
 
   const load = async () => {
@@ -56,6 +58,14 @@ const SupportTicketDialog = ({ open, onOpenChange, orderId, productId, customerI
       setTicket(null);
       setMessages([]);
     }
+    
+    // Load customer details for prepopulation
+    const { data: cust } = await supabase.from("customers").select("email, phone").eq("id", customerId).maybeSingle();
+    if (cust) {
+      setCustomerEmail(cust.email);
+      setPhoneNumber(cust.phone || "");
+    }
+    
     setLoading(false);
   };
 
@@ -92,11 +102,32 @@ const SupportTicketDialog = ({ open, onOpenChange, orderId, productId, customerI
         sender_id: customerId,
         content: content.trim(),
       } as any);
+
+      // Notify seller
+      await supabase.from("notifications").insert({
+        user_id: (prod as any).creator_id,
+        title: "Nouveau ticket de support acheteur",
+        message: `L'acheteur ${customerEmail} a ouvert un ticket pour la commande #${orderId.slice(0,8).toUpperCase()}`,
+        type: "support"
+      } as any);
+
+      // Send email via store-contact
+      await supabase.functions.invoke("store-contact", {
+        body: {
+          action: "contact",
+          store_owner_id: (prod as any).creator_id,
+          sender_name: "Acheteur - Commande #" + orderId.slice(0, 8).toUpperCase(),
+          sender_email: customerEmail,
+          sender_phone: phoneNumber,
+          message: `Sujet: ${subject.trim()}\n\nProblème:\n${content.trim()}`
+        }
+      });
+
       setTicket(ticketRow);
       setContent("");
       setSubject("");
       await load();
-      toast.success("Ticket envoyé au vendeur");
+      toast.success("Ticket envoyé au vendeur. Il vous répondra par email.");
     } catch (e: any) {
       toast.error(e.message || "Erreur lors de l'envoi");
     } finally {
@@ -173,19 +204,43 @@ const SupportTicketDialog = ({ open, onOpenChange, orderId, productId, customerI
             </Button>
           </div>
         ) : (
-          <div className="space-y-3">
-            <Input
-              placeholder="Sujet (ex: Problème de téléchargement)"
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
-            />
-            <Textarea
-              placeholder="Décrivez votre problème en détail…"
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              className="min-h-32"
-            />
-            <Button onClick={createTicket} disabled={sending} className="w-full gap-2">
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <label className="text-xs font-medium text-muted-foreground">Numéro de commande</label>
+                <Input value={`#${orderId.slice(0, 8).toUpperCase()}`} disabled className="bg-muted" />
+              </div>
+              <div className="space-y-1">
+                <label className="text-xs font-medium text-muted-foreground">Email d'achat</label>
+                <Input value={customerEmail} disabled className="bg-muted truncate" />
+              </div>
+            </div>
+            <div className="space-y-1">
+              <label className="text-xs font-medium text-muted-foreground">Numéro utilisé pour l'achat (Optionnel)</label>
+              <Input
+                placeholder="Votre numéro de téléphone..."
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-xs font-medium text-muted-foreground">Sujet du problème</label>
+              <Input
+                placeholder="Ex: Problème de téléchargement"
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-xs font-medium text-muted-foreground">Détails du problème</label>
+              <Textarea
+                placeholder="Décrivez votre problème en détail..."
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                className="min-h-24"
+              />
+            </div>
+            <Button onClick={createTicket} disabled={sending} className="w-full gap-2 mt-2">
               {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
               Ouvrir un ticket
             </Button>

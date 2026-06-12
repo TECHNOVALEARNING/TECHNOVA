@@ -68,11 +68,18 @@ const SaleDetail = () => {
 
       const [{ data: p }, { data: c }, { data: lic }] = await Promise.all([
         supabase.from("products").select("id, title, type, thumbnail_url, price").eq("id", o.product_id).maybeSingle(),
-        supabase.from("customers").select("id, name, email, phone, created_at").eq("id", o.customer_id).maybeSingle(),
+        supabase.from("customers").select("id, name, email, phone, auth_id, created_at").eq("id", o.customer_id).maybeSingle(),
         supabase.from("licenses").select("license_key, status, max_activations, expires_at, activated_at").eq("order_id", o.id),
       ]);
+      
+      let custWithAvatar = { ...c };
+      if (c?.auth_id) {
+        const { data: prof } = await supabase.from("profiles").select("avatar_url").eq("id", c.auth_id).maybeSingle();
+        custWithAvatar.avatar_url = prof?.avatar_url;
+      }
+
       setProduct(p);
-      setCustomer(c);
+      setCustomer(custWithAvatar);
       setLicenses(lic || []);
       setLoading(false);
     })();
@@ -208,8 +215,12 @@ const SaleDetail = () => {
         <Section icon={UserIcon} title="Client">
           <div className="rounded-xl border border-border/60 bg-card overflow-hidden">
             <div className="flex items-center gap-3 p-4 border-b border-border/60">
-              <div className="h-12 w-12 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-bold shrink-0">
-                {initials}
+              <div className="h-12 w-12 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-bold shrink-0 overflow-hidden">
+                {customer?.avatar_url ? (
+                  <img src={customer.avatar_url} alt={customer.name} className="h-full w-full object-cover" />
+                ) : (
+                  initials
+                )}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="font-bold text-foreground uppercase tracking-wide text-sm truncate">
