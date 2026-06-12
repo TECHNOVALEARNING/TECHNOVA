@@ -45,11 +45,16 @@ const AdminUsers = () => {
 
   const fetchProfiles = async () => {
     setLoading(true);
-    const { data } = await supabase
-      .from("profiles")
-      .select("id, first_name, last_name, display_name, avatar_url, phone, country_code, store_slug, created_at")
-      .order("created_at", { ascending: false });
-    setProfiles(data || []);
+    const { data, error } = await supabase.functions.invoke("admin-platform", {
+      body: { action: "list_users" },
+    });
+    
+    if (error) {
+      console.error("Error fetching users:", error);
+      setProfiles([]);
+    } else {
+      setProfiles(data?.users || []);
+    }
     setLoading(false);
   };
 
@@ -57,16 +62,19 @@ const AdminUsers = () => {
     setSelectedUser(userId);
     const events: UserEvent[] = [];
 
-    // Fetch orders (sales + commissions)
-    const { data: orders } = await supabase
-      .from("orders")
-      .select("amount, created_at, status")
-      .eq("store_owner_id", userId)
-      .eq("status", "completed")
-      .order("created_at", { ascending: false })
-      .limit(50);
+    const { data, error } = await supabase.functions.invoke("admin-platform", {
+      body: { action: "get_user_events", userId },
+    });
+    
+    if (error || !data) {
+      console.error("Error fetching user events:", error);
+      setUserEvents([]);
+      return;
+    }
 
-    orders?.forEach((o) => {
+    const { orders, withdrawals } = data;
+
+    orders?.forEach((o: any) => {
       events.push({
         type: "sale",
         amount: Number(o.amount),
@@ -81,15 +89,7 @@ const AdminUsers = () => {
       });
     });
 
-    // Fetch withdrawals
-    const { data: withdrawals } = await supabase
-      .from("withdrawals")
-      .select("amount, fee, net_amount, created_at, status, operator")
-      .eq("user_id", userId)
-      .order("created_at", { ascending: false })
-      .limit(50);
-
-    withdrawals?.forEach((w) => {
+    withdrawals?.forEach((w: any) => {
       events.push({
         type: "withdrawal",
         amount: Number(w.net_amount),

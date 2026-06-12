@@ -1,4 +1,4 @@
-﻿import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.98.0";
 
 const corsHeaders = {
@@ -45,8 +45,8 @@ serve(async (req) => {
 
     // ── DASHBOARD STATS ──
     if (action === "stats") {
-      const { data: totalUsers } = await supabaseAdmin.from("profiles").select("id", { count: "exact", head: true });
-      const { count: usersCount } = await supabaseAdmin.from("profiles").select("id", { count: "exact", head: true });
+      const { data: totalUsers } = await supabaseAdmin.from("profiles").select("id", { count: "exact", head: true }).gte("created_at", "2026-06-05T00:00:00Z");
+      const { count: usersCount } = await supabaseAdmin.from("profiles").select("id", { count: "exact", head: true }).gte("created_at", "2026-06-05T00:00:00Z");
 
       const { data: orders } = await supabaseAdmin
         .from("orders")
@@ -99,6 +99,39 @@ serve(async (req) => {
     }
 
     // ── ALL WITHDRAWALS ──
+    if (action === "list_users") {
+      const { data: profiles } = await supabaseAdmin
+        .from("profiles")
+        .select("id, first_name, last_name, display_name, avatar_url, phone, country_code, store_slug, created_at")
+        .gte("created_at", "2026-06-05T00:00:00Z")
+        .order("created_at", { ascending: false });
+      return new Response(JSON.stringify({ users: profiles || [] }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    if (action === "get_user_events") {
+      const { userId } = params;
+      const { data: orders } = await supabaseAdmin
+        .from("orders")
+        .select("amount, created_at, status")
+        .eq("store_owner_id", userId)
+        .eq("status", "completed")
+        .order("created_at", { ascending: false })
+        .limit(50);
+        
+      const { data: withdrawals } = await supabaseAdmin
+        .from("withdrawals")
+        .select("amount, fee, net_amount, created_at, status, operator")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false })
+        .limit(50);
+        
+      return new Response(JSON.stringify({ orders: orders || [], withdrawals: withdrawals || [] }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     if (action === "list_withdrawals") {
       const { data: withdrawals } = await supabaseAdmin
         .from("withdrawals")
