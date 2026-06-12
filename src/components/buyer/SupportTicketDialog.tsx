@@ -35,6 +35,7 @@ const SupportTicketDialog = ({ open, onOpenChange, orderId, productId, customerI
   const [content, setContent] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
+  const [displayOrderId, setDisplayOrderId] = useState(`#${orderId.slice(0, 8).toUpperCase()}`);
   const [sending, setSending] = useState(false);
 
   const load = async () => {
@@ -62,8 +63,8 @@ const SupportTicketDialog = ({ open, onOpenChange, orderId, productId, customerI
     // Load customer details for prepopulation
     const { data: cust } = await supabase.from("customers").select("email, phone").eq("id", customerId).maybeSingle();
     if (cust) {
-      setCustomerEmail(cust.email);
-      setPhoneNumber(cust.phone || "");
+      if (!customerEmail) setCustomerEmail(cust.email || "");
+      if (!phoneNumber) setPhoneNumber(cust.phone || "");
     }
     
     setLoading(false);
@@ -208,11 +209,18 @@ const SupportTicketDialog = ({ open, onOpenChange, orderId, productId, customerI
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1">
                 <label className="text-xs font-medium text-muted-foreground">Numéro de commande</label>
-                <Input value={`#${orderId.slice(0, 8).toUpperCase()}`} disabled className="bg-muted" />
+                <Input 
+                  value={displayOrderId} 
+                  onChange={(e) => setDisplayOrderId(e.target.value)} 
+                />
               </div>
               <div className="space-y-1">
                 <label className="text-xs font-medium text-muted-foreground">Email d'achat</label>
-                <Input value={customerEmail} disabled className="bg-muted truncate" />
+                <Input 
+                  placeholder="Votre email..."
+                  value={customerEmail} 
+                  onChange={(e) => setCustomerEmail(e.target.value)} 
+                />
               </div>
             </div>
             <div className="space-y-1">
