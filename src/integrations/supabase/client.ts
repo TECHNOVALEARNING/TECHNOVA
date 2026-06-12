@@ -8,10 +8,14 @@ const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY |
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
 
+// Disable hash parsing on the buyer portal to prevent stealing the oauth callback hash from the buyer client
+const isPortal = window.location.hostname.startsWith('portal.') || window.location.hostname.startsWith('client.');
+
 export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
   auth: {
     storage: localStorage,
     persistSession: true,
     autoRefreshToken: true,
+    detectSessionInUrl: !isPortal,
   }
 });
