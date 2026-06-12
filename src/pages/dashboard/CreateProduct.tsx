@@ -142,7 +142,7 @@ const CreateProduct = () => {
     switch (step) {
       case 1: return !!selectedType;
       case 2:
-        return !!title.trim() && !!price && priceNum >= 100 && !priceError && !originalPriceError;
+        return !!title.trim() && (pricingModel === "free" || (!!price && priceNum >= 100 && !priceError && !originalPriceError));
       case 3: return !!description.replace(/<[^>]*>/g, "").trim();
       case 4: return true;
       case 5:
@@ -229,14 +229,14 @@ const CreateProduct = () => {
         downloadUrl = videoUrl;
       }
 
-      const effectivePrice = parseFloat(price);
+      const effectivePrice = pricingModel === "free" ? 0 : parseFloat(price);
 
       const productData: Record<string, unknown> = {
         title: title.trim(),
         description: description.trim() || null,
         category: category || null,
         price: effectivePrice,
-        original_price: originalPrice ? parseFloat(originalPrice) : null,
+        original_price: pricingModel === "free" ? null : (originalPrice ? parseFloat(originalPrice) : null),
         type: selectedType,
         thumbnail_url: thumbnailUrl,
         download_url: downloadUrl,
@@ -744,47 +744,48 @@ const CreateProduct = () => {
                       <SelectContent>
                         <SelectItem value="one_time">Paiement unique</SelectItem>
                         <SelectItem value="subscription">Abonnement</SelectItem>
-                        <SelectItem value="free">Gratuit</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-sm font-medium text-foreground mb-1.5 block">Prix <span className="text-destructive">*</span></label>
-                      <div className="relative">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">FCFA</span>
-                        <Input
-                          type="number"
-                          value={price}
-                          onChange={(e) => setPrice(e.target.value)}
-                          className={`h-12 pl-14 ${priceError ? "border-destructive" : ""}`}
-                          placeholder="100"
-                          min={100}
-                        />
+                  {pricingModel !== "free" && (
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-sm font-medium text-foreground mb-1.5 block">Prix <span className="text-destructive">*</span></label>
+                        <div className="relative">
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">FCFA</span>
+                          <Input
+                            type="number"
+                            value={price}
+                            onChange={(e) => setPrice(e.target.value)}
+                            className={`h-12 pl-14 ${priceError ? "border-destructive" : ""}`}
+                            placeholder="100"
+                            min={100}
+                          />
+                        </div>
+                        {priceError && <p className="text-[11px] text-destructive mt-1">{priceError}</p>}
+                        {!priceError && <p className="text-[11px] text-muted-foreground mt-1">Min : 100 FCFA</p>}
                       </div>
-                      {priceError && <p className="text-[11px] text-destructive mt-1">{priceError}</p>}
-                      {!priceError && <p className="text-[11px] text-muted-foreground mt-1">Min : 100 FCFA</p>}
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-foreground mb-1.5 block">Prix barré</label>
-                      <div className="relative">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">FCFA</span>
-                        <Input
-                          type="number"
-                          value={originalPrice}
-                          onChange={(e) => setOriginalPrice(e.target.value)}
-                          className={`h-12 pl-14 ${originalPriceError ? "border-destructive" : ""}`}
-                          placeholder="0"
-                        />
+                      <div>
+                        <label className="text-sm font-medium text-foreground mb-1.5 block">Prix barré</label>
+                        <div className="relative">
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">FCFA</span>
+                          <Input
+                            type="number"
+                            value={originalPrice}
+                            onChange={(e) => setOriginalPrice(e.target.value)}
+                            className={`h-12 pl-14 ${originalPriceError ? "border-destructive" : ""}`}
+                            placeholder="0"
+                          />
+                        </div>
+                        {originalPriceError && <p className="text-[11px] text-destructive mt-1">{originalPriceError}</p>}
+                        {!originalPriceError && originalPrice && originalPriceNum > priceNum && (
+                          <p className="text-[11px] text-emerald-600 mt-1">
+                            Réduction de {Math.round(((originalPriceNum - priceNum) / originalPriceNum) * 100)}%
+                          </p>
+                        )}
                       </div>
-                      {originalPriceError && <p className="text-[11px] text-destructive mt-1">{originalPriceError}</p>}
-                      {!originalPriceError && originalPrice && originalPriceNum > priceNum && (
-                        <p className="text-[11px] text-emerald-600 mt-1">
-                          Réduction de {Math.round(((originalPriceNum - priceNum) / originalPriceNum) * 100)}%
-                        </p>
-                      )}
                     </div>
-                  </div>
+                  )}
 
                   {/* License-specific fields in step 2 */}
                   {selectedType === "license" && (

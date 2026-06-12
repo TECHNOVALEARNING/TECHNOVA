@@ -78,6 +78,7 @@ const EditProduct = () => {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [originalPrice, setOriginalPrice] = useState("");
+  const [pricingModel, setPricingModel] = useState<"one_time" | "subscription" | "free">("one_time");
   const [type, setType] = useState<string>("file");
   const [isPublished, setIsPublished] = useState(false);
   const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
@@ -153,6 +154,7 @@ const EditProduct = () => {
       setDescription(data.description || "");
       setPrice(String(data.price));
       setOriginalPrice(data.original_price ? String(data.original_price) : "");
+      setPricingModel(data.price === 0 ? "free" : "one_time");
       setType(data.type);
       setIsPublished(data.is_published);
       setThumbnailUrl(data.thumbnail_url);
@@ -271,11 +273,13 @@ const EditProduct = () => {
         newSeoImageUrl = await uploadFile(seoImageFile, "seo-images");
       }
 
+      const effectivePrice = pricingModel === "free" ? 0 : (parseFloat(price) || 0);
+
       const updateData: Record<string, unknown> = {
         title: title.trim(),
         description: description.trim() || null,
-        price: parseFloat(price) || 0,
-        original_price: originalPrice ? parseFloat(originalPrice) : null,
+        price: effectivePrice,
+        original_price: pricingModel === "free" ? null : (originalPrice ? parseFloat(originalPrice) : null),
         thumbnail_url: newThumbnailUrl,
         download_url: newDownloadUrl,
         file_format: fileFormat,
@@ -670,35 +674,52 @@ const EditProduct = () => {
               {activeTab === "pricing" && (
                 <div className="space-y-6">
                   <h2 className="text-lg font-bold text-foreground">Tarification</h2>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-sm font-medium text-foreground mb-1.5 block">Prix</label>
-                      <div className="relative">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">FCFA</span>
-                        <Input
-                          type="number"
-                          value={price}
-                          onChange={(e) => setPrice(e.target.value)}
-                          className="h-11 pl-14"
-                          placeholder="0"
-                        />
-                      </div>
-                      <p className="text-[11px] text-muted-foreground mt-1">Min : 100 FCFA</p>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-foreground mb-1.5 block">Prix barré</label>
-                      <div className="relative">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">FCFA</span>
-                        <Input
-                          type="number"
-                          value={originalPrice}
-                          onChange={(e) => setOriginalPrice(e.target.value)}
-                          className="h-11 pl-14"
-                          placeholder="0"
-                        />
-                      </div>
-                    </div>
+                  
+                  <div>
+                    <label className="text-sm font-medium text-foreground mb-1.5 block">Modèle de prix</label>
+                    <Select value={pricingModel} onValueChange={(v) => setPricingModel(v as any)}>
+                      <SelectTrigger className="h-11">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="one_time">Paiement unique</SelectItem>
+                        <SelectItem value="subscription">Abonnement</SelectItem>
+                        <SelectItem value="free">Gratuit</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
+
+                  {pricingModel !== "free" && (
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-sm font-medium text-foreground mb-1.5 block">Prix</label>
+                        <div className="relative">
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">FCFA</span>
+                          <Input
+                            type="number"
+                            value={price}
+                            onChange={(e) => setPrice(e.target.value)}
+                            className="h-11 pl-14"
+                            placeholder="0"
+                          />
+                        </div>
+                        <p className="text-[11px] text-muted-foreground mt-1">Min : 100 FCFA</p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-foreground mb-1.5 block">Prix barré</label>
+                        <div className="relative">
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">FCFA</span>
+                          <Input
+                            type="number"
+                            value={originalPrice}
+                            onChange={(e) => setOriginalPrice(e.target.value)}
+                            className="h-11 pl-14"
+                            placeholder="0"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
                   {type === "license" && (
                     <div className="p-5 rounded-xl border border-border bg-secondary/30 space-y-4">
