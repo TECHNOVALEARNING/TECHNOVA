@@ -149,7 +149,6 @@ const DashboardProfileTab = () => {
   }
 
   return (
-  return (
     <div className="max-w-5xl space-y-6">
       <div className="flex items-center justify-between bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
         <StoreSelector stores={stores} activeStoreId={activeStoreId} onSelect={setActiveStoreId} />
