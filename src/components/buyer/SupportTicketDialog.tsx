@@ -129,15 +129,15 @@ const SupportTicketDialog = ({ open, onOpenChange, orderId, productId, customerI
         type: "support"
       } as any);
 
-      // Send email via store-contact
-      await supabase.functions.invoke("store-contact", {
+      // Send email via notify-support-ticket to alert seller
+      await supabase.functions.invoke("notify-support-ticket", {
         body: {
-          action: "contact",
-          store_owner_id: (prod as any).creator_id,
-          sender_name: "Acheteur - Commande #" + orderId.slice(0, 8).toUpperCase(),
-          sender_email: customerEmail,
-          sender_phone: phoneNumber,
-          message: `Sujet: ${subject.trim()}\n\nProblème:\n${content.trim()}`
+          action: "new_ticket",
+          userId: customerId,
+          userName: "Acheteur - Commande #" + orderId.slice(0, 8).toUpperCase(),
+          userEmail: customerEmail,
+          subject: subject.trim(),
+          transcript: content.trim()
         }
       });
 
