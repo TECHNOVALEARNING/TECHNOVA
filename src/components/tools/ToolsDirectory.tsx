@@ -32,8 +32,8 @@ export function ToolsDirectory() {
       {/* Header & Search */}
       <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-10">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight mb-2">Les Meilleurs Outils IA & Logiciels</h2>
-          <p className="text-muted-foreground">Découvrez notre sélection des outils indispensables pour travailler plus vite et mieux.</p>
+          <h2 className="text-3xl font-bold tracking-tight mb-2">L'Annuaire des Outils Digitaux</h2>
+          <p className="text-muted-foreground">Découvrez notre sélection des outils et logiciels indispensables pour développer votre activité.</p>
         </div>
         <div className="relative w-full md:w-96">
           <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-muted-foreground">
@@ -41,7 +41,7 @@ export function ToolsDirectory() {
           </div>
           <Input
             type="search"
-            placeholder="Rechercher un outil (ex: ChatGPT, Vidéo...)"
+            placeholder="Rechercher un outil (ex: Shopify, Canva, ChatGPT...)"
             className="pl-10 h-12 rounded-full border-border/50 bg-background/50 focus-visible:bg-background"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
