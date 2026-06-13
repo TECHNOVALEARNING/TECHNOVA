@@ -13,11 +13,11 @@ export default function ToolsDirectoryPage() {
       />
       <Header />
       
-      <main className="flex-1 pt-24 pb-16 bg-background">
+      <main className="flex-1 bg-background">
         {/* Hero Section of the Directory */}
-        <section className="relative overflow-hidden border-b border-border">
+        <section className="relative overflow-hidden border-b border-border pt-20 md:pt-28">
           <div className="absolute inset-0 bg-gradient-to-br from-[#0071e3]/5 to-transparent pointer-events-none" />
-          <div className="container mx-auto px-4 py-16 md:py-20 relative z-10 text-center">
+          <div className="container mx-auto px-4 pb-16 pt-8 md:pb-20 md:pt-12 relative z-10 text-center">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium mb-6 bg-primary/10 text-primary border border-primary/20">
               <Sparkles className="w-4 h-4" />
               <span>Annuaire Officiel</span>
