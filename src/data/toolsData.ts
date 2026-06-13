@@ -4,7 +4,8 @@ export type ToolCategory =
   | "CMS & Création de site" 
   | "Graphisme & Design" 
   | "Productivité & Automatisation" 
-  | "Marketing & SEO";
+  | "Marketing & SEO"
+  | "Fintech & Banques";
 
 export interface Tool {
   id: string;
@@ -25,6 +26,7 @@ export const toolsCategories: { id: ToolCategory; label: string }[] = [
   { id: "Graphisme & Design", label: "Graphisme & Design" },
   { id: "Productivité & Automatisation", label: "Productivité & Automatisation" },
   { id: "Marketing & SEO", label: "Marketing & SEO" },
+  { id: "Fintech & Banques", label: "Fintech & Banques" },
 ];
 
 export const topTools: Tool[] = [
@@ -301,5 +303,42 @@ export const topTools: Tool[] = [
     websiteUrl: "https://brevo.com",
     categories: ["Marketing & SEO"],
     logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=brevo.com",
+  },
+
+  // --- NOUVEAUTÉS & FINTECH ---
+  {
+    id: "anijam",
+    name: "Anijam AI",
+    description: "La plateforme IA tout-en-un pour générer et éditer des vidéos d'animation complètes à partir de texte.",
+    websiteUrl: "https://www.anijam.ai/?via=isidore",
+    categories: ["Intelligence Artificielle", "Graphisme & Design"],
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=anijam.ai",
+    isFeatured: true,
+  },
+  {
+    id: "grey",
+    name: "Grey",
+    description: "Banque digitale idéale pour les freelances africains. Obtenez des comptes en USD, EUR et GBP pour recevoir vos paiements.",
+    websiteUrl: "https://greyapp.page.link/jixhVD5wH6mdykEY7",
+    categories: ["Fintech & Banques"],
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=grey.co",
+    isFeatured: true,
+  },
+  {
+    id: "accrue",
+    name: "Accrue",
+    description: "Épargnez et investissez facilement en dollars ou en crypto, et effectuez des paiements transfrontaliers en Afrique.",
+    websiteUrl: "https://useaccrue.com/join?ref=XSZHWV43",
+    categories: ["Fintech & Banques"],
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=useaccrue.com",
+    isFeatured: true,
+  },
+  {
+    id: "moneco",
+    name: "Moneco",
+    description: "La néo-banque de la diaspora africaine et des locaux. Compte en euros et transferts facilités sans frais cachés.",
+    websiteUrl: "https://www.moneco.app",
+    categories: ["Fintech & Banques"],
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=moneco.app",
   }
 ];
