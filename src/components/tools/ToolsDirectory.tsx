@@ -1,0 +1,99 @@
+import React, { useState, useMemo } from "react";
+import { Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { ToolCard } from "./ToolCard";
+import { topTools, toolsCategories, ToolCategory } from "@/data/toolsData";
+
+export function ToolsDirectory() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeCategory, setActiveCategory] = useState<ToolCategory | "All">("All");
+
+  const filteredTools = useMemo(() => {
+    return topTools.filter((tool) => {
+      // Filter by category
+      if (activeCategory !== "All" && !tool.categories.includes(activeCategory)) {
+        return false;
+      }
+      // Filter by search query
+      if (searchQuery.trim() !== "") {
+        const query = searchQuery.toLowerCase();
+        return (
+          tool.name.toLowerCase().includes(query) ||
+          tool.description.toLowerCase().includes(query) ||
+          tool.categories.some((c) => c.toLowerCase().includes(query))
+        );
+      }
+      return true;
+    });
+  }, [searchQuery, activeCategory]);
+
+  return (
+    <div className="w-full max-w-7xl mx-auto px-4 py-8">
+      {/* Header & Search */}
+      <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-10">
+        <div>
+          <h2 className="text-3xl font-bold tracking-tight mb-2">Les Meilleurs Outils IA & Logiciels</h2>
+          <p className="text-muted-foreground">Découvrez notre sélection des outils indispensables pour travailler plus vite et mieux.</p>
+        </div>
+        <div className="relative w-full md:w-96">
+          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-muted-foreground">
+            <Search className="h-4 w-4" />
+          </div>
+          <Input
+            type="search"
+            placeholder="Rechercher un outil (ex: ChatGPT, Vidéo...)"
+            className="pl-10 h-12 rounded-full border-border/50 bg-background/50 focus-visible:bg-background"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+      </div>
+
+      {/* Categories Filter */}
+      <div className="flex flex-wrap gap-2 mb-8">
+        <button
+          onClick={() => setActiveCategory("All")}
+          className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+            activeCategory === "All"
+              ? "bg-primary text-primary-foreground shadow-sm"
+              : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+          }`}
+        >
+          Tous les outils
+        </button>
+        {toolsCategories.map((category) => (
+          <button
+            key={category.id}
+            onClick={() => setActiveCategory(category.id)}
+            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+              activeCategory === category.id
+                ? "bg-primary text-primary-foreground shadow-sm"
+                : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+            }`}
+          >
+            {category.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Grid */}
+      {filteredTools.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {filteredTools.map((tool) => (
+            <ToolCard key={tool.id} tool={tool} />
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-20 bg-card rounded-xl border border-dashed border-border">
+          <p className="text-muted-foreground text-lg mb-2">Aucun outil ne correspond à votre recherche.</p>
+          <button 
+            onClick={() => { setSearchQuery(""); setActiveCategory("All"); }}
+            className="text-primary font-medium hover:underline"
+          >
+            Réinitialiser les filtres
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}

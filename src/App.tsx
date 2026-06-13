@@ -30,6 +30,7 @@ import LegalNotice from "./pages/LegalNotice";
 import RefundPolicy from "./pages/RefundPolicy";
 import StorePage from "./pages/StorePage";
 import StoreProductDetail from "./pages/StoreProductDetail";
+import ToolsDirectoryPage from "./pages/ToolsDirectoryPage";
 import StoreLegalPage from "./pages/StoreLegalPage";
 import PaymentCallback from "./pages/PaymentCallback";
 import CheckoutPage from "./pages/CheckoutPage";
@@ -130,6 +131,7 @@ const AppContent = () => {
           <Route path="/about" element={<About />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="/outils-ia" element={<ToolsDirectoryPage />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/partners" element={<Partners />} />
           <Route path="/documentation" element={<Documentation />} />

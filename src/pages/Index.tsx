@@ -368,6 +368,38 @@ const Index = () => {
         </div>
       </section>
 
+      {/* ============ AI TOOLS PREVIEW ============ */}
+      <section id="tools" style={{ position: "relative", zIndex: 1, padding: "80px 0", background: "var(--bg)" }}>
+        <div className="mx-auto" style={{ maxWidth: 1280, padding: "0 24px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 40, flexWrap: "wrap", gap: 16 }}>
+            <div>
+              <span className="tn-eyebrow">{lang === 'fr' ? 'Fonctionne avec TECHNOVA' : 'Works with TECHNOVA'}</span>
+              <h2 className="tn-section-title" style={{ color: "var(--text)" }}>{lang === 'fr' ? 'Les Meilleurs Outils IA' : 'Top AI Tools'}</h2>
+            </div>
+            <Link to="/outils-ia" style={{ fontWeight: 600, color: "var(--blue)", fontSize: "0.95rem", display: "flex", alignItems: "center", gap: 6 }}>
+              {lang === 'fr' ? 'Explorer l\'annuaire' : 'Explore directory'} <i className="fas fa-chevron-right" style={{ fontSize: "0.8em" }} />
+            </Link>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 24 }}>
+            {[
+              { id: "chatgpt", name: "ChatGPT", desc: "L'assistant IA de référence pour rédiger et coder.", logo: "https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg", url: "https://chatgpt.com" },
+              { id: "midjourney", name: "Midjourney", desc: "Générez des images époustouflantes avec l'IA.", logo: "https://upload.wikimedia.org/wikipedia/commons/e/e6/Midjourney_Emblem.png", url: "https://midjourney.com" },
+              { id: "make", name: "Make", desc: "Automatisez vos tâches sans écrire de code.", logo: "https://mms.businesswire.com/media/20220222005085/en/1367069/23/Make-Logo-Black-RGB.jpg", url: "https://make.com" },
+            ].map((t) => (
+              <a href={t.url} target="_blank" rel="noopener noreferrer" key={t.id} style={{ textDecoration: "none" }} className="tn-feature-card">
+                <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 16 }}>
+                  <div style={{ width: 48, height: 48, background: "white", borderRadius: 12, padding: 8, border: "1px solid var(--divider)" }}>
+                    <img src={t.logo} alt={t.name} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+                  </div>
+                  <h4 style={{ fontSize: "1.05rem", fontWeight: 700, color: "var(--text)", margin: 0 }}>{t.name}</h4>
+                </div>
+                <p style={{ fontSize: "0.88rem", color: "var(--text-secondary)", lineHeight: 1.5, margin: 0 }}>{t.desc}</p>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ============ CTA ============ */}
       <section style={{ position: "relative", zIndex: 1, padding: "80px 0" }}>
         <div className="mx-auto" style={{ maxWidth: 1280, padding: "0 24px" }}>
