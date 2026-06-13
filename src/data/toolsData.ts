@@ -35,7 +35,7 @@ export const topTools: Tool[] = [
     description: "L'assistant IA de référence pour rédiger, coder et analyser vos données en quelques secondes.",
     websiteUrl: "https://chatgpt.com",
     categories: ["Intelligence Artificielle", "Productivité & Automatisation"],
-    logoUrl: "https://logo.clearbit.com/chatgpt.com",
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=chatgpt.com",
     isFeatured: true,
   },
   {
@@ -44,7 +44,7 @@ export const topTools: Tool[] = [
     description: "Une IA puissante pour l'écriture, la synthèse de documents et le code. Très naturel sur de longs textes.",
     websiteUrl: "https://claude.ai",
     categories: ["Intelligence Artificielle", "Productivité & Automatisation"],
-    logoUrl: "https://logo.clearbit.com/anthropic.com",
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=claude.ai",
     isFeatured: true,
   },
   {
@@ -53,7 +53,7 @@ export const topTools: Tool[] = [
     description: "Le modèle d'IA multimodal de Google, parfait pour la recherche, la rédaction et l'analyse.",
     websiteUrl: "https://gemini.google.com",
     categories: ["Intelligence Artificielle", "Productivité & Automatisation"],
-    logoUrl: "https://logo.clearbit.com/google.com",
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=gemini.google.com",
     isFeatured: true,
   },
   {
@@ -62,7 +62,7 @@ export const topTools: Tool[] = [
     description: "Le moteur de recherche dopé à l'IA. Posez une question, obtenez une réponse sourcée et fiable.",
     websiteUrl: "https://www.perplexity.ai",
     categories: ["Intelligence Artificielle", "Productivité & Automatisation"],
-    logoUrl: "https://logo.clearbit.com/perplexity.ai",
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=perplexity.ai",
   },
   {
     id: "midjourney",
@@ -70,7 +70,7 @@ export const topTools: Tool[] = [
     description: "Générez des images époustouflantes et ultra-réalistes à partir de simples descriptions textuelles.",
     websiteUrl: "https://midjourney.com",
     categories: ["Intelligence Artificielle", "Graphisme & Design"],
-    logoUrl: "https://logo.clearbit.com/midjourney.com",
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=midjourney.com",
     isFeatured: true,
   },
   {
@@ -79,7 +79,7 @@ export const topTools: Tool[] = [
     description: "Créez des assets de production et des images conceptuelles pour vos projets avec une IA générative avancée.",
     websiteUrl: "https://leonardo.ai",
     categories: ["Intelligence Artificielle", "Graphisme & Design"],
-    logoUrl: "https://logo.clearbit.com/leonardo.ai",
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=leonardo.ai",
   },
   {
     id: "dalle3",
@@ -87,7 +87,7 @@ export const topTools: Tool[] = [
     description: "Générateur d'images IA intégré à ChatGPT. Comprend de manière ultra-précise les requêtes textuelles complexes.",
     websiteUrl: "https://openai.com/dall-e-3",
     categories: ["Intelligence Artificielle", "Graphisme & Design"],
-    logoUrl: "https://logo.clearbit.com/openai.com",
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=openai.com",
   },
   {
     id: "elevenlabs",
@@ -95,7 +95,7 @@ export const topTools: Tool[] = [
     description: "Le meilleur générateur de voix par IA. Clonez votre voix ou utilisez des voix ultra-réalistes pour vos vidéos.",
     websiteUrl: "https://elevenlabs.io",
     categories: ["Intelligence Artificielle", "Productivité & Automatisation"],
-    logoUrl: "https://logo.clearbit.com/elevenlabs.io",
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=elevenlabs.io",
   },
   {
     id: "heygen",
@@ -103,7 +103,7 @@ export const topTools: Tool[] = [
     description: "Créez des vidéos avec des avatars IA ultra-réalistes qui parlent avec votre voix dans plusieurs langues.",
     websiteUrl: "https://heygen.com",
     categories: ["Intelligence Artificielle", "Marketing & SEO"],
-    logoUrl: "https://logo.clearbit.com/heygen.com",
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=heygen.com",
   },
   {
     id: "runwayml",
@@ -111,7 +111,7 @@ export const topTools: Tool[] = [
     description: "Suite d'outils magiques dopés à l'IA pour générer et éditer des vidéos (Gen-2, Gen-3 Alpha).",
     websiteUrl: "https://runwayml.com",
     categories: ["Intelligence Artificielle", "Graphisme & Design"],
-    logoUrl: "https://logo.clearbit.com/runwayml.com",
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=runwayml.com",
   },
   {
     id: "huggingface",
@@ -119,7 +119,7 @@ export const topTools: Tool[] = [
     description: "La communauté open-source et plateforme de référence pour découvrir et héberger des modèles d'IA.",
     websiteUrl: "https://huggingface.co",
     categories: ["Intelligence Artificielle", "Productivité & Automatisation"],
-    logoUrl: "https://logo.clearbit.com/huggingface.co",
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=huggingface.co",
   },
   {
     id: "github-copilot",
@@ -127,7 +127,7 @@ export const topTools: Tool[] = [
     description: "Le copilote IA pour les développeurs. Autocomplétion intelligente de code directement dans votre éditeur.",
     websiteUrl: "https://github.com/features/copilot",
     categories: ["Intelligence Artificielle", "Productivité & Automatisation"],
-    logoUrl: "https://logo.clearbit.com/github.com",
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=github.com",
   },
   {
     id: "cursor",
@@ -135,7 +135,7 @@ export const topTools: Tool[] = [
     description: "Un éditeur de code dopé à l'IA, conçu pour programmer infiniment plus vite.",
     websiteUrl: "https://cursor.com",
     categories: ["Intelligence Artificielle", "Productivité & Automatisation"],
-    logoUrl: "https://logo.clearbit.com/cursor.com",
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=cursor.com",
   },
   {
     id: "jasper",
@@ -143,7 +143,7 @@ export const topTools: Tool[] = [
     description: "L'IA conçue pour les équipes marketing. Rédigez des articles, pubs et e-mails conformes à votre image de marque.",
     websiteUrl: "https://jasper.ai",
     categories: ["Intelligence Artificielle", "Marketing & SEO"],
-    logoUrl: "https://logo.clearbit.com/jasper.ai",
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=jasper.ai",
   },
 
   // --- E-COMMERCE & CMS ---
@@ -153,7 +153,7 @@ export const topTools: Tool[] = [
     description: "La plateforme e-commerce leader pour créer et gérer votre boutique en ligne facilement.",
     websiteUrl: "https://shopify.com",
     categories: ["E-commerce", "CMS & Création de site"],
-    logoUrl: "https://logo.clearbit.com/shopify.com",
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=shopify.com",
     isFeatured: true,
   },
   {
@@ -162,7 +162,7 @@ export const topTools: Tool[] = [
     description: "Le CMS le plus utilisé au monde pour créer des blogs, vitrines et sites professionnels.",
     websiteUrl: "https://wordpress.org",
     categories: ["CMS & Création de site"],
-    logoUrl: "https://logo.clearbit.com/wordpress.org",
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=wordpress.org",
     isFeatured: true,
   },
   {
@@ -171,7 +171,7 @@ export const topTools: Tool[] = [
     description: "Transformez n'importe quel site WordPress en une puissante boutique e-commerce.",
     websiteUrl: "https://woocommerce.com",
     categories: ["E-commerce", "CMS & Création de site"],
-    logoUrl: "https://logo.clearbit.com/woocommerce.com",
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=woocommerce.com",
   },
   {
     id: "webflow",
@@ -179,7 +179,7 @@ export const topTools: Tool[] = [
     description: "Créez des sites web professionnels, responsives et animés visuellement, sans coder.",
     websiteUrl: "https://webflow.com",
     categories: ["CMS & Création de site", "Graphisme & Design"],
-    logoUrl: "https://logo.clearbit.com/webflow.com",
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=webflow.com",
     isFeatured: true,
   },
   {
@@ -188,7 +188,7 @@ export const topTools: Tool[] = [
     description: "L'infrastructure de paiement en ligne pour internet. Acceptez les cartes et paiements mondiaux.",
     websiteUrl: "https://stripe.com",
     categories: ["E-commerce"],
-    logoUrl: "https://logo.clearbit.com/stripe.com",
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=stripe.com",
   },
 
   // --- GRAPHISME & DESIGN ---
@@ -198,7 +198,7 @@ export const topTools: Tool[] = [
     description: "Outil de création graphique intuitif pour vos visuels réseaux sociaux, présentations et logos.",
     websiteUrl: "https://canva.com",
     categories: ["Graphisme & Design", "Marketing & SEO"],
-    logoUrl: "https://logo.clearbit.com/canva.com",
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=canva.com",
     isFeatured: true,
   },
   {
@@ -207,7 +207,7 @@ export const topTools: Tool[] = [
     description: "L'outil collaboratif de conception d'interfaces UI/UX leader sur le marché.",
     websiteUrl: "https://figma.com",
     categories: ["Graphisme & Design", "CMS & Création de site"],
-    logoUrl: "https://logo.clearbit.com/figma.com",
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=figma.com",
     isFeatured: true,
   },
   {
@@ -216,7 +216,7 @@ export const topTools: Tool[] = [
     description: "La suite ultime (Photoshop, Illustrator, Premiere Pro) pour la création professionnelle.",
     websiteUrl: "https://adobe.com",
     categories: ["Graphisme & Design"],
-    logoUrl: "https://logo.clearbit.com/adobe.com",
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=adobe.com",
   },
 
   // --- PRODUCTIVITE & AUTOMATISATION ---
@@ -226,7 +226,7 @@ export const topTools: Tool[] = [
     description: "Automatisez vos tâches quotidiennes en connectant vos applications sans écrire une seule ligne de code.",
     websiteUrl: "https://make.com",
     categories: ["Productivité & Automatisation"],
-    logoUrl: "https://logo.clearbit.com/make.com",
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=make.com",
     promoCode: "TECHNOVA",
     discount: "1 Mois Pro Offert",
   },
@@ -236,7 +236,7 @@ export const topTools: Tool[] = [
     description: "Connectez plus de 5000 applications ensemble pour créer des workflows automatisés puissants.",
     websiteUrl: "https://zapier.com",
     categories: ["Productivité & Automatisation"],
-    logoUrl: "https://logo.clearbit.com/zapier.com",
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=zapier.com",
     isFeatured: true,
   },
   {
@@ -245,7 +245,7 @@ export const topTools: Tool[] = [
     description: "Espace de travail tout-en-un pour gérer projets, documents, wikis et bases de données avec l'IA.",
     websiteUrl: "https://notion.so",
     categories: ["Productivité & Automatisation", "CMS & Création de site"],
-    logoUrl: "https://logo.clearbit.com/notion.so",
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=notion.so",
     isFeatured: true,
   },
   {
@@ -254,7 +254,7 @@ export const topTools: Tool[] = [
     description: "Mi-tableur, mi-base de données. Organisez tout, de vos clients à votre pipeline de produits.",
     websiteUrl: "https://airtable.com",
     categories: ["Productivité & Automatisation"],
-    logoUrl: "https://logo.clearbit.com/airtable.com",
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=airtable.com",
   },
 
   // --- MARKETING & SEO ---
@@ -264,7 +264,7 @@ export const topTools: Tool[] = [
     description: "L'outil marketing tout-en-un pour créer des tunnels de vente, gérer vos emails et vendre vos formations.",
     websiteUrl: "https://systeme.io",
     categories: ["Marketing & SEO", "E-commerce"],
-    logoUrl: "https://logo.clearbit.com/systeme.io",
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=systeme.io",
     promoCode: "FREE",
     discount: "Compte Gratuit à Vie",
     isFeatured: true,
@@ -275,7 +275,7 @@ export const topTools: Tool[] = [
     description: "Outil complet pour le référencement (SEO), la recherche de mots-clés et l'analyse de la concurrence.",
     websiteUrl: "https://semrush.com",
     categories: ["Marketing & SEO"],
-    logoUrl: "https://logo.clearbit.com/semrush.com",
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=semrush.com",
     isFeatured: true,
   },
   {
@@ -284,7 +284,7 @@ export const topTools: Tool[] = [
     description: "Un ensemble d'outils SEO puissant pour auditer des sites, explorer des mots-clés et analyser des backlinks.",
     websiteUrl: "https://ahrefs.com",
     categories: ["Marketing & SEO"],
-    logoUrl: "https://logo.clearbit.com/ahrefs.com",
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=ahrefs.com",
   },
   {
     id: "mailchimp",
@@ -292,7 +292,7 @@ export const topTools: Tool[] = [
     description: "Plateforme d'emailing et d'automatisation marketing pour créer des campagnes de newsletters.",
     websiteUrl: "https://mailchimp.com",
     categories: ["Marketing & SEO"],
-    logoUrl: "https://logo.clearbit.com/mailchimp.com",
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=mailchimp.com",
   },
   {
     id: "brevo",
@@ -300,6 +300,6 @@ export const topTools: Tool[] = [
     description: "CRM et plateforme marketing multi-canal (Email, SMS, Chat). (Anciennement Sendinblue).",
     websiteUrl: "https://brevo.com",
     categories: ["Marketing & SEO"],
-    logoUrl: "https://logo.clearbit.com/brevo.com",
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=brevo.com",
   }
 ];

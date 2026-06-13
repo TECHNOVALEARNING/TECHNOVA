@@ -382,9 +382,9 @@ const Index = () => {
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 24 }}>
             {[
-              { id: "shopify", name: "Shopify", desc: "La plateforme e-commerce leader pour créer votre boutique.", logo: "https://logo.clearbit.com/shopify.com", url: "https://shopify.com" },
-              { id: "canva", name: "Canva", desc: "Outil de création graphique intuitif pour vos visuels.", logo: "https://logo.clearbit.com/canva.com", url: "https://canva.com" },
-              { id: "chatgpt", name: "ChatGPT", desc: "L'assistant IA de référence pour rédiger et coder.", logo: "https://logo.clearbit.com/chatgpt.com", url: "https://chatgpt.com" },
+              { id: "shopify", name: "Shopify", desc: "La plateforme e-commerce leader pour créer votre boutique.", logo: "https://www.google.com/s2/favicons?sz=256&domain_url=shopify.com", url: "https://shopify.com" },
+              { id: "canva", name: "Canva", desc: "Outil de création graphique intuitif pour vos visuels.", logo: "https://www.google.com/s2/favicons?sz=256&domain_url=canva.com", url: "https://canva.com" },
+              { id: "chatgpt", name: "ChatGPT", desc: "L'assistant IA de référence pour rédiger et coder.", logo: "https://www.google.com/s2/favicons?sz=256&domain_url=chatgpt.com", url: "https://chatgpt.com" },
             ].map((t) => (
               <a href={t.url} target="_blank" rel="noopener noreferrer" key={t.id} style={{ textDecoration: "none" }} className="tn-feature-card">
                 <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 16 }}>
