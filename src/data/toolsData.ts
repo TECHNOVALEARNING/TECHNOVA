@@ -41,6 +41,15 @@ export const topTools: Tool[] = [
     isFeatured: true,
   },
   {
+    id: "v0",
+    name: "v0 (Vercel)",
+    description: "Générez des interfaces utilisateurs React et Tailwind CSS de haute qualité simplement en les décrivant.",
+    websiteUrl: "https://v0.dev",
+    categories: ["Intelligence Artificielle", "CMS & Création de site"],
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=v0.dev",
+    isFeatured: true,
+  },
+  {
     id: "lovable",
     name: "Lovable",
     description: "Le constructeur de logiciels IA. Générez des applications web complètes et modernes en quelques prompts.",
@@ -110,6 +119,22 @@ export const topTools: Tool[] = [
     logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=openai.com",
   },
   {
+    id: "suno",
+    name: "Suno AI",
+    description: "Créez des chansons complètes (paroles, voix et musique) dans n'importe quel style à partir d'un prompt.",
+    websiteUrl: "https://suno.com",
+    categories: ["Intelligence Artificielle"],
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=suno.com",
+  },
+  {
+    id: "synthesia",
+    name: "Synthesia",
+    description: "Plateforme de création vidéo IA de référence. Transformez votre texte en vidéos avec des avatars professionnels.",
+    websiteUrl: "https://www.synthesia.io",
+    categories: ["Intelligence Artificielle", "Marketing & SEO"],
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=synthesia.io",
+  },
+  {
     id: "elevenlabs",
     name: "ElevenLabs",
     description: "Le meilleur générateur de voix par IA. Clonez votre voix ou utilisez des voix ultra-réalistes pour vos vidéos.",
@@ -132,6 +157,14 @@ export const topTools: Tool[] = [
     websiteUrl: "https://runwayml.com",
     categories: ["Intelligence Artificielle", "Graphisme & Design"],
     logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=runwayml.com",
+  },
+  {
+    id: "gamma",
+    name: "Gamma",
+    description: "Créez des présentations, des documents et des pages web époustouflants en quelques secondes grâce à l'IA.",
+    websiteUrl: "https://gamma.app",
+    categories: ["Intelligence Artificielle", "Productivité & Automatisation"],
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=gamma.app",
   },
   {
     id: "huggingface",
@@ -165,6 +198,14 @@ export const topTools: Tool[] = [
     categories: ["Intelligence Artificielle", "Marketing & SEO"],
     logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=jasper.ai",
   },
+  {
+    id: "copyai",
+    name: "Copy.ai",
+    description: "Générez des textes marketing, des articles de blog et des argumentaires de vente qui convertissent en un clic.",
+    websiteUrl: "https://www.copy.ai",
+    categories: ["Intelligence Artificielle", "Marketing & SEO"],
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=copy.ai",
+  },
 
   // --- E-COMMERCE & CMS ---
   {
@@ -186,6 +227,15 @@ export const topTools: Tool[] = [
     isFeatured: true,
   },
   {
+    id: "framer",
+    name: "Framer",
+    description: "Concevez et publiez des sites web interactifs et incroyablement rapides directement depuis un canevas visuel.",
+    websiteUrl: "https://www.framer.com",
+    categories: ["CMS & Création de site", "Graphisme & Design"],
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=framer.com",
+    isFeatured: true,
+  },
+  {
     id: "woocommerce",
     name: "WooCommerce",
     description: "Transformez n'importe quel site WordPress en une puissante boutique e-commerce.",
@@ -203,12 +253,20 @@ export const topTools: Tool[] = [
     isFeatured: true,
   },
   {
-    id: "stripe",
-    name: "Stripe",
-    description: "L'infrastructure de paiement en ligne pour internet. Acceptez les cartes et paiements mondiaux.",
-    websiteUrl: "https://stripe.com",
+    id: "wix",
+    name: "Wix",
+    description: "Créateur de sites web intuitif en glisser-déposer, idéal pour les petites entreprises et portefeuilles.",
+    websiteUrl: "https://www.wix.com",
+    categories: ["CMS & Création de site", "E-commerce"],
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=wix.com",
+  },
+  {
+    id: "gumroad",
+    name: "Gumroad",
+    description: "La plateforme de commerce électronique la plus simple pour permettre aux créateurs de vendre des produits digitaux.",
+    websiteUrl: "https://gumroad.com",
     categories: ["E-commerce"],
-    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=stripe.com",
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=gumroad.com",
   },
 
   // --- GRAPHISME & DESIGN ---
@@ -238,6 +296,22 @@ export const topTools: Tool[] = [
     categories: ["Graphisme & Design"],
     logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=adobe.com",
   },
+  {
+    id: "spline",
+    name: "Spline",
+    description: "Un outil de conception 3D facile à utiliser pour créer des scènes interactives directement dans le navigateur.",
+    websiteUrl: "https://spline.design",
+    categories: ["Graphisme & Design"],
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=spline.design",
+  },
+  {
+    id: "lottiefiles",
+    name: "LottieFiles",
+    description: "Créez, éditez, testez et affichez des animations Lottie légères et évolutives sur tous vos appareils.",
+    websiteUrl: "https://lottiefiles.com",
+    categories: ["Graphisme & Design", "CMS & Création de site"],
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=lottiefiles.com",
+  },
 
   // --- PRODUCTIVITE & AUTOMATISATION ---
   {
@@ -260,6 +334,14 @@ export const topTools: Tool[] = [
     isFeatured: true,
   },
   {
+    id: "n8n",
+    name: "n8n",
+    description: "Outil d'automatisation des workflows équitable, avec l'approche open source, vous donnant un contrôle total.",
+    websiteUrl: "https://n8n.io",
+    categories: ["Productivité & Automatisation"],
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=n8n.io",
+  },
+  {
     id: "notion",
     name: "Notion",
     description: "Espace de travail tout-en-un pour gérer projets, documents, wikis et bases de données avec l'IA.",
@@ -275,6 +357,22 @@ export const topTools: Tool[] = [
     websiteUrl: "https://airtable.com",
     categories: ["Productivité & Automatisation"],
     logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=airtable.com",
+  },
+  {
+    id: "slack",
+    name: "Slack",
+    description: "Plateforme de messagerie d'entreprise conçue pour rendre la collaboration plus fluide.",
+    websiteUrl: "https://slack.com",
+    categories: ["Productivité & Automatisation"],
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=slack.com",
+  },
+  {
+    id: "trello",
+    name: "Trello",
+    description: "Outil de gestion de projet visuel collaboratif qui organise vos projets en tableaux.",
+    websiteUrl: "https://trello.com",
+    categories: ["Productivité & Automatisation"],
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=trello.com",
   },
 
   // --- MARKETING & SEO ---
@@ -307,6 +405,14 @@ export const topTools: Tool[] = [
     logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=ahrefs.com",
   },
   {
+    id: "hubspot",
+    name: "HubSpot",
+    description: "Plateforme CRM complète avec tous les logiciels dont vous avez besoin pour le marketing et les ventes.",
+    websiteUrl: "https://www.hubspot.com",
+    categories: ["Marketing & SEO", "Productivité & Automatisation"],
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=hubspot.com",
+  },
+  {
     id: "mailchimp",
     name: "Mailchimp",
     description: "Plateforme d'emailing et d'automatisation marketing pour créer des campagnes de newsletters.",
@@ -322,6 +428,14 @@ export const topTools: Tool[] = [
     categories: ["Marketing & SEO"],
     logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=brevo.com",
   },
+  {
+    id: "typeform",
+    name: "Typeform",
+    description: "Créez des formulaires, enquêtes et quiz conversationnels et engageants qui obtiennent plus de réponses.",
+    websiteUrl: "https://www.typeform.com",
+    categories: ["Marketing & SEO", "Productivité & Automatisation"],
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=typeform.com",
+  },
 
   // --- NOUVEAUTÉS & FINTECH ---
   {
@@ -332,6 +446,23 @@ export const topTools: Tool[] = [
     categories: ["Intelligence Artificielle", "Graphisme & Design"],
     logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=anijam.ai",
     isFeatured: true,
+  },
+  {
+    id: "paystack",
+    name: "Paystack",
+    description: "La passerelle de paiement leader en Afrique. Acceptez des paiements sécurisés de partout dans le monde.",
+    websiteUrl: "https://paystack.com",
+    categories: ["Fintech & Banques", "E-commerce"],
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=paystack.com",
+    isFeatured: true,
+  },
+  {
+    id: "flutterwave",
+    name: "Flutterwave",
+    description: "Infrastructures de paiement pour l'Afrique. Vendez en ligne, traitez les paiements et développez votre activité.",
+    websiteUrl: "https://flutterwave.com",
+    categories: ["Fintech & Banques", "E-commerce"],
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=flutterwave.com",
   },
   {
     id: "grey",
@@ -358,6 +489,30 @@ export const topTools: Tool[] = [
     websiteUrl: "https://www.moneco.app",
     categories: ["Fintech & Banques"],
     logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=moneco.app",
+  },
+  {
+    id: "stripe",
+    name: "Stripe",
+    description: "L'infrastructure de paiement en ligne pour internet. Acceptez les cartes et paiements mondiaux.",
+    websiteUrl: "https://stripe.com",
+    categories: ["Fintech & Banques", "E-commerce"],
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=stripe.com",
+  },
+  {
+    id: "wise",
+    name: "Wise",
+    description: "La façon la moins chère et la plus rapide d'envoyer de l'argent à l'international avec les vrais taux de change.",
+    websiteUrl: "https://wise.com",
+    categories: ["Fintech & Banques"],
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=wise.com",
+  },
+  {
+    id: "payoneer",
+    name: "Payoneer",
+    description: "Recevez des paiements de clients et marketplaces mondiales directement sur votre compte.",
+    websiteUrl: "https://www.payoneer.com",
+    categories: ["Fintech & Banques"],
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=payoneer.com",
   },
   {
     id: "binance",
