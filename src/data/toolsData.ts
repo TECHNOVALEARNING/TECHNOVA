@@ -32,6 +32,24 @@ export const toolsCategories: { id: ToolCategory; label: string }[] = [
 export const topTools: Tool[] = [
   // --- INTELLIGENCE ARTIFICIELLE ---
   {
+    id: "antigravity",
+    name: "Antigravity AI",
+    description: "L'assistant IA de codage agentique le plus avancé par Google DeepMind. Développez et déployez à la vitesse de la lumière.",
+    websiteUrl: "https://deepmind.google",
+    categories: ["Intelligence Artificielle", "Productivité & Automatisation"],
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=deepmind.google",
+    isFeatured: true,
+  },
+  {
+    id: "lovable",
+    name: "Lovable",
+    description: "Le constructeur de logiciels IA. Générez des applications web complètes et modernes en quelques prompts.",
+    websiteUrl: "https://lovable.dev",
+    categories: ["Intelligence Artificielle", "CMS & Création de site"],
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=lovable.dev",
+    isFeatured: true,
+  },
+  {
     id: "chatgpt",
     name: "ChatGPT",
     description: "L'assistant IA de référence pour rédiger, coder et analyser vos données en quelques secondes.",
@@ -340,5 +358,14 @@ export const topTools: Tool[] = [
     websiteUrl: "https://www.moneco.app",
     categories: ["Fintech & Banques"],
     logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=moneco.app",
+  },
+  {
+    id: "binance",
+    name: "Binance",
+    description: "La plus grande plateforme d'échange de cryptomonnaies au monde. Idéal pour investir et trader.",
+    websiteUrl: "https://www.binance.com",
+    categories: ["Fintech & Banques"],
+    logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=binance.com",
+    isFeatured: true,
   }
 ];
