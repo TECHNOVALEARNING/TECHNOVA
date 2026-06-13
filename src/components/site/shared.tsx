@@ -175,7 +175,7 @@ export const Footer = () => {
   }, []);
 
   return (
-    <footer className="mt-24 sm:mt-32 bg-[color:var(--navy)] text-white">
+    <footer className="mt-24 sm:mt-32 bg-[#0B1221] text-white">
       <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8 py-12 sm:py-16 grid gap-10 sm:gap-12 sm:grid-cols-2 lg:grid-cols-4">
         {/* Brand */}
         <div className="sm:col-span-2">
