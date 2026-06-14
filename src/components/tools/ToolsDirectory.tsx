@@ -1,15 +1,22 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { ToolCard } from "./ToolCard";
-import { topTools, toolsCategories, ToolCategory } from "@/data/toolsData";
+import { toolsData, toolsCategories, ToolCategory } from "@/data/toolsData";
 
 export function ToolsDirectory() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<ToolCategory | "All">("All");
+  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+
+  useEffect(() => {
+    const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
+    window.addEventListener("technova_lang_changed", handleLangChange);
+    return () => window.removeEventListener("technova_lang_changed", handleLangChange);
+  }, []);
 
   const filteredTools = useMemo(() => {
-    return topTools.filter((tool) => {
+    return toolsData.filter((tool) => {
       // Filter by category
       if (activeCategory !== "All" && !tool.categories.includes(activeCategory)) {
         return false;
@@ -32,8 +39,14 @@ export function ToolsDirectory() {
       {/* Header & Search */}
       <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-10">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight mb-2">Les Meilleurs Outils IA & Logiciels</h2>
-          <p className="text-muted-foreground">Découvrez notre sélection des outils indispensables pour travailler plus vite et mieux.</p>
+          <h2 className="text-3xl font-bold tracking-tight mb-2">
+            {lang === "fr" ? "L'Annuaire des Outils Digitaux" : "Digital Tools Directory"}
+          </h2>
+          <p className="text-muted-foreground">
+            {lang === "fr" 
+              ? "DÃ©couvrez notre sÃ©lection des outils et logiciels indispensables pour dÃ©velopper votre activitÃ©." 
+              : "Discover our selection of essential tools and software to grow your business."}
+          </p>
         </div>
         <div className="relative w-full md:w-96">
           <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-muted-foreground">
@@ -41,7 +54,7 @@ export function ToolsDirectory() {
           </div>
           <Input
             type="search"
-            placeholder="Rechercher un outil (ex: ChatGPT, Vidéo...)"
+            placeholder={lang === "fr" ? "Rechercher un outil (ex: Shopify, Canva, ChatGPT...)" : "Search a tool (e.g. Shopify, Canva, ChatGPT...)"}
             className="pl-10 h-12 rounded-full border-border/50 bg-background/50 focus-visible:bg-background"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -59,9 +72,21 @@ export function ToolsDirectory() {
               : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
           }`}
         >
-          Tous les outils
+          {lang === "fr" ? "Tous les outils" : "All tools"}
         </button>
-        {toolsCategories.map((category) => (
+        {toolsCategories.map((category) => {
+          let translatedLabel = category.label;
+          if (lang === "en") {
+            const translations: Record<string, string> = {
+              "Intelligence Artificielle": "Artificial Intelligence",
+              "CMS & CrÃ©ation de site": "Website Builders & CMS",
+              "Graphisme & Design": "Graphic Design",
+              "ProductivitÃ© & Automatisation": "Productivity & Automation",
+              "Fintech & Banques": "Fintech & Banking",
+            };
+            translatedLabel = translations[category.label] || category.label;
+          }
+          return (
           <button
             key={category.id}
             onClick={() => setActiveCategory(category.id)}
@@ -71,9 +96,9 @@ export function ToolsDirectory() {
                 : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
             }`}
           >
-            {category.label}
+            {translatedLabel}
           </button>
-        ))}
+        )})}
       </div>
 
       {/* Grid */}
@@ -85,12 +110,14 @@ export function ToolsDirectory() {
         </div>
       ) : (
         <div className="text-center py-20 bg-card rounded-xl border border-dashed border-border">
-          <p className="text-muted-foreground text-lg mb-2">Aucun outil ne correspond à votre recherche.</p>
+          <p className="text-muted-foreground text-lg mb-2">
+            {lang === "fr" ? "Aucun outil trouvÃ©" : "No tools found"}
+          </p>
           <button 
             onClick={() => { setSearchQuery(""); setActiveCategory("All"); }}
             className="text-primary font-medium hover:underline"
           >
-            Réinitialiser les filtres
+            {lang === "fr" ? "RÃ©initialiser les filtres" : "Reset filters"}
           </button>
         </div>
       )}
