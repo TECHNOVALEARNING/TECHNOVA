@@ -36,7 +36,7 @@ export function ToolCard({ tool }: ToolCardProps) {
             </h3>
             <div className="flex flex-wrap gap-1 mt-1.5 hidden sm:flex">
               {tool.categories.slice(0, 2).map((cat) => (
-                <Badge key={cat} variant="secondary" className="text-[9px] sm:text-[10px] px-1.5 py-0 h-4 font-normal bg-secondary/50">
+                <Badge key={cat} variant="secondary" className="text-[9px] sm:text-[10px] px-1.5 py-0.5 whitespace-nowrap font-normal bg-secondary/50">
                   {cat}
                 </Badge>
               ))}

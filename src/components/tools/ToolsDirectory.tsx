@@ -44,7 +44,7 @@ export function ToolsDirectory() {
           </h2>
           <p className="text-muted-foreground">
             {lang === "fr" 
-              ? "DÃ©couvrez notre sÃ©lection des outils et logiciels indispensables pour dÃ©velopper votre activitÃ©." 
+              ? "Découvrez notre sélection des outils et logiciels indispensables pour développer votre activité." 
               : "Discover our selection of essential tools and software to grow your business."}
           </p>
         </div>
