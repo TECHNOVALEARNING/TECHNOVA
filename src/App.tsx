@@ -155,10 +155,10 @@ const AppContent = () => {
           <Route path="/store/:slug/:productId" element={<StoreProductDetail />} />
           <Route path="/payment-callback" element={<PaymentCallback />} />
           <Route path="/checkout/:productId" element={<CheckoutPage />} />
-          <Route path="/buyer-login" element={<ExternalRedirect to="https://portal.technovalearning.com/" />} />
-          <Route path="/buyer-auth/callback" element={<ExternalRedirect to="https://portal.technovalearning.com/auth/callback" />} />
-          <Route path="/mes-achats" element={<ExternalRedirect to="https://portal.technovalearning.com/dashboard" />} />
-          <Route path="/mes-achats/:orderId" element={<ExternalRedirect to="https://portal.technovalearning.com/dashboard" />} />
+          <Route path="/buyer-login" element={<BuyerLogin />} />
+          <Route path="/buyer-auth/callback" element={<BuyerOAuthCallback />} />
+          <Route path="/mes-achats" element={<BuyerDashboard />} />
+          <Route path="/mes-achats/:orderId" element={<BuyerOrderDetail />} />
           
           <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
           <Route path="/dashboard" element={<ProtectedRoute><DashboardOverview /></ProtectedRoute>} />

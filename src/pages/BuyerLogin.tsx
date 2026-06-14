@@ -43,7 +43,7 @@ const BuyerLogin = () => {
           authenticatedAt: Date.now(),
         }));
         
-        navigate("/dashboard", { replace: true });
+        navigate("/mes-achats", { replace: true });
       } catch (err) {
         console.error(err);
       } finally {
@@ -55,7 +55,7 @@ const BuyerLogin = () => {
       if (session && !sessionStorage.getItem("buyer_session")) {
         checkSession(session);
       } else if (session && sessionStorage.getItem("buyer_session")) {
-        navigate("/dashboard", { replace: true });
+        navigate("/mes-achats", { replace: true });
       }
     });
 
@@ -125,7 +125,7 @@ const BuyerLogin = () => {
         authenticatedAt: Date.now(),
       }));
       toast.success("Connexion réussie !");
-      navigate("/dashboard");
+      navigate("/mes-achats", { replace: true });
     } catch (err: any) {
       toast.error(err.message || "Code invalide");
     } finally {
@@ -169,10 +169,7 @@ const BuyerLogin = () => {
                 onClick={async () => {
                   try {
                     setLoading(true);
-                    const isLocal = window.location.hostname.includes("localhost") || window.location.hostname.includes("127.0.0.1");
-                    const redirectUrl = isLocal 
-                      ? `${window.location.origin}/auth/callback`
-                      : "https://portal.technovalearning.com/auth/callback";
+                    const redirectUrl = `${window.location.origin}/buyer-auth/callback`;
                       
                     const { error } = await supabase.auth.signInWithOAuth({
                       provider: "google",

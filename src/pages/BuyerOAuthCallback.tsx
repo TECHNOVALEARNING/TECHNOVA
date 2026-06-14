@@ -49,7 +49,7 @@ const BuyerOAuthCallback = () => {
             }));
 
             toast.success("Connexion réussie");
-            navigate("/dashboard", { replace: true });
+            navigate("/mes-achats", { replace: true });
           }
         });
 
