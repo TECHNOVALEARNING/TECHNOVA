@@ -37,7 +37,7 @@ export const topTools: Tool[] = [
     description: "L'assistant IA de codage agentique le plus avancé par Google DeepMind. Développez et déployez à la vitesse de la lumière.",
     websiteUrl: "https://deepmind.google",
     categories: ["Intelligence Artificielle", "Productivité & Automatisation"],
-    logoUrl: "/antigravity.svg",
+    logoUrl: "/antigravity.png",
     isFeatured: true,
   },
   {

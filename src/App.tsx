@@ -31,6 +31,9 @@ import RefundPolicy from "./pages/RefundPolicy";
 import StorePage from "./pages/StorePage";
 import StoreProductDetail from "./pages/StoreProductDetail";
 import ToolsDirectoryPage from "./pages/ToolsDirectoryPage";
+import Marketplace from "./pages/Marketplace";
+import Cours from "./pages/Cours";
+import Products from "./pages/Products";
 import StoreLegalPage from "./pages/StoreLegalPage";
 import PaymentCallback from "./pages/PaymentCallback";
 import CheckoutPage from "./pages/CheckoutPage";
@@ -132,6 +135,10 @@ const AppContent = () => {
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/outils-digitaux" element={<ToolsDirectoryPage />} />
+          <Route path="/marketplace" element={<Marketplace />} />
+          <Route path="/cours" element={<Cours />} />
+          <Route path="/formations" element={<Cours />} />
+          <Route path="/products" element={<Products />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/partners" element={<Partners />} />
           <Route path="/documentation" element={<Documentation />} />

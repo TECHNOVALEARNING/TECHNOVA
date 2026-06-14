@@ -74,7 +74,19 @@ export function ToolsDirectory() {
         >
           {lang === "fr" ? "Tous les outils" : "All tools"}
         </button>
-        {toolsCategories.map((category) => (
+        {toolsCategories.map((category) => {
+          let translatedLabel = category.label;
+          if (lang === "en") {
+            const translations: Record<string, string> = {
+              "Intelligence Artificielle": "Artificial Intelligence",
+              "CMS & Création de site": "Website Builders & CMS",
+              "Graphisme & Design": "Graphic Design",
+              "Productivité & Automatisation": "Productivity & Automation",
+              "Fintech & Banques": "Fintech & Banking",
+            };
+            translatedLabel = translations[category.label] || category.label;
+          }
+          return (
           <button
             key={category.id}
             onClick={() => setActiveCategory(category.id)}
@@ -84,9 +96,9 @@ export function ToolsDirectory() {
                 : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
             }`}
           >
-            {category.label}
+            {translatedLabel}
           </button>
-        ))}
+        )})}
       </div>
 
       {/* Grid */}
