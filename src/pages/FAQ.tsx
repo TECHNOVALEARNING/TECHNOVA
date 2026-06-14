@@ -3,7 +3,6 @@ import { Footer } from "@/components/site/shared";
 import { motion } from "framer-motion";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import SEOHead from "@/components/SEOHead";
-import { Helmet } from "react-helmet-async";
 
 const faqs = [
   { 
@@ -83,11 +82,7 @@ const FAQ = () => {
       />
       
       {/* Inject JSON-LD */}
-      <Helmet>
-        <script type="application/ld+json">
-          {JSON.stringify(faqSchema)}
-        </script>
-      </Helmet>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
 
       <Navbar />
       
