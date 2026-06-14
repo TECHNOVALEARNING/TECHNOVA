@@ -60,7 +60,7 @@ const DashboardAccountTab = () => {
       } else if (data?.newStatus === "rejected") {
         toast.error("Mise à jour : Vérification refusée.");
       } else if (data?.newStatus === "pending") {
-        toast.info("Toujours en cours d'examen chez Didit.");
+        toast.info("Didit indique : " + (data?.diditRawStatus || "In Review") + ". L'événement brut est : " + JSON.stringify(data?.diditEvent).substring(0, 50));
       } else {
         toast.success("Statut vérifié avec succès.");
       }

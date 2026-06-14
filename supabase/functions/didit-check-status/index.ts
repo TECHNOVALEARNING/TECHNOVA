@@ -11,7 +11,7 @@ Deno.serve(async (req) => {
   try {
     const authHeader = req.headers.get('Authorization');
     if (!authHeader?.startsWith('Bearer ')) {
-      return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
     const supabase = createClient(
@@ -22,7 +22,7 @@ Deno.serve(async (req) => {
 
     const { data: userData, error: userErr } = await supabase.auth.getUser();
     if (userErr || !userData?.user) {
-      return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
     const user = userData.user;
 
@@ -44,7 +44,7 @@ Deno.serve(async (req) => {
 
     // Call Didit API to get the session details
     const apiKey = Deno.env.get('DIDIT_API_KEY')!;
-    const diditRes = await fetch(`https://verification.didit.me/v2/session/${verification.didit_session_id}`, {
+    const diditRes = await fetch(`https://verification.didit.me/v2/session/${verification.didit_session_id}/decision/`, {
       method: 'GET',
       headers: {
         'x-api-key': apiKey,
@@ -54,7 +54,7 @@ Deno.serve(async (req) => {
     if (!diditRes.ok) {
         const errText = await diditRes.text();
         console.error('Failed to fetch from Didit:', errText);
-        return new Response(JSON.stringify({ error: 'Failed to fetch status from Didit' }), { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+        return new Response(JSON.stringify({ error: 'Failed to fetch status from Didit: ' + errText }), { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
     const event = await diditRes.json();
@@ -125,12 +125,14 @@ Deno.serve(async (req) => {
     return new Response(JSON.stringify({ 
         ok: true, 
         oldStatus: verification.status, 
-        newStatus 
+        newStatus,
+        diditRawStatus: status,
+        diditEvent: event
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (e) {
     console.error(e);
-    return new Response(JSON.stringify({ error: String(e) }), { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    return new Response(JSON.stringify({ error: String(e) }), { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
   }
 });
