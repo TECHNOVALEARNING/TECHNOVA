@@ -19,7 +19,7 @@ export function ToolCard({ tool }: ToolCardProps) {
       )}
 
       <div className="p-4 sm:p-6 flex-1 flex flex-col">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 mb-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 mb-4 min-w-0">
           <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-white p-2 border border-border/50 shadow-sm flex items-center justify-center shrink-0 overflow-hidden transition-transform group-hover:scale-105">
             <img 
               src={tool.logoUrl} 
@@ -30,13 +30,13 @@ export function ToolCard({ tool }: ToolCardProps) {
               }}
             />
           </div>
-          <div>
-            <h3 className="font-bold text-sm sm:text-lg text-card-foreground group-hover:text-primary transition-colors leading-tight line-clamp-1">
+          <div className="min-w-0 flex-1 w-full">
+            <h3 className="font-bold text-sm sm:text-lg text-card-foreground group-hover:text-primary transition-colors leading-tight truncate">
               {tool.name}
             </h3>
             <div className="flex flex-wrap gap-1 mt-1.5 hidden sm:flex">
               {tool.categories.slice(0, 2).map((cat) => (
-                <Badge key={cat} variant="secondary" className="text-[9px] sm:text-[10px] px-1.5 py-0.5 whitespace-nowrap font-normal bg-secondary/50">
+                <Badge key={cat} variant="secondary" className="text-[9px] sm:text-[10px] px-1.5 py-0.5 truncate max-w-full font-normal bg-secondary/50">
                   {cat}
                 </Badge>
               ))}
@@ -47,7 +47,6 @@ export function ToolCard({ tool }: ToolCardProps) {
         <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2 sm:line-clamp-3 mb-4 flex-1">
           {tool.description}
         </p>
-        <div className="text-[10px] text-green-500 font-bold mb-2 uppercase tracking-wider">✅ Test de mise à jour réussi</div>
 
         <div className="space-y-3 mt-auto">
           {tool.promoCode && (
