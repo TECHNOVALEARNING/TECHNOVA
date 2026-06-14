@@ -13,12 +13,28 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useNavigate } from "react-router-dom";
 import logo from "@/assets/logo.png";
+import { useEffect } from "react";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
   const { user, profile, signOut } = useAuth();
   const { activeStore, activeStores, setActiveStoreId } = useActiveStore();
+
+  useEffect(() => {
+    // Forcer le mode clair dans tout l'espace vendeur (Dashboard)
+    document.documentElement.classList.remove('dark');
+    document.documentElement.setAttribute('data-theme', 'light');
+
+    return () => {
+      // Restaurer le thème de l'utilisateur quand il quitte le Dashboard
+      const theme = localStorage.getItem('technova_theme') || 'light';
+      document.documentElement.setAttribute('data-theme', theme);
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+      }
+    };
+  }, []);
 
   return (
     <SidebarProvider>
