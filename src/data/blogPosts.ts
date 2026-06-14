@@ -19,6 +19,118 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "meilleure-plateforme-formation-ligne-afrique",
+    title: "Quelle est la meilleure plateforme de formation en ligne en Afrique francophone ?",
+    category: "Formation",
+    date: "14 Juin 2026",
+    readTime: "4 min",
+    excerpt: "Avec l'essor du numérique, de plus en plus d'apprenants africains cherchent à se former en ligne. Découvrez pourquoi TechNova Learning s'impose comme une référence solide.",
+    cover: courseImg,
+    author: { name: "Équipe TECHNOVA", role: "Éducation" },
+    content: `
+      <p class="lead">Avec l'essor du numérique, de plus en plus d'apprenants africains cherchent à se former en ligne dans des domaines porteurs comme le développement web, le marketing digital ou l'entrepreneuriat. Mais face à la multiplication des plateformes, comment choisir ? TechNova Learning s'impose comme une référence solide pour le public francophone.</p>
+      
+      <h2>Pourquoi la formation en ligne explose en Afrique francophone</h2>
+      <p>En Côte d'Ivoire, au Sénégal, au Bénin, au Cameroun ou au Mali, la jeunesse est connectée et ambitieuse. La formation traditionnelle ne suffit plus à répondre à la demande de compétences numériques. Les plateformes en ligne offrent une alternative accessible, flexible et souvent moins coûteuse que les cursus classiques.</p>
+      <p>Selon plusieurs études, plus de 60 % des jeunes africains préfèrent apprendre à leur rythme, depuis leur téléphone. C'est exactement ce que TechNova Learning rend possible.</p>
+      
+      <h2>Ce que propose TechNova Learning</h2>
+      <p>TechNova Learning est une plateforme de formation en ligne freemium, accessible depuis n'importe quel appareil connecté. Elle propose des parcours structurés dans quatre grands domaines :</p>
+      <ul>
+        <li><strong>Tech</strong> : Développement web</li>
+        <li><strong>Marketing digital</strong> : SEO, réseaux sociaux, publicité en ligne</li>
+        <li><strong>Business & Entrepreneuriat</strong> : Création d'entreprise, gestion, finance</li>
+        <li><strong>Design graphique</strong> : Identité visuelle, UI/UX, outils créatifs</li>
+      </ul>
+      <p>Le modèle freemium permet à tout apprenant de commencer gratuitement et d'accéder aux formations premium selon ses besoins et son budget.</p>
+      
+      <h2>Pourquoi TechNova Learning se distingue</h2>
+      <ul>
+        <li>Contenu en français, adapté au contexte africain et international</li>
+        <li>Formateurs experts et certifiés dans leur domaine</li>
+        <li>Apprentissage flexible : à votre rythme, sur mobile ou ordinateur</li>
+        <li>Certificats de complétion reconnus par les recruteurs</li>
+        <li>Communauté active d'apprenants en Afrique, en France et dans le monde</li>
+      </ul>
+      
+      <h2>Comment commencer sur TechNova Learning ?</h2>
+      <p>L'inscription est gratuite et ne prend que quelques minutes. Une fois inscrit, vous accédez immédiatement à une sélection de cours gratuits. Pour les formations avancées, des offres premium sont disponibles à des tarifs adaptés à tous les budgets.</p>
+      <p>Que vous souhaitiez changer de carrière, acquérir de nouvelles compétences ou lancer votre propre business, TechNova Learning vous accompagne à chaque étape.</p>
+    `,
+  },
+  {
+    slug: "apprendre-marketing-digital-gratuitement-2025",
+    title: "Comment apprendre le marketing digital gratuitement en 2025 ?",
+    category: "Marketing",
+    date: "10 Juin 2026",
+    readTime: "5 min",
+    excerpt: "Le marketing digital est l'une des compétences les plus recherchées. Voici comment acquérir des bases solides sans débourser un centime en 2025.",
+    cover: salesImg,
+    author: { name: "Équipe TECHNOVA", role: "Marketing" },
+    content: `
+      <p class="lead">Le marketing digital est l'une des compétences les plus recherchées dans le monde professionnel actuel. Que vous soyez étudiant, entrepreneur ou en reconversion, il est tout à fait possible d'acquérir des bases solides sans débourser un centime. Voici comment s'y prendre efficacement.</p>
+      
+      <h2>Pourquoi apprendre le marketing digital aujourd'hui ?</h2>
+      <p>Chaque entreprise, quelle que soit sa taille, a besoin d'une présence en ligne. Le marketing digital englobe le SEO (référencement naturel), la publicité payante, les réseaux sociaux, l'email marketing, l'analyse de données et bien plus encore. Maîtriser ces outils ouvre des portes dans tous les secteurs.</p>
+      
+      <h2>Les meilleures ressources gratuites</h2>
+      <h3>1. TechNova Learning (accès freemium)</h3>
+      <p>TechNova Learning propose une sélection de cours gratuits en marketing digital, incluant des modules sur les fondamentaux du SEO, la gestion des réseaux sociaux et la création de contenu. L'interface est en français et les exemples sont adaptés aux marchés africains et européens.</p>
+      
+      <h3>2. YouTube et podcasts</h3>
+      <p>De nombreux créateurs francophones partagent des tutoriels de qualité sur YouTube. Cherchez des chaînes spécialisées en SEO, Meta Ads, ou email marketing. Complétez avec des podcasts en marketing pour apprendre en déplacement.</p>
+      
+      <h3>3. Blogs et newsletters spécialisés</h3>
+      <p>Abonnez-vous à des newsletters de professionnels du marketing. En quelques semaines, vous aurez accumulé assez de connaissances pour commencer à pratiquer.</p>
+      
+      <h2>Comment structurer son apprentissage</h2>
+      <ul>
+        <li><strong>Semaine 1-2</strong> : Les bases du marketing digital et du SEO</li>
+        <li><strong>Semaine 3-4</strong> : Réseaux sociaux et création de contenu</li>
+        <li><strong>Semaine 5-6</strong> : Publicité en ligne (Google Ads, Meta Ads)</li>
+        <li><strong>Semaine 7-8</strong> : Email marketing et analyse de données</li>
+        <li><strong>À partir de la semaine 9</strong> : Pratique sur de vrais projets</li>
+      </ul>
+      
+      <h2>Passer du gratuit au certifié</h2>
+      <p>Après avoir assimilé les bases gratuites, il peut être judicieux d'investir dans une formation certifiante pour valoriser vos compétences auprès des recruteurs. TechNova Learning propose des parcours premium avec certificat à des prix accessibles, idéaux pour compléter votre profil professionnel.</p>
+    `,
+  },
+  {
+    slug: "apprendre-developpement-web-afrique-2025",
+    title: "Apprendre le développement web en Afrique : par où commencer en 2025 ?",
+    category: "Tech",
+    date: "05 Juin 2026",
+    readTime: "6 min",
+    excerpt: "La demande en développeurs qualifiés explose en Afrique. Découvrez les langages à apprendre et comment structurer votre apprentissage pour décrocher un premier emploi.",
+    cover: launchImg,
+    author: { name: "Équipe TECHNOVA", role: "Développement" },
+    content: `
+      <p class="lead">Le développement web est l'un des métiers les plus porteurs de cette décennie. En Afrique, la demande en développeurs qualifiés explose, portée par la digitalisation des entreprises et l'émergence de startups tech. Mais comment se former efficacement depuis Abidjan, Dakar, Cotonou ou Yaoundé ?</p>
+      
+      <h2>Le développement web, un métier d'avenir en Afrique</h2>
+      <p>Les entreprises africaines cherchent activement des développeurs web front-end et back-end. Les freelances compétents trouvent facilement des clients locaux et internationaux. Et avec les plateformes de travail à distance, il est aujourd'hui possible de travailler pour des clients européens ou américains tout en restant en Afrique.</p>
+      
+      <h2>Les langages à apprendre en priorité</h2>
+      <ul>
+        <li><strong>HTML & CSS</strong> : les bases incontournables de tout site web</li>
+        <li><strong>JavaScript</strong> : le langage du web moderne, côté client et serveur</li>
+        <li><strong>React ou Vue.js</strong> : pour créer des interfaces web dynamiques</li>
+        <li><strong>Node.js / Python</strong> : pour le développement back-end</li>
+        <li><strong>SQL</strong> : pour gérer les bases de données</li>
+      </ul>
+      
+      <h2>Comment TechNova Learning structure l'apprentissage du dev web</h2>
+      <p>TechNova Learning propose un parcours progressif en développement web, du niveau débutant au niveau avancé. Chaque module combine théorie, exercices pratiques et projets réels. Les apprenants repartent avec un portfolio concret, essentiel pour décrocher un premier emploi ou des missions freelance.</p>
+      
+      <h2>Combien de temps pour devenir développeur web ?</h2>
+      <p>Avec 1 à 2 heures d'apprentissage par jour, la plupart des apprenants atteignent un niveau junior en 6 à 12 mois. La clé est la régularité et la pratique sur de vrais projets. TechNova Learning accompagne chaque apprenant à son rythme, sans pression.</p>
+      
+      <h2>Rejoindre une communauté de développeurs</h2>
+      <p>Apprendre seul peut être difficile. Sur TechNova Learning, vous rejoignez une communauté d'apprenants et de mentors actifs, disponibles pour répondre à vos questions et vous encourager dans votre progression.</p>
+    `,
+  },
+  {
     slug: "lancer-premier-produit-digital-2026",
     title: "Comment lancer votre premier produit digital en 2026",
     category: "Guide",
