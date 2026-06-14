@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Trash2, ShoppingBag, ArrowRight } from "lucide-react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import { Header } from "@/components/site/shared";
+import { Footer } from "@/components/site/shared";
 import { useCart } from "@/contexts/CartContext";
 import { formatPrice } from "@/data/products";
 import { Button } from "@/components/ui/button";
@@ -12,7 +12,7 @@ const Cart = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
+      <Header />
       <div className="container mx-auto px-4 py-12">
         <h1 className="mb-8 text-3xl font-bold text-foreground">Votre panier</h1>
 

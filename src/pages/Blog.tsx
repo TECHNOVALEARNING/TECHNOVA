@@ -1,5 +1,5 @@
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import { Header } from "@/components/site/shared";
+import { Footer } from "@/components/site/shared";
 import { motion } from "framer-motion";
 import { ArrowRight, Clock, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -17,7 +17,7 @@ const Blog = () => {
         canonicalPath="/blog"
         keywords="blog produits digitaux, vendre en ligne afrique, mobile money, KYC, marketing digital"
       />
-      <Navbar />
+      <Header />
 
       {/* Hero */}
       <section className="py-20 md:py-28 bg-mesh">

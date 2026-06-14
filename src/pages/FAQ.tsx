@@ -1,4 +1,4 @@
-import Navbar from "@/components/Navbar";
+import { Header } from "@/components/site/shared";
 import { Footer } from "@/components/site/shared";
 import { motion } from "framer-motion";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -84,7 +84,7 @@ const FAQ = () => {
       {/* Inject JSON-LD */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
 
-      <Navbar />
+      <Header />
       
       <section className="py-24 md:py-32 bg-mesh relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />

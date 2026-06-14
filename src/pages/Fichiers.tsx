@@ -1,5 +1,5 @@
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import { Header } from "@/components/site/shared";
+import { Footer } from "@/components/site/shared";
 import { motion } from "framer-motion";
 import { FileText, Download, Shield, Zap, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -17,7 +17,7 @@ const Fichiers = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead title="Vendre des fichiers digitaux" description="Vendez vos fichiers digitaux : PDFs, e-books, templates, presets. Livraison instantanée, protection DRM et paiement Mobile Money." canonicalPath="/fichiers" keywords="vendre fichiers digitaux, ebook, template, preset, PDF, afrique" />
-      <Navbar />
+      <Header />
       <section className="py-24 md:py-32 bg-mesh">
         <div className="container mx-auto px-6 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>

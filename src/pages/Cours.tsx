@@ -1,5 +1,5 @@
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import { Header } from "@/components/site/shared";
+import { Footer } from "@/components/site/shared";
 import { motion } from "framer-motion";
 import { GraduationCap, Video, Award, Users, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -17,7 +17,7 @@ const Cours = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead title="Vendre des cours en ligne" description="Créez et vendez vos cours en ligne : vidéos HD, modules structurés, certificats. Plateforme e-learning avec paiement Mobile Money." canonicalPath="/cours" keywords="vendre cours en ligne, formation en ligne, e-learning, afrique, mobile money" />
-      <Navbar />
+      <Header />
       <section className="py-24 md:py-32 bg-mesh">
         <div className="container mx-auto px-6 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>

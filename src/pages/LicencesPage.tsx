@@ -1,5 +1,5 @@
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import { Header } from "@/components/site/shared";
+import { Footer } from "@/components/site/shared";
 import { motion } from "framer-motion";
 import { Key, RefreshCw, Lock, BarChart3, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -17,7 +17,7 @@ const LicencesPage = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead title="Vendre des licences logicielles" description="Vendez des licences logicielles avec clés automatiques, protection anti-piratage et suivi des activations. Paiement Mobile Money." canonicalPath="/licences" keywords="vendre licences, clés logicielles, anti-piratage, licence digitale, afrique" />
-      <Navbar />
+      <Header />
       <section className="py-24 md:py-32 bg-mesh">
         <div className="container mx-auto px-6 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>

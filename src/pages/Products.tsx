@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import { Header } from "@/components/site/shared";
+import { Footer } from "@/components/site/shared";
 import ProductCard from "@/components/ProductCard";
 import { products, categories } from "@/data/products";
 import SEOHead from "@/components/SEOHead";
@@ -15,7 +15,7 @@ const Products = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead title="Catalogue de produits digitaux" description="Explorez le catalogue TECHNOVA : fichiers, formations et licences digitales avec paiement Mobile Money et carte bancaire." canonicalPath="/products" keywords="TECHNOVA, produits digitaux, catalogue, fichiers, formations en ligne, licences digitales, afrique" />
-      <Navbar />
+      <Header />
       <div className="container mx-auto px-4 py-12">
         <h1 className="mb-2 text-3xl font-bold text-foreground">Catalogue</h1>
         <p className="mb-8 text-muted-foreground">Explorez tous nos produits digitaux</p>

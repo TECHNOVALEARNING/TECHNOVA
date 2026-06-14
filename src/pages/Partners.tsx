@@ -1,5 +1,5 @@
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import { Header } from "@/components/site/shared";
+import { Footer } from "@/components/site/shared";
 import { motion } from "framer-motion";
 import { Handshake, TrendingUp, Gift, HeadphonesIcon, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -17,7 +17,7 @@ const Partners = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead title="Devenir partenaire" description="Rejoignez le programme partenaire TECHNOVA. Gagnez jusqu'à 30% de commissions récurrentes en référant des créateurs." canonicalPath="/partners" />
-      <Navbar />
+      <Header />
       <section className="py-24 md:py-32 bg-mesh">
         <div className="container mx-auto px-6 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>

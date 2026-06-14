@@ -1,8 +1,8 @@
 import { useParams, Link, Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft, Calendar, Clock, ArrowRight, Share2 } from "lucide-react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import { Header } from "@/components/site/shared";
+import { Footer } from "@/components/site/shared";
 import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { blogPosts, getPostBySlug } from "@/data/blogPosts";
@@ -35,7 +35,7 @@ const BlogPost = () => {
         description={post.excerpt}
         canonicalPath={`/blog/${post.slug}`}
       />
-      <Navbar />
+      <Header />
 
       {/* Hero */}
       <section className="pt-12 pb-10 md:pt-16 bg-mesh">

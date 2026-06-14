@@ -1,5 +1,5 @@
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import { Header } from "@/components/site/shared";
+import { Footer } from "@/components/site/shared";
 import { motion } from "framer-motion";
 import { Check, ArrowRight, Percent, ShieldCheck, Zap, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -32,7 +32,7 @@ const Pricing = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead title="Tarifs" description="Tarifs TECHNOVA : 0% de frais d'inscription, commission de seulement 5%. Vendez vos produits digitaux sans abonnement. Paiement Mobile Money." canonicalPath="/pricing" keywords="tarifs vente produits digitaux, commission, prix, mobile money, afrique" />
-      <Navbar />
+      <Header />
 
       {/* Hero */}
       <section className="py-24 md:py-32 bg-mesh relative overflow-hidden">

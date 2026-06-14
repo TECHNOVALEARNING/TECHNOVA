@@ -1,4 +1,4 @@
-import Navbar from "@/components/Navbar";
+import { Header } from "@/components/site/shared";
 import { Footer } from "@/components/site/shared";
 import { motion } from "framer-motion";
 import { Target, Heart, Globe, Users, Rocket, Lightbulb, ArrowRight, Code, Megaphone, Briefcase, PenTool, CheckCircle } from "lucide-react";
@@ -29,7 +29,7 @@ const About = () => {
         description="TechNova Learning est une plateforme de formation en ligne dédiée à l'acquisition de compétences numériques. Notre mission : rendre l'éducation de qualité accessible à tous en Afrique francophone." 
         canonicalPath="/about" 
       />
-      <Navbar />
+      <Header />
 
       {/* Hero */}
       <section className="py-24 md:py-32 bg-mesh overflow-hidden relative">

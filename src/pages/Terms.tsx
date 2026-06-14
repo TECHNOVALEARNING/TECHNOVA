@@ -1,5 +1,5 @@
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import { Header } from "@/components/site/shared";
+import { Footer } from "@/components/site/shared";
 import { motion } from "framer-motion";
 import SEOHead from "@/components/SEOHead";
 
@@ -7,7 +7,7 @@ const Terms = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead title="Conditions d'utilisation" description="Conditions générales d'utilisation de la plateforme TECHNOVA. Politique de confidentialité et mentions légales." canonicalPath="/terms" noindex />
-      <Navbar />
+      <Header />
       <section className="py-24 md:py-32 bg-mesh">
         <div className="container mx-auto px-6 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>

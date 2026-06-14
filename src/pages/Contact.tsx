@@ -1,5 +1,5 @@
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import { Header } from "@/components/site/shared";
+import { Footer } from "@/components/site/shared";
 import { motion } from "framer-motion";
 import { Mail, MessageCircle, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -23,7 +23,7 @@ const Contact = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead title="Contact" description="Contactez l'équipe TECHNOVA. Support disponible 24/7 pour répondre à toutes vos questions sur la vente de produits digitaux." canonicalPath="/contact" />
-      <Navbar />
+      <Header />
       <section className="py-24 md:py-32 bg-mesh">
         <div className="container mx-auto px-6 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>

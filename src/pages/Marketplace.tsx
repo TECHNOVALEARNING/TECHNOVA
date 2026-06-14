@@ -24,8 +24,8 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import { Header } from "@/components/site/shared";
+import { Footer } from "@/components/site/shared";
 import SEOHead from "@/components/SEOHead";
 import { MarketplaceSearchBar } from "@/components/marketplace/MarketplaceSearchBar";
 import {
@@ -86,7 +86,7 @@ const Marketplace = () => {
         title="Marketplace TECHNOVA · Produits numériques vérifiés"
         description="La marketplace #1 de produits numériques en Afrique. Vendeurs vérifiés KYC, paiements mobile money sécurisés, fichiers, formations et licences."
       />
-      <Navbar />
+      <Header />
 
       {/* HERO MARKETPLACE — IMAGE BANNER */}
       <section className="relative overflow-hidden">

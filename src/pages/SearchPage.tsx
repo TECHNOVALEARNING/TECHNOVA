@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import { Header } from "@/components/site/shared";
+import { Footer } from "@/components/site/shared";
 import SEOHead from "@/components/SEOHead";
 import { MarketplaceSearchBar } from "@/components/marketplace/MarketplaceSearchBar";
 import {
@@ -207,7 +207,7 @@ const SearchPage = () => {
         title={q ? `Recherche : ${q} · TECHNOVA` : "Marketplace · TECHNOVA"}
         description="Explorez la marketplace TECHNOVA. Fichiers, formations et licences numériques."
       />
-      <Navbar />
+      <Header />
 
       {/* Sticky search bar */}
       <section className="sticky top-[64px] z-30 border-b border-border bg-background/95 py-3 backdrop-blur sm:py-5">
