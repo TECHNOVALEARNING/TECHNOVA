@@ -844,7 +844,7 @@ const EditProduct = () => {
                                 <Button variant="outline" className="gap-2 rounded-full pointer-events-none">
                                   <Upload className="h-4 w-4" /> {downloadUrl ? "Remplacer le fichier" : `Uploader le fichier ${fileFormat.toUpperCase()}`}
                                 </Button>
-                                <p className="text-xs text-muted-foreground">Taille max: 500 MB</p>
+                                <p className="text-xs text-muted-foreground">Taille max: 50 MB</p>
                               </div>
                               {downloadFile && (
                                 <p className="text-sm font-medium text-foreground mt-4">ðŸ“Ž {downloadFile.name}</p>
@@ -1189,3 +1189,4 @@ const ToggleOption = ({
 );
 
 export default EditProduct;
+
