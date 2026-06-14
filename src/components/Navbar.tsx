@@ -14,12 +14,6 @@ const productLinks = [
 ];
 
 const moreLinks = [
-  { label: "À propos", href: "/about" },
-  { label: "Blog", href: "/blog" },
-  { label: "Partenaires", href: "/partners" },
-  { label: "Documentation", href: "/documentation" },
-  { label: "FAQ", href: "/faq" },
-  { label: "Contact", href: "/contact" },
 ];
 
 const Navbar = () => {
@@ -56,10 +50,6 @@ const Navbar = () => {
           <Link to="/marketplace" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Marketplace</Link>
           <Link to="/outils-digitaux" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Fonctionne avec</Link>
           <Link to="/pricing" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Tarifs</Link>
-          <Link to="/blog" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Blog</Link>
-          <Link to="/about" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">À propos</Link>
-          <Link to="/faq" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">FAQ</Link>
-          <Link to="/documentation" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Docs</Link>
         </div>
 
         <div className="hidden lg:flex items-center gap-3">

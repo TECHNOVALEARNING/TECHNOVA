@@ -44,10 +44,7 @@ const Footer = () => {
             <h4 className="text-sm font-semibold text-foreground mb-4">Entreprise</h4>
             <ul className="space-y-2.5">
               {[
-                { label: "À propos", href: "/about" },
-                { label: "Blog", href: "/blog" },
                 { label: "Tarifs", href: "/pricing" },
-                { label: "Partenaires", href: "/partners" },
               ].map((item) => (
                 <li key={item.label}>
                   <Link to={item.href} className="text-sm text-muted-foreground hover:text-foreground transition-colors">{item.label}</Link>
@@ -60,9 +57,6 @@ const Footer = () => {
             <h4 className="text-sm font-semibold text-foreground mb-4">Support & Légal</h4>
             <ul className="space-y-2.5">
               {[
-                { label: "Documentation", href: "/documentation" },
-                { label: "Contact", href: "/contact" },
-                { label: "FAQ", href: "/faq" },
                 { label: "Conditions", href: "/terms" },
                 { label: "Confidentialité", href: "/privacy" },
                 { label: "Mentions légales", href: "/legal" },
