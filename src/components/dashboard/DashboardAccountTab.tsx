@@ -40,8 +40,12 @@ const DashboardAccountTab = () => {
   // Fetch and check status manually
   const handleCheckStatus = async () => {
     try {
+      const sessionIdFromUrl = searchParams.get("verificationSessionId");
       toast.info("Vérification du statut auprès de Didit...");
-      const { data, error } = await supabase.functions.invoke("didit-check-status");
+      
+      const { data, error } = await supabase.functions.invoke("didit-check-status", {
+        body: sessionIdFromUrl ? { sessionId: sessionIdFromUrl } : {}
+      });
       
       if (error) {
         toast.error("Erreur d'appel: " + error.message);

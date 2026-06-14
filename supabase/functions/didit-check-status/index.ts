@@ -26,25 +26,39 @@ Deno.serve(async (req) => {
     }
     const user = userData.user;
 
-    // Fetch the pending session ID for this user
     const adminClient = createClient(
       Deno.env.get('SUPABASE_URL')!,
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     );
 
-    const { data: verification } = await adminClient
-      .from('identity_verifications')
-      .select('id, didit_session_id, status')
+    let bodyPayload: any = {};
+    try {
+      const text = await req.clone().text();
+      if (text) {
+        bodyPayload = JSON.parse(text);
+      }
+    } catch(e) {
+      // ignore
+    }
+
+    const { data: verification } = await adminClient.from('identity_verifications')
+      .select('*')
       .eq('user_id', user.id)
       .maybeSingle();
 
-    if (!verification || !verification.didit_session_id) {
-      return new Response(JSON.stringify({ status: 'not_found' }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    if (!verification) {
+      return new Response(JSON.stringify({ error: 'No verification found for user' }), { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+
+    const targetSessionId = bodyPayload.sessionId || verification.didit_session_id;
+
+    if (!targetSessionId) {
+      return new Response(JSON.stringify({ error: 'No session ID found' }), { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
     // Call Didit API to get the session details
     const apiKey = Deno.env.get('DIDIT_API_KEY')!;
-    const diditRes = await fetch(`https://verification.didit.me/v2/session/${verification.didit_session_id}/decision/`, {
+    const diditRes = await fetch(`https://verification.didit.me/v3/session/${targetSessionId}/decision/`, {
       method: 'GET',
       headers: {
         'x-api-key': apiKey,
@@ -94,7 +108,7 @@ Deno.serve(async (req) => {
     }
 
     // Only update if status changed or it was pending
-    if (newStatus !== verification.status) {
+    if (newStatus !== verification.status || bodyPayload.sessionId) {
         const updateData: any = {
             status: newStatus,
             didit_decision: event,
@@ -105,12 +119,13 @@ Deno.serve(async (req) => {
         if (country) updateData.country = country;
         if (docType) updateData.document_type = docType;
         if (documentNumber) updateData.document_number = documentNumber;
+        if (bodyPayload.sessionId) updateData.didit_session_id = bodyPayload.sessionId;
 
         await adminClient.from('identity_verifications')
             .update(updateData)
-            .eq('id', verification.id);
+            .eq('user_id', user.id);
 
-        if (newStatus !== 'pending') {
+        if (newStatus !== 'pending' && newStatus !== verification.status) {
             await adminClient.from('notifications').insert({
               user_id: user.id,
               title: newStatus === 'approved' ? '✓ Identité vérifiée' : '✗ Vérification refusée',
