@@ -118,38 +118,44 @@ export const Header = () => {
       </div>
       {open && (
         <div className="lg:hidden border-t border-[color:var(--border)] max-h-[calc(100vh-64px)] overflow-y-auto" style={{ background: "var(--card)" }}>
-          <div className="px-4 py-4 flex flex-col gap-3">
-            <div className="flex justify-end mb-2">
-              <button onClick={() => setLang(l => l === "fr" ? "en" : "fr")} className="flex items-center gap-1.5 text-sm font-bold opacity-80 hover:opacity-100 transition-opacity">
-                <Globe className="h-4 w-4" /> {lang.toUpperCase()}
-              </button>
-            </div>
-            {links.map((l) => (
-              <Link key={l.to} to={l.to} onClick={(e) => { setOpen(false); handleNavClick(e, l.to); }}
-                    className="py-3 font-medium border-b border-border/50 text-base">{l.label}</Link>
-            ))}
+          <div className="px-4 py-6 flex flex-col gap-4">
             
-            <div className="mt-2 flex flex-col gap-3 pb-4">
+            {/* Grille de navigation compacte */}
+            <div className="grid grid-cols-2 gap-3">
+              {links.map((l) => (
+                <Link key={l.to} to={l.to} onClick={(e) => { setOpen(false); handleNavClick(e, l.to); }}
+                      className="py-3 px-2 font-medium rounded-xl bg-muted/40 hover:bg-muted/60 border border-border/50 text-[14px] text-center transition-colors">
+                  {l.label}
+                </Link>
+              ))}
+            </div>
+            
+            <div className="h-px w-full bg-border/50 my-2" />
+            
+            {/* Actions (Login / Devenir vendeur / Dashboard) */}
+            <div className="flex flex-col gap-3 pb-4">
               {user ? (
                 <>
-                  <Link to="/dashboard" onClick={() => setOpen(false)} className="w-full text-center inline-flex items-center justify-center rounded-md text-base font-medium bg-[#0071e3] text-white hover:bg-[#0071e3]/90 h-12 px-4 py-2">
+                  <Link to="/dashboard" onClick={() => setOpen(false)} className="w-full text-center inline-flex items-center justify-center rounded-xl text-base font-medium bg-[#0071e3] text-white hover:bg-[#0071e3]/90 h-12 px-4 py-2 shadow-sm">
                     Dashboard
                   </Link>
-                  <button onClick={() => { signOut(); setOpen(false); }} className="w-full text-center inline-flex items-center justify-center rounded-md text-base font-medium border border-[color:var(--border)] hover:bg-muted/50 h-12 px-4 py-2">
+                  <button onClick={() => { signOut(); setOpen(false); }} className="w-full text-center inline-flex items-center justify-center rounded-xl text-base font-medium border border-[color:var(--border)] hover:bg-muted/50 h-12 px-4 py-2">
                     Déconnexion
                   </button>
                 </>
               ) : (
                 <>
-                  <Link to="/register" onClick={() => setOpen(false)} className="w-full text-center inline-flex items-center justify-center rounded-md text-base font-medium bg-[#0071e3] text-white hover:bg-[#0071e3]/90 h-12 px-4 py-2">
+                  <Link to="/register" onClick={() => setOpen(false)} className="w-full text-center inline-flex items-center justify-center rounded-xl text-base font-medium bg-[#0071e3] text-white hover:bg-[#0071e3]/90 h-12 px-4 py-2 shadow-sm">
                     <Store className="h-5 w-5 mr-2" /> Devenir vendeur
                   </Link>
-                  <Link to="/login" onClick={() => setOpen(false)} className="w-full text-center inline-flex items-center justify-center rounded-md text-base font-medium border border-[color:var(--border)] hover:bg-muted/50 h-12 px-4 py-2">
-                    Connexion
-                  </Link>
-                  <Link to="/buyer-login" onClick={() => setOpen(false)} className="w-full text-center inline-flex items-center justify-center rounded-md text-base font-medium border border-[color:var(--border)] hover:bg-muted/50 h-12 px-4 py-2 mt-2">
-                    <ShoppingBag className="h-5 w-5 mr-2" /> Mes achats
-                  </Link>
+                  <div className="grid grid-cols-2 gap-3">
+                    <Link to="/login" onClick={() => setOpen(false)} className="w-full text-center inline-flex items-center justify-center rounded-xl text-[14px] font-medium border border-[color:var(--border)] bg-card hover:bg-muted/50 h-12 px-2">
+                      Connexion
+                    </Link>
+                    <Link to="/buyer-login" onClick={() => setOpen(false)} className="w-full text-center inline-flex items-center justify-center rounded-xl text-[14px] font-medium border border-[color:var(--border)] bg-card hover:bg-muted/50 h-12 px-2">
+                      <ShoppingBag className="h-4 w-4 mr-1.5" /> Achats
+                    </Link>
+                  </div>
                 </>
               )}
             </div>
