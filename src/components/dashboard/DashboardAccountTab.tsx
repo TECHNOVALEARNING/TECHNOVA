@@ -37,6 +37,16 @@ const DashboardAccountTab = () => {
 
   useEffect(() => { if (user) loadVerification(); }, [user]);
 
+  // Fetch and check status manually
+  const handleCheckStatus = async () => {
+    try {
+      await supabase.functions.invoke("didit-check-status");
+      await loadVerification();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   // Realtime: update KYC status instantly when Didit webhook updates the row
   useEffect(() => {
     if (!user) return;
@@ -65,6 +75,7 @@ const DashboardAccountTab = () => {
 
   // After Didit redirect callback, refresh verification (webhook may take a few seconds)
   useEffect(() => {
+    if (!user) return;
     if (searchParams.get("kyc") === "callback") {
       const status = searchParams.get("status");
       if (status === "Approved") {
@@ -74,11 +85,15 @@ const DashboardAccountTab = () => {
       } else {
         toast.info("Vérification reçue, traitement en cours…");
       }
-      const interval = setInterval(loadVerification, 3000);
+      
+      // Force checking the status immediately
+      handleCheckStatus();
+      
+      const interval = setInterval(handleCheckStatus, 5000);
       const timeout = setTimeout(() => clearInterval(interval), 60000);
       return () => { clearInterval(interval); clearTimeout(timeout); };
     }
-  }, [searchParams]);
+  }, [searchParams, user]);
 
   const loadVerification = async () => {
     if (!user) return;
@@ -138,9 +153,15 @@ const DashboardAccountTab = () => {
                     <span className={`text-sm font-medium ${st.color}`}>{st.label}</span>
                   </div>
                   {verification.status === "pending" && (
-                    <p className="text-xs text-muted-foreground mt-2">
-                      Vos documents sont en cours d'examen ou vous n'avez pas finalisé la vérification. Vous pouvez en redémarrer une nouvelle ci-dessous si nécessaire.
-                    </p>
+                    <div className="mt-3">
+                      <p className="text-xs text-muted-foreground mb-2">
+                        Vos documents sont en cours d'examen ou vous n'avez pas finalisé la vérification. Vous pouvez en redémarrer une nouvelle ci-dessous si nécessaire.
+                      </p>
+                      <Button variant="outline" size="sm" onClick={handleCheckStatus} className="h-8 text-xs">
+                        <RefreshCw className="h-3 w-3 mr-2" />
+                        Rafraîchir le statut
+                      </Button>
+                    </div>
                   )}
                   {verification.status === "approved" && verification.full_name && (
                     <p className="text-xs text-muted-foreground mt-2">
