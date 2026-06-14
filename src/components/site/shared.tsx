@@ -52,8 +52,9 @@ export const Header = () => {
   const links = [
     { to: "/", label: lang === "fr" ? "Accueil" : "Home" },
     { to: "/formations", label: lang === "fr" ? "Nos formations" : "Courses" },
-    { to: "/#features", label: lang === "fr" ? "Pourquoi nous" : "Why us" },
-    { to: "/#about", label: lang === "fr" ? "À propos" : "About" },
+    { to: "/blog", label: "Blog" },
+    { to: "/about", label: lang === "fr" ? "À propos" : "About" },
+    { to: "/faq", label: "FAQ" },
     { to: "/outils-digitaux", label: lang === "fr" ? "Fonctionne avec" : "Works with" },
   ];
 
@@ -234,10 +235,10 @@ export const Footer = () => {
         <ul className="space-y-2.5 text-white/70 text-sm">
           {[
             { label: lang === 'fr' ? "Formations" : "Courses", href: "/formations" },
+            { label: "Blog", href: "/blog" },
+            { label: lang === 'fr' ? "À propos" : "About", href: "/about" },
+            { label: "FAQ", href: "/faq" },
             { label: "E-Shopping", href: "/#eshop" },
-            { label: "Blog", href: "/#blog" },
-            { label: lang === 'fr' ? "À propos" : "About", href: "/#about" },
-            { label: "www.technovalearning.com", href: "https://technovalearning.com" },
           ].map((lnk) => (
             <li key={lnk.label} className="flex items-center gap-2">
               <ChevronRight className="h-3.5 w-3.5 flex-none text-[color:var(--primary)]" />

@@ -58,6 +58,7 @@ const Navbar = () => {
           <Link to="/pricing" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Tarifs</Link>
           <Link to="/blog" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Blog</Link>
           <Link to="/about" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">À propos</Link>
+          <Link to="/faq" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">FAQ</Link>
           <Link to="/documentation" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Docs</Link>
         </div>
 
