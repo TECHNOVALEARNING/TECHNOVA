@@ -34,19 +34,14 @@ export const Header = () => {
   const isHome = location.pathname === "/";
 
   useEffect(() => {
-    if (isHome) {
-      document.documentElement.setAttribute("data-theme", theme);
-      if (theme === "dark") {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-      }
+    document.documentElement.setAttribute("data-theme", theme);
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
     } else {
-      document.documentElement.setAttribute("data-theme", "light");
       document.documentElement.classList.remove("dark");
     }
     localStorage.setItem("technova_theme", theme);
-  }, [theme, isHome]);
+  }, [theme]);
 
   useEffect(() => {
     localStorage.setItem("technova_lang", lang);
