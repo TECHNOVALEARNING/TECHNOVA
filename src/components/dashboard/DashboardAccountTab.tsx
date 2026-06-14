@@ -40,9 +40,34 @@ const DashboardAccountTab = () => {
   // Fetch and check status manually
   const handleCheckStatus = async () => {
     try {
-      await supabase.functions.invoke("didit-check-status");
+      toast.info("Vérification du statut auprès de Didit...");
+      const { data, error } = await supabase.functions.invoke("didit-check-status");
+      
+      if (error) {
+        toast.error("Erreur d'appel: " + error.message);
+        console.error(error);
+        return;
+      }
+      
+      if (data?.error) {
+        toast.error("Erreur serveur: " + data.error);
+        console.error(data.error);
+        return;
+      }
+      
+      if (data?.newStatus === "approved") {
+        toast.success("Mise à jour : Vérification approuvée !");
+      } else if (data?.newStatus === "rejected") {
+        toast.error("Mise à jour : Vérification refusée.");
+      } else if (data?.newStatus === "pending") {
+        toast.info("Toujours en cours d'examen chez Didit.");
+      } else {
+        toast.success("Statut vérifié avec succès.");
+      }
+      
       await loadVerification();
-    } catch (err) {
+    } catch (err: any) {
+      toast.error("Erreur: " + (err.message || "Impossible de joindre le serveur"));
       console.error(err);
     }
   };
