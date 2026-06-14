@@ -19,11 +19,8 @@ const ForgotPassword = () => {
     if (loading) return;
     setLoading(true);
 
-    const { error } = await supabase.functions.invoke('send-password-reset', {
-      body: { 
-        email: email.trim().toLowerCase(), 
-        redirectTo: `${window.location.origin}/reset-password` 
-      }
+    const { error } = await supabase.auth.resetPasswordForEmail(email.trim().toLowerCase(), {
+      redirectTo: `${window.location.origin}/reset-password`,
     });
 
     setLoading(false);
