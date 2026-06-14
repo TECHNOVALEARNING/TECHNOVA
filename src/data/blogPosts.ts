@@ -1,9 +1,9 @@
-import launchImg from "@/assets/blog/launch-digital-product.jpg";
-import salesImg from "@/assets/blog/sales-strategies.jpg";
-import mobileImg from "@/assets/blog/mobile-money.jpg";
-import courseImg from "@/assets/blog/online-course.jpg";
-import kycImg from "@/assets/blog/kyc-trust.jpg";
-import fileImg from "@/assets/blog/file-protection.jpg";
+import launchImg from "@/assets/blog/launch-digital-product-real.png";
+import salesImg from "@/assets/blog/sales-strategies-real.png";
+import mobileImg from "@/assets/blog/mobile-money-real.png";
+import courseImg from "@/assets/blog/online-course-real.png";
+import kycImg from "@/assets/blog/kyc-trust-real.png";
+import fileImg from "@/assets/blog/file-protection-real.png";
 
 export interface BlogPost {
   slug: string;
