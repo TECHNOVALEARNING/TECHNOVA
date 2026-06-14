@@ -1,8 +1,8 @@
-import React, { useState, useMemo, useEffect } from "react";
+﻿import React, { useState, useMemo, useEffect } from "react";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { ToolCard } from "./ToolCard";
-import { topTools, toolsCategories, ToolCategory } from "@/data/toolsData";
+import { toolsData, toolsCategories, ToolCategory } from "@/data/toolsData";
 
 export function ToolsDirectory() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -16,7 +16,7 @@ export function ToolsDirectory() {
   }, []);
 
   const filteredTools = useMemo(() => {
-    return topTools.filter((tool) => {
+    return toolsData.filter((tool) => {
       // Filter by category
       if (activeCategory !== "All" && !tool.categories.includes(activeCategory)) {
         return false;
@@ -44,7 +44,7 @@ export function ToolsDirectory() {
           </h2>
           <p className="text-muted-foreground">
             {lang === "fr" 
-              ? "Découvrez notre sélection des outils et logiciels indispensables pour développer votre activité." 
+              ? "DÃ©couvrez notre sÃ©lection des outils et logiciels indispensables pour dÃ©velopper votre activitÃ©." 
               : "Discover our selection of essential tools and software to grow your business."}
           </p>
         </div>
@@ -79,9 +79,9 @@ export function ToolsDirectory() {
           if (lang === "en") {
             const translations: Record<string, string> = {
               "Intelligence Artificielle": "Artificial Intelligence",
-              "CMS & Création de site": "Website Builders & CMS",
+              "CMS & CrÃ©ation de site": "Website Builders & CMS",
               "Graphisme & Design": "Graphic Design",
-              "Productivité & Automatisation": "Productivity & Automation",
+              "ProductivitÃ© & Automatisation": "Productivity & Automation",
               "Fintech & Banques": "Fintech & Banking",
             };
             translatedLabel = translations[category.label] || category.label;
@@ -111,13 +111,13 @@ export function ToolsDirectory() {
       ) : (
         <div className="text-center py-20 bg-card rounded-xl border border-dashed border-border">
           <p className="text-muted-foreground text-lg mb-2">
-            {lang === "fr" ? "Aucun outil trouvé" : "No tools found"}
+            {lang === "fr" ? "Aucun outil trouvÃ©" : "No tools found"}
           </p>
           <button 
             onClick={() => { setSearchQuery(""); setActiveCategory("All"); }}
             className="text-primary font-medium hover:underline"
           >
-            {lang === "fr" ? "Réinitialiser les filtres" : "Reset filters"}
+            {lang === "fr" ? "RÃ©initialiser les filtres" : "Reset filters"}
           </button>
         </div>
       )}

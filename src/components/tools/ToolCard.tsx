@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Tag, Star } from "lucide-react";
@@ -23,7 +23,7 @@ export function ToolCard({ tool }: ToolCardProps) {
         {tool.coverImageUrl ? (
           <img 
             src={tool.coverImageUrl} 
-            alt={Couverture de } 
+            alt={`Couverture de ${tool.name}`} 
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 opacity-80 group-hover:opacity-100"
           />
         ) : (
@@ -37,7 +37,7 @@ export function ToolCard({ tool }: ToolCardProps) {
         <div className="absolute bottom-[-16px] left-4 w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-white p-2 border border-border/50 shadow-md flex items-center justify-center shrink-0 overflow-hidden z-10 transition-transform group-hover:-translate-y-1">
           <img 
             src={tool.logoUrl} 
-            alt={${tool.name} logo} 
+            alt={`${tool.name} logo`} 
             className="w-full h-full object-contain"
             onError={(e) => {
               (e.target as HTMLImageElement).src = "https://placehold.co/100x100/f1f5f9/94a3b8?text=" + tool.name.charAt(0);
