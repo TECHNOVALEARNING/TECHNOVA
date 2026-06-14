@@ -1,308 +1,308 @@
-﻿éeéxépéoérété étéyépéeé éTéoéoéléCéaétéeégéoéréyé é=é é
-é é é|é é"éIénétéeéléléiégéeénécéeé éAérétéiéféiécéiéeéléléeé"é é
-é é é|é é"éEé-écéoéméméeérécéeé"é é
-é é é|é é"éCéMéSé é&é éCéréééaétéiéoéné édéeé éséiétéeé"é é
-é é é|é é"éGéréaépéhéiéséméeé é&é éDéeéséiégéné"é é
-é é é|é é"éPéréoédéuécétéiévéiétééééé é&é éAéuétéoéméaétéiéséaétéiéoéné"é é
-é é é|é é"éMéaérékéeétéiénégé é&é éSéEéOé"é
-é é é|é é"éFéiénétéeécéhé é&é éBéaénéqéuéeésé"é;é
-é
-éeéxépéoérété éiénétéeéréféaécéeé éTéoéoélé é{é
-é é éiédé:é ésétéréiénégé;é
-é é énéaéméeé:é ésétéréiénégé;é
-é é édéeésécéréiépétéiéoéné:é ésétéréiénégé;é
-é é éwéeébéséiétéeéUérélé:é ésétéréiénégé;é
-é é écéaétéeégéoéréiéeésé:é éTéoéoéléCéaétéeégéoéréyé[é]é;é
-é é éléoégéoéUérélé:é ésétéréiénégé;é
-é é écéoévéeéréIéméaégéeéUérélé?é:é ésétéréiénégé;é
-é é éiéséFéeéaétéuéréeédé?é:é ébéoéoéléeéaéné;é
-é é épéréoéméoéCéoédéeé?é:é ésétéréiénégé;é
-é é édéiésécéoéuénété?é:é ésétéréiénégé;é
-é}é
-é
-éeéxépéoérété écéoénésété étéoéoéléséCéaétéeégéoéréiéeésé:é é{é éiédé:é éTéoéoéléCéaétéeégéoéréyé;é éléaébéeélé:é ésétéréiénégé é}é[é]é é=é é[é
-é é é{é éiédé:é é"éIénétéeéléléiégéeénécéeé éAérétéiéféiécéiéeéléléeé"é,é éléaébéeélé:é é"éIénétéeéléléiégéeénécéeé éAérétéiéféiécéiéeéléléeé"é é}é,é
-é é é{é éiédé:é é"éEé-écéoéméméeérécéeé"é,é éléaébéeélé:é é"éEé-écéoéméméeérécéeé"é é}é,é
-é é é{é éiédé:é é"éCéMéSé é&é éCéréééaétéiéoéné édéeé éséiétéeé"é,é éléaébéeélé:é é"éCéMéSé é&é éCéréééaétéiéoéné édéeé éséiétéeé"é é}é,é
-é é é{é éiédé:é é"éGéréaépéhéiéséméeé é&é éDéeéséiégéné"é,é éléaébéeélé:é é"éGéréaépéhéiéséméeé é&é éDéeéséiégéné"é é}é,é
-é é é{é éiédé:é é"éPéréoédéuécétéiévéiétééééé é&é éAéuétéoéméaétéiéséaétéiéoéné"é,é éléaébéeélé:é é"éPéréoédéuécétéiévéiétééééé é&é éAéuétéoéméaétéiéséaétéiéoéné"é é}é,é
-é é é{é éiédé:é é"éMéaérékéeétéiénégé é&é éSéEéOé"é,é éléaébéeélé:é é"éMéaérékéeétéiénégé é&é éSéEéOé"é é}é,é
-é é é{é éiédé:é é"éFéiénétéeécéhé é&é éBéaénéqéuéeésé"é,é éléaébéeélé:é é"éFéiénétéeécéhé é&é éBéaénéqéuéeésé"é é}é,é
-é]é;é
-é
-éeéxépéoérété écéoénésété étéoéoéléséDéaétéaé:é éTéoéoélé[é]é é=é é[é
-é é é{é
-é é é é éiédé:é é"écéhéaétégépété"é,é
-é é é é énéaéméeé:é é"éCéhéaétéGéPéTé"é,é
-é é é é édéeésécéréiépétéiéoéné:é é"éLé'éaéséséiésétéaénété éIéAé éléeé épéléuésé épéuéiéséséaénété épéoéuéré éléaé érééédéaécétéiéoéné,é éléeé écéoédéeé éeété élé'éaénéaéléyéséeé édéeé édéoénénéééeésé.é"é,é
-é é é é éwéeébéséiétéeéUérélé:é é"éhététépésé:é/é/écéhéaété.éoépéeénéaéié.écéoémé/é"é,é
-é é é é écéaétéeégéoéréiéeésé:é é[é"éIénétéeéléléiégéeénécéeé éAérétéiéféiécéiéeéléléeé"é]é,é
-é é é é éléoégéoéUérélé:é é"éhététépésé:é/é/éuépéléoéaédé.éwéiékéiéméeédéiéaé.éoérégé/éwéiékéiépéeédéiéaé/écéoéméméoénésé/é0é/é0é4é/éCéhéaétéGéPéTé_éléoégéoé.ésévégé"é,é
-é é é é écéoévéeéréIéméaégéeéUérélé:é é"éhététépésé:é/é/éiéméaégéeésé.éuénésépéléaéséhé.écéoémé/épéhéoétéoé-é1é6é7é7é4é4é2é1é3é6é0é1é9é-é2é1é7é8é0éeécéaédé9é9é5é?éaéuétéoé=éféoéréméaété&éféiété=écéréoépé&éqé=é8é0é&éwé=é6é0é0é&éhé=é3é0é0é"é,é
-é é é é éiéséFéeéaétéuéréeédé:é étéréuéeé
-é é é}é,é
-é é é{é
-é é é é éiédé:é é"éméiédéjéoéuérénéeéyé"é,é
-é é é é énéaéméeé:é é"éMéiédéjéoéuérénéeéyé"é,é
-é é é é édéeésécéréiépétéiéoéné:é é"éGééénéééréaétéeéuéré édé'éiéméaégéeésé éIéAé édéeé éhéaéuétéeé éqéuéaéléiétééé épéoéuéré éléaé éCéréééaétéiéoéné éaérétéiésétéiéqéuéeé éeété éléeé édéeéséiégéné.é"é,é
-é é é é éwéeébéséiétéeéUérélé:é é"éhététépésé:é/é/éwéwéwé.éméiédéjéoéuérénéeéyé.écéoémé/é"é,é
-é é é é écéaétéeégéoéréiéeésé:é é[é"éIénétéeéléléiégéeénécéeé éAérétéiéféiécéiéeéléléeé"é,é é"éGéréaépéhéiéséméeé é&é éDéeéséiégéné"é]é,é
-é é é é éléoégéoéUérélé:é é"éhététépésé:é/é/éuépéléoéaédé.éwéiékéiéméeédéiéaé.éoérégé/éwéiékéiépéeédéiéaé/écéoéméméoénésé/éeé/éeé6é/éMéiédéjéoéuérénéeéyé_éEémébéléeémé.épénégé"é,é
-é é é é écéoévéeéréIéméaégéeéUérélé:é é"éhététépésé:é/é/éiéméaégéeésé.éuénésépéléaéséhé.écéoémé/épéhéoétéoé-é1é6é8é6é1é9é1é1é2é8é8é9é2é-é3ébé3é7é0é1é3éfé7é3é6é2é?éaéuétéoé=éféoéréméaété&éféiété=écéréoépé&éqé=é8é0é&éwé=é6é0é0é&éhé=é3é0é0é"é
-é é é}é,é
-é é é{é
-é é é é éiédé:é é"éséhéoépéiéféyé"é,é
-é é é é énéaéméeé:é é"éSéhéoépéiéféyé"é,é
-é é é é édéeésécéréiépétéiéoéné:é é"éLéaé épéléaétéeéféoéréméeé éeé-écéoéméméeérécéeé éléeéaédéeéré épéoéuéré écéréééeéré éeété égéééréeéré évéoétéréeé ébéoéuétéiéqéuéeé éeéné éléiégénéeé.é"é,é
-é é é é éwéeébéséiétéeéUérélé:é é"éhététépésé:é/é/éwéwéwé.éséhéoépéiéféyé.écéoémé/é"é,é
-é é é é écéaétéeégéoéréiéeésé:é é[é"éEé-écéoéméméeérécéeé"é,é é"éCéMéSé é&é éCéréééaétéiéoéné édéeé éséiétéeé"é]é,é
-é é é é éléoégéoéUérélé:é é"éhététépésé:é/é/écédéné.éwéoérélédévéeécétéoéréléoégéoé.écéoémé/éléoégéoésé/éséhéoépéiéféyé.ésévégé"é,é
-é é é é écéoévéeéréIéméaégéeéUérélé:é é"éhététépésé:é/é/éiéméaégéeésé.éuénésépéléaéséhé.écéoémé/épéhéoétéoé-é1é5é5é6é7é4é2é0é4é9é-é0écéféeédé4éfé6éaé4é5édé?éaéuétéoé=éféoéréméaété&éféiété=écéréoépé&éqé=é8é0é&éwé=é6é0é0é&éhé=é3é0é0é"é,é
-é é é é éiéséFéeéaétéuéréeédé:é étéréuéeé
-é é é}é,é
-é é é{é
-é é é é éiédé:é é"ésétéréiépéeé"é,é
-é é é é énéaéméeé:é é"éSétéréiépéeé"é,é
-é é é é édéeésécéréiépétéiéoéné:é é"éIénéféréaésétéréuécétéuéréeé édéeé épéaéiéeéméeénété éeéné éléiégénéeé épéoéuéré éléeésé éeénétéréeépéréiéséeésé éséuéré éiénétéeérénéeété.é"é,é
-é é é é éwéeébéséiétéeéUérélé:é é"éhététépésé:é/é/ésétéréiépéeé.écéoémé/é"é,é
-é é é é écéaétéeégéoéréiéeésé:é é[é"éFéiénétéeécéhé é&é éBéaénéqéuéeésé"é,é é"éEé-écéoéméméeérécéeé"é]é,é
-é é é é éléoégéoéUérélé:é é"éhététépésé:é/é/éuépéléoéaédé.éwéiékéiéméeédéiéaé.éoérégé/éwéiékéiépéeédéiéaé/écéoéméméoénésé/ébé/ébéaé/éSétéréiépéeé_éLéoégéoé%é2éCé_éréeévéiéséeédé_é2é0é1é6é.ésévégé"é,é
-é é é é écéoévéeéréIéméaégéeéUérélé:é é"éhététépésé:é/é/éiéméaégéeésé.éuénésépéléaéséhé.écéoémé/épéhéoétéoé-é1é5é5é9é5é2é6é3é2é4é-é4ébé8é7ébé5éeé3é6éeé4é4é?éaéuétéoé=éféoéréméaété&éféiété=écéréoépé&éqé=é8é0é&éwé=é6é0é0é&éhé=é3é0é0é"é
-é é é}é,é
-é é é{é
-é é é é éiédé:é é"éféiégéméaé"é,é
-é é é é énéaéméeé:é é"éFéiégéméaé"é,é
-é é é é édéeésécéréiépétéiéoéné:é é"éOéuétéiélé édéeé écéoénécéeépétéiéoéné édé'éiénétéeéréféaécéeésé écéoéléléaébéoéréaétéiéfé épéoéuéré éléeésé éééqéuéiépéeésé.é"é,é
-é é é é éwéeébéséiétéeéUérélé:é é"éhététépésé:é/é/éwéwéwé.éféiégéméaé.écéoémé/é"é,é
-é é é é écéaétéeégéoéréiéeésé:é é[é"éGéréaépéhéiéséméeé é&é éDéeéséiégéné"é]é,é
-é é é é éléoégéoéUérélé:é é"éhététépésé:é/é/éuépéléoéaédé.éwéiékéiéméeédéiéaé.éoérégé/éwéiékéiépéeédéiéaé/écéoéméméoénésé/é3é/é3é3é/éFéiégéméaé-éléoégéoé.ésévégé"é,é
-é é é é écéoévéeéréIéméaégéeéUérélé:é é"éhététépésé:é/é/éiéméaégéeésé.éuénésépéléaéséhé.écéoémé/épéhéoétéoé-é1é6é1é1é1é6é2é6é1é7é4é7é4é-é5ébé2é1éeé8é7é9éeé1é1é3é?éaéuétéoé=éféoéréméaété&éféiété=écéréoépé&éqé=é8é0é&éwé=é6é0é0é&éhé=é3é0é0é"é
-é é é}é,é
-é é é{é
-é é é é éiédé:é é"énéoétéiéoéné"é,é
-é é é é énéaéméeé:é é"éNéoétéiéoéné"é,é
-é é é é édéeésécéréiépétéiéoéné:é é"éLé'éeésépéaécéeé édéeé étéréaévéaéiélé étéoéuété-éeéné-éuéné épéoéuéré évéoésé énéoétéeésé,é étéâécéhéeésé,é éwéiékéiésé éeété ébéaéséeésé édéeé édéoénénéééeésé.é"é,é
-é é é é éwéeébéséiétéeéUérélé:é é"éhététépésé:é/é/éwéwéwé.énéoétéiéoéné.éséoé/é"é,é
-é é é é écéaétéeégéoéréiéeésé:é é[é"éPéréoédéuécétéiévéiétééééé é&é éAéuétéoéméaétéiéséaétéiéoéné"é]é,é
-é é é é éléoégéoéUérélé:é é"éhététépésé:é/é/éuépéléoéaédé.éwéiékéiéméeédéiéaé.éoérégé/éwéiékéiépéeédéiéaé/écéoéméméoénésé/é4é/é4é5é/éNéoétéiéoéné_éaépépé_éléoégéoé.épénégé"é,é
-é é é é écéoévéeéréIéméaégéeéUérélé:é é"éhététépésé:é/é/éiéméaégéeésé.éuénésépéléaéséhé.écéoémé/épéhéoétéoé-é1é5é1é7é8é4é2é6é4é5é7é6é7é-écé6é3é9é0é4é2é7é7é7édébé?éaéuétéoé=éféoéréméaété&éféiété=écéréoépé&éqé=é8é0é&éwé=é6é0é0é&éhé=é3é0é0é"é,é
-é é é é éiéséFéeéaétéuéréeédé:é étéréuéeé
-é é é}é,é
-é é é{é
-é é é é éiédé:é é"ézéaépéiéeéré"é,é
-é é é é énéaéméeé:é é"éZéaépéiéeéré"é,é
-é é é é édéeésécéréiépétéiéoéné:é é"éCéoénénéeécétéeézé évéoésé éaépépéléiécéaétéiéoénésé éeété éaéuétéoéméaétéiéséeézé évéoésé éféléuéxé édéeé étéréaévéaéiélé éséaénésé écéoédéeéré.é"é,é
-é é é é éwéeébéséiétéeéUérélé:é é"éhététépésé:é/é/ézéaépéiéeéré.écéoémé/é"é,é
-é é é é écéaétéeégéoéréiéeésé:é é[é"éPéréoédéuécétéiévéiétééééé é&é éAéuétéoéméaétéiéséaétéiéoéné"é]é,é
-é é é é éléoégéoéUérélé:é é"éhététépésé:é/é/écédéné.éwéoérélédévéeécétéoéréléoégéoé.écéoémé/éléoégéoésé/ézéaépéiéeéré-é1é.ésévégé"é,é
-é é é é écéoévéeéréIéméaégéeéUérélé:é é"éhététépésé:é/é/éiéméaégéeésé.éuénésépéléaéséhé.écéoémé/épéhéoétéoé-é1é5é5é1é2é8é8é0é4é9é-ébéeébédéaé4éeé3é8éfé7é1é?éaéuétéoé=éféoéréméaété&éféiété=écéréoépé&éqé=é8é0é&éwé=é6é0é0é&éhé=é3é0é0é"é
-é é é}é,é
-é é é{é
-é é é é éiédé:é é"écéaénévéaé"é,é
-é é é é énéaéméeé:é é"éCéaénévéaé"é,é
-é é é é édéeésécéréiépétéiéoéné:é é"éCéréééeézé éféaécéiéléeéméeénété édéeésé édéeéséiégénésé égéréaépéhéiéqéuéeésé,é édéeésé épéréééséeénétéaétéiéoénésé éeété édéeésé éVéiédéééoésé.é"é,é
-é é é é éwéeébéséiétéeéUérélé:é é"éhététépésé:é/é/éwéwéwé.écéaénévéaé.écéoémé/é"é,é
-é é é é écéaétéeégéoéréiéeésé:é é[é"éGéréaépéhéiéséméeé é&é éDéeéséiégéné"é]é,é
-é é é é éléoégéoéUérélé:é é"éhététépésé:é/é/éuépéléoéaédé.éwéiékéiéméeédéiéaé.éoérégé/éwéiékéiépéeédéiéaé/écéoéméméoénésé/é0é/é0é8é/éCéaénévéaé_éiécéoéné_é2é0é2é1é.ésévégé"é,é
-é é é é écéoévéeéréIéméaégéeéUérélé:é é"éhététépésé:é/é/éiéméaégéeésé.éuénésépéléaéséhé.écéoémé/épéhéoétéoé-é1é6é2é6é7é8é5é7é7é4é5é7é3é-é4ébé7é9é9é3é1é5é3é4é5édé?éaéuétéoé=éféoéréméaété&éféiété=écéréoépé&éqé=é8é0é&éwé=é6é0é0é&éhé=é3é0é0é"é
-é é é}é,é
-é é é{é
-é é é é éiédé:é é"éméaéiélécéhéiémépé"é,é
-é é é é énéaéméeé:é é"éMéaéiélécéhéiémépé"é,é
-é é é é édéeésécéréiépétéiéoéné:é é"éPéléaétéeéféoéréméeé éméaérékéeétéiénégé éiénétééégéréééeé épéoéuéré élé'éeéméaéiéléiénégé éeété élé'éaéuétéoéméaétéiéséaétéiéoéné.é"é,é
-é é é é éwéeébéséiétéeéUérélé:é é"éhététépésé:é/é/éméaéiélécéhéiémépé.écéoémé/é"é,é
-é é é é écéaétéeégéoéréiéeésé:é é[é"éMéaérékéeétéiénégé é&é éSéEéOé"é]é,é
-é é é é éléoégéoéUérélé:é é"éhététépésé:é/é/éuépéléoéaédé.éwéiékéiéméeédéiéaé.éoérégé/éwéiékéiépéeédéiéaé/écéoéméméoénésé/écé/écé9é/éMéaéiélécéhéiémépé_éFéréeédédéiéeé_éIécéoéné.ésévégé"é,é
-é é é é écéoévéeéréIéméaégéeéUérélé:é é"éhététépésé:é/é/éiéméaégéeésé.éuénésépéléaéséhé.écéoémé/épéhéoétéoé-é1é5é6é3é9é8é6é7é6é8é4é9é4é-é4édéeéeé2é7é6é3éféfé3éfé?éaéuétéoé=éféoéréméaété&éféiété=écéréoépé&éqé=é8é0é&éwé=é6é0é0é&éhé=é3é0é0é"é
-é é é}é,é
-é é é{é
-é é é é éiédé:é é"éwéeébéféléoéwé"é,é
-é é é é énéaéméeé:é é"éWéeébéféléoéwé"é,é
-é é é é édéeésécéréiépétéiéoéné:é é"éCéréééeézé édéeésé éséiétéeésé éwéeébé éséuéré éméeéséuéréeé évéiéséuéeéléléeéméeénété éséaénésé ééécéréiéréeé édéeé écéoédéeé.é"é,é
-é é é é éwéeébéséiétéeéUérélé:é é"éhététépésé:é/é/éwéeébéféléoéwé.écéoémé/é"é,é
-é é é é écéaétéeégéoéréiéeésé:é é[é"éCéMéSé é&é éCéréééaétéiéoéné édéeé éséiétéeé"é]é,é
-é é é é éléoégéoéUérélé:é é"éhététépésé:é/é/écédéné.éwéoérélédévéeécétéoéréléoégéoé.écéoémé/éléoégéoésé/éwéeébéféléoéwé.ésévégé"é,é
-é é é é écéoévéeéréIéméaégéeéUérélé:é é"éhététépésé:é/é/éiéméaégéeésé.éuénésépéléaéséhé.écéoémé/épéhéoétéoé-é1é5é4é7é6é5é8é7é1é9é-édéaé2ébé5é1é1é6é9é1é6é6é?éaéuétéoé=éféoéréméaété&éféiété=écéréoépé&éqé=é8é0é&éwé=é6é0é0é&éhé=é3é0é0é"é,é
-é é é é éiéséFéeéaétéuéréeédé:é étéréuéeé
-é é é}é,é
-é é é{é
-é é é é éiédé:é é"éwéoérédépéréeésésé"é,é
-é é é é énéaéméeé:é é"éWéoérédéPéréeésésé"é,é
-é é é é édéeésécéréiépétéiéoéné:é é"éLéeé éCéMéSé éléeé épéléuésé éuétéiéléiésééé éaéué éméoénédéeé épéoéuéré écéréééeéré édéeésé ébéléoégésé éeété édéeésé éséiétéeésé éwéeébé.é"é,é
-é é é é éwéeébéséiétéeéUérélé:é é"éhététépésé:é/é/éwéoérédépéréeésésé.éoérégé/é"é,é
-é é é é écéaétéeégéoéréiéeésé:é é[é"éCéMéSé é&é éCéréééaétéiéoéné édéeé éséiétéeé"é]é,é
-é é é é éléoégéoéUérélé:é é"éhététépésé:é/é/éuépéléoéaédé.éwéiékéiéméeédéiéaé.éoérégé/éwéiékéiépéeédéiéaé/écéoéméméoénésé/é0é/é0é9é/éWéoérédépéréeésésé-éLéoégéoé.ésévégé"é,é
-é é é é écéoévéeéréIéméaégéeéUérélé:é é"éhététépésé:é/é/éiéméaégéeésé.éuénésépéléaéséhé.écéoémé/épéhéoétéoé-é1é5é0é5é3é3é0é6é2é2é2é7é9é-ébéfé7édé7éfécé9é1é8éfé4é?éaéuétéoé=éféoéréméaété&éféiété=écéréoépé&éqé=é8é0é&éwé=é6é0é0é&éhé=é3é0é0é"é
-é é é}é,é
-é é é{é
-é é é é éiédé:é é"éaéhéréeéfésé"é,é
-é é é é énéaéméeé:é é"éAéhéréeéfésé"é,é
-é é é é édéeésécéréiépétéiéoéné:é é"éOéuétéiélésé éSéEéOé étéoéuété-éeéné-éuéné épéoéuéré éoépétéiéméiéséeéré évéoétéréeé éséiétéeé éwéeébé éeété éaénéaéléyéséeéré évéoésé écéoénécéuéréréeénétésé.é"é,é
-é é é é éwéeébéséiétéeéUérélé:é é"éhététépésé:é/é/éaéhéréeéfésé.écéoémé/é"é,é
-é é é é écéaétéeégéoéréiéeésé:é é[é"éMéaérékéeétéiénégé é&é éSéEéOé"é]é,é
-é é é é éléoégéoéUérélé:é é"éhététépésé:é/é/écédéné.éwéoérélédévéeécétéoéréléoégéoé.écéoémé/éléoégéoésé/éaéhéréeéfésé-é1é.ésévégé"é,é
-é é é é écéoévéeéréIéméaégéeéUérélé:é é"éhététépésé:é/é/éiéméaégéeésé.éuénésépéléaéséhé.écéoémé/épéhéoétéoé-é1é4é6é0é9é2é5é8é9é5é9é1é7é-éaéfédéaébé8é2é7écé5é2éfé?éaéuétéoé=éféoéréméaété&éféiété=écéréoépé&éqé=é8é0é&éwé=é6é0é0é&éhé=é3é0é0é"é
-é é é}é,é
-é é é{é
-é é é é éiédé:é é"éséeéméréuéséhé"é,é
-é é é é énéaéméeé:é é"éSéEéMéréuéséhé"é,é
-é é é é édéeésécéréiépétéiéoéné:é é"éPéléaétéeéféoéréméeé éléeéaédéeéré épéoéuéré éléaé évéiéséiébéiéléiétééé éeéné éléiégénéeé éeété éléeé éméaérékéeétéiénégé édéeé écéoénétéeénéué.é"é,é
-é é é é éwéeébéséiétéeéUérélé:é é"éhététépésé:é/é/éwéwéwé.éséeéméréuéséhé.écéoémé/é"é,é
-é é é é écéaétéeégéoéréiéeésé:é é[é"éMéaérékéeétéiénégé é&é éSéEéOé"é]é,é
-é é é é éléoégéoéUérélé:é é"éhététépésé:é/é/écédéné.éwéoérélédévéeécétéoéréléoégéoé.écéoémé/éléoégéoésé/éséeéméréuéséhé-é1é.ésévégé"é,é
-é é é é écéoévéeéréIéméaégéeéUérélé:é é"éhététépésé:é/é/éiéméaégéeésé.éuénésépéléaéséhé.écéoémé/épéhéoétéoé-é1é5é5é1é2é8é8é0é4é9é-ébéeébédéaé4éeé3é8éfé7é1é?éaéuétéoé=éféoéréméaété&éféiété=écéréoépé&éqé=é8é0é&éwé=é6é0é0é&éhé=é3é0é0é"é
-é é é}é,é
-é é é{é
-é é é é éiédé:é é"éméaékéeé"é,é
-é é é é énéaéméeé:é é"éMéaékéeé é(éeéxé éIénétéeégéréoéméaété)é"é,é
-é é é é édéeésécéréiépétéiéoéné:é é"éPéléaétéeéféoéréméeé évéiéséuéeéléléeé épéoéuéré écéoénécéeévéoéiéré,é écéoénésétéréuéiéréeé éeété éaéuétéoéméaétéiéséeéré édéeésé étéâécéhéeésé écéoémépéléeéxéeésé.é"é,é
-é é é é éwéeébéséiétéeéUérélé:é é"éhététépésé:é/é/éwéwéwé.éméaékéeé.écéoémé/é"é,é
-é é é é écéaétéeégéoéréiéeésé:é é[é"éPéréoédéuécétéiévéiétééééé é&é éAéuétéoéméaétéiéséaétéiéoéné"é]é,é
-é é é é éléoégéoéUérélé:é é"éhététépésé:é/é/éiéméaégéeésé.égé2écéréoéwédé.écéoémé/éuépéléoéaédésé/épéréoédéuécété/éiéméaégéeé/éléaérégéeé_édéeétéaéiélé/éléaérégéeé_édéeétéaéiélé_é1ébécé1édécé6é2é1é0éféeécé6é0é3é4éeé4é0é2é9ébécé4éfé3édé2éfébécé/éméaékéeé-éféoéréméeéréléyé-éiénétéeégéréoéméaété.épénégé"é,é
-é é é é écéoévéeéréIéméaégéeéUérélé:é é"éhététépésé:é/é/éiéméaégéeésé.éuénésépéléaéséhé.écéoémé/épéhéoétéoé-é1é5é1é6é1é1é0é8é3é3é9é6é7é-é0ébé5é7é1é6écéaé1é3é8é7é?éaéuétéoé=éféoéréméaété&éféiété=écéréoépé&éqé=é8é0é&éwé=é6é0é0é&éhé=é3é0é0é"é
-é é é}é,é
-é é é{é
-é é é é éiédé:é é"éaéiérétéaébéléeé"é,é
-é é é é énéaéméeé:é é"éAéiérétéaébéléeé"é,é
-é é é é édéeésécéréiépétéiéoéné:é é"éCéréééeézé édéeésé éaépépéléiécéaétéiéoénésé écéoéléléaébéoéréaétéiévéeésé éséuéré éuénéeé épéléaétéeéféoéréméeé éméié-ébéaéséeé édéeé édéoénénéééeésé éméié-étéaébéléeéuéré.é"é,é
-é é é é éwéeébéséiétéeéUérélé:é é"éhététépésé:é/é/éaéiérétéaébéléeé.écéoémé/é"é,é
-é é é é écéaétéeégéoéréiéeésé:é é[é"éPéréoédéuécétéiévéiétééééé é&é éAéuétéoéméaétéiéséaétéiéoéné"é]é,é
-é é é é éléoégéoéUérélé:é é"éhététépésé:é/é/écédéné.éwéoérélédévéeécétéoéréléoégéoé.écéoémé/éléoégéoésé/éaéiérétéaébéléeé.ésévégé"é,é
-é é é é écéoévéeéréIéméaégéeéUérélé:é é"éhététépésé:é/é/éiéméaégéeésé.éuénésépéléaéséhé.écéoémé/épéhéoétéoé-é1é4é5é4é1é6é5é8é0é4é6é0é6é-écé3édé5é7ébécé8é6ébé4é0é?éaéuétéoé=éféoéréméaété&éféiété=écéréoépé&éqé=é8é0é&éwé=é6é0é0é&éhé=é3é0é0é"é
-é é é}é,é
-é é é{é
-é é é é éiédé:é é"épéaéyépéaélé"é,é
-é é é é énéaéméeé:é é"éPéaéyéPéaélé"é,é
-é é é é édéeésécéréiépétéiéoéné:é é"éSéoéléuétéiéoéné édéeé épéaéiéeéméeénété éeéné éléiégénéeé éséiémépéléeé,é éréaépéiédéeé éeété ésééécéuéréiéséééeé.é"é,é
-é é é é éwéeébéséiétéeéUérélé:é é"éhététépésé:é/é/éwéwéwé.épéaéyépéaélé.écéoémé/é"é,é
-é é é é écéaétéeégéoéréiéeésé:é é[é"éFéiénétéeécéhé é&é éBéaénéqéuéeésé"é,é é"éEé-écéoéméméeérécéeé"é]é,é
-é é é é éléoégéoéUérélé:é é"éhététépésé:é/é/éuépéléoéaédé.éwéiékéiéméeédéiéaé.éoérégé/éwéiékéiépéeédéiéaé/écéoéméméoénésé/ébé/ébé5é/éPéaéyéPéaélé.ésévégé"é,é
-é é é é écéoévéeéréIéméaégéeéUérélé:é é"éhététépésé:é/é/éiéméaégéeésé.éuénésépéléaéséhé.écéoémé/épéhéoétéoé-é1é5é5é6é7é4é0é7é5é8é-é9é0édéeé3é7é4écé1é2éaédé?éaéuétéoé=éféoéréméaété&éféiété=écéréoépé&éqé=é8é0é&éwé=é6é0é0é&éhé=é3é0é0é"é
-é é é}é,é
-é é é{é
-é é é é éiédé:é é"épéaéyésétéaécéké"é,é
-é é é é énéaéméeé:é é"éPéaéyésétéaécéké"é,é
-é é é é édéeésécéréiépétéiéoéné:é é"éLé'éiénéféréaésétéréuécétéuéréeé édéeé épéaéiéeéméeénété éeéné éléiégénéeé épéréiévéiélééégéiéééeé éeéné éAéféréiéqéuéeé.é"é,é
-é é é é éwéeébéséiétéeéUérélé:é é"éhététépésé:é/é/épéaéyésétéaécéké.écéoémé/é"é,é
-é é é é écéaétéeégéoéréiéeésé:é é[é"éFéiénétéeécéhé é&é éBéaénéqéuéeésé"é,é é"éEé-écéoéméméeérécéeé"é]é,é
-é é é é éléoégéoéUérélé:é é"éhététépésé:é/é/éuépéléoéaédé.éwéiékéiéméeédéiéaé.éoérégé/éwéiékéiépéeédéiéaé/écéoéméméoénésé/é0é/é0ébé/éPéaéyésétéaécéké_éLéoégéoé.épénégé"é,é
-é é é é écéoévéeéréIéméaégéeéUérélé:é é"éhététépésé:é/é/éiéméaégéeésé.éuénésépéléaéséhé.écéoémé/épéhéoétéoé-é1é5é5é9é5é2é6é3é2é4é-é4ébé8é7ébé5éeé3é6éeé4é4é?éaéuétéoé=éféoéréméaété&éféiété=écéréoépé&éqé=é8é0é&éwé=é6é0é0é&éhé=é3é0é0é"é
-é é é}é,é
-é é é{é
-é é é é éiédé:é é"éféléuététéeéréwéaévéeé"é,é
-é é é é énéaéméeé:é é"éFéléuététéeéréwéaévéeé"é,é
-é é é é édéeésécéréiépétéiéoéné:é é"éDééévéeéléoépépéeézé évéoétéréeé éeénétéréeépéréiéséeé éaévéeécé édéeésé épéaéiéeéméeénétésé éméoénédéiéaéuéxé éiénétééégérééésé épéoéuéré élé'éAéféréiéqéuéeé.é"é,é
-é é é é éwéeébéséiétéeéUérélé:é é"éhététépésé:é/é/éféléuététéeéréwéaévéeé.écéoémé/é"é,é
-é é é é écéaétéeégéoéréiéeésé:é é[é"éFéiénétéeécéhé é&é éBéaénéqéuéeésé"é,é é"éEé-écéoéméméeérécéeé"é]é,é
-é é é é éléoégéoéUérélé:é é"éhététépésé:é/é/éuépéléoéaédé.éwéiékéiéméeédéiéaé.éoérégé/éwéiékéiépéeédéiéaé/écéoéméméoénésé/é1é/é1ébé/éFéléuététéeéréwéaévéeé_éLéoégéoé.épénégé"é,é
-é é é é écéoévéeéréIéméaégéeéUérélé:é é"éhététépésé:é/é/éiéméaégéeésé.éuénésépéléaéséhé.écéoémé/épéhéoétéoé-é1é5é8é0é5é1é9é5é4é2é0é3é6é-écé4é7édéeé6é1é9é6ébéaé5é?éaéuétéoé=éféoéréméaété&éféiété=écéréoépé&éqé=é8é0é&éwé=é6é0é0é&éhé=é3é0é0é"é
-é é é}é,é
-é é é{é
-é é é é éiédé:é é"éféréaéméeéré"é,é
-é é é é énéaéméeé:é é"éFéréaéméeéré"é,é
-é é é é édéeésécéréiépétéiéoéné:é é"éCéoénécéeévéeézé éeété épéuébéléiéeézé édéeésé éséiétéeésé éwéeébé éiémépéréeéséséiéoénénéaénétésé éeéné éqéuéeéléqéuéeésé éméiénéuétéeésé.é"é,é
-é é é é éwéeébéséiétéeéUérélé:é é"éhététépésé:é/é/éwéwéwé.éféréaéméeéré.écéoémé/é"é,é
-é é é é écéaétéeégéoéréiéeésé:é é[é"éCéMéSé é&é éCéréééaétéiéoéné édéeé éséiétéeé"é,é é"éGéréaépéhéiéséméeé é&é éDéeéséiégéné"é]é,é
-é é é é éléoégéoéUérélé:é é"éhététépésé:é/é/écédéné.éwéoérélédévéeécétéoéréléoégéoé.écéoémé/éléoégéoésé/éféréaéméeéré.ésévégé"é,é
-é é é é écéoévéeéréIéméaégéeéUérélé:é é"éhététépésé:é/é/éiéméaégéeésé.éuénésépéléaéséhé.écéoémé/épéhéoétéoé-é1é5é8é1é2é9é1é5é1é8é6é3é3é-é8é3ébé4éeébédé1édé8é3éeé?éaéuétéoé=éféoéréméaété&éféiété=écéréoépé&éqé=é8é0é&éwé=é6é0é0é&éhé=é3é0é0é"é
-é é é}é,é
-é é é{é
-é é é é éiédé:é é"écéléaéuédéeé"é,é
-é é é é énéaéméeé:é é"éCéléaéuédéeé éAéIé"é,é
-é é é é édéeésécéréiépétéiéoéné:é é"éAéséséiésétéaénété éIéAé édééévéeéléoépépééé épéaéré éAénétéhéréoépéiécé,é épéeéréféoéréméaénété épéoéuéré élé'éaénéaéléyéséeé édéeé édéoécéuéméeénétésé.é"é,é
-é é é é éwéeébéséiétéeéUérélé:é é"éhététépésé:é/é/écéléaéuédéeé.éaéié/é"é,é
-é é é é écéaétéeégéoéréiéeésé:é é[é"éIénétéeéléléiégéeénécéeé éAérétéiéféiécéiéeéléléeé"é]é,é
-é é é é éléoégéoéUérélé:é é"éhététépésé:é/é/éuépéléoéaédé.éwéiékéiéméeédéiéaé.éoérégé/éwéiékéiépéeédéiéaé/écéoéméméoénésé/é8é/é8éeé/éAénétéhéréoépéiécé_éléoégéoé.ésévégé"é,é
-é é é é écéoévéeéréIéméaégéeéUérélé:é é"éhététépésé:é/é/éiéméaégéeésé.éuénésépéléaéséhé.écéoémé/épéhéoétéoé-é1é6é2é0é7é1é2é9é4é3é5é4é3é-ébécécé4é6é8é8éeé7é4é8é5é?éaéuétéoé=éféoéréméaété&éféiété=écéréoépé&éqé=é8é0é&éwé=é6é0é0é&éhé=é3é0é0é"é
-é é é}é,é
-é é é{é
-é é é é éiédé:é é"éwéoéoécéoéméméeérécéeé"é,é
-é é é é énéaéméeé:é é"éWéoéoéCéoéméméeérécéeé"é,é
-é é é é édéeésécéréiépétéiéoéné:é é"éLé'éeéxétéeénéséiéoéné éeé-écéoéméméeérécéeé éoépéeéné-éséoéuérécéeé éléaé épéléuésé épéoépéuéléaéiéréeé épéoéuéré éWéoérédéPéréeésésé.é"é,é
-é é é é éwéeébéséiétéeéUérélé:é é"éhététépésé:é/é/éwéoéoécéoéméméeérécéeé.écéoémé/é"é,é
-é é é é écéaétéeégéoéréiéeésé:é é[é"éEé-écéoéméméeérécéeé"é,é é"éCéMéSé é&é éCéréééaétéiéoéné édéeé éséiétéeé"é]é,é
-é é é é éléoégéoéUérélé:é é"éhététépésé:é/é/éuépéléoéaédé.éwéiékéiéméeédéiéaé.éoérégé/éwéiékéiépéeédéiéaé/écéoéméméoénésé/é2é/é2éaé/éWéoéoéCéoéméméeérécéeé_éléoégéoé.ésévégé"é,é
-é é é é écéoévéeéréIéméaégéeéUérélé:é é"éhététépésé:é/é/éiéméaégéeésé.éuénésépéléaéséhé.écéoémé/épéhéoétéoé-é1é4é7é2é8é5é1é2é9é4é6é0é8é-é0é6é2éfé8é2é4édé2é9écécé?éaéuétéoé=éféoéréméaété&éféiété=écéréoépé&éqé=é8é0é&éwé=é6é0é0é&éhé=é3é0é0é"é
-é é é}é,é
-é é é{é
-é é é é éiédé:é é"ébéréeévéoé"é,é
-é é é é énéaéméeé:é é"éBéréeévéoé é(éeéxé éSéeénédéiénébéléuéeé)é"é,é
-é é é é édéeésécéréiépétéiéoéné:é é"éPéléaétéeéféoéréméeé éméaérékéeétéiénégé écéoémépéléèétéeé:é éeéméaéiélésé,é éSéMéSé,é écéhéaété éeété éaéuétéoéméaétéiéséaétéiéoéné.é"é,é
-é é é é éwéeébéséiétéeéUérélé:é é"éhététépésé:é/é/éwéwéwé.ébéréeévéoé.écéoémé/é"é,é
-é é é é écéaétéeégéoéréiéeésé:é é[é"éMéaérékéeétéiénégé é&é éSéEéOé"é]é,é
-é é é é éléoégéoéUérélé:é é"éhététépésé:é/é/éuépéléoéaédé.éwéiékéiéméeédéiéaé.éoérégé/éwéiékéiépéeédéiéaé/écéoéméméoénésé/é6é/é6éfé/éBéréeévéoé_éLéoégéoé.épénégé"é,é
-é é é é écéoévéeéréIéméaégéeéUérélé:é é"éhététépésé:é/é/éiéméaégéeésé.éuénésépéléaéséhé.écéoémé/épéhéoétéoé-é1é5é1é6é3é2é1é3é1é8é4é2é3é-éfé0é6éfé8é5éeé5é0é4ébé3é?éaéuétéoé=éféoéréméaété&éféiété=écéréoépé&éqé=é8é0é&éwé=é6é0é0é&éhé=é3é0é0é"é
-é é é}é,é
-é é é{é
-é é é é éiédé:é é"éaédéoébéeécécé"é,é
-é é é é énéaéméeé:é é"éAédéoébéeé éCéréeéaétéiévéeé éCéléoéuédé"é,é
-é é é é édéeésécéréiépétéiéoéné:é é"éLéaé éséuéiétéeé édé'éoéuétéiélésé écéréééaétéiéfésé édéeé éréééféééréeénécéeé épéoéuéré éléaé épéhéoétéoé,é éléaé éVéiédéééoé éeété éléeé édéeéséiégéné.é"é,é
-é é é é éwéeébéséiétéeéUérélé:é é"éhététépésé:é/é/éwéwéwé.éaédéoébéeé.écéoémé/écéréeéaétéiévéeécéléoéuédé.éhétémélé"é,é
-é é é é écéaétéeégéoéréiéeésé:é é[é"éGéréaépéhéiéséméeé é&é éDéeéséiégéné"é]é,é
-é é é é éléoégéoéUérélé:é é"éhététépésé:é/é/éuépéléoéaédé.éwéiékéiéméeédéiéaé.éoérégé/éwéiékéiépéeédéiéaé/écéoéméméoénésé/é4é/é4écé/éAédéoébéeé_éCéréeéaétéiévéeé_éCéléoéuédé_éréaéiénébéoéwé_éiécéoéné.ésévégé"é,é
-é é é é écéoévéeéréIéméaégéeéUérélé:é é"éhététépésé:é/é/éiéméaégéeésé.éuénésépéléaéséhé.écéoémé/épéhéoétéoé-é1é6é2é6é7é8é5é7é7é4é6é2é5é-édédécédédécé3é4é4é5éeé9é?éaéuétéoé=éféoéréméaété&éféiété=écéréoépé&éqé=é8é0é&éwé=é6é0é0é&éhé=é3é0é0é"é
-é é é}é,é
-é é é{é
-é é é é éiédé:é é"éséléaécéké"é,é
-é é é é énéaéméeé:é é"éSéléaécéké"é,é
-é é é é édéeésécéréiépétéiéoéné:é é"éPéléaétéeéféoéréméeé édéeé écéoéméméuénéiécéaétéiéoéné écéoéléléaébéoéréaétéiévéeé épéoéuéré éléeésé éééqéuéiépéeésé.é"é,é
-é é é é éwéeébéséiétéeéUérélé:é é"éhététépésé:é/é/éséléaécéké.écéoémé/é"é,é
-é é é é écéaétéeégéoéréiéeésé:é é[é"éPéréoédéuécétéiévéiétééééé é&é éAéuétéoéméaétéiéséaétéiéoéné"é]é,é
-é é é é éléoégéoéUérélé:é é"éhététépésé:é/é/éuépéléoéaédé.éwéiékéiéméeédéiéaé.éoérégé/éwéiékéiépéeédéiéaé/écéoéméméoénésé/édé/édé5é/éSéléaécéké_éiécéoéné_é2é0é1é9é.ésévégé"é,é
-é é é é écéoévéeéréIéméaégéeéUérélé:é é"éhététépésé:é/é/éiéméaégéeésé.éuénésépéléaéséhé.écéoémé/épéhéoétéoé-é1é5é2é2é0é7é1é8é2é0é0é8é1é-é0é0é9éfé0é1é2é9écé7é1écé?éaéuétéoé=éféoéréméaété&éféiété=écéréoépé&éqé=é8é0é&éwé=é6é0é0é&éhé=é3é0é0é"é
-é é é}é,é
-é é é{é
-é é é é éiédé:é é"étéréeéléléoé"é,é
-é é é é énéaéméeé:é é"éTéréeéléléoé"é,é
-é é é é édéeésécéréiépétéiéoéné:é é"éOéuétéiélé édéeé égéeésétéiéoéné édéeé épéréoéjéeété évéiéséuéeélé ébéaésééé éséuéré éléeésé étéaébéléeéaéuéxé éKéaénébéaéné.é"é,é
-é é é é éwéeébéséiétéeéUérélé:é é"éhététépésé:é/é/étéréeéléléoé.écéoémé/é"é,é
-é é é é écéaétéeégéoéréiéeésé:é é[é"éPéréoédéuécétéiévéiétééééé é&é éAéuétéoéméaétéiéséaétéiéoéné"é]é,é
-é é é é éléoégéoéUérélé:é é"éhététépésé:é/é/éuépéléoéaédé.éwéiékéiéméeédéiéaé.éoérégé/éwéiékéiépéeédéiéaé/écéoéméméoénésé/é7é/é7éaé/éTéréeéléléoé-éléoégéoé-ébéléuéeé.ésévégé"é,é
-é é é é écéoévéeéréIéméaégéeéUérélé:é é"éhététépésé:é/é/éiéméaégéeésé.éuénésépéléaéséhé.écéoémé/épéhéoétéoé-é1é5é3é1é4é0é3é0é0é9é2é8é4é-é4é4é0éfé0é8é0édé1éeé1é2é?éaéuétéoé=éféoéréméaété&éféiété=écéréoépé&éqé=é8é0é&éwé=é6é0é0é&éhé=é3é0é0é"é
-é é é}é,é
-é é é{é
-é é é é éiédé:é é"égéiétéhéuébé"é,é
-é é é é énéaéméeé:é é"éGéiétéHéuébé"é,é
-é é é é édéeésécéréiépétéiéoéné:é é"éPéléaétéeéféoéréméeé édéeé édééévéeéléoépépéeéméeénété écéoéléléaébéoéréaétéiéfé épéoéuéré élé'éhééébéeérégéeéméeénété édéeé écéoédéeé éséoéuérécéeé.é"é,é
-é é é é éwéeébéséiétéeéUérélé:é é"éhététépésé:é/é/égéiétéhéuébé.écéoémé/é"é,é
-é é é é écéaétéeégéoéréiéeésé:é é[é"éPéréoédéuécétéiévéiétééééé é&é éAéuétéoéméaétéiéséaétéiéoéné"é,é é"éCéMéSé é&é éCéréééaétéiéoéné édéeé éséiétéeé"é]é,é
-é é é é éléoégéoéUérélé:é é"éhététépésé:é/é/éuépéléoéaédé.éwéiékéiéméeédéiéaé.éoérégé/éwéiékéiépéeédéiéaé/écéoéméméoénésé/é9é/é9é1é/éOécétéiécéoénésé-éméaéréké-égéiétéhéuébé.ésévégé"é,é
-é é é é écéoévéeéréIéméaégéeéUérélé:é é"éhététépésé:é/é/éiéméaégéeésé.éuénésépéléaéséhé.écéoémé/épéhéoétéoé-é1é6é1é8é4é0é1é4é7é1é3é5é3é-ébé9é8éaéféeéeé0ébé2éeébé?éaéuétéoé=éféoéréméaété&éféiété=écéréoépé&éqé=é8é0é&éwé=é6é0é0é&éhé=é3é0é0é"é
-é é é}é,é
-é é é{é
-é é é é éiédé:é é"évéeérécéeélé"é,é
-é é é é énéaéméeé:é é"éVéeérécéeélé"é,é
-é é é é édéeésécéréiépétéiéoéné:é é"éPéléaétéeéféoéréméeé écéléoéuédé épéoéuéré éléeésé éféréaéméeéwéoérékésé éféréoénétéeénédé éeété éléeésé éséiétéeésé ésétéaétéiéqéuéeésé.é"é,é
-é é é é éwéeébéséiétéeéUérélé:é é"éhététépésé:é/é/évéeérécéeélé.écéoémé/é"é,é
-é é é é écéaétéeégéoéréiéeésé:é é[é"éCéMéSé é&é éCéréééaétéiéoéné édéeé éséiétéeé"é]é,é
-é é é é éléoégéoéUérélé:é é"éhététépésé:é/é/éaéséséeétésé.évéeérécéeélé.écéoémé/éiéméaégéeé/éuépéléoéaédé/évé1é5é8é8é8é0é5é8é5é8é/éréeépéoéséiétéoéréiéeésé/évéeérécéeélé/éléoégéoé.épénégé"é,é
-é é é é écéoévéeéréIéméaégéeéUérélé:é é"éhététépésé:é/é/éiéméaégéeésé.éuénésépéléaéséhé.écéoémé/épéhéoétéoé-é1é5é5é5é0é6é6é9é3é1é-é4é3é6é5édé1é4ébéaébé8écé?éaéuétéoé=éféoéréméaété&éféiété=écéréoépé&éqé=é8é0é&éwé=é6é0é0é&éhé=é3é0é0é"é
-é é é}é,é
-é é é{é
-é é é é éiédé:é é"éséuépéaébéaéséeé"é,é
-é é é é énéaéméeé:é é"éSéuépéaébéaéséeé"é,é
-é é é é édéeésécéréiépétéiéoéné:é é"éLé'éaélétéeérénéaétéiévéeé éoépéeéné-éséoéuérécéeé éàé éFéiéréeébéaéséeé épéoéuéré évéoétéréeé ébéaécékéeénédé.é"é,é
-é é é é éwéeébéséiétéeéUérélé:é é"éhététépésé:é/é/éséuépéaébéaéséeé.écéoémé/é"é,é
-é é é é écéaétéeégéoéréiéeésé:é é[é"éPéréoédéuécétéiévéiétééééé é&é éAéuétéoéméaétéiéséaétéiéoéné"é,é é"éCéMéSé é&é éCéréééaétéiéoéné édéeé éséiétéeé"é]é,é
-é é é é éléoégéoéUérélé:é é"éhététépésé:é/é/éséeéeékéléoégéoé.écéoémé/éiéméaégéeésé/éSé/éséuépéaébéaéséeé-éléoégéoé-éDéCéCé6é7é6éFéFéEé2é-éséeéeékéléoégéoé.écéoémé.épénégé"é,é
-é é é é écéoévéeéréIéméaégéeéUérélé:é é"éhététépésé:é/é/éiéméaégéeésé.éuénésépéléaéséhé.écéoémé/épéhéoétéoé-é1é5é5é8é4é9é4é9é4é9é-éeéfé0é1é0écébédécécé3é1é?éaéuétéoé=éféoéréméaété&éféiété=écéréoépé&éqé=é8é0é&éwé=é6é0é0é&éhé=é3é0é0é"é
-é é é}é,é
-é é é{é
-é é é é éiédé:é é"éhéuébésépéoété"é,é
-é é é é énéaéméeé:é é"éHéuébéSépéoété"é,é
-é é é é édéeésécéréiépétéiéoéné:é é"éLéoégéiécéiéeélé éCéRéMé écéoémépéléeété épéoéuéré éléeé éméaérékéeétéiénégé,é éléeésé évéeénétéeésé éeété éléeé éséeérévéiécéeé écéléiéeénété.é"é,é
-é é é é éwéeébéséiétéeéUérélé:é é"éhététépésé:é/é/éwéwéwé.éhéuébésépéoété.écéoémé/é"é,é
-é é é é écéaétéeégéoéréiéeésé:é é[é"éMéaérékéeétéiénégé é&é éSéEéOé"é]é,é
-é é é é éléoégéoéUérélé:é é"éhététépésé:é/é/éuépéléoéaédé.éwéiékéiéméeédéiéaé.éoérégé/éwéiékéiépéeédéiéaé/écéoéméméoénésé/é3é/é3éfé/éHéuébéSépéoété_éLéoégéoé.ésévégé"é,é
-é é é é écéoévéeéréIéméaégéeéUérélé:é é"éhététépésé:é/é/éiéméaégéeésé.éuénésépéléaéséhé.écéoémé/épéhéoétéoé-é1é5é5é2é6é6é4é7é3é0é-édé3é0é7écéaé8é8é4é9é7é8é?éaéuétéoé=éféoéréméaété&éféiété=écéréoépé&éqé=é8é0é&éwé=é6é0é0é&éhé=é3é0é0é"é
-é é é}é,é
-é é é{é
-é é é é éiédé:é é"égéoéoégéléeéaénéaéléyétéiécésé"é,é
-é é é é énéaéméeé:é é"éGéoéoégéléeé éAénéaéléyétéiécésé"é,é
-é é é é édéeésécéréiépétéiéoéné:é é"éOéuétéiélé édé'éaénéaéléyéséeé édé'éaéuédéiéeénécéeé épéuéiéséséaénété épéoéuéré évéoétéréeé éséiétéeé éwéeébé.é"é,é
-é é é é éwéeébéséiétéeéUérélé:é é"éhététépésé:é/é/éaénéaéléyétéiécésé.égéoéoégéléeé.écéoémé/é"é,é
-é é é é écéaétéeégéoéréiéeésé:é é[é"éMéaérékéeétéiénégé é&é éSéEéOé"é]é,é
-é é é é éléoégéoéUérélé:é é"éhététépésé:é/é/éuépéléoéaédé.éwéiékéiéméeédéiéaé.éoérégé/éwéiékéiépéeédéiéaé/écéoéméméoénésé/é8é/é8é9é/éGéoéoégéléeé_éAénéaéléyétéiécésé_éiécéoéné_é%é2é8é2é0é2é3é%é2é9é.ésévégé"é,é
-é é é é écéoévéeéréIéméaégéeéUérélé:é é"éhététépésé:é/é/éiéméaégéeésé.éuénésépéléaéséhé.écéoémé/épéhéoétéoé-é1é5é5é1é2é8é8é0é4é9é-ébéeébédéaé4éeé3é8éfé7é1é?éaéuétéoé=éféoéréméaété&éféiété=écéréoépé&éqé=é8é0é&éwé=é6é0é0é&éhé=é3é0é0é"é
-é é é}é
-é]é;é
+export type ToolCategory = 
+  | "Intelligence Artificielle" 
+  | "E-commerce" 
+  | "CMS & Création de site" 
+  | "Graphisme & Design" 
+  | "Productivité & Automatisation" 
+  | "Marketing & SEO"
+  | "Fintech & Banques";
+
+export interface Tool {
+  id: string;
+  name: string;
+  description: string;
+  websiteUrl: string;
+  categories: ToolCategory[];
+  logoUrl: string;
+  coverImageUrl?: string;
+  isFeatured?: boolean;
+  promoCode?: string;
+  discount?: string;
+}
+
+export const toolsCategories: { id: ToolCategory; label: string }[] = [
+  { id: "Intelligence Artificielle", label: "Intelligence Artificielle" },
+  { id: "E-commerce", label: "E-commerce" },
+  { id: "CMS & Création de site", label: "CMS & Création de site" },
+  { id: "Graphisme & Design", label: "Graphisme & Design" },
+  { id: "Productivité & Automatisation", label: "Productivité & Automatisation" },
+  { id: "Marketing & SEO", label: "Marketing & SEO" },
+  { id: "Fintech & Banques", label: "Fintech & Banques" },
+];
+
+export const toolsData: Tool[] = [
+  {
+    id: "chatgpt",
+    name: "ChatGPT",
+    description: "L'assistant IA le plus puissant pour la rédaction, le code et l'analyse de données.",
+    websiteUrl: "https://chat.openai.com/",
+    categories: ["Intelligence Artificielle"],
+    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg",
+    coverImageUrl: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=600&h=300",
+    isFeatured: true
+  },
+  {
+    id: "midjourney",
+    name: "Midjourney",
+    description: "Générateur d'images IA de haute qualité pour la création artistique et le design.",
+    websiteUrl: "https://www.midjourney.com/",
+    categories: ["Intelligence Artificielle", "Graphisme & Design"],
+    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/e/e6/Midjourney_Emblem.png",
+    coverImageUrl: "https://images.unsplash.com/photo-1686191128892-3b37013f7362?auto=format&fit=crop&q=80&w=600&h=300"
+  },
+  {
+    id: "shopify",
+    name: "Shopify",
+    description: "La plateforme e-commerce leader pour créer et gérer votre boutique en ligne.",
+    websiteUrl: "https://www.shopify.com/",
+    categories: ["E-commerce", "CMS & Création de site"],
+    logoUrl: "https://cdn.worldvectorlogo.com/logos/shopify.svg",
+    coverImageUrl: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&q=80&w=600&h=300",
+    isFeatured: true
+  },
+  {
+    id: "stripe",
+    name: "Stripe",
+    description: "Infrastructure de paiement en ligne pour les entreprises sur internet.",
+    websiteUrl: "https://stripe.com/",
+    categories: ["Fintech & Banques", "E-commerce"],
+    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg",
+    coverImageUrl: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&q=80&w=600&h=300"
+  },
+  {
+    id: "figma",
+    name: "Figma",
+    description: "Outil de conception d'interfaces collaboratif pour les équipes.",
+    websiteUrl: "https://www.figma.com/",
+    categories: ["Graphisme & Design"],
+    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/3/33/Figma-logo.svg",
+    coverImageUrl: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=600&h=300"
+  },
+  {
+    id: "notion",
+    name: "Notion",
+    description: "L'espace de travail tout-en-un pour vos notes, tâches, wikis et bases de données.",
+    websiteUrl: "https://www.notion.so/",
+    categories: ["Productivité & Automatisation"],
+    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png",
+    coverImageUrl: "https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&q=80&w=600&h=300",
+    isFeatured: true
+  },
+  {
+    id: "zapier",
+    name: "Zapier",
+    description: "Connectez vos applications et automatisez vos flux de travail sans coder.",
+    websiteUrl: "https://zapier.com/",
+    categories: ["Productivité & Automatisation"],
+    logoUrl: "https://cdn.worldvectorlogo.com/logos/zapier-1.svg",
+    coverImageUrl: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=600&h=300"
+  },
+  {
+    id: "canva",
+    name: "Canva",
+    description: "Créez facilement des designs graphiques, des présentations et des vidéos.",
+    websiteUrl: "https://www.canva.com/",
+    categories: ["Graphisme & Design"],
+    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/0/08/Canva_icon_2021.svg",
+    coverImageUrl: "https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&q=80&w=600&h=300"
+  },
+  {
+    id: "mailchimp",
+    name: "Mailchimp",
+    description: "Plateforme marketing intégrée pour l'emailing et l'automatisation.",
+    websiteUrl: "https://mailchimp.com/",
+    categories: ["Marketing & SEO"],
+    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/c/c9/Mailchimp_Freddie_Icon.svg",
+    coverImageUrl: "https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?auto=format&fit=crop&q=80&w=600&h=300"
+  },
+  {
+    id: "webflow",
+    name: "Webflow",
+    description: "Créez des sites web sur mesure visuellement sans écrire de code.",
+    websiteUrl: "https://webflow.com/",
+    categories: ["CMS & Création de site"],
+    logoUrl: "https://cdn.worldvectorlogo.com/logos/webflow.svg",
+    coverImageUrl: "https://images.unsplash.com/photo-1547658719-da2b51169166?auto=format&fit=crop&q=80&w=600&h=300",
+    isFeatured: true
+  },
+  {
+    id: "wordpress",
+    name: "WordPress",
+    description: "Le CMS le plus utilisé au monde pour créer des blogs et des sites web.",
+    websiteUrl: "https://wordpress.org/",
+    categories: ["CMS & Création de site"],
+    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/0/09/Wordpress-Logo.svg",
+    coverImageUrl: "https://images.unsplash.com/photo-1505330622279-bf7d7fc918f4?auto=format&fit=crop&q=80&w=600&h=300"
+  },
+  {
+    id: "ahrefs",
+    name: "Ahrefs",
+    description: "Outils SEO tout-en-un pour optimiser votre site web et analyser vos concurrents.",
+    websiteUrl: "https://ahrefs.com/",
+    categories: ["Marketing & SEO"],
+    logoUrl: "https://cdn.worldvectorlogo.com/logos/ahrefs-1.svg",
+    coverImageUrl: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=600&h=300"
+  },
+  {
+    id: "semrush",
+    name: "SEMrush",
+    description: "Plateforme leader pour la visibilité en ligne et le marketing de contenu.",
+    websiteUrl: "https://www.semrush.com/",
+    categories: ["Marketing & SEO"],
+    logoUrl: "https://cdn.worldvectorlogo.com/logos/semrush-1.svg",
+    coverImageUrl: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=600&h=300"
+  },
+  {
+    id: "make",
+    name: "Make (ex Integromat)",
+    description: "Plateforme visuelle pour concevoir, construire et automatiser des tâches complexes.",
+    websiteUrl: "https://www.make.com/",
+    categories: ["Productivité & Automatisation"],
+    logoUrl: "https://images.g2crowd.com/uploads/product/image/large_detail/large_detail_1bc1dc6210fec6034e4029bc4f3d2fbc/make-formerly-integromat.png",
+    coverImageUrl: "https://images.unsplash.com/photo-1516110833967-0b5716ca1387?auto=format&fit=crop&q=80&w=600&h=300"
+  },
+  {
+    id: "airtable",
+    name: "Airtable",
+    description: "Créez des applications collaboratives sur une plateforme mi-base de données mi-tableur.",
+    websiteUrl: "https://airtable.com/",
+    categories: ["Productivité & Automatisation"],
+    logoUrl: "https://cdn.worldvectorlogo.com/logos/airtable.svg",
+    coverImageUrl: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&q=80&w=600&h=300"
+  },
+  {
+    id: "paypal",
+    name: "PayPal",
+    description: "Solution de paiement en ligne simple, rapide et sécurisée.",
+    websiteUrl: "https://www.paypal.com/",
+    categories: ["Fintech & Banques", "E-commerce"],
+    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg",
+    coverImageUrl: "https://images.unsplash.com/photo-1556740758-90de374c12ad?auto=format&fit=crop&q=80&w=600&h=300"
+  },
+  {
+    id: "paystack",
+    name: "Paystack",
+    description: "L'infrastructure de paiement en ligne privilégiée en Afrique.",
+    websiteUrl: "https://paystack.com/",
+    categories: ["Fintech & Banques", "E-commerce"],
+    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/0/0b/Paystack_Logo.png",
+    coverImageUrl: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&q=80&w=600&h=300"
+  },
+  {
+    id: "flutterwave",
+    name: "Flutterwave",
+    description: "Développez votre entreprise avec des paiements mondiaux intégrés pour l'Afrique.",
+    websiteUrl: "https://flutterwave.com/",
+    categories: ["Fintech & Banques", "E-commerce"],
+    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/1/1b/Flutterwave_Logo.png",
+    coverImageUrl: "https://images.unsplash.com/photo-1580519542036-c47de6196ba5?auto=format&fit=crop&q=80&w=600&h=300"
+  },
+  {
+    id: "framer",
+    name: "Framer",
+    description: "Concevez et publiez des sites web impressionnants en quelques minutes.",
+    websiteUrl: "https://www.framer.com/",
+    categories: ["CMS & Création de site", "Graphisme & Design"],
+    logoUrl: "https://cdn.worldvectorlogo.com/logos/framer.svg",
+    coverImageUrl: "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?auto=format&fit=crop&q=80&w=600&h=300"
+  },
+  {
+    id: "claude",
+    name: "Claude AI",
+    description: "Assistant IA développé par Anthropic, performant pour l'analyse de documents.",
+    websiteUrl: "https://claude.ai/",
+    categories: ["Intelligence Artificielle"],
+    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/8/8e/Anthropic_logo.svg",
+    coverImageUrl: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&q=80&w=600&h=300"
+  },
+  {
+    id: "woocommerce",
+    name: "WooCommerce",
+    description: "L'extension e-commerce open-source la plus populaire pour WordPress.",
+    websiteUrl: "https://woocommerce.com/",
+    categories: ["E-commerce", "CMS & Création de site"],
+    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/2/2a/WooCommerce_logo.svg",
+    coverImageUrl: "https://images.unsplash.com/photo-1472851294608-062f824d29cc?auto=format&fit=crop&q=80&w=600&h=300"
+  },
+  {
+    id: "brevo",
+    name: "Brevo (ex Sendinblue)",
+    description: "Plateforme marketing complète: emails, SMS, chat et automatisation.",
+    websiteUrl: "https://www.brevo.com/",
+    categories: ["Marketing & SEO"],
+    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/6/6f/Brevo_Logo.png",
+    coverImageUrl: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=600&h=300"
+  },
+  {
+    id: "adobecc",
+    name: "Adobe Creative Cloud",
+    description: "La suite d'outils créatifs de référence pour la photo, la vidéo et le design.",
+    websiteUrl: "https://www.adobe.com/creativecloud.html",
+    categories: ["Graphisme & Design"],
+    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/4/4c/Adobe_Creative_Cloud_rainbow_icon.svg",
+    coverImageUrl: "https://images.unsplash.com/photo-1626785774625-ddcddc3445e9?auto=format&fit=crop&q=80&w=600&h=300"
+  },
+  {
+    id: "slack",
+    name: "Slack",
+    description: "Plateforme de communication collaborative pour les équipes.",
+    websiteUrl: "https://slack.com/",
+    categories: ["Productivité & Automatisation"],
+    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/d/d5/Slack_icon_2019.svg",
+    coverImageUrl: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=600&h=300"
+  },
+  {
+    id: "trello",
+    name: "Trello",
+    description: "Outil de gestion de projet visuel basé sur les tableaux Kanban.",
+    websiteUrl: "https://trello.com/",
+    categories: ["Productivité & Automatisation"],
+    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/7/7a/Trello-logo-blue.svg",
+    coverImageUrl: "https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&q=80&w=600&h=300"
+  },
+  {
+    id: "github",
+    name: "GitHub",
+    description: "Plateforme de développement collaboratif pour l'hébergement de code source.",
+    websiteUrl: "https://github.com/",
+    categories: ["Productivité & Automatisation", "CMS & Création de site"],
+    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg",
+    coverImageUrl: "https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?auto=format&fit=crop&q=80&w=600&h=300"
+  },
+  {
+    id: "vercel",
+    name: "Vercel",
+    description: "Plateforme cloud pour les frameworks frontend et les sites statiques.",
+    websiteUrl: "https://vercel.com/",
+    categories: ["CMS & Création de site"],
+    logoUrl: "https://assets.vercel.com/image/upload/v1588805858/repositories/vercel/logo.png",
+    coverImageUrl: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=600&h=300"
+  },
+  {
+    id: "supabase",
+    name: "Supabase",
+    description: "L'alternative open-source à Firebase pour votre backend.",
+    websiteUrl: "https://supabase.com/",
+    categories: ["Productivité & Automatisation", "CMS & Création de site"],
+    logoUrl: "https://seeklogo.com/images/S/supabase-logo-DCC676FFE2-seeklogo.com.png",
+    coverImageUrl: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&q=80&w=600&h=300"
+  },
+  {
+    id: "hubspot",
+    name: "HubSpot",
+    description: "Logiciel CRM complet pour le marketing, les ventes et le service client.",
+    websiteUrl: "https://www.hubspot.com/",
+    categories: ["Marketing & SEO"],
+    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/3/3f/HubSpot_Logo.svg",
+    coverImageUrl: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=600&h=300"
+  },
+  {
+    id: "googleanalytics",
+    name: "Google Analytics",
+    description: "Outil d'analyse d'audience puissant pour votre site web.",
+    websiteUrl: "https://analytics.google.com/",
+    categories: ["Marketing & SEO"],
+    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/8/89/Google_Analytics_icon_%282023%29.svg",
+    coverImageUrl: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=600&h=300"
+  }
+];
