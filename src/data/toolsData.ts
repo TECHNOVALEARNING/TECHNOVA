@@ -29,7 +29,7 @@ export const toolsCategories: { id: ToolCategory; label: string }[] = [
   { id: "Fintech & Banques", label: "Fintech & Banques" },
 ];
 
-export const topTools: Tool[] = [
+export const toolsData: Tool[] = [
   // --- INTELLIGENCE ARTIFICIELLE ---
   {
     id: "antigravity",
