@@ -150,7 +150,7 @@ const CreateProduct = () => {
           if (fileFormat === "video") return !!videoUrl.trim();
           return !!downloadFile && !!fileFormat;
         }
-        if (selectedType === "course") return courseLessons.length > 0;
+        if (selectedType === "course") return courseModules.length > 0;
         return true;
       default: return false;
     }
@@ -166,12 +166,13 @@ const CreateProduct = () => {
       const { data, error } = await supabase.functions.invoke("rewrite-description", {
         body: {
           title,
-          description: `Réécris uniquement le titre du produit "${title}" (type: ${selectedType || "fichier numérique"}) pour le rendre plus accrocheur, professionnel et vendeur. Réponds UNIQUEMENT avec le nouveau titre, sans guillemets, sans explication.`,
+          description: `Récris uniquement le titre du produit "${title}" (type: ${selectedType || "fichier numérique"}) pour le rendre plus accrocheur, professionnel et vendeur. Réponds UNIQUEMENT avec le nouveau titre, sans guillemets, sans explication.`,
           productType: selectedType || "file",
+          mode: "title",
         },
       });
       if (error) throw error;
-      const newTitle = (data?.description || "").replace(/<[^>]*>/g, "").trim();
+      const newTitle = (data?.title || data?.description || "").replace(/<[^>]*>/g, "").trim();
       if (newTitle) {
         setTitle(newTitle);
         toast.success("Titre amélioré par l'IA !");

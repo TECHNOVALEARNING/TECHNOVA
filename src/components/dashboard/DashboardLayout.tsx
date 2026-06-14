@@ -27,11 +27,14 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     document.documentElement.setAttribute('data-theme', 'light');
 
     return () => {
-      // Restaurer le thème de l'utilisateur quand il quitte le Dashboard
-      const theme = localStorage.getItem('technova_theme') || 'light';
-      document.documentElement.setAttribute('data-theme', theme);
-      if (theme === 'dark') {
-        document.documentElement.classList.add('dark');
+      // Restaurer le thème de l'utilisateur uniquement s'il quitte vraiment le Dashboard
+      // S'il navigue vers une autre page du dashboard, on ne restaure pas pour éviter le flash sombre
+      if (!window.location.pathname.startsWith('/dashboard')) {
+        const theme = localStorage.getItem('technova_theme') || 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+        }
       }
     };
   }, []);
