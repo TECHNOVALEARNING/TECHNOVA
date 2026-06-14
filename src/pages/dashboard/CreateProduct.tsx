@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -24,26 +24,26 @@ const productTypes = [
   {
     type: "file" as ProductType,
     label: "Fichiers",
-    description: "E-books, templates, fichiers audio : vos clients tÃ©lÃ©chargent instantanÃ©ment aprÃ¨s achat.",
+    description: "E-books, templates, fichiers audio : vos clients téléchargent instantanément après achat.",
     icon: FileText,
     color: "bg-amber-500",
-    features: ["Tous formats acceptÃ©s (PDF, ZIP, MP3â€¦)", "Livraison automatique", "TÃ©lÃ©chargement sÃ©curisÃ©"],
+    features: ["Tous formats acceptés (PDF, ZIP, MP3…)", "Livraison automatique", "Téléchargement sécurisé"],
   },
   {
     type: "course" as ProductType,
     label: "Formations",
-    description: "CrÃ©ez des formations structurÃ©es avec vidÃ©o, texte et contenu tÃ©lÃ©chargeable.",
+    description: "Créez des formations structurées avec vidéo, texte et contenu téléchargeable.",
     icon: GraduationCap,
     color: "bg-blue-500",
-    features: ["Contenu vidÃ©o, texte & tÃ©lÃ©chargeable", "Suivi de progression des Ã©tudiants", "Modules & leÃ§ons structurÃ©s"],
+    features: ["Contenu vidéo, texte & téléchargeable", "Suivi de progression des étudiants", "Modules & leçons structurés"],
   },
   {
     type: "license" as ProductType,
     label: "Licences",
-    description: "Vendez des clÃ©s de licence avec contrÃ´le total sur les activations et la durÃ©e.",
+    description: "Vendez des clés de licence avec contrôle total sur les activations et la durée.",
     icon: Key,
     color: "bg-purple-500",
-    features: ["GÃ©nÃ©ration automatique de licences", "Limite d'activations par licence", "DurÃ©e de validitÃ© configurable", "Suivi en temps rÃ©el"],
+    features: ["Génération automatique de licences", "Limite d'activations par licence", "Durée de validité configurable", "Suivi en temps réel"],
   },
 ];
 
@@ -135,7 +135,7 @@ const CreateProduct = () => {
   const originalPriceNum = parseFloat(originalPrice) || 0;
   const priceError = price && priceNum > 0 && priceNum < 100 ? "Le prix minimum est de 100 FCFA" : "";
   const originalPriceError = originalPrice && originalPriceNum > 0 && originalPriceNum <= priceNum
-    ? "Le prix barrÃ© doit Ãªtre supÃ©rieur au prix de vente" : "";
+    ? "Le prix barré doit être supérieur au prix de vente" : "";
 
 
   const canNext = () => {
@@ -158,7 +158,7 @@ const CreateProduct = () => {
 
   const rewriteTitle = async () => {
     if (!title.trim()) {
-      toast.error("Entrez d'abord un titre Ã  amÃ©liorer");
+      toast.error("Entrez d'abord un titre à améliorer");
       return;
     }
     setAiRewritingTitle(true);
@@ -166,7 +166,7 @@ const CreateProduct = () => {
       const { data, error } = await supabase.functions.invoke("rewrite-description", {
         body: {
           title,
-          description: `RÃ©cris uniquement le titre du produit "${title}" (type: ${selectedType || "fichier numÃ©rique"}) pour le rendre plus accrocheur, professionnel et vendeur. RÃ©ponds UNIQUEMENT avec le nouveau titre, sans guillemets, sans explication.`,
+          description: `Récris uniquement le titre du produit "${title}" (type: ${selectedType || "fichier numérique"}) pour le rendre plus accrocheur, professionnel et vendeur. Réponds UNIQUEMENT avec le nouveau titre, sans guillemets, sans explication.`,
           productType: selectedType || "file",
           mode: "title",
         },
@@ -175,10 +175,10 @@ const CreateProduct = () => {
       const newTitle = (data?.title || data?.description || "").replace(/<[^>]*>/g, "").trim();
       if (newTitle) {
         setTitle(newTitle);
-        toast.success("Titre amÃ©liorÃ© par l'IA !");
+        toast.success("Titre amélioré par l'IA !");
       }
     } catch (err: any) {
-      toast.error("Erreur IA : " + (err.message || "RÃ©essayez"));
+      toast.error("Erreur IA : " + (err.message || "Réessayez"));
     } finally {
       setAiRewritingTitle(false);
     }
@@ -201,7 +201,7 @@ const CreateProduct = () => {
         return;
       }
       if (fileFormat === "video" && !videoUrl.trim()) {
-        toast.error("Veuillez entrer le lien de la vidÃ©o");
+        toast.error("Veuillez entrer le lien de la vidéo");
         return;
       }
       if (fileFormat !== "video" && !downloadFile) {
@@ -210,7 +210,7 @@ const CreateProduct = () => {
       }
     }
     if (selectedType === "course" && courseModules.length === 0) {
-      toast.error("Veuillez ajouter au moins un module Ã  votre formation");
+      toast.error("Veuillez ajouter au moins un module à votre formation");
       return;
     }
 
@@ -259,7 +259,7 @@ const CreateProduct = () => {
         .single();
 
       if (error || !productResult) {
-        throw error || new Error("Impossible de crÃ©er le produit");
+        throw error || new Error("Impossible de créer le produit");
       }
 
       createdProductId = productResult.id;
@@ -278,7 +278,7 @@ const CreateProduct = () => {
             .single();
 
           if (modError || !modData) {
-            toast.error("Erreur lors de la crÃ©ation d'un module: " + (modError?.message || ""));
+            toast.error("Erreur lors de la création d'un module: " + (modError?.message || ""));
             continue;
           }
 
@@ -295,7 +295,7 @@ const CreateProduct = () => {
               lessonsToInsert.push({
                 product_id: productResult.id,
                 module_id: modData.id,
-                title: lesson.title || `LeÃ§on ${lesson.position + 1}`,
+                title: lesson.title || `Leçon ${lesson.position + 1}`,
                 description: lesson.description || null,
                 content: lesson.content || null,
                 video_url: lesson.video_url || null,
@@ -307,7 +307,7 @@ const CreateProduct = () => {
 
             const { error: lessonsError } = await supabase.from("course_lessons").insert(lessonsToInsert);
             if (lessonsError) {
-              toast.error("Erreur sur les leÃ§ons d'un module: " + lessonsError.message);
+              toast.error("Erreur sur les leçons d'un module: " + lessonsError.message);
             }
           }
         }
@@ -322,9 +322,9 @@ const CreateProduct = () => {
         // Only block for rejected (illegal/scam)
         setModerationDialogOpen(true);
         setModerationRedirectPath(`/dashboard/products/${productResult.id}/edit`);
-        toast.error("Publication bloquÃ©e par la modÃ©ration.");
+        toast.error("Publication bloquée par la modération.");
       } else {
-        // approved or needs_review â†’ publish silently
+        // approved or needs_review → publish silently
         const { error: publishError } = await supabase
           .from("products")
           .update({ is_published: true })
@@ -340,14 +340,14 @@ const CreateProduct = () => {
           setModerationRedirectPath(null);
           navigate("/dashboard/products");
         }
-        toast.success("Produit publiÃ© avec succÃ¨s !");
+        toast.success("Produit publié avec succès !");
       }
     } catch (error: any) {
       if (createdProductId) {
-        toast.error(error.message || "Analyse impossible. Le produit a Ã©tÃ© enregistrÃ© en brouillon.");
+        toast.error(error.message || "Analyse impossible. Le produit a été enregistré en brouillon.");
         navigate(`/dashboard/products/${createdProductId}/edit`);
       } else {
-        toast.error(error.message || "Impossible de crÃ©er le produit.");
+        toast.error(error.message || "Impossible de créer le produit.");
       }
     } finally {
       setSaving(false);
@@ -359,9 +359,9 @@ const CreateProduct = () => {
       case "file":
         return (
           <div>
-            <h2 className="text-2xl font-bold text-foreground mb-2">Configurez votre produit numÃ©rique</h2>
+            <h2 className="text-2xl font-bold text-foreground mb-2">Configurez votre produit numérique</h2>
             <p className="text-sm text-muted-foreground mb-6">
-              Choisissez d'abord le format de votre produit. Les vidÃ©os sont hÃ©bergÃ©es via lien (Drive, YouTube).
+              Choisissez d'abord le format de votre produit. Les vidéos sont hébergées via lien (Drive, YouTube).
             </p>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
@@ -369,7 +369,7 @@ const CreateProduct = () => {
                 { id: "pdf", label: "Document (PDF)", icon: PdfIcon, color: "text-red-500", border: "border-red-200", bg: "bg-red-50" },
                 { id: "audio", label: "Audio (MP3)", icon: FileAudio, color: "text-purple-500", border: "border-purple-200", bg: "bg-purple-50" },
                 { id: "image", label: "Image (PNG/JPG)", icon: ImageIcon, color: "text-green-500", border: "border-green-200", bg: "bg-green-50" },
-                { id: "video", label: "VidÃ©o (Lien)", icon: FileVideo, color: "text-blue-500", border: "border-blue-200", bg: "bg-blue-50" }
+                { id: "video", label: "Vidéo (Lien)", icon: FileVideo, color: "text-blue-500", border: "border-blue-200", bg: "bg-blue-50" }
               ].map((fmt) => (
                 <button
                   key={fmt.id}
@@ -399,33 +399,33 @@ const CreateProduct = () => {
                     <Upload className="h-4 w-4" /> Uploader le fichier {fileFormat.toUpperCase()}
                   </Button>
                   <p className="text-xs text-muted-foreground mt-2">
-                    Taille max: 50 MB. StockÃ© de faÃ§on sÃ©curisÃ©e.
+                    Taille max: 50 MB. Stocké de façon sécurisée.
                   </p>
                 </div>
                 {downloadFile && (
                   <p className="text-sm font-medium text-foreground mt-4">
-                    ðŸ“Ž {downloadFile.name}
+                    📎 {downloadFile.name}
                   </p>
                 )}
                 <input
                   id="download-input"
-                      type="file"
-                      className="hidden"
-                      accept={fileFormat === "image" ? "image/*" : fileFormat === "audio" ? "audio/*" : fileFormat === "software" ? ".exe,.dmg,.pkg,.zip,.rar" : ".pdf,.doc,.docx,.xls,.xlsx,.txt,.zip,.rar"}
-                      onChange={(e) => {
-                        const f = e.target.files?.[0];
-                        if (f) {
-                          if (f.size > 50 * 1024 * 1024) {
-                            toast.error("Le fichier dépasse la limite autorisée de 50MB.");
-                            e.target.value = "";
-                            setDownloadFile(null);
-                            return;
-                          }
-                          setDownloadFile(f);
-                        } else {
-                          setDownloadFile(null);
-                        }
-                      }}
+                  type="file"
+                  className="hidden"
+                  accept={fileFormat === "image" ? "image/*" : fileFormat === "audio" ? "audio/*" : fileFormat === "software" ? ".exe,.dmg,.pkg,.zip,.rar" : ".pdf,.doc,.docx,.xls,.xlsx,.txt,.zip,.rar"}
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) {
+                      if (f.size > 50 * 1024 * 1024) {
+                        toast.error("Le fichier dépasse la limite autorisée de 50MB.");
+                        e.target.value = "";
+                        setDownloadFile(null);
+                        return;
+                      }
+                      setDownloadFile(f);
+                    } else {
+                      setDownloadFile(null);
+                    }
+                  }}
                 />
               </div>
             )}
@@ -434,7 +434,7 @@ const CreateProduct = () => {
               <div className="p-6 rounded-xl border border-blue-200 bg-blue-50/50 dark:bg-blue-900/10 dark:border-blue-800 animate-in fade-in space-y-4">
                 <div>
                   <label className="text-sm font-medium text-foreground mb-1.5 block">
-                    Lien vers la vidÃ©o (Google Drive, YouTube, Vimeo)
+                    Lien vers la vidéo (Google Drive, YouTube, Vimeo)
                   </label>
                   <div className="flex gap-2">
                     <div className="bg-white dark:bg-background border border-border flex items-center px-3 rounded-md">
@@ -448,7 +448,7 @@ const CreateProduct = () => {
                     />
                   </div>
                   <p className="text-xs text-muted-foreground mt-2">
-                    Le lecteur vidÃ©o sera directement intÃ©grÃ© sur la page pour vos acheteurs.
+                    Le lecteur vidéo sera directement intégré sur la page pour vos acheteurs.
                   </p>
                 </div>
                 
@@ -469,7 +469,7 @@ const CreateProduct = () => {
               <div className="mt-4 p-3 rounded-lg bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800 animate-in fade-in">
                 <div className="flex items-center gap-2 text-sm text-amber-700 dark:text-amber-400">
                   <Shield className="h-4 w-4" />
-                  <span>AccÃ¨s hautement sÃ©curisÃ©, rÃ©servÃ© uniquement aux acheteurs vÃ©rifiÃ©s.</span>
+                  <span>Accès hautement sécurisé, réservé uniquement aux acheteurs vérifiés.</span>
                 </div>
               </div>
             )}
@@ -481,7 +481,7 @@ const CreateProduct = () => {
           <div>
             <h2 className="text-2xl font-bold text-foreground mb-2">Structure de la formation</h2>
             <p className="text-sm text-muted-foreground mb-6">
-              Construisez votre programme. Ajoutez des modules, et pour chaque leÃ§on intÃ©grez des vidÃ©os, du texte riche et des fichiers tÃ©lÃ©chargeables.
+              Construisez votre programme. Ajoutez des modules, et pour chaque leçon intégrez des vidéos, du texte riche et des fichiers téléchargeables.
             </p>
 
             <div className="mb-6 p-4 rounded-xl bg-blue-50 dark:bg-blue-900/10 border border-blue-200 dark:border-blue-800 flex items-start gap-3">
@@ -489,9 +489,9 @@ const CreateProduct = () => {
                 <Layers className="h-5 w-5 text-blue-600 dark:text-blue-300" />
               </div>
               <div>
-                <h4 className="font-semibold text-blue-900 dark:text-blue-100 text-sm">Ã‰cosystÃ¨me d'apprentissage complet</h4>
+                <h4 className="font-semibold text-blue-900 dark:text-blue-100 text-sm">Écosystème d'apprentissage complet</h4>
                 <p className="text-xs text-blue-700 dark:text-blue-300 mt-1">
-                  Chaque leÃ§on est un Ã©cosystÃ¨me en soi : ajoutez-y une vidÃ©o (lien Drive/Youtube), rÃ©digez le cours complet, et joignez un fichier ressource si besoin. L'interface d'apprentissage s'adaptera automatiquement !
+                  Chaque leçon est un écosystème en soi : ajoutez-y une vidéo (lien Drive/Youtube), rédigez le cours complet, et joignez un fichier ressource si besoin. L'interface d'apprentissage s'adaptera automatiquement !
                 </p>
               </div>
             </div>
@@ -504,7 +504,7 @@ const CreateProduct = () => {
             <div className="mt-4 p-3 rounded-lg bg-blue-50 dark:bg-blue-900/10 border border-blue-200 dark:border-blue-800">
               <div className="flex items-center gap-2 text-sm text-blue-700 dark:text-blue-400">
                 <GraduationCap className="h-4 w-4" />
-                <span>La progression des Ã©tudiants sera suivie automatiquement</span>
+                <span>La progression des étudiants sera suivie automatiquement</span>
               </div>
             </div>
           </div>
@@ -515,7 +515,7 @@ const CreateProduct = () => {
           <div>
             <h2 className="text-2xl font-bold text-foreground mb-2">Configuration de la licence</h2>
             <p className="text-sm text-muted-foreground mb-6">
-              Les clÃ©s de licence seront gÃ©nÃ©rÃ©es automatiquement Ã  chaque achat.
+              Les clés de licence seront générées automatiquement à chaque achat.
             </p>
 
             <div className="space-y-6">
@@ -529,35 +529,35 @@ const CreateProduct = () => {
                     type="number"
                     value={licenseMaxActivations}
                     onChange={(e) => setLicenseMaxActivations(e.target.value)}
-                    placeholder="Ex: 3 (laisser vide pour illimitÃ©)"
+                    placeholder="Ex: 3 (laisser vide pour illimité)"
                     className="h-12"
                   />
                   <p className="text-xs text-muted-foreground mt-1">
-                    Limitez le nombre d'appareils sur lesquels la licence peut Ãªtre activÃ©e.
+                    Limitez le nombre d'appareils sur lesquels la licence peut être activée.
                   </p>
                 </div>
 
                 <div>
                   <label className="text-sm font-medium text-foreground mb-1.5 flex items-center gap-2">
                     <Clock className="h-4 w-4 text-purple-500" />
-                    DurÃ©e de validitÃ© (en jours)
+                    Durée de validité (en jours)
                   </label>
                   <Input
                     type="number"
                     value={licenseValidityDays}
                     onChange={(e) => setLicenseValidityDays(e.target.value)}
-                    placeholder="Ex: 365 (laisser vide pour illimitÃ©)"
+                    placeholder="Ex: 365 (laisser vide pour illimité)"
                     className="h-12"
                   />
                   <p className="text-xs text-muted-foreground mt-1">
-                    AprÃ¨s ce dÃ©lai, la licence expirera automatiquement.
+                    Après ce délai, la licence expirera automatiquement.
                   </p>
                 </div>
               </div>
 
               <div>
                 <label className="text-sm font-medium text-foreground mb-3 block">
-                  Fichier associÃ© (optionnel)
+                  Fichier associé (optionnel)
                 </label>
                 <div
                   className="rounded-xl border-2 border-dashed border-border bg-secondary/30 p-8 text-center cursor-pointer hover:border-primary/50 transition-colors"
@@ -571,28 +571,28 @@ const CreateProduct = () => {
                   </p>
                   {downloadFile && (
                     <p className="text-sm font-medium text-foreground mt-3">
-                      ðŸ“Ž {downloadFile.name}
+                      📎 {downloadFile.name}
                     </p>
                   )}
                   <input
                     id="download-input"
-                      type="file"
-                      className="hidden"
-                      accept={fileFormat === "image" ? "image/*" : fileFormat === "audio" ? "audio/*" : fileFormat === "software" ? ".exe,.dmg,.pkg,.zip,.rar" : ".pdf,.doc,.docx,.xls,.xlsx,.txt,.zip,.rar"}
-                      onChange={(e) => {
-                        const f = e.target.files?.[0];
-                        if (f) {
-                          if (f.size > 50 * 1024 * 1024) {
-                            toast.error("Le fichier dépasse la limite autorisée de 50MB.");
-                            e.target.value = "";
-                            setDownloadFile(null);
-                            return;
-                          }
-                          setDownloadFile(f);
-                        } else {
+                    type="file"
+                    className="hidden"
+                    accept={fileFormat === "image" ? "image/*" : fileFormat === "audio" ? "audio/*" : fileFormat === "software" ? ".exe,.dmg,.pkg,.zip,.rar" : ".pdf,.doc,.docx,.xls,.xlsx,.txt,.zip,.rar"}
+                    onChange={(e) => {
+                      const f = e.target.files?.[0];
+                      if (f) {
+                        if (f.size > 50 * 1024 * 1024) {
+                          toast.error("Le fichier dépasse la limite autorisée de 50MB.");
+                          e.target.value = "";
                           setDownloadFile(null);
+                          return;
                         }
-                      }}
+                        setDownloadFile(f);
+                      } else {
+                        setDownloadFile(null);
+                      }
+                    }}
                   />
                 </div>
               </div>
@@ -600,7 +600,7 @@ const CreateProduct = () => {
               <div className="p-3 rounded-lg bg-purple-50 dark:bg-purple-900/10 border border-purple-200 dark:border-purple-800">
                 <div className="flex items-center gap-2 text-sm text-purple-700 dark:text-purple-400">
                   <Key className="h-4 w-4" />
-                  <span>Les activations seront suivies en temps rÃ©el dans votre dashboard</span>
+                  <span>Les activations seront suivies en temps réel dans votre dashboard</span>
                 </div>
               </div>
             </div>
@@ -620,7 +620,7 @@ const CreateProduct = () => {
           <Button variant="ghost" size="icon" onClick={() => step > 1 ? setStep(step - 1) : navigate("/dashboard/products")}>
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          <span className="text-sm font-medium text-foreground">CrÃ©er un produit</span>
+          <span className="text-sm font-medium text-foreground">Créer un produit</span>
         </div>
 
         {/* Type banner */}
@@ -661,7 +661,7 @@ const CreateProduct = () => {
             {step === 1 && (
               <div>
                 <h2 className="text-2xl font-bold text-foreground mb-8 italic">
-                  Quel type de produit dÃ©sirez-vous crÃ©er ?
+                  Quel type de produit désirez-vous créer ?
                 </h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   {productTypes.map((pt) => (
@@ -711,7 +711,7 @@ const CreateProduct = () => {
             {/* Step 2: Details */}
             {step === 2 && (
               <div>
-                <h2 className="text-2xl font-bold text-foreground mb-8">DÃ©tails du produit</h2>
+                <h2 className="text-2xl font-bold text-foreground mb-8">Détails du produit</h2>
                 <div className="space-y-6">
                   <div>
                     <label className="text-sm font-medium text-foreground mb-1.5 block">
@@ -731,7 +731,7 @@ const CreateProduct = () => {
                         className="h-12 w-12 shrink-0 border-primary/30 hover:bg-primary/5"
                         onClick={rewriteTitle}
                         disabled={aiRewritingTitle || !title.trim()}
-                        title="AmÃ©liorer le titre avec l'IA"
+                        title="Améliorer le titre avec l'IA"
                       >
                         {aiRewritingTitle ? (
                           <Loader2 className="h-4 w-4 animate-spin text-primary" />
@@ -740,31 +740,31 @@ const CreateProduct = () => {
                         )}
                       </Button>
                     </div>
-                    <p className="text-[11px] text-muted-foreground mt-1">ðŸ’¡ Cliquez sur l'icÃ´ne âœ¨ pour amÃ©liorer votre titre avec l'IA</p>
+                    <p className="text-[11px] text-muted-foreground mt-1">💡 Cliquez sur l'icône ✨ pour améliorer votre titre avec l'IA</p>
                   </div>
                   <div>
                     <label className="text-sm font-medium text-foreground mb-1.5 block">
-                      CatÃ©gorie <span className="text-destructive">*</span>
+                      Catégorie <span className="text-destructive">*</span>
                     </label>
                     <Select value={category} onValueChange={setCategory}>
                       <SelectTrigger className="h-12">
-                        <SelectValue placeholder="Dans quelle catÃ©gorie classer ce produit ?" />
+                        <SelectValue placeholder="Dans quelle catégorie classer ce produit ?" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="business">ðŸ’¼ Business</SelectItem>
-                        <SelectItem value="design">ðŸŽ¨ Design</SelectItem>
-                        <SelectItem value="tech">ðŸ’» Tech & Code</SelectItem>
-                        <SelectItem value="marketing">ðŸ“ˆ Marketing</SelectItem>
-                        <SelectItem value="education">ðŸŽ“ Ã‰ducation</SelectItem>
-                        <SelectItem value="lifestyle">ðŸŒ¿ Lifestyle</SelectItem>
-                        <SelectItem value="creative">ðŸŽ¬ CrÃ©atif</SelectItem>
-                        <SelectItem value="other">âœ¨ Autres</SelectItem>
+                        <SelectItem value="business">💼 Business</SelectItem>
+                        <SelectItem value="design">🎨 Design</SelectItem>
+                        <SelectItem value="tech">💻 Tech & Code</SelectItem>
+                        <SelectItem value="marketing">📈 Marketing</SelectItem>
+                        <SelectItem value="education">🎓 Éducation</SelectItem>
+                        <SelectItem value="lifestyle">🌿 Lifestyle</SelectItem>
+                        <SelectItem value="creative">🎬 Créatif</SelectItem>
+                        <SelectItem value="other">✨ Autres</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                   <div>
                     <label className="text-sm font-medium text-foreground mb-1.5 block">
-                      ModÃ¨le de tarification <span className="text-destructive">*</span>
+                      Modèle de tarification <span className="text-destructive">*</span>
                     </label>
                     <Select value={pricingModel} onValueChange={setPricingModel}>
                       <SelectTrigger className="h-12">
@@ -795,7 +795,7 @@ const CreateProduct = () => {
                         {!priceError && <p className="text-[11px] text-muted-foreground mt-1">Min : 100 FCFA</p>}
                       </div>
                       <div>
-                        <label className="text-sm font-medium text-foreground mb-1.5 block">Prix barrÃ©</label>
+                        <label className="text-sm font-medium text-foreground mb-1.5 block">Prix barré</label>
                         <div className="relative">
                           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">FCFA</span>
                           <Input
@@ -809,7 +809,7 @@ const CreateProduct = () => {
                         {originalPriceError && <p className="text-[11px] text-destructive mt-1">{originalPriceError}</p>}
                         {!originalPriceError && originalPrice && originalPriceNum > priceNum && (
                           <p className="text-[11px] text-emerald-600 mt-1">
-                            RÃ©duction de {Math.round(((originalPriceNum - priceNum) / originalPriceNum) * 100)}%
+                            Réduction de {Math.round(((originalPriceNum - priceNum) / originalPriceNum) * 100)}%
                           </p>
                         )}
                       </div>
@@ -830,17 +830,17 @@ const CreateProduct = () => {
                             type="number"
                             value={licenseMaxActivations}
                             onChange={(e) => setLicenseMaxActivations(e.target.value)}
-                            placeholder="IllimitÃ©"
+                            placeholder="Illimité"
                             className="h-10"
                           />
                         </div>
                         <div>
-                          <label className="text-xs font-medium text-foreground mb-1 block">ValiditÃ© (jours)</label>
+                          <label className="text-xs font-medium text-foreground mb-1 block">Validité (jours)</label>
                           <Input
                             type="number"
                             value={licenseValidityDays}
                             onChange={(e) => setLicenseValidityDays(e.target.value)}
-                            placeholder="IllimitÃ©"
+                            placeholder="Illimité"
                             className="h-10"
                           />
                         </div>
@@ -858,7 +858,7 @@ const CreateProduct = () => {
                 <p className="text-sm text-muted-foreground mb-6">La description est obligatoire pour pouvoir publier votre produit.</p>
                 <div>
                   <div className="flex items-center justify-between mb-3">
-                    <p className="text-sm font-semibold text-foreground">DÃ©crivez votre produit</p>
+                    <p className="text-sm font-semibold text-foreground">Décrivez votre produit</p>
                     <Button
                       variant="outline"
                       size="sm"
@@ -873,26 +873,26 @@ const CreateProduct = () => {
                           if (error) throw error;
                           if (data?.description) {
                             setDescription(data.description);
-                            toast.success("Description rÃ©Ã©crite par l'IA !");
+                            toast.success("Description réécrite par l'IA !");
                           }
                         } catch (err: any) {
-                          toast.error("Erreur IA: " + (err.message || "RÃ©essayez"));
+                          toast.error("Erreur IA: " + (err.message || "Réessayez"));
                         } finally {
                           setAiRewriting(false);
                         }
                       }}
                     >
                       {aiRewriting ? (
-                        <><Loader2 className="h-3 w-3 animate-spin" /> RÃ©Ã©criture...</>
+                        <><Loader2 className="h-3 w-3 animate-spin" /> Réécriture...</>
                       ) : (
-                        <>âœ¨ Assistant IA</>
+                        <>✨ Assistant IA</>
                       )}
                     </Button>
                   </div>
                   <RichTextEditor
                     content={description}
                     onChange={setDescription}
-                    placeholder="DÃ©crivez votre produit en dÃ©tail. Utilisez la barre d'outils pour formater le texte, ajouter des liens, des images..."
+                    placeholder="Décrivez votre produit en détail. Utilisez la barre d'outils pour formater le texte, ajouter des liens, des images..."
                   />
                 </div>
               </div>
@@ -919,39 +919,39 @@ const CreateProduct = () => {
                       )}
                       <input
                         id="thumbnail-input"
-                          type="file"
-                          accept="image/*"
-                          className="hidden"
-                          onChange={(e) => {
-                            const f = e.target.files?.[0];
-                            if (f) {
-                              if (f.size > 50 * 1024 * 1024) {
-                                toast.error("La vignette dépasse la limite de 50MB.");
-                                e.target.value = "";
-                                return;
-                              }
-                              setThumbnailFile(f);
-                              handleFilePreview(f, setThumbnailPreview);
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => {
+                          const f = e.target.files?.[0];
+                          if (f) {
+                            if (f.size > 50 * 1024 * 1024) {
+                              toast.error("La vignette dépasse la limite de 50MB.");
+                              e.target.value = "";
+                              return;
                             }
-                          }}
+                            setThumbnailFile(f);
+                            handleFilePreview(f, setThumbnailPreview);
+                          }
+                        }}
                       />
                     </div>
                     <p className="text-xs text-muted-foreground mt-2">
-                      CrÃ©ez une vignette mÃ©morable. Utilisez une image carrÃ©e (minimum 600x600px) au format JPG ou PNG.
+                      Créez une vignette mémorable. Utilisez une image carrée (minimum 600x600px) au format JPG ou PNG.
                     </p>
                   </div>
 
                   {/* Banner */}
                   <div>
                     <label className="text-sm font-medium text-foreground mb-3 block">
-                      Ajouter une banniÃ¨re
+                      Ajouter une bannière
                     </label>
                     <div
                       className="relative w-full h-48 rounded-xl bg-secondary border-2 border-dashed border-border hover:border-primary/50 transition-colors cursor-pointer flex items-center justify-center overflow-hidden"
                       onClick={() => document.getElementById("banner-input")?.click()}
                     >
                       {bannerPreview ? (
-                        <img src={bannerPreview} alt="BanniÃ¨re" className="h-full w-full object-cover" />
+                        <img src={bannerPreview} alt="Bannière" className="h-full w-full object-cover" />
                       ) : (
                         <div className="flex flex-col items-center gap-2">
                           <ImageIcon className="h-10 w-10 text-muted-foreground/30" />
@@ -960,25 +960,25 @@ const CreateProduct = () => {
                       )}
                       <input
                         id="banner-input"
-                          type="file"
-                          accept="image/*"
-                          className="hidden"
-                          onChange={(e) => {
-                            const f = e.target.files?.[0];
-                            if (f) {
-                              if (f.size > 50 * 1024 * 1024) {
-                                toast.error("La bannière dépasse la limite de 50MB.");
-                                e.target.value = "";
-                                return;
-                              }
-                              setBannerFile(f);
-                              handleFilePreview(f, setBannerPreview);
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => {
+                          const f = e.target.files?.[0];
+                          if (f) {
+                            if (f.size > 50 * 1024 * 1024) {
+                              toast.error("La bannière dépasse la limite de 50MB.");
+                              e.target.value = "";
+                              return;
                             }
-                          }}
+                            setBannerFile(f);
+                            handleFilePreview(f, setBannerPreview);
+                          }
+                        }}
                       />
                     </div>
                     <p className="text-xs text-muted-foreground mt-2">
-                      CrÃ©ez une banniÃ¨re attrayante. Utilisez une image rectangulaire (1200x400px recommandÃ©).
+                      Créez une bannière attrayante. Utilisez une image rectangulaire (1200x400px recommandé).
                     </p>
                   </div>
                 </div>
@@ -1032,4 +1032,3 @@ const CreateProduct = () => {
 };
 
 export default CreateProduct;
-

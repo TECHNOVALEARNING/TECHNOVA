@@ -853,7 +853,21 @@ const EditProduct = () => {
                                 id="edit-download-input"
                                 type="file"
                                 className="hidden"
-                                onChange={(e) => setDownloadFile(e.target.files?.[0] || null)}
+                                accept={fileFormat === "image" ? "image/*" : fileFormat === "audio" ? "audio/*" : fileFormat === "software" ? ".exe,.dmg,.pkg,.zip,.rar" : ".pdf,.doc,.docx,.xls,.xlsx,.txt,.zip,.rar"}
+                                onChange={(e) => {
+                                  const f = e.target.files?.[0];
+                                  if (f) {
+                                    if (f.size > 50 * 1024 * 1024) {
+                                      toast.error("Le fichier dépasse la limite autorisée de 50MB.");
+                                      e.target.value = "";
+                                      setDownloadFile(null);
+                                      return;
+                                    }
+                                    setDownloadFile(f);
+                                  } else {
+                                    setDownloadFile(null);
+                                  }
+                                }}
                               />
                             </div>
                           </>
@@ -924,6 +938,11 @@ const EditProduct = () => {
                         onChange={(e) => {
                           const f = e.target.files?.[0];
                           if (f) {
+                            if (f.size > 50 * 1024 * 1024) {
+                              toast.error("La vignette dépasse la limite de 50MB.");
+                              e.target.value = "";
+                              return;
+                            }
                             setThumbnailFile(f);
                             const reader = new FileReader();
                             reader.onload = (ev) => setThumbnailPreview(ev.target?.result as string);
@@ -1086,6 +1105,11 @@ const EditProduct = () => {
                         onChange={(e) => {
                           const f = e.target.files?.[0];
                           if (f) {
+                            if (f.size > 50 * 1024 * 1024) {
+                              toast.error("L'image SEO dépasse la limite de 50MB.");
+                              e.target.value = "";
+                              return;
+                            }
                             setSeoImageFile(f);
                             const reader = new FileReader();
                             reader.onload = (ev) => setSeoImagePreview(ev.target?.result as string);
@@ -1189,4 +1213,3 @@ const ToggleOption = ({
 );
 
 export default EditProduct;
-
