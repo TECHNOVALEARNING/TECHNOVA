@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   ArrowLeft, Eye, EyeOff, MoreVertical, Save, Loader2,
@@ -546,7 +546,7 @@ const EditProduct = () => {
                             const newTitle = (data?.title || data?.description || '').replace(/<[^>]*>/g, '').trim();
                             if (newTitle) {
                               setTitle(newTitle);
-                              toast.success('Titre amélioré par l'IA !');
+                              toast.success("Titre amélioré par l'IA !");
                             }
                           } catch { toast.error("Erreur IA"); }
                           finally { setAiRewriting(false); }
