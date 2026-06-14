@@ -47,6 +47,7 @@ export function ToolCard({ tool }: ToolCardProps) {
         <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2 sm:line-clamp-3 mb-4 flex-1">
           {tool.description}
         </p>
+        <div className="text-[10px] text-green-500 font-bold mb-2 uppercase tracking-wider">✅ Test de mise à jour réussi</div>
 
         <div className="space-y-3 mt-auto">
           {tool.promoCode && (
