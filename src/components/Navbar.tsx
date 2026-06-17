@@ -14,6 +14,14 @@ const productLinks = [
 ];
 
 const moreLinks = [
+  { label: "Emplois & Stages", href: "/#jobs" },
+  { label: "Blog", href: "/blog" },
+  { label: "Outils de Productivité", href: "/outils-digitaux" },
+  { label: "Templates Excel", href: "/#excel-templates" },
+  { label: "FAQ", href: "/faq" },
+  { label: "TECHNOVA APPS", href: "/#apps" },
+  { label: "Devenir Vendeur", href: "/register" },
+  { label: "À propos", href: "/about" },
 ];
 
 const Navbar = () => {
@@ -50,6 +58,24 @@ const Navbar = () => {
           <Link to="/marketplace" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Marketplace</Link>
           <Link to="/outils-digitaux" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Productivité</Link>
           <Link to="/pricing" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Tarifs</Link>
+          
+          {/* Dropdown "Plus" */}
+          <div className="relative group">
+            <button className="flex items-center gap-1 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+              Plus <ChevronDown className="h-3.5 w-3.5 transition-transform group-hover:rotate-180" />
+            </button>
+            <div className="absolute top-full right-0 mt-2 w-48 rounded-xl border border-border bg-card p-2 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+              {moreLinks.map((l) => (
+                <Link
+                  key={l.label}
+                  to={l.href}
+                  className="block rounded-lg px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+                >
+                  {l.label}
+                </Link>
+              ))}
+            </div>
+          </div>
         </div>
 
         <div className="hidden lg:flex items-center gap-3">

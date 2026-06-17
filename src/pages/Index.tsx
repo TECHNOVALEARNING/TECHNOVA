@@ -170,7 +170,7 @@ const Index = () => {
                 {lang === 'fr' ? 'TECHNOVA Learning votre passerelle vers le développement, la data science et le design. Formez-vous aux talents qui ouvrent les portes du marché. Etudiants, freelancers, entreprises, c\'est ici que ca se passe.' : 'TECHNOVA Courses is the ultimate platform to learn development, data science, and design. Learn the skills recruiters are looking for. Students, freelancers, companies, this is where it happens.'}
               </p>
               <div style={{ display: "flex", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 36 }}>
-                <Link to="/formations" className="tn-btn-primary">
+                <Link to="/#courses" className="tn-btn-primary">
                   {lang === 'fr' ? 'Explorer les ebooks' : 'Explore ebooks'} <i className="fas fa-arrow-right" style={{ marginLeft: 6 }} />
                 </Link>
                 <Link to="/formations" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 28px", borderRadius: 50, border: "1.5px solid var(--blue)", color: "var(--blue)", fontWeight: 600, fontSize: "0.88rem", textDecoration: "none", transition: "all 0.25s" }}>
@@ -270,9 +270,6 @@ const Index = () => {
                 {lang === 'fr' ? 'Investissez dans votre avenir à petit prix.' : 'Invest in your future at a low price.'}
               </p>
             </div>
-            <Link to="/marketplace" style={{ fontWeight: 600, color: "var(--blue)", fontSize: "0.95rem", display: "flex", alignItems: "center", gap: 6 }}>
-              {lang === 'fr' ? 'Voir tous les produits' : 'View all products'} <i className="fas fa-chevron-right" style={{ fontSize: "0.8em" }} />
-            </Link>
           </div>
 
           {dbProducts.length > 0 ? (
@@ -299,8 +296,15 @@ const Index = () => {
       <section id="blog" style={{ position: "relative", zIndex: 1, padding: "100px 0" }}>
         <div className="mx-auto" style={{ maxWidth: 1280, padding: "0 24px" }}>
           <div style={{ marginBottom: 48 }}>
-            <span className="tn-eyebrow">{lang === 'fr' ? 'Blog & Actualités' : 'Blog & News'}</span>
-            <h2 className="tn-section-title" style={{ color: "var(--text)" }}>{lang === 'fr' ? 'Informez-vous' : 'Stay Informed'}</h2>
+            <span className="tn-eyebrow">{lang === 'fr' ? 'Actualités' : 'News'}</span>
+            <h2 className="section-title">
+              <span className="title-motion-wrap">
+                <span className="title-motion">
+                  {lang === 'fr' ? 'Actualités' : 'News'}
+                </span>
+                <i className="fas fa-sparkles motion-spark"></i>
+              </span>
+            </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
@@ -360,7 +364,14 @@ const Index = () => {
         <div className="mx-auto" style={{ maxWidth: 1280, padding: "0 24px" }}>
           <div style={{ textAlign: "center", marginBottom: 48 }}>
             <span className="tn-eyebrow">{lang === 'fr' ? 'Témoignages' : 'Testimonials'}</span>
-            <h2 className="tn-section-title" style={{ color: "var(--text)" }}>{lang === 'fr' ? 'Ils ont réussi avec nous' : 'They succeeded with us'}</h2>
+            <h2 className="section-title">
+              <span className="title-motion-wrap">
+                <span className="title-motion">
+                  {lang === 'fr' ? 'Témoignages' : 'Testimonials'}
+                </span>
+                <i className="fas fa-sparkles motion-spark"></i>
+              </span>
+            </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {TESTIMONIALS.map((t, i) => (
@@ -401,7 +412,14 @@ const Index = () => {
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 40, flexWrap: "wrap", gap: 16 }}>
             <div>
               <span className="tn-eyebrow">{lang === 'fr' ? 'Fonctionne avec TECHNOVA' : 'Works with TECHNOVA'}</span>
-              <h2 className="tn-section-title" style={{ color: "var(--text)" }}>{lang === 'fr' ? 'L\'Annuaire des Outils Digitaux' : 'Top Digital Tools'}</h2>
+              <h2 className="section-title">
+                <span className="title-motion-wrap">
+                  <span className="title-motion">
+                    {lang === 'fr' ? 'L\'Annuaire des Outils Digitaux' : 'Top Digital Tools'}
+                  </span>
+                  <i className="fas fa-sparkles motion-spark"></i>
+                </span>
+              </h2>
             </div>
             <Link to="/outils-digitaux" style={{ fontWeight: 600, color: "var(--blue)", fontSize: "0.95rem", display: "flex", alignItems: "center", gap: 6 }}>
               {lang === 'fr' ? 'Explorer l\'annuaire' : 'Explore directory'} <i className="fas fa-chevron-right" style={{ fontSize: "0.8em" }} />

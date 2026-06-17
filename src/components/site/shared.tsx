@@ -51,11 +51,21 @@ export const Header = () => {
 
   const links = [
     { to: "/", label: lang === "fr" ? "Accueil" : "Home" },
+    { to: "/marketplace", label: lang === "fr" ? "Nos Produits Digitaux" : "Our Digital Products" },
     { to: "/formations", label: lang === "fr" ? "Nos formations" : "Courses" },
+    { to: "/marketplace", label: lang === "fr" ? "STORE" : "STORE" },
+    { to: "/#discoveries", label: lang === "fr" ? "Découvertes" : "Discoveries" },
+  ];
+
+  const moreDropdownLinks = [
+    { to: "/#jobs", label: lang === "fr" ? "Emplois & Stages" : "Jobs & Internships" },
     { to: "/blog", label: "Blog" },
-    { to: "/about", label: lang === "fr" ? "À propos" : "About" },
+    { to: "/outils-digitaux", label: lang === "fr" ? "Outils de Productivité" : "Productivity Tools" },
+    { to: "/#excel-templates", label: lang === "fr" ? "Templates Excel" : "Excel Templates" },
     { to: "/faq", label: "FAQ" },
-    { to: "/outils-digitaux", label: lang === "fr" ? "Productivité" : "Productivity" },
+    { to: "/#apps", label: lang === "fr" ? "TECHNOVA APPS" : "TECHNOVA APPS" },
+    { to: "/register", label: lang === "fr" ? "Devenir Vendeur" : "Become Seller" },
+    { to: "/about", label: lang === "fr" ? "À propos" : "About" },
   ];
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, to: string) => {
@@ -80,10 +90,29 @@ export const Header = () => {
         <Logo />
         <nav className="hidden lg:flex items-center gap-8 text-sm font-medium">
           {links.map((l) => (
-            <Link key={l.to} to={l.to} onClick={(e) => handleNavClick(e, l.to)} className="hover:text-[color:var(--primary)] transition-colors story-link">
+            <Link key={l.label} to={l.to} onClick={(e) => handleNavClick(e, l.to)} className="hover:text-[color:var(--primary)] transition-colors story-link">
               {l.label}
             </Link>
           ))}
+          
+          {/* Dropdown "Plus" */}
+          <div className="relative group">
+            <button className="flex items-center gap-1 hover:text-[color:var(--primary)] text-muted-foreground transition-colors story-link font-medium text-sm">
+              {lang === "fr" ? "Plus" : "More"} <ChevronDown className="h-3.5 w-3.5 transition-transform group-hover:rotate-180" />
+            </button>
+            <div className="absolute top-full right-0 mt-2 w-48 rounded-xl border border-border bg-card p-2 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+              {moreDropdownLinks.map((l) => (
+                <Link
+                  key={l.label}
+                  to={l.to}
+                  onClick={(e) => handleNavClick(e, l.to)}
+                  className="block rounded-lg px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+                >
+                  {l.label}
+                </Link>
+              ))}
+            </div>
+          </div>
         </nav>
         <div className="hidden lg:flex items-center gap-4">
           {/* Toggles */}
@@ -123,11 +152,32 @@ export const Header = () => {
             {/* Grille de navigation compacte */}
             <div className="grid grid-cols-2 gap-3">
               {links.map((l) => (
-                <Link key={l.to} to={l.to} onClick={(e) => { setOpen(false); handleNavClick(e, l.to); }}
+                <Link key={l.label} to={l.to} onClick={(e) => { setOpen(false); handleNavClick(e, l.to); }}
                       className="py-3 px-2 font-medium rounded-xl bg-muted/40 hover:bg-muted/60 border border-border/50 text-[14px] text-center transition-colors">
                   {l.label}
                 </Link>
               ))}
+            </div>
+            
+            <div className="h-px w-full bg-border/50 my-1" />
+
+            {/* Mobile "Plus" section */}
+            <div className="space-y-2">
+              <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider pl-1">
+                {lang === "fr" ? "Plus" : "More"}
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                {moreDropdownLinks.map((l) => (
+                  <Link
+                    key={l.label}
+                    to={l.to}
+                    onClick={(e) => { setOpen(false); handleNavClick(e, l.to); }}
+                    className="py-3 px-2 font-medium rounded-xl bg-muted/40 hover:bg-muted/60 border border-border/50 text-[14px] text-center transition-colors"
+                  >
+                    {l.label}
+                  </Link>
+                ))}
+              </div>
             </div>
             
             <div className="h-px w-full bg-border/50 my-2" />
