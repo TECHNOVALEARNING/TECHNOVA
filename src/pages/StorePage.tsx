@@ -265,7 +265,7 @@ const StorePage = ({ customSlug }: { customSlug?: string }) => {
   const types = [...new Set(products.map((p) => p.type))];
 
   return (
-    <div className="min-h-screen flex flex-col bg-white" style={{ fontFamily: storeFont }}>
+    <div className="min-h-screen flex flex-col bg-background" style={{ fontFamily: storeFont }}>
       {/* ─── HEADER ─── */}
       <header className="sticky top-0 z-50 border-b border-gray-100 bg-white">
         <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 h-14">

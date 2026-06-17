@@ -77,7 +77,7 @@ const CheckoutPage = ({ customSlug }: { customSlug?: string }) => {
         title={`Paiement sécurisé — ${product?.title || "TECHNOVA"}`}
         description="Finalisez votre commande en toute sécurité via Mobile Money."
       />
-      <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-amber-50/40">
+      <div className="min-h-screen bg-background">
         {/* Top bar */}
         <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-violet-100/60">
           <div className="max-w-6xl mx-auto flex items-center justify-between px-4 sm:px-6 h-14">

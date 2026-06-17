@@ -55,7 +55,7 @@ export const Header = () => {
     { to: "/blog", label: "Blog" },
     { to: "/about", label: lang === "fr" ? "À propos" : "About" },
     { to: "/faq", label: "FAQ" },
-    { to: "/outils-digitaux", label: lang === "fr" ? "Fonctionne avec" : "Works with" },
+    { to: "/outils-digitaux", label: lang === "fr" ? "Productivité" : "Productivity" },
   ];
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, to: string) => {

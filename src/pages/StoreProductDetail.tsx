@@ -260,7 +260,7 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50/40 flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
       {/* ─── HEADER ─── */}
       <header className="sticky top-0 z-40 border-b border-gray-100 bg-white/90 backdrop-blur-md">
         <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 h-14">

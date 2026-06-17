@@ -48,7 +48,7 @@ const Index = () => {
         .from("products")
         .select("*")
         .order("created_at", { ascending: false })
-        .limit(8);
+        .limit(16);
       if (error) throw error;
       const active = (data || []).filter((p: any) => {
         try {
@@ -271,14 +271,21 @@ const Index = () => {
               </p>
             </div>
             <Link to="/marketplace" style={{ fontWeight: 600, color: "var(--blue)", fontSize: "0.95rem", display: "flex", alignItems: "center", gap: 6 }}>
-              {lang === 'fr' ? 'Voir toutes les formations' : 'View all courses'} <i className="fas fa-chevron-right" style={{ fontSize: "0.8em" }} />
+              {lang === 'fr' ? 'Voir tous les produits' : 'View all products'} <i className="fas fa-chevron-right" style={{ fontSize: "0.8em" }} />
             </Link>
           </div>
 
           {dbProducts.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {dbProducts.map((c, i) => <CourseCard key={c.slug} c={c} i={i} />)}
-            </div>
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {dbProducts.map((c, i) => <CourseCard key={c.slug} c={c} i={i} />)}
+              </div>
+              <div className="flex justify-center mt-12">
+                <Link to="/marketplace" className="tn-btn-primary">
+                  {lang === 'fr' ? 'Voir tous les produits' : 'See all products'} <i className="fas fa-arrow-right" style={{ marginLeft: 6 }} />
+                </Link>
+              </div>
+            </>
           ) : (
             <div style={{ textAlign: "center", padding: "48px 0", color: "var(--text-secondary)" }}>
               <i className="fas fa-graduation-cap" style={{ fontSize: "3rem", marginBottom: 16, display: "block", color: "var(--blue)" }} />

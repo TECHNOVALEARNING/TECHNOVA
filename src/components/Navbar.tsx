@@ -48,7 +48,7 @@ const Navbar = () => {
             </div>
           </div>
           <Link to="/marketplace" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Marketplace</Link>
-          <Link to="/outils-digitaux" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Productivités</Link>
+          <Link to="/outils-digitaux" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Productivité</Link>
           <Link to="/pricing" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Tarifs</Link>
         </div>
 
