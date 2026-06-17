@@ -48,7 +48,7 @@ const Navbar = () => {
             </div>
           </div>
           <Link to="/marketplace" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Marketplace</Link>
-          <Link to="/outils-digitaux" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Fonctionne avec</Link>
+          <Link to="/outils-digitaux" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Productivités</Link>
           <Link to="/pricing" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Tarifs</Link>
         </div>
 
@@ -106,7 +106,7 @@ const Navbar = () => {
             </div>
           )}
           <Link to="/marketplace" onClick={() => setMobileOpen(false)} className="block py-2 text-sm font-medium text-foreground">Marketplace</Link>
-          <Link to="/outils-digitaux" onClick={() => setMobileOpen(false)} className="block py-2 text-sm font-medium text-foreground">Fonctionne avec</Link>
+          <Link to="/outils-digitaux" onClick={() => setMobileOpen(false)} className="block py-2 text-sm font-medium text-foreground">Productivité</Link>
           <Link to="/pricing" onClick={() => setMobileOpen(false)} className="block py-2 text-sm font-medium text-foreground">Tarifs</Link>
           {moreLinks.map((l) => (
             <Link key={l.label} to={l.href} onClick={() => setMobileOpen(false)} className="block py-2 text-sm text-muted-foreground hover:text-foreground">{l.label}</Link>
