@@ -44,11 +44,21 @@ const Index = () => {
   const { data: dbProducts = [] } = useQuery({
     queryKey: ["public_products_home"],
     queryFn: async () => {
+      // Find the administrator's profile id from their store
+      const { data: storeData } = await supabase
+        .from("stores")
+        .select("owner_id")
+        .eq("slug", "easy-tech")
+        .maybeSingle();
+
+      const adminId = storeData?.owner_id || "9a7bc1fd-3c21-4a8c-b7a3-c60ff2fcf902";
+
       const { data, error } = await supabase
         .from("products")
         .select("*")
+        .eq("creator_id", adminId)
         .order("created_at", { ascending: false })
-        .limit(16);
+        .limit(30);
       if (error) throw error;
       const active = (data || []).filter((p: any) => {
         try {
@@ -170,7 +180,14 @@ const Index = () => {
                 {lang === 'fr' ? 'TECHNOVA Learning votre passerelle vers le développement, la data science et le design. Formez-vous aux talents qui ouvrent les portes du marché. Etudiants, freelancers, entreprises, c\'est ici que ca se passe.' : 'TECHNOVA Courses is the ultimate platform to learn development, data science, and design. Learn the skills recruiters are looking for. Students, freelancers, companies, this is where it happens.'}
               </p>
               <div style={{ display: "flex", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 36 }}>
-                <Link to="/#courses" className="tn-btn-primary">
+                <Link 
+                  to="/#courses" 
+                  className="tn-btn-primary"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.getElementById("courses")?.scrollIntoView({ behavior: "smooth" });
+                  }}
+                >
                   {lang === 'fr' ? 'Explorer les ebooks' : 'Explore ebooks'} <i className="fas fa-arrow-right" style={{ marginLeft: 6 }} />
                 </Link>
                 <Link to="/formations" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 28px", borderRadius: 50, border: "1.5px solid var(--blue)", color: "var(--blue)", fontWeight: 600, fontSize: "0.88rem", textDecoration: "none", transition: "all 0.25s" }}>
@@ -278,7 +295,7 @@ const Index = () => {
                 {dbProducts.map((c, i) => <CourseCard key={c.slug} c={c} i={i} />)}
               </div>
               <div className="flex justify-center mt-12">
-                <Link to="/marketplace" className="tn-btn-primary">
+                <Link to="/admin-products" className="tn-btn-primary">
                   {lang === 'fr' ? 'Voir tous les produits' : 'See all products'} <i className="fas fa-arrow-right" style={{ marginLeft: 6 }} />
                 </Link>
               </div>

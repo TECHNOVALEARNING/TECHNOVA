@@ -51,10 +51,10 @@ export const Header = () => {
 
   const links = [
     { to: "/", label: lang === "fr" ? "Accueil" : "Home" },
-    { to: "/marketplace", label: lang === "fr" ? "Nos Produits Digitaux" : "Our Digital Products" },
+    { to: "/#courses", label: lang === "fr" ? "Nos Produits Digitaux" : "Our Digital Products" },
     { to: "/formations", label: lang === "fr" ? "Nos formations" : "Courses" },
-    { to: "/marketplace", label: lang === "fr" ? "STORE" : "STORE" },
-    { to: "/#discoveries", label: lang === "fr" ? "Découvertes" : "Discoveries" },
+    { to: "/admin-products", label: lang === "fr" ? "STORE" : "STORE" },
+    { to: "/#blog", label: lang === "fr" ? "Actualités" : "News" },
   ];
 
   const moreDropdownLinks = [
@@ -100,7 +100,7 @@ export const Header = () => {
             <button className="flex items-center gap-1 hover:text-[color:var(--primary)] text-muted-foreground transition-colors story-link font-medium text-sm">
               {lang === "fr" ? "Plus" : "More"} <ChevronDown className="h-3.5 w-3.5 transition-transform group-hover:rotate-180" />
             </button>
-            <div className="absolute top-full right-0 mt-2 w-48 rounded-xl border border-border bg-card p-2 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+            <div className="absolute top-full right-0 mt-2 w-48 rounded-xl border border-border bg-white dark:bg-[#1c1c1e] p-2 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
               {moreDropdownLinks.map((l) => (
                 <Link
                   key={l.label}

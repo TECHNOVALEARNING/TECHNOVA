@@ -1,24 +1,28 @@
-import { useLayoutEffect } from "react";
+import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
-const forceScrollTop = () => {
-  window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-  document.documentElement.scrollTop = 0;
-  document.body.scrollTop = 0;
-
-  const root = document.getElementById("root");
-  if (root) root.scrollTop = 0;
-};
-
 export const ScrollToTop = () => {
-  const { pathname, search, hash, key } = useLocation();
+  const { pathname, hash } = useLocation();
 
-  useLayoutEffect(() => {
-    forceScrollTop();
+  useEffect(() => {
+    if (hash) {
+      const id = hash.replace("#", "").replace("/", "");
+      const element = document.getElementById(id);
+      if (element) {
+        const timer = setTimeout(() => {
+          element.scrollIntoView({ behavior: "smooth" });
+        }, 100);
+        return () => clearTimeout(timer);
+      }
+    }
 
-    const raf = requestAnimationFrame(forceScrollTop);
-    return () => cancelAnimationFrame(raf);
-  }, [pathname, search, hash, key]);
+    // Scroll to top
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    const root = document.getElementById("root");
+    if (root) root.scrollTop = 0;
+  }, [pathname, hash]);
 
   return null;
 };

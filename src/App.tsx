@@ -35,6 +35,8 @@ import ToolsDirectoryPage from "./pages/ToolsDirectoryPage";
 import Marketplace from "./pages/Marketplace";
 import Cours from "./pages/Cours";
 import Products from "./pages/Products";
+import AdminProducts from "./pages/AdminProducts";
+import AllProducts from "./pages/AllProducts";
 import StoreLegalPage from "./pages/StoreLegalPage";
 import PaymentCallback from "./pages/PaymentCallback";
 import CheckoutPage from "./pages/CheckoutPage";
@@ -144,6 +146,8 @@ const AppContent = () => {
               <Route path="/blog/:slug" element={<BlogPost />} />
               <Route path="/outils-digitaux" element={<ToolsDirectoryPage />} />
               <Route path="/marketplace" element={<Marketplace />} />
+              <Route path="/admin-products" element={<AdminProducts />} />
+              <Route path="/all-products" element={<AllProducts />} />
               <Route path="/cours" element={<Cours />} />
               <Route path="/formations" element={<Cours />} />
               <Route path="/products" element={<Products />} />
