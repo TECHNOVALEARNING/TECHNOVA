@@ -81,6 +81,52 @@ const Index = () => {
     },
   });
 
+  const { data: trendingNews = [], isLoading: isLoadingNews } = useQuery({
+    queryKey: ["trending_news_home", lang],
+    queryFn: async () => {
+      const rssUrl = lang === "fr" 
+        ? "https://news.google.com/rss?hl=fr&gl=FR&ceid=FR:fr" 
+        : "https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en";
+      const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
+      
+      const res = await fetch(apiUrl);
+      if (!res.ok) throw new Error("Failed to fetch news feed");
+      const data = await res.json();
+      if (data.status !== "ok") throw new Error("Failed to parse news feed");
+
+      const images = [
+        "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=600&h=350&fit=crop", // Tech/AI
+        "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=350&fit=crop", // Business/Analytics
+        "https://images.unsplash.com/photo-1551434678-e076c223a692?w=600&h=350&fit=crop", // Coding/Fullstack
+        "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&h=350&fit=crop", // Chips/Hardware
+        "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&h=350&fit=crop", // Earth/Connectivity
+        "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&h=350&fit=crop", // Security/Cyber
+        "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&h=350&fit=crop", // Digital learning
+      ];
+
+      return (data.items || []).slice(0, 10).map((item: any) => {
+        const hash = item.title.split("").reduce((acc: number, char: string) => acc + char.charCodeAt(0), 0);
+        const cleanTitle = item.title.split(" - ")[0] || item.title;
+        const cleanDesc = (item.description || "").replace(/<[^>]*>/g, "").trim();
+        const shortDesc = cleanDesc.length > 120 ? cleanDesc.substring(0, 120) + "..." : cleanDesc;
+        
+        const formattedDate = new Date(item.pubDate).toLocaleDateString(
+          lang === "fr" ? "fr-FR" : "en-US",
+          { day: "numeric", month: "short", year: "numeric" }
+        );
+
+        return {
+          title: cleanTitle,
+          desc: shortDesc || (lang === "fr" ? "Actualités récentes sélectionnées par TECHNOVA." : "Recent news updates curated by TECHNOVA."),
+          date: formattedDate,
+          img: images[hash % images.length],
+          link: item.link,
+        };
+      });
+    },
+    staleTime: 1000 * 60 * 15,
+  });
+
   return (
     <div className="min-h-screen overflow-x-hidden transition-colors duration-300" style={{ background: "var(--bg, #f2f2f7)", color: "var(--text, #1d1d1f)", fontFamily: "'Manrope', -apple-system, sans-serif" }}>
       {/* Font import via style tag */}
@@ -131,6 +177,12 @@ const Index = () => {
         .tn-cta-wrap { background:linear-gradient(135deg,#0071e3,#409cff); border-radius:var(--radius-lg); padding:72px 48px; text-align:center; position:relative; overflow:hidden; }
         .tn-blog-card { background:var(--card); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur); border:1px solid var(--card-border); border-radius:var(--radius); overflow:hidden; height:100%; transition:all 0.3s; box-shadow:var(--shadow-sm); }
         .tn-blog-card:hover { transform:translateY(-6px); box-shadow:var(--shadow-md); }
+        .news-marquee-container { overflow:hidden; width:100%; position:relative; padding:12px 0; }
+        .news-marquee-track { display:flex; gap:24px; width:max-content; animation:scrollNews 60s linear infinite; }
+        .news-marquee-track:hover,
+        .news-marquee-container:hover .news-marquee-track { animation-play-state:paused; }
+        @keyframes scrollNews { from { transform:translateX(0); } to { transform:translateX(-50%); } }
+        .news-card-marquee-wrap { width:380px; flex-shrink:0; }
         .tn-about-ico { width:46px; height:46px; min-width:46px; background:var(--blue); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; color:white; }
         @keyframes orbFloat { 0%,100% { transform:translateY(0) scale(1); } 33% { transform:translateY(-30px) scale(1.04); } 66% { transform:translateY(20px) scale(0.97); } }
         .bg-orb { position:fixed; border-radius:50%; filter:blur(120px); pointer-events:none; z-index:0; opacity:0.35; transition:opacity 0.5s; animation:orbFloat 12s ease-in-out infinite; }
@@ -323,29 +375,51 @@ const Index = () => {
               </span>
             </h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              { img: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=600&h=350&fit=crop", date: "15 Jan 2026", title: lang === 'fr' ? "L'IA générative en 2026" : "Generative AI in 2026", desc: lang === 'fr' ? "Découvrez les dernières avancées en intelligence artificielle et leur impact sur le marché du travail." : "Discover the latest advances in AI and their impact on the job market." },
-              { img: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=350&fit=crop", date: "12 Jan 2026", title: lang === 'fr' ? "Cybersécurité : Les tendances" : "Cybersecurity: Trends", desc: lang === 'fr' ? "Protégez vos données avec les meilleures pratiques de sécurité en 2026." : "Protect your data with the best security practices in 2026." },
-              { img: "https://images.unsplash.com/photo-1551434678-e076c223a692?w=600&h=350&fit=crop", date: "08 Jan 2026", title: lang === 'fr' ? "Devenir développeur Full Stack" : "Becoming a Full Stack Developer", desc: lang === 'fr' ? "Le guide complet pour maîtriser le développement web moderne." : "The complete guide to mastering modern web development." },
-            ].map((b, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="tn-blog-card">
-                <div style={{ height: 200, overflow: "hidden" }}>
-                  <img src={b.img} alt={b.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.5s" }} />
+          {isLoadingNews ? (
+            <div className="flex gap-6 overflow-hidden py-4">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="w-[380px] h-[400px] rounded-3xl border border-[color:var(--border)] bg-[color:var(--surface)] p-4 animate-pulse shrink-0">
+                  <div className="w-full h-44 rounded-2xl bg-[color:var(--bg)] mb-4" />
+                  <div className="h-6 w-3/4 rounded bg-[color:var(--bg)] mb-2" />
+                  <div className="h-4 w-1/2 rounded bg-[color:var(--bg)]" />
                 </div>
-                <div style={{ padding: 22 }}>
-                  <div style={{ fontSize: "0.75rem", fontWeight: 600, color: "var(--blue)", marginBottom: 10, display: "flex", alignItems: "center", gap: 6 }}>
-                    <i className="far fa-calendar" /> {b.date}
+              ))}
+            </div>
+          ) : trendingNews.length > 0 ? (
+            <div className="news-marquee-container">
+              <div className="news-marquee-track">
+                {[...trendingNews, ...trendingNews].map((b, i) => (
+                  <div key={i} className="news-card-marquee-wrap">
+                    <div className="tn-blog-card">
+                      <div style={{ height: 180, overflow: "hidden" }}>
+                        <img src={b.img} alt={b.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.5s" }} />
+                      </div>
+                      <div style={{ padding: 22, display: "flex", flexDirection: "column", height: 220, justifyContent: "space-between" }}>
+                        <div>
+                          <div style={{ fontSize: "0.75rem", fontWeight: 600, color: "var(--blue)", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}>
+                            <i className="far fa-calendar" /> {b.date}
+                          </div>
+                          <h5 style={{ fontSize: "0.92rem", fontWeight: 700, marginBottom: 8, color: "var(--text)", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden", lineHeight: 1.4 }} title={b.title}>
+                            {b.title}
+                          </h5>
+                          <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)", marginBottom: 12, lineHeight: 1.5, display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                            {b.desc}
+                          </p>
+                        </div>
+                        <a href={b.link} target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.82rem", fontWeight: 600, color: "var(--blue)", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 4 }}>
+                          {lang === 'fr' ? 'Détails de l\'actualité' : 'News Details'} <i className="fas fa-arrow-right fa-xs" />
+                        </a>
+                      </div>
+                    </div>
                   </div>
-                  <h5 style={{ fontSize: "0.98rem", fontWeight: 700, marginBottom: 10, color: "var(--text)" }}>{b.title}</h5>
-                  <p style={{ fontSize: "0.84rem", color: "var(--text-secondary)", marginBottom: 16, lineHeight: 1.6 }}>{b.desc}</p>
-                  <a href="#" style={{ fontSize: "0.82rem", fontWeight: 600, color: "var(--blue)", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 4 }}>
-                    {lang === 'fr' ? 'Lire plus' : 'Read more'} <i className="fas fa-arrow-right fa-xs" />
-                  </a>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div style={{ textAlign: "center", padding: "48px 0", color: "var(--text-secondary)" }}>
+              <p>{lang === 'fr' ? 'Actualités indisponibles pour le moment.' : 'News currently unavailable.'}</p>
+            </div>
+          )}
         </div>
       </section>
 

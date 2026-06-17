@@ -53,7 +53,7 @@ export const Header = () => {
     { to: "/", label: lang === "fr" ? "Accueil" : "Home" },
     { to: "/#courses", label: lang === "fr" ? "Nos Produits Digitaux" : "Our Digital Products" },
     { to: "/formations", label: lang === "fr" ? "Nos formations" : "Courses" },
-    { to: "/admin-products", label: lang === "fr" ? "STORE" : "STORE" },
+    { to: "/admin-products", label: lang === "fr" ? "Store" : "Store" },
     { to: "/#blog", label: lang === "fr" ? "Actualités" : "News" },
   ];
 
@@ -63,7 +63,7 @@ export const Header = () => {
     { to: "/outils-digitaux", label: lang === "fr" ? "Outils de Productivité" : "Productivity Tools" },
     { to: "/#excel-templates", label: lang === "fr" ? "Templates Excel" : "Excel Templates" },
     { to: "/faq", label: "FAQ" },
-    { to: "/#apps", label: lang === "fr" ? "TECHNOVA APPS" : "TECHNOVA APPS" },
+    { to: "/#apps", label: lang === "fr" ? "Technova Apps" : "Technova Apps" },
     { to: "/register", label: lang === "fr" ? "Devenir Vendeur" : "Become Seller" },
     { to: "/about", label: lang === "fr" ? "À propos" : "About" },
   ];
