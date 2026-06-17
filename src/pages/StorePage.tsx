@@ -411,68 +411,98 @@ const StorePage = ({ customSlug }: { customSlug?: string }) => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                   {filtered.map((product, i) => {
                     const disc = discount(product);
+                    const hash = product.title.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
+                    const ratings = ["4.5", "4.8", "5.0", "4.6", "4.7"];
+                    const rating = ratings[hash % ratings.length];
+                    
+                    const labels = ["bestseller", "nouveau", "populaire", "tendance", "top", "promo"];
+                    const label = disc ? "promo" : labels[hash % labels.length];
+                    const LABEL_MAP: Record<string, { cls: string; label: string }> = {
+                      bestseller: { cls: 'label-bestseller', label: 'Bestseller' },
+                      nouveau: { cls: 'label-nouveau', label: 'Nouveau' },
+                      populaire: { cls: 'label-populaire', label: 'Populaire' },
+                      promo: { cls: 'label-promo', label: 'Promo' },
+                      tendance: { cls: 'label-tendance', label: 'Tendance' },
+                      top: { cls: 'label-top', label: 'Top' },
+                    };
+                    const lb = LABEL_MAP[label] || {};
+
+                    const priceFcfa = product.price.toLocaleString() + " FCFA";
+                    const priceUsd = (product.price / 563).toFixed(2) + " $";
+
                     return (
                       <motion.div
                         key={product.id}
                         initial={{ opacity: 0, y: 12 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: i * 0.04 }}
-                        className="group bg-white border border-gray-100 rounded-xl overflow-hidden hover:shadow-lg hover:shadow-gray-100/80 transition-all duration-300"
+                        className="course-card"
                       >
                         <Link to={customSlug ? `/${product.id}` : `/store/${slug}/${product.id}`}>
-                          <div className="relative aspect-square overflow-hidden bg-gray-50">
+                          <div className="course-img-wrap">
                             {product.thumbnail_url ? (
                               <img
                                 src={product.thumbnail_url}
                                 alt={product.title}
-                                className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
                               />
                             ) : (
-                              <div className="h-full w-full flex items-center justify-center">
+                              <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-primary/5 to-accent/10">
                                 <Package className="h-10 w-10 text-gray-200" />
                               </div>
                             )}
-                            {disc && (
-                              <span
-                                className="absolute top-3 right-3 text-xs font-bold px-2.5 py-1 rounded-full text-white"
-                                style={{ backgroundColor: brandColor }}
-                              >
-                                {disc}% OFF
+                            <span className="course-badge">
+                              {typeLabels[product.type] || product.type}
+                            </span>
+                            {lb.cls && (
+                              <span className={`label-badge ${lb.cls}`}>
+                                {disc ? `-${disc}%` : lb.label}
                               </span>
                             )}
                           </div>
                         </Link>
-                        <div className="p-4 space-y-2">
-                          <Link to={customSlug ? `/${product.id}` : `/store/${slug}/${product.id}`}>
-                            <h3 className="text-sm font-semibold text-gray-900 line-clamp-2 hover:opacity-70 transition-opacity">
-                              {product.title}
-                            </h3>
-                          </Link>
-                          <div className="flex items-center gap-1.5">
-                            <ThumbsUp className="h-3.5 w-3.5 text-gray-300" />
-                            <span className="text-xs text-gray-400">
-                              {reviewsEnabled ? "Avis publics sur la boutique" : "Produit numérique"}
-                            </span>
-                          </div>
-                          <div className="flex items-baseline gap-2">
-                            {product.original_price && product.original_price > product.price && (
-                              <span className="text-xs line-through text-gray-300">
-                                {product.original_price.toLocaleString()} FCFA
+                        
+                        <div className="course-body flex-1 flex flex-col justify-between">
+                          <div>
+                            <Link to={customSlug ? `/${product.id}` : `/store/${slug}/${product.id}`}>
+                              <div className="course-title line-clamp-2 hover:text-[color:var(--blue)] transition-colors">
+                                {product.title}
+                              </div>
+                            </Link>
+                            
+                            <div className="course-meta mb-3">
+                              <span className="students">
+                                <i className="fas fa-cubes" style={{ fontSize: "0.65rem", marginRight: 4 }}></i>
+                                {reviewsEnabled ? "Avis publics" : "Produit numérique"}
                               </span>
-                            )}
-                            <span className="text-base font-bold" style={{ color: brandColor }}>
-                              {product.price.toLocaleString()} FCFA
-                            </span>
+                              <span className="stars-sm">
+                                {"★".repeat(Math.floor(parseFloat(rating))) + (parseFloat(rating) % 1 >= 0.5 ? "½" : "")}
+                              </span>
+                            </div>
                           </div>
-                          {showBuyBtn && (
-                            <button
-                              className="w-full text-sm font-semibold text-white py-2.5 rounded-lg transition-opacity hover:opacity-90 mt-1"
-                              style={{ backgroundColor: brandColor }}
-                              onClick={() => handleBuyClick(product)}
-                            >
-                              Acheter
-                            </button>
-                          )}
+
+                          <div>
+                            <div className="price-row">
+                              <div>
+                                <div className="price-main">{priceFcfa}</div>
+                                <div className="price-usd">{priceUsd}</div>
+                              </div>
+                              {product.original_price && product.original_price > product.price && (
+                                <span className="text-[11px] text-muted-foreground line-through">
+                                  {product.original_price.toLocaleString()} FCFA
+                                </span>
+                              )}
+                            </div>
+                            
+                            {showBuyBtn && (
+                              <button
+                                className="btn-buy mt-2 py-2.5"
+                                onClick={() => handleBuyClick(product)}
+                              >
+                                <i className="fas fa-shopping-cart" style={{ marginRight: 8 }}></i>
+                                Acheter
+                              </button>
+                            )}
+                          </div>
                         </div>
                       </motion.div>
                     );

@@ -55,92 +55,131 @@ export const MarketplaceProductCard = ({ product, index = 0, fixedWidth, sellerB
 
   const [liked, setLiked] = useState(false);
 
+  // Stable hash based on course title to derive a fixed visual mock for stars rating and status
+  const hash = product.title.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  const ratings = ["4.5", "4.8", "5.0", "4.6", "4.7"];
+  const rating = ratings[hash % ratings.length];
+  
+  const labels = ["bestseller", "nouveau", "populaire", "tendance", "top", "promo"];
+  const label = hasDiscount ? "promo" : labels[hash % labels.length];
+
+  const LABEL_MAP: Record<string, { cls: string; label: string }> = {
+    bestseller: { cls: 'label-bestseller', label: 'Bestseller' },
+    nouveau: { cls: 'label-nouveau', label: 'Nouveau' },
+    populaire: { cls: 'label-populaire', label: 'Populaire' },
+    promo: { cls: 'label-promo', label: 'Promo' },
+    tendance: { cls: 'label-tendance', label: 'Tendance' },
+    top: { cls: 'label-top', label: 'Top' },
+  };
+  const lb = LABEL_MAP[label] || {};
+
+  const renderStars = (r: string) => {
+    const ratingNum = parseFloat(r);
+    const full = Math.floor(ratingNum);
+    const half = ratingNum % 1 >= 0.5;
+    let s = "";
+    for (let i = 0; i < full; i++) s += "★";
+    if (half) s += "½";
+    return <span className="stars-sm">{s}</span>;
+  };
+
+  const priceFcfa = Number(product.price).toLocaleString() + " FCFA";
+  const priceUsd = (Number(product.price) / 563).toFixed(2) + " $";
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: Math.min(index * 0.03, 0.3) }}
-      whileHover={{ y: -4 }}
-      className={`group ${fixedWidth ? "w-[160px] shrink-0 sm:w-[200px]" : ""}`}
+      className={`course-card ${fixedWidth ? "w-[160px] shrink-0 sm:w-[220px]" : ""}`}
     >
-      <Link to={href} className="block">
-        <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-secondary ring-1 ring-border/50">
-          {product.thumbnail_url ? (
-            <img
-              src={product.thumbnail_url}
-              alt={product.title}
-              loading="lazy"
-              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-            />
-          ) : (
-            <div className="flex h-full w-full items-center justify-center text-muted-foreground">
-              <Package className="h-10 w-10" />
+      <div className="course-img-wrap relative">
+        {product.thumbnail_url ? (
+          <img
+            src={product.thumbnail_url}
+            alt={product.title}
+            loading="lazy"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/5 to-accent/10 text-muted-foreground">
+            <Package className="h-10 w-10 text-gray-200" />
+          </div>
+        )}
+
+        <span className="course-badge">
+          {cat ? `${cat.emoji} ${cat.label}` : product.type}
+        </span>
+
+        {lb.cls && (
+          <span className={`label-badge ${lb.cls}`}>
+            {hasDiscount ? `-${discountPct}%` : lb.label}
+          </span>
+        )}
+
+        {/* favorite heart button absolute overlay */}
+        <button
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setLiked((s) => !s);
+          }}
+          aria-label="Favori"
+          className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-background/90 text-foreground shadow-md backdrop-blur transition-all hover:scale-110 active:scale-95 z-10"
+        >
+          <Heart
+            className={`h-4 w-4 transition-colors ${
+              liked ? "fill-destructive text-destructive" : ""
+            }`}
+          />
+        </button>
+      </div>
+
+      <div className="course-body flex-1 flex flex-col justify-between">
+        <div>
+          <Link to={href}>
+            <div className="course-title line-clamp-2 hover:text-[color:var(--blue)] transition-colors">
+              {product.title}
             </div>
-          )}
-
-          {/* gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-
-          {/* top-left badge */}
-          {hasDiscount && (
-            <span className="absolute left-2 top-2 rounded-full bg-destructive px-2 py-0.5 text-[10px] font-bold uppercase text-destructive-foreground shadow-md">
-              -{discountPct}%
-            </span>
-          )}
-
-          {/* heart */}
-          <button
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              setLiked((s) => !s);
-            }}
-            aria-label="Favori"
-            className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-background/90 text-foreground shadow-md backdrop-blur transition-all hover:scale-110 active:scale-95"
-          >
-            <Heart
-              className={`h-4 w-4 transition-colors ${
-                liked ? "fill-destructive text-destructive" : ""
-              }`}
-            />
-          </button>
-
-          {/* sales count chip bottom */}
-          {(product.sales_count || 0) > 0 && (
-            <span className="absolute bottom-2 left-2 flex items-center gap-1 rounded-full bg-background/90 px-2 py-0.5 text-[10px] font-semibold text-foreground shadow-md backdrop-blur">
-              <Star className="h-2.5 w-2.5 fill-primary text-primary" />
-              {product.sales_count} vendus
-            </span>
-          )}
-        </div>
-
-        <div className="mt-2.5 space-y-1">
-          {cat && (
-            <span className="text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
-              {cat.emoji} {cat.label}
-            </span>
-          )}
-          <h3 className="line-clamp-2 text-[13px] font-semibold leading-snug text-foreground transition-colors group-hover:text-primary sm:text-sm">
-            {product.title}
-          </h3>
+          </Link>
+          
           {product.store?.display_name && (
-            <p className="flex items-center gap-1 truncate text-[11px] text-muted-foreground">
+            <p className="flex items-center gap-1 truncate text-[11px] text-muted-foreground mb-3">
               <span className="truncate">par {product.store.display_name}</span>
               {grade && <VerifiedBadge grade={grade} size="xs" />}
             </p>
           )}
-          <div className="flex items-baseline gap-1.5 pt-0.5">
-            <span className="text-sm font-bold text-foreground sm:text-base">
-              {Number(product.price).toLocaleString()} FCFA
-            </span>
+
+          <div className="course-meta mb-3">
+            {(product.sales_count || 0) > 0 && (
+              <span className="students">
+                <i className="fas fa-shopping-cart" style={{ fontSize: "0.65rem", marginRight: 4 }}></i>
+                {product.sales_count} vendus
+              </span>
+            )}
+            {renderStars(rating)}
+          </div>
+        </div>
+
+        <div>
+          <div className="price-row">
+            <div>
+              <div className="price-main">{priceFcfa}</div>
+              <div className="price-usd">{priceUsd}</div>
+            </div>
             {hasDiscount && (
               <span className="text-[11px] text-muted-foreground line-through">
                 {Number(product.original_price).toLocaleString()}
               </span>
             )}
           </div>
+
+          <Link className="btn-buy mt-2 text-center text-xs py-2.5" to={href}>
+            <i className="fas fa-shopping-cart" style={{ marginRight: 6 }}></i>
+            Détails
+          </Link>
         </div>
-      </Link>
+      </div>
     </motion.div>
   );
 };

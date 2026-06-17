@@ -1,0 +1,2052 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TECHNOVA — Formations Professionnelles</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+
+<style>
+/* ============ VARIABLES ============ */
+:root {
+  --blue: #0071e3;
+  --blue-light: #409cff;
+  --blue-soft: rgba(0,113,227,0.08);
+  --accent: #f5a623;
+  --mtn-yellow: #ffcc00;
+  --moov-blue: #0066cc;
+  --bg: #f0f2f5;
+  --surface: rgba(255,255,255,0.72);
+  --surface-strong: rgba(255,255,255,0.92);
+  --card: rgba(255,255,255,0.68);
+  --card-border: rgba(255,255,255,0.55);
+  --text: #1d1d1f;
+  --text-secondary: #6e6e73;
+  --divider: rgba(0,0,0,0.08);
+  --glass-blur: blur(24px) saturate(180%);
+  --shadow-sm: 0 2px 16px rgba(0,0,0,0.06);
+  --shadow-md: 0 8px 40px rgba(0,0,0,0.09);
+  --shadow-lg: 0 20px 60px rgba(0,0,0,0.12);
+  --radius: 20px;
+  --radius-sm: 12px;
+  --radius-lg: 28px;
+}
+
+[data-theme="dark"] {
+  --bg: #000000;
+  --surface: rgba(22,22,24,0.82);
+  --surface-strong: rgba(38,38,40,0.92);
+  --card: rgba(22,22,24,0.72);
+  --card-border: rgba(255,255,255,0.08);
+  --text: #f5f5f7;
+  --text-secondary: #98989d;
+  --divider: rgba(255,255,255,0.07);
+  --shadow-sm: 0 2px 16px rgba(0,0,0,0.35);
+  --shadow-md: 0 8px 40px rgba(0,0,0,0.45);
+  --shadow-lg: 0 20px 60px rgba(0,0,0,0.55);
+}
+
+/* ============ BASE ============ */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  transition: background 0.4s ease, color 0.4s ease;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Figtree', sans-serif;
+  letter-spacing: -0.025em;
+}
+
+/* ============ NOISE TEXTURE ============ */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.025'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.35;
+}
+
+/* ============ BACKGROUND ORBS ============ */
+.bg-orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(130px);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.32;
+  transition: opacity 0.5s;
+}
+[data-theme="dark"] .bg-orb { opacity: 0.18; }
+.orb-1 { width: 700px; height: 700px; background: radial-gradient(circle, #0071e3, transparent 70%); top: -250px; left: -220px; animation: orbFloat1 18s ease-in-out infinite; }
+.orb-2 { width: 550px; height: 550px; background: radial-gradient(circle, #409cff, transparent 70%); bottom: 15%; right: -180px; animation: orbFloat2 22s ease-in-out infinite; }
+.orb-3 { width: 450px; height: 450px; background: radial-gradient(circle, #f5a623, transparent 70%); top: 50%; left: 38%; animation: orbFloat3 26s ease-in-out infinite; }
+
+@keyframes orbFloat1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(40px,30px)} }
+@keyframes orbFloat2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-30px,40px)} }
+@keyframes orbFloat3 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(20px,-30px)} }
+
+/* ============ GLASS UTILITY ============ */
+.glass {
+  background: var(--card);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--card-border);
+}
+
+/* ============ NAVBAR — FIXED GLASSMORPHISM ============ */
+.navbar {
+  position: fixed !important;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.4) !important;
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+}
+
+[data-theme="dark"] .navbar {
+  background: rgba(10, 10, 12, 0.4) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+}
+
+.navbar.scrolled {
+  background: rgba(255, 255, 255, 0.65) !important;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="dark"] .navbar.scrolled {
+  background: rgba(10, 10, 12, 0.65) !important;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.45);
+}
+
+.nav-inner {
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  max-width: 1240px;
+  margin: 0 auto;
+}
+
+.brand {
+  font-family: 'Figtree', sans-serif;
+  font-weight: 900;
+  font-size: 1.18rem;
+  color: var(--text);
+  text-decoration: none;
+  letter-spacing: -0.04em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-dot {
+  width: 9px; height: 9px;
+  background: var(--blue);
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 0 0 3px rgba(0,113,227,0.18);
+}
+
+.nav-links {
+  display: flex;
+  gap: 2px;
+  list-style: none;
+  margin: 0; padding: 0;
+}
+
+.nav-links a {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 6px 11px;
+  border-radius: 8px;
+  transition: all 0.2s;
+  letter-spacing: 0.01em;
+}
+.nav-links a:hover {
+  color: var(--text);
+  background: var(--divider);
+}
+
+.nav-links .dropdown-menu {
+  background: var(--surface-strong);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+  padding: 8px;
+  margin-top: 8px;
+  min-width: 220px;
+}
+.nav-links .dropdown-menu li a,
+.nav-links .dropdown-item {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: all 0.2s;
+  display: block;
+}
+.nav-links .dropdown-item:hover,
+.nav-links .dropdown-item:focus {
+  color: var(--text);
+  background: var(--divider);
+}
+.nav-links .dropdown-toggle::after {
+  vertical-align: middle;
+  margin-left: 4px;
+}
+.mobile-menu .submenu-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  padding: 10px 12px 2px;
+}
+
+.nav-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.ctrl-btn {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: var(--divider);
+  border: none;
+  color: var(--text);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  font-size: 0.78rem;
+  transition: all 0.2s;
+}
+.ctrl-btn:hover { background: var(--blue); color: white; }
+
+.lang-btn {
+  width: auto;
+  padding: 0 13px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.74rem;
+  gap: 4px;
+  font-family: 'Figtree', sans-serif;
+}
+
+.nav-toggler {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+/* ============ HERO ============ */
+#home {
+  position: relative;
+  z-index: 1;
+  padding: 148px 0 110px;
+  overflow: hidden;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+}
+
+/* Animated hero background mesh */
+#home::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse 80% 60% at 20% 50%, rgba(0,113,227,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 80% 30%, rgba(64,156,255,0.05) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.hero-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--blue);
+  background: var(--blue-soft);
+  border: 1px solid rgba(0,113,227,0.15);
+  padding: 6px 14px;
+  border-radius: 20px;
+  margin-bottom: 24px;
+  font-family: 'Figtree', sans-serif;
+}
+
+.hero-title {
+  font-family: 'Figtree', sans-serif;
+  font-size: clamp(2.8rem, 5.5vw, 4.6rem);
+  font-weight: 900;
+  line-height: 1.06;
+  letter-spacing: -0.045em;
+  margin-bottom: 24px;
+  color: var(--text);
+}
+
+.hero-span {
+  background: linear-gradient(135deg, var(--blue), var(--blue-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-desc {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  line-height: 1.75;
+  max-width: 500px;
+  margin-bottom: 38px;
+  font-weight: 300;
+}
+
+.hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--blue);
+  color: white;
+  font-family: 'Figtree', sans-serif;
+  font-weight: 700;
+  font-size: 0.92rem;
+  padding: 14px 28px;
+  border-radius: 50px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: none;
+  box-shadow: 0 8px 28px rgba(0,113,227,0.38);
+  letter-spacing: -0.01em;
+}
+.hero-cta:hover {
+  background: #0077ed;
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 14px 36px rgba(0,113,227,0.48);
+}
+
+.hero-social-proof {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 36px;
+}
+
+.avatars { display: flex; }
+.avatars img {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 2.5px solid var(--bg);
+  object-fit: cover;
+  margin-left: -10px;
+}
+.avatars img:first-child { margin-left: 0; }
+
+.proof-text { font-size: 0.83rem; color: var(--text-secondary); }
+.proof-text strong { color: var(--text); }
+
+/* Hero image with floating animation */
+.hero-img-wrap {
+  position: relative;
+  animation: heroFloat 6s ease-in-out infinite;
+  perspective: 1000px;
+}
+
+@keyframes heroFloat {
+  0%,100% { transform: translateY(0px); }
+  50% { transform: translateY(-14px); }
+}
+
+.hero-img-wrap img {
+  width: 100%;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg), 0 0 0 1px rgba(255,255,255,0.1);
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+  will-change: transform;
+}
+
+.hero-stat-card {
+  position: absolute;
+  bottom: 28px;
+  left: -28px;
+  background: var(--surface-strong);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 16px 22px;
+  box-shadow: var(--shadow-md);
+  min-width: 185px;
+  animation: cardPulse 4s ease-in-out infinite;
+  transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+  will-change: transform;
+  z-index: 2;
+}
+@keyframes cardPulse { 0%,100%{box-shadow:var(--shadow-md)} 50%{box-shadow:0 12px 48px rgba(0,113,227,0.18)} }
+
+.hero-stat-card .num {
+  font-family: 'Figtree', sans-serif;
+  font-size: 1.65rem;
+  font-weight: 900;
+  color: var(--blue);
+  letter-spacing: -0.04em;
+}
+.hero-stat-card .lbl { font-size: 0.76rem; color: var(--text-secondary); margin-top: 2px; }
+
+.hero-badge {
+  position: absolute;
+  top: 24px;
+  right: -18px;
+  background: linear-gradient(135deg, #0071e3, #409cff);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  text-align: center;
+  color: white;
+  box-shadow: var(--shadow-md);
+  min-width: 115px;
+  transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+  will-change: transform;
+  z-index: 2;
+}
+.hero-badge .big { font-size: 1.5rem; font-weight: 900; font-family: 'Figtree', sans-serif; letter-spacing:-0.03em; }
+.hero-badge .sm { font-size: 0.68rem; opacity: 0.85; }
+
+
+/* ============ SECTION LAYOUT ============ */
+.section-wrap {
+  position: relative;
+  z-index: 1;
+  padding: 100px 0;
+}
+.section-wrap.alt { background: rgba(0,0,0,0.025); }
+[data-theme="dark"] .section-wrap.alt { background: rgba(255,255,255,0.02); }
+
+.section-eyebrow {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 12px;
+  display: block;
+  font-family: 'Figtree', sans-serif;
+}
+
+.section-title {
+  font-family: 'Figtree', sans-serif;
+  font-size: clamp(1.9rem, 3vw, 2.9rem);
+  font-weight: 900;
+  letter-spacing: -0.035em;
+  line-height: 1.08;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+
+.section-sub {
+  font-size: 0.98rem;
+  color: var(--text-secondary);
+  max-width: 480px;
+  line-height: 1.65;
+}
+
+/* ============ MOTION DESIGN: Digital Products title ============ */
+.title-motion {
+  background: linear-gradient(110deg, var(--blue) 0%, var(--blue-light) 35%, var(--accent) 60%, var(--blue) 100%);
+  background-size: 250% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: titleGradientFlow 6s ease-in-out infinite, titleRise 0.9s ease both;
+  display: inline-block;
+}
+@keyframes titleGradientFlow {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+@keyframes titleRise {
+  from { opacity: 0; transform: translateY(18px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.title-motion-wrap { position: relative; display: inline-block; }
+.title-motion-wrap .motion-spark {
+  position: absolute;
+  top: -10px; right: -28px;
+  font-size: 1.1rem;
+  color: var(--accent);
+  animation: sparkPulse 2.4s ease-in-out infinite;
+}
+@keyframes sparkPulse {
+  0%, 100% { opacity: 0.35; transform: scale(0.85) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.15) rotate(15deg); }
+}
+
+/* ============ PARTNERS ============ */
+.partners-bar {
+  position: relative;
+  z-index: 1;
+  background: var(--surface);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-top: 1px solid var(--divider);
+  border-bottom: 1px solid var(--divider);
+  padding: 32px 0;
+  overflow: hidden;
+}
+
+.partners-marquee-container {
+  overflow: hidden;
+  width: 100%;
+  display: flex;
+  position: relative;
+  mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+}
+
+.partners-marquee-inner {
+  display: flex;
+  width: max-content;
+  animation: marquee 30s linear infinite;
+}
+
+.partners-marquee-inner:hover {
+  animation-play-state: paused;
+}
+
+.marquee-group {
+  display: flex;
+  align-items: center;
+  gap: 50px;
+  padding-right: 50px;
+}
+
+.partner-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  opacity: 0.38;
+  transition: all 0.3s;
+  cursor: default;
+  font-family: 'Figtree', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--text);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+.partner-item:hover { opacity: 0.85; color: var(--blue); }
+.partner-item i { font-size: 1.5rem; }
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ============ FEATURES ============ */
+.feature-card {
+  background: var(--card);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 36px 30px;
+  transition: all 0.3s ease;
+  height: 100%;
+  box-shadow: var(--shadow-sm);
+}
+.feature-card:hover {
+  transform: translateY(-7px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(0,113,227,0.22);
+}
+
+.feature-icon {
+  width: 52px; height: 52px;
+  background: var(--blue-soft);
+  border: 1px solid rgba(0,113,227,0.15);
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.25rem;
+  color: var(--blue);
+  margin-bottom: 22px;
+}
+
+.feature-card h4 { font-size: 1rem; font-weight: 700; margin-bottom: 10px; color: var(--text); }
+.feature-card p { font-size: 0.86rem; color: var(--text-secondary); line-height: 1.65; margin: 0; }
+
+/* ============ COURSE CARDS ============ */
+.course-card {
+  background: var(--card);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  height: 100%;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-sm);
+}
+.course-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-md);
+}
+
+.course-img-wrap {
+  height: 185px;
+  overflow: hidden;
+  position: relative;
+}
+.course-img-wrap img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+.course-card:hover .course-img-wrap img { transform: scale(1.07); }
+
+/* Category badge */
+.course-badge {
+  position: absolute;
+  bottom: 10px; left: 10px;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-family: 'Figtree', sans-serif;
+}
+
+/* Label badges (bestseller, promo, etc.) */
+.label-badge {
+  position: absolute;
+  top: 10px; right: 10px;
+  font-size: 0.64rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-family: 'Figtree', sans-serif;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.label-bestseller { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; }
+.label-nouveau { background: linear-gradient(135deg, #10b981, #059669); color: white; }
+.label-populaire { background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: white; }
+.label-promo { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; }
+.label-tendance { background: linear-gradient(135deg, #f97316, #ea580c); color: white; }
+.label-top { background: linear-gradient(135deg, #0071e3, #409cff); color: white; }
+
+.course-body { padding: 20px 20px 22px; display: flex; flex-direction: column; flex: 1; }
+
+.course-title {
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.4;
+  margin-bottom: 14px;
+  color: var(--text);
+  flex: 1;
+  letter-spacing: -0.01em;
+}
+
+.course-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  font-size: 0.74rem;
+  color: var(--text-secondary);
+}
+.course-meta .students { display: flex; align-items: center; gap: 4px; }
+.stars-sm { color: #f5a623; font-size: 0.7rem; }
+
+.price-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.price-main {
+  font-family: 'Figtree', sans-serif;
+  font-size: 1.12rem;
+  font-weight: 900;
+  color: var(--blue);
+  letter-spacing: -0.03em;
+}
+.price-usd { font-size: 0.72rem; color: var(--text-secondary); margin-top: 2px; }
+
+.btn-buy {
+  display: block;
+  width: 100%;
+  text-align: center;
+  background: var(--blue);
+  color: white;
+  font-family: 'Figtree', sans-serif;
+  font-weight: 700;
+  font-size: 0.82rem;
+  padding: 11px;
+  border-radius: 12px;
+  border: none;
+  text-decoration: none;
+  transition: all 0.25s;
+  cursor: pointer;
+  letter-spacing: -0.01em;
+}
+.btn-buy:hover {
+  background: #0077ed;
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 22px rgba(0,113,227,0.38);
+}
+
+/* ============ SHOP ============ */
+.shop-card {
+  background: var(--card);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: all 0.3s;
+  height: 100%;
+  box-shadow: var(--shadow-sm);
+}
+.shop-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); }
+.shop-badge {
+  position: absolute;
+  top: 14px; right: 14px;
+  background: var(--accent);
+  color: white;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-family: 'Figtree', sans-serif;
+}
+.shop-img { height: 200px; overflow: hidden; }
+.shop-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+.shop-card:hover .shop-img img { transform: scale(1.05); }
+.shop-body { padding: 20px; }
+.shop-body h5 { font-size: 0.93rem; font-weight: 700; margin-bottom: 6px; color: var(--text); font-family:'Figtree',sans-serif; }
+.shop-body p { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 16px; }
+
+/* ============ APPS ============ */
+.app-glass {
+  background: linear-gradient(135deg, rgba(0,113,227,0.13), rgba(64,156,255,0.08));
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid rgba(0,113,227,0.2);
+  border-radius: var(--radius-lg);
+  padding: 60px 52px;
+  overflow: hidden;
+  position: relative;
+}
+.app-glass::before {
+  content: '';
+  position: absolute;
+  top: -80px; right: -80px;
+  width: 320px; height: 320px;
+  background: radial-gradient(circle, rgba(0,113,227,0.14), transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.app-icon-wrap {
+  width: 70px; height: 70px;
+  background: linear-gradient(135deg, #0071e3, #409cff);
+  border-radius: 18px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.9rem;
+  color: white;
+  margin-bottom: 26px;
+  box-shadow: 0 10px 30px rgba(0,113,227,0.4);
+}
+.btn-app {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border-radius: 14px;
+  font-family: 'Figtree', sans-serif;
+  font-weight: 700;
+  font-size: 0.86rem;
+  text-decoration: none;
+  transition: all 0.25s;
+  border: none;
+  letter-spacing: -0.01em;
+}
+.btn-app-light { background: white; color: #1d1d1f; box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+.btn-app-light:hover { background: #f5f5f7; color: #1d1d1f; transform: translateY(-2px); }
+.btn-app-outline { background: transparent; color: white; border: 1.5px solid rgba(255,255,255,0.5); }
+.btn-app-outline:hover { background: rgba(255,255,255,0.1); color: white; }
+[data-theme="dark"] .btn-app-light { background: rgba(255,255,255,0.12); color: white; }
+[data-theme="dark"] .btn-app-light:hover { background: rgba(255,255,255,0.18); }
+
+/* ============ BLOG ============ */
+.blog-card {
+  background: var(--card);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  height: 100%;
+  transition: all 0.3s;
+  box-shadow: var(--shadow-sm);
+}
+.blog-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); }
+.blog-img { height: 200px; overflow: hidden; }
+.blog-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+.blog-card:hover .blog-img img { transform: scale(1.05); }
+.blog-body { padding: 22px; }
+.blog-date { font-size: 0.72rem; font-weight: 600; color: var(--blue); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+.blog-body h5 { font-size: 0.95rem; font-weight: 700; margin-bottom: 10px; color: var(--text); font-family:'Figtree',sans-serif; }
+.blog-body p { font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.6; }
+.blog-link { font-size: 0.8rem; font-weight: 700; color: var(--blue); text-decoration: none; display: inline-flex; align-items: center; gap: 4px; font-family:'Figtree',sans-serif; }
+.blog-link:hover { gap: 8px; }
+
+/* ============ ABOUT ============ */
+.about-item { display: flex; align-items: flex-start; gap: 18px; margin-bottom: 30px; }
+.about-ico { width: 46px; height: 46px; min-width: 46px; background: var(--blue); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: white; }
+.about-item h5 { font-size: 0.93rem; font-weight: 700; margin-bottom: 6px; color: var(--text); font-family:'Figtree',sans-serif; }
+.about-item p { font-size: 0.83rem; color: var(--text-secondary); margin: 0; line-height: 1.6; }
+
+/* ============ JOBS ============ */
+.job-card {
+  background: var(--card);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-bottom: 14px;
+  transition: all 0.3s;
+  box-shadow: var(--shadow-sm);
+}
+.job-card:hover { border-color: rgba(0,113,227,0.3); box-shadow: var(--shadow-md); transform: translateY(-3px); }
+.job-tag { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; margin-right: 6px; margin-bottom: 4px; font-family:'Figtree',sans-serif; }
+.tag-full { background: rgba(0,113,227,0.1); color: var(--blue); }
+.tag-part { background: rgba(16,185,129,0.1); color: #10b981; }
+.tag-remote { background: rgba(124,58,237,0.1); color: #7c3aed; }
+.job-card h5 { font-size: 0.98rem; font-weight: 700; margin-bottom: 8px; color: var(--text); font-family:'Figtree',sans-serif; }
+.job-card p { font-size: 0.83rem; color: var(--text-secondary); margin: 12px 0; line-height: 1.6; }
+
+/* ============ DISCOVERIES ============ */
+.disc-card { position: relative; border-radius: var(--radius); overflow: hidden; height: 320px; }
+.disc-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+.disc-card:hover img { transform: scale(1.05); }
+.disc-overlay {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.87) 0%, rgba(0,0,0,0.22) 60%, transparent 100%);
+  padding: 32px 24px 24px;
+  color: white;
+}
+.disc-overlay h4 { font-family:'Figtree',sans-serif; font-size: 1.08rem; font-weight: 800; margin-bottom: 8px; }
+.disc-overlay p { font-size: 0.81rem; opacity: 0.8; margin-bottom: 14px; }
+.btn-disc {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.76rem; font-weight: 700; color: white;
+  background: rgba(255,255,255,0.2); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.3); padding: 8px 16px; border-radius: 10px; text-decoration: none;
+  transition: all 0.25s; font-family:'Figtree',sans-serif;
+}
+.btn-disc:hover { background: rgba(255,255,255,0.35); color: white; }
+
+/* ============ TESTIMONIALS ============ */
+.testi-card {
+  background: var(--card);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 30px 26px;
+  height: 100%;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s;
+}
+.testi-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
+.stars { color: #f5a623; font-size: 0.78rem; margin-bottom: 16px; letter-spacing: 2px; }
+.testi-text { font-size: 0.88rem; color: var(--text); line-height: 1.72; margin-bottom: 22px; font-style: italic; }
+.testi-author { display: flex; align-items: center; gap: 12px; }
+.testi-author img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid var(--blue-soft); }
+.testi-name { font-family:'Figtree',sans-serif; font-size: 0.86rem; font-weight: 700; color: var(--text); }
+.testi-loc { font-size: 0.72rem; color: var(--text-secondary); }
+
+/* ============ CTA ============ */
+.cta-wrap {
+  background: linear-gradient(135deg, #0071e3, #409cff);
+  border-radius: var(--radius-lg);
+  padding: 76px 52px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.cta-wrap::before {
+  content: '';
+  position: absolute;
+  top: -100px; right: -100px;
+  width: 420px; height: 420px;
+  background: radial-gradient(circle, rgba(255,255,255,0.12), transparent 70%);
+  border-radius: 50%;
+}
+.cta-wrap h2 { font-family:'Figtree',sans-serif; font-size: clamp(1.9rem, 3vw, 2.6rem); font-weight: 900; color: white; letter-spacing: -0.04em; margin-bottom: 16px; }
+.cta-wrap p { color: rgba(255,255,255,0.82); font-size: 1rem; margin-bottom: 36px; }
+.btn-cta-white {
+  background: white; color: var(--blue); font-family:'Figtree',sans-serif; font-weight: 800; font-size: 0.92rem;
+  padding: 14px 36px; border-radius: 50px; border: none; cursor: pointer; text-decoration: none;
+  display: inline-block; transition: all 0.25s; box-shadow: 0 8px 28px rgba(0,0,0,0.16);
+  letter-spacing: -0.01em;
+}
+.btn-cta-white:hover { transform: translateY(-3px); box-shadow: 0 14px 36px rgba(0,0,0,0.22); color: var(--blue); }
+
+/* ============ PAYMENT LOGOS ============ */
+.pay-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 14px; border-radius: 8px;
+  font-family:'Figtree',sans-serif; font-weight: 800; font-size: 0.8rem; margin: 4px;
+}
+.pay-mtn { background: var(--mtn-yellow); color: #000; }
+.pay-moov { background: var(--moov-blue); color: #fff; }
+.pay-orange { background: #ff6600; color: #fff; }
+.pay-wave { background: #1ba0e1; color: #fff; }
+.pay-airtel { background: #e31837; color: #fff; }
+.pay-visa { background: white; border: 1px solid rgba(0,0,0,0.12); color: #1a1f71; font-style: italic; }
+
+/* ============ FOOTER ============ */
+footer {
+  position: relative; z-index: 1;
+  background: var(--surface);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-top: 1px solid var(--divider);
+  padding: 64px 0 30px;
+}
+footer .brand-name { font-family: 'Figtree', sans-serif; font-weight: 900; font-size: 1.12rem; color: var(--text); letter-spacing:-0.03em; }
+footer p { font-size: 0.83rem; color: var(--text-secondary); line-height: 1.7; }
+footer h6 { font-family:'Figtree',sans-serif; font-size: 0.78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text); margin-bottom: 16px; }
+footer ul { list-style: none; padding: 0; margin: 0; }
+footer ul li { font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+footer .divider { border-color: var(--divider); margin: 36px 0 22px; }
+footer .copy { font-size: 0.76rem; color: var(--text-secondary); text-align: center; }
+
+/* ============ OUTLINE BTN ============ */
+.btn-outline-custom {
+  background: transparent; border: 1.5px solid var(--blue); color: var(--blue);
+  font-family:'Figtree',sans-serif; font-weight: 700; font-size: 0.86rem;
+  padding: 12px 28px; border-radius: 50px; text-decoration: none; transition: all 0.25s; display: inline-block;
+  letter-spacing: -0.01em;
+}
+.btn-outline-custom:hover { background: var(--blue); color: white; transform: translateY(-2px); }
+
+/* ============ MOBILE NAV ============ */
+.mobile-menu {
+  display: none;
+  position: fixed;
+  top: 58px; left: 0; right: 0;
+  background: rgba(255, 255, 255, 0.7) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 16px 24px 24px;
+  z-index: 999;
+  flex-direction: column;
+  gap: 4px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+}
+
+[data-theme="dark"] .mobile-menu {
+  background: rgba(10, 10, 12, 0.7) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+}
+
+.mobile-menu.open { display: flex; }
+.mobile-menu a { font-family:'Figtree',sans-serif; font-size: 0.9rem; font-weight: 500; color: var(--text); text-decoration: none; padding: 10px 12px; border-radius: 10px; transition: background 0.2s; }
+.mobile-menu a:hover { background: var(--divider); }
+.mobile-menu-controls { display: flex; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--divider); }
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 991px) {
+  .nav-links, .nav-controls { display: none; }
+  .nav-toggler { display: flex; align-items: center; }
+  .hero-stat-card { left: 0; bottom: -16px; }
+  .hero-badge { right: 0; }
+  .app-glass { padding: 36px 24px; }
+  .cta-wrap { padding: 52px 28px; }
+}
+
+@media (max-width: 575px) {
+  #home { padding: 130px 0 70px; }
+  .section-wrap { padding: 72px 0; }
+  .hero-stat-card, .hero-badge { display: none; }
+}
+
+/* ============ ANIMATIONS ============ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fadeUp 0.75s ease both; }
+.fade-up-2 { animation-delay: 0.12s; }
+.fade-up-3 { animation-delay: 0.24s; }
+.fade-up-4 { animation-delay: 0.36s; }
+
+/* scroll-reveal */
+.reveal { opacity: 0; transform: translateY(32px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="bg-orb orb-1"></div>
+<div class="bg-orb orb-2"></div>
+<div class="bg-orb orb-3"></div>
+
+<!-- ============ NAVBAR ============ -->
+<nav class="navbar" id="mainNav">
+  <div class="nav-inner">
+    <a href="#home" class="brand">
+      <span class="brand-dot"></span>TECHNOVA
+    </a>
+    <ul class="nav-links">
+      <li><a href="#home" data-i18n="nav.home">Accueil</a></li>
+      <li><a href="#courses" data-i18n="nav.products">Nos Produits Digitaux</a></li>
+      <li><a href="#eshop" data-i18n="nav.formations">Nos Formations</a></li>
+      <li><a href="#eshop" data-i18n="nav.store">STORE</a></li>
+      <li><a href="#discoveries" data-i18n="nav.discoveries">Découvertes</a></li>
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" id="navMoreToggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-i18n="nav.more">Plus</a>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navMoreToggle">
+          <li><a class="dropdown-item" href="#jobs" data-i18n="nav.jobsStages">Emplois &amp; Stages</a></li>
+          <li><a class="dropdown-item" href="#blog" data-i18n="nav.blog">Blog</a></li>
+          <li><a class="dropdown-item" href="#productivity" data-i18n="nav.productivity">Outils de Productivité</a></li>
+          <li><a class="dropdown-item" href="#excel-templates" data-i18n="nav.excelTemplates">Templates Excel</a></li>
+          <li><a class="dropdown-item" href="#faq" data-i18n="nav.faq">FAQ</a></li>
+          <li><a class="dropdown-item" href="#apps" data-i18n="nav.technovaApps">TECHNOVA APPS</a></li>
+          <li><a class="dropdown-item" href="#become-seller" data-i18n="nav.becomeSeller">Devenir Vendeur</a></li>
+          <li><a class="dropdown-item" href="#about" data-i18n="nav.about">À propos</a></li>
+        </ul>
+      </li>
+    </ul>
+    <div class="nav-controls">
+      <button class="ctrl-btn lang-btn" id="langToggle">
+        <i class="fas fa-globe"></i><span id="langLabel">EN</span>
+      </button>
+      <button class="ctrl-btn" id="themeToggle">
+        <i class="fas fa-moon" id="themeIcon"></i>
+      </button>
+    </div>
+    <button class="nav-toggler" id="navToggler"><i class="fas fa-bars"></i></button>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#home" data-i18n="nav.home">Accueil</a>
+  <a href="#courses" data-i18n="nav.products">Nos Produits Digitaux</a>
+  <a href="#eshop" data-i18n="nav.formations">Nos Formations</a>
+  <a href="#eshop" data-i18n="nav.store">STORE</a>
+  <a href="#discoveries" data-i18n="nav.discoveries">Découvertes</a>
+  <div class="submenu-label" data-i18n="nav.more">Plus</div>
+  <a href="#jobs" data-i18n="nav.jobsStages">Emplois &amp; Stages</a>
+  <a href="#blog" data-i18n="nav.blog">Blog</a>
+  <a href="#productivity" data-i18n="nav.productivity">Outils de Productivité</a>
+  <a href="#excel-templates" data-i18n="nav.excelTemplates">Templates Excel</a>
+  <a href="#faq" data-i18n="nav.faq">FAQ</a>
+  <a href="#apps" data-i18n="nav.technovaApps">TECHNOVA APPS</a>
+  <a href="#become-seller" data-i18n="nav.becomeSeller">Devenir Vendeur</a>
+  <a href="#about" data-i18n="nav.about">À propos</a>
+  <div class="mobile-menu-controls">
+    <button class="ctrl-btn lang-btn" id="langToggle2"><i class="fas fa-globe"></i><span id="langLabel2">EN</span></button>
+    <button class="ctrl-btn" id="themeToggle2"><i class="fas fa-moon" id="themeIcon2"></i></button>
+  </div>
+</div>
+
+<!-- ============ HERO ============ -->
+<section id="home">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <div class="hero-label fade-up">
+          <i class="fas fa-rocket"></i>
+          <span data-i18n="hero.eyebrow">Plateforme #1 en Afrique de l'Ouest</span>
+        </div>
+        <h1 class="hero-title fade-up fade-up-2" data-i18n="hero.title">
+          Maîtrisez la Tech de <span class="hero-span">Demain</span>.
+        </h1>
+        <p class="hero-desc fade-up fade-up-3" data-i18n="hero.desc">
+          TECHNOVA Learning — la plateforme ultime pour apprendre le développement, la data science et le design. Formez-vous aux compétences recherchées par les recruteurs.
+        </p>
+        <a href="#courses" class="hero-cta fade-up fade-up-4" data-i18n="hero.cta">
+          Explorer les cours <i class="fas fa-arrow-right"></i>
+        </a>
+        <div class="hero-social-proof fade-up fade-up-4">
+          <div class="avatars">
+            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="">
+            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="">
+            <img src="https://randomuser.me/api/portraits/men/85.jpg" alt="">
+          </div>
+          <p class="proof-text mb-0" data-i18n="hero.proof"><strong>+10k</strong> étudiants nous font confiance</p>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="hero-img-wrap fade-up fade-up-2">
+          <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Students learning">
+          <div class="hero-stat-card">
+            <div class="num">95%</div>
+            <div class="lbl" data-i18n="hero.stat1.lbl">Taux de satisfaction</div>
+          </div>
+          <div class="hero-badge">
+            <div class="big">500+</div>
+            <div class="sm" data-i18n="hero.badge.lbl">Entreprises</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PARTNERS ============ -->
+<div class="partners-bar">
+  <div class="container">
+    <p class="text-center mb-4" data-i18n="partners.title" style="font-size:0.68rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-secondary);font-family:'Figtree',sans-serif;">NOS PARTENAIRES TECHNOLOGIQUES</p>
+  </div>
+  <div class="partners-marquee-container">
+    <div class="partners-marquee-inner">
+      <div class="marquee-group">
+        <div class="partner-item"><i class="fab fa-google"></i> Google</div>
+        <div class="partner-item"><i class="fab fa-microsoft"></i> Microsoft</div>
+        <div class="partner-item"><i class="fab fa-aws"></i> AWS</div>
+        <div class="partner-item"><i class="fab fa-python"></i> Python</div>
+        <div class="partner-item"><i class="fab fa-meta"></i> Meta</div>
+        <div class="partner-item"><i class="fab fa-github"></i> GitHub</div>
+        <div class="partner-item"><i class="fab fa-docker"></i> Docker</div>
+        <div class="partner-item"><i class="fab fa-linux"></i> Linux</div>
+        <div class="partner-item"><i class="fab fa-android"></i> Android</div>
+        <div class="partner-item"><i class="fab fa-apple"></i> Apple</div>
+      </div>
+      <div class="marquee-group">
+        <div class="partner-item"><i class="fab fa-google"></i> Google</div>
+        <div class="partner-item"><i class="fab fa-microsoft"></i> Microsoft</div>
+        <div class="partner-item"><i class="fab fa-aws"></i> AWS</div>
+        <div class="partner-item"><i class="fab fa-python"></i> Python</div>
+        <div class="partner-item"><i class="fab fa-meta"></i> Meta</div>
+        <div class="partner-item"><i class="fab fa-github"></i> GitHub</div>
+        <div class="partner-item"><i class="fab fa-docker"></i> Docker</div>
+        <div class="partner-item"><i class="fab fa-linux"></i> Linux</div>
+        <div class="partner-item"><i class="fab fa-android"></i> Android</div>
+        <div class="partner-item"><i class="fab fa-apple"></i> Apple</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ FEATURES ============ -->
+<section id="features" class="section-wrap">
+  <div class="container">
+    <div class="row mb-5">
+      <div class="col-lg-6 reveal">
+        <span class="section-eyebrow" data-i18n="features.eyebrow">Pourquoi TECHNOVA</span>
+        <h2 class="section-title" data-i18n="features.title">Pourquoi choisir TECHNOVA ?</h2>
+        <p class="section-sub" data-i18n="features.sub">Une pédagogie adaptée au marché de l'emploi local et international.</p>
+      </div>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-4 reveal"><div class="feature-card"><div class="feature-icon"><i class="fas fa-laptop-code"></i></div><h4 data-i18n="features.f1.title">100% Pratique</h4><p data-i18n="features.f1.desc">Des projets concrets pour construire votre portfolio professionnel dès la première leçon.</p></div></div>
+      <div class="col-md-4 reveal"><div class="feature-card"><div class="feature-icon"><i class="fas fa-headset"></i></div><h4 data-i18n="features.f2.title">Support Dédié</h4><p data-i18n="features.f2.desc">Un accompagnement personnalisé pour répondre à vos questions pendant toute la formation.</p></div></div>
+      <div class="col-md-4 reveal"><div class="feature-card"><div class="feature-icon"><i class="fas fa-mobile-alt"></i></div><h4 data-i18n="features.f3.title">Paiement Local</h4><p data-i18n="features.f3.desc">Payez facilement via MTN MoMo, Moov Money, Orange Money, Wave ou Carte Visa.</p></div></div>
+      <div class="col-md-4 reveal"><div class="feature-card"><div class="feature-icon"><i class="fas fa-certificate"></i></div><h4 data-i18n="features.f4.title">Certificats Reconnus</h4><p data-i18n="features.f4.desc">Obtenez des certifications valorisées par les employeurs africains et internationaux.</p></div></div>
+      <div class="col-md-4 reveal"><div class="feature-card"><div class="feature-icon"><i class="fas fa-users"></i></div><h4 data-i18n="features.f5.title">Communauté Active</h4><p data-i18n="features.f5.desc">Rejoignez 10 000+ apprenants et un réseau de mentors passionnés par la technologie.</p></div></div>
+      <div class="col-md-4 reveal"><div class="feature-card"><div class="feature-icon"><i class="fas fa-infinity"></i></div><h4 data-i18n="features.f6.title">Accès à Vie</h4><p data-i18n="features.f6.desc">Achetez une fois, apprenez pour toujours. Mises à jour incluses sans frais supplémentaires.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COURSES ============ -->
+<section id="courses" class="section-wrap alt">
+  <div class="container">
+    <div class="row mb-5">
+      <div class="col-lg-7 reveal">
+        <span class="section-eyebrow" data-i18n="courses.eyebrow">Formations</span>
+        <h2 class="section-title"><span class="title-motion-wrap"><span class="title-motion" data-i18n="courses.title">Nos Produits Digitaux</span><i class="fas fa-sparkles motion-spark"></i></span></h2>
+        <p class="section-sub" data-i18n="courses.sub">Investissez dans votre avenir à petit prix.</p>
+      </div>
+    </div>
+    <div class="row g-4" id="course-list"></div>
+  </div>
+</section>
+
+<!-- ============ E-SHOP ============ -->
+<section id="eshop" class="section-wrap">
+  <div class="container">
+    <div class="row mb-5">
+      <div class="col-lg-6 reveal">
+        <span class="section-eyebrow" data-i18n="eshop.eyebrow">E-Commerce</span>
+        <h2 class="section-title" data-i18n="eshop.title">E-Shopping</h2>
+        <p class="section-sub" data-i18n="eshop.sub">Produits tech et accessoires à prix réduits</p>
+      </div>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-4"><div class="shop-card position-relative"><span class="shop-badge" data-i18n="eshop.badge.promo">-20%</span><div class="shop-img"><img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&h=400&fit=crop" alt="Laptop"></div><div class="shop-body"><h5 data-i18n="eshop.p1.title">Laptop Professionnel</h5><p data-i18n="eshop.p1.desc">Intel i7, 16GB RAM, SSD 512GB</p><div class="d-flex justify-content-between align-items-center"><span class="price-main">450.000 F</span><button class="btn-buy" data-i18n="eshop.btn.add" style="width:auto;padding:9px 18px;"><i class="fas fa-cart-plus me-2"></i>Ajouter</button></div></div></div></div>
+      <div class="col-md-4"><div class="shop-card position-relative"><span class="shop-badge" data-i18n="eshop.badge.new" style="background:#10b981;">Nouveau</span><div class="shop-img"><img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=400&fit=crop" alt="Headphones"></div><div class="shop-body"><h5 data-i18n="eshop.p2.title">Casque Audio Premium</h5><p data-i18n="eshop.p2.desc">Noise cancelling, Bluetooth 5.0</p><div class="d-flex justify-content-between align-items-center"><span class="price-main">75.000 F</span><button class="btn-buy" data-i18n="eshop.btn.add" style="width:auto;padding:9px 18px;"><i class="fas fa-cart-plus me-2"></i>Ajouter</button></div></div></div></div>
+      <div class="col-md-4"><div class="shop-card position-relative"><div class="shop-img"><img src="https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=600&h=400&fit=crop" alt="Smartphone"></div><div class="shop-body"><h5 data-i18n="eshop.p3.title">Smartphone Pro</h5><p data-i18n="eshop.p3.desc">5G, 256GB, Triple caméra</p><div class="d-flex justify-content-between align-items-center"><span class="price-main">320.000 F</span><button class="btn-buy" data-i18n="eshop.btn.add" style="width:auto;padding:9px 18px;"><i class="fas fa-cart-plus me-2"></i>Ajouter</button></div></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ APPS ============ -->
+<section id="apps" class="section-wrap alt">
+  <div class="container">
+    <div class="app-glass">
+      <div class="row align-items-center g-5">
+        <div class="col-lg-6">
+          <div class="app-icon-wrap"><i class="fas fa-graduation-cap"></i></div>
+          <span class="section-eyebrow" data-i18n="apps.eyebrow" style="color:rgba(255,255,255,0.7);">Nos Applications</span>
+          <h2 class="section-title" data-i18n="apps.title" style="color:white;">TECHNOVA Mobile</h2>
+          <p data-i18n="apps.desc" style="color:rgba(255,255,255,0.8);font-size:0.93rem;margin-bottom:32px;">Accédez à tous vos cours depuis votre smartphone. Téléchargez vos leçons et apprenez hors ligne, partout en Afrique.</p>
+          <div class="d-flex gap-3 flex-wrap">
+            <a href="#" class="btn-app btn-app-light"><i class="fab fa-google-play"></i>Google Play</a>
+            <a href="#" class="btn-app btn-app-outline"><i class="fab fa-apple"></i>App Store</a>
+          </div>
+        </div>
+        <div class="col-lg-6 text-center">
+          <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=500&h=600&fit=crop" alt="Mobile App" class="img-fluid rounded-4" style="max-height:460px;box-shadow:0 24px 60px rgba(0,0,0,0.3);">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BLOG ============ -->
+<section id="blog" class="section-wrap">
+  <div class="container">
+    <div class="row mb-5">
+      <div class="col-lg-6 reveal">
+        <span class="section-eyebrow" data-i18n="blog.eyebrow">Blog & Actualités</span>
+        <h2 class="section-title" data-i18n="blog.title">Informez-vous</h2>
+        <p class="section-sub" data-i18n="blog.sub">Actualités et conseils tech pour rester à la pointe</p>
+      </div>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-4 reveal"><div class="blog-card"><div class="blog-img"><img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=600&h=350&fit=crop" alt="Blog 1"></div><div class="blog-body"><div class="blog-date"><i class="far fa-calendar"></i>15 Jan 2026</div><h5 data-i18n="blog.b1.title">L'IA générative en 2026</h5><p data-i18n="blog.b1.desc">Découvrez les dernières avancées en intelligence artificielle et leur impact sur le marché du travail africain.</p><a href="#" class="blog-link" data-i18n="blog.link">Lire plus <i class="fas fa-arrow-right fa-xs"></i></a></div></div></div>
+      <div class="col-md-4 reveal"><div class="blog-card"><div class="blog-img"><img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=350&fit=crop" alt="Blog 2"></div><div class="blog-body"><div class="blog-date"><i class="far fa-calendar"></i>12 Jan 2026</div><h5 data-i18n="blog.b2.title">Cybersécurité : Les tendances</h5><p data-i18n="blog.b2.desc">Protégez vos données avec les meilleures pratiques de sécurité informatique en 2026.</p><a href="#" class="blog-link" data-i18n="blog.link">Lire plus <i class="fas fa-arrow-right fa-xs"></i></a></div></div></div>
+      <div class="col-md-4 reveal"><div class="blog-card"><div class="blog-img"><img src="https://images.unsplash.com/photo-1551434678-e076c223a692?w=600&h=350&fit=crop" alt="Blog 3"></div><div class="blog-body"><div class="blog-date"><i class="far fa-calendar"></i>08 Jan 2026</div><h5 data-i18n="blog.b3.title">Devenir développeur Full Stack</h5><p data-i18n="blog.b3.desc">Le guide complet pour maîtriser le développement web moderne en Afrique.</p><a href="#" class="blog-link" data-i18n="blog.link">Lire plus <i class="fas fa-arrow-right fa-xs"></i></a></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section id="about" class="section-wrap alt">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-5 reveal">
+        <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&h=600&fit=crop" alt="Team" class="img-fluid rounded-4" style="box-shadow:var(--shadow-lg);">
+      </div>
+      <div class="col-lg-7 reveal">
+        <span class="section-eyebrow" data-i18n="about.eyebrow">À propos</span>
+        <h2 class="section-title" data-i18n="about.title">Qui Sommes-Nous ?</h2>
+        <p class="section-sub mb-4" data-i18n="about.sub">TECHNOVA Learning est née d'une vision simple : rendre l'éducation technologique accessible à tous en Afrique et au-delà. Nous croyons que chacun mérite d'avoir accès aux compétences du futur.</p>
+        <div class="about-item"><div class="about-ico"><i class="fas fa-bullseye"></i></div><div><h5 data-i18n="about.item1.title">Notre Vision</h5><p data-i18n="about.item1.desc">Devenir la plateforme de référence pour l'apprentissage tech en Afrique d'ici 2030.</p></div></div>
+        <div class="about-item"><div class="about-ico"><i class="fas fa-heart"></i></div><div><h5 data-i18n="about.item2.title">Nos Valeurs</h5><p data-i18n="about.item2.desc">Excellence, accessibilité, innovation et accompagnement personnalisé de chaque apprenant.</p></div></div>
+        <div class="about-item"><div class="about-ico"><i class="fas fa-award"></i></div><div><h5 data-i18n="about.item3.title">Nos Résultats</h5><p data-i18n="about.item3.desc">+10 000 étudiants formés, 95% de taux de satisfaction, 500+ entreprises partenaires.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ JOBS ============ -->
+<section id="jobs" class="section-wrap">
+  <div class="container">
+    <div class="row mb-5">
+      <div class="col-lg-6 reveal">
+        <span class="section-eyebrow" data-i18n="jobs.eyebrow">Carrière</span>
+        <h2 class="section-title" data-i18n="jobs.title">Jobs & Annonces</h2>
+        <p class="section-sub" data-i18n="jobs.sub">Trouvez votre prochaine opportunité professionnelle</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-8 mx-auto">
+        <div class="job-card reveal"><div class="d-flex justify-content-between align-items-start flex-wrap gap-2"><div><h5 data-i18n="jobs.j1.title">Développeur Full Stack Junior</h5><span class="job-tag tag-full" data-i18n="jobs.tag.full">Temps plein</span><span class="job-tag tag-remote" data-i18n="jobs.tag.remote">Remote</span></div><span style="font-size:0.73rem;color:var(--text-secondary);" data-i18n="jobs.j1.time"><i class="far fa-clock me-1"></i>Publié il y a 2j</span></div><p data-i18n="jobs.j1.desc">Startup tech recherche développeur motivé pour rejoindre son équipe. Stack: React, Node.js, MongoDB.</p><div class="d-flex justify-content-between align-items-center"><span style="font-weight:600;color:var(--blue);font-size:0.83rem;" data-i18n="jobs.j1.loc"><i class="fas fa-map-marker-alt me-2"></i>Cotonou, Bénin</span><button class="btn-buy" data-i18n="jobs.btn.apply" style="width:auto;padding:9px 20px;">Postuler</button></div></div>
+        <div class="job-card reveal"><div class="d-flex justify-content-between align-items-start flex-wrap gap-2"><div><h5 data-i18n="jobs.j2.title">Data Analyst</h5><span class="job-tag tag-part" data-i18n="jobs.tag.part">Temps partiel</span></div><span style="font-size:0.73rem;color:var(--text-secondary);" data-i18n="jobs.j2.time"><i class="far fa-clock me-1"></i>Publié il y a 5j</span></div><p data-i18n="jobs.j2.desc">Cabinet de conseil recherche analyste de données pour missions ponctuelles. Maîtrise de Python et SQL requise.</p><div class="d-flex justify-content-between align-items-center"><span style="font-weight:600;color:var(--blue);font-size:0.83rem;" data-i18n="jobs.j2.loc"><i class="fas fa-map-marker-alt me-2"></i>Abidjan, Côte d'Ivoire</span><button class="btn-buy" data-i18n="jobs.btn.apply" style="width:auto;padding:9px 20px;">Postuler</button></div></div>
+        <div class="job-card reveal"><div class="d-flex justify-content-between align-items-start flex-wrap gap-2"><div><h5 data-i18n="jobs.j3.title">Designer UX/UI</h5><span class="job-tag tag-full" data-i18n="jobs.tag.full">Temps plein</span></div><span style="font-size:0.73rem;color:var(--text-secondary);" data-i18n="jobs.j3.time"><i class="far fa-clock me-1"></i>Publié il y a 1j</span></div><p data-i18n="jobs.j3.desc">Agence digitale créative cherche designer passionné pour projets innovants. Portfolio requis.</p><div class="d-flex justify-content-between align-items-center"><span style="font-weight:600;color:var(--blue);font-size:0.83rem;" data-i18n="jobs.j3.loc"><i class="fas fa-map-marker-alt me-2"></i>Dakar, Sénégal</span><button class="btn-buy" data-i18n="jobs.btn.apply" style="width:auto;padding:9px 20px;">Postuler</button></div></div>
+        <div class="text-center mt-4"><a href="#" class="btn-outline-custom" data-i18n="jobs.btn.all">Voir toutes les offres</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DISCOVERIES ============ -->
+<section id="discoveries" class="section-wrap alt">
+  <div class="container">
+    <div class="row mb-5">
+      <div class="col-lg-6 reveal">
+        <span class="section-eyebrow" data-i18n="disc.eyebrow">Découvertes</span>
+        <h2 class="section-title" data-i18n="disc.title">Innovations & Tendances</h2>
+        <p class="section-sub" data-i18n="disc.sub">Les technologies qui façonnent le futur du continent africain</p>
+      </div>
+    </div>
+    <div class="row g-4" id="discoveries-list"></div>
+  </div>
+</section>
+
+<!-- ============ TESTIMONIALS ============ -->
+<section id="avis" class="section-wrap">
+  <div class="container">
+    <div class="text-center mb-5 reveal">
+      <span class="section-eyebrow" data-i18n="testi.eyebrow">Témoignages</span>
+      <h2 class="section-title" data-i18n="testi.title">Ils ont réussi avec nous</h2>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-4 col-lg-4 reveal">
+        <div class="testi-card">
+          <div class="stars">★★★★★</div>
+          <p class="testi-text" data-i18n="testi.t1.text">"La formation Cybersécurité m'a permis de décrocher un poste de consultant. Le paiement par Mobile Money est très pratique."</p>
+          <div class="testi-author"><img src="https://i.pinimg.com/1200x/a2/09/d6/a209d6e66859493e14c59bc92e5b2e02.jpg" alt="Koffi"><div><div class="testi-name">Koffi Jean-Marc</div><div class="testi-loc">Abidjan, Côte d'Ivoire</div></div></div>
+        </div>
+      </div>
+      <div class="col-md-4 col-lg-4 reveal">
+        <div class="testi-card">
+          <div class="stars">★★★★★</div>
+          <p class="testi-text" data-i18n="testi.t2.text">"J'adore le pack Design Graphique. Les vidéos sont claires et le certificat Technova a vraiment boosté mon profil LinkedIn."</p>
+          <div class="testi-author"><img src="https://i.pinimg.com/736x/7d/e4/c4/7de4c4c91b6a68c6f4f59065e3efc700.jpg" alt="Aminata"><div><div class="testi-name">Aminata Diallo</div><div class="testi-loc">Cotonou, Bénin</div></div></div>
+        </div>
+      </div>
+      <div class="col-md-4 col-lg-4 reveal">
+        <div class="testi-card">
+          <div class="stars">★★★★★</div>
+          <p class="testi-text" data-i18n="testi.t3.text">"Le cours sur l'IA Premium est une mine d'or. Je recommande vivement Technova pour la qualité exceptionnelle du contenu."</p>
+          <div class="testi-author"><img src="https://i.pinimg.com/1200x/1f/c9/6e/1fc96e1619b913eade6eb6533f72cf83.jpg" alt="Patrick"><div><div class="testi-name">Patrick Nguema</div><div class="testi-loc">Libreville, Gabon</div></div></div>
+        </div>
+      </div>
+      <div class="col-md-4 col-lg-4 reveal">
+        <div class="testi-card">
+          <div class="stars">★★★★★</div>
+          <p class="testi-text" data-i18n="testi.t4.text">"Grâce à la formation Data Analyste, j'ai pu changer de carrière et doubler mon salaire en moins de 6 mois. Merci TECHNOVA !"</p>
+          <div class="testi-author"><img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Ibrahim"><div><div class="testi-name">Ibrahim Konaté</div><div class="testi-loc">Bamako, Mali</div></div></div>
+        </div>
+      </div>
+      <div class="col-md-4 col-lg-4 reveal">
+        <div class="testi-card">
+          <div class="stars">★★★★★</div>
+          <p class="testi-text" data-i18n="testi.t5.text">"La formation Développement Web m'a permis de lancer mon agence digitale. Le support est réactif et les cours bien structurés."</p>
+          <div class="testi-author"><img src="https://randomuser.me/api/portraits/women/28.jpg" alt="Fatima"><div><div class="testi-name">Fatima Ouédraogo</div><div class="testi-loc">Ouagadougou, Burkina</div></div></div>
+        </div>
+      </div>
+      <div class="col-md-4 col-lg-4 reveal">
+        <div class="testi-card">
+          <div class="stars">★★★★☆</div>
+          <p class="testi-text" data-i18n="testi.t6.text">"Excellent rapport qualité-prix. La formation Excel Professionnel m'a donné toutes les clés pour exceller dans mon travail quotidien."</p>
+          <div class="testi-author"><img src="https://randomuser.me/api/portraits/men/62.jpg" alt="Moussa"><div><div class="testi-name">Moussa Traoré</div><div class="testi-loc">Lomé, Togo</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section class="section-wrap">
+  <div class="container">
+    <div class="cta-wrap reveal">
+      <h2 data-i18n="cta.title">Prêt à changer de vie ?</h2>
+      <p data-i18n="cta.desc">Rejoignez la communauté TECHNOVA Learning aujourd'hui.</p>
+      <a href="#courses" class="btn-cta-white" data-i18n="cta.btn">Choisir ma formation</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="container">
+    <div class="row g-5">
+      <div class="col-lg-4">
+        <div class="d-flex align-items-center gap-2 mb-3">
+          <span style="width:9px;height:9px;background:var(--blue);border-radius:50%;display:inline-block;box-shadow:0 0 0 3px rgba(0,113,227,0.18);"></span>
+          <span class="brand-name">TECHNOVA Learning</span>
+        </div>
+        <p data-i18n="footer.desc">La plateforme de référence pour la montée en compétences tech en Afrique. Formations pratiques et certifiantes.</p>
+      </div>
+      <div class="col-lg-4">
+        <h6 data-i18n="footer.payment">Moyens de Paiement</h6>
+        <div class="d-flex flex-wrap">
+          <span class="pay-badge pay-mtn">MTN MoMo</span>
+          <span class="pay-badge pay-moov">Moov Money</span>
+          <span class="pay-badge pay-orange">Orange Money</span>
+          <span class="pay-badge pay-wave">Wave</span>
+          <span class="pay-badge pay-airtel">Airtel Money</span>
+          <span class="pay-badge pay-visa"><i class="fab fa-cc-visa me-1"></i>VISA</span>
+        </div>
+        <p class="mt-3" data-i18n="footer.payment.sub">Paiement sécurisé disponible partout en Afrique de l'Ouest.</p>
+      </div>
+      <div class="col-lg-4">
+        <h6 data-i18n="footer.contact">Nous Contacter</h6>
+        <ul>
+          <li><i class="fas fa-envelope" style="color:var(--blue);"></i> support@technovalearning.com</li>
+          <li><i class="fab fa-whatsapp" style="color:#25D366;"></i> +33 7 46 29 73 60</li>
+          <li><i class="fab fa-whatsapp" style="color:#25D366;"></i> +229 47 88 37 35</li>
+          <li><i class="fas fa-map-marker-alt" style="color:var(--blue);"></i> 14 Rue Doré, Melun, France</li>
+          <li><i class="fas fa-globe" style="color:var(--blue);"></i> www.technovalearning.com</li>
+        </ul>
+      </div>
+    </div>
+    <hr class="divider">
+    <p class="copy" data-i18n="footer.rights">&copy; 2026 TECHNOVA Learning. Tous droits réservés.</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// ============ STATE ============
+let currentLang = localStorage.getItem('technova_lang') || 'fr';
+let currentTheme = localStorage.getItem('technova_theme') || 'light';
+
+// ============ TRANSLATIONS DICTIONARY ============
+const translations = {
+  fr: {
+    // Navbar
+    "nav.home": "Accueil",
+    "nav.products": "Nos Produits Digitaux",
+    "nav.formations": "Nos Formations",
+    "nav.store": "STORE",
+    "nav.discoveries": "Découvertes",
+    "nav.more": "Plus",
+    "nav.jobsStages": "Emplois & Stages",
+    "nav.blog": "Blog",
+    "nav.productivity": "Outils de Productivité",
+    "nav.excelTemplates": "Templates Excel",
+    "nav.faq": "FAQ",
+    "nav.technovaApps": "TECHNOVA APPS",
+    "nav.becomeSeller": "Devenir Vendeur",
+    "nav.about": "À propos",
+    
+    // Hero
+    "hero.eyebrow": "Plateforme #1 en Afrique de l'Ouest",
+    "hero.title": "Maîtrisez la Tech de <span class=\"hero-span\">Demain</span>.",
+    "hero.desc": "TECHNOVA Learning — la plateforme ultime pour apprendre le développement, la data science et le design. Formez-vous aux compétences recherchées par les recruteurs.",
+    "hero.cta": "Explorer les cours <i class=\"fas fa-arrow-right\"></i>",
+    "hero.proof": "<strong>+10k</strong> étudiants nous font confiance",
+    "hero.stat1.lbl": "Taux de satisfaction",
+    "hero.badge.lbl": "Entreprises",
+    
+    // Partners
+    "partners.title": "NOS PARTENAIRES TECHNOLOGIQUES",
+    
+    // Features
+    "features.eyebrow": "Pourquoi TECHNOVA",
+    "features.title": "Pourquoi choisir TECHNOVA ?",
+    "features.sub": "Une pédagogie adaptée au marché de l'emploi local et international.",
+    "features.f1.title": "100% Pratique",
+    "features.f1.desc": "Des projets concrets pour construire votre portfolio professionnel dès la première leçon.",
+    "features.f2.title": "Support Dédié",
+    "features.f2.desc": "Un accompagnement personnalisé pour répondre à vos questions pendant toute la formation.",
+    "features.f3.title": "Paiement Local",
+    "features.f3.desc": "Payez facilement via MTN MoMo, Moov Money, Orange Money, Wave ou Carte Visa.",
+    "features.f4.title": "Certificats Reconnus",
+    "features.f4.desc": "Obtenez des certifications valorisées par les employeurs africains et internationaux.",
+    "features.f5.title": "Communauté Active",
+    "features.f5.desc": "Rejoignez 10 000+ apprenants et un réseau de mentors passionnés par la technologie.",
+    "features.f6.title": "Accès à Vie",
+    "features.f6.desc": "Achetez une fois, apprenez pour toujours. Mises à jour incluses sans frais supplémentaires.",
+    
+    // Courses
+    "courses.eyebrow": "Formations",
+    "courses.title": "Nos Produits Digitaux",
+    "courses.sub": "Investissez dans votre avenir à petit prix.",
+    
+    // E-Shop
+    "eshop.eyebrow": "E-Commerce",
+    "eshop.title": "E-Shopping",
+    "eshop.sub": "Produits tech et accessoires à prix réduits",
+    "eshop.badge.promo": "-20%",
+    "eshop.badge.new": "Nouveau",
+    "eshop.p1.title": "Laptop Professionnel",
+    "eshop.p1.desc": "Intel i7, 16GB RAM, SSD 512GB",
+    "eshop.p2.title": "Casque Audio Premium",
+    "eshop.p2.desc": "Noise cancelling, Bluetooth 5.0",
+    "eshop.p3.title": "Smartphone Pro",
+    "eshop.p3.desc": "5G, 256GB, Triple caméra",
+    "eshop.btn.add": "<i class=\"fas fa-cart-plus me-2\"></i>Ajouter",
+    
+    // Apps
+    "apps.eyebrow": "Nos Applications",
+    "apps.title": "TECHNOVA Mobile",
+    "apps.desc": "Accédez à tous vos cours depuis votre smartphone. Téléchargez vos leçons et apprenez hors ligne, partout en Afrique.",
+    
+    // Blog
+    "blog.eyebrow": "Blog & Actualités",
+    "blog.title": "Informez-vous",
+    "blog.sub": "Actualités et conseils tech pour rester à la pointe",
+    "blog.b1.title": "L'IA générative en 2026",
+    "blog.b1.desc": "Découvrez les dernières avancées en intelligence artificielle et leur impact sur le marché du travail africain.",
+    "blog.b2.title": "Cybersécurité : Les tendances",
+    "blog.b2.desc": "Protégez vos données avec les meilleures pratiques de sécurité informatique en 2026.",
+    "blog.b3.title": "Devenir développeur Full Stack",
+    "blog.b3.desc": "Le guide complet pour maîtriser le développement web moderne en Afrique.",
+    "blog.link": "Lire plus <i class=\"fas fa-arrow-right fa-xs\"></i>",
+    
+    // About
+    "about.eyebrow": "À propos",
+    "about.title": "Qui Sommes-Nous ?",
+    "about.sub": "TECHNOVA Learning est née d'une vision simple : rendre l'éducation technologique accessible à tous en Afrique et au-delà. Nous croyons que chacun mérite d'avoir accès aux compétences du futur.",
+    "about.item1.title": "Notre Vision",
+    "about.item1.desc": "Devenir la plateforme de référence pour l'apprentissage tech en Afrique d'ici 2030.",
+    "about.item2.title": "Nos Valeurs",
+    "about.item2.desc": "Excellence, accessibilité, innovation et accompagnement personnalisé de chaque apprenant.",
+    "about.item3.title": "Nos Résultats",
+    "about.item3.desc": "+10 000 étudiants formés, 95% de taux de satisfaction, 500+ entreprises partenaires.",
+    
+    // Jobs
+    "jobs.eyebrow": "Carrière",
+    "jobs.title": "Jobs & Annonces",
+    "jobs.sub": "Trouvez votre prochaine opportunité professionnelle",
+    "jobs.tag.full": "Temps plein",
+    "jobs.tag.part": "Temps partiel",
+    "jobs.tag.remote": "Remote",
+    "jobs.j1.title": "Développeur Full Stack Junior",
+    "jobs.j1.time": "<i class=\"far fa-clock me-1\"></i>Publié il y a 2j",
+    "jobs.j1.desc": "Startup tech recherche développeur motivé pour rejoindre son équipe. Stack: React, Node.js, MongoDB.",
+    "jobs.j1.loc": "<i class=\"fas fa-map-marker-alt me-2\"></i>Cotonou, Bénin",
+    "jobs.j2.title": "Data Analyst",
+    "jobs.j2.time": "<i class=\"far fa-clock me-1\"></i>Publié il y a 5j",
+    "jobs.j2.desc": "Cabinet de conseil recherche analyste de données pour missions ponctuelles. Maîtrise de Python et SQL requise.",
+    "jobs.j2.loc": "<i class=\"fas fa-map-marker-alt me-2\"></i>Abidjan, Côte d'Ivoire",
+    "jobs.j3.title": "Designer UX/UI",
+    "jobs.j3.time": "<i class=\"far fa-clock me-1\"></i>Publié il y a 1j",
+    "jobs.j3.desc": "Agence digitale créative cherche designer passionné pour projets innovants. Portfolio requis.",
+    "jobs.j3.loc": "<i class=\"fas fa-map-marker-alt me-2\"></i>Dakar, Sénégal",
+    "jobs.btn.apply": "Postuler",
+    "jobs.btn.all": "Voir toutes les offres",
+    
+    // Discoveries
+    "disc.eyebrow": "Découvertes",
+    "disc.title": "Innovations & Tendances",
+    "disc.sub": "Les technologies qui façonnent le futur du continent africain",
+    "disc.d1.title": "L'Intelligence Artificielle Générative",
+    "disc.d1.desc": "Comment ChatGPT et Midjourney transforment notre façon de travailler",
+    "disc.d2.title": "Blockchain & Web3",
+    "disc.d2.desc": "Les applications concrètes de la blockchain au-delà des cryptomonnaies",
+    "disc.btn": "Découvrir <i class=\"fas fa-arrow-right fa-xs\"></i>",
+    
+    // Testimonials
+    "testi.eyebrow": "Témoignages",
+    "testi.title": "Ils ont réussi avec nous",
+    "testi.t1.text": "\"La formation Cybersécurité m'a permis de décrocher un poste de consultant. Le paiement par Mobile Money est très pratique.\"",
+    "testi.t2.text": "\"J'adore le pack Design Graphique. Les vidéos sont claires et le certificat Technova a vraiment boosté mon profil LinkedIn.\"",
+    "testi.t3.text": "\"Le cours sur l'IA Premium est une mine d'or. Je recommande vivement Technova pour la qualité exceptionnelle du contenu.\"",
+    "testi.t4.text": "\"Grâce à la formation Data Analyste, j'ai pu changer de carrière et doubler mon salaire en moins de 6 mois. Merci TECHNOVA !\"",
+    "testi.t5.text": "\"La formation Développement Web m'a permis de lancer mon agence digitale. Le support est réactif et les cours bien structurés.\"",
+    "testi.t6.text": "\"Excellent rapport qualité-prix. La formation Excel Professionnel m'a donné toutes les clés pour exceller dans mon travail quotidien.\"",
+    
+    // CTA
+    "cta.title": "Prêt à changer de vie ?",
+    "cta.desc": "Rejoignez la communauté TECHNOVA Learning aujourd'hui.",
+    "cta.btn": "Choisir ma formation",
+    
+    // Footer
+    "footer.desc": "La plateforme de référence pour la montée en compétences tech en Afrique. Formations pratiques et certifiantes.",
+    "footer.payment": "Moyens de Paiement",
+    "footer.payment.sub": "Paiement sécurisé disponible partout en Afrique de l'Ouest.",
+    "footer.contact": "Nous Contacter",
+    "footer.rights": "&copy; 2026 TECHNOVA Learning. Tous droits réservés."
+  },
+  en: {
+    // Navbar
+    "nav.home": "Home",
+    "nav.products": "Our Digital Products",
+    "nav.formations": "Our Trainings",
+    "nav.store": "STORE",
+    "nav.discoveries": "Discoveries",
+    "nav.more": "More",
+    "nav.jobsStages": "Jobs & Internships",
+    "nav.blog": "Blog",
+    "nav.productivity": "Productivity Tools",
+    "nav.excelTemplates": "Excel Templates",
+    "nav.faq": "FAQ",
+    "nav.technovaApps": "TECHNOVA APPS",
+    "nav.becomeSeller": "Become a Seller",
+    "nav.about": "About",
+    
+    // Hero
+    "hero.eyebrow": "#1 Platform in West Africa",
+    "hero.title": "Master the Tech of <span class=\"hero-span\">Tomorrow</span>.",
+    "hero.desc": "TECHNOVA Learning — the ultimate platform to learn development, data science, and design. Get trained in the skills sought after by recruiters.",
+    "hero.cta": "Explore courses <i class=\"fas fa-arrow-right\"></i>",
+    "hero.proof": "<strong>+10k</strong> students trust us",
+    "hero.stat1.lbl": "Satisfaction rate",
+    "hero.badge.lbl": "Companies",
+    
+    // Partners
+    "partners.title": "OUR TECH PARTNERS",
+    
+    // Features
+    "features.eyebrow": "Why TECHNOVA",
+    "features.title": "Why choose TECHNOVA?",
+    "features.sub": "A pedagogy adapted to the local and international job market.",
+    "features.f1.title": "100% Practical",
+    "features.f1.desc": "Concrete projects to build your professional portfolio from the very first lesson.",
+    "features.f2.title": "Dedicated Support",
+    "features.f2.desc": "Personalized support to answer your questions throughout the entire training.",
+    "features.f3.title": "Local Payment",
+    "features.f3.desc": "Pay easily via MTN MoMo, Moov Money, Orange Money, Wave, or Visa Card.",
+    "features.f4.title": "Recognized Certificates",
+    "features.f4.desc": "Obtain certifications valued by African and international employers.",
+    "features.f5.title": "Active Community",
+    "features.f5.desc": "Join 10,000+ learners and a network of mentors passionate about technology.",
+    "features.f6.title": "Lifetime Access",
+    "features.f6.desc": "Buy once, learn forever. Updates included at no extra charge.",
+    
+    // Courses
+    "courses.eyebrow": "Trainings",
+    "courses.title": "Our Digital Products",
+    "courses.sub": "Invest in your future at a low price.",
+    
+    // E-Shop
+    "eshop.eyebrow": "E-Commerce",
+    "eshop.title": "E-Shopping",
+    "eshop.sub": "Tech products and accessories at discounted prices",
+    "eshop.badge.promo": "-20%",
+    "eshop.badge.new": "New",
+    "eshop.p1.title": "Professional Laptop",
+    "eshop.p1.desc": "Intel i7, 16GB RAM, 512GB SSD",
+    "eshop.p2.title": "Premium Headphones",
+    "eshop.p2.desc": "Noise cancelling, Bluetooth 5.0",
+    "eshop.p3.title": "Smartphone Pro",
+    "eshop.p3.desc": "5G, 256GB, Triple camera",
+    "eshop.btn.add": "<i class=\"fas fa-cart-plus me-2\"></i>Add",
+    
+    // Apps
+    "apps.eyebrow": "Our Applications",
+    "apps.title": "TECHNOVA Mobile",
+    "apps.desc": "Access all your courses from your smartphone. Download your lessons and learn offline, anywhere in Africa.",
+    
+    // Blog
+    "blog.eyebrow": "Blog & News",
+    "blog.title": "Stay Informed",
+    "blog.sub": "Tech news and tips to stay at the cutting edge",
+    "blog.b1.title": "Generative AI in 2026",
+    "blog.b1.desc": "Discover the latest advancements in artificial intelligence and their impact on the African job market.",
+    "blog.b2.title": "Cybersecurity: Trends",
+    "blog.b2.desc": "Protect your data with the best computer security practices in 2026.",
+    "blog.b3.title": "Becoming a Full Stack Developer",
+    "blog.b3.desc": "The complete guide to mastering modern web development in Africa.",
+    "blog.link": "Read more <i class=\"fas fa-arrow-right fa-xs\"></i>",
+    
+    // About
+    "about.eyebrow": "About Us",
+    "about.title": "Who Are We?",
+    "about.sub": "TECHNOVA Learning was born from a simple vision: to make technological education accessible to everyone in Africa and beyond. We believe everyone deserves access to the skills of the future.",
+    "about.item1.title": "Our Vision",
+    "about.item1.desc": "To become the reference platform for tech learning in Africa by 2030.",
+    "about.item2.title": "Our Values",
+    "about.item2.desc": "Excellence, accessibility, innovation, and personalized support for each learner.",
+    "about.item3.title": "Our Results",
+    "about.item3.desc": "+10,000 students trained, 95% satisfaction rate, 500+ partner companies.",
+    
+    // Jobs
+    "jobs.eyebrow": "Career",
+    "jobs.title": "Jobs & Adverts",
+    "jobs.sub": "Find your next professional opportunity",
+    "jobs.tag.full": "Full time",
+    "jobs.tag.part": "Part time",
+    "jobs.tag.remote": "Remote",
+    "jobs.j1.title": "Junior Full Stack Developer",
+    "jobs.j1.time": "<i class=\"far fa-clock me-1\"></i>Published 2d ago",
+    "jobs.j1.desc": "Tech startup looking for a motivated developer to join its team. Stack: React, Node.js, MongoDB.",
+    "jobs.j1.loc": "<i class=\"fas fa-map-marker-alt me-2\"></i>Cotonou, Benin",
+    "jobs.j2.title": "Data Analyst",
+    "jobs.j2.time": "<i class=\"far fa-clock me-1\"></i>Published 5d ago",
+    "jobs.j2.desc": "Consulting firm looking for a data analyst for occasional missions. Proficiency in Python and SQL required.",
+    "jobs.j2.loc": "<i class=\"fas fa-map-marker-alt me-2\"></i>Abidjan, Ivory Coast",
+    "jobs.j3.title": "UX/UI Designer",
+    "jobs.j3.time": "<i class=\"far fa-clock me-1\"></i>Published 1d ago",
+    "jobs.j3.desc": "Creative digital agency looking for a passionate designer for innovative projects. Portfolio required.",
+    "jobs.j3.loc": "<i class=\"fas fa-map-marker-alt me-2\"></i>Dakar, Senegal",
+    "jobs.btn.apply": "Apply",
+    "jobs.btn.all": "See all offers",
+    
+    // Discoveries
+    "disc.eyebrow": "Discoveries",
+    "disc.title": "Innovations & Trends",
+    "disc.sub": "The technologies shaping the future of the African continent",
+    "disc.d1.title": "Generative Artificial Intelligence",
+    "disc.d1.desc": "How ChatGPT and Midjourney are transforming the way we work",
+    "disc.d2.title": "Blockchain & Web3",
+    "disc.d2.desc": "Concrete applications of blockchain beyond cryptocurrencies",
+    "disc.btn": "Discover <i class=\"fas fa-arrow-right fa-xs\"></i>",
+    
+    // Testimonials
+    "testi.eyebrow": "Testimonials",
+    "testi.title": "They succeeded with us",
+    "testi.t1.text": "\"The Cybersecurity training allowed me to land a consultant job. Payment by Mobile Money is very convenient.\"",
+    "testi.t2.text": "\"I love the Graphic Design pack. The videos are clear and the Technova certificate really boosted my LinkedIn profile.\"",
+    "testi.t3.text": "\"The Premium AI course is a gold mine. I highly recommend Technova for the exceptional quality of the content.\"",
+    "testi.t4.text": "\"Thanks to the Data Analyst training, I was able to change careers and double my salary in less than 6 months. Thank you TECHNOVA!\"",
+    "testi.t5.text": "\"The Web Development training allowed me to launch my digital agency. Support is responsive and courses are well structured.\"",
+    "testi.t6.text": "\"Excellent value for money. The Professional Excel training gave me all the keys to excel in my daily work.\"",
+    
+    // CTA
+    "cta.title": "Ready to change your life?",
+    "cta.desc": "Join the TECHNOVA Learning community today.",
+    "cta.btn": "Choose my training",
+    
+    // Footer
+    "footer.desc": "The reference platform for tech upskilling in Africa. Practical and certifying courses.",
+    "footer.payment": "Payment Methods",
+    "footer.payment.sub": "Secure payment available everywhere in West Africa.",
+    "footer.contact": "Contact Us",
+    "footer.rights": "&copy; 2026 TECHNOVA Learning. All rights reserved."
+  }
+};
+
+// ============ APPLY THEME ============
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  const iconClass = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+  document.querySelectorAll('#themeIcon, #themeIcon2').forEach(el => el.className = iconClass);
+  localStorage.setItem('technova_theme', theme);
+}
+
+// ============ APPLY LANG ============
+function applyLanguage(lang) {
+  document.documentElement.setAttribute('lang', lang);
+  
+  // Libellé du bouton (indique la langue vers laquelle basculer)
+  const newLabel = lang === 'fr' ? 'EN' : 'FR';
+  document.querySelectorAll('#langLabel, #langLabel2').forEach(el => el.textContent = newLabel);
+  
+  // Traduction des éléments HTML statiques
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (translations[lang] && translations[lang][key]) {
+      const val = translations[lang][key];
+      if (val.includes('<')) {
+        el.innerHTML = val;
+      } else {
+        el.textContent = val;
+      }
+    }
+  });
+
+  // Re-rendre les cours avec la bonne langue
+  renderCourses(lang);
+  renderDiscoveries(lang);
+  
+  localStorage.setItem('technova_lang', lang);
+}
+
+// ============ EVENTS ============
+document.getElementById('themeToggle').addEventListener('click', () => { currentTheme = currentTheme==='light'?'dark':'light'; applyTheme(currentTheme); });
+document.getElementById('langToggle').addEventListener('click', () => { currentLang = currentLang==='fr'?'en':'fr'; applyLanguage(currentLang); });
+document.getElementById('themeToggle2')?.addEventListener('click', () => { currentTheme = currentTheme==='light'?'dark':'light'; applyTheme(currentTheme); });
+document.getElementById('langToggle2')?.addEventListener('click', () => { currentLang = currentLang==='fr'?'en':'fr'; applyLanguage(currentLang); });
+document.getElementById('navToggler').addEventListener('click', () => { document.getElementById('mobileMenu').classList.toggle('open'); });
+document.querySelectorAll('#mobileMenu a').forEach(a => { a.addEventListener('click', () => document.getElementById('mobileMenu').classList.remove('open')); });
+
+// ============ NAVBAR SCROLL ============
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('mainNav');
+  if (window.scrollY > 30) nav.classList.add('scrolled');
+  else nav.classList.remove('scrolled');
+});
+
+// ============ COURSES DATA (from uploaded images) ============
+const courses = [
+  { 
+    title: { fr: "Cybersécurité — Débutant à Expert", en: "Cybersecurity — Beginner to Expert" }, 
+    priceFcfa: "2.500 F", priceUsd: "4.44 $", 
+    img: "https://i.pinimg.com/736x/69/e0/0b/69e00be05f7eb68fb22adfcff784f799.jpg", 
+    cat: { fr: "Sécurité", en: "Security" }, 
+    label: "bestseller", students: "2.4k", rating: "4.5", link: "#" 
+  },
+  { 
+    title: { fr: "Data Analyste — Débutant à Expert", en: "Data Analyst — Beginner to Expert" }, 
+    priceFcfa: "2.000 F", priceUsd: "3.55 $", 
+    img: "https://i.pinimg.com/736x/a4/db/da/a4dbda9524cdf7ebb94329b29668b6d7.jpg", 
+    cat: { fr: "Data Science", en: "Data Science" }, 
+    label: "populaire", students: "3.1k", rating: "4.5", link: "#" 
+  },
+  { 
+    title: { fr: "Accès aux IA PREMIUM", en: "Access to PREMIUM AIs" }, 
+    priceFcfa: "3.500 F", priceUsd: "6.21 $", 
+    img: "https://i.pinimg.com/736x/fd/56/b2/fd56b2bce297c47137770a33a1160d0e.jpg", 
+    cat: { fr: "Intelligence Artificielle", en: "Artificial Intelligence" }, 
+    label: "nouveau", students: "1.8k", rating: "5", link: "#" 
+  },
+  { 
+    title: { fr: "Pack Design Graphique & Montage Vidéo", en: "Graphic Design & Video Editing Pack" }, 
+    priceFcfa: "2.300 F", priceUsd: "4.08 $", 
+    img: "https://i.pinimg.com/1200x/73/be/bc/73bebc317001b889bd37e21f2957da48.jpg", 
+    cat: { fr: "Design", en: "Design" }, 
+    label: "tendance", students: "2.1k", rating: "4.5", link: "#" 
+  },
+  { 
+    title: { fr: "200 Packs de Formations en Ligne", en: "200 Online Course Packs" }, 
+    priceFcfa: "1.500 F", priceUsd: "2.66 $", 
+    img: "https://i.pinimg.com/736x/a9/49/1d/a9491d457163f5d85a03fa23c51b95a2.jpg", 
+    cat: { fr: "Bundle", en: "Bundle" }, 
+    label: "promo", students: "4.2k", rating: "4", link: "#" 
+  },
+  { 
+    title: { fr: "Bureautique Excel — Bases & Avancé", en: "Excel Office — Basics & Advanced" }, 
+    priceFcfa: "1.500 F", priceUsd: "2.66 $", 
+    img: "https://i.pinimg.com/1200x/be/e9/47/bee947687b5710ff51bd4d5b704eb663.jpg", 
+    cat: { fr: "Bureautique", en: "Office" }, 
+    label: "top", students: "3.8k", rating: "4.5", link: "#" 
+  },
+  { 
+    title: { fr: "E-commerce & Marketing — Vendre en Ligne", en: "E-commerce & Marketing — Sell Online" }, 
+    priceFcfa: "1.500 F", priceUsd: "2.66 $", 
+    img: "https://i.pinimg.com/736x/b8/ae/64/b8ae64dbb9d71b215de889f0f17cd6c3.jpg", 
+    cat: { fr: "E-commerce", en: "E-commerce" }, 
+    label: "tendance", students: "1.6k", rating: "4", link: "#" 
+  },
+  { 
+    title: { fr: "Développement Web & Mobile", en: "Web & Mobile Development" }, 
+    priceFcfa: "1.500 F", priceUsd: "2.66 $", 
+    img: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=600&q=80", 
+    cat: { fr: "Développement", en: "Development" }, 
+    label: "populaire", students: "2.9k", rating: "4.5", link: "#" 
+  },
+  { 
+    title: { fr: "Comptabilité — Débutant à Expert", en: "Accounting — Beginner to Expert" }, 
+    priceFcfa: "2.000 F", priceUsd: "3.55 $", 
+    img: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=600&q=80", 
+    cat: { fr: "Finance", en: "Finance" }, 
+    label: "nouveau", students: "1.2k", rating: "4.5", link: "#" 
+  },
+  { 
+    title: { fr: "Cours de Chinois", en: "Chinese Course" }, 
+    priceFcfa: "1.500 F", priceUsd: "2.66 $", 
+    img: "https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=600&q=80", 
+    cat: { fr: "Langues", en: "Languages" }, 
+    label: "top", students: "980", rating: "4", link: "#" 
+  },
+  { 
+    title: { fr: "Ressources Humaines & Management", en: "Human Resources & Management" }, 
+    priceFcfa: "2.000 F", priceUsd: "3.55 $", 
+    img: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=600&q=80", 
+    cat: { fr: "Management", en: "Management" }, 
+    label: "bestseller", students: "1.4k", rating: "5", link: "#" 
+  },
+  { 
+    title: { fr: "Audit Interne — Formation Complète", en: "Internal Audit — Complete Training" }, 
+    priceFcfa: "2.500 F", priceUsd: "4.44 $", 
+    img: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=600&q=80", 
+    cat: { fr: "Finance", en: "Finance" }, 
+    label: "nouveau", students: "760", rating: "4.5", link: "#" 
+  },
+  { 
+    title: { fr: "Parler Anglais en 3 Mois", en: "Speak English in 3 Months" }, 
+    priceFcfa: "1.500 F", priceUsd: "2.66 $", 
+    img: "https://images.unsplash.com/photo-1546410531-bb4caa6b424d?auto=format&fit=crop&w=600&q=80", 
+    cat: { fr: "Langues", en: "Languages" }, 
+    label: "tendance", students: "2.2k", rating: "4.5", link: "#" 
+  },
+  { 
+    title: { fr: "Recettes de Cuisine & Art Culinaire", en: "Cooking Recipes & Culinary Art" }, 
+    priceFcfa: "1.000 F", priceUsd: "1.77 $", 
+    img: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=600&q=80", 
+    cat: { fr: "Lifestyle", en: "Lifestyle" }, 
+    label: "promo", students: "1.8k", rating: "4", link: "#" 
+  },
+  { 
+    title: { fr: "Antigravity & AI Studio Google", en: "Antigravity & AI Studio Google" }, 
+    priceFcfa: "3.000 F", priceUsd: "5.33 $", 
+    img: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=600&q=80", 
+    cat: { fr: "Intelligence Artificielle", en: "Artificial Intelligence" }, 
+    label: "nouveau", students: "640", rating: "5", link: "#" 
+  },
+  { 
+    title: { fr: "Secret des Grands Patrons", en: "Secrets of Great Bosses" }, 
+    priceFcfa: "2.000 F", priceUsd: "3.55 $", 
+    img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80", 
+    cat: { fr: "Business", en: "Business" }, 
+    label: "bestseller", students: "3.4k", rating: "5", link: "#" 
+  },
+];
+
+function starsHtml(rating) {
+  const full = Math.floor(rating);
+  const half = rating % 1 >= 0.5;
+  let s = '';
+  for(let i=0;i<full;i++) s += '★';
+  if(half) s += '½';
+  return `<span class="stars-sm">${s}</span>`;
+}
+
+const labelMap = {
+  bestseller: { cls:'label-bestseller', fr:'Bestseller', en:'Bestseller' },
+  nouveau: { cls:'label-nouveau', fr:'Nouveau', en:'New' },
+  populaire: { cls:'label-populaire', fr:'Populaire', en:'Popular' },
+  promo: { cls:'label-promo', fr:'Promo', en:'Promo' },
+  tendance: { cls:'label-tendance', fr:'Tendance', en:'Trending' },
+  top: { cls:'label-top', fr:'Top', en:'Top' },
+};
+
+function renderCourses(lang) {
+  const courseContainer = document.getElementById('course-list');
+  if (!courseContainer) return;
+  courseContainer.innerHTML = '';
+  const buyBtnText = lang === 'fr' ? 'Acheter' : 'Buy';
+  
+  courses.forEach(c => {
+    const lb = labelMap[c.label] || {};
+    const labelTxt = lb[lang] || '';
+    const titleText = c.title[lang] || c.title.fr;
+    const catText = c.cat[lang] || c.cat.fr;
+    
+    courseContainer.innerHTML += `
+    <div class="col-md-6 col-lg-3 d-flex reveal">
+      <div class="course-card d-flex flex-column w-100">
+        <div class="course-img-wrap">
+          <img src="${c.img}" alt="${titleText}" loading="lazy">
+          <span class="course-badge">${catText}</span>
+          ${lb.cls && labelTxt ? `<span class="label-badge ${lb.cls}">${labelTxt}</span>` : ''}
+        </div>
+        <div class="course-body">
+          <div class="course-title">${titleText}</div>
+          <div class="course-meta">
+            <span class="students"><i class="fas fa-users" style="font-size:0.65rem;"></i> ${c.students}</span>
+            ${starsHtml(parseFloat(c.rating))}
+          </div>
+          <div class="price-row">
+            <div>
+              <div class="price-main">${c.priceFcfa}</div>
+              <div class="price-usd">${c.priceUsd}</div>
+            </div>
+          </div>
+          <a class="btn-buy" href="${c.link}"><i class="fas fa-shopping-cart me-2"></i>${buyBtnText}</a>
+        </div>
+      </div>
+    </div>`;
+  });
+  
+  // Re-observe dynamic entries
+  if (typeof observer !== 'undefined') {
+    document.querySelectorAll('#course-list .reveal').forEach(el => observer.observe(el));
+  }
+}
+
+// ============ DISCOVERIES DATA (dynamic module) ============
+const discoveries = [
+  {
+    title: { fr: "L'Intelligence Artificielle Générative", en: "Generative Artificial Intelligence" },
+    desc: { fr: "Comment ChatGPT et Midjourney transforment notre façon de travailler", en: "How ChatGPT and Midjourney are transforming the way we work" },
+    img: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=600&fit=crop",
+    alt: "AI", link: "#"
+  },
+  {
+    title: { fr: "Blockchain & Web3", en: "Blockchain & Web3" },
+    desc: { fr: "Les applications concrètes de la blockchain au-delà des cryptomonnaies", en: "Concrete applications of blockchain beyond cryptocurrencies" },
+    img: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&h=600&fit=crop",
+    alt: "Blockchain", link: "#"
+  },
+];
+
+function renderDiscoveries(lang) {
+  const discContainer = document.getElementById('discoveries-list');
+  if (!discContainer) return;
+  discContainer.innerHTML = '';
+  const btnTxt = translations[lang]?.['disc.btn'] || translations.fr['disc.btn'];
+
+  discoveries.forEach(d => {
+    const titleText = d.title[lang] || d.title.fr;
+    const descText = d.desc[lang] || d.desc.fr;
+
+    discContainer.innerHTML += `
+    <div class="col-md-6 reveal"><div class="disc-card"><img src="${d.img}" alt="${d.alt}" loading="lazy"><div class="disc-overlay"><h4>${titleText}</h4><p>${descText}</p><a href="${d.link}" class="btn-disc">${btnTxt}</a></div></div></div>`;
+  });
+
+  // Re-observe dynamic entries
+  if (typeof observer !== 'undefined') {
+    document.querySelectorAll('#discoveries-list .reveal').forEach(el => observer.observe(el));
+  }
+}
+
+// ============ SCROLL REVEAL ============
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ============ HERO INTERACTIVE TILT EFFECT ============
+const heroImgWrap = document.querySelector('.hero-img-wrap');
+const heroImg = heroImgWrap?.querySelector('img');
+const heroStatCard = heroImgWrap?.querySelector('.hero-stat-card');
+const heroBadge = heroImgWrap?.querySelector('.hero-badge');
+
+if (heroImgWrap && heroImg) {
+  heroImgWrap.addEventListener('mousemove', (e) => {
+    const rect = heroImgWrap.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    const normalizedX = (x / rect.width) - 0.5;
+    const normalizedY = (y / rect.height) - 0.5;
+    
+    const maxRotateX = 12;
+    const maxRotateY = 12;
+    
+    const rotateX = -normalizedY * maxRotateX;
+    const rotateY = normalizedX * maxRotateY;
+    
+    heroImg.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.03, 1.03, 1.03)`;
+    
+    if (heroStatCard) {
+      heroStatCard.style.transform = `translate3d(${normalizedX * -20}px, ${normalizedY * -20}px, 40px)`;
+    }
+    if (heroBadge) {
+      heroBadge.style.transform = `translate3d(${normalizedX * -30}px, ${normalizedY * -30}px, 60px)`;
+    }
+  });
+
+  heroImgWrap.addEventListener('mouseleave', () => {
+    heroImg.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+    if (heroStatCard) {
+      heroStatCard.style.transform = '';
+    }
+    if (heroBadge) {
+      heroBadge.style.transform = '';
+    }
+  });
+}
+
+// ============ INIT ============
+applyTheme(currentTheme);
+applyLanguage(currentLang);
+</script>
+</body>
+</html>

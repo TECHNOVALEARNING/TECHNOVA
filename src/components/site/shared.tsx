@@ -517,79 +517,92 @@ export type Course = {
   slug: string; title: string; cover: string; category: string;
   level: string; price: string; oldPrice?: string; duration: string;
 };
+
+const LABEL_MAP: Record<string, { cls: string; fr: string; en: string }> = {
+  bestseller: { cls: 'label-bestseller', fr: 'Bestseller', en: 'Bestseller' },
+  nouveau: { cls: 'label-nouveau', fr: 'Nouveau', en: 'New' },
+  populaire: { cls: 'label-populaire', fr: 'Populaire', en: 'Popular' },
+  promo: { cls: 'label-promo', fr: 'Promo', en: 'Promo' },
+  tendance: { cls: 'label-tendance', fr: 'Tendance', en: 'Trending' },
+  top: { cls: 'label-top', fr: 'Top', en: 'Top' },
+};
+
 export const CourseCard = ({ c, i = 0 }: { c: Course; i?: number }) => {
-  // Calculate discount percentage if both prices available
-  const discount = (() => {
-    if (!c.oldPrice) return null;
-    const oldVal = parseFloat(c.oldPrice.replace(/\D/g, ""));
-    const newVal = parseFloat(c.price.replace(/\D/g, ""));
-    if (!oldVal || !newVal) return null;
-    return Math.round((1 - newVal / oldVal) * 100);
-  })();
+  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+
+  useEffect(() => {
+    const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
+    window.addEventListener("technova_lang_changed", handleLangChange);
+    return () => window.removeEventListener("technova_lang_changed", handleLangChange);
+  }, []);
+
+  // Parse numerical price to format in FCFA and USD
+  const numericPrice = parseFloat(c.price.replace(/[^\d.]/g, "")) || 0;
+  const numericOldPrice = c.oldPrice ? (parseFloat(c.oldPrice.replace(/[^\d.]/g, "")) || 0) : null;
+  
+  const priceFcfa = numericPrice > 0 ? new Intl.NumberFormat('fr-FR').format(numericPrice) + " F" : "Gratuit";
+  const priceUsd = numericPrice > 0 ? (numericPrice / 563).toFixed(2) + " $" : "Free";
+  
+  // Stable hash based on course title to derive a fixed visual mock for stars rating, students count, and badge
+  const hash = c.title.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  const ratings = ["4.5", "4.8", "5.0", "4.6", "4.7"];
+  const studentsList = ["2.4k", "1.2k", "3.1k", "1.8k", "2.1k", "4.2k", "3.8k"];
+  const labels = ["bestseller", "nouveau", "populaire", "tendance", "top", "promo"];
+  
+  const rating = ratings[hash % ratings.length];
+  const students = studentsList[hash % studentsList.length];
+  const label = numericOldPrice && numericOldPrice > numericPrice ? "promo" : labels[hash % labels.length];
+  
+  const lb = LABEL_MAP[label] || {};
+  const labelTxt = lang === 'fr' ? lb.fr : lb.en;
+  const buyBtnText = lang === 'fr' ? 'Acheter' : 'Buy';
+
+  const renderStars = (r: string) => {
+    const ratingNum = parseFloat(r);
+    const full = Math.floor(ratingNum);
+    const half = ratingNum % 1 >= 0.5;
+    let s = "";
+    for (let i = 0; i < full; i++) s += "★";
+    if (half) s += "½";
+    return <span className="stars-sm">{s}</span>;
+  };
 
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 30 }}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: i * 0.05 }}
-      className="group relative flex flex-col overflow-hidden rounded-2xl bg-card border border-border shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+      className="course-card"
     >
-      {/* Cover image — shows in its natural dimensions */}
-      <div className="relative w-full overflow-hidden bg-gray-100">
-        <img
-          src={c.cover}
-          alt={c.title}
-          loading="lazy"
-          className="w-full object-cover group-hover:scale-105 transition-transform duration-500"
-          style={{ maxHeight: "280px", minHeight: "160px", objectFit: "cover", width: "100%", display: "block" }}
-        />
-        {/* Discount badge */}
-        {discount && (
-          <span className="absolute top-2.5 left-2.5 rounded-full bg-red-500 px-2.5 py-0.5 text-[11px] font-bold text-white shadow">
-            -{discount}%
-          </span>
+      <div className="course-img-wrap">
+        <img src={c.cover} alt={c.title} loading="lazy" />
+        <span className="course-badge">{c.category}</span>
+        {lb.cls && labelTxt && (
+          <span className={`label-badge ${lb.cls}`}>{labelTxt}</span>
         )}
-        {/* Category chip */}
-        <span className="absolute bottom-2.5 right-2.5 rounded-full bg-black/40 backdrop-blur px-2.5 py-0.5 text-[10px] font-semibold text-white">
-          {c.category}
-        </span>
       </div>
-
-      {/* Body */}
-      <div className="flex flex-1 flex-col p-3.5 sm:p-4">
-        <h3 className="mb-1.5 text-[14px] font-bold leading-snug text-foreground line-clamp-2 sm:text-[15px] group-hover:text-[#004DB8] transition-colors">
-          {c.title}
-        </h3>
-
-        {/* Rating */}
-        <div className="mb-3 flex items-center gap-1 text-[12px] text-muted-foreground">
-          <ThumbsUp className="h-3 w-3 shrink-0" />
-          <span>100% (1 Avis)</span>
+      <div className="course-body">
+        <div className="course-title">{c.title}</div>
+        <div className="course-meta">
+          <span className="students">
+            <i className="fas fa-users" style={{ fontSize: "0.65rem", marginRight: 4 }}></i>
+            {students}
+          </span>
+          {renderStars(rating)}
         </div>
-
-        {/* Spacer */}
-        <div className="mt-auto">
-          {/* Pricing */}
-          <div className="mb-3 flex items-baseline gap-2">
-            {c.oldPrice && (
-              <span className="text-[12px] text-muted-foreground/60 line-through">{c.oldPrice}</span>
-            )}
-            <span className="text-[15px] font-extrabold text-[#D31626] sm:text-[16px]">
-              {c.price}
-            </span>
+        <div className="price-row">
+          <div>
+            <div className="price-main">{priceFcfa}</div>
+            <div className="price-usd">{priceUsd}</div>
           </div>
-
-          {/* CTA button */}
-          <Link
-            to={`/product/${c.slug}`}
-            className="block w-full rounded-xl bg-[#004DB8] py-2.5 text-center text-[13px] font-semibold text-white transition-all hover:bg-[#003c91] hover:shadow-lg active:scale-[0.97] sm:text-sm"
-          >
-            Acheter maintenant
-          </Link>
         </div>
+        <Link className="btn-buy" to={`/checkout/${c.slug}`}>
+          <i className="fas fa-shopping-cart" style={{ marginRight: 8 }}></i>
+          {buyBtnText}
+        </Link>
       </div>
-    </motion.article>
+    </motion.div>
   );
 };
 

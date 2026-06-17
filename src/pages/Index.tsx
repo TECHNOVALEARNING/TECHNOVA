@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowRight, Check } from "lucide-react";
 import { Header, Footer, CourseCard, Course } from "@/components/site/shared";
 import { supabase } from "@/integrations/supabase/client";
 import logoImg from "@/assets/logo.png";
@@ -52,14 +51,21 @@ const Index = () => {
         .limit(8);
       if (error) throw error;
       const active = (data || []).filter((p: any) => {
-        try { const f = typeof p.features === "string" ? JSON.parse(p.features) : (p.features || {}); return f.status !== "draft"; } catch { return true; }
+        try {
+          const f = typeof p.features === "string" ? JSON.parse(p.features) : (p.features || {});
+          return f.status !== "draft";
+        } catch {
+          return true;
+        }
       });
-      return active.slice(0, 4).map((p: any) => ({
-        slug: p.id, title: p.title,
-        cover: p.image_url || "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=800",
-        category: p.category, level: lang === "fr" ? "Tous niveaux" : "All levels",
+      return active.slice(0, 8).map((p: any) => ({
+        slug: p.id,
+        title: p.title,
+        cover: p.thumbnail_url || "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=800&q=80",
+        category: p.category || "Formation",
+        level: lang === "fr" ? "Tous niveaux" : "All levels",
         price: `${p.price} FCFA`,
-        oldPrice: p.crossed_price ? `${p.crossed_price} FCFA` : undefined,
+        oldPrice: p.original_price ? `${p.original_price} FCFA` : undefined,
         duration: lang === "fr" ? "Accès à vie" : "Lifetime access",
       })) as Course[];
     },
@@ -155,17 +161,17 @@ const Index = () => {
             {/* Left */}
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
               <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: "0.78rem", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--blue)", background: "var(--blue-soft)", border: "1px solid rgba(0,113,227,0.15)", padding: "6px 14px", borderRadius: 20, marginBottom: 28 }}>
-                <i className="fas fa-rocket" /> <span>{lang === 'fr' ? 'Plateforme #1 en Afrique' : '#1 Platform in Africa'}</span>
+                <i className="fas fa-rocket" /> <span>{lang === 'fr' ? '#Référence digitale' : '#Digital Reference'}</span>
               </div>
               <h1 className="tn-hero-title" style={{ marginBottom: 24, color: "var(--text)" }}>
                 {lang === 'fr' ? <>Maîtrisez la Tech de <span className="tn-hero-span">Demain</span>.</> : <>Master the Tech of <span className="tn-hero-span">Tomorrow</span>.</>}
               </h1>
               <p style={{ fontSize: "1.05rem", color: "var(--text-secondary)", lineHeight: 1.7, maxWidth: 520, marginBottom: 40 }}>
-                {lang === 'fr' ? 'TECHNOVA Courses est la plateforme ultime pour apprendre le développement, la data science et le design. Formez-vous aux compétences recherchées par les recruteurs.' : 'TECHNOVA Courses is the ultimate platform to learn development, data science, and design. Learn the skills recruiters are looking for.'}
+                {lang === 'fr' ? 'TECHNOVA Learning votre passerelle vers le développement, la data science et le design. Formez-vous aux talents qui ouvrent les portes du marché. Etudiants, freelancers, entreprises, c\'est ici que ca se passe.' : 'TECHNOVA Courses is the ultimate platform to learn development, data science, and design. Learn the skills recruiters are looking for. Students, freelancers, companies, this is where it happens.'}
               </p>
               <div style={{ display: "flex", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 36 }}>
                 <Link to="/formations" className="tn-btn-primary">
-                  {lang === 'fr' ? 'Démarrer maintenant' : 'Start now'} <i className="fas fa-arrow-right" style={{ marginLeft: 6 }} />
+                  {lang === 'fr' ? 'Explorer les ebooks' : 'Explore ebooks'} <i className="fas fa-arrow-right" style={{ marginLeft: 6 }} />
                 </Link>
                 <Link to="/formations" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 28px", borderRadius: 50, border: "1.5px solid var(--blue)", color: "var(--blue)", fontWeight: 600, fontSize: "0.88rem", textDecoration: "none", transition: "all 0.25s" }}>
                   {lang === 'fr' ? 'Voir les formations' : 'View courses'}
@@ -179,7 +185,7 @@ const Index = () => {
                   ))}
                 </div>
                 <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", margin: 0 }}>
-                  <strong style={{ color: "var(--text)" }}>+10k</strong> {lang === 'fr' ? 'étudiants nous font confiance' : 'students trust us'}
+                  <strong style={{ color: "var(--text)" }}>Plusieurs</strong> {lang === 'fr' ? 'étudiants nous font déjà confiance' : 'students trust us'}
                 </p>
               </div>
             </motion.div>
@@ -198,7 +204,7 @@ const Index = () => {
               </div>
               {/* Badge */}
               <div style={{ position: "absolute", top: 24, right: -16, background: "linear-gradient(135deg,#0071e3,#409cff)", borderRadius: "var(--radius)", padding: "14px 18px", textAlign: "center", color: "white", boxShadow: "var(--shadow-md)", minWidth: 110, animation: "heroCardFloat 9s ease-in-out infinite", animationDelay: "-4s" }}>
-                <div style={{ fontSize: "1.4rem", fontWeight: 800, fontFamily: "'Outfit',sans-serif" }}>500+</div>
+                <div style={{ fontSize: "1.4rem", fontWeight: 800, fontFamily: "'Outfit',sans-serif" }}>+10</div>
                 <div style={{ fontSize: "0.7rem", opacity: 0.85 }}>{lang === 'fr' ? 'Entreprises' : 'Companies'}</div>
               </div>
             </motion.div>
@@ -222,21 +228,24 @@ const Index = () => {
       {/* ============ FEATURES ============ */}
       <section id="features" style={{ position: "relative", zIndex: 1, padding: "100px 0" }}>
         <div className="mx-auto" style={{ maxWidth: 1280, padding: "0 24px" }}>
-          <div style={{ textAlign: "center", marginBottom: 60 }}>
-            <span className="tn-eyebrow">{lang === 'fr' ? 'Pourquoi TECHNOVA' : 'Why TECHNOVA'}</span>
-            <h2 className="tn-section-title" style={{ color: "var(--text)" }}>{lang === 'fr' ? 'Pourquoi choisir TECHNOVA ?' : 'Why choose TECHNOVA?'}</h2>
-            <p style={{ fontSize: "1rem", color: "var(--text-secondary)", maxWidth: 480, lineHeight: 1.6, margin: "16px auto" }}>{lang === 'fr' ? 'Une pédagogie adaptée au marché de l\'emploi local et international.' : 'A pedagogy adapted to the local and international job market.'}</p>
+          <div style={{ marginBottom: 48, maxWidth: 600 }}>
+            <span className="section-eyebrow">{lang === 'fr' ? 'Pourquoi TECHNOVA' : 'Why TECHNOVA'}</span>
+            <h2 className="section-title">{lang === 'fr' ? 'Pourquoi choisir TECHNOVA ?' : 'Why choose TECHNOVA?'}</h2>
+            <p className="section-sub">{lang === 'fr' ? 'Une pédagogie adaptée au marché de l\'emploi local et international.' : 'A pedagogy adapted to the local and international job market.'}</p>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 24 }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              { icon: "fas fa-laptop-code", title: lang === 'fr' ? "100% Pratique" : "100% Practical", desc: lang === 'fr' ? "Des projets concrets pour construire votre portfolio professionnel dès la première semaine." : "Concrete projects to build your professional portfolio from the first week." },
-              { icon: "fas fa-headset", title: lang === 'fr' ? "Support Dédié" : "Dedicated Support", desc: lang === 'fr' ? "Un accompagnement personnalisé via WhatsApp pour répondre à toutes vos questions." : "Personalized guidance via WhatsApp to answer all your questions." },
+              { icon: "fas fa-laptop-code", title: lang === 'fr' ? "100% Pratique" : "100% Practical", desc: lang === 'fr' ? "Des projets concrets pour construire votre portfolio professionnel dès la première leçon." : "Concrete projects to build your professional portfolio from the first lesson." },
+              { icon: "fas fa-headset", title: lang === 'fr' ? "Support Dédié" : "Dedicated Support", desc: lang === 'fr' ? "Un accompagnement personnalisé pour répondre à vos questions pendant toute la formation." : "Personalized guidance to answer your questions throughout the training." },
               { icon: "fas fa-mobile-alt", title: lang === 'fr' ? "Paiement Local" : "Local Payment", desc: lang === 'fr' ? "Payez facilement via MTN MoMo, Moov Money, Orange Money, Wave ou Carte Visa." : "Pay easily via MTN MoMo, Moov Money, Orange Money, Wave, or Visa Card." },
+              { icon: "fas fa-certificate", title: lang === 'fr' ? "Certificats Reconnus" : "Recognized Certificates", desc: lang === 'fr' ? "Obtenez des certifications valorisées par les employeurs africains et internationaux." : "Obtain certifications valued by African and international employers." },
+              { icon: "fas fa-users", title: lang === 'fr' ? "Communauté Active" : "Active Community", desc: lang === 'fr' ? "Rejoignez 10 000+ apprenants et un réseau de mentors passionnés par la technologie." : "Join 10,000+ learners and a network of mentors passionate about technology." },
+              { icon: "fas fa-infinity", title: lang === 'fr' ? "Accès à Vie" : "Access for life", desc: lang === 'fr' ? "Achetez une fois, apprenez pour toujours. Mises à jour incluses sans frais supplémentaires." : "Buy once, learn forever. Updates included without extra charges." },
             ].map((f, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="tn-feature-card">
-                <div className="tn-feature-icon"><i className={f.icon} /></div>
-                <h4 style={{ fontSize: "1.05rem", fontWeight: 700, marginBottom: 10, color: "var(--text)" }}>{f.title}</h4>
-                <p style={{ fontSize: "0.88rem", color: "var(--text-secondary)", lineHeight: 1.65, margin: 0 }}>{f.desc}</p>
+              <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }} className="feature-card">
+                <div className="feature-icon"><i className={f.icon} /></div>
+                <h4>{f.title}</h4>
+                <p>{f.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -249,14 +258,25 @@ const Index = () => {
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 40, flexWrap: "wrap", gap: 16 }}>
             <div>
               <span className="tn-eyebrow">{lang === 'fr' ? 'Formations' : 'Courses'}</span>
-              <h2 className="tn-section-title" style={{ color: "var(--text)" }}>{lang === 'fr' ? 'Nos Formations Phares' : 'Featured Courses'}</h2>
+              <h2 className="section-title">
+                <span className="title-motion-wrap">
+                  <span className="title-motion">
+                    {lang === 'fr' ? 'Nos Produits Digitaux' : 'Our Digital Products'}
+                  </span>
+                  <i className="fas fa-sparkles motion-spark"></i>
+                </span>
+              </h2>
+              <p className="section-sub" style={{ marginTop: 8 }}>
+                {lang === 'fr' ? 'Investissez dans votre avenir à petit prix.' : 'Invest in your future at a low price.'}
+              </p>
             </div>
-            <Link to="/formations" style={{ fontWeight: 600, color: "var(--blue)", fontSize: "0.95rem", display: "flex", alignItems: "center", gap: 6 }}>
+            <Link to="/marketplace" style={{ fontWeight: 600, color: "var(--blue)", fontSize: "0.95rem", display: "flex", alignItems: "center", gap: 6 }}>
               {lang === 'fr' ? 'Voir toutes les formations' : 'View all courses'} <i className="fas fa-chevron-right" style={{ fontSize: "0.8em" }} />
             </Link>
           </div>
+
           {dbProducts.length > 0 ? (
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 20 }}>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {dbProducts.map((c, i) => <CourseCard key={c.slug} c={c} i={i} />)}
             </div>
           ) : (
@@ -275,7 +295,7 @@ const Index = () => {
             <span className="tn-eyebrow">{lang === 'fr' ? 'Blog & Actualités' : 'Blog & News'}</span>
             <h2 className="tn-section-title" style={{ color: "var(--text)" }}>{lang === 'fr' ? 'Informez-vous' : 'Stay Informed'}</h2>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 24 }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               { img: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=600&h=350&fit=crop", date: "15 Jan 2026", title: lang === 'fr' ? "L'IA générative en 2026" : "Generative AI in 2026", desc: lang === 'fr' ? "Découvrez les dernières avancées en intelligence artificielle et leur impact sur le marché du travail." : "Discover the latest advances in AI and their impact on the job market." },
               { img: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=350&fit=crop", date: "12 Jan 2026", title: lang === 'fr' ? "Cybersécurité : Les tendances" : "Cybersecurity: Trends", desc: lang === 'fr' ? "Protégez vos données avec les meilleures pratiques de sécurité en 2026." : "Protect your data with the best security practices in 2026." },
@@ -309,11 +329,11 @@ const Index = () => {
             <div>
               <span className="tn-eyebrow">{lang === 'fr' ? 'À propos' : 'About'}</span>
               <h2 className="tn-section-title" style={{ color: "var(--text)", marginBottom: 16 }}>{lang === 'fr' ? 'Qui Sommes-Nous ?' : 'About Us'}</h2>
-              <p style={{ fontSize: "1rem", color: "var(--text-secondary)", marginBottom: 32, lineHeight: 1.6 }}>{lang === 'fr' ? "TECHNOVA est née d'une vision simple : rendre l'éducation technologique accessible à tous en Afrique et au-delà. Nous croyons que chacun mérite d'avoir accès aux compétences du futur." : "TECHNOVA was born from a simple vision: to make technological education accessible to everyone in Africa and beyond. We believe everyone deserves access to the skills of the future."}</p>
+              <p style={{ fontSize: "1rem", color: "var(--text-secondary)", marginBottom: 32, lineHeight: 1.6 }}>{lang === 'fr' ? "TECHNOVA est née d'une vision simple : rendre l'éducation et l'information technologique accessible à tous en Afrique et au-delà. Nous croyons que chacun mérite d'avoir accès aux compétences du futur." : "TECHNOVA was born from a simple vision: to make technological education and information accessible to everyone in Africa and beyond. We believe everyone deserves access to the skills of the future."}</p>
               {[
                 { icon: "fas fa-bullseye", title: lang === 'fr' ? "Notre Vision" : "Our Vision", desc: lang === 'fr' ? "Devenir la plateforme de référence pour l'apprentissage tech en Afrique d'ici 2030." : "Become the reference platform for tech learning in Africa by 2030." },
                 { icon: "fas fa-heart", title: lang === 'fr' ? "Nos Valeurs" : "Our Values", desc: lang === 'fr' ? "Excellence, accessibilité, innovation et accompagnement personnalisé." : "Excellence, accessibility, innovation, and personalized support." },
-                { icon: "fas fa-award", title: lang === 'fr' ? "Nos Résultats" : "Our Results", desc: lang === 'fr' ? "+10,000 étudiants formés, 95% de taux de satisfaction, 500+ entreprises partenaires." : "10,000+ students trained, 95% satisfaction rate, 500+ partner companies." },
+                { icon: "fas fa-award", title: lang === 'fr' ? "Nos Résultats" : "Our Results", desc: lang === 'fr' ? "Plusieurs étudiants déjà formés, 95% de taux de satisfaction, 500+ entreprises partenaires." : "Several students already trained, 95% satisfaction rate, 500+ partner companies." },
               ].map((item, i) => (
                 <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 18, marginBottom: 24 }}>
                   <div className="tn-about-ico"><i className={item.icon} /></div>
@@ -335,7 +355,7 @@ const Index = () => {
             <span className="tn-eyebrow">{lang === 'fr' ? 'Témoignages' : 'Testimonials'}</span>
             <h2 className="tn-section-title" style={{ color: "var(--text)" }}>{lang === 'fr' ? 'Ils ont réussi avec nous' : 'They succeeded with us'}</h2>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {TESTIMONIALS.map((t, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }} className="tn-testi-card">
                 <div style={{ color: "#f5a623", fontSize: "0.8rem", marginBottom: 16, letterSpacing: 2 }}>{"★".repeat(t.stars)}</div>
