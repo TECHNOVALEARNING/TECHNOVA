@@ -84,9 +84,10 @@ const Index = () => {
   const { data: trendingNews = [], isLoading: isLoadingNews } = useQuery({
     queryKey: ["trending_news_home", lang],
     queryFn: async () => {
-      const rssUrl = lang === "fr" 
-        ? "https://news.google.com/rss?hl=fr&gl=FR&ceid=FR:fr" 
-        : "https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en";
+      const queryStr = lang === "fr"
+        ? "informatique+OR+IA+OR+intelligence+artificielle+OR+technologie"
+        : "computer+science+OR+AI+OR+artificial+intelligence+OR+technology";
+      const rssUrl = `https://news.google.com/rss/search?q=${queryStr}&hl=${lang === "fr" ? "fr&gl=FR&ceid=FR:fr" : "en-US&gl=US&ceid=US:en"}`;
       const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
       
       const res = await fetch(apiUrl);
@@ -94,32 +95,75 @@ const Index = () => {
       const data = await res.json();
       if (data.status !== "ok") throw new Error("Failed to parse news feed");
 
-      const images = [
-        "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=600&h=350&fit=crop", // Tech/AI
-        "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=350&fit=crop", // Business/Analytics
-        "https://images.unsplash.com/photo-1551434678-e076c223a692?w=600&h=350&fit=crop", // Coding/Fullstack
-        "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&h=350&fit=crop", // Chips/Hardware
-        "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&h=350&fit=crop", // Earth/Connectivity
-        "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&h=350&fit=crop", // Security/Cyber
-        "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&h=350&fit=crop", // Digital learning
-      ];
-
       return (data.items || []).slice(0, 10).map((item: any) => {
         const hash = item.title.split("").reduce((acc: number, char: string) => acc + char.charCodeAt(0), 0);
         const cleanTitle = item.title.split(" - ")[0] || item.title;
         const cleanDesc = (item.description || "").replace(/<[^>]*>/g, "").trim();
         const shortDesc = cleanDesc.length > 120 ? cleanDesc.substring(0, 120) + "..." : cleanDesc;
         
+        // Dynamic Unsplash keyword mapping based on title content
+        let query = "technology";
+        const titleLower = cleanTitle.toLowerCase();
+        if (titleLower.includes("ia") || titleLower.includes("ai") || titleLower.includes("artificielle") || titleLower.includes("intelligence") || titleLower.includes("chatgpt") || titleLower.includes("copilot") || titleLower.includes("gemini")) {
+          query = "artificial-intelligence";
+        } else if (titleLower.includes("cyber") || titleLower.includes("securite") || titleLower.includes("sécurité") || titleLower.includes("hacker") || titleLower.includes("cryptage")) {
+          query = "cybersecurity";
+        } else if (titleLower.includes("code") || titleLower.includes("dev") || titleLower.includes("programmation") || titleLower.includes("python") || titleLower.includes("javascript") || titleLower.includes("web") || titleLower.includes("logiciel")) {
+          query = "coding";
+        } else if (titleLower.includes("data") || titleLower.includes("science") || titleLower.includes("analyse") || titleLower.includes("database")) {
+          query = "data-science";
+        } else if (titleLower.includes("cloud") || titleLower.includes("serveur") || titleLower.includes("server") || titleLower.includes("reseau") || titleLower.includes("réseau")) {
+          query = "network-server";
+        } else if (titleLower.includes("ordinateur") || titleLower.includes("pc") || titleLower.includes("computer") || titleLower.includes("processeur") || titleLower.includes("chip")) {
+          query = "computer";
+        }
+
         const formattedDate = new Date(item.pubDate).toLocaleDateString(
           lang === "fr" ? "fr-FR" : "en-US",
           { day: "numeric", month: "short", year: "numeric" }
         );
 
+        const IMAGES_BY_TOPIC: Record<string, string[]> = {
+          "artificial-intelligence": [
+            "https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=600&h=350&q=80",
+            "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=600&h=350&q=80"
+          ],
+          "cybersecurity": [
+            "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=600&h=350&q=80",
+            "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=600&h=350&q=80"
+          ],
+          "coding": [
+            "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=600&h=350&q=80",
+            "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=600&h=350&q=80"
+          ],
+          "data-science": [
+            "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&h=350&q=80",
+            "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=600&h=350&q=80"
+          ],
+          "network-server": [
+            "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&h=350&q=80",
+            "https://images.unsplash.com/photo-1600132806370-bf17e65e942f?auto=format&fit=crop&w=600&h=350&q=80"
+          ],
+          "computer": [
+            "https://images.unsplash.com/photo-1496181130204-7552cc1534e0?auto=format&fit=crop&w=600&h=350&q=80",
+            "https://images.unsplash.com/photo-1531297484001-80022131f5a1?auto=format&fit=crop&w=600&h=350&q=80"
+          ],
+          "technology": [
+            "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=600&h=350&q=80",
+            "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=600&h=350&q=80"
+          ]
+        };
+
+        const list = IMAGES_BY_TOPIC[query] || IMAGES_BY_TOPIC["technology"];
+        const topicImg = list[hash % list.length];
+        const feedImg = item.thumbnail || (item.enclosure && item.enclosure.link);
+        const finalImg = (feedImg && feedImg.startsWith("http")) ? feedImg : topicImg;
+
         return {
           title: cleanTitle,
           desc: shortDesc || (lang === "fr" ? "Actualités récentes sélectionnées par TECHNOVA." : "Recent news updates curated by TECHNOVA."),
           date: formattedDate,
-          img: images[hash % images.length],
+          img: finalImg,
           link: item.link,
         };
       });

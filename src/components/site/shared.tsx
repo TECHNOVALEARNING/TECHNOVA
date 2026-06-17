@@ -58,7 +58,7 @@ export const Header = () => {
   ];
 
   const moreDropdownLinks = [
-    { to: "/#jobs", label: lang === "fr" ? "Emplois & Stages" : "Jobs & Internships" },
+    { to: "/jobs", label: lang === "fr" ? "Emplois & Stages" : "Jobs & Internships" },
     { to: "/blog", label: "Blog" },
     { to: "/outils-digitaux", label: lang === "fr" ? "Outils de Productivité" : "Productivity Tools" },
     { to: "/#excel-templates", label: lang === "fr" ? "Templates Excel" : "Excel Templates" },

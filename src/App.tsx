@@ -25,6 +25,7 @@ import Partners from "./pages/Partners";
 import Documentation from "./pages/Documentation";
 import Contact from "./pages/Contact";
 import FAQ from "./pages/FAQ";
+import Jobs from "./pages/Jobs";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import LegalNotice from "./pages/LegalNotice";
@@ -156,6 +157,7 @@ const AppContent = () => {
               <Route path="/documentation" element={<Documentation />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/faq" element={<FAQ />} />
+              <Route path="/jobs" element={<Jobs />} />
               <Route path="/terms" element={<Terms />} />
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/legal" element={<LegalNotice />} />
