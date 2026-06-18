@@ -111,7 +111,7 @@ const Index = () => {
         .eq("slug", "easy-tech")
         .maybeSingle();
 
-      const adminId = storeData?.owner_id || "9a7bc1fd-3c21-4a8c-b7a3-c60ff2fcf902";
+      const adminId = storeData?.owner_id || "9702b3c5-4acf-42e2-828c-8bf2d50dfff8";
 
       const { data, error } = await supabase
         .from("products")
