@@ -18,7 +18,7 @@ import {
   Shield, CheckCircle2, XCircle, Clock, Eye, Loader2, Search,
 } from "lucide-react";
 
-const ADMIN_EMAIL = "isidoreagonan@gmail.com";
+const ADMIN_EMAIL = "ancres707@gmail.com";
 
 interface KYCRequest {
   id: string;

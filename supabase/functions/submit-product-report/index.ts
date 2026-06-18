@@ -1,4 +1,4 @@
-﻿import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
@@ -6,7 +6,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const ADMIN_EMAIL = "isidoreagonan@gmail.com";
+const ADMIN_EMAIL = "ancres707@gmail.com";
 const LOGO_URL = "https://nexozjpjbhqfjplrogvz.supabase.co/storage/v1/object/public/store-assets/brand/technova-logo.png";
 
 const escapeHtml = (value: string) =>

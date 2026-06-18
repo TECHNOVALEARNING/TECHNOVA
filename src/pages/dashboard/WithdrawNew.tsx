@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { pawapayCountries, providerLogos } from "@/data/pawapayProviders";
 import SEOHead from "@/components/SEOHead";
 
-const ADMIN_EMAIL = "isidoreagonan@gmail.com";
+const ADMIN_EMAIL = "ancres707@gmail.com";
 const UNLOCK_KEY = "technova_wallet_unlock";
 
 interface WalletRow {

@@ -1,11 +1,11 @@
-﻿// Telegram bot — long-polling worker invoked every minute by pg_cron.
+// Telegram bot — long-polling worker invoked every minute by pg_cron.
 // Receives messages, handles commands (/start, /link, /help, /stats),
 // and falls back to the Lovable AI gateway (Gemini) for free-form questions.
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const GATEWAY_URL = "https://connector-gateway.lovable.dev/telegram";
-const ADMIN_EMAIL = "isidoreagonan@gmail.com";
+const ADMIN_EMAIL = "ancres707@gmail.com";
 
 const MAX_RUNTIME_MS = 55_000;
 const MIN_REMAINING_MS = 5_000;

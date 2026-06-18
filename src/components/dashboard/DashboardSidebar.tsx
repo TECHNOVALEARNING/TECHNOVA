@@ -35,7 +35,7 @@ export function DashboardSidebar() {
   const navigate = useNavigate();
   const { user, profile, signOut } = useAuth();
   const { stores, activeStore, activeStores, setActiveStoreId } = useActiveStore();
-  const isAdmin = user?.email === "isidoreagonan@gmail.com";
+  const isAdmin = user?.email === "ancres707@gmail.com";
 
   const isActive = (path: string) => {
     if (path === "/dashboard") return location.pathname === path;

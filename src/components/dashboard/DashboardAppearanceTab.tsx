@@ -303,37 +303,39 @@ const DashboardAppearanceTab = () => {
         </div>
 
         {/* Vidéo de bienvenue */}
-        <div className="rounded-xl border border-border bg-card p-6 space-y-4">
-          <div className="flex items-center gap-3">
-            <Video className="h-4 w-4 text-muted-foreground" />
-            <div>
-              <p className="text-sm font-semibold text-foreground">Vidéo de bienvenue</p>
-              <p className="text-xs text-muted-foreground">Configurez la vidéo d'accueil visible en bas de la section de bienvenue.</p>
+        {user?.email === "ancres707@gmail.com" && (
+          <div className="rounded-xl border border-border bg-card p-6 space-y-4">
+            <div className="flex items-center gap-3">
+              <Video className="h-4 w-4 text-muted-foreground" />
+              <div>
+                <p className="text-sm font-semibold text-foreground">Vidéo de bienvenue</p>
+                <p className="text-xs text-muted-foreground">Configurez la vidéo d'accueil visible en bas de la section de bienvenue.</p>
+              </div>
             </div>
-          </div>
-          <div className="space-y-4 pt-2">
-            <div className="flex items-center justify-between gap-3">
-              <div className="flex items-start gap-3">
-                <Switch checked={showVideo} onCheckedChange={setShowVideo} />
-                <div>
-                  <p className="text-sm font-medium text-foreground">Afficher la vidéo de bienvenue</p>
-                  <p className="text-xs text-muted-foreground">Activer ou désactiver l'affichage de la vidéo sur la page d'accueil publique</p>
+            <div className="space-y-4 pt-2">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-start gap-3">
+                  <Switch checked={showVideo} onCheckedChange={setShowVideo} />
+                  <div>
+                    <p className="text-sm font-medium text-foreground">Afficher la vidéo de bienvenue</p>
+                    <p className="text-xs text-muted-foreground">Activer ou désactiver l'affichage de la vidéo sur la page d'accueil publique</p>
+                  </div>
                 </div>
               </div>
+              {showVideo && (
+                <div className="space-y-2 pt-2 animate-in fade-in slide-in-from-top-1 duration-200">
+                  <label className="text-xs font-semibold text-foreground">Lien de la vidéo (YouTube, Vimeo, MP4, etc.)</label>
+                  <Input
+                    value={videoUrl}
+                    onChange={(e) => setVideoUrl(e.target.value)}
+                    placeholder="Ex: https://www.youtube.com/watch?v=9xwazD5SyVg"
+                    className="bg-background"
+                  />
+                </div>
+              )}
             </div>
-            {showVideo && (
-              <div className="space-y-2 pt-2 animate-in fade-in slide-in-from-top-1 duration-200">
-                <label className="text-xs font-semibold text-foreground">Lien de la vidéo (YouTube, Vimeo, MP4, etc.)</label>
-                <Input
-                  value={videoUrl}
-                  onChange={(e) => setVideoUrl(e.target.value)}
-                  placeholder="Ex: https://www.youtube.com/watch?v=9xwazD5SyVg"
-                  className="bg-background"
-                />
-              </div>
-            )}
           </div>
-        </div>
+        )}
 
         {/* Sort Order */}
         <div className="rounded-xl border border-border bg-card p-6 space-y-4">

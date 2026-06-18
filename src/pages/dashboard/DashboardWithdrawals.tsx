@@ -19,7 +19,7 @@ interface Withdrawal {
   created_at: string;
 }
 
-const ADMIN_EMAIL = "isidoreagonan@gmail.com";
+const ADMIN_EMAIL = "ancres707@gmail.com";
 
 const statusConfig: Record<string, { label: string; icon: any; color: string; badgeBg: string }> = {
   pending: { label: "En attente", icon: Clock, color: "text-amber-600", badgeBg: "bg-amber-50 border-amber-200" },

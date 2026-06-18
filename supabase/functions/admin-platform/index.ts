@@ -6,7 +6,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const ADMIN_EMAIL = "isidoreagonan@gmail.com";
+const ADMIN_EMAIL = "ancres707@gmail.com";
 
 const getAdminUser = async (req: Request, supabaseUrl: string, anonKey: string) => {
   const authHeader = req.headers.get("Authorization");

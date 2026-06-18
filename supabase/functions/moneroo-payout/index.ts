@@ -1,4 +1,4 @@
-﻿// Initiate a Moneroo payout from a saved wallet (PIN-protected)
+// Initiate a Moneroo payout from a saved wallet (PIN-protected)
 // Restreint aux 22 corridors PawaPay réellement opérationnels
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { verify } from "https://deno.land/x/djwt@v3.0.2/mod.ts";
@@ -91,7 +91,7 @@ Deno.serve(async (req) => {
     }
 
     // KYC check (admin bypasses)
-    const ADMIN_EMAIL = "isidoreagonan@gmail.com";
+    const ADMIN_EMAIL = "ancres707@gmail.com";
     if (user.email !== ADMIN_EMAIL) {
       const { data: kyc } = await admin.from("identity_verifications").select("status").eq("user_id", user.id).maybeSingle();
       if (kyc?.status !== "approved") return j({ error: "KYC non approuvé" }, 403);

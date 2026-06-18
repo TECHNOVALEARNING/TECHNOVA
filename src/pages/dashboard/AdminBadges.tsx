@@ -12,7 +12,7 @@ import VerifiedBadge from "@/components/VerifiedBadge";
 import { useAuth } from "@/contexts/AuthContext";
 import { Navigate } from "react-router-dom";
 
-const ADMIN_EMAIL = "isidoreagonan@gmail.com";
+const ADMIN_EMAIL = "ancres707@gmail.com";
 
 const AdminBadges = () => {
   const { user } = useAuth();

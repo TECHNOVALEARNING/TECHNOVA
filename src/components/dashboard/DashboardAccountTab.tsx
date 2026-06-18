@@ -24,7 +24,7 @@ const statusConfig: Record<string, { label: string; icon: any; color: string; bg
   rejected: { label: "Vérification refusée", icon: XCircle, color: "text-destructive", bg: "bg-destructive/5 border-destructive/20" },
 };
 
-const ADMIN_EMAIL = "isidoreagonan@gmail.com";
+const ADMIN_EMAIL = "ancres707@gmail.com";
 
 const DashboardAccountTab = () => {
   const { user, signOut } = useAuth();

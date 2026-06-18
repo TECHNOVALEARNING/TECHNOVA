@@ -1,4 +1,4 @@
-﻿import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
@@ -191,7 +191,7 @@ Décision attendue :
           },
           body: JSON.stringify({
             from: "Technova <noreply@mail.technova.com>",
-            to: ["isidoreagonan@gmail.com"],
+            to: ["ancres707@gmail.com"],
             subject: `⚠️ Modération IA — Produit à vérifier : ${product.title}`,
             html: `
               <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">

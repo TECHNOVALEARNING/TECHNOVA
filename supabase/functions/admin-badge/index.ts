@@ -1,4 +1,4 @@
-﻿// Edge function admin: accorder/révoquer un badge à n'importe quel utilisateur
+// Edge function admin: accorder/révoquer un badge à n'importe quel utilisateur
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.98.0";
 
 const corsHeaders = {
@@ -6,7 +6,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const ADMIN_EMAIL = "isidoreagonan@gmail.com";
+const ADMIN_EMAIL = "ancres707@gmail.com";
 
 const getAdminUser = async (req: Request) => {
   const authHeader = req.headers.get("Authorization");
