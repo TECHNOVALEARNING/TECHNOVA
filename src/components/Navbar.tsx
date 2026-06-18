@@ -17,7 +17,8 @@ const moreLinks = [
   { label: "Emplois & Stages", href: "/jobs" },
   { label: "Blog", href: "/blog" },
   { label: "Outils de Productivité", href: "/outils-digitaux" },
-  { label: "Templates Excel", href: "/#excel-templates" },
+  { label: "Découvertes", href: "/decouvertes" },
+  { label: "Templates", href: "/templates" },
   { label: "FAQ", href: "/faq" },
   { label: "TECHNOVA APPS", href: "/#apps" },
   { label: "Devenir Vendeur", href: "/register" },
@@ -58,7 +59,7 @@ const Navbar = () => {
           <Link to="/marketplace" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Marketplace</Link>
           <Link to="/outils-digitaux" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Productivité</Link>
           <Link to="/pricing" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Tarifs</Link>
-          
+
           {/* Dropdown "Plus" */}
           <div className="relative group">
             <button className="flex items-center gap-1 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">

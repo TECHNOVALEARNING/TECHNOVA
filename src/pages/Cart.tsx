@@ -47,7 +47,7 @@ const Cart = () => {
                     {item.product.category === "course" && "📚"}
                     {item.product.category === "formation" && "🎓"}
                     {item.product.category === "ebook" && "📄"}
-                    {item.product.category === "template" && "📋"}
+                    {(item.product.category === "template" || item.product.category?.startsWith("template:")) && "📋"}
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="font-semibold text-card-foreground truncate">{item.product.title}</h3>

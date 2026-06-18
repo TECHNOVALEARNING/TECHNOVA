@@ -10,6 +10,15 @@ const categoryLabels: Record<string, string> = {
   template: "Template",
 };
 
+const SUBCAT_LABELS: Record<string, string> = {
+  notion: "Notion",
+  canva: "Canva",
+  excel: "Excel",
+  dev: "Dev",
+  marketing: "Marketing",
+  other: "Autre"
+};
+
 const getBadgeClass = (b: string) => {
   const badge = b.toLowerCase();
   if (badge.includes("best") || badge.includes("vente")) return "label-bestseller";
@@ -51,11 +60,15 @@ const ProductCard = ({ product, index = 0 }: { product: Product; index?: number 
               {product.category === "course" && "📚"}
               {product.category === "formation" && "🎓"}
               {product.category === "ebook" && "📄"}
-              {product.category === "template" && "📋"}
+              {(product.category === "template" || product.category?.startsWith("template:")) && "📋"}
             </span>
           </div>
         )}
-        <span className="course-badge">{categoryLabels[product.category] || product.category}</span>
+        <span className="course-badge">
+          {product.category?.startsWith("template:")
+            ? `Template ${SUBCAT_LABELS[product.category.split(":")[1]] || product.category.split(":")[1]}`
+            : (categoryLabels[product.category] || product.category)}
+        </span>
         {product.badge && (
           <span className={`label-badge ${getBadgeClass(product.badge)}`}>
             {product.badge}

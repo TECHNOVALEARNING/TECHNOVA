@@ -72,9 +72,14 @@ const EditProduct = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
+  const filteredTabs = category === "discovery"
+    ? tabs.filter((t) => t.key !== "pricing")
+    : tabs;
+
   // Product fields
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
+  const [templateSubcat, setTemplateSubcat] = useState("other");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [originalPrice, setOriginalPrice] = useState("");
@@ -161,7 +166,18 @@ const EditProduct = () => {
       setThumbnailPreview(data.thumbnail_url);
       setDownloadUrl(data.download_url);
       setFileFormat((data as any).file_format || null);
-      if ((data as any).file_format === "video") {
+      if (data.category === "discovery") {
+        setCategory("discovery");
+        setFileFormat("video");
+        setVideoUrl(data.download_url || "");
+      } else if (data.category && data.category.startsWith("template:")) {
+        setCategory("template");
+        setTemplateSubcat(data.category.split(":")[1] || "other");
+      } else {
+        setCategory(data.category || "");
+        setTemplateSubcat("other");
+      }
+      if ((data as any).file_format === "video" && data.category !== "discovery") {
         setVideoUrl(data.download_url || "");
       }
       setLicenseMaxActivations(data.license_max_activations ? String(data.license_max_activations) : "");
@@ -236,6 +252,17 @@ const EditProduct = () => {
     fetchProduct();
   }, [id, user]);
 
+  useEffect(() => {
+    if (category === "discovery") {
+      setPricingModel("free");
+      setPrice("0");
+      setOriginalPrice("");
+      if (activeTab === "pricing") {
+        setActiveTab("info");
+      }
+    }
+  }, [category, activeTab]);
+
   const uploadFile = async (file: File, folder: string): Promise<string | null> => {
     const ext = file.name.split(".").pop();
     const path = `${folder}/${user!.id}/${Date.now()}.${ext}`;
@@ -275,9 +302,12 @@ const EditProduct = () => {
 
       const effectivePrice = pricingModel === "free" ? 0 : (parseFloat(price) || 0);
 
+      const finalCategory = category === "template" ? `template:${templateSubcat}` : (category || null);
+
       const updateData: Record<string, unknown> = {
         title: title.trim(),
         description: description.trim() || null,
+        category: finalCategory,
         price: effectivePrice,
         original_price: pricingModel === "free" ? null : (originalPrice ? parseFloat(originalPrice) : null),
         thumbnail_url: newThumbnailUrl,
@@ -501,7 +531,7 @@ const EditProduct = () => {
           {/* Tabs - horizontal scroll on mobile, sidebar on desktop */}
           <nav className="md:w-56 md:shrink-0 -mx-1 sm:mx-0">
             <div className="flex md:flex-col gap-1 overflow-x-auto pb-2 md:pb-0 md:space-y-1 scrollbar-hide">
-              {tabs.map((tab) => (
+              {filteredTabs.map((tab) => (
                 <button
                   key={tab.key}
                   onClick={() => setActiveTab(tab.key)}
@@ -558,22 +588,44 @@ const EditProduct = () => {
                   </div>
                   <div>
                     <label className="text-sm font-medium text-foreground mb-1.5 block">
-                      CatÃ©gorie <span className="text-destructive">*</span>
+                      Catégorie <span className="text-destructive">*</span>
                     </label>
                     <Select value={category} onValueChange={setCategory}>
                       <SelectTrigger className="h-11">
-                        <SelectValue placeholder="SÃ©lectionner une catÃ©gorie" />
+                        <SelectValue placeholder="Sélectionner une catégorie" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="marketing">Marketing Digital</SelectItem>
-                        <SelectItem value="design">Design & CrÃ©ativitÃ©</SelectItem>
-                        <SelectItem value="dev">DÃ©veloppement</SelectItem>
+                        <SelectItem value="design">Design & Créativité</SelectItem>
+                        <SelectItem value="tech">D&eacute;veloppement</SelectItem>
                         <SelectItem value="business">Business & Finance</SelectItem>
-                        <SelectItem value="education">Ã‰ducation & Apprentissage</SelectItem>
+                        <SelectItem value="education">Éducation & Apprentissage</SelectItem>
+                        <SelectItem value="template">📋 Templates</SelectItem>
+                        <SelectItem value="discovery">🔍 Découvertes (Lien externe)</SelectItem>
                         <SelectItem value="other">Autre</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
+                  {category === "template" && (
+                    <div className="animate-in fade-in slide-in-from-top-2 mt-4">
+                      <label className="text-sm font-medium text-foreground mb-1.5 block">
+                        Sous-catégorie du template <span className="text-destructive">*</span>
+                      </label>
+                      <Select value={templateSubcat} onValueChange={setTemplateSubcat}>
+                        <SelectTrigger className="h-11">
+                          <SelectValue placeholder="Sélectionner la sous-catégorie" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="notion">📋 Notion</SelectItem>
+                          <SelectItem value="canva">🎨 Canva & Design</SelectItem>
+                          <SelectItem value="excel">📊 Excel & Finance</SelectItem>
+                          <SelectItem value="dev">💻 Dev & Web</SelectItem>
+                          <SelectItem value="marketing">📈 Marketing & Social</SelectItem>
+                          <SelectItem value="other">📁 Autre</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
 
                   {/* Advanced toggle options */}
                   <div className="space-y-0 divide-y divide-border">
@@ -758,15 +810,45 @@ const EditProduct = () => {
               {/* FICHIERS */}
               {activeTab === "files" && (
                 <div className="space-y-6">
-                  <h2 className="text-lg font-bold text-foreground">Fichiers du produit</h2>
-
-                  {type === "course" ? (
-                    <CourseLessonsManager
-                      modules={courseModules}
-                      onModulesChange={setCourseModules}
-                    />
+                  {category === "discovery" ? (
+                    <div>
+                      <h2 className="text-lg font-bold text-foreground mb-2">Lien de la découverte</h2>
+                      <p className="text-sm text-muted-foreground mb-6">
+                        Entrez l'URL du site internet de cette découverte.
+                      </p>
+                      <div className="space-y-4 animate-in fade-in">
+                        <div>
+                          <label className="text-sm font-medium text-foreground mb-1.5 block">
+                            Lien du site internet <span className="text-destructive">*</span>
+                          </label>
+                          <div className="flex gap-2">
+                            <div className="bg-white dark:bg-background border border-border flex items-center px-3 rounded-md">
+                              <LinkIcon className="h-4 w-4 text-muted-foreground" />
+                            </div>
+                            <Input
+                              value={videoUrl}
+                              onChange={(e) => {
+                                setVideoUrl(e.target.value);
+                                setFileFormat("video");
+                              }}
+                              placeholder="https://example.com"
+                              className="flex-1 bg-white dark:bg-background h-11"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   ) : (
                     <>
+                      <h2 className="text-lg font-bold text-foreground">Fichiers du produit</h2>
+
+                      {type === "course" ? (
+                        <CourseLessonsManager
+                          modules={courseModules}
+                          onModulesChange={setCourseModules}
+                        />
+                      ) : (
+                        <>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
                         {[
                           { id: "pdf", label: "Document (PDF)", icon: PdfIcon, color: "text-red-500", border: "border-red-200", bg: "bg-red-50" },
@@ -875,8 +957,10 @@ const EditProduct = () => {
                       )}
                     </>
                   )}
-                </div>
-              )}
+                  </>
+                )}
+              </div>
+            )}
 
               {/* DESCRIPTION */}
               {activeTab === "description" && (

@@ -88,6 +88,7 @@ const CreateProduct = () => {
   // Step 2 - Details
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
+  const [templateSubcat, setTemplateSubcat] = useState("other");
   const [pricingModel, setPricingModel] = useState("one_time");
   const [price, setPrice] = useState("");
   const [originalPrice, setOriginalPrice] = useState("");
@@ -130,6 +131,15 @@ const CreateProduct = () => {
     reader.onload = (e) => setter(e.target?.result as string);
     reader.readAsDataURL(file);
   };
+
+  useEffect(() => {
+    if (category === "discovery") {
+      setPricingModel("free");
+      setPrice("0");
+      setOriginalPrice("");
+    }
+  }, [category]);
+
 
   const priceNum = parseFloat(price) || 0;
   const originalPriceNum = parseFloat(originalPrice) || 0;
@@ -196,17 +206,24 @@ const CreateProduct = () => {
   const handleSubmit = async () => {
     if (!user || !selectedType || !title.trim()) return;
     if (selectedType === "file") {
-      if (!fileFormat) {
-        toast.error("Veuillez choisir le format du fichier");
-        return;
-      }
-      if (fileFormat === "video" && !videoUrl.trim()) {
-        toast.error("Veuillez entrer le lien de la vidéo");
-        return;
-      }
-      if (fileFormat !== "video" && !downloadFile) {
-        toast.error("Veuillez uploader le fichier");
-        return;
+      if (category === "discovery") {
+        if (!videoUrl.trim()) {
+          toast.error("Veuillez entrer le lien du site internet");
+          return;
+        }
+      } else {
+        if (!fileFormat) {
+          toast.error("Veuillez choisir le format du fichier");
+          return;
+        }
+        if (fileFormat === "video" && !videoUrl.trim()) {
+          toast.error("Veuillez entrer le lien de la vidéo");
+          return;
+        }
+        if (fileFormat !== "video" && !downloadFile) {
+          toast.error("Veuillez uploader le fichier");
+          return;
+        }
       }
     }
     if (selectedType === "course" && courseModules.length === 0) {
@@ -232,10 +249,12 @@ const CreateProduct = () => {
 
       const effectivePrice = pricingModel === "free" ? 0 : parseFloat(price);
 
+      const finalCategory = category === "template" ? `template:${templateSubcat}` : (category || null);
+
       const productData: Record<string, unknown> = {
         title: title.trim(),
         description: description.trim() || null,
-        category: category || null,
+        category: finalCategory,
         price: effectivePrice,
         original_price: pricingModel === "free" ? null : (originalPrice ? parseFloat(originalPrice) : null),
         type: selectedType,
@@ -355,6 +374,38 @@ const CreateProduct = () => {
   };
 
   const getStep5Content = () => {
+    if (category === "discovery") {
+      return (
+        <div>
+          <h2 className="text-2xl font-bold text-foreground mb-2">Lien de la découverte</h2>
+          <p className="text-sm text-muted-foreground mb-6">
+            Entrez l'URL du site internet de cette découverte.
+          </p>
+          <div className="space-y-4 animate-in fade-in">
+            <div>
+              <label className="text-sm font-medium text-foreground mb-1.5 block">
+                Lien du site internet <span className="text-destructive">*</span>
+              </label>
+              <div className="flex gap-2">
+                <div className="bg-white dark:bg-background border border-border flex items-center px-3 rounded-md">
+                  <LinkIcon className="h-4 w-4 text-muted-foreground" />
+                </div>
+                <Input
+                  value={videoUrl}
+                  onChange={(e) => {
+                    setVideoUrl(e.target.value);
+                    setFileFormat("video");
+                  }}
+                  placeholder="https://example.com"
+                  className="flex-1 bg-white dark:bg-background h-12"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     switch (selectedType) {
       case "file":
         return (
@@ -758,62 +809,88 @@ const CreateProduct = () => {
                         <SelectItem value="education">🎓 Éducation</SelectItem>
                         <SelectItem value="lifestyle">🌿 Lifestyle</SelectItem>
                         <SelectItem value="creative">🎬 Créatif</SelectItem>
+                        <SelectItem value="template">📋 Templates</SelectItem>
+                        <SelectItem value="discovery">🔍 Découvertes (Lien externe)</SelectItem>
                         <SelectItem value="other">✨ Autres</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
-                  <div>
-                    <label className="text-sm font-medium text-foreground mb-1.5 block">
-                      Modèle de tarification <span className="text-destructive">*</span>
-                    </label>
-                    <Select value={pricingModel} onValueChange={setPricingModel}>
-                      <SelectTrigger className="h-12">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="one_time">Paiement unique</SelectItem>
-                        <SelectItem value="subscription">Abonnement</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  {pricingModel !== "free" && (
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="text-sm font-medium text-foreground mb-1.5 block">Prix <span className="text-destructive">*</span></label>
-                        <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">FCFA</span>
-                          <Input
-                            type="number"
-                            value={price}
-                            onChange={(e) => setPrice(e.target.value)}
-                            className={`h-12 pl-14 ${priceError ? "border-destructive" : ""}`}
-                            placeholder="100"
-                            min={100}
-                          />
-                        </div>
-                        {priceError && <p className="text-[11px] text-destructive mt-1">{priceError}</p>}
-                        {!priceError && <p className="text-[11px] text-muted-foreground mt-1">Min : 100 FCFA</p>}
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium text-foreground mb-1.5 block">Prix barré</label>
-                        <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">FCFA</span>
-                          <Input
-                            type="number"
-                            value={originalPrice}
-                            onChange={(e) => setOriginalPrice(e.target.value)}
-                            className={`h-12 pl-14 ${originalPriceError ? "border-destructive" : ""}`}
-                            placeholder="0"
-                          />
-                        </div>
-                        {originalPriceError && <p className="text-[11px] text-destructive mt-1">{originalPriceError}</p>}
-                        {!originalPriceError && originalPrice && originalPriceNum > priceNum && (
-                          <p className="text-[11px] text-emerald-600 mt-1">
-                            Réduction de {Math.round(((originalPriceNum - priceNum) / originalPriceNum) * 100)}%
-                          </p>
-                        )}
-                      </div>
+                  {category === "template" && (
+                    <div className="animate-in fade-in slide-in-from-top-2">
+                      <label className="text-sm font-medium text-foreground mb-1.5 block">
+                        Sous-catégorie du template <span className="text-destructive">*</span>
+                      </label>
+                      <Select value={templateSubcat} onValueChange={setTemplateSubcat}>
+                        <SelectTrigger className="h-12">
+                          <SelectValue placeholder="Sélectionner la sous-catégorie" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="notion">📋 Notion</SelectItem>
+                          <SelectItem value="canva">🎨 Canva & Design</SelectItem>
+                          <SelectItem value="excel">📊 Excel & Finance</SelectItem>
+                          <SelectItem value="dev">💻 Dev & Web</SelectItem>
+                          <SelectItem value="marketing">📈 Marketing & Social</SelectItem>
+                          <SelectItem value="other">📁 Autre</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
+                  )}
+                  {category !== "discovery" && (
+                    <>
+                      <div>
+                        <label className="text-sm font-medium text-foreground mb-1.5 block">
+                          Modèle de tarification <span className="text-destructive">*</span>
+                        </label>
+                        <Select value={pricingModel} onValueChange={setPricingModel}>
+                          <SelectTrigger className="h-12">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="one_time">Paiement unique</SelectItem>
+                            <SelectItem value="subscription">Abonnement</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      {pricingModel !== "free" && (
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <label className="text-sm font-medium text-foreground mb-1.5 block">Prix <span className="text-destructive">*</span></label>
+                            <div className="relative">
+                              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">FCFA</span>
+                              <Input
+                                type="number"
+                                value={price}
+                                onChange={(e) => setPrice(e.target.value)}
+                                className={`h-12 pl-14 ${priceError ? "border-destructive" : ""}`}
+                                placeholder="100"
+                                min={100}
+                              />
+                            </div>
+                            {priceError && <p className="text-[11px] text-destructive mt-1">{priceError}</p>}
+                            {!priceError && <p className="text-[11px] text-muted-foreground mt-1">Min : 100 FCFA</p>}
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium text-foreground mb-1.5 block">Prix barré</label>
+                            <div className="relative">
+                              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">FCFA</span>
+                              <Input
+                                type="number"
+                                value={originalPrice}
+                                onChange={(e) => setOriginalPrice(e.target.value)}
+                                className={`h-12 pl-14 ${originalPriceError ? "border-destructive" : ""}`}
+                                placeholder="0"
+                              />
+                            </div>
+                            {originalPriceError && <p className="text-[11px] text-destructive mt-1">{originalPriceError}</p>}
+                            {!originalPriceError && originalPrice && originalPriceNum > priceNum && (
+                              <p className="text-[11px] text-emerald-600 mt-1">
+                                Réduction de {Math.round(((originalPriceNum - priceNum) / originalPriceNum) * 100)}%
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </>
                   )}
 
                   {/* License-specific fields in step 2 */}

@@ -85,8 +85,8 @@ const Index = () => {
     queryKey: ["trending_news_home", lang],
     queryFn: async () => {
       const queryStr = lang === "fr"
-        ? "informatique+OR+IA+OR+intelligence+artificielle+OR+technologie"
-        : "computer+science+OR+AI+OR+artificial+intelligence+OR+technology";
+        ? "technologie+OR+politique+OR+sport+OR+intelligence+OR+sciences"
+        : "technology+OR+politics+OR+sports+OR+intelligence+OR+science";
       const rssUrl = `https://news.google.com/rss/search?q=${queryStr}&hl=${lang === "fr" ? "fr&gl=FR&ceid=FR:fr" : "en-US&gl=US&ceid=US:en"}`;
       const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
       
@@ -116,6 +116,12 @@ const Index = () => {
           query = "network-server";
         } else if (titleLower.includes("ordinateur") || titleLower.includes("pc") || titleLower.includes("computer") || titleLower.includes("processeur") || titleLower.includes("chip")) {
           query = "computer";
+        } else if (titleLower.includes("politique") || titleLower.includes("gouvernement") || titleLower.includes("election") || titleLower.includes("élection") || titleLower.includes("ministre") || titleLower.includes("president") || titleLower.includes("président") || titleLower.includes("politics") || titleLower.includes("government")) {
+          query = "politics";
+        } else if (titleLower.includes("sport") || titleLower.includes("football") || titleLower.includes("soccer") || titleLower.includes("basket") || titleLower.includes("tennis") || titleLower.includes("olympic") || titleLower.includes("match") || titleLower.includes("joueur") || titleLower.includes("player") || titleLower.includes("cup") || titleLower.includes("coupe")) {
+          query = "sports";
+        } else if (titleLower.includes("science") || titleLower.includes("chercheur") || titleLower.includes("decouverte") || titleLower.includes("découverte") || titleLower.includes("espace") || titleLower.includes("space") || titleLower.includes("nasa") || titleLower.includes("medecine") || titleLower.includes("médecine") || titleLower.includes("biolog")) {
+          query = "science";
         }
 
         const formattedDate = new Date(item.pubDate).toLocaleDateString(
@@ -148,6 +154,18 @@ const Index = () => {
             "https://images.unsplash.com/photo-1496181130204-7552cc1534e0?auto=format&fit=crop&w=600&h=350&q=80",
             "https://images.unsplash.com/photo-1531297484001-80022131f5a1?auto=format&fit=crop&w=600&h=350&q=80"
           ],
+          "politics": [
+            "https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=600&h=350&q=80",
+            "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=600&h=350&q=80"
+          ],
+          "sports": [
+            "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=600&h=350&q=80",
+            "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=600&h=350&q=80"
+          ],
+          "science": [
+            "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=600&h=350&q=80",
+            "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=600&h=350&q=80"
+          ],
           "technology": [
             "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=600&h=350&q=80",
             "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=600&h=350&q=80"
@@ -164,6 +182,7 @@ const Index = () => {
           desc: shortDesc || (lang === "fr" ? "Actualités récentes sélectionnées par TECHNOVA." : "Recent news updates curated by TECHNOVA."),
           date: formattedDate,
           img: finalImg,
+          fallbackImg: topicImg,
           link: item.link,
         };
       });
@@ -436,7 +455,15 @@ const Index = () => {
                   <div key={i} className="news-card-marquee-wrap">
                     <div className="tn-blog-card">
                       <div style={{ height: 180, overflow: "hidden" }}>
-                        <img src={b.img} alt={b.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.5s" }} />
+                        <img 
+                          src={b.img} 
+                          alt={b.title} 
+                          style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.5s" }}
+                          onError={(e) => {
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src = b.fallbackImg || "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=600&h=350&q=80";
+                          }}
+                        />
                       </div>
                       <div style={{ padding: 22, display: "flex", flexDirection: "column", height: 220, justifyContent: "space-between" }}>
                         <div>

@@ -16,6 +16,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Fichiers from "./pages/Fichiers";
 import LicencesPage from "./pages/LicencesPage";
+import Decouvertes from "./pages/Decouvertes";
 
 import About from "./pages/About";
 import Blog from "./pages/Blog";
@@ -38,6 +39,7 @@ import Cours from "./pages/Cours";
 import Products from "./pages/Products";
 import AdminProducts from "./pages/AdminProducts";
 import AllProducts from "./pages/AllProducts";
+import TemplatesPage from "./pages/TemplatesPage";
 import StoreLegalPage from "./pages/StoreLegalPage";
 import PaymentCallback from "./pages/PaymentCallback";
 import CheckoutPage from "./pages/CheckoutPage";
@@ -146,9 +148,11 @@ const AppContent = () => {
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogPost />} />
               <Route path="/outils-digitaux" element={<ToolsDirectoryPage />} />
+              <Route path="/decouvertes" element={<Decouvertes />} />
               <Route path="/marketplace" element={<Marketplace />} />
               <Route path="/admin-products" element={<AdminProducts />} />
               <Route path="/all-products" element={<AllProducts />} />
+              <Route path="/templates" element={<TemplatesPage />} />
               <Route path="/cours" element={<Cours />} />
               <Route path="/formations" element={<Cours />} />
               <Route path="/products" element={<Products />} />

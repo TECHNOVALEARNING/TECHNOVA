@@ -14,6 +14,15 @@ const categoryLabels: Record<string, string> = {
   template: "Template",
 };
 
+const SUBCAT_LABELS: Record<string, string> = {
+  notion: "Notion",
+  canva: "Canva",
+  excel: "Excel",
+  dev: "Dev",
+  marketing: "Marketing",
+  other: "Autre"
+};
+
 const ProductDetail = () => {
   const { id } = useParams();
   const product = products.find((p) => p.id === id);
@@ -58,7 +67,7 @@ const ProductDetail = () => {
                 {product.category === "course" && "📚"}
                 {product.category === "formation" && "🎓"}
                 {product.category === "ebook" && "📄"}
-                {product.category === "template" && "📋"}
+                {(product.category === "template" || product.category?.startsWith("template:")) && "📋"}
               </span>
             </div>
           </motion.div>
@@ -71,7 +80,9 @@ const ProductDetail = () => {
           >
             <div className="mb-4 flex items-center gap-3">
               <span className="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
-                {categoryLabels[product.category]}
+                {product.category?.startsWith("template:")
+                  ? `Template ${SUBCAT_LABELS[product.category.split(":")[1]] || product.category.split(":")[1]}`
+                  : (categoryLabels[product.category] || product.category)}
               </span>
               {product.badge && (
                 <span className="rounded-full bg-gold-gradient px-3 py-1 text-sm font-semibold text-accent-foreground">
