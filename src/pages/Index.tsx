@@ -32,6 +32,43 @@ const TESTIMONIALS = [
   { stars: 5, text: "\"Formation Data Science très complète. Le support WhatsApp répond en moins de 2h. Vraiment professionnel.\"", name: "Adaeze Okonkwo", loc: "Lagos, Nigeria", img: "https://randomuser.me/api/portraits/women/29.jpg" },
 ];
 
+const getWelcomeVideoEmbedUrl = (url: string) => {
+  if (!url) return "";
+  try {
+    if (url.includes("drive.google.com/file/d/")) {
+      const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+      if (match && match[1]) {
+        return `https://drive.google.com/file/d/${match[1]}/preview`;
+      }
+    }
+    if (url.includes("youtube.com/watch")) {
+      const urlObj = new URL(url);
+      return `https://www.youtube.com/embed/${urlObj.searchParams.get("v")}`;
+    }
+    if (url.includes("youtu.be")) {
+      const id = url.split("youtu.be/")[1]?.split("?")[0];
+      return `https://www.youtube.com/embed/${id}`;
+    }
+    if (url.includes("vimeo.com")) {
+      const id = url.split("vimeo.com/")[1]?.split("/")[0]?.split("?")[0];
+      return `https://player.vimeo.com/video/${id}`;
+    }
+    return url;
+  } catch {
+    return url;
+  }
+};
+
+const isDirectVideo = (url: string) => {
+  if (!url) return false;
+  try {
+    const cleanUrl = url.split("?")[0].split("#")[0].toLowerCase();
+    return cleanUrl.endsWith(".mp4") || cleanUrl.endsWith(".webm") || cleanUrl.endsWith(".ogg");
+  } catch {
+    return false;
+  }
+};
+
 const Index = () => {
   const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
 
@@ -40,6 +77,29 @@ const Index = () => {
     window.addEventListener("technova_lang_changed", handleLangChange);
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
+
+  const { data: storeInfo } = useQuery({
+    queryKey: ["public_store_home"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("stores")
+        .select("layout_sections")
+        .eq("slug", "easy-tech")
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    }
+  });
+
+  const welcomeVideoUrl = (() => {
+    if (!storeInfo?.layout_sections) return null;
+    const sections = Array.isArray(storeInfo.layout_sections) ? storeInfo.layout_sections : [];
+    const videoSection = sections.find((s: any) => s.type === "video");
+    if (videoSection && videoSection.enabled) {
+      return videoSection.config?.video_url || null;
+    }
+    return null;
+  })();
 
   const { data: dbProducts = [] } = useQuery({
     queryKey: ["public_products_home"],
@@ -338,6 +398,52 @@ const Index = () => {
               </div>
             </motion.div>
           </div>
+
+          {/* Video de bienvenue */}
+          {welcomeVideoUrl && (
+            <motion.div 
+              initial={{ opacity: 0, y: 35 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              style={{ marginTop: 72, width: "100%" }}
+            >
+              <div style={{ 
+                maxWidth: 840, 
+                margin: "0 auto", 
+                background: "var(--card)", 
+                backdropFilter: "var(--glass-blur)", 
+                WebkitBackdropFilter: "var(--glass-blur)",
+                border: "1px solid var(--card-border)", 
+                borderRadius: "var(--radius-lg)", 
+                padding: 16,
+                boxShadow: "var(--shadow-lg)"
+              }}>
+                <div style={{ 
+                  position: "relative", 
+                  width: "100%", 
+                  paddingTop: "56.25%", /* 16:9 Aspect Ratio */
+                  borderRadius: "var(--radius)",
+                  overflow: "hidden"
+                }}>
+                  {isDirectVideo(welcomeVideoUrl) ? (
+                    <video 
+                      src={welcomeVideoUrl} 
+                      controls 
+                      style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: 0, objectFit: "cover" }}
+                    />
+                  ) : (
+                    <iframe 
+                      src={getWelcomeVideoEmbedUrl(welcomeVideoUrl)} 
+                      style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: 0 }}
+                      allow="autoplay; fullscreen; picture-in-picture"
+                      allowFullScreen
+                    />
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          )}
         </div>
       </section>
 

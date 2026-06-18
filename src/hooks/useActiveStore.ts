@@ -25,6 +25,7 @@ export interface StoreData {
   is_archived: boolean;
   created_at: string;
   updated_at: string;
+  layout_sections?: any;
 }
 
 export const useActiveStore = () => {

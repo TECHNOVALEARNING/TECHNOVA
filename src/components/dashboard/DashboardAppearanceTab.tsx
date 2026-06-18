@@ -5,7 +5,8 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Eye, RotateCcw, Save, Paintbrush, Type, MousePointerClick, ArrowUpDown, Star, ShoppingCart, Sparkles, Check, Package, ImagePlus, X, Loader2, AlertCircle } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Eye, RotateCcw, Save, Paintbrush, Type, MousePointerClick, ArrowUpDown, Star, ShoppingCart, Sparkles, Check, Package, ImagePlus, X, Loader2, AlertCircle, Video } from "lucide-react";
 import { cn } from "@/lib/utils";
 import StoreSelector from "./StoreSelector";
 import { useActiveStore } from "@/hooks/useActiveStore";
@@ -63,6 +64,8 @@ const DashboardAppearanceTab = () => {
   const [realProducts, setRealProducts] = useState<RealProduct[]>([]);
   const [bannerUrl, setBannerUrl] = useState<string | null>(null);
   const [uploadingBanner, setUploadingBanner] = useState(false);
+  const [videoUrl, setVideoUrl] = useState("");
+  const [showVideo, setShowVideo] = useState(false);
 
   useEffect(() => {
     if (activeStore) {
@@ -72,6 +75,11 @@ const DashboardAppearanceTab = () => {
       setShowBuyButton(activeStore.show_buy_button ?? true);
       setSortOrder(activeStore.sort_order || "recent");
       setBannerUrl(activeStore.banner_url || null);
+      
+      const sections = Array.isArray(activeStore.layout_sections) ? activeStore.layout_sections : [];
+      const videoSection = sections.find((s: any) => s.type === "video");
+      setVideoUrl(videoSection?.config?.video_url || "");
+      setShowVideo(videoSection?.enabled ?? false);
     }
   }, [activeStore]);
 
@@ -94,11 +102,43 @@ const DashboardAppearanceTab = () => {
     if (!user || !activeStoreId) return;
     setSaving(true);
     try {
+      const currentSections = Array.isArray(activeStore?.layout_sections) ? activeStore.layout_sections : [];
+      let videoSectionExists = false;
+      const newSections = currentSections.map((sec: any) => {
+        if (sec.type === "video") {
+          videoSectionExists = true;
+          return {
+            ...sec,
+            enabled: showVideo,
+            config: {
+              ...sec.config,
+              video_url: videoUrl,
+              video_type: videoUrl.includes("youtube.com") || videoUrl.includes("youtu.be") ? "youtube" : "direct"
+            }
+          };
+        }
+        return sec;
+      });
+
+      if (!videoSectionExists) {
+        newSections.push({
+          type: "video",
+          enabled: showVideo,
+          position: 6,
+          config: {
+            title: "Vidéo de bienvenue",
+            video_url: videoUrl,
+            video_type: videoUrl.includes("youtube.com") || videoUrl.includes("youtu.be") ? "youtube" : "direct"
+          }
+        });
+      }
+
       await updateStore.mutateAsync({
         brand_color: brandColor, font,
         button_animation: buttonAnimation,
         show_buy_button: showBuyButton,
         sort_order: sortOrder, banner_url: bannerUrl,
+        layout_sections: newSections,
       } as any);
 
       await supabase.from("profiles").update({
@@ -119,6 +159,7 @@ const DashboardAppearanceTab = () => {
   const handleReset = () => {
     setBrandColor("#2563EB"); setFont("Inter"); setButtonAnimation("none");
     setShowBuyButton(true); setSortOrder("recent"); setBannerUrl(null);
+    setVideoUrl(""); setShowVideo(false);
   };
 
   const handleBannerUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -259,6 +300,39 @@ const DashboardAppearanceTab = () => {
         <div className="rounded-xl border border-border bg-card p-6 space-y-4">
           <p className="text-sm font-semibold text-foreground">Options d'affichage</p>
           <ToggleOption icon={ShoppingCart} label="Afficher le bouton d'achat" desc="Bouton « Acheter » visible sur chaque carte produit" checked={showBuyButton} onChange={setShowBuyButton} />
+        </div>
+
+        {/* Vidéo de bienvenue */}
+        <div className="rounded-xl border border-border bg-card p-6 space-y-4">
+          <div className="flex items-center gap-3">
+            <Video className="h-4 w-4 text-muted-foreground" />
+            <div>
+              <p className="text-sm font-semibold text-foreground">Vidéo de bienvenue</p>
+              <p className="text-xs text-muted-foreground">Configurez la vidéo d'accueil visible en bas de la section de bienvenue.</p>
+            </div>
+          </div>
+          <div className="space-y-4 pt-2">
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-start gap-3">
+                <Switch checked={showVideo} onCheckedChange={setShowVideo} />
+                <div>
+                  <p className="text-sm font-medium text-foreground">Afficher la vidéo de bienvenue</p>
+                  <p className="text-xs text-muted-foreground">Activer ou désactiver l'affichage de la vidéo sur la page d'accueil publique</p>
+                </div>
+              </div>
+            </div>
+            {showVideo && (
+              <div className="space-y-2 pt-2 animate-in fade-in slide-in-from-top-1 duration-200">
+                <label className="text-xs font-semibold text-foreground">Lien de la vidéo (YouTube, Vimeo, MP4, etc.)</label>
+                <Input
+                  value={videoUrl}
+                  onChange={(e) => setVideoUrl(e.target.value)}
+                  placeholder="Ex: https://www.youtube.com/watch?v=9xwazD5SyVg"
+                  className="bg-background"
+                />
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Sort Order */}
