@@ -114,8 +114,8 @@ const Decouvertes = () => {
             className="text-lg text-muted-foreground leading-relaxed"
           >
             {lang === "fr" 
-              ? "Explorez une sélection de sites web, outils innovants et ressources incroyables ajoutés par notre administrateur pour booster votre productivité."
-              : "Explore a curated selection of innovative websites, tools, and incredible resources recommended by our administrator to boost your productivity."}
+              ? "Explorez une sélection de sites web, outils innovants et ressources incroyables pour booster votre productivité."
+              : "Explore a curated selection of innovative websites, tools, and incredible resources to boost your productivity."}
           </motion.p>
         </div>
 
