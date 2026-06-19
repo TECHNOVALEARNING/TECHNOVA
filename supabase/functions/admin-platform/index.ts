@@ -6,7 +6,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const ADMIN_EMAIL = "ancres707@gmail.com";
+const ADMIN_EMAILS = ["ancres707@gmail.com", "isidoreagonan@gmail.com"];
 
 const getAdminUser = async (req: Request, supabaseUrl: string, anonKey: string) => {
   const authHeader = req.headers.get("Authorization");
@@ -18,7 +18,7 @@ const getAdminUser = async (req: Request, supabaseUrl: string, anonKey: string) 
   const { data, error } = await supabaseAuth.auth.getClaims(authHeader.replace("Bearer ", ""));
   const email = String(data?.claims?.email || "").toLowerCase();
 
-  if (error || !data?.claims?.sub || email !== ADMIN_EMAIL) return null;
+  if (error || !data?.claims?.sub || !ADMIN_EMAILS.includes(email)) return null;
   return { id: String(data.claims.sub), email };
 };
 

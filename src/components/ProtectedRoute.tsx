@@ -15,7 +15,7 @@ const ProtectedRoute = ({ children, requireAdmin }: { children: React.ReactNode,
 
   if (!user) return <Navigate to="/login" replace />;
 
-  if (requireAdmin && user.email !== "ancres707@gmail.com") {
+  if (requireAdmin && user.email !== "ancres707@gmail.com" && user.email !== "isidoreagonan@gmail.com") {
     return <Navigate to="/dashboard" replace />;
   }
 

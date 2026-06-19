@@ -72,13 +72,13 @@ const EditProduct = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
-  const filteredTabs = category === "discovery"
-    ? tabs.filter((t) => t.key !== "pricing")
-    : tabs;
-
   // Product fields
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
+
+  const filteredTabs = category === "discovery"
+    ? tabs.filter((t) => t.key !== "pricing")
+    : tabs;
   const [templateSubcat, setTemplateSubcat] = useState("other");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -600,7 +600,7 @@ const EditProduct = () => {
                         <SelectItem value="tech">D&eacute;veloppement</SelectItem>
                         <SelectItem value="business">Business & Finance</SelectItem>
                         <SelectItem value="education">Éducation & Apprentissage</SelectItem>
-                        {user?.email === "ancres707@gmail.com" && (
+                        {(user?.email === "ancres707@gmail.com" || user?.email === "isidoreagonan@gmail.com") && (
                           <>
                             <SelectItem value="template">📋 Templates</SelectItem>
                             <SelectItem value="discovery">🔍 Découvertes (Lien externe)</SelectItem>

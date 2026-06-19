@@ -6,7 +6,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const ADMIN_EMAIL = "ancres707@gmail.com";
+const ADMIN_EMAILS = ["ancres707@gmail.com", "isidoreagonan@gmail.com"];
 
 const getAdminUser = async (req: Request) => {
   const authHeader = req.headers.get("Authorization");
@@ -21,7 +21,7 @@ const getAdminUser = async (req: Request) => {
   const { data, error } = await authClient.auth.getClaims(token);
   const email = String(data?.claims?.email || "").toLowerCase();
 
-  if (error || !data?.claims?.sub || email !== ADMIN_EMAIL) throw new Error("Accès admin requis");
+  if (error || !data?.claims?.sub || !ADMIN_EMAILS.includes(email)) throw new Error("Accès admin requis");
   return { id: String(data.claims.sub), email };
 };
 

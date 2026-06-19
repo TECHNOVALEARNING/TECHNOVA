@@ -42,7 +42,7 @@ const AdminModeration = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (user?.email !== "ancres707@gmail.com") return;
+    if (user?.email !== "ancres707@gmail.com" && user?.email !== "isidoreagonan@gmail.com") return;
     fetchData();
   }, [user]);
 
@@ -92,7 +92,7 @@ const AdminModeration = () => {
     return !q || s.name.toLowerCase().includes(q) || s.slug.toLowerCase().includes(q) || getName(s.owner).toLowerCase().includes(q);
   });
 
-  if (user?.email !== "ancres707@gmail.com") {
+  if (user?.email !== "ancres707@gmail.com" && user?.email !== "isidoreagonan@gmail.com") {
     return <DashboardLayout><div className="text-center py-20 text-muted-foreground">Accès non autorisé</div></DashboardLayout>;
   }
 

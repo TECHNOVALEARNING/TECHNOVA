@@ -28,7 +28,7 @@ const AdminBadges = () => {
   const [emailLoading, setEmailLoading] = useState(false);
   const [foundUser, setFoundUser] = useState<{ id: string; email: string; profile: any; badge: any } | null>(null);
 
-  if (user && user.email !== ADMIN_EMAIL) return <Navigate to="/dashboard" />;
+  if (user && user.email !== ADMIN_EMAIL && user.email !== "isidoreagonan@gmail.com") return <Navigate to="/dashboard" />;
 
   const load = async () => {
     setLoading(true);

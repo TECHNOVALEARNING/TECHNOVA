@@ -41,7 +41,7 @@ const WithdrawNew = () => {
   const [submitting, setSubmitting] = useState(false);
 
   const numAmount = parseFloat(amount) || 0;
-  const isAdmin = user?.email === ADMIN_EMAIL;
+  const isAdmin = user?.email === ADMIN_EMAIL || user?.email === "isidoreagonan@gmail.com";
   const COMMISSION = 0.10;
 
   useEffect(() => {

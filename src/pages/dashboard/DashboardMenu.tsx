@@ -54,7 +54,7 @@ export default function DashboardMenu() {
   const navigate = useNavigate();
   const { user, profile, signOut } = useAuth();
   const { activeStore, activeStores, setActiveStoreId } = useActiveStore();
-  const isAdmin = user?.email === "ancres707@gmail.com";
+  const isAdmin = user?.email === "ancres707@gmail.com" || user?.email === "isidoreagonan@gmail.com";
 
   return (
     <DashboardLayout>

@@ -6,7 +6,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const ADMIN_EMAIL = "ancres707@gmail.com";
+const ADMIN_EMAILS = ["ancres707@gmail.com", "isidoreagonan@gmail.com"];
 const LOGO_URL = "https://nexozjpjbhqfjplrogvz.supabase.co/storage/v1/object/public/store-assets/brand/technova-logo.png";
 
 const getAuthenticatedUser = async (req: Request, supabaseUrl: string, anonKey: string) => {
@@ -93,7 +93,7 @@ serve(async (req) => {
       ]);
 
       const submitterProfile = submitterProfileResult.data;
-      const adminUser = adminUsersResult.data?.users?.find((entry: any) => entry.email === ADMIN_EMAIL);
+      const adminUser = adminUsersResult.data?.users?.find((entry: any) => ADMIN_EMAILS.includes(entry.email));
       const submitterName = submitterProfile?.display_name || user.email || "Un utilisateur";
 
       if (adminUser) {
@@ -108,7 +108,7 @@ serve(async (req) => {
       if (resendApiKey) {
         await sendEmail({
           resendApiKey,
-          to: ADMIN_EMAIL,
+          to: ADMIN_EMAILS[0],
           subject: "Nouvelle demande KYC à vérifier",
           html: `
             <div style="font-family:Arial,sans-serif;max-width:620px;margin:0 auto;padding:24px;background:#f8fafc;">
@@ -131,7 +131,7 @@ serve(async (req) => {
       });
     }
 
-    if (user.email !== ADMIN_EMAIL) {
+    if (!ADMIN_EMAILS.includes(user.email)) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 403,
         headers: { ...corsHeaders, "Content-Type": "application/json" },

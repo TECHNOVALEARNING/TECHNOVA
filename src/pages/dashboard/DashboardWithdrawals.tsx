@@ -72,7 +72,7 @@ const formatEta = (createdAt: string, status: string, providerCode?: string | nu
 
 const DashboardWithdrawals = () => {
   const { user } = useAuth();
-  const isAdmin = user?.email === ADMIN_EMAIL;
+  const isAdmin = user?.email === ADMIN_EMAIL || user?.email === "isidoreagonan@gmail.com";
   const [withdrawals, setWithdrawals] = useState<Withdrawal[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalSales, setTotalSales] = useState(0);
