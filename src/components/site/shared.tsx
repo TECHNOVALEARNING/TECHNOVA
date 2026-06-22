@@ -255,10 +255,11 @@ export const Footer = () => {
               <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
             </svg>
           </a>
-          <a href="#" className="h-10 w-10 rounded-full bg-card/10 hover:bg-black transition-colors flex items-center justify-center text-white shadow-sm hover:-translate-y-1 duration-300">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
-              <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
-            </svg>
+          <a href="#" className="h-10 w-10 rounded-full bg-card/10 hover:bg-[#1877F2] transition-colors flex items-center justify-center text-white shadow-sm hover:-translate-y-1 duration-300">
+            <i className="fa-brands fa-linkedin-in"></i>
+          </a>
+          <a href="#" className="h-10 w-10 rounded-full bg-card/10 hover:bg-red-700 transition-colors flex items-center justify-center text-white shadow-sm hover:-translate-y-1 duration-300">
+            <i className="fa-brands fa-youtube"></i>          
           </a>
         </div>
       </div>

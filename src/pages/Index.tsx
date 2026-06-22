@@ -383,44 +383,18 @@ const Index = () => {
             </motion.div>
 
             {/* Right */}
-            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 0.2 }} style={{ position: "relative" }}>
-              <img
-                src="https://images.unsplash.com/photo-1531482615713-2afd69097998?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                alt="Students learning"
-                style={{ width: "100%", borderRadius: "var(--radius-lg)", boxShadow: "var(--shadow-lg)", animation: "heroImageFloat 6s ease-in-out infinite" }}
-              />
-              {/* Stat card */}
-              <div style={{ position: "absolute", bottom: 28, left: -24, background: "var(--surface-strong)", backdropFilter: "blur(24px) saturate(180%)", border: "1px solid var(--card-border)", borderRadius: "var(--radius)", padding: "16px 22px", boxShadow: "var(--shadow-md)", minWidth: 180, animation: "heroCardFloat 7s ease-in-out infinite", animationDelay: "-2s" }}>
-                <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: "1.6rem", fontWeight: 800, color: "var(--blue)", letterSpacing: "-0.03em" }}>95%</div>
-                <div style={{ fontSize: "0.78rem", color: "var(--text-secondary)", marginTop: 2 }}>{lang === 'fr' ? 'Taux de satisfaction' : 'Satisfaction rate'}</div>
-              </div>
-              {/* Badge */}
-              <div style={{ position: "absolute", top: 24, right: -16, background: "linear-gradient(135deg,#0071e3,#409cff)", borderRadius: "var(--radius)", padding: "14px 18px", textAlign: "center", color: "white", boxShadow: "var(--shadow-md)", minWidth: 110, animation: "heroCardFloat 9s ease-in-out infinite", animationDelay: "-4s" }}>
-                <div style={{ fontSize: "1.4rem", fontWeight: 800, fontFamily: "'Outfit',sans-serif" }}>+10</div>
-                <div style={{ fontSize: "0.7rem", opacity: 0.85 }}>{lang === 'fr' ? 'Entreprises' : 'Companies'}</div>
-              </div>
-            </motion.div>
-          </div>
-
-          {/* Video de bienvenue */}
-          {welcomeVideoUrl && (
-            <motion.div 
-              initial={{ opacity: 0, y: 35 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              style={{ marginTop: 72, width: "100%" }}
-            >
+            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 0.2 }} style={{ position: "relative", width: "100%" }}>
               <div style={{ 
-                maxWidth: 840, 
-                margin: "0 auto", 
+                width: "100%", 
                 background: "var(--card)", 
                 backdropFilter: "var(--glass-blur)", 
                 WebkitBackdropFilter: "var(--glass-blur)",
                 border: "1px solid var(--card-border)", 
                 borderRadius: "var(--radius-lg)", 
-                padding: 16,
-                boxShadow: "var(--shadow-lg)"
+                padding: 12,
+                boxShadow: "var(--shadow-lg)",
+                animation: "heroImageFloat 6s ease-in-out infinite",
+                overflow: "hidden"
               }}>
                 <div style={{ 
                   position: "relative", 
@@ -429,24 +403,95 @@ const Index = () => {
                   borderRadius: "var(--radius)",
                   overflow: "hidden"
                 }}>
-                  {isDirectVideo(welcomeVideoUrl) ? (
-                    <video 
-                      src={welcomeVideoUrl} 
-                      controls 
-                      style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: 0, objectFit: "cover" }}
-                    />
+                  {welcomeVideoUrl ? (
+                    isDirectVideo(welcomeVideoUrl) ? (
+                      <video 
+                        src={welcomeVideoUrl} 
+                        controls 
+                        style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: 0, objectFit: "cover" }}
+                      />
+                    ) : (
+                      <iframe 
+                        src={getWelcomeVideoEmbedUrl(welcomeVideoUrl)} 
+                        style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: 0 }}
+                        allow="autoplay; fullscreen; picture-in-picture"
+                        allowFullScreen
+                      />
+                    )
                   ) : (
-                    <iframe 
-                      src={getWelcomeVideoEmbedUrl(welcomeVideoUrl)} 
-                      style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: 0 }}
-                      allow="autoplay; fullscreen; picture-in-picture"
-                      allowFullScreen
+                    /* Fallback to original image if no video url is loaded yet */
+                    <img
+                      src="https://images.unsplash.com/photo-1531482615713-2afd69097998?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                      alt="Students learning"
+                      style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", objectFit: "cover" }}
                     />
                   )}
                 </div>
               </div>
+              {/* Stat card */}
+              <div style={{ position: "absolute", bottom: 12, left: -20, background: "var(--surface-strong)", backdropFilter: "blur(24px) saturate(180%)", border: "1px solid var(--card-border)", borderRadius: "var(--radius)", padding: "12px 18px", boxShadow: "var(--shadow-md)", minWidth: 160, zIndex: 10, animation: "heroCardFloat 7s ease-in-out infinite", animationDelay: "-2s" }}>
+                <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: "1.4rem", fontWeight: 800, color: "var(--blue)", letterSpacing: "-0.03em" }}>95%</div>
+                <div style={{ fontSize: "0.72rem", color: "var(--text-secondary)", marginTop: 2 }}>{lang === 'fr' ? 'Taux de satisfaction' : 'Satisfaction rate'}</div>
+              </div>
+              {/* Badge */}
+              <div style={{ position: "absolute", top: 12, right: -12, background: "linear-gradient(135deg,#0071e3,#409cff)", borderRadius: "var(--radius)", padding: "10px 14px", textAlign: "center", color: "white", boxShadow: "var(--shadow-md)", minWidth: 90, zIndex: 10, animation: "heroCardFloat 9s ease-in-out infinite", animationDelay: "-4s" }}>
+                <div style={{ fontSize: "1.2rem", fontWeight: 800, fontFamily: "'Outfit',sans-serif" }}>+10</div>
+                <div style={{ fontSize: "0.68rem", opacity: 0.85 }}>{lang === 'fr' ? 'Entreprises' : 'Companies'}</div>
+              </div>
             </motion.div>
-          )}
+          </div>
+
+          {/* Annonces et Publicités */}
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            style={{ marginTop: 64, width: "100%" }}
+          >
+            <div style={{ 
+              maxWidth: 840, 
+              margin: "0 auto", 
+              background: "var(--surface)", 
+              backdropFilter: "var(--glass-blur)", 
+              WebkitBackdropFilter: "var(--glass-blur)",
+              border: "1px dashed var(--blue)", 
+              borderRadius: "var(--radius-lg)", 
+              padding: "32px 24px",
+              boxShadow: "var(--shadow-sm)",
+              textAlign: "center",
+              position: "relative",
+              overflow: "hidden"
+            }}>
+              <div style={{ position: "absolute", top: -20, right: -20, width: 100, height: 100, background: "var(--blue-soft)", borderRadius: "50%", filter: "blur(20px)" }} />
+              <div style={{ position: "absolute", bottom: -20, left: -20, width: 100, height: 100, background: "var(--blue-soft)", borderRadius: "50%", filter: "blur(20px)" }} />
+              
+              <div style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
+                <div style={{ 
+                  width: 48, 
+                  height: 48, 
+                  borderRadius: "50%", 
+                  background: "var(--blue-soft)", 
+                  border: "1px solid rgba(0,113,227,0.15)",
+                  display: "flex", 
+                  alignItems: "center", 
+                  justifyContent: "center",
+                  color: "var(--blue)",
+                  fontSize: "1.2rem"
+                }}>
+                  <i className="fas fa-bullhorn" />
+                </div>
+                <h3 style={{ fontFamily: "'Outfit', sans-serif", fontSize: "1.1rem", fontWeight: 800, color: "var(--text)", margin: 0 }}>
+                  {lang === 'fr' ? "Espace Annonces & Publicités" : "Announcements & Advertisements Space"}
+                </h3>
+                <p style={{ fontSize: "0.82rem", color: "var(--text-secondary)", maxWidth: 500, margin: 0, lineHeight: 1.5 }}>
+                  {lang === 'fr' 
+                    ? "Découvrez bientôt ici nos offres exclusives, nouveautés technologiques, lancements de formations et événements à venir." 
+                    : "Stay tuned for exclusive offers, tech news, course launches, and upcoming events in this space."}
+                </p>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </section>
 
