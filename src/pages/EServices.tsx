@@ -128,7 +128,7 @@ const EServices = () => {
         lang === "fr" ? "Panier et checkout optimisés" : "Optimized cart & checkout flow",
         lang === "fr" ? "Dashboard vendeur simplifié" : "Simplified seller dashboard"
       ],
-      price: lang === "fr" ? "À partir de 150 000 FCFA" : "From $250"
+      price: lang === "fr" ? "À partir de 6 000 000 FCFA" : "From $10 000"
     },
     {
       icon: Layers,
