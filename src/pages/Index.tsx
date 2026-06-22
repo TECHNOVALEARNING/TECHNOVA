@@ -43,19 +43,37 @@ const getWelcomeVideoEmbedUrl = (url: string) => {
     }
     if (url.includes("youtube.com/watch")) {
       const urlObj = new URL(url);
-      return `https://www.youtube.com/embed/${urlObj.searchParams.get("v")}`;
+      return `https://www.youtube.com/embed/${urlObj.searchParams.get("v")}?autoplay=1&mute=0`;
     }
     if (url.includes("youtu.be")) {
       const id = url.split("youtu.be/")[1]?.split("?")[0];
-      return `https://www.youtube.com/embed/${id}`;
+      return `https://www.youtube.com/embed/${id}?autoplay=1&mute=0`;
     }
     if (url.includes("vimeo.com")) {
       const id = url.split("vimeo.com/")[1]?.split("/")[0]?.split("?")[0];
-      return `https://player.vimeo.com/video/${id}`;
+      return `https://player.vimeo.com/video/${id}?autoplay=1`;
     }
     return url;
   } catch {
     return url;
+  }
+};
+
+const getWelcomeVideoThumbnailUrl = (url: string) => {
+  if (!url) return "https://images.unsplash.com/photo-1531482615713-2afd69097998?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80";
+  try {
+    if (url.includes("youtube.com/watch")) {
+      const urlObj = new URL(url);
+      const id = urlObj.searchParams.get("v");
+      if (id) return `https://img.youtube.com/vi/${id}/sddefault.jpg`;
+    }
+    if (url.includes("youtu.be")) {
+      const id = url.split("youtu.be/")[1]?.split("?")[0];
+      if (id) return `https://img.youtube.com/vi/${id}/sddefault.jpg`;
+    }
+    return "https://images.unsplash.com/photo-1531482615713-2afd69097998?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80";
+  } catch {
+    return "https://images.unsplash.com/photo-1531482615713-2afd69097998?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80";
   }
 };
 
@@ -71,6 +89,7 @@ const isDirectVideo = (url: string) => {
 
 const Index = () => {
   const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+  const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -298,13 +317,23 @@ const Index = () => {
                   width: "100%", 
                   paddingTop: "56.25%", /* 16:9 Aspect Ratio */
                   borderRadius: "var(--radius)",
-                  overflow: "hidden"
-                }}>
-                  {welcomeVideoUrl ? (
+                  overflow: "hidden",
+                  cursor: !isPlaying ? "pointer" : "default"
+                }}
+                onClick={() => {
+                  if (!isPlaying && welcomeVideoUrl) {
+                    setIsPlaying(true);
+                  }
+                }}
+                >
+                  {welcomeVideoUrl && isPlaying ? (
                     isDirectVideo(welcomeVideoUrl) ? (
                       <video 
                         src={welcomeVideoUrl} 
                         controls 
+                        autoPlay
+                        preload="none"
+                        playsInline
                         style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: 0, objectFit: "cover" }}
                       />
                     ) : (
@@ -316,12 +345,24 @@ const Index = () => {
                       />
                     )
                   ) : (
-                    /* Fallback to original image if no video url is loaded yet */
-                    <img
-                      src="https://images.unsplash.com/photo-1531482615713-2afd69097998?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                      alt="Students learning"
-                      style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", objectFit: "cover" }}
-                    />
+                    /* Facade (Image + Play button) */
+                    <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}>
+                      <img
+                        src={getWelcomeVideoThumbnailUrl(welcomeVideoUrl)}
+                        alt="Welcome video preview"
+                        style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                        loading="lazy"
+                      />
+                      {/* Dark overlay */}
+                      <div className="absolute inset-0 bg-black/30 flex items-center justify-center transition-all hover:bg-black/40 duration-300">
+                        {/* Play button */}
+                        <div className="h-16 w-16 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-lg transition-transform hover:scale-110 duration-300 cursor-pointer group">
+                          <svg viewBox="0 0 24 24" fill="currentColor" className="h-7 w-7 text-[color:var(--primary)] translate-x-0.5">
+                            <path d="M8 5v14l11-7z" />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
                   )}
                 </div>
               </div>

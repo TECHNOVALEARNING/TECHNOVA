@@ -66,9 +66,6 @@ const Cours = () => {
       <section className="py-24 md:py-32 bg-mesh">
         <div className="container mx-auto px-6 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <span className="inline-flex items-center gap-2 rounded-full border border-border bg-background/80 px-4 py-1.5 text-xs font-medium text-muted-foreground mb-6">
-              🎓 Cours en ligne
-            </span>
             <h1 className="text-4xl md:text-6xl font-extrabold text-foreground mb-6">
               Suivez vos <span className="text-gradient">cours en ligne</span> <br />
               <span className="text-md text-muted-foreground">Bientôt disponible</span>

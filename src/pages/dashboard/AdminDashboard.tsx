@@ -29,11 +29,56 @@ const cardVariants = {
   }),
 };
 
+const translations = {
+  fr: {
+    adminTitle: "Administration",
+    adminSub: "Vue d'ensemble de la plateforme",
+    unauthorized: "Accès non autorisé",
+    users: "Utilisateurs",
+    totalRevenue: "Revenu total",
+    commissions: "Commissions",
+    orders: "Commandes",
+    products: "Produits",
+    stores: "Boutiques",
+    pendingWithdrawals: "Retraits en attente",
+    pendingKyc: "KYC en attente",
+    openTickets: "Tickets ouverts",
+    chartTitle: "Ventes des 30 derniers jours",
+    chartLabel: "Ventes"
+  },
+  en: {
+    adminTitle: "Administration",
+    adminSub: "Platform overview",
+    unauthorized: "Unauthorized access",
+    users: "Users",
+    totalRevenue: "Total Revenue",
+    commissions: "Commissions",
+    orders: "Orders",
+    products: "Products",
+    stores: "Stores",
+    pendingWithdrawals: "Pending Withdrawals",
+    pendingKyc: "Pending KYC",
+    openTickets: "Open Tickets",
+    chartTitle: "Sales over the last 30 days",
+    chartLabel: "Sales"
+  }
+};
+
 const AdminDashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+
+  useEffect(() => {
+    const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
+    window.addEventListener("technova_lang_changed", handleLangChange);
+    return () => window.removeEventListener("technova_lang_changed", handleLangChange);
+  }, []);
+
+  const t = translations[lang === 'en' ? 'en' : 'fr'];
 
   useEffect(() => {
     if (user?.email !== "ancres707@gmail.com") return;
@@ -54,7 +99,7 @@ const AdminDashboard = () => {
   if (user?.email !== "ancres707@gmail.com") {
     return (
       <DashboardLayout>
-        <div className="text-center py-20 text-muted-foreground">Accès non autorisé</div>
+        <div className="text-center py-20 text-muted-foreground">{t.unauthorized}</div>
       </DashboardLayout>
     );
   }
@@ -65,27 +110,29 @@ const AdminDashboard = () => {
         .map(([date, amount]) => ({ date: date.slice(5), amount }))
     : [];
 
+  const currencySuffix = lang === 'en' ? ' F' : ' F';
+
   const statCards = stats ? [
-    { label: "Utilisateurs", value: stats.usersCount, icon: Users, color: "from-blue-500/20 to-blue-600/5 text-blue-600" },
-    { label: "Revenu total", value: `${(stats.totalRevenue).toLocaleString()} F`, icon: TrendingUp, color: "from-green-500/20 to-green-600/5 text-green-600" },
-    { label: "Commissions", value: `${(stats.totalCommissions).toLocaleString()} F`, icon: DollarSign, color: "from-purple-500/20 to-purple-600/5 text-purple-600" },
-    { label: "Commandes", value: stats.totalOrders, icon: ShoppingCart, color: "from-orange-500/20 to-orange-600/5 text-orange-600" },
-    { label: "Produits", value: stats.productsCount, icon: Package, color: "from-pink-500/20 to-pink-600/5 text-pink-600" },
-    { label: "Boutiques", value: stats.storesCount, icon: Store, color: "from-indigo-500/20 to-indigo-600/5 text-indigo-600" },
+    { label: t.users, value: stats.usersCount, icon: Users, color: "from-blue-500/10 to-blue-600/5 border-blue-500/20 text-blue-600 dark:text-blue-400" },
+    { label: t.totalRevenue, value: `${(stats.totalRevenue).toLocaleString()}${currencySuffix}`, icon: TrendingUp, color: "from-green-500/10 to-green-600/5 border-green-500/20 text-green-600 dark:text-green-400" },
+    { label: t.commissions, value: `${(stats.totalCommissions).toLocaleString()}${currencySuffix}`, icon: DollarSign, color: "from-purple-500/10 to-purple-600/5 border-purple-500/20 text-purple-600 dark:text-purple-400" },
+    { label: t.orders, value: stats.totalOrders, icon: ShoppingCart, color: "from-orange-500/10 to-orange-600/5 border-orange-500/20 text-orange-600 dark:text-orange-400" },
+    { label: t.products, value: stats.productsCount, icon: Package, color: "from-pink-500/10 to-pink-600/5 border-pink-500/20 text-pink-600 dark:text-pink-400" },
+    { label: t.stores, value: stats.storesCount, icon: Store, color: "from-indigo-500/10 to-indigo-600/5 border-indigo-500/20 text-indigo-600 dark:text-indigo-400" },
   ] : [];
 
   const alertCards = stats ? [
-    { label: "Retraits en attente", value: stats.pendingWithdrawals, icon: Wallet, route: "/dashboard/admin-withdrawals", color: "text-orange-600 bg-orange-500/10" },
-    { label: "KYC en attente", value: stats.pendingKyc, icon: Shield, route: "/dashboard/admin-kyc", color: "text-yellow-600 bg-yellow-500/10" },
-    { label: "Tickets ouverts", value: stats.openTickets, icon: MessageCircle, route: "/dashboard/admin-support", color: "text-blue-600 bg-blue-500/10" },
+    { label: t.pendingWithdrawals, value: stats.pendingWithdrawals, icon: Wallet, route: "/dashboard/admin-withdrawals", color: "text-orange-600 dark:text-orange-400 bg-orange-500/10 border-orange-500/20" },
+    { label: t.pendingKyc, value: stats.pendingKyc, icon: Shield, route: "/dashboard/admin-kyc", color: "text-yellow-600 dark:text-yellow-400 bg-yellow-500/10 border-yellow-500/20" },
+    { label: t.openTickets, value: stats.openTickets, icon: MessageCircle, route: "/dashboard/admin-support", color: "text-blue-600 dark:text-blue-400 bg-blue-500/10 border-blue-500/20" },
   ] : [];
 
   return (
     <DashboardLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Administration</h1>
-          <p className="text-sm text-muted-foreground mt-1">Vue d'ensemble de la plateforme</p>
+          <h1 className="text-2xl font-bold text-foreground">{t.adminTitle}</h1>
+          <p className="text-sm text-muted-foreground mt-1">{t.adminSub}</p>
         </div>
 
         {loading ? (
@@ -105,11 +152,11 @@ const AdminDashboard = () => {
                   initial="hidden"
                   animate="visible"
                   variants={cardVariants}
-                  className={`rounded-2xl border border-border/60 bg-gradient-to-br ${card.color} p-4`}
+                  className={`rounded-2xl border bg-gradient-to-br ${card.color} p-4 hover:scale-[1.03] transition-all duration-300 backdrop-blur-md shadow-sm`}
                 >
                   <card.icon className="h-5 w-5 mb-2 opacity-70" />
-                  <p className="text-xl font-bold">{card.value}</p>
-                  <p className="text-[11px] opacity-60 mt-0.5">{card.label}</p>
+                  <p className="text-xl font-bold tracking-tight">{card.value}</p>
+                  <p className="text-[11px] opacity-70 mt-0.5 font-medium">{card.label}</p>
                 </motion.div>
               ))}
             </div>
@@ -124,19 +171,17 @@ const AdminDashboard = () => {
                   animate="visible"
                   variants={cardVariants}
                   onClick={() => navigate(card.route)}
-                  className="rounded-2xl border border-border/60 bg-card p-4 text-left hover:border-primary/30 transition-colors"
+                  className={`rounded-2xl border ${card.color} p-4 text-left hover:scale-[1.02] transition-all duration-300 dash-glass flex items-center justify-between`}
                 >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className={`h-8 w-8 rounded-full flex items-center justify-center ${card.color}`}>
-                        <card.icon className="h-4 w-4" />
-                      </div>
-                      <span className="text-sm font-medium text-foreground">{card.label}</span>
+                  <div className="flex items-center gap-2.5">
+                    <div className="h-8 w-8 rounded-full flex items-center justify-center bg-background/60 shadow-[0_1px_3px_rgba(0,0,0,0.05)] border border-border/20 shrink-0">
+                      <card.icon className="h-4 w-4" />
                     </div>
-                    {card.value > 0 && (
-                      <Badge variant="destructive" className="text-xs">{card.value}</Badge>
-                    )}
+                    <span className="text-sm font-semibold text-foreground">{card.label}</span>
                   </div>
+                  {card.value > 0 && (
+                    <Badge variant="destructive" className="text-xs px-2.5 py-0.5 rounded-full shrink-0">{card.value}</Badge>
+                  )}
                 </motion.button>
               ))}
             </div>
@@ -147,9 +192,9 @@ const AdminDashboard = () => {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
-                className="rounded-2xl border border-border/60 bg-card p-5"
+                className="rounded-2xl border p-5 dash-glass"
               >
-                <h3 className="text-sm font-semibold text-foreground mb-4">Ventes des 30 derniers jours</h3>
+                <h3 className="text-sm font-semibold text-foreground mb-4">{t.chartTitle}</h3>
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={chartData}>
@@ -163,7 +208,7 @@ const AdminDashboard = () => {
                       <YAxis tick={{ fontSize: 11 }} tickLine={false} axisLine={false} tickFormatter={(v) => `${v / 1000}k`} />
                       <Tooltip
                         contentStyle={{ borderRadius: 12, border: "1px solid hsl(var(--border))", background: "hsl(var(--card))" }}
-                        formatter={(v: number) => [`${v.toLocaleString()} FCFA`, "Ventes"]}
+                        formatter={(v: number) => [`${v.toLocaleString()} FCFA`, t.chartLabel]}
                       />
                       <Area type="monotone" dataKey="amount" stroke="hsl(var(--primary))" fill="url(#adminGrad)" strokeWidth={2} />
                     </AreaChart>
