@@ -121,6 +121,9 @@ const Index = () => {
         .limit(30);
       if (error) throw error;
       const active = (data || []).filter((p: any) => {
+        if (p.category === "discovery" || p.category === "template" || (p.category && p.category.startsWith("template:"))) {
+          return false;
+        }
         try {
           const f = typeof p.features === "string" ? JSON.parse(p.features) : (p.features || {});
           return f.status !== "draft";

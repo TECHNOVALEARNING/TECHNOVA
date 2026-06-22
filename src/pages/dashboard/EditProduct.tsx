@@ -144,15 +144,22 @@ const EditProduct = () => {
   useEffect(() => {
     if (!id || !user) return;
     const fetchProduct = async () => {
-      const { data, error } = await supabase
+      const isAdmin = user?.email === "ancres707@gmail.com" || user?.email === "isidoreagonan@gmail.com";
+      let query = supabase
         .from("products")
         .select("*")
-        .eq("id", id)
-        .eq("creator_id", user.id)
-        .single();
+        .eq("id", id);
+
+      if (!isAdmin) {
+        query = query.eq("creator_id", user.id);
+      }
+
+      const { data, error } = await query.maybeSingle();
+
       if (error || !data) {
         toast.error("Produit introuvable");
         navigate("/dashboard/products");
+        setLoading(false);
         return;
       }
       setTitle(data.title);
@@ -600,12 +607,12 @@ const EditProduct = () => {
                         <SelectItem value="tech">D&eacute;veloppement</SelectItem>
                         <SelectItem value="business">Business & Finance</SelectItem>
                         <SelectItem value="education">Éducation & Apprentissage</SelectItem>
-                        {(user?.email === "ancres707@gmail.com" || user?.email === "isidoreagonan@gmail.com") && (
+                        (user?.email === "ancres707@gmail.com" || user?.email === "isidoreagonan@gmail.com" || category === "template" || category === "discovery") && (
                           <>
                             <SelectItem value="template">📋 Templates</SelectItem>
                             <SelectItem value="discovery">🔍 Découvertes (Lien externe)</SelectItem>
                           </>
-                        )}
+                        )
                         <SelectItem value="other">Autre</SelectItem>
                       </SelectContent>
                     </Select>
