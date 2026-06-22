@@ -60,7 +60,6 @@ export const Header = () => {
   const moreDropdownLinks = [
     { to: "/e-services", label: "E-services" },
     { to: "/jobs", label: lang === "fr" ? "Emplois & Stages" : "Jobs & Internships" },
-    { to: "/blog", label: "Blog" },
     { to: "/outils-digitaux", label: lang === "fr" ? "Outils de Productivité" : "Productivity Tools" },
     { to: "/decouvertes", label: lang === "fr" ? "Découvertes" : "Discoveries" },
     { to: "/templates", label: "Templates" },
