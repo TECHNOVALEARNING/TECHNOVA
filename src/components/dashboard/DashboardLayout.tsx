@@ -82,9 +82,8 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         <div className="bg-orb orb-2 opacity-20 dark:opacity-10 pointer-events-none absolute z-0" />
         <div className="bg-orb orb-3 opacity-15 dark:opacity-10 pointer-events-none absolute z-0" />
 
-        <div className="relative z-10 flex w-full">
-          <DashboardSidebar />
-          <div className="flex-1 flex flex-col min-w-0">
+        <DashboardSidebar />
+        <div className="flex-1 flex flex-col min-w-0 relative z-10">
             {/* Header */}
             <header className="sticky top-0 z-30 h-16 flex items-center justify-between border-b border-border/50 px-3 sm:px-6 bg-background/80 backdrop-blur-md shadow-sm transition-all duration-300">
               <div className="flex items-center gap-3 min-w-0 pl-1">
@@ -238,8 +237,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
             </motion.main>
           </div>
         </div>
-      </div>
-    </SidebarProvider>
+      </SidebarProvider>
   );
 };
 
