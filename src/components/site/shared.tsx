@@ -58,6 +58,7 @@ export const Header = () => {
   ];
 
   const moreDropdownLinks = [
+    { to: "/e-services", label: "E-services" },
     { to: "/jobs", label: lang === "fr" ? "Emplois & Stages" : "Jobs & Internships" },
     { to: "/blog", label: "Blog" },
     { to: "/outils-digitaux", label: lang === "fr" ? "Outils de Productivité" : "Productivity Tools" },
@@ -241,6 +242,7 @@ export const Footer = () => {
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
               <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
             </svg>
+            facebook
           </a>
           <a href="#" className="h-10 w-10 rounded-full bg-card/10 hover:bg-[#E4405F] transition-colors flex items-center justify-center text-white shadow-sm hover:-translate-y-1 duration-300">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">

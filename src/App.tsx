@@ -17,6 +17,7 @@ import ResetPassword from "./pages/ResetPassword";
 import Fichiers from "./pages/Fichiers";
 import LicencesPage from "./pages/LicencesPage";
 import Decouvertes from "./pages/Decouvertes";
+import EServices from "./pages/EServices";
 
 import About from "./pages/About";
 import Blog from "./pages/Blog";
@@ -143,6 +144,7 @@ const AppContent = () => {
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/fichiers" element={<Fichiers />} />
               <Route path="/licences" element={<LicencesPage />} />
+              <Route path="/e-services" element={<EServices />} />
               
               <Route path="/about" element={<About />} />
               <Route path="/blog" element={<Blog />} />
