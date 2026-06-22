@@ -67,6 +67,7 @@ const getEmbedUrl = (url: string) => {
 const EditProduct = () => {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
+  const isAdmin = user?.email === "ancres707@gmail.com";
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<TabKey>("info");
   const [loading, setLoading] = useState(true);
@@ -144,7 +145,6 @@ const EditProduct = () => {
   useEffect(() => {
     if (!id || !user) return;
     const fetchProduct = async () => {
-      const isAdmin = user?.email === "ancres707@gmail.com";
       let query = supabase
         .from("products")
         .select("*")
@@ -287,6 +287,14 @@ const EditProduct = () => {
     manageSaving?: boolean;
   } = {}) => {
     if (!id || !user) return false;
+    if (!isAdmin && (type === "course" || type === "license")) {
+      toast.error("Vous n'êtes pas autorisé à modifier ce type de produit.");
+      return false;
+    }
+    if (!isAdmin && pricingModel === "free") {
+      toast.error("Seul l'administrateur peut publier des produits gratuitement.");
+      return false;
+    }
     if (manageSaving) setSaving(true);
 
     try {
@@ -748,7 +756,7 @@ const EditProduct = () => {
                       <SelectContent>
                         <SelectItem value="one_time">Paiement unique</SelectItem>
                         <SelectItem value="subscription">Abonnement</SelectItem>
-                        <SelectItem value="free">Gratuit</SelectItem>
+                        {isAdmin && <SelectItem value="free">Gratuit</SelectItem>}
                       </SelectContent>
                     </Select>
                   </div>

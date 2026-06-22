@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   Users, Key, DollarSign, Wallet, BadgeCheck, Megaphone,
   Link2, Zap, Webhook, MessageCircle, Settings, HelpCircle
@@ -35,6 +36,10 @@ const item = {
 
 export default function DashboardOthers() {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const isAdmin = user?.email === "ancres707@gmail.com";
+  
+  const allowedMenus = otherMenus.filter((menu) => isAdmin || menu.title !== "Licences");
 
   return (
     <DashboardLayout>
@@ -56,7 +61,7 @@ export default function DashboardOthers() {
           animate="show"
           className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
         >
-          {otherMenus.map((menu) => (
+          {allowedMenus.map((menu) => (
             <motion.div
               key={menu.title}
               variants={item}

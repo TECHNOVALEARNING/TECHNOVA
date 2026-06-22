@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Navigate } from "react-router-dom";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { Key, Loader2, Search, Copy, Ban, Eye, CheckCircle2, XCircle, Clock, AlertTriangle, Monitor } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -47,6 +48,12 @@ const statusConfig: Record<string, { label: string; variant: "default" | "second
 
 const DashboardLicenses = () => {
   const { user } = useAuth();
+  const isAdmin = user?.email === "ancres707@gmail.com";
+
+  if (!isAdmin) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
   const [licenses, setLicenses] = useState<License[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");

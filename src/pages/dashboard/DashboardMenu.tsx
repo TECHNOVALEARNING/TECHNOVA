@@ -111,34 +111,37 @@ export default function DashboardMenu() {
         )}
 
         {/* Sections */}
-        {drawerSections.map((section) => (
-          <div key={section.label}>
-            <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground mb-2 px-1">
-              {section.label}
-            </p>
-            <div className="grid grid-cols-2 gap-2">
-              {section.items.map((item) => {
-                const content = (
-                  <div className="flex items-center gap-2.5 rounded-xl border border-border bg-card px-3 py-3 transition-all hover:border-primary/30">
-                    <div className="h-9 w-9 rounded-lg flex items-center justify-center bg-secondary text-foreground">
-                      <item.icon className="h-4 w-4" />
+        {drawerSections.map((section) => {
+          const filteredItems = section.items.filter(item => isAdmin || item.title !== "Licences");
+          return (
+            <div key={section.label}>
+              <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground mb-2 px-1">
+                {section.label}
+              </p>
+              <div className="grid grid-cols-2 gap-2">
+                {filteredItems.map((item) => {
+                  const content = (
+                    <div className="flex items-center gap-2.5 rounded-xl border border-border bg-card px-3 py-3 transition-all hover:border-primary/30">
+                      <div className="h-9 w-9 rounded-lg flex items-center justify-center bg-secondary text-foreground">
+                        <item.icon className="h-4 w-4" />
+                      </div>
+                      <span className="text-xs font-semibold text-foreground">{item.title}</span>
                     </div>
-                    <span className="text-xs font-semibold text-foreground">{item.title}</span>
-                  </div>
-                );
-                return "external" in item && item.external ? (
-                  <a key={item.title} href={item.url} target="_blank" rel="noopener noreferrer">
-                    {content}
-                  </a>
-                ) : (
-                  <NavLink key={item.title} to={item.url}>
-                    {content}
-                  </NavLink>
-                );
-              })}
+                  );
+                  return "external" in item && item.external ? (
+                    <a key={item.title} href={item.url} target="_blank" rel="noopener noreferrer">
+                      {content}
+                    </a>
+                  ) : (
+                    <NavLink key={item.title} to={item.url}>
+                      {content}
+                    </NavLink>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
 
         {isAdmin && (
           <div>

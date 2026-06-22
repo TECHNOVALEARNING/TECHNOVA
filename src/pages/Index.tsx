@@ -206,6 +206,20 @@ const Index = () => {
         .pay-orange { background:#FF6B00; color:white; }
         .pay-wave { background:#1A73E8; color:white; }
         .pay-visa { background:white; border:1px solid rgba(0,0,0,0.12); color:#1a1f71; font-style:italic; }
+        @media (max-width: 1024px) {
+          .hero-video-container {
+            margin-top: 48px;
+            padding: 0 16px;
+          }
+          .hero-badge-left {
+            left: 0px !important;
+            bottom: -8px !important;
+          }
+          .hero-badge-right {
+            right: 0px !important;
+            top: -8px !important;
+          }
+        }
       `}</style>
 
       {/* BG Orbs */}
@@ -266,7 +280,7 @@ const Index = () => {
             </motion.div>
 
             {/* Right */}
-            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 0.2 }} style={{ position: "relative", width: "100%" }}>
+            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 0.2 }} className="hero-video-container" style={{ position: "relative", width: "100%" }}>
               <div style={{ 
                 width: "100%", 
                 background: "var(--card)", 
@@ -312,12 +326,12 @@ const Index = () => {
                 </div>
               </div>
               {/* Stat card */}
-              <div style={{ position: "absolute", bottom: 12, left: -20, background: "var(--surface-strong)", backdropFilter: "blur(24px) saturate(180%)", border: "1px solid var(--card-border)", borderRadius: "var(--radius)", padding: "12px 18px", boxShadow: "var(--shadow-md)", minWidth: 160, zIndex: 10, animation: "heroCardFloat 7s ease-in-out infinite", animationDelay: "-2s" }}>
+              <div className="hero-badge-left" style={{ position: "absolute", bottom: 12, left: -20, background: "var(--surface-strong)", backdropFilter: "blur(24px) saturate(180%)", border: "1px solid var(--card-border)", borderRadius: "var(--radius)", padding: "12px 18px", boxShadow: "var(--shadow-md)", minWidth: 160, zIndex: 10, animation: "heroCardFloat 7s ease-in-out infinite", animationDelay: "-2s" }}>
                 <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: "1.4rem", fontWeight: 800, color: "var(--blue)", letterSpacing: "-0.03em" }}>95%</div>
                 <div style={{ fontSize: "0.72rem", color: "var(--text-secondary)", marginTop: 2 }}>{lang === 'fr' ? 'Taux de satisfaction' : 'Satisfaction rate'}</div>
               </div>
               {/* Badge */}
-              <div style={{ position: "absolute", top: 12, right: -12, background: "linear-gradient(135deg,#0071e3,#409cff)", borderRadius: "var(--radius)", padding: "10px 14px", textAlign: "center", color: "white", boxShadow: "var(--shadow-md)", minWidth: 90, zIndex: 10, animation: "heroCardFloat 9s ease-in-out infinite", animationDelay: "-4s" }}>
+              <div className="hero-badge-right" style={{ position: "absolute", top: 12, right: -12, background: "linear-gradient(135deg,#0071e3,#409cff)", borderRadius: "var(--radius)", padding: "10px 14px", textAlign: "center", color: "white", boxShadow: "var(--shadow-md)", minWidth: 90, zIndex: 10, animation: "heroCardFloat 9s ease-in-out infinite", animationDelay: "-4s" }}>
                 <div style={{ fontSize: "1.2rem", fontWeight: 800, fontFamily: "'Outfit',sans-serif" }}>+10</div>
                 <div style={{ fontSize: "0.68rem", opacity: 0.85 }}>{lang === 'fr' ? 'Entreprises' : 'Companies'}</div>
               </div>

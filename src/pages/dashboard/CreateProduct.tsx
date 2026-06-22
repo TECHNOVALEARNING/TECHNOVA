@@ -78,6 +78,7 @@ const getEmbedUrl = (url: string) => {
 
 const CreateProduct = () => {
   const { user } = useAuth();
+  const isAdmin = user?.email === "ancres707@gmail.com";
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [saving, setSaving] = useState(false);
@@ -205,6 +206,10 @@ const CreateProduct = () => {
 
   const handleSubmit = async () => {
     if (!user || !selectedType || !title.trim()) return;
+    if (!isAdmin && selectedType !== "file") {
+      toast.error("Seul l'administrateur peut publier des formations ou des licences.");
+      return;
+    }
     if (selectedType === "file") {
       if (category === "discovery") {
         if (!videoUrl.trim()) {
@@ -715,7 +720,7 @@ const CreateProduct = () => {
                   Quel type de produit désirez-vous créer ?
                 </h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {productTypes.map((pt) => (
+                  {productTypes.filter(pt => isAdmin || pt.type === "file").map((pt) => (
                     <button
                       key={pt.type}
                       onClick={() => setSelectedType(pt.type)}
@@ -852,6 +857,7 @@ const CreateProduct = () => {
                           <SelectContent>
                             <SelectItem value="one_time">Paiement unique</SelectItem>
                             <SelectItem value="subscription">Abonnement</SelectItem>
+                            {isAdmin && <SelectItem value="free">Gratuit</SelectItem>}
                           </SelectContent>
                         </Select>
                       </div>
