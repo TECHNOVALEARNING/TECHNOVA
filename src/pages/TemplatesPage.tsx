@@ -198,7 +198,6 @@ const TemplatesPage = () => {
                       : "bg-[color:var(--bg)] border-[color:var(--border)] text-[color:var(--text-secondary)] hover:bg-[color:var(--surface-strong)]"
                   }`}
                 >
-                  <span>{cat.icon}</span>
                   {lang === "fr" ? cat.label : (cat.key === "all" ? "All" : cat.label)}
                 </button>
               ))}
