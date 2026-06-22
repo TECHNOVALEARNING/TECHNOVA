@@ -1,4 +1,4 @@
-﻿// Marketplace text search across all published products (cross-stores)
+// Marketplace text search across all published products (cross-stores)
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
@@ -144,12 +144,20 @@ Deno.serve(async (req) => {
       }
     }
 
-    let enriched = (products || []).map((p) => ({
-      ...p,
-      store: creators[p.creator_id] || null,
-      seller_badge: badgesByUser[p.creator_id]?.grade || null,
-      seller_badge_expires_at: badgesByUser[p.creator_id]?.expires_at || null,
-    }));
+    let enriched = (products || [])
+      .filter((p) => {
+        const cat = p.category || "";
+        if (cat === "discovery" || cat === "template" || cat.startsWith("template:")) {
+          return false;
+        }
+        return true;
+      })
+      .map((p) => ({
+        ...p,
+        store: creators[p.creator_id] || null,
+        seller_badge: badgesByUser[p.creator_id]?.grade || null,
+        seller_badge_expires_at: badgesByUser[p.creator_id]?.expires_at || null,
+      }));
 
     if (sort === "verified") {
       enriched.sort((a, b) => {

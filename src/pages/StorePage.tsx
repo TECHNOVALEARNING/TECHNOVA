@@ -202,6 +202,10 @@ const StorePage = ({ customSlug }: { customSlug?: string }) => {
   });
 
   const filtered = sorted.filter((p) => {
+    const cat = (p as any).category || "";
+    if (cat === "discovery" || cat === "template" || cat.startsWith("template:")) {
+      return false;
+    }
     const matchSearch = p.title.toLowerCase().includes(search.toLowerCase());
     const matchType = typeFilter === "all" || p.type === typeFilter;
     return matchSearch && matchType;

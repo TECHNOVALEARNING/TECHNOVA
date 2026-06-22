@@ -6,7 +6,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const ADMIN_EMAILS = ["ancres707@gmail.com", "isidoreagonan@gmail.com"];
+const ADMIN_EMAILS = ["ancres707@gmail.com"];
 const LOGO_URL = "https://nexozjpjbhqfjplrogvz.supabase.co/storage/v1/object/public/store-assets/brand/technova-logo.png";
 
 const getAuthenticatedUser = async (req: Request, supabaseUrl: string, anonKey: string) => {
@@ -16,12 +16,12 @@ const getAuthenticatedUser = async (req: Request, supabaseUrl: string, anonKey: 
   const supabaseAuth = createClient(supabaseUrl, anonKey, {
     global: { headers: { Authorization: authHeader } },
   });
-  const { data, error } = await supabaseAuth.auth.getClaims(authHeader.replace("Bearer ", ""));
-  if (error || !data?.claims?.sub) return null;
+  const { data, error } = await supabaseAuth.auth.getUser(authHeader.replace("Bearer ", ""));
+  if (error || !data?.user?.id) return null;
 
   return {
-    id: String(data.claims.sub),
-    email: String(data.claims.email || "").toLowerCase(),
+    id: String(data.user.id),
+    email: String(data.user.email || "").toLowerCase(),
   };
 };
 

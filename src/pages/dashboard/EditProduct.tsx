@@ -607,12 +607,12 @@ const EditProduct = () => {
                         <SelectItem value="tech">D&eacute;veloppement</SelectItem>
                         <SelectItem value="business">Business & Finance</SelectItem>
                         <SelectItem value="education">Éducation & Apprentissage</SelectItem>
-                        (user?.email === "ancres707@gmail.com" || category === "template" || category === "discovery") && (
+                        {(user?.email === "ancres707@gmail.com" || category === "template" || category === "discovery") && (
                           <>
                             <SelectItem value="template">📋 Templates</SelectItem>
                             <SelectItem value="discovery">🔍 Découvertes (Lien externe)</SelectItem>
                           </>
-                        )
+                        )}
                         <SelectItem value="other">Autre</SelectItem>
                       </SelectContent>
                     </Select>
