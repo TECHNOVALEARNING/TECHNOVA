@@ -103,7 +103,7 @@ export function DashboardSidebar() {
   };
 
   return (
-    <Sidebar collapsible="icon" className="dashboard-shell-scope border-r-0 relative z-20">
+    <Sidebar collapsible="icon" className="dashboard-shell-scope border-r-0 z-20">
       {/* Logo Header */}
       <SidebarHeader className={`p-4 border-b border-sidebar-border/20 flex flex-row items-center min-h-[64px] ${collapsed ? 'justify-center' : 'justify-between'}`}>
         {!collapsed && (
