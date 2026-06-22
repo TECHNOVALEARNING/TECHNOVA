@@ -809,7 +809,7 @@ const CreateProduct = () => {
                         <SelectItem value="education">🎓 Éducation</SelectItem>
                         <SelectItem value="lifestyle">🌿 Lifestyle</SelectItem>
                         <SelectItem value="creative">🎬 Créatif</SelectItem>
-                        {(user?.email === "ancres707@gmail.com" || user?.email === "isidoreagonan@gmail.com") && (
+                        {user?.email === "ancres707@gmail.com" && (
                           <>
                             <SelectItem value="template">📋 Templates</SelectItem>
                             <SelectItem value="discovery">🔍 Découvertes (Lien externe)</SelectItem>

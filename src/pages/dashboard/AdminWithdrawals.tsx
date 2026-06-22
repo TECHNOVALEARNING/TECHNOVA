@@ -33,7 +33,7 @@ const AdminWithdrawals = () => {
   const [processing, setProcessing] = useState<string | null>(null);
 
   useEffect(() => {
-    if (user?.email !== "ancres707@gmail.com" && user?.email !== "isidoreagonan@gmail.com") return;
+    if (user?.email !== "ancres707@gmail.com") return;
     fetchWithdrawals();
   }, [user]);
 
@@ -80,7 +80,7 @@ const AdminWithdrawals = () => {
     return <Badge variant={s.variant} className="text-xs">{s.label}</Badge>;
   };
 
-  if (user?.email !== "ancres707@gmail.com" && user?.email !== "isidoreagonan@gmail.com") {
+  if (user?.email !== "ancres707@gmail.com") {
     return <DashboardLayout><div className="text-center py-20 text-muted-foreground">Accès non autorisé</div></DashboardLayout>;
   }
 

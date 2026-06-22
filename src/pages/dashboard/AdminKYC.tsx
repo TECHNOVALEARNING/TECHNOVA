@@ -62,7 +62,7 @@ const AdminKYC = () => {
   const [rejectionReason, setRejectionReason] = useState("");
   const [processing, setProcessing] = useState(false);
 
-  const isAdmin = user?.email === "ancres707@gmail.com" || user?.email === "isidoreagonan@gmail.com";
+  const isAdmin = user?.email === "ancres707@gmail.com";
 
   useEffect(() => {
     if (isAdmin) loadRequests();

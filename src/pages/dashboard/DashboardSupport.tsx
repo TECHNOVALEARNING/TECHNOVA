@@ -43,7 +43,7 @@ interface ContactMessage {
 
 const DashboardSupport = () => {
   const { user } = useAuth();
-  const isAdmin = user?.email === "ancres707@gmail.com" || user?.email === "isidoreagonan@gmail.com";
+  const isAdmin = user?.email === "ancres707@gmail.com";
 
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [selectedConv, setSelectedConv] = useState<Conversation | null>(null);
