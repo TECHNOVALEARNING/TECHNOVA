@@ -144,115 +144,6 @@ const Index = () => {
     },
   });
 
-  const { data: trendingNews = [], isLoading: isLoadingNews } = useQuery({
-    queryKey: ["trending_news_home", lang],
-    queryFn: async () => {
-      const queryStr = lang === "fr"
-        ? "technologie+OR+politique+OR+sport+OR+intelligence+OR+sciences"
-        : "technology+OR+politics+OR+sports+OR+intelligence+OR+science";
-      const rssUrl = `https://news.google.com/rss/search?q=${queryStr}&hl=${lang === "fr" ? "fr&gl=FR&ceid=FR:fr" : "en-US&gl=US&ceid=US:en"}`;
-      const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
-      
-      const res = await fetch(apiUrl);
-      if (!res.ok) throw new Error("Failed to fetch news feed");
-      const data = await res.json();
-      if (data.status !== "ok") throw new Error("Failed to parse news feed");
-
-      return (data.items || []).slice(0, 10).map((item: any) => {
-        const hash = item.title.split("").reduce((acc: number, char: string) => acc + char.charCodeAt(0), 0);
-        const cleanTitle = item.title.split(" - ")[0] || item.title;
-        const cleanDesc = (item.description || "").replace(/<[^>]*>/g, "").trim();
-        const shortDesc = cleanDesc.length > 120 ? cleanDesc.substring(0, 120) + "..." : cleanDesc;
-        
-        // Dynamic Unsplash keyword mapping based on title content
-        let query = "technology";
-        const titleLower = cleanTitle.toLowerCase();
-        if (titleLower.includes("ia") || titleLower.includes("ai") || titleLower.includes("artificielle") || titleLower.includes("intelligence") || titleLower.includes("chatgpt") || titleLower.includes("copilot") || titleLower.includes("gemini")) {
-          query = "artificial-intelligence";
-        } else if (titleLower.includes("cyber") || titleLower.includes("securite") || titleLower.includes("sécurité") || titleLower.includes("hacker") || titleLower.includes("cryptage")) {
-          query = "cybersecurity";
-        } else if (titleLower.includes("code") || titleLower.includes("dev") || titleLower.includes("programmation") || titleLower.includes("python") || titleLower.includes("javascript") || titleLower.includes("web") || titleLower.includes("logiciel")) {
-          query = "coding";
-        } else if (titleLower.includes("data") || titleLower.includes("science") || titleLower.includes("analyse") || titleLower.includes("database")) {
-          query = "data-science";
-        } else if (titleLower.includes("cloud") || titleLower.includes("serveur") || titleLower.includes("server") || titleLower.includes("reseau") || titleLower.includes("réseau")) {
-          query = "network-server";
-        } else if (titleLower.includes("ordinateur") || titleLower.includes("pc") || titleLower.includes("computer") || titleLower.includes("processeur") || titleLower.includes("chip")) {
-          query = "computer";
-        } else if (titleLower.includes("politique") || titleLower.includes("gouvernement") || titleLower.includes("election") || titleLower.includes("élection") || titleLower.includes("ministre") || titleLower.includes("president") || titleLower.includes("président") || titleLower.includes("politics") || titleLower.includes("government")) {
-          query = "politics";
-        } else if (titleLower.includes("sport") || titleLower.includes("football") || titleLower.includes("soccer") || titleLower.includes("basket") || titleLower.includes("tennis") || titleLower.includes("olympic") || titleLower.includes("match") || titleLower.includes("joueur") || titleLower.includes("player") || titleLower.includes("cup") || titleLower.includes("coupe")) {
-          query = "sports";
-        } else if (titleLower.includes("science") || titleLower.includes("chercheur") || titleLower.includes("decouverte") || titleLower.includes("découverte") || titleLower.includes("espace") || titleLower.includes("space") || titleLower.includes("nasa") || titleLower.includes("medecine") || titleLower.includes("médecine") || titleLower.includes("biolog")) {
-          query = "science";
-        }
-
-        const formattedDate = new Date(item.pubDate).toLocaleDateString(
-          lang === "fr" ? "fr-FR" : "en-US",
-          { day: "numeric", month: "short", year: "numeric" }
-        );
-
-        const IMAGES_BY_TOPIC: Record<string, string[]> = {
-          "artificial-intelligence": [
-            "https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=600&h=350&q=80",
-            "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=600&h=350&q=80"
-          ],
-          "cybersecurity": [
-            "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=600&h=350&q=80",
-            "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=600&h=350&q=80"
-          ],
-          "coding": [
-            "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=600&h=350&q=80",
-            "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=600&h=350&q=80"
-          ],
-          "data-science": [
-            "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&h=350&q=80",
-            "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=600&h=350&q=80"
-          ],
-          "network-server": [
-            "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&h=350&q=80",
-            "https://images.unsplash.com/photo-1600132806370-bf17e65e942f?auto=format&fit=crop&w=600&h=350&q=80"
-          ],
-          "computer": [
-            "https://images.unsplash.com/photo-1496181130204-7552cc1534e0?auto=format&fit=crop&w=600&h=350&q=80",
-            "https://images.unsplash.com/photo-1531297484001-80022131f5a1?auto=format&fit=crop&w=600&h=350&q=80"
-          ],
-          "politics": [
-            "https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=600&h=350&q=80",
-            "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=600&h=350&q=80"
-          ],
-          "sports": [
-            "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=600&h=350&q=80",
-            "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=600&h=350&q=80"
-          ],
-          "science": [
-            "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=600&h=350&q=80",
-            "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=600&h=350&q=80"
-          ],
-          "technology": [
-            "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=600&h=350&q=80",
-            "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=600&h=350&q=80"
-          ]
-        };
-
-        const list = IMAGES_BY_TOPIC[query] || IMAGES_BY_TOPIC["technology"];
-        const topicImg = list[hash % list.length];
-        const feedImg = item.thumbnail || (item.enclosure && item.enclosure.link);
-        const finalImg = (feedImg && feedImg.startsWith("http")) ? feedImg : topicImg;
-
-        return {
-          title: cleanTitle,
-          desc: shortDesc || (lang === "fr" ? "Actualités récentes sélectionnées par TECHNOVA." : "Recent news updates curated by TECHNOVA."),
-          date: formattedDate,
-          img: finalImg,
-          fallbackImg: topicImg,
-          link: item.link,
-        };
-      });
-    },
-    staleTime: 1000 * 60 * 15,
-  });
-
   return (
     <div className="min-h-screen overflow-x-hidden transition-colors duration-300" style={{ background: "var(--bg, #f2f2f7)", color: "var(--text, #1d1d1f)", fontFamily: "'Manrope', -apple-system, sans-serif" }}>
       {/* Font import via style tag */}
@@ -301,14 +192,6 @@ const Index = () => {
         .tn-testi-card { background:var(--card); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur); border:1px solid var(--card-border); border-radius:var(--radius); padding:32px 28px; height:100%; box-shadow:var(--shadow-sm); transition:all 0.3s; }
         .tn-testi-card:hover { transform:translateY(-5px); box-shadow:var(--shadow-md); }
         .tn-cta-wrap { background:linear-gradient(135deg,#0071e3,#409cff); border-radius:var(--radius-lg); padding:72px 48px; text-align:center; position:relative; overflow:hidden; }
-        .tn-blog-card { background:var(--card); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur); border:1px solid var(--card-border); border-radius:var(--radius); overflow:hidden; height:100%; transition:all 0.3s; box-shadow:var(--shadow-sm); }
-        .tn-blog-card:hover { transform:translateY(-6px); box-shadow:var(--shadow-md); }
-        .news-marquee-container { overflow:hidden; width:100%; position:relative; padding:12px 0; }
-        .news-marquee-track { display:flex; gap:24px; width:max-content; animation:scrollNews 60s linear infinite; }
-        .news-marquee-track:hover,
-        .news-marquee-container:hover .news-marquee-track { animation-play-state:paused; }
-        @keyframes scrollNews { from { transform:translateX(0); } to { transform:translateX(-50%); } }
-        .news-card-marquee-wrap { width:380px; flex-shrink:0; }
         .tn-about-ico { width:46px; height:46px; min-width:46px; background:var(--blue); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; color:white; }
         @keyframes orbFloat { 0%,100% { transform:translateY(0) scale(1); } 33% { transform:translateY(-30px) scale(1.04); } 66% { transform:translateY(20px) scale(0.97); } }
         .bg-orb { position:fixed; border-radius:50%; filter:blur(120px); pointer-events:none; z-index:0; opacity:0.35; transition:opacity 0.5s; animation:orbFloat 12s ease-in-out infinite; }
@@ -575,75 +458,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* ============ BLOG ============ */}
-      <section id="blog" style={{ position: "relative", zIndex: 1, padding: "100px 0" }}>
-        <div className="mx-auto" style={{ maxWidth: 1280, padding: "0 24px" }}>
-          <div style={{ marginBottom: 48 }}>
-            <span className="tn-eyebrow">{lang === 'fr' ? 'Actualités' : 'News'}</span>
-            <h2 className="section-title">
-              <span className="title-motion-wrap">
-                <span className="title-motion">
-                  {lang === 'fr' ? 'Actualités' : 'News'}
-                </span>
-                <i className="fas fa-sparkles motion-spark"></i>
-              </span>
-            </h2>
-          </div>
-          {isLoadingNews ? (
-            <div className="flex gap-6 overflow-hidden py-4">
-              {[...Array(3)].map((_, i) => (
-                <div key={i} className="w-[380px] h-[400px] rounded-3xl border border-[color:var(--border)] bg-[color:var(--surface)] p-4 animate-pulse shrink-0">
-                  <div className="w-full h-44 rounded-2xl bg-[color:var(--bg)] mb-4" />
-                  <div className="h-6 w-3/4 rounded bg-[color:var(--bg)] mb-2" />
-                  <div className="h-4 w-1/2 rounded bg-[color:var(--bg)]" />
-                </div>
-              ))}
-            </div>
-          ) : trendingNews.length > 0 ? (
-            <div className="news-marquee-container">
-              <div className="news-marquee-track">
-                {[...trendingNews, ...trendingNews].map((b, i) => (
-                  <div key={i} className="news-card-marquee-wrap">
-                    <div className="tn-blog-card">
-                      <div style={{ height: 180, overflow: "hidden" }}>
-                        <img 
-                          src={b.img} 
-                          alt={b.title} 
-                          style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.5s" }}
-                          onError={(e) => {
-                            e.currentTarget.onerror = null;
-                            e.currentTarget.src = b.fallbackImg || "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=600&h=350&q=80";
-                          }}
-                        />
-                      </div>
-                      <div style={{ padding: 22, display: "flex", flexDirection: "column", height: 220, justifyContent: "space-between" }}>
-                        <div>
-                          <div style={{ fontSize: "0.75rem", fontWeight: 600, color: "var(--blue)", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}>
-                            <i className="far fa-calendar" /> {b.date}
-                          </div>
-                          <h5 style={{ fontSize: "0.92rem", fontWeight: 700, marginBottom: 8, color: "var(--text)", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden", lineHeight: 1.4 }} title={b.title}>
-                            {b.title}
-                          </h5>
-                          <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)", marginBottom: 12, lineHeight: 1.5, display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
-                            {b.desc}
-                          </p>
-                        </div>
-                        <a href={b.link} target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.82rem", fontWeight: 600, color: "var(--blue)", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 4 }}>
-                          {lang === 'fr' ? 'Détails de l\'actualité' : 'News Details'} <i className="fas fa-arrow-right fa-xs" />
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ) : (
-            <div style={{ textAlign: "center", padding: "48px 0", color: "var(--text-secondary)" }}>
-              <p>{lang === 'fr' ? 'Actualités indisponibles pour le moment.' : 'News currently unavailable.'}</p>
-            </div>
-          )}
-        </div>
-      </section>
+
 
       {/* ============ ABOUT ============ */}
       <section id="about" style={{ position: "relative", zIndex: 1, padding: "100px 0", background: "var(--section-alt)" }}>

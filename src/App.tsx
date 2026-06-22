@@ -20,8 +20,6 @@ import Decouvertes from "./pages/Decouvertes";
 import EServices from "./pages/EServices";
 
 import About from "./pages/About";
-import Blog from "./pages/Blog";
-import BlogPost from "./pages/BlogPost";
 import Pricing from "./pages/Pricing";
 import Partners from "./pages/Partners";
 import Documentation from "./pages/Documentation";
@@ -147,8 +145,6 @@ const AppContent = () => {
               <Route path="/e-services" element={<EServices />} />
               
               <Route path="/about" element={<About />} />
-              <Route path="/blog" element={<Blog />} />
-              <Route path="/blog/:slug" element={<BlogPost />} />
               <Route path="/outils-digitaux" element={<ToolsDirectoryPage />} />
               <Route path="/decouvertes" element={<Decouvertes />} />
               <Route path="/marketplace" element={<Marketplace />} />

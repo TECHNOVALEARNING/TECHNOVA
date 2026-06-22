@@ -54,7 +54,6 @@ export const Header = () => {
     { to: "/#courses", label: lang === "fr" ? "Nos Produits Digitaux" : "Our Digital Products" },
     { to: "/formations", label: lang === "fr" ? "Nos formations" : "Courses" },
     { to: "/admin-products", label: lang === "fr" ? "Store" : "Store" },
-    { to: "/#blog", label: lang === "fr" ? "Actualités" : "News" },
   ];
 
   const moreDropdownLinks = [
@@ -298,7 +297,6 @@ export const Footer = () => {
         <ul className="space-y-2.5 text-white/70 text-sm">
           {[
             { label: lang === 'fr' ? "Formations" : "Courses", href: "/formations" },
-            { label: "Blog", href: "/blog" },
             { label: lang === 'fr' ? "À propos" : "About", href: "/about" },
             { label: "FAQ", href: "/faq" },
           ].map((lnk) => (

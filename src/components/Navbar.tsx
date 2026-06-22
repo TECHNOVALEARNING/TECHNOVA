@@ -15,7 +15,6 @@ const productLinks = [
 
 const moreLinks = [
   { label: "Emplois & Stages", href: "/jobs" },
-  { label: "Blog", href: "/blog" },
   { label: "Outils de Productivité", href: "/outils-digitaux" },
   { label: "Découvertes", href: "/decouvertes" },
   { label: "Templates", href: "/templates" },
