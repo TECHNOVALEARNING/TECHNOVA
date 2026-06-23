@@ -128,7 +128,7 @@ export const Header = () => {
             </Link>
           ) : (
             <Link to="/register" className="ml-2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-[#0071e3] text-white hover:bg-[#0071e3]/90 h-10 px-4 py-2">
-              Devenir vendeur
+              Espace vendeur
             </Link>
           )}
         </div>
