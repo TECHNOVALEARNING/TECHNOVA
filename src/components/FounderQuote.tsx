@@ -64,8 +64,8 @@ const FounderQuote = () => {
             >
               <Quote className="h-8 w-8 text-primary/40 mb-4 mx-auto md:mx-0" />
               <blockquote className="text-lg md:text-xl font-medium text-foreground leading-relaxed mb-6">
-                Je crois profondément que chaque créateur africain mérite les outils pour transformer son talent en revenus. 
-                TECHNOVA est né de cette conviction : <span className="text-primary font-bold">démocratiser la vente digitale en Afrique</span>, 
+                Je crois profondément que chaque créateur mérite les outils pour transformer son talent en revenus. 
+                TECHNOVA est né de cette conviction : <span className="text-primary font-bold">démocratiser la vente digitale dans le monde entier</span>, 
                 sans barrière technique, sans complexité inutile.
               </blockquote>
               <div className="flex items-center gap-3 justify-center md:justify-start">

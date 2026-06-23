@@ -8,7 +8,7 @@ const faqs = [
   { 
     category: "Général", 
     items: [
-      { q: "Qu'est-ce que TechNova Learning ?", a: "TechNova Learning est une plateforme de formation en ligne freemium proposant des cours en développement web, marketing digital, business et design graphique. Elle est accessible depuis n'importe quel appareil connecté et s'adresse à un public mondial, avec un focus particulier sur l'Afrique francophone." },
+      { q: "Qu'est-ce que TechNova Learning ?", a: "TechNova Learning est une plateforme de formation en ligne freemium proposant des cours en développement web, marketing digital, business et design graphique. Elle est accessible depuis n'importe quel appareil connecté et s'adresse à un public mondial." },
       { q: "TechNova Learning est-il gratuit ?", a: "Oui, TechNova Learning propose un accès freemium. De nombreux cours sont entièrement gratuits. Des formations avancées et certifiantes sont disponibles en version premium à des tarifs accessibles." },
       { q: "Dans quelle langue sont les formations ?", a: "Toutes les formations sont disponibles en français. Certains modules avancés peuvent inclure des ressources complémentaires en anglais." },
       { q: "Faut-il un niveau de départ pour s'inscrire ?", a: "Non. TechNova Learning accueille les débutants complets comme les apprenants ayant déjà des bases. Chaque parcours commence par les fondamentaux et progresse graduellement." },
@@ -26,10 +26,10 @@ const faqs = [
     ]
   },
   {
-    category: "Certificats et reconnaissance",
+    category: "Attestations et reconnaissance",
     items: [
-      { q: "Obtient-on un certificat à la fin d'une formation ?", a: "Oui. À la fin de chaque parcours premium, un certificat de complétion est délivré. Ce certificat peut être partagé sur LinkedIn et présenté aux employeurs." },
-      { q: "Les certificats TechNova Learning sont-ils reconnus ?", a: "Nos certificats sont reconnus par une communauté croissante d'employeurs et de recruteurs, en particulier dans le secteur numérique en Afrique et en Europe francophone." }
+      { q: "Obtient-on une attestation à la fin d'une formation ?", a: "Oui. À la fin de chaque parcours premium, une attestation de fin de formation est délivrée. Cette attestation peut être partagée sur LinkedIn et présentée aux employeurs." },
+      { q: "Les attestations TechNova Learning sont-elles reconnues ?", a: "Nos attestations sont reconnus par une communauté croissante d'employeurs et de recruteurs, en particulier dans le secteur numérique à l'international." }
     ]
   },
   {
@@ -43,7 +43,7 @@ const faqs = [
   {
     category: "Paiement et abonnement",
     items: [
-      { q: "Quels modes de paiement sont acceptés ?", a: "TechNova Learning accepte les cartes bancaires, les paiements par mobile money (Orange Money, Wave, MTN MoMo) ainsi que PayPal pour les paiements internationaux." },
+      { q: "Quels modes de paiement sont acceptés ?", a: "TechNova Learning accepte les cartes bancaires, les paiements par mobile money (Orange Money, Wave, MTN MoMo) ainsi que le VISA et Mastercard pour les paiements internationaux." },
       { q: "Peut-on annuler son abonnement premium ?", a: "Oui, l'abonnement peut être annulé à tout moment depuis les paramètres du compte. Aucune pénalité n'est appliquée." },
       { q: "Y a-t-il une période d'essai pour le premium ?", a: "Oui. Nous proposons une période d'essai gratuite pour découvrir les fonctionnalités premium avant tout engagement." }
     ]

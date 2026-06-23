@@ -33,7 +33,7 @@ serve(async (req) => {
 Le titre doit être accrocheur, vendeur, professionnel et court (maximum 5 à 10 mots).
 Ne mets pas de guillemets, ni d'explication. Réponds UNIQUEMENT avec le nouveau titre.`;
     } else {
-      systemPrompt = `Tu es un expert en copywriting pour la vente de produits numériques en Afrique francophone. Tu écris des descriptions de produits convaincantes et professionnelles en français. Tu utilises du HTML pour le formatage (h2, h3, p, ul, li, strong, em). La description doit être engageante, structurée avec des sous-titres, des listes de bénéfices, et un appel à l'action. Ne mets pas de balise h1.`;
+      systemPrompt = `Tu es un expert en copywriting pour la vente de produits numériques dans le monde entier. Tu écris des descriptions de produits convaincantes et professionnelles. Tu utilises du HTML pour le formatage (h2, h3, p, ul, li, strong, em). La description doit être engageante, structurée avec des sous-titres, des listes de bénéfices, et un appel à l'action. Ne mets pas de balise h1.`;
       userPrompt = `Récris et améliore cette description pour un ${typeLabel} intitulé "${title}".
 
 Description actuelle : ${description || "(aucune description fournie, crée-en une de zéro)"}

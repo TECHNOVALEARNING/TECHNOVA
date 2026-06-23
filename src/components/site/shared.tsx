@@ -236,12 +236,12 @@ export const Footer = () => {
             {lang === 'fr' ? 'TECHNOVA Learning : la plateforme de formations & produits numériques à petit prix. Cybersécurité, IA, marketing, entrepreneuriat — apprenez ce que les entreprises recherchent vraiment.' : 'TECHNOVA Learning: the ultimate platform for digital courses & products at low prices. Cybersecurity, AI, marketing, entrepreneurship — learn what companies are really looking for.'}
           </p>
         <div className="mt-6 flex flex-wrap gap-3">
-          <a href="#" className="h-10 w-10 rounded-full bg-card/10 hover:bg-[#1877F2] transition-colors flex items-center justify-center text-white shadow-sm hover:-translate-y-1 duration-300">
+          <a href="https://www.facebook.com/share/18GYGMg9o8/" className="h-10 w-10 rounded-full bg-card/10 hover:bg-[#1877F2] transition-colors flex items-center justify-center text-white shadow-sm hover:-translate-y-1 duration-300">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
               <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
             </svg>
           </a>
-          <a href="#" className="h-10 w-10 rounded-full bg-card/10 hover:bg-[#E4405F] transition-colors flex items-center justify-center text-white shadow-sm hover:-translate-y-1 duration-300">
+          <a href="https://www.instagram.com/technova.learning?igsh=NGkwbjNocHUwMDE5" className="h-10 w-10 rounded-full bg-card/10 hover:bg-[#E4405F] transition-colors flex items-center justify-center text-white shadow-sm hover:-translate-y-1 duration-300">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
               <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
               <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
@@ -253,7 +253,7 @@ export const Footer = () => {
               <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
             </svg>
           </a>
-          <a href="#" className="h-10 w-10 rounded-full bg-card/10 hover:bg-[#1877F2] transition-colors flex items-center justify-center text-white shadow-sm hover:-translate-y-1 duration-300">
+          <a href="https://www.linkedin.com/company/130533963" className="h-10 w-10 rounded-full bg-card/10 hover:bg-[#1877F2] transition-colors flex items-center justify-center text-white shadow-sm hover:-translate-y-1 duration-300">
             <i className="fa-brands fa-linkedin-in"></i>
           </a>
           <a href="#" className="h-10 w-10 rounded-full bg-card/10 hover:bg-red-700 transition-colors flex items-center justify-center text-white shadow-sm hover:-translate-y-1 duration-300">
@@ -311,8 +311,8 @@ export const Footer = () => {
     <div className="border-t border-white/10 py-5 px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-white/50 text-xs">
       <p>© {new Date().getFullYear()} TECHNOVA Learning — {lang === 'fr' ? 'Tous droits réservés.' : 'All rights reserved.'}</p>
       <div className="flex items-center gap-4">
-        <Link to="/legal/privacy" className="hover:text-white transition-colors">{lang === 'fr' ? 'Politique de confidentialité' : 'Privacy Policy'}</Link>
-        <Link to="/legal/terms" className="hover:text-white transition-colors">{lang === 'fr' ? "Conditions d'utilisation" : 'Terms of Service'}</Link>
+        <Link to="/privacy" className="hover:text-white transition-colors">{lang === 'fr' ? 'Politique de confidentialité' : 'Privacy Policy'}</Link>
+        <Link to="/terms" className="hover:text-white transition-colors">{lang === 'fr' ? "Conditions d'utilisation" : 'Terms of Service'}</Link>
       </div>
     </div>
   </footer>

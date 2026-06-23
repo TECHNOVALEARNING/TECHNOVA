@@ -1,4 +1,4 @@
-﻿import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
@@ -62,7 +62,7 @@ serve(async (req) => {
     if (verification.document_back_url) documentUrls.push(verification.document_back_url);
     if (verification.selfie_url) documentUrls.push(verification.selfie_url);
 
-    const systemPrompt = `Tu es un expert en vérification d'identité (KYC) pour une plateforme de vente de produits numériques en Afrique. 
+    const systemPrompt = `Tu es un expert en vérification d'identité (KYC) pour une plateforme mondiale de vente de produits numériques. 
 Tu dois analyser les informations soumises et les images de documents d'identité pour donner une recommandation.
 
 CRITÈRES D'ANALYSE :

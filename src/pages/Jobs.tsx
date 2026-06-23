@@ -92,8 +92,8 @@ const JOBS_DATA: Job[] = [
     experience: { fr: "3-5 ans", en: "3-5 years" },
     publishedAt: { fr: "il y a 1 jour", en: "1 day ago" },
     description: {
-      fr: "Nous recherchons un Designer UX/UI passionné pour concevoir des parcours utilisateurs intuitifs et des interfaces esthétiques pour nos clients en Afrique de l'Ouest. Vous serez responsable de l'ensemble du cycle de conception.",
-      en: "We are looking for a passionate UX/UI Designer to design intuitive user flows and beautiful interfaces for our clients in West Africa. You will be responsible for the entire design lifecycle."
+      fr: "Nous recherchons un Designer UX/UI passionné pour concevoir des parcours utilisateurs intuitifs et des interfaces esthétiques pour nos clients à travers le monde. Vous serez responsable de l'ensemble du cycle de conception.",
+      en: "We are looking for a passionate UX/UI Designer to design intuitive user flows and beautiful interfaces for our clients worldwide. You will be responsible for the entire design lifecycle."
     },
     requirements: {
       fr: [
@@ -398,8 +398,8 @@ const JOBS_DATA: Job[] = [
     experience: { fr: "1-3 ans", en: "1-3 years" },
     publishedAt: { fr: "il y a 3 jours", en: "3 days ago" },
     description: {
-      fr: "Participez aux audits de sécurité et aux tests d'intrusion de nos clients d'Afrique de l'Ouest. Vous aiderez à identifier les vulnérabilités et à renforcer leurs systèmes.",
-      en: "Participate in security audits and pentesting for our West African clients. You will help identify vulnerabilities and strengthen their systems."
+      fr: "Participez aux audits de sécurité et aux tests d'intrusion de nos clients internationaux. Vous aiderez à identifier les vulnérabilités et à renforcer leurs systèmes.",
+      en: "Participate in security audits and pentesting for our global clients. You will help identify vulnerabilities and strengthen their systems."
     },
     requirements: {
       fr: [
@@ -613,7 +613,7 @@ const Jobs = () => {
           const companyName = companyElement?.textContent?.trim() || "Entreprise Anonyme";
 
           const locationElement = el.querySelector("i.fa-map-marker-alt")?.parentElement;
-          const locationName = locationElement?.textContent?.trim() || "Afrique de l'Ouest";
+          const locationName = locationElement?.textContent?.trim() || "International";
 
           // Extract metadata from listing badges
           const badgeList = el.querySelectorAll(".badge");
@@ -794,8 +794,8 @@ const Jobs = () => {
           : "Find your next career or internship opportunity in tech across Benin, Ivory Coast, Senegal, Togo, and globally."}
         canonicalPath="/jobs" 
         keywords={lang === "fr" 
-          ? "Emploi Tech, Recrutement Afrique, Stage Web, Développeur Junior, UX/UI, Marketing Digital" 
-          : "Tech Jobs, Africa Recruitment, Web Internship, Junior Developer, UX/UI, Digital Marketing"} 
+          ? "Emploi Tech, Recrutement Mondial, Stage Web, Développeur Junior, UX/UI, Marketing Digital" 
+          : "Tech Jobs, Global Recruitment, Web Internship, Junior Developer, UX/UI, Digital Marketing"} 
       />
 
       <Header />
@@ -816,8 +816,8 @@ const Jobs = () => {
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               {lang === "fr" 
-                ? "Trouvez des opportunités ciblées dans les métiers du digital et de la tech en Afrique de l'Ouest et à l'international." 
-                : "Explore highly-targeted job offers and internships in tech and digital sectors in West Africa and worldwide."}
+                ? "Trouvez des opportunités ciblées dans les métiers du digital et de la tech partout dans le monde." 
+                : "Explore highly-targeted job offers and internships in tech and digital sectors worldwide."}
             </p>
           </motion.div>
         </div>

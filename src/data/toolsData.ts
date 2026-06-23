@@ -450,7 +450,7 @@ export const toolsData: Tool[] = [
   {
     id: "paystack",
     name: "Paystack",
-    description: "La passerelle de paiement leader en Afrique. Acceptez des paiements sécurisés de partout dans le monde.",
+    description: "Une passerelle de paiement leader. Acceptez des paiements sécurisés de partout dans le monde.",
     websiteUrl: "https://paystack.com",
     categories: ["Fintech & Banques", "E-commerce"],
     logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=paystack.com",
@@ -459,7 +459,7 @@ export const toolsData: Tool[] = [
   {
     id: "flutterwave",
     name: "Flutterwave",
-    description: "Infrastructures de paiement pour l'Afrique. Vendez en ligne, traitez les paiements et développez votre activité.",
+    description: "Infrastructures de paiement sécurisées. Vendez en ligne, traitez les paiements et développez votre activité.",
     websiteUrl: "https://flutterwave.com",
     categories: ["Fintech & Banques", "E-commerce"],
     logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=flutterwave.com",
@@ -467,7 +467,7 @@ export const toolsData: Tool[] = [
   {
     id: "grey",
     name: "Grey",
-    description: "Banque digitale idéale pour les freelances africains. Obtenez des comptes en USD, EUR et GBP pour recevoir vos paiements.",
+    description: "Banque digitale idéale pour les freelances et créateurs de contenu. Obtenez des comptes en USD, EUR et GBP pour recevoir vos paiements.",
     websiteUrl: "https://greyapp.page.link/jixhVD5wH6mdykEY7",
     categories: ["Fintech & Banques"],
     logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=grey.co",
@@ -476,7 +476,7 @@ export const toolsData: Tool[] = [
   {
     id: "accrue",
     name: "Accrue",
-    description: "Épargnez et investissez facilement en dollars ou en crypto, et effectuez des paiements transfrontaliers en Afrique.",
+    description: "Épargnez et investissez facilement en dollars ou en crypto, et effectuez des paiements transfrontaliers sécurisés.",
     websiteUrl: "https://useaccrue.com/join?ref=XSZHWV43",
     categories: ["Fintech & Banques"],
     logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=useaccrue.com",
@@ -485,7 +485,7 @@ export const toolsData: Tool[] = [
   {
     id: "moneco",
     name: "Moneco",
-    description: "La néo-banque de la diaspora africaine et des locaux. Compte en euros et transferts facilités sans frais cachés.",
+    description: "La néo-banque mondiale pour les transferts et la gestion d'argent. Compte multidevises et transferts facilités sans frais cachés.",
     websiteUrl: "https://www.moneco.app",
     categories: ["Fintech & Banques"],
     logoUrl: "https://www.google.com/s2/favicons?sz=256&domain_url=moneco.app",

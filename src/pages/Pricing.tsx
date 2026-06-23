@@ -31,7 +31,7 @@ const included = [
 const Pricing = () => {
   return (
     <div className="min-h-screen bg-background">
-      <SEOHead title="Tarifs" description="Tarifs TECHNOVA : 0% de frais d'inscription, commission de seulement 5%. Vendez vos produits digitaux sans abonnement. Paiement Mobile Money." canonicalPath="/pricing" keywords="tarifs vente produits digitaux, commission, prix, mobile money, afrique" />
+      <SEOHead title="Tarifs" description="Tarifs TECHNOVA : 0% de frais d'inscription, commission de seulement 10%. Vendez vos produits digitaux sans abonnement. Paiements en ligne sécurisés." canonicalPath="/pricing" keywords="tarifs vente produits digitaux, commission, prix, stripe, cartes, mondial" />
       <Header />
 
       {/* Hero */}

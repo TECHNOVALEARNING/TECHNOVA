@@ -16,7 +16,8 @@ import {
   Layers,
   Zap,
   ShieldCheck,
-  Check
+  Check,
+  ExternalLink
 } from "lucide-react";
 import { toast } from "sonner";
 import SEOHead from "@/components/SEOHead";
@@ -43,6 +44,7 @@ interface Project {
   image: string;
   tags: string[];
   stats: string;
+  url: string;
 }
 
 const EServices = () => {
@@ -128,7 +130,7 @@ const EServices = () => {
         lang === "fr" ? "Panier et checkout optimisés" : "Optimized cart & checkout flow",
         lang === "fr" ? "Dashboard vendeur simplifié" : "Simplified seller dashboard"
       ],
-      price: lang === "fr" ? "À partir de 6 000 000 FCFA" : "From $10 000"
+      price: lang === "fr" ? "À partir de 4 000 000 FCFA" : "From $7 000"
     },
     {
       icon: Layers,
@@ -162,34 +164,37 @@ const EServices = () => {
 
   const projects: Project[] = [
     {
-      title: "TECHNOVA Marketplace",
+      title: "TECHNOVA Learning",
       category: lang === "fr" ? "Plateforme Web" : "Web Platform",
       desc: lang === "fr"
-        ? "Conception d'une marketplace complète de produits numériques en Afrique avec KYC, paiements Mobile Money et livraison automatisée."
-        : "Design of a complete multivendor digital product marketplace in Africa with KYC, Mobile Money payments, and automated delivery.",
+        ? "Plateforme de cours en ligne avec paiements sécurisés et accès instantané aux formations."
+        : "Online course platform with secure payments and instant access to training modules.",
       image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80",
-      tags: ["React", "TypeScript", "Supabase", "PawaPay", "Edge Functions"],
-      stats: "+2,000 users"
+      tags: ["React 18", "TypeScript", "Supabase", "Tailwind CSS 3", "Vite 5", "PawaPay", "Edge Functions"],
+      stats: "+2,000 users",
+      url: "https://technovalearning.com"
     },
     {
-      title: "Easy-Tech Store",
-      category: lang === "fr" ? "E-commerce" : "E-commerce",
+      title: "Technova Humanizer",
+      category: lang === "fr" ? "Outil IA" : "AI Tool",
       desc: lang === "fr"
-        ? "Boutique en ligne officielle de formations technologiques avec support WhatsApp intégré, thème sombre dynamique et vitesse de chargement instantanée."
-        : "Official online store for tech training featuring integrated WhatsApp support, dynamic dark theme, and instant loading speed.",
-      image: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=800&q=80",
-      tags: ["Tailwind CSS", "Framer Motion", "Vite", "React Query"],
-      stats: "0.8s load time"
+        ? "Outil IA de transformation de texte IA en texte humain"
+        : "AI tool for transforming AI text into human text",
+      image: "src/assets/humaniser.jpg",
+      tags: ["React 19", "Express (Node.js)", "Tailwind CSS 4", "Gemini API", "Motion"],
+      stats: "0.8s load time",
+      url: "https://ai.studio/apps/481bcaa5-8b7f-4920-bbf3-dd4e6448a54b"
     },
     {
-      title: "Nova AI Agent",
+      title: "Viral IA Agent",
       category: lang === "fr" ? "Automatisation & IA" : "Automation & AI",
       desc: lang === "fr"
-        ? "Agent de support client connecté à une base de connaissances vectorielle, capable de résoudre les tickets techniques en moins de 30 secondes."
-        : "Customer support AI agent connected to a vector database, capable of resolving technical tickets in less than 30 seconds.",
-      image: "https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=800&q=80",
-      tags: ["Node.js", "Gemini API", "Vector Search", "Telegram Webhooks"],
-      stats: "92% resolution rate"
+        ? "Agent IA de viralisation de contenu" 
+        : "AI agent for content viralization",
+      image: "https://i.pinimg.com/736x/b1/bb/ac/b1bbac1e29f08c1c7b5fa1cdb8d5aebb.jpg",
+      tags: ["HTML5 / CSS3", "Vanilla JS", "Gemini API", "Local Storage"],
+      stats: "92% resolution rate",
+      url: "https://t.me/technova_bot"
     }
   ];
 
@@ -399,6 +404,15 @@ const EServices = () => {
                       </span>
                       <span className="px-2 py-0.5 rounded bg-green-500/10 text-green-600 font-semibold">{project.stats}</span>
                     </div>
+                    <a
+                      href={project.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-4 flex items-center justify-center gap-1.5 w-full px-4 py-2.5 text-xs font-bold rounded-xl bg-[color:var(--blue-soft)] text-[color:var(--blue)] hover:bg-[color:var(--blue)] hover:text-white transition-all duration-200"
+                    >
+                      {lang === "fr" ? "Visiter le site" : "Visit website"}
+                      <ExternalLink className="h-3.5 w-3.5" />
+                    </a>
                   </div>
                 </div>
               </motion.div>
@@ -453,7 +467,6 @@ const EServices = () => {
                   </div>
                   <div>
                     <div className="text-[10px] text-[color:var(--text-secondary)] uppercase tracking-wider font-bold">{lang === "fr" ? "WhatsApp direct" : "WhatsApp Chat"}</div>
-                    <div className="text-xs sm:text-sm font-semibold text-[color:var(--text)]">+229 47 88 37 35</div>
                   </div>
                 </a>
               </div>

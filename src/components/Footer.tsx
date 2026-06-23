@@ -13,7 +13,7 @@ const Footer = () => {
               <span className="text-lg font-bold text-foreground">TECHNOVA</span>
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              La plateforme #1 pour vendre vos produits digitaux en Afrique et dans le monde.
+              La plateforme #1 pour vendre vos produits digitaux dans le monde entier.
             </p>
             <div className="flex flex-col gap-2 mt-3">
               <a href="mailto:contact@technova.com" className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline">

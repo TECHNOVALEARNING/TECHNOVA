@@ -84,7 +84,7 @@ const Marketplace = () => {
       <SEOHead
         canonicalPath="/marketplace"
         title="Marketplace TECHNOVA · Produits numériques vérifiés"
-        description="La marketplace #1 de produits numériques en Afrique. Vendeurs vérifiés KYC, paiements mobile money sécurisés, fichiers, formations et licences."
+        description="La marketplace #1 de produits numériques dans le monde. Vendeurs vérifiés KYC, paiements en ligne sécurisés, fichiers, formations et licences."
       />
       <Header />
 
@@ -111,7 +111,7 @@ const Marketplace = () => {
             className="mx-auto max-w-3xl text-center"
           >
             <span className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-[11px] font-semibold text-accent backdrop-blur sm:text-xs">
-              <Sparkles className="h-3 w-3" /> Marketplace #1 de produits numériques en Afrique
+              <Sparkles className="h-3 w-3" /> Marketplace #1 de produits numériques au niveau mondial
             </span>
             <h1 className="mb-3 text-3xl font-bold leading-[1.05] tracking-tight text-foreground sm:text-5xl md:text-6xl">
               Achetez en confiance.{" "}

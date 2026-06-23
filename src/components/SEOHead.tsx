@@ -12,9 +12,9 @@ interface SEOHeadProps {
 
 const SITE_NAME = "TECHNOVA";
 const SITE_URL = "https://technova.com";
-const DEFAULT_DESCRIPTION = "TECHNOVA est la plateforme pour vendre vos produits digitaux en Afrique : fichiers, formations et licences. Créez votre boutique et encaissez via Mobile Money ou carte.";
+const DEFAULT_DESCRIPTION = "TECHNOVA est la plateforme pour vendre vos produits digitaux dans le monde : fichiers, formations et licences. Créez votre boutique et encaissez vos ventes en ligne.";
 const DEFAULT_IMAGE = `${SITE_URL}/og-image.jpg?v=technova-20260505`;
-const DEFAULT_KEYWORDS = "TECHNOVA, technova, vente produits digitaux, marketplace afrique, vendre en ligne, cours en ligne, fichiers numériques, licences digitales, boutique digitale, mobile money, ecommerce afrique";
+const DEFAULT_KEYWORDS = "TECHNOVA, technova, vente produits digitaux, marketplace mondial, vendre en ligne, cours en ligne, fichiers numériques, licences digitales, boutique digitale, e-commerce, stripe";
 
 const SEOHead = ({
   title,
@@ -25,7 +25,7 @@ const SEOHead = ({
   ogType = "website",
   noindex = false,
 }: SEOHeadProps) => {
-  const fullTitle = title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} — Vendez vos produits digitaux en Afrique`;
+  const fullTitle = title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} — Vendez vos produits digitaux dans le monde`;
   const canonicalUrl = `${SITE_URL}${canonicalPath}`;
 
   useEffect(() => {

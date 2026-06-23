@@ -1,4 +1,4 @@
-﻿// Nova - Technova AI Assistant
+// Nova - Technova AI Assistant
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
 const corsHeaders = {
@@ -129,7 +129,7 @@ async function executeTool(name: string, args: any, userId: string) {
   return { error: "Outil inconnu" };
 }
 
-const SYSTEM_PROMPT = `Tu es **Nova**, l'IA assistante de Technova (plateforme e-commerce de produits numériques en Afrique : fichiers, formations, licences).
+const SYSTEM_PROMPT = `Tu es **Nova**, l'IA assistante de Technova (plateforme e-commerce de produits numériques dans le monde entier : fichiers, formations, licences).
 
 Tu aides le vendeur connecté à :
 - Analyser ses ventes, revenus, pays, méthodes de paiement

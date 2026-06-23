@@ -16,7 +16,7 @@ const features = [
 const LicencesPage = () => {
   return (
     <div className="min-h-screen bg-background">
-      <SEOHead title="Vendre des licences logicielles" description="Vendez des licences logicielles avec clés automatiques, protection anti-piratage et suivi des activations. Paiement Mobile Money." canonicalPath="/licences" keywords="vendre licences, clés logicielles, anti-piratage, licence digitale, afrique" />
+      <SEOHead title="Vendre des licences logicielles" description="Vendez des licences logicielles avec clés automatiques, protection anti-piratage et suivi des activations. Paiements sécurisés en ligne." canonicalPath="/licences" keywords="vendre licences, clés logicielles, anti-piratage, licence digitale, mondial, global" />
       <Header />
       <section className="py-24 md:py-32 bg-mesh">
         <div className="container mx-auto px-6 text-center">

@@ -22,13 +22,13 @@ const productFeatures = [
 const platformFeatures = [
   {
     icon: Smartphone,
-    title: "Mobile Money & Cartes",
-    description: "Orange Money, MTN, Wave, Moov et cartes bancaires — tous les paiements en un clic.",
+    title: "Moyens de paiement globaux",
+    description: "Cartes bancaires, Stripe, PayPal, Mobile Money — tous les modes de paiements internationaux et locaux en un clic.",
   },
   {
     icon: Shield,
     title: "Paiements sécurisés",
-    description: "Transactions sécurisées via Mobile Money et carte bancaire dans plus de 10 pays d'Afrique.",
+    description: "Transactions sécurisées via cartes de crédit, comptes bancaires et passerelles de paiement locales et internationales.",
   },
   {
     icon: Zap,

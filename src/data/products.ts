@@ -3,8 +3,8 @@ import { Product } from "@/contexts/CartContext";
 export const products: Product[] = [
   {
     id: "1",
-    title: "Maîtrisez le Marketing Digital en Afrique",
-    description: "Formation complète pour dominer le marketing digital sur le continent africain. Stratégies locales, réseaux sociaux, et croissance.",
+    title: "Maîtrisez le Marketing Digital",
+    description: "Formation complète pour dominer le marketing digital. Stratégies, réseaux sociaux, et croissance.",
     price: 25000,
     currency: "XOF",
     category: "course",
@@ -16,7 +16,7 @@ export const products: Product[] = [
   {
     id: "2",
     title: "Guide PDF : Lancer son E-commerce",
-    description: "Tout ce qu'il faut savoir pour lancer votre boutique en ligne en Afrique de l'Ouest. De A à Z.",
+    description: "Tout ce qu'il faut savoir pour lancer votre boutique en ligne de A à Z.",
     price: 5000,
     currency: "XOF",
     category: "ebook",
@@ -50,8 +50,8 @@ export const products: Product[] = [
   },
   {
     id: "5",
-    title: "Guide : Investir en Bourse depuis l'Afrique",
-    description: "PDF complet sur l'investissement boursier adapté au contexte africain. BRVM, marchés internationaux.",
+    title: "Guide : Investir en Bourse",
+    description: "PDF complet sur l'investissement boursier et les marchés internationaux.",
     price: 8000,
     currency: "XOF",
     category: "ebook",

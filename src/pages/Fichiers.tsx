@@ -16,7 +16,7 @@ const features = [
 const Fichiers = () => {
   return (
     <div className="min-h-screen bg-background">
-      <SEOHead title="Vendre des fichiers digitaux" description="Vendez vos fichiers digitaux : PDFs, e-books, templates, presets. Livraison instantanée, protection DRM et paiement Mobile Money." canonicalPath="/fichiers" keywords="vendre fichiers digitaux, ebook, template, preset, PDF, afrique" />
+      <SEOHead title="Vendre des fichiers digitaux" description="Vendez vos fichiers digitaux : PDFs, e-books, templates, presets. Livraison instantanée, protection DRM et paiements sécurisés." canonicalPath="/fichiers" keywords="vendre fichiers digitaux, ebook, template, preset, PDF, mondial, global" />
       <Header />
       <section className="py-24 md:py-32 bg-mesh">
         <div className="container mx-auto px-6 text-center">

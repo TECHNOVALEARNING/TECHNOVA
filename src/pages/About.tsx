@@ -26,7 +26,7 @@ const About = () => {
     <div className="min-h-screen bg-background text-foreground transition-colors duration-300 font-sans">
       <SEOHead 
         title="À propos de TechNova Learning" 
-        description="TechNova Learning est une plateforme de formation en ligne dédiée à l'acquisition de compétences numériques. Notre mission : rendre l'éducation de qualité accessible à tous en Afrique francophone." 
+        description="TechNova Learning est une plateforme de formation en ligne dédiée à l'acquisition de compétences numériques. Notre mission : rendre l'éducation de qualité accessible à tous dans le monde entier." 
         canonicalPath="/about" 
       />
       <Header />
@@ -38,7 +38,7 @@ const About = () => {
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium mb-6 bg-primary/10 text-primary border border-primary/20">
               <Globe className="w-4 h-4" />
-              <span>Pour l'Afrique francophone et la diaspora</span>
+              <span>Pour les apprenants du monde entier</span>
             </div>
             <h1 className="text-4xl md:text-6xl font-extrabold text-foreground mb-6">
               À propos de <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400">TechNova Learning</span>
@@ -70,7 +70,7 @@ const About = () => {
                 Nous croyons que chaque personne mérite d'accéder à une formation de qualité, quel que soit son niveau de revenus, sa localisation géographique ou son parcours scolaire. 
               </p>
               <p className="text-muted-foreground leading-relaxed text-lg">
-                <strong className="text-foreground">TechNova Learning</strong> a été conçu pour éliminer les barrières à l'apprentissage numérique, en particulier en Afrique francophone et dans la diaspora.
+                <strong className="text-foreground">TechNova Learning</strong> a été conçu pour éliminer les barrières à l'apprentissage numérique, pour tous ceux qui souhaitent acquérir des compétences clés depuis n'importe où.
               </p>
             </motion.div>
 
@@ -90,7 +90,7 @@ const About = () => {
                 D'ici 2030, notre objectif est de <strong>former 1 million d'apprenants francophones</strong> aux compétences numériques du futur.
               </p>
               <p className="text-muted-foreground leading-relaxed text-lg">
-                Nous voulons être la référence absolue en matière de formation en ligne pour l'Afrique francophone et la diaspora mondiale, en créant le pont entre le talent et les opportunités professionnelles.
+                Nous voulons être la référence absolue en matière de formation en ligne au niveau mondial, en créant le pont entre le talent et les opportunités professionnelles.
               </p>
             </motion.div>
           </div>
