@@ -196,7 +196,7 @@ export const Header = () => {
               ) : (
                 <>
                   <Link to="/register" onClick={() => setOpen(false)} className="w-full text-center inline-flex items-center justify-center rounded-xl text-base font-medium bg-[#0071e3] text-white hover:bg-[#0071e3]/90 h-12 px-4 py-2 shadow-sm">
-                    <Store className="h-5 w-5 mr-2" /> Devenir vendeur
+                    <Store className="h-5 w-5 mr-2" /> Espace vendeur
                   </Link>
                   <div className="grid grid-cols-2 gap-3">
                     <Link to="/login" onClick={() => setOpen(false)} className="w-full text-center inline-flex items-center justify-center rounded-xl text-[14px] font-medium border border-[color:var(--border)] bg-card hover:bg-muted/50 h-12 px-2">
