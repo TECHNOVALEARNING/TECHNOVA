@@ -64,7 +64,7 @@ export const Header = () => {
     { to: "/templates", label: "Templates" },
     { to: "/faq", label: "FAQ" },
     { to: "/#apps", label: lang === "fr" ? "Technova Apps" : "Technova Apps" },
-    { to: "/register", label: lang === "fr" ? "Devenir Vendeur" : "Become Seller" },
+    { to: "/register", label: lang === "fr" ? "Espace Vendeur" : "Seller Space" },
     { to: "/about", label: lang === "fr" ? "À propos" : "About" },
   ];
 
