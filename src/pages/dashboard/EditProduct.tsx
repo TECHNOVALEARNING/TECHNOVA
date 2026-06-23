@@ -32,9 +32,9 @@ const tabs: { key: TabKey; label: string; icon: React.ElementType }[] = [
   { key: "files", label: "Fichiers", icon: Upload },
   { key: "description", label: "Description", icon: AlignLeft },
   { key: "visual", label: "Visuel & Design", icon: Palette },
-  { key: "faq", label: "Questions frÃ©quentes", icon: HelpCircle },
+  { key: "faq", label: "Questions fréquentes", icon: HelpCircle },
   { key: "seo", label: "SEO", icon: Search },
-  { key: "advanced", label: "AvancÃ©", icon: Settings },
+  { key: "advanced", label: "Avancé", icon: Settings },
 ];
 
 const getEmbedUrl = (url: string) => {
@@ -381,7 +381,7 @@ const EditProduct = () => {
                 lessonsToInsert.push({
                   product_id: id,
                   module_id: modData.id,
-                  title: lesson.title || `LeÃ§on ${lesson.position + 1}`,
+                  title: lesson.title || `Leçon ${lesson.position + 1}`,
                   description: lesson.description || null,
                   content: lesson.content || null,
                   video_url: lesson.video_url || null,
@@ -409,12 +409,12 @@ const EditProduct = () => {
       }
 
       if (showToast) {
-        toast.success("Produit mis Ã  jour !");
+        toast.success("Produit mis à jour !");
       }
 
       return true;
     } catch (error: any) {
-      toast.error(error.message || "Erreur lors de la mise Ã  jour");
+      toast.error(error.message || "Erreur lors de la mise à jour");
       return false;
     } finally {
       if (manageSaving) setSaving(false);
@@ -435,7 +435,7 @@ const EditProduct = () => {
         return;
       }
       setIsPublished(false);
-      toast.success("Produit dÃ©publiÃ©");
+      toast.success("Produit dépublié");
       return;
     }
 
@@ -450,7 +450,7 @@ const EditProduct = () => {
 
       if (review?.status === "rejected") {
         setModerationDialogOpen(true);
-        toast.error("Publication bloquÃ©e par la modÃ©ration.");
+        toast.error("Publication bloquée par la modération.");
       } else {
         const { error: publishError } = await supabase.from("products").update({ is_published: true }).eq("id", id);
         if (publishError) throw publishError;
@@ -458,7 +458,7 @@ const EditProduct = () => {
         if (review?.status === "approved") {
           setModerationDialogOpen(true);
         }
-        toast.success("Produit publiÃ© avec succÃ¨s !");
+        toast.success("Produit publié avec succès !");
       }
     } catch (error: any) {
       toast.error(error.message || "Impossible d'analyser le produit");
@@ -508,7 +508,7 @@ const EditProduct = () => {
               onClick={togglePublish}
             >
               {isPublished ? (
-                <><EyeOff className="h-4 w-4 mr-1.5" /> DÃ©publier</>
+                <><EyeOff className="h-4 w-4 mr-1.5" /> Dépublier</>
               ) : (
                 <><Eye className="h-4 w-4 mr-1.5" /> Publier</>
               )}
@@ -520,7 +520,7 @@ const EditProduct = () => {
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={() => {
                   navigator.clipboard.writeText(`${window.location.origin}/products/${id}`);
-                  toast.success("Lien copiÃ©");
+                  toast.success("Lien copié");
                 }}>
                   <Link2 className="h-4 w-4 mr-2" /> Copier le lien
                 </DropdownMenuItem>
@@ -530,7 +530,7 @@ const EditProduct = () => {
                   onClick={async () => {
                     if (!confirm("Supprimer ce produit ?")) return;
                     await supabase.from("products").delete().eq("id", id!);
-                    toast.success("Produit supprimÃ©");
+                    toast.success("Produit supprimé");
                     navigate("/dashboard/products");
                   }}
                 >
@@ -569,7 +569,7 @@ const EditProduct = () => {
               {/* INFORMATIONS */}
               {activeTab === "info" && (
                 <div className="space-y-6">
-                  <h2 className="text-lg font-bold text-foreground">DÃ©tails du produit</h2>
+                  <h2 className="text-lg font-bold text-foreground">Détails du produit</h2>
                   <div>
                     <label className="text-sm font-medium text-foreground mb-1.5 block">
                       Nom du produit <span className="text-destructive">*</span>
@@ -662,8 +662,8 @@ const EditProduct = () => {
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="Acheter maintenant">Acheter maintenant</SelectItem>
-                            <SelectItem value="TÃ©lÃ©charger maintenant">TÃ©lÃ©charger maintenant</SelectItem>
-                            <SelectItem value="Obtenir l'accÃ¨s">Obtenir l'accÃ¨s</SelectItem>
+                            <SelectItem value="Télécharger maintenant">Télécharger maintenant</SelectItem>
+                            <SelectItem value="Obtenir l'accès">Obtenir l'accès</SelectItem>
                             <SelectItem value="S'inscrire">S'inscrire</SelectItem>
                           </SelectContent>
                         </Select>
@@ -672,8 +672,8 @@ const EditProduct = () => {
 
                     <ToggleOption
                       icon={<Lock className="h-4 w-4" />}
-                      title="ProtÃ©gez vos fichiers avec un mot de passe"
-                      description="SÃ©curisez votre contenu premium avec protection par mot de passe"
+                      title="Protégez vos fichiers avec un mot de passe"
+                      description="Sécurisez votre contenu premium avec protection par mot de passe"
                       enabled={enableFilePassword}
                       onToggle={setEnableFilePassword}
                     >
@@ -682,7 +682,7 @@ const EditProduct = () => {
                           type="text"
                           value={filePassword}
                           onChange={(e) => setFilePassword(e.target.value)}
-                          placeholder="Mot de passe Ã  communiquer Ã  l'acheteur"
+                          placeholder="Mot de passe à communiquer à l'acheteur"
                           className="h-10 mt-3"
                         />
                       )}
@@ -690,8 +690,8 @@ const EditProduct = () => {
 
                     <ToggleOption
                       icon={<Fingerprint className="h-4 w-4" />}
-                      title="Ajoutez des filigranes Ã  vos fichiers"
-                      description="Affiche les dÃ©tails de l'acheteur (nom, email) sur la page de tÃ©lÃ©chargement pour dÃ©courager le partage"
+                      title="Ajoutez des filigranes à vos fichiers"
+                      description="Affiche les détails de l'acheteur (nom, email) sur la page de téléchargement pour décourager le partage"
                       enabled={watermarkEnabled}
                       onToggle={setWatermarkEnabled}
                     />
@@ -718,7 +718,7 @@ const EditProduct = () => {
                     <ToggleOption
                       icon={<EyeOffIcon className="h-4 w-4" />}
                       title="Masquer sur la boutique"
-                      description="Gardez ce produit privÃ© - uniquement accessible avec un lien direct"
+                      description="Gardez ce produit privé - uniquement accessible avec un lien direct"
                       enabled={hideFromStore}
                       onToggle={setHideFromStore}
                     />
@@ -748,7 +748,7 @@ const EditProduct = () => {
                   <h2 className="text-lg font-bold text-foreground">Tarification</h2>
                   
                   <div>
-                    <label className="text-sm font-medium text-foreground mb-1.5 block">ModÃ¨le de prix</label>
+                    <label className="text-sm font-medium text-foreground mb-1.5 block">Modèle de prix</label>
                     <Select value={pricingModel} onValueChange={(v) => setPricingModel(v as any)}>
                       <SelectTrigger className="h-11">
                         <SelectValue />
@@ -778,7 +778,7 @@ const EditProduct = () => {
                         <p className="text-[11px] text-muted-foreground mt-1">Min : 100 FCFA</p>
                       </div>
                       <div>
-                        <label className="text-sm font-medium text-foreground mb-1.5 block">Prix barrÃ©</label>
+                        <label className="text-sm font-medium text-foreground mb-1.5 block">Prix barré</label>
                         <div className="relative">
                           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">FCFA</span>
                           <Input
@@ -803,17 +803,17 @@ const EditProduct = () => {
                             type="number"
                             value={licenseMaxActivations}
                             onChange={(e) => setLicenseMaxActivations(e.target.value)}
-                            placeholder="IllimitÃ©"
+                            placeholder="Illimité"
                             className="h-10"
                           />
                         </div>
                         <div>
-                          <label className="text-xs font-medium text-foreground mb-1 block">ValiditÃ© (jours)</label>
+                          <label className="text-xs font-medium text-foreground mb-1 block">Validité (jours)</label>
                           <Input
                             type="number"
                             value={licenseValidityDays}
                             onChange={(e) => setLicenseValidityDays(e.target.value)}
-                            placeholder="IllimitÃ©"
+                            placeholder="Illimité"
                             className="h-10"
                           />
                         </div>
@@ -873,7 +873,7 @@ const EditProduct = () => {
                           { id: "pdf", label: "Document (PDF)", icon: PdfIcon, color: "text-red-500", border: "border-red-200", bg: "bg-red-50" },
                           { id: "audio", label: "Audio (MP3)", icon: FileAudio, color: "text-purple-500", border: "border-purple-200", bg: "bg-purple-50" },
                           { id: "image", label: "Image (PNG/JPG)", icon: ImageIcon, color: "text-green-500", border: "border-green-200", bg: "bg-green-50" },
-                          { id: "video", label: "VidÃ©o (Lien)", icon: FileVideo, color: "text-blue-500", border: "border-blue-200", bg: "bg-blue-50" }
+                          { id: "video", label: "Vidéo (Lien)", icon: FileVideo, color: "text-blue-500", border: "border-blue-200", bg: "bg-blue-50" }
                         ].map((fmt) => (
                           <button
                             key={fmt.id}
@@ -894,7 +894,7 @@ const EditProduct = () => {
                         <div className="p-6 rounded-xl border border-blue-200 bg-blue-50/50 dark:bg-blue-900/10 dark:border-blue-800 animate-in fade-in space-y-4">
                           <div>
                             <label className="text-sm font-medium text-foreground mb-1.5 block">
-                              Lien vers la vidÃ©o (Google Drive, YouTube, Vimeo)
+                              Lien vers la vidéo (Google Drive, YouTube, Vimeo)
                             </label>
                             <div className="flex gap-2">
                               <div className="bg-white dark:bg-background border border-border flex items-center px-3 rounded-md">
@@ -948,7 +948,7 @@ const EditProduct = () => {
                                 <p className="text-xs text-muted-foreground">Taille max: 50 MB</p>
                               </div>
                               {downloadFile && (
-                                <p className="text-sm font-medium text-foreground mt-4">ðŸ“Ž {downloadFile.name}</p>
+                                <p className="text-sm font-medium text-foreground mt-4">📌 {downloadFile.name}</p>
                               )}
                               <input
                                 id="edit-download-input"
@@ -1000,7 +1000,7 @@ const EditProduct = () => {
                           if (error) throw error;
                           if (data?.description) {
                             setDescription(data.description);
-                            toast.success("Description rÃ©Ã©crite !");
+                            toast.success("Description réécrite !");
                           }
                         } catch { toast.error("Erreur IA"); }
                         finally { setAiRewriting(false); }
@@ -1013,7 +1013,7 @@ const EditProduct = () => {
                   <RichTextEditor
                     content={description}
                     onChange={setDescription}
-                    placeholder="DÃ©crivez votre produit en dÃ©tailâ€¦"
+                    placeholder="Décrivez votre produit en détail..."
                   />
                 </div>
               )}
@@ -1067,10 +1067,10 @@ const EditProduct = () => {
                       <HelpCircle className="h-6 w-6 text-muted-foreground" />
                     </div>
                     <h2 className="text-lg font-bold text-foreground">
-                      Apportez des rÃ©ponses aux questions frÃ©quentes de vos clients
+                      Apportez des réponses aux questions fréquentes de vos clients
                     </h2>
                     <p className="text-sm text-muted-foreground mt-1 max-w-md">
-                      Les FAQ vous permettent de rÃ©pondre aux questions frÃ©quemment posÃ©s par vos clients.
+                      Les FAQ vous permettent de répondre aux questions fréquemment posées par vos clients.
                     </p>
                   </div>
 
@@ -1089,12 +1089,12 @@ const EditProduct = () => {
                                     updated[index].question = e.target.value;
                                     setFaqs(updated);
                                   }}
-                                  placeholder="Ex: Comment accÃ©der au contenu ?"
+                                  placeholder="Ex: Comment accéder au contenu ?"
                                   className="h-10"
                                 />
                               </div>
                               <div>
-                                <label className="text-xs font-medium text-muted-foreground mb-1 block">RÃ©ponse</label>
+                                <label className="text-xs font-medium text-muted-foreground mb-1 block">Réponse</label>
                                 <textarea
                                   value={faq.answer}
                                   onChange={(e) => {
@@ -1102,7 +1102,7 @@ const EditProduct = () => {
                                     updated[index].answer = e.target.value;
                                     setFaqs(updated);
                                   }}
-                                  placeholder="Votre rÃ©ponse..."
+                                  placeholder="Votre réponse..."
                                   className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm min-h-[80px] resize-y focus:outline-none focus:ring-2 focus:ring-ring"
                                 />
                               </div>
@@ -1138,7 +1138,7 @@ const EditProduct = () => {
                 <div className="space-y-8">
                   {/* AperÃ§u Google */}
                   <div>
-                    <h2 className="text-lg font-bold text-foreground mb-1">AperÃ§u</h2>
+                    <h2 className="text-lg font-bold text-foreground mb-1">Aperçu</h2>
                     <div className="rounded-xl border border-border bg-secondary/30 p-5 flex items-start gap-4">
                       <div className="h-14 w-14 rounded-lg border border-border bg-background flex items-center justify-center shrink-0">
                         <Globe className="h-6 w-6 text-muted-foreground/40" />
@@ -1161,7 +1161,7 @@ const EditProduct = () => {
                   <div>
                     <h3 className="text-base font-bold text-foreground mb-1">Titre et Meta description</h3>
                     <p className="text-sm text-muted-foreground mb-4">
-                      Le titre et la description apparaissent dans les rÃ©sultats de recherche en mettant la description qui correspond le plus Ã  votre audience.
+                      Le titre et la description apparaissent dans les résultats de recherche en mettant la description qui correspond le plus à votre audience.
                     </p>
                     <div className="space-y-4">
                       <div>
@@ -1178,7 +1178,7 @@ const EditProduct = () => {
                         <textarea
                           value={seoDescription}
                           onChange={(e) => setSeoDescription(e.target.value)}
-                          placeholder="Entre une description qui correspond Ã  votre produit et audience..."
+                          placeholder="Entre une description qui correspond à votre produit et audience..."
                           className="w-full rounded-lg border border-border bg-background px-3 py-3 text-sm min-h-[100px] resize-y focus:outline-none focus:ring-2 focus:ring-ring"
                         />
                       </div>
@@ -1189,7 +1189,7 @@ const EditProduct = () => {
                   <div>
                     <h3 className="text-base font-bold text-foreground mb-1">Miniature</h3>
                     <p className="text-sm text-muted-foreground mb-4">
-                      Donnez un apperÃ§u du contenu du lien sur lequel vos prospects s'apprÃªtent Ã  cliquer. Pour une meilleure prÃ©sentation, veuillez respecter le format d'image suivant : 1200 x 627px.
+                      Donnez un aperçu du contenu du lien sur lequel vos prospects s'apprêtent à cliquer. Pour une meilleure présentation, veuillez respecter le format d'image suivant : 1200 x 627px.
                     </p>
                     <div
                       className="rounded-xl border-2 border-dashed border-border bg-secondary/30 h-48 flex items-center justify-center cursor-pointer hover:border-primary/50 transition-colors"
@@ -1225,28 +1225,28 @@ const EditProduct = () => {
 
                   {/* Mots clÃ©s */}
                   <div>
-                    <h3 className="text-base font-bold text-foreground mb-1">Mots clÃ©s</h3>
+                    <h3 className="text-base font-bold text-foreground mb-1">Mots clés</h3>
                     <p className="text-sm text-muted-foreground mb-4">
-                      SpÃ©cifiez les informations de votre boutique telles que les titres, les descriptions et mÃ©tadonnÃ©es afin d'amÃ©liorer votre positionnement sur les moteurs de recherche.
+                      Spécifiez les informations de votre boutique telles que les titres, les descriptions and métadonnées afin d'améliorer votre positionnement sur les moteurs de recherche.
                     </p>
                     <Input
                       value={seoKeywords}
                       onChange={(e) => setSeoKeywords(e.target.value)}
-                      placeholder="Entrez des mots clÃ©s sÃ©parÃ©s par des virgules"
+                      placeholder="Entrez des mots clés séparés par des virgules"
                       className="h-11"
                     />
                   </div>
                 </div>
               )}
 
-              {/* AVANCÃ‰ */}
+              {/* AVANCÉ */}
               {activeTab === "advanced" && (
                 <div className="space-y-4">
-                  <h2 className="text-lg font-bold text-foreground">ParamÃ¨tres avancÃ©s</h2>
+                  <h2 className="text-lg font-bold text-foreground">Paramètres avancés</h2>
                   <div className="p-8 rounded-xl border-2 border-dashed border-border text-center">
                     <Settings className="h-10 w-10 text-muted-foreground/30 mx-auto mb-3" />
-                    <p className="text-sm text-muted-foreground">BientÃ´t disponible</p>
-                    <p className="text-xs text-muted-foreground mt-1">ParamÃ¨tres avancÃ©s de gestion du produit</p>
+                    <p className="text-sm text-muted-foreground">Bientôt disponible</p>
+                    <p className="text-xs text-muted-foreground mt-1">Paramètres avancés de gestion du produit</p>
                   </div>
                 </div>
               )}
@@ -1305,7 +1305,7 @@ const ToggleOption = ({
         <p className="text-sm font-medium text-foreground flex items-center gap-2">
           {title}
           {comingSoon && (
-            <span className="text-[10px] px-1.5 py-0.5 rounded bg-secondary text-muted-foreground">BientÃ´t</span>
+            <span className="text-[10px] px-1.5 py-0.5 rounded bg-secondary text-muted-foreground">Bientôt</span>
           )}
         </p>
         <p className="text-xs text-muted-foreground mt-0.5">{description}</p>

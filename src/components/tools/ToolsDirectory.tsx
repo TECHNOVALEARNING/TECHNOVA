@@ -79,9 +79,9 @@ export function ToolsDirectory() {
           if (lang === "en") {
             const translations: Record<string, string> = {
               "Intelligence Artificielle": "Artificial Intelligence",
-              "CMS & CrÃ©ation de site": "Website Builders & CMS",
+              "CMS & Création de site": "Website Builders & CMS",
               "Graphisme & Design": "Graphic Design",
-              "ProductivitÃ© & Automatisation": "Productivity & Automation",
+              "Productivité & Automatisation": "Productivity & Automation",
               "Fintech & Banques": "Fintech & Banking",
             };
             translatedLabel = translations[category.label] || category.label;
@@ -111,13 +111,13 @@ export function ToolsDirectory() {
       ) : (
         <div className="text-center py-20 bg-card rounded-xl border border-dashed border-border">
           <p className="text-muted-foreground text-lg mb-2">
-            {lang === "fr" ? "Aucun outil trouvÃ©" : "No tools found"}
+            {lang === "fr" ? "Aucun outil trouvé" : "No tools found"}
           </p>
           <button 
             onClick={() => { setSearchQuery(""); setActiveCategory("All"); }}
             className="text-primary font-medium hover:underline"
           >
-            {lang === "fr" ? "RÃ©initialiser les filtres" : "Reset filters"}
+            {lang === "fr" ? "Réinitialiser les filtres" : "Reset filters"}
           </button>
         </div>
       )}
