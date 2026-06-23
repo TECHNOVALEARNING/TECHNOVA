@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/AuthContext";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
@@ -15,6 +16,14 @@ import { Plus, Store, Archive, RotateCcw, ExternalLink, Settings, Pencil } from 
 
 const DashboardStores = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    if (user && user.email !== "ancres707@gmail.com") {
+      navigate("/dashboard");
+    }
+  }, [user, navigate]);
+
   const queryClient = useQueryClient();
   const [createOpen, setCreateOpen] = useState(false);
   const [name, setName] = useState("");

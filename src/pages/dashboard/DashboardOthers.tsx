@@ -18,7 +18,7 @@ const otherMenus = [
   { title: "Automatisations", description: "Workflows & API", icon: Zap, path: "/dashboard/automations" },
   { title: "Webhooks", description: "Écouteurs d'événements", icon: Webhook, path: "/dashboard/webhooks" },
   { title: "Messages", description: "Support client & litiges", icon: MessageCircle, path: "/dashboard/support" },
-  { title: "Paramètres", description: "Configuration boutique", icon: Settings, path: "/dashboard/settings" },
+  { title: "Paramètres", description: "Configuration profil & compte", icon: Settings, path: "/dashboard/settings" },
 ];
 
 const container = {

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
@@ -37,6 +37,24 @@ const Onboarding = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [saving, setSaving] = useState(false);
+
+  const isAdmin = user?.email === "ancres707@gmail.com";
+
+  useEffect(() => {
+    if (user && !isAdmin) {
+      const autoOnboard = async () => {
+        setSaving(true);
+        await supabase.from("profiles").update({
+          onboarding_completed: true,
+          updated_at: new Date().toISOString(),
+        } as any).eq("id", user.id);
+        setSaving(false);
+        await refreshProfile();
+        navigate("/dashboard");
+      };
+      autoOnboard();
+    }
+  }, [user, isAdmin, navigate, refreshProfile]);
 
   // Form data
   const [storeName, setStoreName] = useState("");
