@@ -134,28 +134,26 @@ export default function DashboardMenu() {
     <DashboardLayout>
       <div className="max-w-2xl mx-auto space-y-6">
         {/* Header: store info */}
-        {isAdmin && (
-          <div className="flex items-center gap-3 p-4 rounded-2xl dash-glass relative overflow-hidden transition-all duration-300">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-accent shadow-lg shadow-primary/25">
-              {activeStore?.logo_url ? (
-                <img src={activeStore.logo_url} alt="" className="h-12 w-12 rounded-xl object-cover" />
-              ) : (
-                <img src={logo} alt="TECHNOVA" className="h-6 w-6 object-contain" />
-              )}
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-base font-bold text-foreground truncate">
-                {activeStore?.name || "TECHNOVA"}
-              </p>
-              <p className="text-xs text-muted-foreground truncate">
-                {activeStores.length} {activeStores.length !== 1 ? t.activeStoresPlural : t.activeStores}
-              </p>
-            </div>
+        <div className="flex items-center gap-3 p-4 rounded-2xl dash-glass relative overflow-hidden transition-all duration-300">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-accent shadow-lg shadow-primary/25">
+            {activeStore?.logo_url ? (
+              <img src={activeStore.logo_url} alt="" className="h-12 w-12 rounded-xl object-cover" />
+            ) : (
+              <img src={logo} alt="TECHNOVA" className="h-6 w-6 object-contain" />
+            )}
           </div>
-        )}
+          <div className="flex-1 min-w-0">
+            <p className="text-base font-bold text-foreground truncate">
+              {activeStore?.name || "TECHNOVA"}
+            </p>
+            <p className="text-xs text-muted-foreground truncate">
+              {activeStores.length} {activeStores.length !== 1 ? t.activeStoresPlural : t.activeStores}
+            </p>
+          </div>
+        </div>
 
         {/* Switch store */}
-        {isAdmin && activeStores.length > 1 && (
+        {activeStores.length > 1 && (
           <div className="flex gap-2 overflow-x-auto pb-1 [&::-webkit-scrollbar]:hidden">
             {activeStores.map((s) => {
               const sel = s.id === activeStore?.id;

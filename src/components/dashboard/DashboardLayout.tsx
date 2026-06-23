@@ -45,7 +45,6 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
   const { user, profile, signOut } = useAuth();
   const { activeStore, activeStores, setActiveStoreId } = useActiveStore();
-  const isAdmin = user?.email === "ancres707@gmail.com";
 
   const [theme, setTheme] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_theme") || "light") : "light");
   const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
@@ -98,71 +97,67 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                   </span>
                 </div>
                 
-                {isAdmin && (
-                  <button 
-                    onClick={() => navigate('/dashboard/stores')}
-                    className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-md border border-primary/20 text-primary bg-primary/5 hover:bg-primary/10 transition-colors"
-                  >
-                    <StoreIcon className="h-4 w-4" />
-                    <span className="text-sm font-medium">{t.marketplaces}</span>
-                    <ChevronDown className="h-3 w-3 opacity-50" />
-                  </button>
-                )}
+                <button 
+                  onClick={() => navigate('/dashboard/stores')}
+                  className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-md border border-primary/20 text-primary bg-primary/5 hover:bg-primary/10 transition-colors"
+                >
+                  <StoreIcon className="h-4 w-4" />
+                  <span className="text-sm font-medium">{t.marketplaces}</span>
+                  <ChevronDown className="h-3 w-3 opacity-50" />
+                </button>
               </div>
 
               <div className="flex items-center gap-2 sm:gap-4">
                 
                 {/* Store Switcher */}
-                {isAdmin && (
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <button className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-md border border-border hover:bg-muted/50 dark:hover:bg-muted/30 transition-colors bg-background/50">
-                        <StoreIcon className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-sm font-medium text-foreground max-w-[120px] truncate">
-                          {activeStore?.name || t.store}
-                        </span>
-                        <ChevronDown className="h-3 w-3 text-muted-foreground" />
-                      </button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-[220px]">
-                      <DropdownMenuLabel className="text-[10px] uppercase tracking-wider text-muted-foreground">{t.yourStores}</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      {activeStores.map((store) => (
-                        <DropdownMenuItem
-                          key={store.id}
-                          onClick={() => setActiveStoreId(store.id)}
-                          className="flex items-center gap-2.5 cursor-pointer"
-                        >
-                          <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-primary/10 overflow-hidden">
-                            {store.logo_url ? (
-                              <img src={store.logo_url} alt="" className="h-6 w-6 object-cover" />
-                            ) : (
-                              <Store className="h-3.5 w-3.5 text-primary" />
-                            )}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-md border border-border hover:bg-muted/50 dark:hover:bg-muted/30 transition-colors bg-background/50">
+                      <StoreIcon className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-sm font-medium text-foreground max-w-[120px] truncate">
+                        {activeStore?.name || t.store}
+                      </span>
+                      <ChevronDown className="h-3 w-3 text-muted-foreground" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-[220px]">
+                    <DropdownMenuLabel className="text-[10px] uppercase tracking-wider text-muted-foreground">{t.yourStores}</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    {activeStores.map((store) => (
+                      <DropdownMenuItem
+                        key={store.id}
+                        onClick={() => setActiveStoreId(store.id)}
+                        className="flex items-center gap-2.5 cursor-pointer"
+                      >
+                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-primary/10 overflow-hidden">
+                          {store.logo_url ? (
+                            <img src={store.logo_url} alt="" className="h-6 w-6 object-cover" />
+                          ) : (
+                            <Store className="h-3.5 w-3.5 text-primary" />
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium truncate">{store.name}</p>
+                        </div>
+                        {store.id === activeStore?.id && <Check className="h-4 w-4 text-primary shrink-0" />}
+                      </DropdownMenuItem>
+                    ))}
+                    {activeStores.length < 3 && (
+                      <>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={() => navigate("/dashboard/stores")} className="flex items-center gap-2.5 cursor-pointer text-primary">
+                          <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-dashed border-primary/40">
+                            <Plus className="h-3.5 w-3.5" />
                           </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium truncate">{store.name}</p>
-                          </div>
-                          {store.id === activeStore?.id && <Check className="h-4 w-4 text-primary shrink-0" />}
+                          <span className="text-sm font-medium">{t.createStore}</span>
                         </DropdownMenuItem>
-                      ))}
-                      {activeStores.length < 3 && (
-                        <>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem onClick={() => navigate("/dashboard/stores")} className="flex items-center gap-2.5 cursor-pointer text-primary">
-                            <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-dashed border-primary/40">
-                              <Plus className="h-3.5 w-3.5" />
-                            </div>
-                            <span className="text-sm font-medium">{t.createStore}</span>
-                          </DropdownMenuItem>
-                        </>
-                      )}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                )}
+                      </>
+                    )}
+                  </DropdownMenuContent>
+                </DropdownMenu>
 
                 {/* Visiter la boutique button */}
-                {isAdmin && activeStore && (
+                {activeStore && (
                   <a 
                     href={`https://${activeStore.slug}.technova.app`} 
                     target="_blank" 

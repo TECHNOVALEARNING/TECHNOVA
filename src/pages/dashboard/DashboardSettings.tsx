@@ -9,7 +9,6 @@ import DashboardTelegramTab from "@/components/dashboard/DashboardTelegramTab";
 import DashboardLegalTab from "@/components/dashboard/DashboardLegalTab";
 import DashboardOrderLookupTab from "@/components/dashboard/DashboardOrderLookupTab";
 import { useActiveStore } from "@/hooks/useActiveStore";
-import { useAuth } from "@/contexts/AuthContext";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
@@ -42,22 +41,12 @@ const SETTINGS_CATEGORIES = [
 const VALID_TABS = ["profile", "appearance", "pixels", "account", "domain", "telegram", "legal", "orders"];
 
 const DashboardSettings = () => {
-  const { user } = useAuth();
-  const isAdmin = user?.email === "ancres707@gmail.com";
   const { activeStore } = useActiveStore();
   const [searchParams, setSearchParams] = useSearchParams();
   const tabParam = searchParams.get("tab");
   const navigate = useNavigate();
   
-  const allowedTabs = isAdmin ? VALID_TABS : ["account"];
-  const activeTab = tabParam && allowedTabs.includes(tabParam) ? tabParam : null;
-
-  const categories = SETTINGS_CATEGORIES.filter((cat) => {
-    if (!isAdmin) {
-      return cat.title === "Compte & Sécurité";
-    }
-    return true;
-  });
+  const activeTab = tabParam && VALID_TABS.includes(tabParam) ? tabParam : null;
 
   const renderContent = () => {
     switch (activeTab) {
@@ -114,7 +103,7 @@ const DashboardSettings = () => {
         {/* Dynamic Content */}
         {!activeTab ? (
           <div className="space-y-10 animate-in fade-in slide-in-from-bottom-2 duration-500">
-            {categories.map((category) => (
+            {SETTINGS_CATEGORIES.map((category) => (
               <div key={category.title}>
                 <h2 className="text-lg font-serif font-semibold text-foreground mb-4 pl-1">{category.title}</h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
