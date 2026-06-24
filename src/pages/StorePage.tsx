@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Search, Package, ShoppingBag, ThumbsUp } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -76,6 +76,7 @@ const StorePage = ({ customSlug }: { customSlug?: string }) => {
   const { slug: urlSlug } = useParams();
   const slug = customSlug || urlSlug;
   const { formatPrice, currency } = useGeoPricing();
+  const navigate = useNavigate();
   const [store, setStore] = useState<StoreInfo | null>(null);
   const [ownerProfile, setOwnerProfile] = useState<OwnerProfile | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
@@ -434,9 +435,6 @@ const StorePage = ({ customSlug }: { customSlug?: string }) => {
                     const lb = LABEL_MAP[label] || {};
 
                     const priceMain = formatPrice(product.price);
-                    const priceSecondary = currency.code === "XOF"
-                      ? (product.price / 600).toFixed(2) + " $"
-                      : product.price.toLocaleString("fr-FR") + " FCFA";
                     const originalPriceFormatted = product.original_price
                       ? formatPrice(product.original_price)
                       : null;
@@ -447,7 +445,12 @@ const StorePage = ({ customSlug }: { customSlug?: string }) => {
                         initial={{ opacity: 0, y: 12 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: i * 0.04 }}
-                        className="course-card"
+                        className="course-card cursor-pointer"
+                        onClick={(e) => {
+                          const target = e.target as HTMLElement;
+                          if (target.closest("button") || target.closest("a")) return;
+                          navigate(customSlug ? `/${product.id}` : `/store/${slug}/${product.id}`);
+                        }}
                       >
                         <Link to={customSlug ? `/${product.id}` : `/store/${slug}/${product.id}`}>
                           <div className="course-img-wrap">
@@ -495,7 +498,6 @@ const StorePage = ({ customSlug }: { customSlug?: string }) => {
                             <div className="price-row">
                               <div>
                                 <div className="price-main">{priceMain}</div>
-                                <div className="price-usd">{priceSecondary}</div>
                               </div>
                               {product.original_price && product.original_price > product.price && (
                                 <span className="text-[11px] text-muted-foreground line-through">

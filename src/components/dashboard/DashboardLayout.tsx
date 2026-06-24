@@ -159,7 +159,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                 {/* Visiter la boutique button */}
                 {activeStore && (
                   <a 
-                    href={`https://${activeStore.slug}.technova.app`} 
+                    href={`/store/${activeStore.slug}`} 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="hidden lg:flex items-center justify-center px-4 py-1.5 bg-primary text-white text-sm font-medium rounded-md hover:bg-primary/90 transition-colors shadow-sm"

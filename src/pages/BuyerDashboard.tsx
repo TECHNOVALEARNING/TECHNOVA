@@ -53,11 +53,13 @@ const BuyerDashboard = () => {
   const [customerId, setCustomerId] = useState("");
   const [selectedProduct, setSelectedProduct] = useState<OrderWithProduct["product"] | null>(null);
   const navigate = useNavigate();
+  const isPortal = window.location.hostname.startsWith("portal.") || window.location.hostname.startsWith("client.");
+  const loginPath = isPortal ? "/" : "/buyer-login";
 
   useEffect(() => {
     const raw = sessionStorage.getItem("buyer_session");
     if (!raw) {
-      navigate("/buyer-login");
+      navigate(loginPath);
       return;
     }
     try {
@@ -65,7 +67,7 @@ const BuyerDashboard = () => {
       // Check session expiry (30 min)
       if (Date.now() - session.authenticatedAt > SESSION_DURATION) {
         sessionStorage.removeItem("buyer_session");
-        navigate("/buyer-login");
+        navigate(loginPath);
         return;
       }
       setCustomerName(session.customerName);
@@ -94,14 +96,14 @@ const BuyerDashboard = () => {
 
     } catch {
       sessionStorage.removeItem("buyer_session");
-      navigate("/buyer-login");
+      navigate(loginPath);
     }
   }, [navigate]);
 
   const handleLogout = async () => {
     sessionStorage.removeItem("buyer_session");
     await supabase.auth.signOut();
-    navigate("/buyer-login");
+    navigate(loginPath);
   };
 
   const filtered = orders.filter((o) => {

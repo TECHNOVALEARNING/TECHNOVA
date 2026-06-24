@@ -1,10 +1,11 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Star, Package, Heart } from "lucide-react";
 import { getCategoryByKey } from "@/data/marketplaceCategories";
 import { useState } from "react";
 import { useUserBadge } from "@/hooks/useUserBadge";
 import { VerifiedBadge, type BadgeGrade } from "@/components/VerifiedBadge";
+import { useGeoPricing } from "@/contexts/GeoPricingContext";
 
 export interface MarketplaceProduct {
   id: string;
@@ -35,6 +36,8 @@ interface Props {
 }
 
 export const MarketplaceProductCard = ({ product, index = 0, fixedWidth, sellerBadge }: Props) => {
+  const { formatPrice } = useGeoPricing();
+  const navigate = useNavigate();
   const { grade: fetchedGrade } = useUserBadge(sellerBadge === undefined ? product.creator_id : null);
   const grade = sellerBadge !== undefined ? sellerBadge : fetchedGrade;
   const cat = getCategoryByKey(product.category);
@@ -83,15 +86,22 @@ export const MarketplaceProductCard = ({ product, index = 0, fixedWidth, sellerB
     return <span className="stars-sm">{s}</span>;
   };
 
-  const priceFcfa = Number(product.price).toLocaleString() + " FCFA";
-  const priceUsd = (Number(product.price) / 563).toFixed(2) + " $";
+  const priceMain = formatPrice(Number(product.price));
+  const originalPriceFormatted = product.original_price
+    ? formatPrice(Number(product.original_price))
+    : null;
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: Math.min(index * 0.03, 0.3) }}
-      className={`course-card ${fixedWidth ? "w-[160px] shrink-0 sm:w-[220px]" : ""}`}
+      className={`course-card cursor-pointer ${fixedWidth ? "w-[160px] shrink-0 sm:w-[220px]" : ""}`}
+      onClick={(e) => {
+        const target = e.target as HTMLElement;
+        if (target.closest("button") || target.closest("a")) return;
+        navigate(href);
+      }}
     >
       <div className="course-img-wrap relative">
         {product.thumbnail_url ? (
@@ -164,12 +174,11 @@ export const MarketplaceProductCard = ({ product, index = 0, fixedWidth, sellerB
         <div>
           <div className="price-row">
             <div>
-              <div className="price-main">{priceFcfa}</div>
-              <div className="price-usd">{priceUsd}</div>
+              <div className="price-main">{priceMain}</div>
             </div>
-            {hasDiscount && (
+            {hasDiscount && originalPriceFormatted && (
               <span className="text-[11px] text-muted-foreground line-through">
-                {Number(product.original_price).toLocaleString()}
+                {originalPriceFormatted}
               </span>
             )}
           </div>

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Product, useCart } from "@/contexts/CartContext";
 import { useGeoPricing } from "@/contexts/GeoPricingContext";
@@ -29,14 +29,12 @@ const getBadgeClass = (b: string) => {
 };
 
 const ProductCard = ({ product, index = 0 }: { product: Product; index?: number }) => {
+  const navigate = useNavigate();
   const { addToCart, items } = useCart();
   const { formatPrice, currency } = useGeoPricing();
   const inCart = items.some((i) => i.product.id === product.id);
 
   const priceMain = formatPrice(product.price);
-  const priceSecondary = currency.code === "XOF"
-    ? (product.price / 600).toFixed(2) + " $"
-    : product.price.toLocaleString("fr-FR") + " FCFA";
 
   const renderStars = (r: number) => {
     const full = Math.floor(r);
@@ -52,7 +50,12 @@ const ProductCard = ({ product, index = 0 }: { product: Product; index?: number 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: index * 0.1 }}
-      className="course-card"
+      className="course-card cursor-pointer"
+      onClick={(e) => {
+        const target = e.target as HTMLElement;
+        if (target.closest("button") || target.closest("a")) return;
+        navigate(`/product/${product.id}`);
+      }}
     >
       <div className="course-img-wrap">
         {product.image ? (
@@ -103,7 +106,6 @@ const ProductCard = ({ product, index = 0 }: { product: Product; index?: number 
         <div className="price-row">
           <div>
             <div className="price-main">{priceMain}</div>
-            <div className="price-usd">{priceSecondary}</div>
           </div>
         </div>
 

@@ -15,6 +15,8 @@ const BuyerLogin = () => {
   const [loading, setLoading] = useState(false);
   const [customerName, setCustomerName] = useState("");
   const navigate = useNavigate();
+  const isPortal = window.location.hostname.startsWith("portal.") || window.location.hostname.startsWith("client.");
+  const dashboardPath = isPortal ? "/dashboard" : "/mes-achats";
 
   useEffect(() => {
     // Check if user is already logged in or if Supabase just parsed a token
@@ -43,7 +45,7 @@ const BuyerLogin = () => {
           authenticatedAt: Date.now(),
         }));
         
-        navigate("/mes-achats", { replace: true });
+        navigate(dashboardPath, { replace: true });
       } catch (err) {
         console.error(err);
       } finally {
@@ -55,7 +57,7 @@ const BuyerLogin = () => {
       if (session && !sessionStorage.getItem("buyer_session")) {
         checkSession(session);
       } else if (session && sessionStorage.getItem("buyer_session")) {
-        navigate("/mes-achats", { replace: true });
+        navigate(dashboardPath, { replace: true });
       }
     });
 
@@ -125,7 +127,7 @@ const BuyerLogin = () => {
         authenticatedAt: Date.now(),
       }));
       toast.success("Connexion réussie !");
-      navigate("/mes-achats", { replace: true });
+      navigate(dashboardPath, { replace: true });
     } catch (err: any) {
       toast.error(err.message || "Code invalide");
     } finally {

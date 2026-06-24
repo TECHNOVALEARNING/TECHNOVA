@@ -107,105 +107,194 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
   const { grade: ownerBadge, expiresAt: ownerBadgeExpires } = useUserBadge(profile?.id);
+  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+
+  useEffect(() => {
+    const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
+    window.addEventListener("technova_lang_changed", handleLangChange);
+    return () => window.removeEventListener("technova_lang_changed", handleLangChange);
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data: storeData } = await supabase
-        .from("stores")
-        .select(`
-          owner_id, brand_color, logo_url, name, footer_disclaimer,
-          custom_domains ( domain )
-        `)
-        .eq("slug", slug)
-        .eq("is_archived", false)
-        .maybeSingle();
+      try {
+        let ownerId: string | null = null;
+        let prod: any = null;
+        let storeData: any = null;
+        let prof: any = null;
 
-      let ownerId: string | null = null;
+        if (!slug) {
+          // Accessed directly via /product/:productId, so fetch product first to resolve creator and store slug
+          const { data: prodData } = await supabase
+            .from("products")
+            .select("*")
+            .eq("id", productId)
+            .eq("is_published", true)
+            .maybeSingle();
 
-      if (storeData) {
-        // Redirect if accessed via default technova URL but has a custom domain
-        if (!customSlug && storeData.custom_domains && Array.isArray(storeData.custom_domains) && storeData.custom_domains.length > 0) {
-          const domain = storeData.custom_domains[0].domain;
-          if (domain) {
-            window.location.replace(`https://${domain}/${productId}`);
+          if (!prodData) {
+            setNotFound(true);
+            setLoading(false);
             return;
           }
+          prod = prodData;
+          ownerId = prodData.creator_id;
+
+          const { data: sData } = await supabase
+            .from("stores")
+            .select(`
+              owner_id, brand_color, logo_url, name, footer_disclaimer,
+              custom_domains ( domain )
+            `)
+            .eq("owner_id", ownerId)
+            .eq("is_archived", false)
+            .maybeSingle();
+
+          storeData = sData;
+
+          const { data: pData } = await supabase
+            .from("profiles")
+            .select("id, display_name, avatar_url, store_slug, store_description, store_logo_url, contact")
+            .eq("id", ownerId)
+            .maybeSingle();
+
+          prof = pData;
+        } else {
+          // Standard /store/:slug/:productId path
+          const { data: sData } = await supabase
+            .from("stores")
+            .select(`
+              owner_id, brand_color, logo_url, name, footer_disclaimer,
+              custom_domains ( domain )
+            `)
+            .eq("slug", slug)
+            .eq("is_archived", false)
+            .maybeSingle();
+
+          storeData = sData;
+
+          if (storeData) {
+            // Redirect if accessed via default technova URL but has a custom domain
+            if (!customSlug && storeData.custom_domains && Array.isArray(storeData.custom_domains) && storeData.custom_domains.length > 0) {
+              const domain = storeData.custom_domains[0].domain;
+              if (domain) {
+                window.location.replace(`https://${domain}/${productId}`);
+                return;
+              }
+            }
+            ownerId = storeData.owner_id;
+          }
+
+          const { data: pData } = await supabase
+            .from("profiles")
+            .select("id, display_name, avatar_url, store_slug, store_description, store_logo_url, contact")
+            .eq(storeData ? "id" : "store_slug", storeData ? storeData.owner_id : slug)
+            .maybeSingle();
+
+          prof = pData;
+          if (!prof) {
+            setNotFound(true);
+            setLoading(false);
+            return;
+          }
+          ownerId = prof.id;
+
+          // Redirect if accessed via default technova URL but has a custom domain
+          if (!customSlug) {
+            const { data: cDomain } = await supabase
+              .from("custom_domains")
+              .select("domain")
+              .eq("store_id", prof.id)
+              .maybeSingle();
+
+            if (cDomain?.domain) {
+              window.location.replace(`https://${cDomain.domain}/${productId}`);
+              return;
+            }
+          }
+
+          const { data: prodData } = await supabase
+            .from("products")
+            .select("*")
+            .eq("id", productId)
+            .eq("creator_id", ownerId)
+            .eq("is_published", true)
+            .maybeSingle();
+
+          prod = prodData;
         }
-        ownerId = storeData.owner_id;
-        setStoreInfo(storeData as StoreInfo);
-      }
 
-      const { data: prof } = await supabase
-        .from("profiles")
-        .select("id, display_name, avatar_url, store_slug, store_description, store_logo_url, contact")
-        .eq(storeData ? "id" : "store_slug", storeData ? storeData.owner_id : slug)
-        .single();
-
-      if (!prof) { setNotFound(true); setLoading(false); return; }
-      
-      // Redirect if accessed via default technova URL but has a custom domain
-      if (!customSlug) {
-        const { data: cDomain } = await supabase
-          .from("custom_domains")
-          .select("domain")
-          .eq("store_id", prof.id)
-          .maybeSingle();
-        if (cDomain?.domain) {
-          window.location.replace(`https://${cDomain.domain}/${productId}`);
+        if (!prod || !prof) {
+          setNotFound(true);
+          setLoading(false);
           return;
         }
-      }
-      setProfile(prof as Profile);
-      ownerId = prof.id;
 
-      const { data: prod } = await supabase
-        .from("products")
-        .select("*")
-        .eq("id", productId)
-        .eq("creator_id", ownerId)
-        .eq("is_published", true)
-        .single();
+        setProduct(prod as Product);
+        if (storeData) setStoreInfo(storeData as StoreInfo);
+        setProfile(prof as Profile);
 
-      if (!prod) { setNotFound(true); setLoading(false); return; }
-      setProduct(prod as Product);
+        trackEvent("ViewContent", {
+          content_name: prod.title,
+          content_ids: [productId],
+          content_type: "product",
+          value: prod.price,
+          currency: "XOF",
+        });
 
-      trackEvent("ViewContent", {
-        content_name: (prod as Product).title,
-        content_ids: [productId],
-        content_type: "product",
-        value: (prod as Product).price,
-        currency: "XOF",
-      });
-
-      const { data: faqData } = await supabase
-        .from("product_faqs")
-        .select("question, answer")
-        .eq("product_id", productId)
-        .order("position");
-      if (faqData) setFaqs(faqData as any);
-
-      if ((prod as Product).type === "course") {
-        const { data: lessonsData } = await supabase
-          .from("course_lessons")
-          .select("title, description, duration_minutes, position")
+        const { data: faqData } = await supabase
+          .from("product_faqs")
+          .select("question, answer")
           .eq("product_id", productId)
           .order("position");
-        if (lessonsData) setLessons(lessonsData as any);
+        if (faqData) setFaqs(faqData as any);
+
+        if (prod.type === "course") {
+          const { data: lessonsData } = await supabase
+            .from("course_lessons")
+            .select("title, description, duration_minutes, position")
+            .eq("product_id", productId)
+            .order("position");
+          if (lessonsData) setLessons(lessonsData as any);
+        }
+
+        const { data: related } = await supabase
+          .from("products")
+          .select("*")
+          .eq("creator_id", ownerId)
+          .eq("is_published", true)
+          .neq("id", productId)
+          .limit(4);
+        if (related) setRelatedProducts(related as Product[]);
+
+        setLoading(false);
+      } catch (err) {
+        console.error("Error loading product detail", err);
+        setNotFound(true);
+        setLoading(false);
       }
-
-      const { data: related } = await supabase
-        .from("products")
-        .select("*")
-        .eq("creator_id", ownerId)
-        .eq("is_published", true)
-        .neq("id", productId)
-        .limit(4);
-      if (related) setRelatedProducts(related as Product[]);
-
-      setLoading(false);
     };
     fetchData();
   }, [slug, productId]);
+
+  const hasFiles = product && (
+    product.type === "file" ||
+    product.type === "bundle" ||
+    product.category === "template" ||
+    product.category?.startsWith("template:") ||
+    !!product.download_url
+  );
+
+  const getFileName = (url: string | null) => {
+    if (!url) return "templates_et_produits.zip";
+    try {
+      const parts = url.split("/");
+      const lastPart = parts[parts.length - 1].split("?")[0];
+      return decodeURIComponent(lastPart) || "templates_et_produits.zip";
+    } catch {
+      return "templates_et_produits.zip";
+    }
+  };
 
   if (loading) {
     return (
@@ -221,7 +310,7 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
         <Package className="h-16 w-16 text-gray-200 mb-4" />
         <h1 className="text-2xl font-bold text-gray-900 mb-2">Produit introuvable</h1>
         <p className="text-gray-500 mb-6">Ce produit n'existe pas ou n'est plus disponible.</p>
-        <Link to={customSlug ? `/` : `/store/${slug}`}><Button>Retour à la boutique</Button></Link>
+        <Link to={customSlug ? `/` : `/store/${profile?.store_slug || slug || ""}`}><Button>Retour à la boutique</Button></Link>
       </div>
     );
   }
@@ -266,7 +355,7 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
       {/* ─── HEADER ─── */}
       <header className="sticky top-0 z-40 border-b border-gray-100 bg-white/90 backdrop-blur-md">
         <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 h-14">
-          <Link to={customSlug ? `/` : `/store/${slug}`} className="flex items-center gap-3 min-w-0">
+          <Link to={customSlug ? `/` : `/store/${profile?.store_slug || slug || ""}`} className="flex items-center gap-3 min-w-0">
             {logoUrl ? (
               <img src={logoUrl} alt={storeName} className="h-8 w-8 rounded-lg object-cover" />
             ) : (
@@ -278,7 +367,7 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
             {ownerBadge && <VerifiedBadge grade={ownerBadge} size="sm" expiresAt={ownerBadgeExpires} />}
           </Link>
           <div className="flex items-center gap-2">
-            <Link to={customSlug ? `/` : `/store/${slug}`} className="hidden sm:block">
+            <Link to={customSlug ? `/` : `/store/${profile?.store_slug || slug || ""}`} className="hidden sm:block">
               <Button variant="ghost" size="sm" className="text-xs text-gray-600">Boutique</Button>
             </Link>
             <a href="https://technovalearning.com/buyer-login">
@@ -295,7 +384,7 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
           {/* Breadcrumb */}
           <Link
-            to={customSlug ? `/` : `/store/${slug}`}
+            to={customSlug ? `/` : `/store/${profile?.store_slug || slug || ""}`}
             className="mb-4 sm:mb-6 inline-flex items-center gap-2 text-xs sm:text-sm text-gray-500 hover:text-gray-900 transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -384,6 +473,51 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                   </div>
                 ))}
               </div>
+
+              {/* Files block */}
+              {hasFiles && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.08 }}
+                  className="rounded-2xl border border-gray-100 bg-white p-5 sm:p-7 space-y-4 shadow-sm"
+                >
+                  <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                    {lang === "fr" ? "Fichiers (1)" : "Files (1)"}
+                  </h2>
+
+                  {/* Warning/Alert box */}
+                  <div className="flex items-start gap-3 rounded-xl bg-amber-50/60 border border-amber-100/80 p-4 text-amber-800">
+                    <Lock className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" style={{ color: brandColor }} />
+                    <div className="text-sm font-medium leading-relaxed">
+                      {lang === "fr" 
+                        ? "Acheter le produit pour l'accès aux fichiers" 
+                        : "Buy the product to access files"}
+                    </div>
+                  </div>
+
+                  {/* File row */}
+                  <div className="flex items-center justify-between p-3.5 rounded-xl border border-gray-100 bg-gray-50/50 hover:bg-gray-50 transition-all">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="h-10 w-10 rounded-lg bg-gray-100 flex items-center justify-center shrink-0">
+                        <Download className="h-5 w-5 text-gray-400" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-semibold text-gray-800 truncate">
+                          {getFileName(product.download_url)}
+                        </div>
+                        <div className="text-[11px] text-gray-400 mt-0.5 uppercase tracking-wider font-semibold">
+                          Zip • Archive
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-100 text-gray-500 text-xs font-bold shrink-0">
+                      <Lock className="h-3.5 w-3.5 animate-pulse" />
+                      {lang === "fr" ? "Verrouillé" : "Locked"}
+                    </div>
+                  </div>
+                </motion.div>
+              )}
 
               {/* Description */}
               {product.description && (
@@ -532,7 +666,7 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                       </p>
                     )}
                   </div>
-                  <Link to={customSlug ? `/` : `/store/${slug}`}>
+                  <Link to={customSlug ? `/` : `/store/${profile?.store_slug || slug || ""}`}>
                     <Button variant="outline" size="sm" className="text-xs">Voir</Button>
                   </Link>
                 </div>
@@ -624,10 +758,10 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                     <div className="h-7 w-10 rounded-md bg-[#EB001B] flex items-center justify-center">
                       <span className="text-[8px] font-bold text-white">MC</span>
                     </div>
-                    <img src="/images/mtn-momo.webp" alt="MTN" className="h-7 w-7 rounded-full object-cover" />
-                    <img src="/images/orange-money.png" alt="Orange" className="h-7 w-7 rounded-full object-cover" />
-                    <img src="/images/moov-money.png" alt="Moov" className="h-7 w-7 rounded-full object-cover" />
-                    <img src="/images/wave.png" alt="Wave" className="h-7 w-7 rounded-full object-cover" />
+                    <img src="/providers/mtn.svg" alt="MTN" className="h-7 w-7 rounded-full object-contain" />
+                    <img src="/providers/orange.svg" alt="Orange" className="h-7 w-7 rounded-full object-contain" />
+                    <img src="/providers/moov.svg" alt="Moov" className="h-7 w-7 rounded-full object-contain" />
+                    <img src="/providers/wave.svg" alt="Wave" className="h-7 w-7 rounded-full object-contain" />
                   </div>
                 </div>
 
@@ -669,7 +803,7 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                   const rDisc = rp.original_price && rp.original_price > rp.price
                     ? Math.round(((rp.original_price - rp.price) / rp.original_price) * 100) : null;
                   return (
-                    <Link key={rp.id} to={customSlug ? `/${rp.id}` : `/store/${slug}/${rp.id}`}
+                    <Link key={rp.id} to={customSlug ? `/${rp.id}` : `/store/${profile?.store_slug || slug || ""}/${rp.id}`}
                       className="group border border-gray-100 rounded-2xl overflow-hidden bg-white hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
                       <div className="relative aspect-square overflow-hidden bg-gray-50">
                         {rp.thumbnail_url ? (
@@ -752,7 +886,7 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                   </a>
                 </li>
                 <li>
-                  <Link to={customSlug ? `/` : `/store/${slug}`} className="text-sm text-gray-600 hover:text-gray-900">
+                  <Link to={customSlug ? `/` : `/store/${profile?.store_slug || slug || ""}`} className="text-sm text-gray-600 hover:text-gray-900">
                     Boutique
                   </Link>
                 </li>
@@ -762,9 +896,9 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
             <div className="space-y-3">
               <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-400">Légal</h3>
               <ul className="space-y-2.5">
-                <li><Link to={customSlug ? `/legal` : `/store/${slug}/legal`} className="text-sm text-gray-600 hover:text-gray-900">Mentions légales</Link></li>
-                <li><Link to={customSlug ? `/terms` : `/store/${slug}/terms`} className="text-sm text-gray-600 hover:text-gray-900">Conditions générales</Link></li>
-                <li><Link to={customSlug ? `/privacy` : `/store/${slug}/privacy`} className="text-sm text-gray-600 hover:text-gray-900">Politique de confidentialité</Link></li>
+                <li><Link to={customSlug ? `/legal` : `/store/${profile?.store_slug || slug || ""}/legal`} className="text-sm text-gray-600 hover:text-gray-900">Mentions légales</Link></li>
+                <li><Link to={customSlug ? `/terms` : `/store/${profile?.store_slug || slug || ""}/terms`} className="text-sm text-gray-600 hover:text-gray-900">Conditions générales</Link></li>
+                <li><Link to={customSlug ? `/privacy` : `/store/${profile?.store_slug || slug || ""}/privacy`} className="text-sm text-gray-600 hover:text-gray-900">Politique de confidentialité</Link></li>
               </ul>
             </div>
           </div>

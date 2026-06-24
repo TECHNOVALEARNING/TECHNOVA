@@ -114,6 +114,7 @@ const AppContent = () => {
         <Routes>
           <Route path="/" element={<BuyerLogin />} />
           <Route path="/auth/callback" element={<BuyerOAuthCallback />} />
+          <Route path="/buyer-auth/callback" element={<BuyerOAuthCallback />} />
           <Route path="/dashboard" element={<BuyerDashboard />} />
           <Route path="/orders/:orderId" element={<BuyerOrderDetail />} />
           <Route path="*" element={<Navigate to="/" replace />} />
@@ -172,6 +173,7 @@ const AppContent = () => {
               <Route path="/store/:slug/:productId" element={<StoreProductDetail />} />
               <Route path="/payment-callback" element={<PaymentCallback />} />
               <Route path="/checkout/:productId" element={<CheckoutPage />} />
+              <Route path="/product/:productId" element={<StoreProductDetail />} />
               <Route path="/buyer-login" element={<BuyerLogin />} />
               <Route path="/buyer-auth/callback" element={<BuyerOAuthCallback />} />
               <Route path="/mes-achats" element={<BuyerDashboard />} />

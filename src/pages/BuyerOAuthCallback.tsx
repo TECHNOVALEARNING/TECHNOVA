@@ -8,6 +8,9 @@ import { toast } from "sonner";
 const BuyerOAuthCallback = () => {
   const navigate = useNavigate();
   const ranRef = useRef(false);
+  const isPortal = window.location.hostname.startsWith("portal.") || window.location.hostname.startsWith("client.");
+  const dashboardPath = isPortal ? "/dashboard" : "/mes-achats";
+  const loginPath = isPortal ? "/" : "/buyer-login";
 
   useEffect(() => {
     if (ranRef.current) return;
@@ -49,7 +52,7 @@ const BuyerOAuthCallback = () => {
             }));
 
             toast.success("Connexion réussie");
-            navigate("/mes-achats", { replace: true });
+            navigate(dashboardPath, { replace: true });
           }
         });
 
@@ -59,14 +62,14 @@ const BuyerOAuthCallback = () => {
           if (!currentSession && !window.location.hash.includes("access_token=") && !window.location.search.includes("code=")) {
             subscription.unsubscribe();
             toast.error("Session non établie. Réessayez.");
-            navigate("/", { replace: true });
+            navigate(loginPath, { replace: true });
           }
         }, 3000);
 
       } catch (e: any) {
         console.error(e);
         toast.error("Erreur de connexion");
-        navigate("/", { replace: true });
+        navigate(loginPath, { replace: true });
       }
     })();
   }, [navigate]);

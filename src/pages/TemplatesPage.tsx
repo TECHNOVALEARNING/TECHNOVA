@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import { Header, Footer } from "@/components/site/shared";
 import { supabase } from "@/integrations/supabase/client";
 import { Search, Sparkles, SlidersHorizontal, PackageOpen, LayoutGrid } from "lucide-react";
 import SEOHead from "@/components/SEOHead";
+import { useGeoPricing } from "@/contexts/GeoPricingContext";
 
 interface TemplateProduct {
   id: string;
@@ -76,6 +77,8 @@ const TemplatesPage = () => {
   const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedSubcat, setSelectedSubcat] = useState("all");
+  const { formatPrice } = useGeoPricing();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -223,8 +226,7 @@ const TemplatesPage = () => {
             >
               <AnimatePresence mode="popLayout">
                 {filteredTemplates.map((t, idx) => {
-                  const formattedPrice = new Intl.NumberFormat("fr-FR").format(t.price) + " F";
-                  const priceUsd = (t.price / 563).toFixed(2) + " $";
+                  const formattedPrice = formatPrice(t.price);
                   
                   return (
                     <motion.div
@@ -233,7 +235,12 @@ const TemplatesPage = () => {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -20 }}
                       transition={{ duration: 0.4, delay: idx * 0.05 }}
-                      className="course-card"
+                      className="course-card cursor-pointer"
+                      onClick={(e) => {
+                        const target = e.target as HTMLElement;
+                        if (target.closest("button") || target.closest("a")) return;
+                        navigate(`/product/${t.id}`);
+                      }}
                     >
                       <div className="course-img-wrap">
                         <img src={t.thumbnail_url || ""} alt={t.title} loading="lazy" />
@@ -257,7 +264,6 @@ const TemplatesPage = () => {
                         <div className="price-row">
                           <div>
                             <div className="price-main">{formattedPrice}</div>
-                            <div className="price-usd">{priceUsd}</div>
                           </div>
                         </div>
                         <Link className="btn-buy" to={`/checkout/${t.id}`}>

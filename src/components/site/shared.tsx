@@ -583,6 +583,7 @@ const LABEL_MAP: Record<string, { cls: string; fr: string; en: string }> = {
 };
 
 export const CourseCard = ({ c, i = 0 }: { c: Course; i?: number }) => {
+  const navigate = useNavigate();
   const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
   const { formatPrice, currency } = useGeoPricing();
 
@@ -597,11 +598,6 @@ export const CourseCard = ({ c, i = 0 }: { c: Course; i?: number }) => {
   const numericOldPrice = c.oldPrice ? (parseFloat(c.oldPrice.replace(/[^\d.]/g, "")) || 0) : null;
   
   const priceMain = numericPrice > 0 ? formatPrice(numericPrice) : (lang === 'fr' ? "Gratuit" : "Free");
-  const priceSecondary = numericPrice > 0 ? (
-    currency.code === "XOF"
-      ? (numericPrice / 600).toFixed(2) + " $"
-      : numericPrice.toLocaleString("fr-FR") + " FCFA"
-  ) : "";
   
   // Stable hash based on course title to derive a fixed visual mock for stars rating, students count, and badge
   const hash = c.title.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
@@ -633,7 +629,12 @@ export const CourseCard = ({ c, i = 0 }: { c: Course; i?: number }) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: i * 0.05 }}
-      className="course-card"
+      className="course-card cursor-pointer"
+      onClick={(e) => {
+        const target = e.target as HTMLElement;
+        if (target.closest("button") || target.closest("a")) return;
+        navigate(`/product/${c.slug}`);
+      }}
     >
       <div className="course-img-wrap">
         <img src={c.cover} alt={c.title} loading="lazy" />
@@ -654,7 +655,6 @@ export const CourseCard = ({ c, i = 0 }: { c: Course; i?: number }) => {
         <div className="price-row">
           <div>
             <div className="price-main">{priceMain}</div>
-            <div className="price-usd">{priceSecondary}</div>
           </div>
         </div>
         <Link className="btn-buy" to={`/checkout/${c.slug}`}>

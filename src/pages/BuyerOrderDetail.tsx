@@ -81,6 +81,9 @@ const getEmbedUrl = (url: string) => {
 const BuyerOrderDetail = () => {
   const { orderId } = useParams();
   const navigate = useNavigate();
+  const isPortal = window.location.hostname.startsWith("portal.") || window.location.hostname.startsWith("client.");
+  const loginPath = isPortal ? "/" : "/buyer-login";
+  const dashboardPath = isPortal ? "/dashboard" : "/mes-achats";
   const [order, setOrder] = useState<OrderRow | null>(null);
   const [product, setProduct] = useState<ProductRow | null>(null);
   const [store, setStore] = useState<StoreRow | null>(null);
@@ -94,7 +97,7 @@ const BuyerOrderDetail = () => {
   useEffect(() => {
     const raw = sessionStorage.getItem("buyer_session");
     if (!raw) {
-      navigate("/buyer-login");
+      navigate(loginPath);
       return;
     }
     let session: any;
@@ -103,7 +106,7 @@ const BuyerOrderDetail = () => {
       if (Date.now() - session.authenticatedAt > SESSION_DURATION) throw new Error("expired");
     } catch {
       sessionStorage.removeItem("buyer_session");
-      navigate("/buyer-login");
+      navigate(loginPath);
       return;
     }
     setCustomer({ id: session.customerId, name: session.customerName, email: session.email });
@@ -117,7 +120,7 @@ const BuyerOrderDetail = () => {
         .maybeSingle();
       if (!o) {
         toast.error("Commande introuvable");
-        navigate("/dashboard");
+        navigate(dashboardPath);
         return;
       }
       setOrder(o as OrderRow);
@@ -181,7 +184,7 @@ const BuyerOrderDetail = () => {
             <img src={logo} alt="TECHNOVA" className="h-8 w-8 rounded-lg object-contain" />
             <span className="text-lg font-bold text-foreground">TECHNOVA</span>
           </Link>
-          <Link to="/dashboard">
+          <Link to={dashboardPath}>
             <Button variant="ghost" size="sm" className="gap-1.5">
               <ArrowLeft className="h-4 w-4" /> Mes achats
             </Button>

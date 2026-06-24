@@ -199,10 +199,10 @@ const TestimonialsSection = () => {
           </p>
           <div className="flex flex-wrap justify-center items-center gap-6 md:gap-10">
             {[
-              { src: "/images/orange-money.png", alt: "Orange Money" },
-              { src: "/images/mtn-momo.webp", alt: "MTN Mobile Money" },
-              { src: "/images/wave.png", alt: "Wave" },
-              { src: "/images/moov-money.png", alt: "Moov Money" },
+              { src: "/providers/orange.svg", alt: "Orange Money" },
+              { src: "/providers/mtn.svg", alt: "MTN Mobile Money" },
+              { src: "/providers/wave.svg", alt: "Wave" },
+              { src: "/providers/moov.svg", alt: "Moov Money" },
             ].map((pm) => (
               <motion.div
                 key={pm.alt}
