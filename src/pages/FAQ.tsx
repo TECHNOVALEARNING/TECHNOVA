@@ -3,8 +3,9 @@ import { Footer } from "@/components/site/shared";
 import { motion } from "framer-motion";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import SEOHead from "@/components/SEOHead";
+import { useState, useEffect } from "react";
 
-const faqs = [
+const faqsFr = [
   { 
     category: "Général", 
     items: [
@@ -57,26 +58,98 @@ const faqs = [
   }
 ];
 
-// Generate JSON-LD Schema
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": faqs.flatMap(cat => cat.items).map(item => ({
-    "@type": "Question",
-    "name": item.q,
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": item.a
-    }
-  }))
-};
+const faqsEn = [
+  { 
+    category: "General", 
+    items: [
+      { q: "What is TechNova Learning?", a: "TechNova Learning is a freemium online training platform offering courses in web development, digital marketing, business, and graphic design. It is accessible from any connected device and targets a global audience." },
+      { q: "Is TechNova Learning free?", a: "Yes, TechNova Learning offers freemium access. Many courses are entirely free. Advanced and certificate courses are available in premium versions at affordable rates." },
+      { q: "In which language are the trainings?", a: "All courses are available in French. Some advanced modules may include additional resources in English." },
+      { q: "Is a baseline level required to register?", a: "No. TechNova Learning welcomes complete beginners as well as learners with some background. Each pathway starts with the fundamentals and progresses gradually." },
+      { q: "Can we learn from a smartphone?", a: "Yes, the platform is fully responsive and optimized for mobile devices. You can follow your courses from an Android or iOS phone without any issues." }
+    ]
+  },
+  {
+    category: "Courses",
+    items: [
+      { q: "What courses does TechNova Learning offer?", a: "TechNova Learning offers courses in web development (HTML, CSS, JavaScript, React), digital marketing (SEO, social networks, ads), business and entrepreneurship, and graphic design (Figma, Adobe, UI/UX)." },
+      { q: "Do the courses include practical exercises?", a: "Yes. Each module includes exercises, quizzes, and practical projects. The goal is for every learner to acquire immediately applicable skills." },
+      { q: "How long are the courses?", a: "The duration varies depending on the pathway: from a few hours for short modules, to several months for complete pathways. Each learner progresses at their own pace." },
+      { q: "Are courses updated regularly?", a: "Yes. Content is updated regularly to stay aligned with market developments and the technologies being taught." },
+      { q: "Does TechNova Learning offer training for companies?", a: "Yes. B2B offers are available for companies wishing to train their teams. Contact us for a custom quote." }
+    ]
+  },
+  {
+    category: "Certificates and Recognition",
+    items: [
+      { q: "Do we get a certificate at the end of a course?", a: "Yes. At the end of each premium pathway, a course completion certificate is issued. This certificate can be shared on LinkedIn and presented to employers." },
+      { q: "Are TechNova Learning certificates recognized?", a: "Our certificates are recognized by a growing community of employers and recruiters, particularly in the international digital sector." }
+    ]
+  },
+  {
+    category: "Technical and Access",
+    items: [
+      { q: "How to register on TechNova Learning?", a: "Registration is done directly on our website in a few minutes. Just create an account with your email address, then select your first course." },
+      { q: "Can we access courses without an internet connection?", a: "Some content can be downloaded for offline access. This feature is available for premium subscribers." },
+      { q: "What should I do if I have a technical problem?", a: "Our support team is available via email and our online chat. We commit to responding within 24 business hours." }
+    ]
+  },
+  {
+    category: "Payment and Subscription",
+    items: [
+      { q: "What payment methods are accepted?", a: "TechNova Learning accepts credit cards, mobile money payments (Orange Money, Wave, MTN MoMo), as well as VISA and Mastercard for international payments." },
+      { q: "Can we cancel our premium subscription?", a: "Yes, the subscription can be canceled at any time from your account settings. No penalties are applied." },
+      { q: "Is there a trial period for premium?", a: "Yes. We offer a free trial period to explore premium features before any commitment." }
+    ]
+  },
+  {
+    category: "Community and Mentoring",
+    items: [
+      { q: "Is there a community of learners?", a: "Yes. TechNova Learning has an active community on its platforms: internal forum, exchange groups, live mentoring sessions, and regular online events." },
+      { q: "Can we be connected with mentors?", a: "Yes. Premium learners have access to individual or group mentoring sessions with trainers and experienced professionals in their field." }
+    ]
+  }
+];
 
 const FAQ = () => {
+  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+
+  useEffect(() => {
+    const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
+    window.addEventListener("technova_lang_changed", handleLangChange);
+    return () => window.removeEventListener("technova_lang_changed", handleLangChange);
+  }, []);
+
+  const faqs = lang === "en" ? faqsEn : faqsFr;
+  
+  // Generate JSON-LD Schema
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.flatMap(cat => cat.items).map(item => ({
+      "@type": "Question",
+      "name": item.q,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": item.a
+      }
+    }))
+  };
+
+  const seoTitle = lang === "en" ? "FAQ - TechNova Learning" : "Foire Aux Questions - TechNova Learning";
+  const seoDesc = lang === "en" 
+    ? "Find all the answers to your questions about TechNova Learning: online courses, certificates, payments, and community." 
+    : "Trouvez toutes les réponses à vos questions sur TechNova Learning : formations en ligne, certificats, paiements (Mobile Money, Cartes) et notre communauté.";
+  const titleText = lang === "en" ? <>Frequently Asked <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400">Questions</span></> : <>Foire Aux <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400">Questions</span></>;
+  const subtitleText = lang === "en" 
+    ? "Everything you need to know about TechNova Learning, our courses, payments, and how the platform works." 
+    : "Tout ce que vous devez savoir sur TechNova Learning, nos formations, les paiements et le fonctionnement de la plateforme.";
+
   return (
     <div className="min-h-screen bg-background font-sans transition-colors duration-300">
       <SEOHead 
-        title="Foire Aux Questions - TechNova Learning" 
-        description="Trouvez toutes les réponses à vos questions sur TechNova Learning : formations en ligne, certificats, paiements (Mobile Money, Cartes) et notre communauté." 
+        title={seoTitle} 
+        description={seoDesc} 
         canonicalPath="/faq" 
         keywords="FAQ TechNova Learning, questions fréquentes, formation en ligne, certificats, mobile money, apprentissage" 
       />
@@ -91,10 +164,10 @@ const FAQ = () => {
         <div className="container mx-auto px-6 text-center relative z-10">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <h1 className="text-4xl md:text-6xl font-extrabold text-foreground mb-6">
-              Foire Aux <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400">Questions</span>
+              {titleText}
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Tout ce que vous devez savoir sur TechNova Learning, nos formations, les paiements et le fonctionnement de la plateforme.
+              {subtitleText}
             </p>
           </motion.div>
         </div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence, Reorder } from "framer-motion";
 import {
   Plus, Trash2, GripVertical, Video, FileText, Upload,
@@ -33,6 +33,63 @@ interface CourseLessonsManagerProps {
   modules: Module[];
   onModulesChange: (modules: Module[]) => void;
 }
+
+const translations = {
+  fr: {
+    title: "Programme de la formation",
+    description: "Structurez votre cours en modules et leçons.",
+    addModule: "Ajouter un module",
+    noModules: "Aucun module pour le moment",
+    createFirstModule: "Commencez par créer votre premier module",
+    moduleTitlePlaceholder: "Titre du module ",
+    moduleTitlePlaceholderExample: " (ex: Introduction)",
+    emptyModule: "Ce module est vide.",
+    untitledLesson: "Nouvelle leçon sans titre",
+    videoConfigured: "Vidéo configurée",
+    richText: "Texte riche",
+    resource: "Ressource",
+    editBtn: "Éditer",
+    addLesson: "Ajouter une leçon au module",
+    editLessonTitle: "Éditer la leçon",
+    lessonTitleLabel: "Titre de la leçon",
+    lessonTitlePlaceholder: "Ex: 1. Introduction à la formation",
+    durationLabel: "Durée estimée (min)",
+    videoUrlLabel: "Vidéo de la leçon (Lien externe)",
+    videoUrlPlaceholder: "https://drive.google.com/... ou YouTube",
+    writtenContentLabel: "Contenu écrit (Texte enrichi)",
+    writtenContentPlaceholder: "Rédigez le cours ici, ajoutez des explications, des liens...",
+    resourceLabel: "Ressource téléchargeable (Optionnel)",
+    existingResource: "Ressource existante enregistrée",
+    uploadPlaceholder: "Cliquez pour uploader un fichier (PDF, ZIP...)",
+  },
+  en: {
+    title: "Training Program",
+    description: "Structure your course into modules and lessons.",
+    addModule: "Add a module",
+    noModules: "No modules yet",
+    createFirstModule: "Start by creating your first module",
+    moduleTitlePlaceholder: "Module ",
+    moduleTitlePlaceholderExample: " title (e.g., Introduction)",
+    emptyModule: "This module is empty.",
+    untitledLesson: "New untitled lesson",
+    videoConfigured: "Video configured",
+    richText: "Rich text",
+    resource: "Resource",
+    editBtn: "Edit",
+    addLesson: "Add a lesson to the module",
+    editLessonTitle: "Edit Lesson",
+    lessonTitleLabel: "Lesson title",
+    lessonTitlePlaceholder: "e.g., 1. Introduction to the course",
+    durationLabel: "Estimated duration (min)",
+    videoUrlLabel: "Lesson video (External link)",
+    videoUrlPlaceholder: "https://drive.google.com/... or YouTube",
+    writtenContentLabel: "Written content (Rich text)",
+    writtenContentPlaceholder: "Write the course here, add explanations, links...",
+    resourceLabel: "Downloadable resource (Optional)",
+    existingResource: "Existing saved resource",
+    uploadPlaceholder: "Click to upload a file (PDF, ZIP...)",
+  }
+};
 
 const safeUUID = () => {
   if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
@@ -94,6 +151,15 @@ const getEmbedUrl = (url: string) => {
 
 const CourseLessonsManager = ({ modules, onModulesChange }: CourseLessonsManagerProps) => {
   const [editingLessonId, setEditingLessonId] = useState<string | null>(null);
+  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+
+  useEffect(() => {
+    const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
+    window.addEventListener("technova_lang_changed", handleLangChange);
+    return () => window.removeEventListener("technova_lang_changed", handleLangChange);
+  }, []);
+
+  const t = translations[lang === 'en' ? 'en' : 'fr'];
 
   const findLessonAndModule = (lessonId: string) => {
     for (const m of modules) {
@@ -169,9 +235,9 @@ const CourseLessonsManager = ({ modules, onModulesChange }: CourseLessonsManager
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-base font-semibold text-foreground">Programme de la formation</h3>
+          <h3 className="text-base font-semibold text-foreground">{t.title}</h3>
           <p className="text-sm text-muted-foreground">
-            Structurez votre cours en modules et leçons.
+            {t.description}
           </p>
         </div>
         <Button
@@ -180,7 +246,7 @@ const CourseLessonsManager = ({ modules, onModulesChange }: CourseLessonsManager
           className="gap-2"
         >
           <Plus className="h-4 w-4" />
-          Ajouter un module
+          {t.addModule}
         </Button>
       </div>
 
@@ -190,8 +256,8 @@ const CourseLessonsManager = ({ modules, onModulesChange }: CourseLessonsManager
           onClick={addModule}
         >
           <Layers className="h-10 w-10 text-muted-foreground/30 mx-auto mb-3" />
-          <p className="text-sm font-medium text-muted-foreground">Aucun module pour le moment</p>
-          <p className="text-xs text-muted-foreground mt-1">Commencez par créer votre premier module</p>
+          <p className="text-sm font-medium text-muted-foreground">{t.noModules}</p>
+          <p className="text-xs text-muted-foreground mt-1">{t.createFirstModule}</p>
         </div>
       ) : (
         <Reorder.Group
@@ -216,7 +282,7 @@ const CourseLessonsManager = ({ modules, onModulesChange }: CourseLessonsManager
                       <Input
                         value={module.title}
                         onChange={(e) => updateModule(module.id, { title: e.target.value })}
-                        placeholder={`Titre du module ${mIndex + 1} (ex: Introduction)`}
+                        placeholder={`${t.moduleTitlePlaceholder}${mIndex + 1}${t.moduleTitlePlaceholderExample}`}
                         className="font-medium bg-transparent border-transparent hover:border-border focus:border-primary px-2"
                       />
                     </div>
@@ -234,7 +300,7 @@ const CourseLessonsManager = ({ modules, onModulesChange }: CourseLessonsManager
                   <div className="p-3 space-y-2">
                     {module.lessons.length === 0 ? (
                       <div className="text-center p-4 border border-dashed rounded-lg text-sm text-muted-foreground">
-                        Ce module est vide.
+                        {t.emptyModule}
                       </div>
                     ) : (
                       <Reorder.Group
@@ -258,17 +324,17 @@ const CourseLessonsManager = ({ modules, onModulesChange }: CourseLessonsManager
                               </div>
                               <div className="flex-1 min-w-0 cursor-pointer" onClick={() => setEditingLessonId(lesson.id)}>
                                 <p className="text-sm font-medium truncate group-hover:text-primary transition-colors">
-                                  {lesson.title || "Nouvelle leçon sans titre"}
+                                  {lesson.title || t.untitledLesson}
                                 </p>
                                 <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
                                   {lesson.video_url && (
-                                    <span className="flex items-center gap-1"><Video className="h-3 w-3"/> Vidéo configurée</span>
+                                    <span className="flex items-center gap-1"><Video className="h-3 w-3"/> {t.videoConfigured}</span>
                                   )}
                                   {lesson.content && lesson.content !== "<p></p>" && (
-                                    <span className="flex items-center gap-1"><FileText className="h-3 w-3"/> Texte riche</span>
+                                    <span className="flex items-center gap-1"><FileText className="h-3 w-3"/> {t.richText}</span>
                                   )}
                                   {(lesson.resourceFile || lesson.resource_url) && (
-                                    <span className="flex items-center gap-1"><Download className="h-3 w-3"/> Ressource</span>
+                                    <span className="flex items-center gap-1"><Download className="h-3 w-3"/> {t.resource}</span>
                                   )}
                                   {lesson.duration_minutes && (
                                     <span className="flex items-center gap-1"><Clock className="h-3 w-3"/> {lesson.duration_minutes} min</span>
@@ -283,7 +349,7 @@ const CourseLessonsManager = ({ modules, onModulesChange }: CourseLessonsManager
                                   className="h-8 hidden group-hover:flex"
                                   onClick={() => setEditingLessonId(lesson.id)}
                                 >
-                                  Éditer
+                                  {t.editBtn}
                                 </Button>
                                 <Button
                                   type="button"
@@ -309,7 +375,7 @@ const CourseLessonsManager = ({ modules, onModulesChange }: CourseLessonsManager
                       onClick={() => addLesson(module.id)}
                     >
                       <Plus className="h-4 w-4" />
-                      Ajouter une leçon au module
+                      {t.addLesson}
                     </Button>
                   </div>
                 </div>
@@ -324,22 +390,22 @@ const CourseLessonsManager = ({ modules, onModulesChange }: CourseLessonsManager
           {editingContext && (
             <>
               <SheetHeader className="mb-6">
-                <SheetTitle>Éditer la leçon</SheetTitle>
+                <SheetTitle>{t.editLessonTitle}</SheetTitle>
               </SheetHeader>
               
               <div className="space-y-6">
                 <div>
-                  <label className="text-sm font-medium mb-1 block">Titre de la leçon</label>
+                  <label className="text-sm font-medium mb-1 block">{t.lessonTitleLabel}</label>
                   <Input 
                     value={editingContext.lesson.title}
                     onChange={(e) => updateLesson(editingContext.module.id, editingContext.lesson.id, { title: e.target.value })}
-                    placeholder="Ex: 1. Introduction à la formation"
+                    placeholder={t.lessonTitlePlaceholder}
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="text-sm font-medium mb-1 block">Durée estimée (min)</label>
+                    <label className="text-sm font-medium mb-1 block">{t.durationLabel}</label>
                     <Input 
                       type="number"
                       value={editingContext.lesson.duration_minutes || ""}
@@ -350,7 +416,7 @@ const CourseLessonsManager = ({ modules, onModulesChange }: CourseLessonsManager
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium mb-1 block">Vidéo de la leçon (Lien externe)</label>
+                  <label className="text-sm font-medium mb-1 block">{t.videoUrlLabel}</label>
                   <div className="flex gap-2 mb-2">
                     <div className="bg-muted border border-border flex items-center px-3 rounded-md">
                       <LinkIcon className="h-4 w-4 text-muted-foreground" />
@@ -358,7 +424,7 @@ const CourseLessonsManager = ({ modules, onModulesChange }: CourseLessonsManager
                     <Input 
                       value={editingContext.lesson.video_url}
                       onChange={(e) => updateLesson(editingContext.module.id, editingContext.lesson.id, { video_url: e.target.value })}
-                      placeholder="https://drive.google.com/... ou YouTube"
+                      placeholder={t.videoUrlPlaceholder}
                     />
                   </div>
                   {editingContext.lesson.video_url && editingContext.lesson.video_url.trim().startsWith("http") && (
@@ -374,16 +440,16 @@ const CourseLessonsManager = ({ modules, onModulesChange }: CourseLessonsManager
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium mb-1 block">Contenu écrit (Texte enrichi)</label>
+                  <label className="text-sm font-medium mb-1 block">{t.writtenContentLabel}</label>
                   <RichTextEditor 
                     content={editingContext.lesson.content}
                     onChange={(content) => updateLesson(editingContext.module.id, editingContext.lesson.id, { content })}
-                    placeholder="Rédigez le cours ici, ajoutez des explications, des liens..."
+                    placeholder={t.writtenContentPlaceholder}
                   />
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium mb-1 block">Ressource téléchargeable (Optionnel)</label>
+                  <label className="text-sm font-medium mb-1 block">{t.resourceLabel}</label>
                   <div 
                     className="border-2 border-dashed rounded-lg p-6 text-center cursor-pointer hover:bg-muted/50 transition-colors"
                     onClick={() => document.getElementById(`resource-upload-${editingContext.lesson.id}`)?.click()}
@@ -393,8 +459,8 @@ const CourseLessonsManager = ({ modules, onModulesChange }: CourseLessonsManager
                       {editingContext.lesson.resourceFile 
                         ? `📎 ${editingContext.lesson.resourceFile.name}` 
                         : editingContext.lesson.resource_url 
-                          ? `📎 Ressource existante enregistrée` 
-                          : "Cliquez pour uploader un fichier (PDF, ZIP...)"}
+                          ? `📎 ${t.existingResource}` 
+                          : t.uploadPlaceholder}
                     </p>
                     <input 
                       id={`resource-upload-${editingContext.lesson.id}`}

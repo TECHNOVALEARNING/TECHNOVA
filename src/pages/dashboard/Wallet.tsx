@@ -24,6 +24,109 @@ interface WalletRow {
 
 const UNLOCK_KEY = "technova_wallet_unlock";
 
+const translations = {
+  fr: {
+    seoTitleSetup: "Créer votre PIN — TECHNOVA Wallet",
+    seoDescSetup: "Sécurisez votre wallet",
+    seoTitleUnlock: "Déverrouiller — TECHNOVA Wallet",
+    seoDescUnlock: "Saisissez votre PIN",
+    seoTitleReady: "TECHNOVA Wallet",
+    seoDescReady: "Gérez vos comptes Mobile Money pour les retraits",
+    back: "Retour",
+    lock: "Verrouiller",
+    secureArea: "Espace sécurisé",
+    withdrawalAccounts: "Vos comptes de retrait",
+    walletDesc: "Enregistrez jusqu'à 3 comptes Mobile Money. Vous les utiliserez pour recevoir vos retraits TECHNOVA.",
+    myWallets: "Mes wallets",
+    add: "Ajouter",
+    noWallet: "Aucun wallet pour l'instant.",
+    createFirstWallet: "Créer mon premier wallet",
+    setDefault: "Définir par défaut",
+    delete: "Supprimer",
+    securityTitle: "Sécurité TECHNOVA",
+    securityDesc: "Votre PIN est haché et jamais stocké en clair. Après 5 tentatives échouées, le wallet se bloque 15 minutes. La session de déverrouillage expire après 15 min d'inactivité.",
+    dialogTitle: "Nouveau wallet",
+    walletNameLabel: "Nom du wallet",
+    walletNamePlaceholder: "Ex: Mon MTN principal",
+    holderFirstName: "Prénom titulaire",
+    holderLastName: "Nom titulaire",
+    country: "Pays",
+    operator: "Opérateur",
+    momoNumber: "Numéro Mobile Money",
+    cancel: "Annuler",
+    createBtn: "Créer le wallet",
+    pinTitle: "Créez votre PIN",
+    pinSub: "Un code à 4 chiffres pour protéger votre TECHNOVA Wallet.",
+    newPinLabel: "Nouveau PIN",
+    confirmPinLabel: "Confirmer le PIN",
+    createPinBtn: "Créer mon PIN",
+    pinDisclaimer: "Ne le partagez avec personne. Il vous sera demandé à chaque accès.",
+    unlockTitle: "TECHNOVA Wallet",
+    unlockSub: "Entrez votre PIN à 4 chiffres",
+    unlockBtn: "Déverrouiller",
+    toastPinLength: "PIN doit faire 4 chiffres",
+    toastPinMismatch: "Les PIN ne correspondent pas",
+    toastPinSuccess: "PIN créé !",
+    toastWalletNameRequired: "Nom du wallet requis",
+    toastHolderRequired: "Nom et prénom du titulaire requis",
+    toastInvalidPhone: "Numéro invalide",
+    toastMaxWallets: "Maximum 3 wallets",
+    toastWalletSuccess: "Wallet créé !",
+    confirmDelete: "Supprimer ce wallet ?",
+    toastWalletDeleted: "Wallet supprimé",
+  },
+  en: {
+    seoTitleSetup: "Create your PIN — TECHNOVA Wallet",
+    seoDescSetup: "Secure your wallet",
+    seoTitleUnlock: "Unlock — TECHNOVA Wallet",
+    seoDescUnlock: "Enter your PIN",
+    seoTitleReady: "TECHNOVA Wallet",
+    seoDescReady: "Manage your Mobile Money accounts for withdrawals",
+    back: "Back",
+    lock: "Lock",
+    secureArea: "Secure area",
+    withdrawalAccounts: "Your withdrawal accounts",
+    walletDesc: "Register up to 3 Mobile Money accounts. You will use them to receive your TECHNOVA withdrawals.",
+    myWallets: "My wallets",
+    add: "Add",
+    noWallet: "No wallets yet.",
+    createFirstWallet: "Create my first wallet",
+    setDefault: "Set as default",
+    delete: "Delete",
+    securityTitle: "TECHNOVA Security",
+    securityDesc: "Your PIN is hashed and never stored in plain text. After 5 failed attempts, the wallet locks for 15 minutes. The unlock session expires after 15 min of inactivity.",
+    dialogTitle: "New Wallet",
+    walletNameLabel: "Wallet Name",
+    walletNamePlaceholder: "E.g., My main MTN",
+    holderFirstName: "Holder First Name",
+    holderLastName: "Holder Last Name",
+    country: "Country",
+    operator: "Operator",
+    momoNumber: "Mobile Money Number",
+    cancel: "Cancel",
+    createBtn: "Create Wallet",
+    pinTitle: "Create your PIN",
+    pinSub: "A 4-digit code to protect your TECHNOVA Wallet.",
+    newPinLabel: "New PIN",
+    confirmPinLabel: "Confirm PIN",
+    createPinBtn: "Create my PIN",
+    pinDisclaimer: "Do not share it with anyone. It will be requested at each access.",
+    unlockTitle: "TECHNOVA Wallet",
+    unlockSub: "Enter your 4-digit PIN",
+    unlockBtn: "Unlock",
+    toastPinLength: "PIN must be 4 digits",
+    toastPinMismatch: "PINs do not match",
+    toastPinSuccess: "PIN created!",
+    toastWalletNameRequired: "Wallet name required",
+    toastHolderRequired: "Holder first name and last name required",
+    toastInvalidPhone: "Invalid number",
+    toastMaxWallets: "Maximum 3 wallets",
+    toastWalletSuccess: "Wallet created!",
+    confirmDelete: "Delete this wallet?",
+    toastWalletDeleted: "Wallet deleted",
+  }
+};
+
 const Wallet = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
@@ -45,6 +148,16 @@ const Wallet = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [countryOpen, setCountryOpen] = useState(false);
+
+  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+
+  useEffect(() => {
+    const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
+    window.addEventListener("technova_lang_changed", handleLangChange);
+    return () => window.removeEventListener("technova_lang_changed", handleLangChange);
+  }, []);
+
+  const t = translations[lang === 'en' ? 'en' : 'fr'];
 
   useEffect(() => { setProvider(country.deposit[0]); }, [country.code]);
 
@@ -79,13 +192,13 @@ const Wallet = () => {
   };
 
   const handleSetup = async () => {
-    if (pin.length !== 4) return toast.error("PIN doit faire 4 chiffres");
-    if (pin !== confirmPin) return toast.error("Les PIN ne correspondent pas");
+    if (pin.length !== 4) return toast.error(t.toastPinLength);
+    if (pin !== confirmPin) return toast.error(t.toastPinMismatch);
     setSubmitting(true);
     try {
       const { data, error } = await supabase.functions.invoke("wallet-pin-set", { body: { pin } });
       if (error || data?.error) throw new Error(data?.error || error?.message);
-      toast.success("PIN créé !");
+      toast.success(t.toastPinSuccess);
       // Auto-unlock
       const { data: vData, error: vErr } = await supabase.functions.invoke("wallet-pin-verify", { body: { pin } });
       if (vErr || vData?.error) throw new Error(vData?.error || vErr?.message);
@@ -119,10 +232,10 @@ const Wallet = () => {
 
   const handleCreateWallet = async () => {
     if (!user) return;
-    if (!name.trim()) return toast.error("Nom du wallet requis");
-    if (!firstName.trim() || !lastName.trim()) return toast.error("Nom et prénom du titulaire requis");
-    if (phone.length < 6) return toast.error("Numéro invalide");
-    if (wallets.length >= 3) return toast.error("Maximum 3 wallets");
+    if (!name.trim()) return toast.error(t.toastWalletNameRequired);
+    if (!firstName.trim() || !lastName.trim()) return toast.error(t.toastHolderRequired);
+    if (phone.length < 6) return toast.error(t.toastInvalidPhone);
+    if (wallets.length >= 3) return toast.error(t.toastMaxWallets);
 
     setSubmitting(true);
     try {
@@ -139,7 +252,7 @@ const Wallet = () => {
         is_default: isDefault,
       });
       if (error) throw error;
-      toast.success("Wallet créé !");
+      toast.success(t.toastWalletSuccess);
       setCreateOpen(false);
       setName(""); setPhone(""); setFirstName(""); setLastName("");
       await loadWallets();
@@ -148,10 +261,10 @@ const Wallet = () => {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Supprimer ce wallet ?")) return;
+    if (!confirm(t.confirmDelete)) return;
     const { error } = await supabase.from("wallets").delete().eq("id", id);
     if (error) return toast.error(error.message);
-    toast.success("Wallet supprimé");
+    toast.success(t.toastWalletDeleted);
     await loadWallets();
   };
 
@@ -182,7 +295,7 @@ const Wallet = () => {
   if (phase === "setup") {
     return (
       <>
-        <SEOHead title="Créer votre PIN — TECHNOVA Wallet" description="Sécurisez votre wallet" />
+        <SEOHead title={t.seoTitleSetup} description={t.seoDescSetup} />
         <div className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-violet-900 via-violet-700 to-amber-600">
           <div className="w-full max-w-md bg-white rounded-3xl p-8 shadow-2xl">
             <div className="flex justify-center mb-6">
@@ -190,12 +303,12 @@ const Wallet = () => {
                 <KeyRound className="h-8 w-8 text-white" />
               </div>
             </div>
-            <h1 className="text-2xl font-bold text-center text-gray-900 mb-2">Créez votre PIN</h1>
-            <p className="text-sm text-center text-gray-500 mb-6">Un code à 4 chiffres pour protéger votre TECHNOVA Wallet.</p>
+            <h1 className="text-2xl font-bold text-center text-gray-900 mb-2">{t.pinTitle}</h1>
+            <p className="text-sm text-center text-gray-500 mb-6">{t.pinSub}</p>
 
             <div className="space-y-5">
               <div>
-                <label className="text-xs font-semibold text-gray-700 mb-2 block text-center">Nouveau PIN</label>
+                <label className="text-xs font-semibold text-gray-700 mb-2 block text-center">{t.newPinLabel}</label>
                 <div className="flex justify-center">
                   <InputOTP maxLength={4} value={pin} onChange={setPin}>
                     <InputOTPGroup>
@@ -205,7 +318,7 @@ const Wallet = () => {
                 </div>
               </div>
               <div>
-                <label className="text-xs font-semibold text-gray-700 mb-2 block text-center">Confirmer le PIN</label>
+                <label className="text-xs font-semibold text-gray-700 mb-2 block text-center">{t.confirmPinLabel}</label>
                 <div className="flex justify-center">
                   <InputOTP maxLength={4} value={confirmPin} onChange={setConfirmPin}>
                     <InputOTPGroup>
@@ -221,9 +334,9 @@ const Wallet = () => {
                 className="w-full h-12 rounded-xl text-base font-bold"
                 style={{ background: "linear-gradient(135deg, #7C2DCC 0%, #C9962E 130%)" }}
               >
-                {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Créer mon PIN"}
+                {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : t.createPinBtn}
               </Button>
-              <p className="text-[11px] text-gray-400 text-center">Ne le partagez avec personne. Il vous sera demandé à chaque accès.</p>
+              <p className="text-[11px] text-gray-400 text-center">{t.pinDisclaimer}</p>
             </div>
           </div>
         </div>
@@ -235,7 +348,7 @@ const Wallet = () => {
   if (phase === "unlock") {
     return (
       <>
-        <SEOHead title="Déverrouiller — TECHNOVA Wallet" description="Saisissez votre PIN" />
+        <SEOHead title={t.seoTitleUnlock} description={t.seoDescUnlock} />
         <div className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-violet-900 via-violet-700 to-amber-600">
           <div className="w-full max-w-md bg-white rounded-3xl p-8 shadow-2xl">
             <div className="flex justify-center mb-6">
@@ -243,8 +356,8 @@ const Wallet = () => {
                 <Lock className="h-8 w-8 text-white" />
               </div>
             </div>
-            <h1 className="text-2xl font-bold text-center text-gray-900 mb-2">TECHNOVA Wallet</h1>
-            <p className="text-sm text-center text-gray-500 mb-6">Entrez votre PIN à 4 chiffres</p>
+            <h1 className="text-2xl font-bold text-center text-gray-900 mb-2">{t.unlockTitle}</h1>
+            <p className="text-sm text-center text-gray-500 mb-6">{t.unlockSub}</p>
 
             <div className="flex justify-center mb-5">
               <InputOTP maxLength={4} value={pin} onChange={(v) => { setPin(v); if (v.length === 4) setTimeout(() => handleUnlock(), 100); }}>
@@ -260,7 +373,7 @@ const Wallet = () => {
               className="w-full h-12 rounded-xl text-base font-bold"
               style={{ background: "linear-gradient(135deg, #7C2DCC 0%, #C9962E 130%)" }}
             >
-              {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Déverrouiller"}
+              {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : t.unlockBtn}
             </Button>
           </div>
         </div>
@@ -271,21 +384,21 @@ const Wallet = () => {
   // READY — wallet management
   return (
     <>
-      <SEOHead title="TECHNOVA Wallet" description="Gérez vos comptes Mobile Money pour les retraits" />
+      <SEOHead title={t.seoTitleReady} description={t.seoDescReady} />
       <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-amber-50/40">
         <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-violet-100/60">
           <div className="max-w-5xl mx-auto flex items-center justify-between px-4 sm:px-6 h-14">
             <button onClick={() => (window.history.length > 1 ? navigate(-1) : window.close())} className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900">
-              <ArrowLeft className="h-4 w-4" /> <span className="hidden sm:inline">Retour</span>
+              <ArrowLeft className="h-4 w-4" /> <span className="hidden sm:inline">{t.back}</span>
             </button>
             <span className="text-sm font-bold text-gray-900 flex items-center gap-1.5">
-              <WalletIcon className="h-4 w-4 text-violet-600" /> TECHNOVA Wallet
+              <WalletIcon className="h-4 w-4 text-violet-600" /> {t.unlockTitle}
             </span>
             <button
               onClick={() => { sessionStorage.removeItem(UNLOCK_KEY); setPhase("unlock"); }}
               className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-900"
             >
-              <Lock className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Verrouiller</span>
+              <Lock className="h-3.5 w-3.5" /> <span className="hidden sm:inline">{t.lock}</span>
             </button>
           </div>
         </header>
@@ -296,20 +409,20 @@ const Wallet = () => {
             style={{ background: "linear-gradient(135deg, #7C2DCC 0%, #4B1A8A 60%, #C9962E 130%)" }}>
             <div className="absolute -top-24 -right-20 h-64 w-64 rounded-full bg-amber-400/20 blur-3xl" />
             <div className="relative z-10">
-              <div className="text-[10px] font-bold uppercase tracking-widest text-amber-300 mb-2">Espace sécurisé</div>
-              <h1 className="text-2xl sm:text-3xl font-extrabold mb-1">Vos comptes de retrait</h1>
+              <div className="text-[10px] font-bold uppercase tracking-widest text-amber-300 mb-2">{t.secureArea}</div>
+              <h1 className="text-2xl sm:text-3xl font-extrabold mb-1">{t.withdrawalAccounts}</h1>
               <p className="text-sm text-white/70 max-w-md">
-                Enregistrez jusqu'à 3 comptes Mobile Money. Vous les utiliserez pour recevoir vos retraits TECHNOVA.
+                {t.walletDesc}
               </p>
             </div>
           </div>
 
           {/* Wallets list */}
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-sm font-bold text-gray-900">Mes wallets ({wallets.length}/3)</h2>
+            <h2 className="text-sm font-bold text-gray-900">{t.myWallets} ({wallets.length}/3)</h2>
             {wallets.length < 3 && (
               <Button onClick={() => setCreateOpen(true)} size="sm" className="rounded-xl gap-1">
-                <Plus className="h-4 w-4" /> Ajouter
+                <Plus className="h-4 w-4" /> {t.add}
               </Button>
             )}
           </div>
@@ -317,10 +430,10 @@ const Wallet = () => {
           {wallets.length === 0 ? (
             <div className="rounded-2xl border-2 border-dashed border-gray-200 bg-white p-10 text-center">
               <WalletIcon className="h-10 w-10 mx-auto text-gray-300 mb-3" />
-              <p className="text-sm text-gray-600 mb-4">Aucun wallet pour l'instant.</p>
+              <p className="text-sm text-gray-600 mb-4">{t.noWallet}</p>
               <Button onClick={() => setCreateOpen(true)} className="rounded-xl"
                 style={{ background: "linear-gradient(135deg, #7C2DCC 0%, #C9962E 130%)" }}>
-                <Plus className="h-4 w-4 mr-1.5" /> Créer mon premier wallet
+                <Plus className="h-4 w-4 mr-1.5" /> {t.createFirstWallet}
               </Button>
             </div>
           ) : (
@@ -347,11 +460,11 @@ const Wallet = () => {
                     <div className="flex gap-1.5 mt-3 pt-3 border-t border-gray-100">
                       {!w.is_default && (
                         <button onClick={() => setDefault(w.id)} className="text-[11px] font-semibold text-violet-600 hover:underline">
-                          Définir par défaut
+                          {t.setDefault}
                         </button>
                       )}
                       <button onClick={() => handleDelete(w.id)} className="ml-auto text-[11px] text-red-500 hover:text-red-700 flex items-center gap-1">
-                        <Trash2 className="h-3 w-3" /> Supprimer
+                        <Trash2 className="h-3 w-3" /> {t.delete}
                       </button>
                     </div>
                   </div>
@@ -363,8 +476,8 @@ const Wallet = () => {
           <div className="mt-6 rounded-2xl bg-violet-50/50 border border-violet-100 p-4 flex gap-3">
             <ShieldCheck className="h-5 w-5 text-violet-600 shrink-0 mt-0.5" />
             <div className="text-xs text-violet-900/80">
-              <p className="font-semibold mb-1">Sécurité TECHNOVA</p>
-              <p>Votre PIN est haché et jamais stocké en clair. Après 5 tentatives échouées, le wallet se bloque 15 minutes. La session de déverrouillage expire après 15 min d'inactivité.</p>
+              <p className="font-semibold mb-1">{t.securityTitle}</p>
+              <p>{t.securityDesc}</p>
             </div>
           </div>
         </main>
@@ -373,27 +486,27 @@ const Wallet = () => {
         <Dialog open={createOpen} onOpenChange={setCreateOpen}>
           <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>Nouveau wallet</DialogTitle>
+              <DialogTitle>{t.dialogTitle}</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
               <div>
-                <label className="text-xs font-semibold text-gray-700 mb-1 block">Nom du wallet</label>
-                <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Ex: Mon MTN principal" maxLength={40} />
+                <label className="text-xs font-semibold text-gray-700 mb-1 block">{t.walletNameLabel}</label>
+                <Input value={name} onChange={(e) => setName(e.target.value)} placeholder={t.walletNamePlaceholder} maxLength={40} />
               </div>
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="text-xs font-semibold text-gray-700 mb-1 block">Prénom titulaire</label>
+                  <label className="text-xs font-semibold text-gray-700 mb-1 block">{t.holderFirstName}</label>
                   <Input value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="Jean" />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-gray-700 mb-1 block">Nom titulaire</label>
+                  <label className="text-xs font-semibold text-gray-700 mb-1 block">{t.holderLastName}</label>
                   <Input value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Dupont" />
                 </div>
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-gray-700 mb-1 block">Pays</label>
+                <label className="text-xs font-semibold text-gray-700 mb-1 block">{t.country}</label>
                 <div className="relative">
                   <button type="button" onClick={() => setCountryOpen(!countryOpen)}
                     className="w-full flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg border border-gray-200 bg-gray-50">
@@ -419,7 +532,7 @@ const Wallet = () => {
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-gray-700 mb-1 block">Opérateur</label>
+                <label className="text-xs font-semibold text-gray-700 mb-1 block">{t.operator}</label>
                 <div className="grid grid-cols-2 gap-2">
                   {country.deposit.map((op) => {
                     const sel = provider.code === op.code;
@@ -436,7 +549,7 @@ const Wallet = () => {
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-gray-700 mb-1 block">Numéro Mobile Money</label>
+                <label className="text-xs font-semibold text-gray-700 mb-1 block">{t.momoNumber}</label>
                 <div className="flex gap-2">
                   <div className="flex items-center px-3 rounded-lg border border-gray-200 bg-gray-50 text-sm font-medium text-gray-600">+{country.dial}</div>
                   <Input value={phone} onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))} placeholder="97 00 00 00" />
@@ -444,10 +557,10 @@ const Wallet = () => {
               </div>
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setCreateOpen(false)}>Annuler</Button>
+              <Button variant="outline" onClick={() => setCreateOpen(false)}>{t.cancel}</Button>
               <Button onClick={handleCreateWallet} disabled={submitting}
                 style={{ background: "linear-gradient(135deg, #7C2DCC 0%, #C9962E 130%)" }}>
-                {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Créer le wallet"}
+                {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : t.createBtn}
               </Button>
             </DialogFooter>
           </DialogContent>

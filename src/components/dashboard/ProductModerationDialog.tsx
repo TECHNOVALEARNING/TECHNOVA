@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Ban, CheckCircle2, ShieldAlert } from "lucide-react";
 import {
   Dialog,
@@ -16,20 +17,22 @@ export interface ProductModerationReview {
   reviewed_at?: string;
 }
 
-const statusConfig = {
-  approved: {
-    label: "Approuvé",
-    icon: CheckCircle2,
-    badgeClass: "border-emerald-500/20 bg-emerald-500/10 text-emerald-700",
-    panelClass: "border-emerald-500/20 bg-emerald-500/5",
+const translations = {
+  fr: {
+    approved: "Approuvé",
+    rejected: "Bloqué",
+    title: "Analyse du produit",
+    description: "Vérification avant publication",
+    reasons: "Raisons",
   },
-  rejected: {
-    label: "Bloqué",
-    icon: Ban,
-    badgeClass: "border-destructive/20 bg-destructive/10 text-destructive",
-    panelClass: "border-destructive/20 bg-destructive/5",
-  },
-} as const;
+  en: {
+    approved: "Approved",
+    rejected: "Blocked",
+    title: "Product Analysis",
+    description: "Verification before publication",
+    reasons: "Reasons",
+  }
+};
 
 interface ProductModerationDialogProps {
   open: boolean;
@@ -38,8 +41,33 @@ interface ProductModerationDialogProps {
 }
 
 const ProductModerationDialog = ({ open, onOpenChange, review }: ProductModerationDialogProps) => {
+  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+
+  useEffect(() => {
+    const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
+    window.addEventListener("technova_lang_changed", handleLangChange);
+    return () => window.removeEventListener("technova_lang_changed", handleLangChange);
+  }, []);
+
+  const t = translations[lang === 'en' ? 'en' : 'fr'];
+
   // Don't show dialog for needs_review (silently handled) or missing review
   if (!review || review.status === "needs_review") return null;
+
+  const statusConfig = {
+    approved: {
+      label: t.approved,
+      icon: CheckCircle2,
+      badgeClass: "border-emerald-500/20 bg-emerald-500/10 text-emerald-700",
+      panelClass: "border-emerald-500/20 bg-emerald-500/5",
+    },
+    rejected: {
+      label: t.rejected,
+      icon: Ban,
+      badgeClass: "border-destructive/20 bg-destructive/10 text-destructive",
+      panelClass: "border-destructive/20 bg-destructive/5",
+    },
+  } as const;
 
   const config = statusConfig[review.status];
   if (!config) return null;
@@ -54,9 +82,9 @@ const ProductModerationDialog = ({ open, onOpenChange, review }: ProductModerati
               <ShieldAlert className="h-4 w-4 text-foreground" />
             </div>
             <div>
-              <DialogTitle className="text-base">Analyse du produit</DialogTitle>
+              <DialogTitle className="text-base">{t.title}</DialogTitle>
               <DialogDescription className="text-xs">
-                Vérification avant publication
+                {t.description}
               </DialogDescription>
             </div>
           </div>
@@ -75,7 +103,7 @@ const ProductModerationDialog = ({ open, onOpenChange, review }: ProductModerati
 
           {review.status === "rejected" && review.issues.length > 0 && (
             <div className="space-y-1.5">
-              <h3 className="text-xs font-semibold text-foreground">Raisons</h3>
+              <h3 className="text-xs font-semibold text-foreground">{t.reasons}</h3>
               <ul className="space-y-1">
                 {review.issues.map((issue, index) => (
                   <li key={`${issue}-${index}`} className="rounded-lg border border-border bg-card px-3 py-2 text-xs text-foreground">

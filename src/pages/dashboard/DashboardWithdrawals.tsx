@@ -21,11 +21,67 @@ interface Withdrawal {
 
 const ADMIN_EMAIL = "ancres707@gmail.com";
 
-const statusConfig: Record<string, { label: string; icon: any; color: string; badgeBg: string }> = {
-  pending: { label: "En attente", icon: Clock, color: "text-amber-600", badgeBg: "bg-amber-50 border-amber-200" },
-  processing: { label: "Traitement", icon: Loader2, color: "text-blue-600", badgeBg: "bg-blue-50 border-blue-200" },
-  completed: { label: "Payé", icon: CheckCircle2, color: "text-green-600", badgeBg: "bg-green-50 border-green-200" },
-  failed: { label: "Échoué", icon: XCircle, color: "text-destructive", badgeBg: "bg-destructive/10 border-destructive/30" },
+const translations = {
+  fr: {
+    title: "Retraits",
+    subtitle: "Retirez vos gains via Mobile Money",
+    kycRequired: "Vous devez vérifier votre identité avant de pouvoir effectuer des retraits.",
+    kycPending: "Votre vérification d'identité est en cours d'examen.",
+    kycRejected: "Votre vérification a été rejetée. Veuillez soumettre de nouveaux documents.",
+    btnVerify: "Vérifier mon identité",
+    btnResubmit: "Resoumettre",
+    btnViewStatus: "Voir le statut",
+    totalSales: "Ventes totales",
+    platformCommission: "Commission plateforme (10%)",
+    fundsInTransit: "Fonds en transit (72h)",
+    availableSoon: "Disponibles sous 72h après la vente",
+    availableBalance: "Solde disponible",
+    minWithdrawal: "Minimum de retrait : 100 FCFA",
+    alreadyWithdrawn: "Déjà retiré : ",
+    btnWithdraw: "Retirer mes gains",
+    wdHistory: "Historique des retraits",
+    noWithdrawals: "Aucun retrait pour le moment",
+    statusPending: "En attente",
+    statusProcessing: "Traitement",
+    statusCompleted: "Payé",
+    statusFailed: "Échoué",
+    etaCompleted: "Versé sur votre compte",
+    etaFailed: "Retrait échoué",
+    etaEstimating: "Délai en cours d'estimation",
+    etaEstimatedOn: "Estimé le ",
+    etaEstimatedBetween: "Estimé entre le ",
+    etaAnd: " et le ",
+  },
+  en: {
+    title: "Withdrawals",
+    subtitle: "Withdraw your earnings via Mobile Money",
+    kycRequired: "You must verify your identity before you can make withdrawals.",
+    kycPending: "Your identity verification is under review.",
+    kycRejected: "Your verification was rejected. Please submit new documents.",
+    btnVerify: "Verify my identity",
+    btnResubmit: "Resubmit",
+    btnViewStatus: "View status",
+    totalSales: "Total Sales",
+    platformCommission: "Platform Commission (10%)",
+    fundsInTransit: "Funds in transit (72h)",
+    availableSoon: "Available 72h after sale",
+    availableBalance: "Available balance",
+    minWithdrawal: "Minimum withdrawal: 100 FCFA",
+    alreadyWithdrawn: "Already withdrawn: ",
+    btnWithdraw: "Withdraw my earnings",
+    wdHistory: "Withdrawal History",
+    noWithdrawals: "No withdrawals yet",
+    statusPending: "Pending",
+    statusProcessing: "Processing",
+    statusCompleted: "Paid",
+    statusFailed: "Failed",
+    etaCompleted: "Paid to your account",
+    etaFailed: "Withdrawal failed",
+    etaEstimating: "Delay being estimated",
+    etaEstimatedOn: "Estimated on ",
+    etaEstimatedBetween: "Estimated between ",
+    etaAnd: " and ",
+  }
 };
 
 // Délais PawaPay en jours ouvrés selon le pays (T+min / T+max)
@@ -56,18 +112,20 @@ const getCountryFromProvider = (providerCode?: string | null): string | null => 
   return parts[parts.length - 1] || null;
 };
 
-const formatEta = (createdAt: string, status: string, providerCode?: string | null): string => {
-  if (status === "completed") return "Versé sur votre compte";
-  if (status === "failed") return "Retrait échoué";
+const formatEta = (createdAt: string, status: string, providerCode: string | null | undefined, lang: string): string => {
+  const t = translations[lang === 'en' ? 'en' : 'fr'];
+  if (status === "completed") return t.etaCompleted;
+  if (status === "failed") return t.etaFailed;
   const country = getCountryFromProvider(providerCode);
   const delay = country ? payoutDelaysByCountry[country] : null;
-  if (!delay) return "Délai en cours d'estimation";
+  if (!delay) return t.etaEstimating;
   const start = new Date(createdAt);
   const minDate = addBusinessDays(start, delay.min);
   const maxDate = addBusinessDays(start, delay.max);
-  const fmt = (d: Date) => d.toLocaleDateString("fr-FR", { day: "2-digit", month: "short" });
-  if (delay.min === delay.max) return `Estimé le ${fmt(minDate)}`;
-  return `Estimé entre le ${fmt(minDate)} et le ${fmt(maxDate)}`;
+  const localeStr = lang === "en" ? "en-US" : "fr-FR";
+  const fmt = (d: Date) => d.toLocaleDateString(localeStr, { day: "2-digit", month: "short" });
+  if (delay.min === delay.max) return `${t.etaEstimatedOn}${fmt(minDate)}`;
+  return `${t.etaEstimatedBetween}${fmt(minDate)}${t.etaAnd}${fmt(maxDate)}`;
 };
 
 const DashboardWithdrawals = () => {
@@ -80,6 +138,23 @@ const DashboardWithdrawals = () => {
   const [totalWithdrawn, setTotalWithdrawn] = useState(0);
   const [availableBalance, setAvailableBalance] = useState(0);
   const [kycStatus, setKycStatus] = useState<string | null>(null);
+
+  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+
+  useEffect(() => {
+    const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
+    window.addEventListener("technova_lang_changed", handleLangChange);
+    return () => window.removeEventListener("technova_lang_changed", handleLangChange);
+  }, []);
+
+  const t = translations[lang === 'en' ? 'en' : 'fr'];
+
+  const statusConfig: Record<string, { label: string; icon: any; color: string; badgeBg: string }> = {
+    pending: { label: t.statusPending, icon: Clock, color: "text-amber-600", badgeBg: "bg-amber-50 border-amber-200" },
+    processing: { label: t.statusProcessing, icon: Loader2, color: "text-blue-600", badgeBg: "bg-blue-50 border-blue-200" },
+    completed: { label: t.statusCompleted, icon: CheckCircle2, color: "text-green-600", badgeBg: "bg-green-50 border-green-200" },
+    failed: { label: t.statusFailed, icon: XCircle, color: "text-destructive", badgeBg: "bg-destructive/10 border-destructive/30" },
+  };
 
   useEffect(() => { if (user) loadData(); }, [user]);
 
@@ -117,8 +192,8 @@ const DashboardWithdrawals = () => {
     <DashboardLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Retraits</h1>
-          <p className="text-sm text-muted-foreground mt-1">Retirez vos gains via Mobile Money</p>
+          <h1 className="text-2xl font-bold text-foreground">{t.title}</h1>
+          <p className="text-sm text-muted-foreground mt-1">{t.subtitle}</p>
         </div>
 
         {!isAdmin && kycStatus !== "approved" && (
@@ -127,13 +202,13 @@ const DashboardWithdrawals = () => {
             <AlertDescription className="text-sm text-amber-800 flex items-center justify-between flex-wrap gap-3">
               <span className="flex items-center gap-1.5">
                 <Shield className="h-4 w-4" />
-                {!kycStatus && "Vous devez vérifier votre identité avant de pouvoir effectuer des retraits."}
-                {kycStatus === "pending" && "Votre vérification d'identité est en cours d'examen."}
-                {kycStatus === "rejected" && "Votre vérification a été rejetée. Veuillez soumettre de nouveaux documents."}
+                {!kycStatus && t.kycRequired}
+                {kycStatus === "pending" && t.kycPending}
+                {kycStatus === "rejected" && t.kycRejected}
               </span>
               <Link to="/dashboard/settings">
                 <Button size="sm" variant="outline" className="text-xs">
-                  {!kycStatus ? "Vérifier mon identité" : kycStatus === "rejected" ? "Resoumettre" : "Voir le statut"}
+                  {!kycStatus ? t.btnVerify : kycStatus === "rejected" ? t.btnResubmit : t.btnViewStatus}
                 </Button>
               </Link>
             </AlertDescription>
@@ -142,30 +217,30 @@ const DashboardWithdrawals = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="rounded-xl border border-border bg-card p-5">
-            <p className="text-xs text-muted-foreground mb-1">Ventes totales</p>
+            <p className="text-xs text-muted-foreground mb-1">{t.totalSales}</p>
             <p className="text-2xl font-bold text-foreground">{Math.floor(totalSales).toLocaleString("fr")} <span className="text-sm font-normal text-muted-foreground">FCFA</span></p>
           </div>
           <div className="rounded-xl border border-border bg-card p-5">
-            <p className="text-xs text-muted-foreground mb-1">Commission plateforme (10%)</p>
+            <p className="text-xs text-muted-foreground mb-1">{t.platformCommission}</p>
             <p className="text-2xl font-bold text-muted-foreground">{Math.floor(totalSales * 0.10).toLocaleString("fr")} <span className="text-sm font-normal">FCFA</span></p>
           </div>
           {pendingFunds > 0 && (
             <div className="rounded-xl border border-amber-200 bg-amber-50/50 p-5">
               <p className="text-xs text-muted-foreground mb-1 flex items-center gap-1">
-                <Clock className="h-3 w-3" /> Fonds en transit (72h)
+                <Clock className="h-3 w-3" /> {t.fundsInTransit}
               </p>
               <p className="text-2xl font-bold text-amber-600">{Math.floor(pendingFunds).toLocaleString("fr")} <span className="text-sm font-normal">FCFA</span></p>
-              <p className="text-xs text-muted-foreground mt-1">Disponibles sous 72h après la vente</p>
+              <p className="text-xs text-muted-foreground mt-1">{t.availableSoon}</p>
             </div>
           )}
           <div className="rounded-xl border border-primary/30 bg-primary/5 p-5">
-            <p className="text-xs text-muted-foreground mb-1">Solde disponible</p>
+            <p className="text-xs text-muted-foreground mb-1">{t.availableBalance}</p>
             <p className="text-2xl font-bold text-foreground">{Math.floor(availableBalance).toLocaleString("fr")} <span className="text-sm font-normal text-muted-foreground">FCFA</span></p>
             {availableBalance < 100 && availableBalance > 0 && (
-              <p className="text-xs text-orange-500 mt-1">Minimum de retrait : 100 FCFA</p>
+              <p className="text-xs text-orange-500 mt-1">{t.minWithdrawal}</p>
             )}
             {availableBalance >= 100 && (
-              <p className="text-xs text-muted-foreground mt-1">Déjà retiré : {Math.floor(totalWithdrawn).toLocaleString("fr")} FCFA</p>
+              <p className="text-xs text-muted-foreground mt-1">{t.alreadyWithdrawn}{Math.floor(totalWithdrawn).toLocaleString("fr")} FCFA</p>
             )}
           </div>
         </div>
@@ -176,25 +251,26 @@ const DashboardWithdrawals = () => {
             disabled={!isAdmin && kycStatus !== "approved"}
             onClick={() => window.open("/dashboard/withdrawals/new", "_blank", "noopener,noreferrer")}
           >
-            <ArrowDownToLine className="h-4 w-4" /> Retirer mes gains
+            <ArrowDownToLine className="h-4 w-4" /> {t.btnWithdraw}
           </Button>
         </div>
 
         <div>
-          <h2 className="text-lg font-semibold text-foreground mb-3">Historique des retraits</h2>
+          <h2 className="text-lg font-semibold text-foreground mb-3">{t.wdHistory}</h2>
           {loading ? (
             <div className="flex justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
           ) : withdrawals.length === 0 ? (
             <div className="text-center py-12 rounded-xl border border-border bg-card">
               <Wallet className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
-              <p className="text-sm text-muted-foreground">Aucun retrait pour le moment</p>
+              <p className="text-sm text-muted-foreground">{t.noWithdrawals}</p>
             </div>
           ) : (
             <div className="space-y-2">
               {withdrawals.map((w) => {
                 const cfg = statusConfig[w.status] || statusConfig.pending;
                 const Icon = cfg.icon;
-                const eta = formatEta(w.created_at, w.status, w.provider_code);
+                const eta = formatEta(w.created_at, w.status, w.provider_code, lang);
+                const localeStr = lang === "en" ? "en-US" : "fr-FR";
                 return (
                   <div key={w.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 rounded-xl border border-border bg-card">
                     <div className="flex items-center gap-3 min-w-0">
@@ -204,7 +280,7 @@ const DashboardWithdrawals = () => {
                       <div className="min-w-0">
                         <p className="text-sm font-semibold text-foreground">{Number(w.amount).toLocaleString("fr")} FCFA</p>
                         <p className="text-xs text-muted-foreground truncate">
-                          {w.phone_number} · {new Date(w.created_at).toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric" })}
+                          {w.phone_number} · {new Date(w.created_at).toLocaleDateString(localeStr, { day: "2-digit", month: "short", year: "numeric" })}
                         </p>
                         <p className="text-[11px] text-muted-foreground/90 mt-0.5 flex items-center gap-1">
                           <Clock className="h-3 w-3" /> {eta}

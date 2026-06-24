@@ -13,6 +13,61 @@ import SEOHead from "@/components/SEOHead";
 import { countries, Country } from "@/data/countries";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
+const translations = {
+  fr: {
+    seoTitle: "Créer un compte",
+    seoDesc: "Créez votre compte TECHNOVA gratuitement et commencez à vendre vos produits digitaux en 5 minutes.",
+    visualHeading: "Lancez votre boutique en 5 minutes",
+    visualDesc: "Fichiers, formations et licences — vendez vos produits digitaux avec TECHNOVA.",
+    heading: "Créer un compte",
+    subtitle: "Commencez à vendre vos produits digitaux dès aujourd'hui.",
+    continueGoogle: "Continuer avec Google",
+    googleError: "Erreur lors de l'inscription avec Google",
+    orEmail: "ou par email",
+    lastNameLabel: "Nom",
+    firstNameLabel: "Prénom",
+    emailLabel: "Email",
+    phoneLabel: "Numéro de téléphone",
+    searchCountry: "Rechercher un pays...",
+    passwordLabel: "Mot de passe",
+    passwordPlaceholder: "Min. 8 caractères",
+    createBtn: "Créer mon compte",
+    creating: "Création...",
+    alreadyAccount: "Déjà un compte ?",
+    loginLink: "Se connecter",
+    validationPass: "Le mot de passe doit contenir au moins 8 caractères",
+    validationName: "Veuillez renseigner votre nom et prénom",
+    successCreated: "Compte créé avec succès !",
+    verifyEmail: "Vérifiez votre email pour confirmer votre inscription !"
+  },
+  en: {
+    seoTitle: "Create an Account",
+    seoDesc: "Create your TECHNOVA account for free and start selling your digital products in 5 minutes.",
+    visualHeading: "Launch your store in 5 minutes",
+    visualDesc: "Files, courses, and licenses — sell your digital products with TECHNOVA.",
+    heading: "Create an account",
+    subtitle: "Start selling your digital products today.",
+    continueGoogle: "Continue with Google",
+    googleError: "Error registering with Google",
+    orEmail: "or by email",
+    lastNameLabel: "Last name",
+    firstNameLabel: "First name",
+    emailLabel: "Email",
+    phoneLabel: "Phone number",
+    searchCountry: "Search country...",
+    passwordLabel: "Password",
+    passwordPlaceholder: "Min. 8 characters",
+    createBtn: "Create my account",
+    creating: "Creating...",
+    alreadyAccount: "Already have an account?",
+    loginLink: "Log in",
+    validationPass: "Password must contain at least 8 characters",
+    validationName: "Please fill in your first and last name",
+    successCreated: "Account created successfully!",
+    verifyEmail: "Check your email to confirm your registration!"
+  }
+};
+
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [firstName, setFirstName] = useState("");
@@ -26,6 +81,16 @@ const Register = () => {
   const [countryOpen, setCountryOpen] = useState(false);
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
+
+  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+
+  useEffect(() => {
+    const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
+    window.addEventListener("technova_lang_changed", handleLangChange);
+    return () => window.removeEventListener("technova_lang_changed", handleLangChange);
+  }, []);
+
+  const t = translations[lang === 'en' ? 'en' : 'fr'];
 
   useEffect(() => {
     if (!authLoading && user) {
@@ -46,12 +111,12 @@ const Register = () => {
     if (loading || authLoading) return;
 
     if (password.length < 8) {
-      toast.error("Le mot de passe doit contenir au moins 8 caractères");
+      toast.error(t.validationPass);
       return;
     }
 
     if (!firstName.trim() || !lastName.trim()) {
-      toast.error("Veuillez renseigner votre nom et prénom");
+      toast.error(t.validationName);
       return;
     }
 
@@ -81,12 +146,12 @@ const Register = () => {
     }
 
     if (data.session?.user) {
-      toast.success("Compte créé avec succès !");
+      toast.success(t.successCreated);
       navigate("/onboarding", { replace: true });
       return;
     }
 
-    toast.success("Vérifiez votre email pour confirmer votre inscription !");
+    toast.success(t.verifyEmail);
     navigate("/login", { replace: true });
   };
 
@@ -103,7 +168,7 @@ const Register = () => {
     });
 
     if (error) {
-      toast.error("Erreur lors de l'inscription avec Google");
+      toast.error(t.googleError);
       setLoading(false);
       return;
     }
@@ -115,17 +180,17 @@ const Register = () => {
 
   return (
     <div className="min-h-screen flex">
-      <SEOHead title="Créer un compte" description="Créez votre compte TECHNOVA gratuitement et commencez à vendre vos produits digitaux en 5 minutes." canonicalPath="/register" />
+      <SEOHead title={t.seoTitle} description={t.seoDesc} canonicalPath="/register" />
       {/* Left - Visual */}
       <div className="hidden lg:flex flex-1 items-center justify-center bg-foreground relative overflow-hidden">
         <div className="absolute top-20 left-10 h-64 w-64 rounded-full bg-primary/20 blur-[100px]" />
         <div className="absolute -bottom-32 -right-32 h-48 w-48 rounded-full bg-primary/15 blur-[80px]" />
         <div className="relative text-center px-12">
           <h2 className="text-3xl font-extrabold text-background mb-4">
-            Lancez votre boutique en 5 minutes
+            {t.visualHeading}
           </h2>
           <p className="text-background/50 text-lg max-w-md">
-            Fichiers, formations et licences — vendez vos produits digitaux avec TECHNOVA.
+            {t.visualDesc}
           </p>
         </div>
       </div>
@@ -142,9 +207,9 @@ const Register = () => {
             <span className="text-lg font-bold text-foreground">TECHNOVA</span>
           </Link>
 
-          <h1 className="text-2xl font-extrabold text-foreground mb-2">Créer un compte</h1>
+          <h1 className="text-2xl font-extrabold text-foreground mb-2">{t.heading}</h1>
           <p className="text-sm text-muted-foreground mb-8">
-            Commencez à vendre vos produits digitaux dès aujourd'hui.
+            {t.subtitle}
           </p>
 
           {/* Google Button */}
@@ -161,7 +226,7 @@ const Register = () => {
               <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
               <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
             </svg>
-            Continuer avec Google
+            {t.continueGoogle}
           </Button>
 
           <div className="relative mb-6">
@@ -169,14 +234,14 @@ const Register = () => {
               <div className="w-full border-t border-border" />
             </div>
             <div className="relative flex justify-center text-xs">
-              <span className="bg-background px-3 text-muted-foreground">ou par email</span>
+              <span className="bg-background px-3 text-muted-foreground">{t.orEmail}</span>
             </div>
           </div>
 
           <form onSubmit={handleRegister} className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-sm font-medium text-foreground mb-1.5 block">Nom</label>
+                <label className="text-sm font-medium text-foreground mb-1.5 block">{t.lastNameLabel}</label>
                 <Input
                   type="text"
                   placeholder="Dupont"
@@ -187,7 +252,7 @@ const Register = () => {
                 />
               </div>
               <div>
-                <label className="text-sm font-medium text-foreground mb-1.5 block">Prénom</label>
+                <label className="text-sm font-medium text-foreground mb-1.5 block">{t.firstNameLabel}</label>
                 <Input
                   type="text"
                   placeholder="Jean"
@@ -199,7 +264,7 @@ const Register = () => {
               </div>
             </div>
             <div>
-              <label className="text-sm font-medium text-foreground mb-1.5 block">Email</label>
+              <label className="text-sm font-medium text-foreground mb-1.5 block">{t.emailLabel}</label>
               <Input
                 type="email"
                 placeholder="vous@exemple.com"
@@ -210,7 +275,7 @@ const Register = () => {
               />
             </div>
             <div>
-              <label className="text-sm font-medium text-foreground mb-1.5 block">Numéro de téléphone</label>
+              <label className="text-sm font-medium text-foreground mb-1.5 block">{t.phoneLabel}</label>
               <div className="flex gap-2">
                 <Popover open={countryOpen} onOpenChange={setCountryOpen}>
                   <PopoverTrigger asChild>
@@ -230,7 +295,7 @@ const Register = () => {
                       <Search className="h-4 w-4 text-muted-foreground" />
                       <input
                         className="flex-1 text-sm bg-transparent outline-none placeholder:text-muted-foreground"
-                        placeholder="Rechercher un pays..."
+                        placeholder={t.searchCountry}
                         value={countrySearch}
                         onChange={(e) => setCountrySearch(e.target.value)}
                       />
@@ -249,7 +314,7 @@ const Register = () => {
                         >
                           <img src={`https://flagcdn.com/w40/${c.code.toLowerCase()}.png`} alt={c.code} className="h-4 w-6 object-cover rounded-sm shrink-0" />
                           <span className="text-xs font-medium text-foreground">{c.code}</span>
-                          <span className="flex-1 truncate">{c.name}</span>
+                          <span className="flex-1 truncate">{c.dial === '+229' && lang === 'en' ? 'Benin' : c.name}</span>
                           <span className="text-xs text-muted-foreground">{c.dial}</span>
                         </button>
                       ))}
@@ -268,11 +333,11 @@ const Register = () => {
               </div>
             </div>
             <div>
-              <label className="text-sm font-medium text-foreground mb-1.5 block">Mot de passe</label>
+              <label className="text-sm font-medium text-foreground mb-1.5 block">{t.passwordLabel}</label>
               <div className="relative">
                 <Input
                   type={showPassword ? "text" : "password"}
-                  placeholder="Min. 8 caractères"
+                  placeholder={t.passwordPlaceholder}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   autoComplete="new-password"
@@ -290,14 +355,14 @@ const Register = () => {
             </div>
 
             <Button className="w-full py-5 text-sm font-semibold" disabled={isBusy}>
-              {isBusy ? "Création..." : "Créer mon compte"}
+              {isBusy ? t.creating : t.createBtn}
             </Button>
           </form>
 
           <p className="mt-6 text-center text-sm text-muted-foreground">
-            Déjà un compte ?{" "}
+            {t.alreadyAccount}{" "}
             <Link to="/login" className="font-medium text-primary hover:underline">
-              Se connecter
+              {t.loginLink}
             </Link>
           </p>
         </motion.div>

@@ -7,21 +7,41 @@ import { products } from "@/data/products";
 import { useGeoPricing } from "@/contexts/GeoPricingContext";
 import { useCart } from "@/contexts/CartContext";
 import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
 
-const categoryLabels: Record<string, string> = {
-  course: "Cours",
-  formation: "Formation",
-  ebook: "E-book",
-  template: "Template",
+const categoryLabels: Record<string, Record<string, string>> = {
+  course: { fr: "Cours", en: "Course" },
+  formation: { fr: "Formation", en: "Training" },
+  ebook: { fr: "E-book", en: "E-book" },
+  template: { fr: "Template", en: "Template" },
 };
 
-const SUBCAT_LABELS: Record<string, string> = {
-  notion: "Notion",
-  canva: "Canva",
-  excel: "Excel",
-  dev: "Dev",
-  marketing: "Marketing",
-  other: "Autre"
+const SUBCAT_LABELS: Record<string, Record<string, string>> = {
+  notion: { fr: "Notion", en: "Notion" },
+  canva: { fr: "Canva", en: "Canva" },
+  excel: { fr: "Excel", en: "Excel" },
+  dev: { fr: "Dev", en: "Dev" },
+  marketing: { fr: "Marketing", en: "Marketing" },
+  other: { fr: "Autre", en: "Other" }
+};
+
+const translations = {
+  fr: {
+    notFound: "Produit introuvable",
+    backToCatalog: "Retour au catalogue",
+    students: "étudiants",
+    alreadyInCart: "Déjà dans le panier",
+    addToCart: "Ajouter au panier",
+    features: ["Accès à vie", "Téléchargement immédiat", "Paiement sécurisé"]
+  },
+  en: {
+    notFound: "Product not found",
+    backToCatalog: "Back to catalog",
+    students: "students",
+    alreadyInCart: "Already in cart",
+    addToCart: "Add to cart",
+    features: ["Lifetime access", "Immediate download", "Secure payment"]
+  }
 };
 
 const ProductDetail = () => {
@@ -31,14 +51,24 @@ const ProductDetail = () => {
   const { addToCart, items } = useCart();
   const inCart = product ? items.some((i) => i.product.id === product.id) : false;
 
+  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+
+  useEffect(() => {
+    const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
+    window.addEventListener("technova_lang_changed", handleLangChange);
+    return () => window.removeEventListener("technova_lang_changed", handleLangChange);
+  }, []);
+
+  const t = translations[lang === 'en' ? 'en' : 'fr'];
+
   if (!product) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
         <div className="container mx-auto px-4 py-20 text-center">
-          <h1 className="text-2xl font-bold text-foreground">Produit introuvable</h1>
+          <h1 className="text-2xl font-bold text-foreground">{t.notFound}</h1>
           <Link to="/products" className="mt-4 inline-block text-primary underline">
-            Retour au catalogue
+            {t.backToCatalog}
           </Link>
         </div>
       </div>
@@ -54,7 +84,7 @@ const ProductDetail = () => {
           className="mb-8 inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4" />
-          Retour au catalogue
+          {t.backToCatalog}
         </Link>
 
         <div className="grid gap-12 lg:grid-cols-2">
@@ -83,8 +113,8 @@ const ProductDetail = () => {
             <div className="mb-4 flex items-center gap-3">
               <span className="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
                 {product.category?.startsWith("template:")
-                  ? `Template ${SUBCAT_LABELS[product.category.split(":")[1]] || product.category.split(":")[1]}`
-                  : (categoryLabels[product.category] || product.category)}
+                  ? `Template ${SUBCAT_LABELS[product.category.split(":")[1]]?.[lang] || product.category.split(":")[1]}`
+                  : (categoryLabels[product.category]?.[lang] || product.category)}
               </span>
               {product.badge && (
                 <span className="rounded-full bg-gold-gradient px-3 py-1 text-sm font-semibold text-accent-foreground">
@@ -103,7 +133,7 @@ const ProductDetail = () => {
               {product.students && (
                 <div className="flex items-center gap-1 text-muted-foreground">
                   <Users className="h-4 w-4" />
-                  <span className="text-sm">{product.students} étudiants</span>
+                  <span className="text-sm">{product.students} {t.students}</span>
                 </div>
               )}
             </div>
@@ -127,19 +157,19 @@ const ProductDetail = () => {
                 {inCart ? (
                   <>
                     <CheckCircle className="mr-2 h-5 w-5" />
-                    Déjà dans le panier
+                    {t.alreadyInCart}
                   </>
                 ) : (
                   <>
                     <ShoppingCart className="mr-2 h-5 w-5" />
-                    Ajouter au panier
+                    {t.addToCart}
                   </>
                 )}
               </Button>
             </div>
 
             <div className="space-y-3">
-              {["Accès à vie", "Téléchargement immédiat", "Paiement sécurisé"].map((feat) => (
+              {t.features.map((feat) => (
                 <div key={feat} className="flex items-center gap-2 text-sm text-muted-foreground">
                   <CheckCircle className="h-4 w-4 text-primary" />
                   {feat}

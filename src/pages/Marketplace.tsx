@@ -39,6 +39,134 @@ import {
 import { Button } from "@/components/ui/button";
 import heroImage from "@/assets/marketplace-hero.jpg";
 
+const translations = {
+  fr: {
+    seoTitle: "Marketplace TECHNOVA · Produits numériques vérifiés",
+    seoDesc: "La marketplace #1 de produits numériques dans le monde. Vendeurs vérifiés KYC, paiements en ligne sécurisés, fichiers, formations et licences.",
+    badge: "Marketplace #1 de produits numériques au niveau mondial",
+    title: "Achetez en confiance.",
+    titleHighlight: "Vendez sans limite.",
+    desc: "Fichiers, formations, licences. Vendeurs vérifiés par KYC, paiements chiffrés, livraison instantanée.",
+    myPurchases: "Mes achats",
+    becomeSeller: "Devenir vendeur",
+    exploreCategory: "Explorez par catégorie",
+    findExactly: "Trouvez exactement ce dont vous avez besoin",
+    viewAll: "Voir tout",
+    topProducts: "Top produits",
+    topProductsSub: "Les best-sellers du moment",
+    verifiedTitle: "Achetez auprès de vendeurs Verified",
+    verifiedDesc: "Identité confirmée, KYC validé, garantie de remboursement renforcée.",
+    verifiedBtn: "Voir les vendeurs vérifiés",
+    newProducts: "Nouveautés",
+    newProductsSub: "Les derniers ajouts de nos créateurs",
+    recommended: "Recommandés pour vous",
+    recommendedSub: "Une sélection de la marketplace",
+    marketingTitle: "Outils marketing intégrés",
+    marketingHeading: <>Tout pour <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">vendre plus</span></>,
+    marketingDesc: "Une suite marketing puissante incluse dans chaque boutique TECHNOVA.",
+    ctaTitle: "Vendez vos produits numériques sur TECHNOVA",
+    ctaDesc: "Lancez votre boutique en quelques minutes. Commission unique de 10%, paiements mobile money intégrés, suite marketing complète.",
+    ctaBtn: "Ouvrir ma boutique",
+    ctaPricing: "Voir les tarifs",
+    noSubscription: "Sans abonnement",
+    autoPayments: "Paiements automatiques",
+    supportLabel: "Support FR 24/7",
+    all: "Tout",
+    verifiedSellers: "Vendeurs Verified",
+    benefits: [
+      { label: "Vendeurs vérifiés KYC", desc: "Identité confirmée" },
+      { label: "Badges Verified", desc: "Standard, Pro, Premium" },
+      { label: "Paiements chiffrés", desc: "PCI-DSS · Mobile money" },
+      { label: "Anti-fraude IA", desc: "Modération 24/7" },
+    ],
+    features: [
+      { title: "Email campagnes", desc: "Envoyez des newsletters ciblées à vos clients via Resend." },
+      { title: "Codes promo & remises", desc: "Créez des coupons illimités pour booster vos ventes." },
+      { title: "Analytics avancées", desc: "Suivez chiffre d'affaires, conversions et top produits." },
+      { title: "Programme d'affiliation", desc: "Recrutez des affiliés et payez à la commission." },
+      { title: "Domaine personnalisé", desc: "Connectez votre propre domaine en 1 clic (Cloudflare)." },
+      { title: "Pixels & automations", desc: "Meta, TikTok, Google Ads · webhooks Telegram & Zapier." },
+    ],
+    kpis: [
+      { value: "10%", label: "Commission unique" },
+      { value: "72h", label: "Délai de maturité" },
+      { value: "100%", label: "Vendeurs KYC" },
+      { value: "24/7", label: "Modération IA" },
+    ]
+  },
+  en: {
+    seoTitle: "Marketplace TECHNOVA · Verified Digital Products",
+    seoDesc: "#1 digital products marketplace worldwide. KYC-verified sellers, secure online payments, files, courses, and licenses.",
+    badge: "#1 digital products marketplace globally",
+    title: "Buy with confidence.",
+    titleHighlight: "Sell without limits.",
+    desc: "Files, training, licenses. KYC verified sellers, encrypted payments, instant delivery.",
+    myPurchases: "My purchases",
+    becomeSeller: "Become a seller",
+    exploreCategory: "Explore by category",
+    findExactly: "Find exactly what you need",
+    viewAll: "View all",
+    topProducts: "Top Products",
+    topProductsSub: "Current best-sellers",
+    verifiedTitle: "Buy from Verified Sellers",
+    verifiedDesc: "Confirmed identity, verified KYC, enhanced refund guarantee.",
+    verifiedBtn: "View verified sellers",
+    newProducts: "New Releases",
+    newProductsSub: "Latest additions from our creators",
+    recommended: "Recommended for you",
+    recommendedSub: "A selection from the marketplace",
+    marketingTitle: "Integrated Marketing Tools",
+    marketingHeading: <>Everything to <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">sell more</span></>,
+    marketingDesc: "A powerful marketing suite included in every TECHNOVA storefront.",
+    ctaTitle: "Sell your digital products on TECHNOVA",
+    ctaDesc: "Launch your storefront in minutes. Flat 10% commission, integrated mobile money payments, complete marketing suite.",
+    ctaBtn: "Open my storefront",
+    ctaPricing: "View pricing",
+    noSubscription: "No subscription",
+    autoPayments: "Automated payouts",
+    supportLabel: "Support 24/7",
+    all: "All",
+    verifiedSellers: "Verified Sellers",
+    benefits: [
+      { label: "KYC Verified Sellers", desc: "Confirmed identity" },
+      { label: "Verified Badges", desc: "Standard, Pro, Premium" },
+      { label: "Encrypted Payments", desc: "PCI-DSS · Mobile money" },
+      { label: "AI Anti-fraud", desc: "24/7 moderation" },
+    ],
+    features: [
+      { title: "Email Campaigns", desc: "Send targeted newsletters to your clients via Resend." },
+      { title: "Promo Codes & Discounts", desc: "Create unlimited coupons to boost your sales." },
+      { title: "Advanced Analytics", desc: "Track revenue, conversions, and top products." },
+      { title: "Affiliate Program", desc: "Recruit affiliates and pay commission-based." },
+      { title: "Custom Domain", desc: "Connect your own domain in 1 click (Cloudflare)." },
+      { title: "Pixels & Automations", desc: "Meta, TikTok, Google Ads · Telegram & Zapier webhooks." },
+    ],
+    kpis: [
+      { value: "10%", label: "Flat commission" },
+      { value: "72h", label: "Maturity period" },
+      { value: "100%", label: "KYC Sellers" },
+      { value: "24/7", label: "AI Moderation" },
+    ]
+  }
+};
+
+const categoryLabels: Record<string, Record<string, string>> = {
+  business: { fr: "Business", en: "Business" },
+  design: { fr: "Design", en: "Design" },
+  tech: { fr: "Tech & Code", en: "Tech & Code" },
+  marketing: { fr: "Marketing", en: "Marketing" },
+  education: { fr: "Éducation", en: "Education" },
+  lifestyle: { fr: "Lifestyle", en: "Lifestyle" },
+  creative: { fr: "Créatif", en: "Creative" },
+  other: { fr: "Autres", en: "Others" },
+};
+
+const productTypeLabels: Record<string, Record<string, string>> = {
+  file: { fr: "Fichiers", en: "Files" },
+  course: { fr: "Formations", en: "Courses" },
+  license: { fr: "Licences", en: "Licenses" },
+};
+
 const Marketplace = () => {
   const { loading } = useAuth();
   const navigate = useNavigate();
@@ -46,6 +174,16 @@ const Marketplace = () => {
   const [newProducts, setNewProducts] = useState<MarketplaceProduct[]>([]);
   const [recommended, setRecommended] = useState<MarketplaceProduct[]>([]);
   const [loadingProducts, setLoadingProducts] = useState(true);
+
+  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+
+  useEffect(() => {
+    const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
+    window.addEventListener("technova_lang_changed", handleLangChange);
+    return () => window.removeEventListener("technova_lang_changed", handleLangChange);
+  }, []);
+
+  const t = translations[lang === 'en' ? 'en' : 'fr'];
 
   useEffect(() => {
     const fetchAll = async () => {
@@ -83,8 +221,8 @@ const Marketplace = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         canonicalPath="/marketplace"
-        title="Marketplace TECHNOVA · Produits numériques vérifiés"
-        description="La marketplace #1 de produits numériques dans le monde. Vendeurs vérifiés KYC, paiements en ligne sécurisés, fichiers, formations et licences."
+        title={t.seoTitle}
+        description={t.seoDesc}
       />
       <Header />
 
@@ -93,7 +231,7 @@ const Marketplace = () => {
         <div className="relative">
           <img
             src={heroImage}
-            alt="TECHNOVA — marketplace de produits numériques sécurisée"
+            alt="TECHNOVA"
             width={1920}
             height={1024}
             className="h-[340px] w-full object-cover sm:h-[440px] md:h-[560px]"
@@ -111,17 +249,16 @@ const Marketplace = () => {
             className="mx-auto max-w-3xl text-center"
           >
             <span className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-[11px] font-semibold text-accent backdrop-blur sm:text-xs">
-              <Sparkles className="h-3 w-3" /> Marketplace #1 de produits numériques au niveau mondial
+              <Sparkles className="h-3 w-3" /> {t.badge}
             </span>
             <h1 className="mb-3 text-3xl font-bold leading-[1.05] tracking-tight text-foreground sm:text-5xl md:text-6xl">
-              Achetez en confiance.{" "}
+              {t.title}{" "}
               <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-                Vendez sans limite.
+                {t.titleHighlight}
               </span>
             </h1>
             <p className="mx-auto mb-6 max-w-xl text-sm text-muted-foreground sm:text-base md:text-lg">
-              Fichiers, formations, licences. Vendeurs vérifiés par KYC, paiements chiffrés,
-              livraison instantanée.
+              {t.desc}
             </p>
 
             <div className="rounded-2xl border border-border/60 bg-background/80 p-2 shadow-2xl backdrop-blur-xl sm:p-3">
@@ -131,12 +268,12 @@ const Marketplace = () => {
             <div className="mt-5 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
               <Link to="/buyer-login">
                 <Button variant="outline" size="sm" className="rounded-full gap-1.5 backdrop-blur">
-                  <ShoppingBag className="h-4 w-4" /> Mes achats
+                  <ShoppingBag className="h-4 w-4" /> {t.myPurchases}
                 </Button>
               </Link>
               <Link to="/register">
                 <Button size="sm" className="rounded-full gap-1.5 shadow-lg shadow-primary/30">
-                  <Store className="h-4 w-4" /> Devenir vendeur
+                  <Store className="h-4 w-4" /> {t.becomeSeller}
                 </Button>
               </Link>
             </div>
@@ -146,33 +283,32 @@ const Marketplace = () => {
         {/* TRUST BENEFITS BAR */}
         <div className="container mx-auto px-4 pb-2 pt-10 sm:pt-14">
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
-            {[
-              { icon: Fingerprint, label: "Vendeurs vérifiés KYC", desc: "Identité confirmée" },
-              { icon: BadgeCheck, label: "Badges Verified", desc: "Standard, Pro, Premium" },
-              { icon: Lock, label: "Paiements chiffrés", desc: "PCI-DSS · Mobile money" },
-              { icon: Shield, label: "Anti-fraude IA", desc: "Modération 24/7" },
-            ].map((b, i) => (
-              <motion.div
-                key={b.label}
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.05 }}
-                className="flex items-center gap-2.5 rounded-xl border border-border bg-card/60 p-3 backdrop-blur sm:gap-3 sm:p-4"
-              >
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-primary/15 to-accent/15 sm:h-10 sm:w-10">
-                  <b.icon className="h-4 w-4 text-primary sm:h-5 sm:w-5" />
-                </div>
-                <div className="min-w-0">
-                  <div className="truncate text-xs font-semibold text-foreground sm:text-sm">
-                    {b.label}
+            {t.benefits.map((b, i) => {
+              const icons = [Fingerprint, BadgeCheck, Lock, Shield];
+              const Icon = icons[i];
+              return (
+                <motion.div
+                  key={b.label}
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.05 }}
+                  className="flex items-center gap-2.5 rounded-xl border border-border bg-card/60 p-3 backdrop-blur sm:gap-3 sm:p-4"
+                >
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-primary/15 to-accent/15 sm:h-10 sm:w-10">
+                    <Icon className="h-4 w-4 text-primary sm:h-5 sm:w-5" />
                   </div>
-                  <div className="truncate text-[10px] text-muted-foreground sm:text-xs">
-                    {b.desc}
+                  <div className="min-w-0">
+                    <div className="truncate text-xs font-semibold text-foreground sm:text-sm">
+                      {b.label}
+                    </div>
+                    <div className="truncate text-[10px] text-muted-foreground sm:text-xs">
+                      {b.desc}
+                    </div>
                   </div>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -185,7 +321,7 @@ const Marketplace = () => {
               onClick={() => navigate("/search")}
               className="flex shrink-0 items-center gap-1.5 rounded-full bg-foreground px-4 py-2 text-xs font-semibold text-background sm:text-sm"
             >
-              ✨ Tout
+              ✨ {t.all}
             </button>
             {PRODUCT_TYPES.map((t) => (
               <button
@@ -193,14 +329,14 @@ const Marketplace = () => {
                 onClick={() => navigate(`/search?type=${t.key}`)}
                 className="flex shrink-0 items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2 text-xs font-medium text-foreground transition-colors hover:border-primary hover:text-primary sm:text-sm"
               >
-                <span>{t.emoji}</span> {t.label}
+                <span>{t.emoji}</span> {productTypeLabels[t.key]?.[lang] || t.label}
               </button>
             ))}
             <button
               onClick={() => navigate(`/search?verified=any`)}
               className="flex shrink-0 items-center gap-1.5 rounded-full border border-accent/50 bg-accent/10 px-4 py-2 text-xs font-semibold text-accent sm:text-sm"
             >
-              <BadgeCheck className="h-3.5 w-3.5" /> Vendeurs Verified
+              <BadgeCheck className="h-3.5 w-3.5" /> {t.verifiedSellers}
             </button>
             {MARKETPLACE_CATEGORIES.slice(0, 4).map((c) => (
               <button
@@ -208,7 +344,7 @@ const Marketplace = () => {
                 onClick={() => navigate(`/search?category=${c.key}`)}
                 className="flex shrink-0 items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2 text-xs font-medium text-muted-foreground transition-colors hover:border-primary hover:text-primary sm:text-sm"
               >
-                <span>{c.emoji}</span> {c.label}
+                <span>{c.emoji}</span> {categoryLabels[c.key]?.[lang] || c.label}
               </button>
             ))}
           </div>
@@ -221,17 +357,17 @@ const Marketplace = () => {
           <div className="mb-3 flex items-center justify-between gap-3 sm:mb-4">
             <div className="min-w-0">
               <h2 className="text-base font-bold text-foreground sm:text-lg md:text-xl">
-                Explorez par catégorie
+                {t.exploreCategory}
               </h2>
               <p className="line-clamp-1 text-[11px] text-muted-foreground sm:text-xs">
-                Trouvez exactement ce dont vous avez besoin
+                {t.findExactly}
               </p>
             </div>
             <Link
               to="/search"
               className="shrink-0 text-xs font-semibold text-primary hover:underline"
             >
-              Voir tout →
+              {t.viewAll} →
             </Link>
           </div>
 
@@ -249,7 +385,7 @@ const Marketplace = () => {
                 <div className="absolute -right-2 -top-2 h-10 w-10 rounded-full bg-primary/5 transition-all group-hover:bg-primary/15" />
                 <span className="relative text-2xl">{c.emoji}</span>
                 <div className="relative text-[12px] font-semibold leading-tight text-foreground transition-colors group-hover:text-primary sm:text-[13px]">
-                  {c.label}
+                  {categoryLabels[c.key]?.[lang] || c.label}
                 </div>
               </motion.button>
             ))}
@@ -259,12 +395,13 @@ const Marketplace = () => {
 
       {/* TOP PRODUCTS */}
       <ProductSection
-        title="Top produits"
-        subtitle="Les best-sellers du moment"
+        title={t.topProducts}
+        subtitle={t.topProductsSub}
         icon={<TrendingUp className="h-4 w-4 text-primary sm:h-5 sm:w-5" />}
         products={topProducts}
         loading={loadingProducts}
         ctaLink="/search?sort=popular"
+        viewAllText={t.viewAll}
       />
 
       {/* VERIFIED PROMO STRIP */}
@@ -279,16 +416,16 @@ const Marketplace = () => {
               </div>
               <div>
                 <h3 className="text-base font-bold text-foreground sm:text-lg">
-                  Achetez auprès de vendeurs <span className="text-accent">Verified</span>
+                  {lang === "en" ? <>Buy from <span className="text-accent">Verified</span> sellers</> : <>Achetez auprès de vendeurs <span className="text-accent">Verified</span></>}
                 </h3>
                 <p className="text-xs text-muted-foreground sm:text-sm">
-                  Identité confirmée, KYC validé, garantie de remboursement renforcée.
+                  {t.verifiedDesc}
                 </p>
               </div>
             </div>
             <Link to="/search?verified=any">
               <Button size="sm" className="rounded-full gap-1.5 shadow-md">
-                Voir les vendeurs vérifiés <ArrowRight className="h-3.5 w-3.5" />
+                {t.verifiedBtn} <ArrowRight className="h-3.5 w-3.5" />
               </Button>
             </Link>
           </div>
@@ -297,22 +434,24 @@ const Marketplace = () => {
 
       {/* NEW */}
       <ProductSection
-        title="Nouveautés"
-        subtitle="Les derniers ajouts de nos créateurs"
+        title={t.newProducts}
+        subtitle={t.newProductsSub}
         icon={<Clock className="h-4 w-4 text-primary sm:h-5 sm:w-5" />}
         products={newProducts}
         loading={loadingProducts}
         ctaLink="/search?sort=recent"
+        viewAllText={t.viewAll}
       />
 
       {/* RECOMMENDED */}
       <ProductSection
-        title="Recommandés pour vous"
-        subtitle="Une sélection de la marketplace"
+        title={t.recommended}
+        subtitle={t.recommendedSub}
         icon={<Sparkles className="h-4 w-4 text-primary sm:h-5 sm:w-5" />}
         products={recommended}
         loading={loadingProducts}
         ctaLink="/search"
+        viewAllText={t.viewAll}
       />
 
       {/* MARKETING TOOLS — VENDOR POWER SECTION */}
@@ -325,43 +464,40 @@ const Marketplace = () => {
             className="mb-8 text-center"
           >
             <span className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-[11px] font-semibold text-primary sm:text-xs">
-              <Megaphone className="h-3 w-3" /> Outils marketing intégrés
+              <Megaphone className="h-3 w-3" /> {t.marketingTitle}
             </span>
             <h2 className="mb-2 text-2xl font-bold text-foreground sm:text-3xl md:text-4xl">
-              Tout pour <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">vendre plus</span>
+              {t.marketingHeading}
             </h2>
             <p className="mx-auto max-w-xl text-sm text-muted-foreground sm:text-base">
-              Une suite marketing puissante incluse dans chaque boutique TECHNOVA.
+              {t.marketingDesc}
             </p>
           </motion.div>
 
           <div className="grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
-            {[
-              { icon: Mail, title: "Email campagnes", desc: "Envoyez des newsletters ciblées à vos clients via Resend." },
-              { icon: Tag, title: "Codes promo & remises", desc: "Créez des coupons illimités pour booster vos ventes." },
-              { icon: BarChart3, title: "Analytics avancées", desc: "Suivez chiffre d'affaires, conversions et top produits." },
-              { icon: Users, title: "Programme d'affiliation", desc: "Recrutez des affiliés et payez à la commission." },
-              { icon: Globe, title: "Domaine personnalisé", desc: "Connectez votre propre domaine en 1 clic (Cloudflare)." },
-              { icon: Zap, title: "Pixels & automations", desc: "Meta, TikTok, Google Ads · webhooks Telegram & Zapier." },
-            ].map((f, i) => (
-              <motion.div
-                key={f.title}
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.05 }}
-                className="group relative overflow-hidden rounded-2xl border border-border bg-card p-5 transition-all hover:-translate-y-1 hover:border-primary hover:shadow-xl hover:shadow-primary/10"
-              >
-                <div className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-gradient-to-br from-primary/10 to-accent/10 blur-2xl transition-opacity group-hover:opacity-100" />
-                <div className="relative">
-                  <div className="mb-3 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-accent text-primary-foreground shadow-md">
-                    <f.icon className="h-5 w-5" />
+            {t.features.map((f, i) => {
+              const icons = [Mail, Tag, BarChart3, Users, Globe, Zap];
+              const Icon = icons[i];
+              return (
+                <motion.div
+                  key={f.title}
+                  initial={{ opacity: 0, y: 15 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.05 }}
+                  className="group relative overflow-hidden rounded-2xl border border-border bg-card p-5 transition-all hover:-translate-y-1 hover:border-primary hover:shadow-xl hover:shadow-primary/10"
+                >
+                  <div className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-gradient-to-br from-primary/10 to-accent/10 blur-2xl transition-opacity group-hover:opacity-100" />
+                  <div className="relative">
+                    <div className="mb-3 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-accent text-primary-foreground shadow-md">
+                      <Icon className="h-5 w-5" />
+                    </div>
+                    <h3 className="mb-1 text-base font-bold text-foreground">{f.title}</h3>
+                    <p className="text-xs text-muted-foreground sm:text-sm">{f.desc}</p>
                   </div>
-                  <h3 className="mb-1 text-base font-bold text-foreground">{f.title}</h3>
-                  <p className="text-xs text-muted-foreground sm:text-sm">{f.desc}</p>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -369,12 +505,7 @@ const Marketplace = () => {
       {/* TRUST KPIs */}
       <section className="border-y border-border bg-card/40 py-10">
         <div className="container mx-auto grid grid-cols-2 gap-4 px-4 text-center sm:grid-cols-4">
-          {[
-            { value: "10%", label: "Commission unique" },
-            { value: "72h", label: "Délai de maturité" },
-            { value: "100%", label: "Vendeurs KYC" },
-            { value: "24/7", label: "Modération IA" },
-          ].map((k) => (
+          {t.kpis.map((k) => (
             <div key={k.label}>
               <div className="bg-gradient-to-r from-primary to-accent bg-clip-text text-2xl font-bold text-transparent sm:text-3xl md:text-4xl">
                 {k.value}
@@ -392,16 +523,15 @@ const Marketplace = () => {
           <div className="pointer-events-none absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-white/10 blur-2xl" />
           <Store className="relative mx-auto mb-3 h-9 w-9 sm:h-10 sm:w-10" />
           <h2 className="relative mb-2 text-xl font-bold sm:mb-3 sm:text-2xl md:text-4xl">
-            Vendez vos produits numériques sur TECHNOVA
+            {t.ctaTitle}
           </h2>
           <p className="relative mx-auto mb-5 max-w-xl text-xs opacity-90 sm:mb-6 sm:text-sm md:text-base">
-            Lancez votre boutique en quelques minutes. Commission unique de 10%, paiements mobile
-            money intégrés, suite marketing complète.
+            {t.ctaDesc}
           </p>
           <div className="relative flex flex-wrap items-center justify-center gap-3">
             <Link to="/register">
               <Button size="lg" variant="secondary" className="rounded-full gap-2 shadow-lg">
-                Ouvrir ma boutique <ArrowRight className="h-4 w-4" />
+                {t.ctaBtn} <ArrowRight className="h-4 w-4" />
               </Button>
             </Link>
             <Link to="/pricing">
@@ -410,19 +540,19 @@ const Marketplace = () => {
                 variant="outline"
                 className="rounded-full border-white/30 bg-white/10 text-primary-foreground hover:bg-white/20"
               >
-                Voir les tarifs
+                {t.ctaPricing}
               </Button>
             </Link>
           </div>
           <div className="relative mt-6 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[11px] opacity-80 sm:text-xs">
             <span className="inline-flex items-center gap-1">
-              <CheckCircle2 className="h-3.5 w-3.5" /> Sans abonnement
+              <CheckCircle2 className="h-3.5 w-3.5" /> {t.noSubscription}
             </span>
             <span className="inline-flex items-center gap-1">
-              <CheckCircle2 className="h-3.5 w-3.5" /> Paiements automatiques
+              <CheckCircle2 className="h-3.5 w-3.5" /> {t.autoPayments}
             </span>
             <span className="inline-flex items-center gap-1">
-              <CheckCircle2 className="h-3.5 w-3.5" /> Support FR 24/7
+              <CheckCircle2 className="h-3.5 w-3.5" /> {t.supportLabel}
             </span>
           </div>
         </div>
@@ -440,6 +570,7 @@ const ProductSection = ({
   products,
   loading,
   ctaLink,
+  viewAllText,
 }: {
   title: string;
   subtitle: string;
@@ -447,6 +578,7 @@ const ProductSection = ({
   products: MarketplaceProduct[];
   loading: boolean;
   ctaLink: string;
+  viewAllText: string;
 }) => {
   if (!loading && products.length === 0) return null;
 
@@ -469,7 +601,7 @@ const ProductSection = ({
             to={ctaLink}
             className="shrink-0 text-xs font-semibold text-primary hover:underline sm:text-sm"
           >
-            Voir tout →
+            {viewAllText} →
           </Link>
         </div>
 

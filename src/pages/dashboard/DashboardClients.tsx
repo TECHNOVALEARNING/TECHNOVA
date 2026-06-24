@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Input } from "@/components/ui/input";
 import { format } from "date-fns";
-import { fr } from "date-fns/locale";
+import { fr, enUS } from "date-fns/locale";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface ClientWithOrders {
@@ -19,12 +19,74 @@ interface ClientWithOrders {
   orders: { id: string; amount: number; created_at: string; productTitle: string }[];
 }
 
+const translations = {
+  fr: {
+    title: "Clients",
+    customer: "client",
+    customers: "clients",
+    total: "au total",
+    searchPlaceholder: "Rechercher par nom, email ou téléphone...",
+    noCustomers: "Aucun client pour le moment",
+    noCustomersSub: "Vos clients apparaîtront ici après leur premier achat.",
+    colCustomer: "Client",
+    colPhone: "Téléphone",
+    colPurchases: "Achats",
+    colTotalSpent: "Total dépensé",
+    colSince: "Depuis",
+    noResults: "Aucun résultat pour",
+    purchase: "achat",
+    purchases: "achats",
+    detailsTitle: "Détails du client",
+    sinceLabel: "Client depuis",
+    emailLabel: "Email",
+    phoneLabel: "Téléphone",
+    totalSpentLabel: "Total dépensé",
+    purchaseHistory: "Historique d'achats",
+    defaultProduct: "Produit",
+  },
+  en: {
+    title: "Customers",
+    customer: "customer",
+    customers: "customers",
+    total: "in total",
+    searchPlaceholder: "Search by name, email or phone...",
+    noCustomers: "No customers yet",
+    noCustomersSub: "Your customers will appear here after their first purchase.",
+    colCustomer: "Customer",
+    colPhone: "Phone",
+    colPurchases: "Purchases",
+    colTotalSpent: "Total spent",
+    colSince: "Since",
+    noResults: "No results for",
+    purchase: "purchase",
+    purchases: "purchases",
+    detailsTitle: "Customer Details",
+    sinceLabel: "Customer since",
+    emailLabel: "Email",
+    phoneLabel: "Phone",
+    totalSpentLabel: "Total spent",
+    purchaseHistory: "Purchase History",
+    defaultProduct: "Product",
+  }
+};
+
 const DashboardClients = () => {
   const { user } = useAuth();
   const [clients, setClients] = useState<ClientWithOrders[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [selectedClient, setSelectedClient] = useState<ClientWithOrders | null>(null);
+
+  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+
+  useEffect(() => {
+    const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
+    window.addEventListener("technova_lang_changed", handleLangChange);
+    return () => window.removeEventListener("technova_lang_changed", handleLangChange);
+  }, []);
+
+  const t = translations[lang === 'en' ? 'en' : 'fr'];
+  const dateLocale = lang === 'en' ? enUS : fr;
 
   useEffect(() => {
     if (!user) return;
@@ -52,7 +114,7 @@ const DashboardClients = () => {
           id: o.id,
           amount: Number(o.amount),
           created_at: o.created_at,
-          productTitle: o.products?.title || "Produit",
+          productTitle: o.products?.title || t.defaultProduct,
         };
         if (existing) {
           existing.totalSpent += Number(o.amount);
@@ -87,9 +149,9 @@ const DashboardClients = () => {
     <DashboardLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Clients</h1>
+          <h1 className="text-2xl font-bold text-foreground">{t.title}</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            {clients.length} client{clients.length !== 1 ? "s" : ""} au total
+            {clients.length} {clients.length !== 1 ? t.customers : t.customer} {t.total}
           </p>
         </div>
 
@@ -99,7 +161,7 @@ const DashboardClients = () => {
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Rechercher par nom, email ou téléphone..."
+              placeholder={t.searchPlaceholder}
               className="pl-10"
             />
           </div>
@@ -112,9 +174,9 @@ const DashboardClients = () => {
         ) : clients.length === 0 ? (
           <div className="rounded-xl border border-border bg-card p-10 text-center">
             <Users className="h-12 w-12 mx-auto text-muted-foreground/30 mb-3" />
-            <p className="text-muted-foreground">Aucun client pour le moment</p>
+            <p className="text-muted-foreground">{t.noCustomers}</p>
             <p className="text-sm text-muted-foreground/60 mt-1">
-              Vos clients apparaîtront ici après leur premier achat.
+              {t.noCustomersSub}
             </p>
           </div>
         ) : (
@@ -125,11 +187,11 @@ const DashboardClients = () => {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-border bg-muted/30">
-                      <th className="text-left p-4 font-medium text-muted-foreground">Client</th>
-                      <th className="text-left p-4 font-medium text-muted-foreground">Téléphone</th>
-                      <th className="text-left p-4 font-medium text-muted-foreground">Achats</th>
-                      <th className="text-left p-4 font-medium text-muted-foreground">Total dépensé</th>
-                      <th className="text-left p-4 font-medium text-muted-foreground">Depuis</th>
+                      <th className="text-left p-4 font-medium text-muted-foreground">{t.colCustomer}</th>
+                      <th className="text-left p-4 font-medium text-muted-foreground">{t.colPhone}</th>
+                      <th className="text-left p-4 font-medium text-muted-foreground">{t.colPurchases}</th>
+                      <th className="text-left p-4 font-medium text-muted-foreground">{t.colTotalSpent}</th>
+                      <th className="text-left p-4 font-medium text-muted-foreground">{t.colSince}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -156,7 +218,7 @@ const DashboardClients = () => {
                         <td className="p-4 text-foreground font-medium">{c.orderCount}</td>
                         <td className="p-4 font-semibold text-foreground">{c.totalSpent.toLocaleString()} FCFA</td>
                         <td className="p-4 text-muted-foreground">
-                          {format(new Date(c.created_at), "dd MMM yyyy", { locale: fr })}
+                          {format(new Date(c.created_at), "dd MMM yyyy", { locale: dateLocale })}
                         </td>
                       </tr>
                     ))}
@@ -165,7 +227,7 @@ const DashboardClients = () => {
               </div>
               {filtered.length === 0 && search && (
                 <div className="text-center py-8 text-muted-foreground text-sm">
-                  Aucun résultat pour « {search} »
+                  {t.noResults} « {search} »
                 </div>
               )}
             </div>
@@ -197,14 +259,14 @@ const DashboardClients = () => {
                     <span className="font-semibold text-foreground">{c.totalSpent.toLocaleString()} FCFA</span>
                   </div>
                   <div className="flex items-center justify-between text-xs text-muted-foreground mt-2">
-                    <span>{c.orderCount} achat{c.orderCount > 1 ? "s" : ""}</span>
-                    <span>{format(new Date(c.created_at), "dd MMM yyyy", { locale: fr })}</span>
+                    <span>{c.orderCount} {c.orderCount !== 1 ? t.purchases : t.purchase}</span>
+                    <span>{format(new Date(c.created_at), "dd MMM yyyy", { locale: dateLocale })}</span>
                   </div>
                 </div>
               ))}
               {filtered.length === 0 && search && (
                 <div className="text-center py-8 text-muted-foreground text-sm">
-                  Aucun résultat pour « {search} »
+                  {t.noResults} « {search} »
                 </div>
               )}
             </div>
@@ -218,7 +280,7 @@ const DashboardClients = () => {
           {selectedClient && (
             <>
               <DialogHeader>
-                <DialogTitle className="text-lg font-bold">Détails du client</DialogTitle>
+                <DialogTitle className="text-lg font-bold">{t.detailsTitle}</DialogTitle>
               </DialogHeader>
 
               <div className="space-y-5">
@@ -232,7 +294,7 @@ const DashboardClients = () => {
                   <div>
                     <p className="text-lg font-bold text-foreground">{selectedClient.name}</p>
                     <p className="text-sm text-muted-foreground">
-                      Client depuis {format(new Date(selectedClient.created_at), "MMMM yyyy", { locale: fr })}
+                      {t.sinceLabel} {format(new Date(selectedClient.created_at), "MMMM yyyy", { locale: dateLocale })}
                     </p>
                   </div>
                 </div>
@@ -241,23 +303,23 @@ const DashboardClients = () => {
                   <div className="flex items-center gap-3 rounded-lg border border-border p-3">
                     <Mail className="h-4 w-4 text-muted-foreground shrink-0" />
                     <div>
-                      <p className="text-xs text-muted-foreground">Email</p>
+                      <p className="text-xs text-muted-foreground">{t.emailLabel}</p>
                       <p className="text-sm font-medium text-foreground">{selectedClient.email}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3 rounded-lg border border-border p-3">
                     <Phone className="h-4 w-4 text-muted-foreground shrink-0" />
                     <div>
-                      <p className="text-xs text-muted-foreground">Téléphone</p>
+                      <p className="text-xs text-muted-foreground">{t.phoneLabel}</p>
                       <p className="text-sm font-medium text-foreground">{selectedClient.phone}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3 rounded-lg border border-border p-3">
                     <ShoppingBag className="h-4 w-4 text-muted-foreground shrink-0" />
                     <div>
-                      <p className="text-xs text-muted-foreground">Total dépensé</p>
+                      <p className="text-xs text-muted-foreground">{t.totalSpentLabel}</p>
                       <p className="text-sm font-bold text-foreground">
-                        {selectedClient.totalSpent.toLocaleString()} FCFA ({selectedClient.orderCount} achat{selectedClient.orderCount > 1 ? "s" : ""})
+                        {selectedClient.totalSpent.toLocaleString()} FCFA ({selectedClient.orderCount} {selectedClient.orderCount !== 1 ? t.purchases : t.purchase})
                       </p>
                     </div>
                   </div>
@@ -265,7 +327,7 @@ const DashboardClients = () => {
 
                 {/* Orders history */}
                 <div>
-                  <p className="text-sm font-semibold text-foreground mb-2">Historique d'achats</p>
+                  <p className="text-sm font-semibold text-foreground mb-2">{t.purchaseHistory}</p>
                   <div className="space-y-2 max-h-48 overflow-y-auto">
                     {selectedClient.orders.map((o) => (
                       <div key={o.id} className="flex items-center justify-between rounded-lg border border-border p-3">
@@ -276,7 +338,7 @@ const DashboardClients = () => {
                         <div className="text-right shrink-0">
                           <p className="text-sm font-semibold text-foreground">{Number(o.amount).toLocaleString()} FCFA</p>
                           <p className="text-xs text-muted-foreground">
-                            {format(new Date(o.created_at), "dd/MM/yyyy", { locale: fr })}
+                            {format(new Date(o.created_at), "dd/MM/yyyy", { locale: dateLocale })}
                           </p>
                         </div>
                       </div>

@@ -24,6 +24,85 @@ interface WalletRow {
   is_default: boolean;
 }
 
+const translations = {
+  fr: {
+    seoTitle: "Retrait — TECHNOVA",
+    seoDesc: "Retirez vos gains en toute sécurité.",
+    back: "Retour",
+    headerTitle: "Retrait TECHNOVA",
+    secure: "Sécurisé",
+    pinTitle: "Confirmation requise",
+    pinSub: "Saisissez votre PIN pour valider le retrait",
+    cancel: "Annuler",
+    confirm: "Confirmer",
+    title: "Demander un retrait",
+    subtitle: "Sélectionnez un wallet et confirmez avec votre PIN.",
+    kycRequired: "Vérifiez votre identité (KYC) avant de pouvoir retirer.",
+    receivingWallet: "Wallet de réception",
+    manageWallets: "Gérer mes wallets",
+    noWallet: "Aucun wallet enregistré",
+    createWallet: "Créer un wallet",
+    amountLabel: "Montant à retirer (FCFA)",
+    withdrawAll: "Retirer tout",
+    withdrawBtn: "Retirer",
+    disclaimer: "Délai : 2 à 11 jours ouvrés selon votre opérateur. Frais inclus dans la commission TECHNOVA (10%).",
+    sidebarNetBalance: "Solde net disponible",
+    sidebarCommission: "Commission TECHNOVA",
+    sidebarCommissionSub: "10% (déjà déduit)",
+    sidebarFees: "Frais Mobile Money",
+    sidebarFeesSub: "Inclus",
+    sidebarMaturity: "Maturité",
+    sidebarMaturitySub: "72h après vente",
+    sidebarMin: "Minimum retrait",
+    sidebarMinSub: "100 FCFA",
+    sidebarPinTitle: "Sécurité PIN",
+    sidebarPinDesc: "Chaque retrait nécessite votre PIN à 4 chiffres.",
+    toastSelectWallet: "Sélectionnez un wallet",
+    toastMinAmount: "Minimum 100 FCFA",
+    toastInsufficientBalance: "Solde insuffisant",
+    toastCreatePin: "Créez d'abord un PIN dans l'espace Wallet",
+    toastSuccess: "Demande de retrait envoyée !",
+  },
+  en: {
+    seoTitle: "Withdrawal — TECHNOVA",
+    seoDesc: "Withdraw your earnings securely.",
+    back: "Back",
+    headerTitle: "TECHNOVA Withdrawal",
+    secure: "Secure",
+    pinTitle: "Confirmation Required",
+    pinSub: "Enter your PIN to validate the withdrawal",
+    cancel: "Cancel",
+    confirm: "Confirm",
+    title: "Request a withdrawal",
+    subtitle: "Select a wallet and confirm with your PIN.",
+    kycRequired: "Verify your identity (KYC) before you can make withdrawals.",
+    receivingWallet: "Receiving Wallet",
+    manageWallets: "Manage my wallets",
+    noWallet: "No wallets registered",
+    createWallet: "Create a wallet",
+    amountLabel: "Amount to withdraw (FCFA)",
+    withdrawAll: "Withdraw all",
+    withdrawBtn: "Withdraw",
+    disclaimer: "Timeframe: 2 to 11 business days depending on your operator. Fees included in the TECHNOVA commission (10%).",
+    sidebarNetBalance: "Available net balance",
+    sidebarCommission: "TECHNOVA Commission",
+    sidebarCommissionSub: "10% (already deducted)",
+    sidebarFees: "Mobile Money Fees",
+    sidebarFeesSub: "Included",
+    sidebarMaturity: "Maturity",
+    sidebarMaturitySub: "72h after sale",
+    sidebarMin: "Minimum withdrawal",
+    sidebarMinSub: "100 FCFA",
+    sidebarPinTitle: "PIN Security",
+    sidebarPinDesc: "Each withdrawal requires your 4-digit PIN.",
+    toastSelectWallet: "Select a wallet",
+    toastMinAmount: "Minimum 100 FCFA",
+    toastInsufficientBalance: "Insufficient balance",
+    toastCreatePin: "Create a PIN first in the Wallet space",
+    toastSuccess: "Withdrawal request sent!",
+  }
+};
+
 const WithdrawNew = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
@@ -43,6 +122,16 @@ const WithdrawNew = () => {
   const numAmount = parseFloat(amount) || 0;
   const isAdmin = user?.email === ADMIN_EMAIL;
   const COMMISSION = 0.10;
+
+  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+
+  useEffect(() => {
+    const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
+    window.addEventListener("technova_lang_changed", handleLangChange);
+    return () => window.removeEventListener("technova_lang_changed", handleLangChange);
+  }, []);
+
+  const t = translations[lang === 'en' ? 'en' : 'fr'];
 
   useEffect(() => {
     if (authLoading) return;
@@ -66,7 +155,7 @@ const WithdrawNew = () => {
       const wList = (walletsRes.data as WalletRow[]) || [];
       setWallets(wList);
       if (wList.length > 0) setSelectedWallet(wList[0].id);
-      setLoading(false);
+      loading && setLoading(false);
     })();
   }, [user, authLoading, isAdmin, navigate]);
 
@@ -81,9 +170,9 @@ const WithdrawNew = () => {
   };
 
   const handleSubmit = async () => {
-    if (!selectedWallet) { toast.error("Sélectionnez un wallet"); return; }
-    if (numAmount < 100) { toast.error("Minimum 100 FCFA"); return; }
-    if (numAmount > availableNet) { toast.error("Solde insuffisant"); return; }
+    if (!selectedWallet) { toast.error(t.toastSelectWallet); return; }
+    if (numAmount < 100) { toast.error(t.toastMinAmount); return; }
+    if (numAmount > availableNet) { toast.error(t.toastInsufficientBalance); return; }
 
     let token = getUnlockToken();
     if (!token) {
@@ -100,7 +189,7 @@ const WithdrawNew = () => {
       const { data, error } = await supabase.functions.invoke("wallet-pin-verify", { body: { pin } });
       if (error || data?.error) {
         if (data?.needs_setup) {
-          toast.error("Créez d'abord un PIN dans l'espace Wallet");
+          toast.error(t.toastCreatePin);
           window.open("/dashboard/wallet", "_blank");
           return;
         }
@@ -123,7 +212,7 @@ const WithdrawNew = () => {
         body: { wallet_id: selectedWallet, amount: numAmount, unlock_token },
       });
       if (error || data?.error) throw new Error(data?.error || error?.message);
-      toast.success("Demande de retrait envoyée !");
+      toast.success(t.toastSuccess);
       setTimeout(() => {
         if (window.history.length > 1) navigate("/dashboard/withdrawals");
         else window.close();
@@ -160,8 +249,8 @@ const WithdrawNew = () => {
               <KeyRound className="h-8 w-8 text-white" />
             </div>
           </div>
-          <h2 className="text-xl font-bold text-center text-gray-900 mb-1">Confirmation requise</h2>
-          <p className="text-sm text-center text-gray-500 mb-6">Saisissez votre PIN pour valider le retrait</p>
+          <h2 className="text-xl font-bold text-center text-gray-900 mb-1">{t.pinTitle}</h2>
+          <p className="text-sm text-center text-gray-500 mb-6">{t.pinSub}</p>
           <div className="flex justify-center mb-5">
             <InputOTP maxLength={4} value={pin} onChange={(v) => { setPin(v); if (v.length === 4) setTimeout(() => verifyPinAndPayout(), 100); }}>
               <InputOTPGroup>
@@ -170,10 +259,10 @@ const WithdrawNew = () => {
             </InputOTP>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" onClick={() => { setNeedsPin(false); setPin(""); }} className="flex-1">Annuler</Button>
+            <Button variant="outline" onClick={() => { setNeedsPin(false); setPin(""); }} className="flex-1">{t.cancel}</Button>
             <Button onClick={verifyPinAndPayout} disabled={submitting || pin.length !== 4} className="flex-1"
               style={{ background: "linear-gradient(135deg, #7C2DCC 0%, #C9962E 130%)" }}>
-              {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Confirmer"}
+              {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : t.confirm}
             </Button>
           </div>
         </div>
@@ -183,17 +272,17 @@ const WithdrawNew = () => {
 
   return (
     <>
-      <SEOHead title="Retrait — TECHNOVA" description="Retirez vos gains en toute sécurité." />
+      <SEOHead title={t.seoTitle} description={t.seoDesc} />
       <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-amber-50/40">
         <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-violet-100/60">
           <div className="max-w-5xl mx-auto flex items-center justify-between px-4 sm:px-6 h-14">
             <button onClick={() => (window.history.length > 1 ? navigate(-1) : window.close())} className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900">
-              <ArrowLeft className="h-4 w-4" /> <span className="hidden sm:inline">Retour</span>
+              <ArrowLeft className="h-4 w-4" /> <span className="hidden sm:inline">{t.back}</span>
             </button>
-            <span className="text-sm font-bold text-gray-900">Retrait TECHNOVA</span>
+            <span className="text-sm font-bold text-gray-900">{t.headerTitle}</span>
             <div className="hidden sm:flex items-center gap-3 text-[11px] text-gray-500">
               <span className="flex items-center gap-1"><Lock className="h-3 w-3" /> SSL</span>
-              <span className="flex items-center gap-1"><ShieldCheck className="h-3 w-3" /> Sécurisé</span>
+              <span className="flex items-center gap-1"><ShieldCheck className="h-3 w-3" /> {t.secure}</span>
             </div>
           </div>
         </header>
@@ -202,31 +291,31 @@ const WithdrawNew = () => {
           <div className="max-w-5xl mx-auto grid md:grid-cols-[1fr_360px] gap-0 bg-white md:rounded-3xl overflow-hidden shadow-2xl shadow-violet-900/10 ring-1 ring-violet-100/60">
             <div className="p-5 sm:p-8 md:p-10 space-y-6">
               <div>
-                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Demander un retrait</h1>
-                <p className="text-sm text-gray-500 mt-1">Sélectionnez un wallet et confirmez avec votre PIN.</p>
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{t.title}</h1>
+                <p className="text-sm text-gray-500 mt-1">{t.subtitle}</p>
               </div>
 
               {!canWithdraw && (
                 <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
-                  Vérifiez votre identité (KYC) avant de pouvoir retirer.
+                  {t.kycRequired}
                 </div>
               )}
 
               {/* Wallet selector */}
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <label className="text-xs font-semibold text-gray-700">Wallet de réception</label>
+                  <label className="text-xs font-semibold text-gray-700">{t.receivingWallet}</label>
                   <button onClick={() => window.open("/dashboard/wallet", "_blank")} className="text-[11px] text-violet-600 hover:underline flex items-center gap-1">
-                    <Plus className="h-3 w-3" /> Gérer mes wallets
+                    <Plus className="h-3 w-3" /> {t.manageWallets}
                   </button>
                 </div>
                 {wallets.length === 0 ? (
                   <div className="rounded-xl border-2 border-dashed border-gray-200 p-6 text-center bg-gray-50">
                     <WalletIcon className="h-8 w-8 mx-auto text-gray-400 mb-2" />
-                    <p className="text-sm text-gray-600 mb-3">Aucun wallet enregistré</p>
+                    <p className="text-sm text-gray-600 mb-3">{t.noWallet}</p>
                     <Button size="sm" onClick={() => window.open("/dashboard/wallet", "_blank")}
                       style={{ background: "linear-gradient(135deg, #7C2DCC 0%, #C9962E 130%)" }}>
-                      Créer un wallet
+                      {t.createWallet}
                     </Button>
                   </div>
                 ) : (
@@ -255,13 +344,13 @@ const WithdrawNew = () => {
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-gray-700 mb-1.5 block">Montant à retirer (FCFA)</label>
+                <label className="text-xs font-semibold text-gray-700 mb-1.5 block">{t.amountLabel}</label>
                 <Input type="number" value={amount} onChange={(e) => setAmount(e.target.value)}
                   placeholder="Ex: 50000" className="h-12 text-lg font-semibold bg-gray-50 border-gray-200"
                   disabled={!canWithdraw || wallets.length === 0} />
                 <button type="button" onClick={() => setAmount(Math.floor(availableNet).toString())}
                   className="text-xs text-violet-600 mt-1 hover:underline">
-                  Retirer tout ({Math.floor(availableNet).toLocaleString("fr")} FCFA)
+                  {t.withdrawAll} ({Math.floor(availableNet).toLocaleString("fr")} FCFA)
                 </button>
               </div>
 
@@ -270,11 +359,11 @@ const WithdrawNew = () => {
                 className="w-full h-14 text-base font-bold rounded-xl"
                 style={{ background: "linear-gradient(135deg, #7C2DCC 0%, #4B1A8A 50%, #C9962E 130%)", boxShadow: "0 14px 36px -10px rgba(124,45,204,0.55)" }}>
                 {submitting ? <Loader2 className="h-5 w-5 animate-spin mr-2" /> : <WalletIcon className="h-5 w-5 mr-2" />}
-                Retirer {numAmount > 0 ? numAmount.toLocaleString("fr") : ""} FCFA
+                {t.withdrawBtn} {numAmount > 0 ? numAmount.toLocaleString("fr") : ""} FCFA
               </Button>
 
               <p className="text-[11px] text-gray-400 text-center">
-                Délai : 2 à 11 jours ouvrés selon votre opérateur. Frais inclus dans la commission TECHNOVA (10%).
+                {t.disclaimer}
               </p>
             </div>
 
@@ -283,21 +372,21 @@ const WithdrawNew = () => {
               <div className="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-amber-400/20 blur-3xl" />
               <div className="absolute -bottom-32 -left-20 h-72 w-72 rounded-full bg-violet-500/30 blur-3xl" />
               <div className="relative z-10 flex-1 flex flex-col">
-                <div className="text-[10px] font-bold uppercase tracking-widest text-amber-300 mb-3">Solde net disponible</div>
+                <div className="text-[10px] font-bold uppercase tracking-widest text-amber-300 mb-3">{t.sidebarNetBalance}</div>
                 <div className="text-4xl font-extrabold mb-1 bg-gradient-to-r from-white to-amber-200 bg-clip-text text-transparent">
                   {Math.floor(availableNet).toLocaleString("fr")}
                 </div>
                 <div className="text-sm text-white/70 mb-6">FCFA</div>
                 <div className="space-y-3 text-sm">
-                  <div className="flex items-center justify-between"><span className="text-white/70">Commission TECHNOVA</span><span className="font-semibold text-amber-300">10% (déjà déduit)</span></div>
-                  <div className="flex items-center justify-between"><span className="text-white/70">Frais Mobile Money</span><span className="font-semibold text-amber-300">Inclus</span></div>
-                  <div className="flex items-center justify-between"><span className="text-white/70">Maturité</span><span className="font-semibold">72h après vente</span></div>
-                  <div className="flex items-center justify-between"><span className="text-white/70">Minimum retrait</span><span className="font-semibold">100 FCFA</span></div>
+                  <div className="flex items-center justify-between"><span className="text-white/70">{t.sidebarCommission}</span><span className="font-semibold text-amber-300">{t.sidebarCommissionSub}</span></div>
+                  <div className="flex items-center justify-between"><span className="text-white/70">{t.sidebarFees}</span><span className="font-semibold text-amber-300">{t.sidebarFeesSub}</span></div>
+                  <div className="flex items-center justify-between"><span className="text-white/70">{t.sidebarMaturity}</span><span className="font-semibold">{t.sidebarMaturitySub}</span></div>
+                  <div className="flex items-center justify-between"><span className="text-white/70">{t.sidebarMin}</span><span className="font-semibold">{t.sidebarMinSub}</span></div>
                 </div>
                 <div className="mt-auto pt-6">
                   <div className="rounded-xl bg-white/10 backdrop-blur p-3.5 border border-white/10">
-                    <div className="flex items-center gap-2 text-xs font-bold mb-1"><ShieldCheck className="h-4 w-4 text-amber-300" /> Sécurité PIN</div>
-                    <p className="text-[11px] text-white/70 leading-relaxed">Chaque retrait nécessite votre PIN à 4 chiffres.</p>
+                    <div className="flex items-center gap-2 text-xs font-bold mb-1"><ShieldCheck className="h-4 w-4 text-amber-300" /> {t.sidebarPinTitle}</div>
+                    <p className="text-[11px] text-white/70 leading-relaxed">{t.sidebarPinDesc}</p>
                   </div>
                 </div>
               </div>

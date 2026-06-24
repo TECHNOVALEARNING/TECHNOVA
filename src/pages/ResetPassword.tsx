@@ -9,6 +9,43 @@ import { toast } from "sonner";
 import logo from "@/assets/logo.png";
 import SEOHead from "@/components/SEOHead";
 
+const translations = {
+  fr: {
+    seoTitle: "Nouveau mot de passe",
+    seoDesc: "Créez un nouveau mot de passe pour votre compte TECHNOVA.",
+    loading: "Chargement...",
+    heading: "Nouveau mot de passe",
+    subtitle: "Créez un nouveau mot de passe pour votre compte.",
+    passLabel: "Nouveau mot de passe",
+    confirmLabel: "Confirmer le mot de passe",
+    updateBtn: "Mettre à jour le mot de passe",
+    updating: "Mise à jour...",
+    successTitle: "Mot de passe mis à jour !",
+    successDesc: "Redirection vers votre tableau de bord...",
+    validationLength: "Le mot de passe doit contenir au moins 6 caractères.",
+    validationMatch: "Les mots de passe ne correspondent pas.",
+    errorUpdate: "Erreur lors de la mise à jour du mot de passe.",
+    successMsg: "Mot de passe mis à jour avec succès !"
+  },
+  en: {
+    seoTitle: "New Password",
+    seoDesc: "Create a new password for your TECHNOVA account.",
+    loading: "Loading...",
+    heading: "New Password",
+    subtitle: "Create a new password for your account.",
+    passLabel: "New password",
+    confirmLabel: "Confirm password",
+    updateBtn: "Update password",
+    updating: "Updating...",
+    successTitle: "Password updated!",
+    successDesc: "Redirecting to your dashboard...",
+    validationLength: "Password must contain at least 6 characters.",
+    validationMatch: "Passwords do not match.",
+    errorUpdate: "Error updating password.",
+    successMsg: "Password updated successfully!"
+  }
+};
+
 const ResetPassword = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -17,6 +54,16 @@ const ResetPassword = () => {
   const [success, setSuccess] = useState(false);
   const [isRecovery, setIsRecovery] = useState(false);
   const navigate = useNavigate();
+
+  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+
+  useEffect(() => {
+    const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
+    window.addEventListener("technova_lang_changed", handleLangChange);
+    return () => window.removeEventListener("technova_lang_changed", handleLangChange);
+  }, []);
+
+  const t = translations[lang === 'en' ? 'en' : 'fr'];
 
   useEffect(() => {
     // Listen for the PASSWORD_RECOVERY event from Supabase
@@ -40,12 +87,12 @@ const ResetPassword = () => {
     if (loading) return;
 
     if (password.length < 6) {
-      toast.error("Le mot de passe doit contenir au moins 6 caractères.");
+      toast.error(t.validationLength);
       return;
     }
 
     if (password !== confirmPassword) {
-      toast.error("Les mots de passe ne correspondent pas.");
+      toast.error(t.validationMatch);
       return;
     }
 
@@ -56,12 +103,12 @@ const ResetPassword = () => {
     setLoading(false);
 
     if (error) {
-      toast.error("Erreur lors de la mise à jour du mot de passe.");
+      toast.error(t.errorUpdate);
       return;
     }
 
     setSuccess(true);
-    toast.success("Mot de passe mis à jour avec succès !");
+    toast.success(t.successMsg);
     setTimeout(() => navigate("/dashboard"), 2000);
   };
 
@@ -69,7 +116,7 @@ const ResetPassword = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background px-6">
         <div className="text-center space-y-4">
-          <p className="text-muted-foreground">Chargement...</p>
+          <p className="text-muted-foreground">{t.loading}</p>
         </div>
       </div>
     );
@@ -77,7 +124,7 @@ const ResetPassword = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-6 py-12">
-      <SEOHead title="Nouveau mot de passe" description="Créez un nouveau mot de passe pour votre compte TECHNOVA." canonicalPath="/reset-password" />
+      <SEOHead title={t.seoTitle} description={t.seoDesc} canonicalPath="/reset-password" />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -90,14 +137,14 @@ const ResetPassword = () => {
 
         {!success ? (
           <>
-            <h1 className="text-2xl font-extrabold text-foreground mb-2">Nouveau mot de passe</h1>
+            <h1 className="text-2xl font-extrabold text-foreground mb-2">{t.heading}</h1>
             <p className="text-sm text-muted-foreground mb-8">
-              Créez un nouveau mot de passe pour votre compte.
+              {t.subtitle}
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="text-sm font-medium text-foreground mb-1.5 block">Nouveau mot de passe</label>
+                <label className="text-sm font-medium text-foreground mb-1.5 block">{t.passLabel}</label>
                 <div className="relative">
                   <Input
                     type={showPassword ? "text" : "password"}
@@ -118,7 +165,7 @@ const ResetPassword = () => {
               </div>
 
               <div>
-                <label className="text-sm font-medium text-foreground mb-1.5 block">Confirmer le mot de passe</label>
+                <label className="text-sm font-medium text-foreground mb-1.5 block">{t.confirmLabel}</label>
                 <Input
                   type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
@@ -130,7 +177,7 @@ const ResetPassword = () => {
               </div>
 
               <Button className="w-full py-5 text-sm font-semibold" disabled={loading}>
-                {loading ? "Mise à jour..." : "Mettre à jour le mot de passe"}
+                {loading ? t.updating : t.updateBtn}
               </Button>
             </form>
           </>
@@ -139,9 +186,9 @@ const ResetPassword = () => {
             <div className="h-16 w-16 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mx-auto">
               <CheckCircle className="h-8 w-8 text-green-600 dark:text-green-400" />
             </div>
-            <h1 className="text-2xl font-extrabold text-foreground">Mot de passe mis à jour !</h1>
+            <h1 className="text-2xl font-extrabold text-foreground">{t.successTitle}</h1>
             <p className="text-sm text-muted-foreground">
-              Redirection vers votre tableau de bord...
+              {t.successDesc}
             </p>
           </div>
         )}

@@ -9,6 +9,81 @@ import RichTextEditor from "@/components/RichTextEditor";
 import StoreSelector from "./StoreSelector";
 import { useActiveStore } from "@/hooks/useActiveStore";
 
+const translations = {
+  fr: {
+    improveErrorEmpty: "Ajoutez d'abord une description avant de l'améliorer",
+    improveSuccess: "Description réorganisée par l'IA ✨",
+    improveErrorFail: "Impossible d'améliorer la description",
+    logoErrorType: "Veuillez sélectionner une image",
+    logoErrorSize: "L'image ne doit pas dépasser 2 Mo",
+    logoErrorUpload: "Erreur lors de l'upload",
+    logoSuccess: "Logo uploadé !",
+    saveErrorName: "Le nom de la boutique est obligatoire",
+    saveSuccess: "Boutique mise à jour !",
+    saveErrorSlug: "Ce slug est déjà utilisé",
+    saveErrorFail: "Erreur lors de la sauvegarde",
+    noStoreTitle: "Aucune boutique",
+    noStoreDesc: "Créez votre première boutique dans l'onglet ",
+    noStoreLinkText: "Mes Boutiques",
+    noStoreDescEnd: " pour configurer votre profil.",
+    saving: "Enregistrement...",
+    saveBtn: "Enregistrer les modifications",
+    identity: "Identité",
+    logoLabel: "Logo de la boutique",
+    logoChange: "Changer le logo",
+    logoAdd: "Ajouter un logo",
+    storeNameLabel: "Nom de la boutique",
+    storeNamePlaceholder: "Ex: Ma Super Boutique",
+    contactLabel: "Contact public",
+    contactPlaceholder: "Ex: +229 97 00 00 00",
+    domainTitle: "Domaine",
+    storeLinkLabel: "Lien de la boutique",
+    openDefaultLink: "↗ Ouvrir mon lien par défaut",
+    customDomainTitle: "Domaine Personnalisé",
+    descTitle: "Description & Présentation",
+    improving: "Amélioration...",
+    optimizeAi: "Optimiser avec l'IA",
+    descPlaceholder: "Présentez votre boutique, vos produits et votre histoire. Vous pouvez ajouter des images, des vidéos YouTube et formater votre texte pour le rendre attrayant.",
+    editorPlaceholder: "Commencez à écrire ici...",
+  },
+  en: {
+    improveErrorEmpty: "First add a description before improving it",
+    improveSuccess: "Description reorganized by AI ✨",
+    improveErrorFail: "Failed to improve the description",
+    logoErrorType: "Please select an image",
+    logoErrorSize: "The image must not exceed 2 MB",
+    logoErrorUpload: "Error uploading logo",
+    logoSuccess: "Logo uploaded!",
+    saveErrorName: "Shop name is required",
+    saveSuccess: "Shop updated!",
+    saveErrorSlug: "This slug is already in use",
+    saveErrorFail: "Error saving modifications",
+    noStoreTitle: "No shop",
+    noStoreDesc: "Create your first shop in the ",
+    noStoreLinkText: "My Shops",
+    noStoreDescEnd: " tab to configure your profile.",
+    saving: "Saving...",
+    saveBtn: "Save changes",
+    identity: "Identity",
+    logoLabel: "Shop logo",
+    logoChange: "Change logo",
+    logoAdd: "Add logo",
+    storeNameLabel: "Shop name",
+    storeNamePlaceholder: "e.g., My Awesome Shop",
+    contactLabel: "Public contact",
+    contactPlaceholder: "e.g., +229 97 00 00 00",
+    domainTitle: "Domain",
+    storeLinkLabel: "Shop link",
+    openDefaultLink: "↗ Open default link",
+    customDomainTitle: "Custom Domain",
+    descTitle: "Description & Presentation",
+    improving: "Improving...",
+    optimizeAi: "Optimize with AI",
+    descPlaceholder: "Introduce your shop, products, and story. You can add images, YouTube videos, and format your text to make it attractive.",
+    editorPlaceholder: "Start writing here...",
+  }
+};
+
 const DashboardProfileTab = () => {
   const { user, profile, refreshProfile } = useAuth();
   const { stores, activeStore, activeStoreId, setActiveStoreId, updateStore, isLoading, hasStores } = useActiveStore();
@@ -23,10 +98,20 @@ const DashboardProfileTab = () => {
   const [customDomain, setCustomDomain] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+
+  useEffect(() => {
+    const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
+    window.addEventListener("technova_lang_changed", handleLangChange);
+    return () => window.removeEventListener("technova_lang_changed", handleLangChange);
+  }, []);
+
+  const t = translations[lang === 'en' ? 'en' : 'fr'];
+
   const handleImproveDescription = async () => {
     const text = storeDescription.replace(/<[^>]*>/g, "").trim();
     if (!text) {
-      toast.error("Ajoutez d'abord une description avant de l'améliorer");
+      toast.error(t.improveErrorEmpty);
       return;
     }
     setImproving(true);
@@ -39,9 +124,9 @@ const DashboardProfileTab = () => {
       const improved = (data as any)?.improved as string;
       if (!improved) throw new Error("Réponse vide");
       setStoreDescription(improved);
-      toast.success("Description réorganisée par l'IA ✨");
+      toast.success(t.improveSuccess);
     } catch (err: any) {
-      toast.error(err.message || "Impossible d'améliorer la description");
+      toast.error(err.message || t.improveErrorFail);
     } finally {
       setImproving(false);
     }
@@ -74,23 +159,23 @@ const DashboardProfileTab = () => {
   const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !user || !activeStoreId) return;
-    if (!file.type.startsWith("image/")) { toast.error("Veuillez sélectionner une image"); return; }
-    if (file.size > 2 * 1024 * 1024) { toast.error("L'image ne doit pas dépasser 2 Mo"); return; }
+    if (!file.type.startsWith("image/")) { toast.error(t.logoErrorType); return; }
+    if (file.size > 2 * 1024 * 1024) { toast.error(t.logoErrorSize); return; }
 
     setUploading(true);
     const ext = file.name.split(".").pop();
     const path = `logos/${user.id}/${activeStoreId}.${ext}`;
     const { error: uploadError } = await supabase.storage.from("product-assets").upload(path, file, { upsert: true });
-    if (uploadError) { toast.error("Erreur lors de l'upload"); setUploading(false); return; }
+    if (uploadError) { toast.error(t.logoErrorUpload); setUploading(false); return; }
     const { data: urlData } = supabase.storage.from("product-assets").getPublicUrl(path);
     setLogoUrl(urlData.publicUrl);
     setUploading(false);
-    toast.success("Logo uploadé !");
+    toast.success(t.logoSuccess);
   };
 
   const handleSave = async () => {
     if (!user || !activeStoreId) return;
-    if (!storeName.trim()) { toast.error("Le nom de la boutique est obligatoire"); return; }
+    if (!storeName.trim()) { toast.error(t.saveErrorName); return; }
     setSaving(true);
     
     const slug = storeSlug.trim().toLowerCase().replace(/[^a-z0-9-]/g, "-").replace(/-+/g, "-");
@@ -118,13 +203,13 @@ const DashboardProfileTab = () => {
         updated_at: new Date().toISOString(),
       } as any).eq("id", user.id);
 
-      toast.success("Boutique mise à jour !");
+      toast.success(t.saveSuccess);
       refreshProfile();
     } catch (err: any) {
       if (err.message?.includes("unique") || err.message?.includes("duplicate")) {
-        toast.error("Ce slug est déjà utilisé");
+        toast.error(t.saveErrorSlug);
       } else {
-        toast.error("Erreur lors de la sauvegarde");
+        toast.error(t.saveErrorFail);
       }
     }
     setSaving(false);
@@ -140,8 +225,8 @@ const DashboardProfileTab = () => {
         <div className="flex items-center gap-3 p-4 rounded-xl border border-border bg-muted/50">
           <AlertCircle className="h-5 w-5 text-muted-foreground shrink-0" />
           <div>
-            <p className="text-sm font-medium text-foreground">Aucune boutique</p>
-            <p className="text-xs text-muted-foreground">Créez votre première boutique dans l'onglet <a href="/dashboard/stores" className="text-primary hover:underline">Mes Boutiques</a> pour configurer votre profil.</p>
+            <p className="text-sm font-medium text-foreground">{t.noStoreTitle}</p>
+            <p className="text-xs text-muted-foreground">{t.noStoreDesc}<a href="/dashboard/stores" className="text-primary hover:underline">{t.noStoreLinkText}</a>{t.noStoreDescEnd}</p>
           </div>
         </div>
       </div>
@@ -153,7 +238,7 @@ const DashboardProfileTab = () => {
       <div className="flex items-center justify-between bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
         <StoreSelector stores={stores} activeStoreId={activeStoreId} onSelect={setActiveStoreId} />
         <Button onClick={handleSave} disabled={saving} className="hidden sm:flex">
-          {saving ? "Enregistrement..." : "Enregistrer les modifications"}
+          {saving ? t.saving : t.saveBtn}
         </Button>
       </div>
 
@@ -161,13 +246,13 @@ const DashboardProfileTab = () => {
         {/* Left Column: Essential Info */}
         <div className="lg:col-span-1 space-y-6">
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-6">
-            <h3 className="font-semibold text-lg text-gray-900 border-b border-gray-100 pb-3">Identité</h3>
+            <h3 className="font-semibold text-lg text-gray-900 border-b border-gray-100 pb-3">{t.identity}</h3>
             
             {/* Store Logo */}
             <div>
               <label className="text-sm font-medium text-gray-700 mb-3 flex items-center gap-2">
                 <ImageIcon className="h-4 w-4 text-gray-400" />
-                Logo de la boutique
+                {t.logoLabel}
               </label>
               <div className="flex flex-col items-center gap-4">
                 <div
@@ -182,7 +267,7 @@ const DashboardProfileTab = () => {
                 </div>
                 <div className="text-center">
                   <Button variant="outline" size="sm" onClick={() => fileInputRef.current?.click()} disabled={uploading} className="rounded-full">
-                    {uploading ? "Upload..." : logoUrl ? "Changer le logo" : "Ajouter un logo"}
+                    {uploading ? "Upload..." : logoUrl ? t.logoChange : t.logoAdd}
                   </Button>
                   <p className="text-[11px] text-gray-400 mt-2">JPG, PNG. Max 2 Mo.</p>
                 </div>
@@ -194,29 +279,29 @@ const DashboardProfileTab = () => {
             <div>
               <label className="text-sm font-medium text-gray-700 mb-1.5 flex items-center gap-2">
                 <Store className="h-4 w-4 text-gray-400" />
-                Nom de la boutique
+                {t.storeNameLabel}
               </label>
-              <Input value={storeName} onChange={(e) => setStoreName(e.target.value)} placeholder="Ex: Ma Super Boutique" className="bg-gray-50/50" />
+              <Input value={storeName} onChange={(e) => setStoreName(e.target.value)} placeholder={t.storeNamePlaceholder} className="bg-gray-50/50" />
             </div>
 
             {/* Contact */}
             <div>
               <label className="text-sm font-medium text-gray-700 mb-1.5 flex items-center gap-2">
                 <Phone className="h-4 w-4 text-gray-400" />
-                Contact public
+                {t.contactLabel}
               </label>
-              <Input value={contact} onChange={(e) => setContact(e.target.value)} placeholder="Ex: +229 97 00 00 00" className="bg-gray-50/50" />
+              <Input value={contact} onChange={(e) => setContact(e.target.value)} placeholder={t.contactPlaceholder} className="bg-gray-50/50" />
             </div>
           </div>
 
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
-            <h3 className="font-semibold text-lg text-gray-900 border-b border-gray-100 pb-3">Domaine</h3>
+            <h3 className="font-semibold text-lg text-gray-900 border-b border-gray-100 pb-3">{t.domainTitle}</h3>
             
             {/* Store Domain / Slug */}
             <div>
               <label className="text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
                 <Globe className="h-4 w-4 text-gray-400" />
-                Lien de la boutique
+                {t.storeLinkLabel}
               </label>
               <div className="flex items-center">
                 <span className="inline-flex items-center px-3 h-10 rounded-l-md border border-r-0 border-input bg-gray-100 text-xs text-gray-500 whitespace-nowrap">
@@ -232,12 +317,12 @@ const DashboardProfileTab = () => {
                     rel="noopener noreferrer"
                     className="text-xs font-medium text-gray-500 hover:text-blue-600 hover:underline truncate block"
                   >
-                    ↗ Ouvrir mon lien par défaut
+                    {t.openDefaultLink}
                   </a>
                   
                   {customDomain && (
                     <div className="bg-blue-50 p-3 rounded-lg border border-blue-100 mt-3">
-                      <p className="text-[11px] font-semibold text-blue-600 uppercase tracking-wider mb-1">Domaine Personnalisé</p>
+                      <p className="text-[11px] font-semibold text-blue-600 uppercase tracking-wider mb-1">{t.customDomainTitle}</p>
                       <a
                         href={`https://${customDomain}`}
                         target="_blank"
@@ -260,7 +345,7 @@ const DashboardProfileTab = () => {
             <div className="flex items-center justify-between gap-4 mb-4 pb-3 border-b border-gray-100">
               <h3 className="font-semibold text-lg text-gray-900 flex items-center gap-2">
                 <FileText className="h-5 w-5 text-gray-400" />
-                Description & Présentation
+                {t.descTitle}
               </h3>
               <Button
                 type="button"
@@ -273,26 +358,26 @@ const DashboardProfileTab = () => {
                 {improving ? (
                   <>
                     <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                    Amélioration...
+                    {t.improving}
                   </>
                 ) : (
                   <>
                     <Sparkles className="h-3.5 w-3.5" />
-                    Optimiser avec l'IA
+                    {t.optimizeAi}
                   </>
                 )}
               </Button>
             </div>
             
             <p className="text-sm text-gray-500 mb-4 leading-relaxed">
-              Présentez votre boutique, vos produits et votre histoire. Vous pouvez ajouter des images, des vidéos YouTube et formater votre texte pour le rendre attrayant.
+              {t.descPlaceholder}
             </p>
             
             <div className="flex-1 rounded-xl overflow-hidden border border-gray-200 focus-within:border-blue-300 focus-within:ring-1 focus-within:ring-blue-300 transition-all">
               <RichTextEditor
                 content={storeDescription}
                 onChange={setStoreDescription}
-                placeholder="Commencez à écrire ici..."
+                placeholder={t.editorPlaceholder}
               />
             </div>
           </div>
@@ -301,7 +386,7 @@ const DashboardProfileTab = () => {
 
       <div className="flex justify-end sm:hidden">
         <Button onClick={handleSave} disabled={saving} className="w-full">
-          {saving ? "Enregistrement..." : "Enregistrer les modifications"}
+          {saving ? t.saving : t.saveBtn}
         </Button>
       </div>
     </div>

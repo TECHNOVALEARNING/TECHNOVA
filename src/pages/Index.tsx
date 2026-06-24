@@ -435,7 +435,7 @@ const Index = () => {
 
       {/* ============ PARTNERS MARQUEE ============ */}
       <div style={{ position: "relative", zIndex: 1, background: "var(--surface)", backdropFilter: "blur(24px) saturate(180%)", borderTop: "1px solid var(--divider)", borderBottom: "1px solid var(--divider)", padding: "28px 0", overflow: "hidden" }}>
-        <p style={{ textAlign: "center", fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--text-secondary)", marginBottom: 16 }}>{lang === 'fr' ? 'NOS PARTENAIRES TECHNOLOGIQUES' : 'OUR TECHNOLOGY PARTNERS'}</p>
+        <p style={{ textAlign: "center", fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--text-secondary)", marginBottom: 16 }}>{lang === 'fr' ? 'NOS TECHNOLOGIES' : 'OUR TECHNOLOGIES'}</p>
         <div className="partners-track">
           {[...PARTNERS, ...PARTNERS].map((p, i) => (
             <div key={i} className="partner-item">

@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
-import { fr } from "date-fns/locale";
+import { fr, enUS } from "date-fns/locale";
 
 interface Order {
   id: string;
@@ -48,6 +48,69 @@ type Transaction = {
 
 const COMMISSION_RATE = 0.10;
 
+const translations = {
+  fr: {
+    title: "Revenus",
+    subtitle: "Suivez vos gains, commissions et retraits en détail",
+    btnWithdraw: "Demander un retrait",
+    netRevenue: "Revenu net",
+    netRevenueSub: "Après commission TECHNOVA 10%",
+    inTransit: "En transit",
+    transitDelay: "délai 3 jours",
+    transitSoon: "Disponibles bientôt",
+    availableWithdrawal: "Disponible retrait",
+    pendingLabel: "en attente",
+    readyToWithdraw: "Prêt à retirer",
+    totalWithdrawn: "Total retiré",
+    withdrawalsCount: "retrait(s)",
+    txHistory: "Historique des transactions",
+    filterAll: "Tout",
+    filterSales: "Ventes",
+    filterWithdrawals: "Retraits",
+    filter7d: "7 jours",
+    filter30d: "30 jours",
+    filter90d: "90 jours",
+    noTransactions: "Aucune transaction trouvée",
+    noTransactionsSub: "Commencez à vendre vos produits pour voir vos transactions ici.",
+    defaultProduct: "Produit",
+    defaultCustomer: "Client",
+    withdrawalLabelPrefix: "Retrait ",
+    statusCompleted: "Complété",
+    statusPending: "En attente",
+    statusFailed: "Échoué",
+  },
+  en: {
+    title: "Revenue",
+    subtitle: "Track your earnings, commissions, and withdrawals in detail",
+    btnWithdraw: "Request a withdrawal",
+    netRevenue: "Net Revenue",
+    netRevenueSub: "After 10% TECHNOVA commission",
+    inTransit: "In transit",
+    transitDelay: "3-day delay",
+    transitSoon: "Available soon",
+    availableWithdrawal: "Available for withdrawal",
+    pendingLabel: "pending",
+    readyToWithdraw: "Ready to withdraw",
+    totalWithdrawn: "Total withdrawn",
+    withdrawalsCount: "withdrawal(s)",
+    txHistory: "Transaction History",
+    filterAll: "All",
+    filterSales: "Sales",
+    filterWithdrawals: "Withdrawals",
+    filter7d: "7 days",
+    filter30d: "30 days",
+    filter90d: "90 days",
+    noTransactions: "No transactions found",
+    noTransactionsSub: "Start selling your products to see your transactions here.",
+    defaultProduct: "Product",
+    defaultCustomer: "Customer",
+    withdrawalLabelPrefix: "Withdrawal ",
+    statusCompleted: "Completed",
+    statusPending: "Pending",
+    statusFailed: "Failed",
+  }
+};
+
 const DashboardRevenue = () => {
   const { user } = useAuth();
   const [orders, setOrders] = useState<Order[]>([]);
@@ -55,6 +118,17 @@ const DashboardRevenue = () => {
   const [loading, setLoading] = useState(true);
   const [filterType, setFilterType] = useState<"all" | "sale" | "withdrawal">("all");
   const [filterPeriod, setFilterPeriod] = useState<"all" | "7d" | "30d" | "90d">("all");
+
+  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+
+  useEffect(() => {
+    const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
+    window.addEventListener("technova_lang_changed", handleLangChange);
+    return () => window.removeEventListener("technova_lang_changed", handleLangChange);
+  }, []);
+
+  const t = translations[lang === 'en' ? 'en' : 'fr'];
+  const dateLocale = lang === 'en' ? enUS : fr;
 
   useEffect(() => {
     if (!user) return;
@@ -115,8 +189,8 @@ const DashboardRevenue = () => {
       items.push({
         id: o.id,
         type: "sale",
-        label: (o.products as any)?.title || "Produit",
-        detail: (o.customers as any)?.name || (o.customers as any)?.email || "Client",
+        label: (o.products as any)?.title || t.defaultProduct,
+        detail: (o.customers as any)?.name || (o.customers as any)?.email || t.defaultCustomer,
         amount: Number(o.amount),
         netAmount: Number(o.amount) * (1 - COMMISSION_RATE),
         status: o.status,
@@ -129,7 +203,7 @@ const DashboardRevenue = () => {
       items.push({
         id: w.id,
         type: "withdrawal",
-        label: `Retrait ${w.operator.toUpperCase()}`,
+        label: `${t.withdrawalLabelPrefix}${w.operator.toUpperCase()}`,
         detail: w.phone_number,
         amount: Number(w.amount),
         netAmount: Number(w.net_amount),
@@ -153,9 +227,9 @@ const DashboardRevenue = () => {
 
   const statusBadge = (status: string, type: "sale" | "withdrawal") => {
     const map: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
-      completed: { label: "Complété", variant: "default" },
-      pending: { label: "En attente", variant: "secondary" },
-      failed: { label: "Échoué", variant: "destructive" },
+      completed: { label: t.statusCompleted, variant: "default" },
+      pending: { label: t.statusPending, variant: "secondary" },
+      failed: { label: t.statusFailed, variant: "destructive" },
     };
     const s = map[status] || { label: status, variant: "outline" as const };
     return <Badge variant={s.variant}>{s.label}</Badge>;
@@ -181,14 +255,14 @@ const DashboardRevenue = () => {
   }
 
   const transitSub = stats.pendingRevenue > 0
-    ? `${formatAmount(stats.pendingRevenue)} (délai 3 jours)`
-    : "Disponibles bientôt";
+    ? `${formatAmount(stats.pendingRevenue)} (${t.transitDelay})`
+    : t.transitSoon;
 
   const statCards = [
-    { label: "Revenu net", value: formatAmount(stats.netRevenue), icon: TrendingUp, sub: "Après commission TECHNOVA 10%" },
-    ...(stats.pendingFunds > 0 ? [{ label: "En transit", value: formatAmount(stats.pendingFunds), icon: Clock, sub: transitSub }] : []),
-    { label: "Disponible retrait", value: formatAmount(stats.available), icon: ArrowUpRight, sub: stats.pendingWithdrawals > 0 ? `${formatAmount(stats.pendingWithdrawals)} en attente` : "Prêt à retirer" },
-    { label: "Total retiré", value: formatAmount(stats.totalWithdrawn), icon: Download, sub: `${withdrawals.filter(w => w.status === "completed").length} retrait(s)` },
+    { label: t.netRevenue, value: formatAmount(stats.netRevenue), icon: TrendingUp, sub: t.netRevenueSub },
+    ...(stats.pendingFunds > 0 ? [{ label: t.inTransit, value: formatAmount(stats.pendingFunds), icon: Clock, sub: transitSub }] : []),
+    { label: t.availableWithdrawal, value: formatAmount(stats.available), icon: ArrowUpRight, sub: stats.pendingWithdrawals > 0 ? `${formatAmount(stats.pendingWithdrawals)} ${t.pendingLabel}` : t.readyToWithdraw },
+    { label: t.totalWithdrawn, value: formatAmount(stats.totalWithdrawn), icon: Download, sub: `${withdrawals.filter(w => w.status === "completed").length} ${t.withdrawalsCount}` },
   ];
 
   return (
@@ -196,15 +270,15 @@ const DashboardRevenue = () => {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Revenus</h1>
+            <h1 className="text-2xl font-bold text-foreground">{t.title}</h1>
             <p className="text-sm text-muted-foreground mt-1">
-              Suivez vos gains, commissions et retraits en détail
+              {t.subtitle}
             </p>
           </div>
           <Link to="/dashboard/withdrawals">
             <Button className="gap-2">
               <Wallet className="h-4 w-4" />
-              Demander un retrait
+              {t.btnWithdraw}
             </Button>
           </Link>
         </div>
@@ -228,7 +302,7 @@ const DashboardRevenue = () => {
         {/* Transaction History */}
         <div className="rounded-xl border border-border bg-card">
           <div className="p-5 border-b border-border flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <h2 className="text-lg font-semibold text-foreground">Historique des transactions</h2>
+            <h2 className="text-lg font-semibold text-foreground">{t.txHistory}</h2>
             <div className="flex items-center gap-2">
               <Select value={filterType} onValueChange={(v) => setFilterType(v as any)}>
                 <SelectTrigger className="w-[140px] h-9 text-sm">
@@ -236,9 +310,9 @@ const DashboardRevenue = () => {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Tout</SelectItem>
-                  <SelectItem value="sale">Ventes</SelectItem>
-                  <SelectItem value="withdrawal">Retraits</SelectItem>
+                  <SelectItem value="all">{t.filterAll}</SelectItem>
+                  <SelectItem value="sale">{t.filterSales}</SelectItem>
+                  <SelectItem value="withdrawal">{t.filterWithdrawals}</SelectItem>
                 </SelectContent>
               </Select>
               <Select value={filterPeriod} onValueChange={(v) => setFilterPeriod(v as any)}>
@@ -247,10 +321,10 @@ const DashboardRevenue = () => {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Tout</SelectItem>
-                  <SelectItem value="7d">7 jours</SelectItem>
-                  <SelectItem value="30d">30 jours</SelectItem>
-                  <SelectItem value="90d">90 jours</SelectItem>
+                  <SelectItem value="all">{t.filterAll}</SelectItem>
+                  <SelectItem value="7d">{t.filter7d}</SelectItem>
+                  <SelectItem value="30d">{t.filter30d}</SelectItem>
+                  <SelectItem value="90d">{t.filter90d}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -259,9 +333,9 @@ const DashboardRevenue = () => {
           {transactions.length === 0 ? (
             <div className="p-10 text-center">
               <DollarSign className="h-12 w-12 mx-auto text-muted-foreground/30 mb-3" />
-              <p className="text-muted-foreground">Aucune transaction trouvée</p>
+              <p className="text-muted-foreground">{t.noTransactions}</p>
               <p className="text-sm text-muted-foreground/60 mt-1">
-                Commencez à vendre vos produits pour voir vos transactions ici.
+                {t.noTransactionsSub}
               </p>
             </div>
           ) : (
@@ -304,7 +378,7 @@ const DashboardRevenue = () => {
                       {formatAmount(t.type === "sale" ? t.netAmount! : t.amount)}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      {format(new Date(t.date), "dd MMM yyyy, HH:mm", { locale: fr })}
+                      {format(new Date(t.date), "dd MMM yyyy, HH:mm", { locale: dateLocale })}
                     </p>
                   </div>
 

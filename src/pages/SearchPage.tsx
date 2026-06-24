@@ -17,21 +17,91 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { SlidersHorizontal, X, Loader2, ArrowUpDown, ShieldCheck } from "lucide-react";
 
-const SORTS = [
-  { key: "relevance", label: "Pertinence" },
-  { key: "popular", label: "Populaires" },
-  { key: "recent", label: "Récents" },
-  { key: "price_asc", label: "Prix croissant" },
-  { key: "price_desc", label: "Prix décroissant" },
-  { key: "verified", label: "Vendeurs vérifiés ⭐" },
-];
+const translations = {
+  fr: {
+    seoTitle: "Recherche · TECHNOVA",
+    seoDesc: "Explorez la marketplace TECHNOVA. Fichiers, formations et licences numériques.",
+    allProducts: "Tous les produits",
+    searching: "Recherche…",
+    all: "Tous",
+    allFem: "Toutes",
+    filtersBtn: "Filtres",
+    filtersTitle: "Filtres & tri",
+    viewResults: "Voir",
+    resultsText: (total: number) => `${total} produit${total > 1 ? "s" : ""} trouvé${total > 1 ? "s" : ""}`,
+    noProducts: "Aucun produit trouvé",
+    noProductsDesc: "Essayez d'autres mots-clés ou retirez certains filtres.",
+    productType: "Type de produit",
+    category: "Catégorie",
+    sortBy: "Trier par",
+    verifiedStatus: "Statut Verified",
+    verifiedAll: "Tous (vérifiés ou non)",
+    sorts: [
+      { key: "relevance", label: "Pertinence" },
+      { key: "popular", label: "Populaires" },
+      { key: "recent", label: "Récents" },
+      { key: "price_asc", label: "Prix croissant" },
+      { key: "price_desc", label: "Prix décroissant" },
+      { key: "verified", label: "Vendeurs vérifiés ⭐" },
+    ],
+    verifiedOptions: [
+      { key: "any", label: "Tous les vendeurs vérifiés" },
+      { key: "standard", label: "Verify Standard" },
+      { key: "pro", label: "Verify Pro" },
+      { key: "premium", label: "Verify Premium" },
+    ]
+  },
+  en: {
+    seoTitle: "Search · TECHNOVA",
+    seoDesc: "Explore the TECHNOVA marketplace. Files, training, and digital licenses.",
+    allProducts: "All products",
+    searching: "Searching…",
+    all: "All",
+    allFem: "All",
+    filtersBtn: "Filters",
+    filtersTitle: "Filters & Sort",
+    viewResults: "View",
+    resultsText: (total: number) => `${total} product${total > 1 ? "s" : ""} found`,
+    noProducts: "No products found",
+    noProductsDesc: "Try other keywords or clear some filters.",
+    productType: "Product Type",
+    category: "Category",
+    sortBy: "Sort by",
+    verifiedStatus: "Verified Status",
+    verifiedAll: "All (verified or not)",
+    sorts: [
+      { key: "relevance", label: "Relevance" },
+      { key: "popular", label: "Popular" },
+      { key: "recent", label: "Recent" },
+      { key: "price_asc", label: "Price: Low to High" },
+      { key: "price_desc", label: "Price: High to Low" },
+      { key: "verified", label: "Verified Sellers ⭐" },
+    ],
+    verifiedOptions: [
+      { key: "any", label: "All verified sellers" },
+      { key: "standard", label: "Verify Standard" },
+      { key: "pro", label: "Verify Pro" },
+      { key: "premium", label: "Verify Premium" },
+    ]
+  }
+};
 
-const VERIFIED_OPTIONS = [
-  { key: "any", label: "Tous les vendeurs vérifiés" },
-  { key: "standard", label: "Verify Standard" },
-  { key: "pro", label: "Verify Pro" },
-  { key: "premium", label: "Verify Premium" },
-];
+const categoryLabels: Record<string, Record<string, string>> = {
+  business: { fr: "Business", en: "Business" },
+  design: { fr: "Design", en: "Design" },
+  tech: { fr: "Tech & Code", en: "Tech & Code" },
+  marketing: { fr: "Marketing", en: "Marketing" },
+  education: { fr: "Éducation", en: "Education" },
+  lifestyle: { fr: "Lifestyle", en: "Lifestyle" },
+  creative: { fr: "Créatif", en: "Creative" },
+  other: { fr: "Autres", en: "Others" },
+};
+
+const productTypeLabels: Record<string, Record<string, string>> = {
+  file: { fr: "Fichiers", en: "Files" },
+  course: { fr: "Formations", en: "Courses" },
+  license: { fr: "Licences", en: "Licenses" },
+};
 
 const SearchPage = () => {
   const [params, setParams] = useSearchParams();
@@ -45,6 +115,16 @@ const SearchPage = () => {
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [sheetOpen, setSheetOpen] = useState(false);
+
+  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+
+  useEffect(() => {
+    const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
+    window.addEventListener("technova_lang_changed", handleLangChange);
+    return () => window.removeEventListener("technova_lang_changed", handleLangChange);
+  }, []);
+
+  const t = translations[lang === 'en' ? 'en' : 'fr'];
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -84,13 +164,13 @@ const SearchPage = () => {
 
   const activeCat = getCategoryByKey(category);
   const activeType = PRODUCT_TYPES.find((t) => t.key === type);
-  const activeVerified = VERIFIED_OPTIONS.find((v) => v.key === verified);
+  const activeVerified = t.verifiedOptions.find((v) => v.key === verified);
   const activeFilterCount = (category ? 1 : 0) + (type ? 1 : 0) + (verified ? 1 : 0);
 
   const FiltersBlock = (
     <div className="space-y-6">
       <div>
-        <h3 className="mb-3 text-sm font-semibold text-foreground">Type de produit</h3>
+        <h3 className="mb-3 text-sm font-semibold text-foreground">{t.productType}</h3>
         <div className="space-y-1.5">
           <button
             onClick={() => updateParam("type", null)}
@@ -100,26 +180,26 @@ const SearchPage = () => {
                 : "text-muted-foreground hover:bg-secondary"
             }`}
           >
-            Tous
+            {t.all}
           </button>
-          {PRODUCT_TYPES.map((t) => (
+          {PRODUCT_TYPES.map((pt) => (
             <button
-              key={t.key}
-              onClick={() => updateParam("type", t.key)}
+              key={pt.key}
+              onClick={() => updateParam("type", pt.key)}
               className={`block w-full rounded-lg px-3 py-2.5 text-left text-sm transition-colors ${
-                type === t.key
+                type === pt.key
                   ? "bg-primary/10 text-primary font-medium"
                   : "text-muted-foreground hover:bg-secondary"
               }`}
             >
-              {t.emoji} {t.label}
+              {pt.emoji} {productTypeLabels[pt.key]?.[lang] || pt.label}
             </button>
           ))}
         </div>
       </div>
 
       <div>
-        <h3 className="mb-3 text-sm font-semibold text-foreground">Catégorie</h3>
+        <h3 className="mb-3 text-sm font-semibold text-foreground">{t.category}</h3>
         <div className="space-y-1.5">
           <button
             onClick={() => updateParam("category", null)}
@@ -129,7 +209,7 @@ const SearchPage = () => {
                 : "text-muted-foreground hover:bg-secondary"
             }`}
           >
-            Toutes
+            {t.allFem}
           </button>
           {MARKETPLACE_CATEGORIES.map((c) => (
             <button
@@ -141,16 +221,16 @@ const SearchPage = () => {
                   : "text-muted-foreground hover:bg-secondary"
               }`}
             >
-              {c.emoji} {c.label}
+              {c.emoji} {categoryLabels[c.key]?.[lang] || c.label}
             </button>
           ))}
         </div>
       </div>
 
       <div>
-        <h3 className="mb-3 text-sm font-semibold text-foreground">Trier par</h3>
+        <h3 className="mb-3 text-sm font-semibold text-foreground">{t.sortBy}</h3>
         <div className="space-y-1.5">
-          {SORTS.map((s) => (
+          {t.sorts.map((s) => (
             <button
               key={s.key}
               onClick={() => updateParam("sort", s.key)}
@@ -169,7 +249,7 @@ const SearchPage = () => {
       <div>
         <h3 className="mb-3 flex items-center gap-1.5 text-sm font-semibold text-foreground">
           <ShieldCheck className="h-4 w-4 text-primary" />
-          Statut Verified
+          {t.verifiedStatus}
         </h3>
         <div className="space-y-1.5">
           <button
@@ -180,9 +260,9 @@ const SearchPage = () => {
                 : "text-muted-foreground hover:bg-secondary"
             }`}
           >
-            Tous (vérifiés ou non)
+            {t.verifiedAll}
           </button>
-          {VERIFIED_OPTIONS.map((v) => (
+          {t.verifiedOptions.map((v) => (
             <button
               key={v.key}
               onClick={() => updateParam("verified", v.key)}
@@ -204,8 +284,8 @@ const SearchPage = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         canonicalPath="/search"
-        title={q ? `Recherche : ${q} · TECHNOVA` : "Marketplace · TECHNOVA"}
-        description="Explorez la marketplace TECHNOVA. Fichiers, formations et licences numériques."
+        title={q ? `${lang === 'en' ? 'Search' : 'Recherche'} : ${q} · TECHNOVA` : `Marketplace · TECHNOVA`}
+        description={t.seoDesc}
       />
       <Header />
 
@@ -232,15 +312,15 @@ const SearchPage = () => {
                 {q
                   ? `« ${q} »`
                   : activeCat
-                  ? `${activeCat.emoji} ${activeCat.label}`
+                  ? `${activeCat.emoji} ${categoryLabels[activeCat.key]?.[lang] || activeCat.label}`
                   : activeType
-                  ? `${activeType.emoji} ${activeType.label}`
-                  : "Tous les produits"}
+                  ? `${activeType.emoji} ${productTypeLabels[activeType.key]?.[lang] || activeType.label}`
+                  : t.allProducts}
               </h1>
               <p className="text-xs text-muted-foreground sm:text-sm">
                 {loading
-                  ? "Recherche…"
-                  : `${total} produit${total > 1 ? "s" : ""} trouvé${total > 1 ? "s" : ""}`}
+                  ? t.searching
+                  : t.resultsText(total)}
               </p>
             </div>
 
@@ -250,7 +330,7 @@ const SearchPage = () => {
                 <SheetTrigger asChild>
                   <Button variant="outline" size="sm" className="relative gap-1.5 rounded-full">
                     <SlidersHorizontal className="h-3.5 w-3.5" />
-                    Filtres
+                    {t.filtersBtn}
                     {activeFilterCount > 0 && (
                       <span className="ml-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground">
                         {activeFilterCount}
@@ -262,13 +342,13 @@ const SearchPage = () => {
                   <SheetHeader className="mb-4">
                     <SheetTitle className="flex items-center gap-2">
                       <SlidersHorizontal className="h-4 w-4" />
-                      Filtres & tri
+                      {t.filtersTitle}
                     </SheetTitle>
                   </SheetHeader>
                   {FiltersBlock}
                   <div className="sticky bottom-0 -mx-6 mt-6 border-t border-border bg-background px-6 py-4">
                     <Button className="w-full" onClick={() => setSheetOpen(false)}>
-                      Voir {total} résultat{total > 1 ? "s" : ""}
+                      {t.viewResults} {t.resultsText(total)}
                     </Button>
                   </div>
                 </SheetContent>
@@ -283,7 +363,7 @@ const SearchPage = () => {
                 onChange={(e) => updateParam("sort", e.target.value)}
                 className="h-9 rounded-lg border border-border bg-card px-3 text-sm text-foreground"
               >
-                {SORTS.map((s) => (
+                {t.sorts.map((s) => (
                   <option key={s.key} value={s.key}>
                     {s.label}
                   </option>
@@ -298,12 +378,12 @@ const SearchPage = () => {
               {q && <Chip onRemove={() => updateParam("q", null)}>« {q} »</Chip>}
               {activeType && (
                 <Chip onRemove={() => updateParam("type", null)}>
-                  {activeType.emoji} {activeType.label}
+                  {activeType.emoji} {productTypeLabels[activeType.key]?.[lang] || activeType.label}
                 </Chip>
               )}
               {activeCat && (
                 <Chip onRemove={() => updateParam("category", null)}>
-                  {activeCat.emoji} {activeCat.label}
+                  {activeCat.emoji} {categoryLabels[activeCat.key]?.[lang] || activeCat.label}
                 </Chip>
               )}
               {activeVerified && (
@@ -326,10 +406,10 @@ const SearchPage = () => {
           ) : products.length === 0 ? (
             <div className="rounded-2xl border border-dashed border-border bg-card/40 p-8 text-center sm:p-12">
               <p className="text-base font-semibold text-foreground sm:text-lg">
-                Aucun produit trouvé
+                {t.noProducts}
               </p>
               <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
-                Essayez d'autres mots-clés ou retirez certains filtres.
+                {t.noProductsDesc}
               </p>
             </div>
           ) : (

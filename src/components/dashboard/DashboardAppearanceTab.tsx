@@ -11,16 +11,6 @@ import { cn } from "@/lib/utils";
 import StoreSelector from "./StoreSelector";
 import { useActiveStore } from "@/hooks/useActiveStore";
 
-const BRAND_COLORS = [
-  { name: "Bleu", value: "#2563EB" },
-  { name: "Émeraude", value: "#10B981" },
-  { name: "Orange", value: "#F97316" },
-  { name: "Indigo", value: "#6366F1" },
-  { name: "Rose", value: "#EC4899" },
-  { name: "Jaune", value: "#EAB308" },
-  { name: "Rouge", value: "#EF4444" },
-];
-
 const FONTS = [
   { label: "Inter", value: "Inter" },
   { label: "Space Grotesk", value: "Space Grotesk" },
@@ -28,18 +18,130 @@ const FONTS = [
   { label: "Playfair Display", value: "Playfair Display" },
 ];
 
-const BUTTON_ANIMATIONS = [
-  { label: "Aucune", value: "none" },
-  { label: "Pulse", value: "pulse" },
-  { label: "Rebond", value: "bounce" },
-];
-
-const SORT_OPTIONS = [
-  { label: "Les plus récents en premier", desc: "Présentez vos nouveautés", value: "recent", icon: Sparkles },
-  { label: "Ordre alphabétique", desc: "Produits dans l'ordre alphabétique", value: "alphabetical", icon: ArrowUpDown },
-  { label: "Les plus cher en premier", desc: "Valorisez vos produits haut de gamme", value: "price_desc", icon: ArrowUpDown },
-  { label: "Moins cher en premier", desc: "Priorisez vos produits les plus abordables", value: "price_asc", icon: ArrowUpDown },
-];
+const translations = {
+  fr: {
+    viewStore: "Voir ma boutique",
+    reset: "Réinitialiser",
+    saving: "Enregistrement...",
+    save: "Enregistrer",
+    bannerTitle: "Bannière de la boutique",
+    bannerDesc: "Image affichée en haut (recommandé : 1200×400)",
+    bannerUploadClick: "Cliquez pour uploader une bannière",
+    brandColorTitle: "Couleur de votre marque",
+    brandColorDesc: "Utilisée pour les boutons, prix et accents",
+    fontTitle: "Police d'écriture",
+    buttonAnimTitle: "Animation du bouton d'achat",
+    displayOptionsTitle: "Options d'affichage",
+    showBuyBtnLabel: "Afficher le bouton d'achat",
+    showBuyBtnDesc: "Bouton « Acheter » visible sur chaque carte produit",
+    welcomeVideoTitle: "Vidéo de bienvenue",
+    welcomeVideoDesc: "Configurez la vidéo d'accueil visible en bas de la section de bienvenue.",
+    showWelcomeVideoLabel: "Afficher la vidéo de bienvenue",
+    showWelcomeVideoDesc: "Activer ou désactiver l'affichage de la vidéo sur la page d'accueil publique",
+    videoLinkLabel: "Lien de la vidéo (YouTube, Vimeo, MP4, etc.)",
+    displayOrderTitle: "Ordre d'affichage",
+    noStoreTitle: "Aucune boutique",
+    noStoreDesc: "Créez votre première boutique dans l'onglet ",
+    noStoreLinkText: "Mes Boutiques",
+    saveSuccess: "Apparence sauvegardée !",
+    saveError: "Erreur lors de la sauvegarde",
+    uploadError: "Erreur lors de l'upload",
+    bannerSuccess: "Bannière uploadée !",
+    // Preview
+    previewUrlPlaceholder: "votre-boutique.technova.app",
+    previewDefaultStoreName: "Ma Boutique",
+    previewTabProducts: "Produits",
+    previewTabAbout: "À propos",
+    previewTabContact: "Contact",
+    previewDiscover: "Découvrez les produits de ",
+    previewSearch: "🔍 Rechercher…",
+    previewExampleProd: "Exemple de produit",
+    previewOtherProd: "Autre produit",
+    previewReviews: "0% (0 avis)",
+    previewBuyBtn: "Acheter",
+    previewPoweredBy: "Propulsé par",
+    // Options lists
+    colorBlue: "Bleu",
+    colorEmerald: "Émeraude",
+    colorOrange: "Orange",
+    colorIndigo: "Indigo",
+    colorPink: "Rose",
+    colorYellow: "Jaune",
+    colorRed: "Rouge",
+    animNone: "Aucune",
+    animPulse: "Pulse",
+    animBounce: "Rebond",
+    sortRecent: "Les plus récents en premier",
+    sortRecentDesc: "Présentez vos nouveautés",
+    sortAlpha: "Ordre alphabétique",
+    sortAlphaDesc: "Produits dans l'ordre alphabétique",
+    sortPriceDesc: "Les plus cher en premier",
+    sortPriceDescDesc: "Valorisez vos produits haut de gamme",
+    sortPriceAsc: "Moins cher en premier",
+    sortPriceAscDesc: "Priorisez vos produits les plus abordables",
+  },
+  en: {
+    viewStore: "View my shop",
+    reset: "Reset",
+    saving: "Saving...",
+    save: "Save",
+    bannerTitle: "Shop Banner",
+    bannerDesc: "Image displayed at the top (recommended: 1200×400)",
+    bannerUploadClick: "Click to upload a banner",
+    brandColorTitle: "Brand Color",
+    brandColorDesc: "Used for buttons, prices, and accents",
+    fontTitle: "Typography / Font",
+    buttonAnimTitle: "Buy button animation",
+    displayOptionsTitle: "Display options",
+    showBuyBtnLabel: "Show buy button",
+    showBuyBtnDesc: "« Buy » button visible on each product card",
+    welcomeVideoTitle: "Welcome Video",
+    welcomeVideoDesc: "Configure the welcome video shown at the bottom of the welcome section.",
+    showWelcomeVideoLabel: "Show welcome video",
+    showWelcomeVideoDesc: "Enable or disable welcome video display on the public homepage",
+    videoLinkLabel: "Video link (YouTube, Vimeo, MP4, etc.)",
+    displayOrderTitle: "Display order",
+    noStoreTitle: "No shop",
+    noStoreDesc: "Create your first shop in the ",
+    noStoreLinkText: "My Shops",
+    saveSuccess: "Appearance saved!",
+    saveError: "Error saving appearance",
+    uploadError: "Error uploading banner",
+    bannerSuccess: "Banner uploaded!",
+    // Preview
+    previewUrlPlaceholder: "your-shop.technova.app",
+    previewDefaultStoreName: "My Shop",
+    previewTabProducts: "Products",
+    previewTabAbout: "About",
+    previewTabContact: "Contact",
+    previewDiscover: "Discover products from ",
+    previewSearch: "🔍 Search…",
+    previewExampleProd: "Example product",
+    previewOtherProd: "Other product",
+    previewReviews: "0% (0 reviews)",
+    previewBuyBtn: "Buy",
+    previewPoweredBy: "Powered by",
+    // Options lists
+    colorBlue: "Blue",
+    colorEmerald: "Emerald",
+    colorOrange: "Orange",
+    colorIndigo: "Indigo",
+    colorPink: "Pink",
+    colorYellow: "Yellow",
+    colorRed: "Red",
+    animNone: "None",
+    animPulse: "Pulse",
+    animBounce: "Bounce",
+    sortRecent: "Newest first",
+    sortRecentDesc: "Showcase your latest items",
+    sortAlpha: "Alphabetical order",
+    sortAlphaDesc: "Products in alphabetical order",
+    sortPriceDesc: "Most expensive first",
+    sortPriceDescDesc: "Highlight premium products",
+    sortPriceAsc: "Cheapest first",
+    sortPriceAscDesc: "Prioritize affordable products",
+  }
+};
 
 interface RealProduct {
   id: string;
@@ -66,6 +168,39 @@ const DashboardAppearanceTab = () => {
   const [uploadingBanner, setUploadingBanner] = useState(false);
   const [videoUrl, setVideoUrl] = useState("");
   const [showVideo, setShowVideo] = useState(false);
+
+  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+
+  useEffect(() => {
+    const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
+    window.addEventListener("technova_lang_changed", handleLangChange);
+    return () => window.removeEventListener("technova_lang_changed", handleLangChange);
+  }, []);
+
+  const t = translations[lang === 'en' ? 'en' : 'fr'];
+
+  const BRAND_COLORS = [
+    { name: t.colorBlue, value: "#2563EB" },
+    { name: t.colorEmerald, value: "#10B981" },
+    { name: t.colorOrange, value: "#F97316" },
+    { name: t.colorIndigo, value: "#6366F1" },
+    { name: t.colorPink, value: "#EC4899" },
+    { name: t.colorYellow, value: "#EAB308" },
+    { name: t.colorRed, value: "#EF4444" },
+  ];
+
+  const BUTTON_ANIMATIONS = [
+    { label: t.animNone, value: "none" },
+    { label: t.animPulse, value: "pulse" },
+    { label: t.animBounce, value: "bounce" },
+  ];
+
+  const SORT_OPTIONS = [
+    { label: t.sortRecent, desc: t.sortRecentDesc, value: "recent", icon: Sparkles },
+    { label: t.sortAlpha, desc: t.sortAlphaDesc, value: "alphabetical", icon: ArrowUpDown },
+    { label: t.sortPriceDesc, desc: t.sortPriceDescDesc, value: "price_desc", icon: ArrowUpDown },
+    { label: t.sortPriceAsc, desc: t.sortPriceAscDesc, value: "price_asc", icon: ArrowUpDown },
+  ];
 
   useEffect(() => {
     if (activeStore) {
@@ -149,9 +284,9 @@ const DashboardAppearanceTab = () => {
         updated_at: new Date().toISOString(),
       } as any).eq("id", user.id);
 
-      toast.success("Apparence sauvegardée !");
+      toast.success(t.saveSuccess);
     } catch {
-      toast.error("Erreur lors de la sauvegarde");
+      toast.error(t.saveError);
     }
     setSaving(false);
   };
@@ -169,11 +304,11 @@ const DashboardAppearanceTab = () => {
     const ext = file.name.split(".").pop();
     const path = `${user.id}/banner-${activeStoreId}.${ext}`;
     const { error } = await supabase.storage.from("product-assets").upload(path, file, { upsert: true });
-    if (error) { toast.error("Erreur lors de l'upload"); setUploadingBanner(false); return; }
+    if (error) { toast.error(t.uploadError); setUploadingBanner(false); return; }
     const { data: urlData } = supabase.storage.from("product-assets").getPublicUrl(path);
     setBannerUrl(urlData.publicUrl + "?t=" + Date.now());
     setUploadingBanner(false);
-    toast.success("Bannière uploadée !");
+    toast.success(t.bannerSuccess);
   };
 
   if (isLoading) {
@@ -186,8 +321,8 @@ const DashboardAppearanceTab = () => {
         <div className="flex items-center gap-3 p-4 rounded-xl border border-border bg-muted/50">
           <AlertCircle className="h-5 w-5 text-muted-foreground shrink-0" />
           <div>
-            <p className="text-sm font-medium text-foreground">Aucune boutique</p>
-            <p className="text-xs text-muted-foreground">Créez votre première boutique dans l'onglet <a href="/dashboard/stores" className="text-primary hover:underline">Mes Boutiques</a>.</p>
+            <p className="text-sm font-medium text-foreground">{t.noStoreTitle}</p>
+            <p className="text-xs text-muted-foreground">{t.noStoreDesc}<a href="/dashboard/stores" className="text-primary hover:underline">{t.noStoreLinkText}</a>.</p>
           </div>
         </div>
       </div>
@@ -205,15 +340,15 @@ const DashboardAppearanceTab = () => {
           {storeSlug && (
             <Button variant="outline" size="sm" className="gap-2" asChild>
               <a href={`/store/${storeSlug}`} target="_blank" rel="noopener noreferrer">
-                <Eye className="h-4 w-4" /> Voir ma boutique
+                <Eye className="h-4 w-4" /> {t.viewStore}
               </a>
             </Button>
           )}
           <Button variant="outline" size="sm" className="gap-2" onClick={handleReset}>
-            <RotateCcw className="h-4 w-4" /> Réinitialiser
+            <RotateCcw className="h-4 w-4" /> {t.reset}
           </Button>
           <Button size="sm" className="gap-2" onClick={handleSave} disabled={saving}>
-            <Save className="h-4 w-4" /> {saving ? "Enregistrement..." : "Enregistrer"}
+            <Save className="h-4 w-4" /> {saving ? t.saving : t.save}
           </Button>
         </div>
 
@@ -222,8 +357,8 @@ const DashboardAppearanceTab = () => {
           <div className="flex items-center gap-3">
             <ImagePlus className="h-4 w-4 text-muted-foreground" />
             <div>
-              <p className="text-sm font-semibold text-foreground">Bannière de la boutique</p>
-              <p className="text-xs text-muted-foreground">Image affichée en haut (recommandé : 1200×400)</p>
+              <p className="text-sm font-semibold text-foreground">{t.bannerTitle}</p>
+              <p className="text-xs text-muted-foreground">{t.bannerDesc}</p>
             </div>
           </div>
           {bannerUrl ? (
@@ -239,7 +374,7 @@ const DashboardAppearanceTab = () => {
               {uploadingBanner ? <Loader2 className="h-8 w-8 text-muted-foreground animate-spin" /> : (
                 <>
                   <ImagePlus className="h-8 w-8 text-muted-foreground/50 mb-2" />
-                  <span className="text-xs text-muted-foreground">Cliquez pour uploader une bannière</span>
+                  <span className="text-xs text-muted-foreground">{t.bannerUploadClick}</span>
                 </>
               )}
               <input type="file" accept="image/*" onChange={handleBannerUpload} className="sr-only" disabled={uploadingBanner} />
@@ -252,8 +387,8 @@ const DashboardAppearanceTab = () => {
           <div className="flex items-center gap-3">
             <Paintbrush className="h-4 w-4 text-muted-foreground" />
             <div>
-              <p className="text-sm font-semibold text-foreground">Couleur de votre marque</p>
-              <p className="text-xs text-muted-foreground">Utilisée pour les boutons, prix et accents</p>
+              <p className="text-sm font-semibold text-foreground">{t.brandColorTitle}</p>
+              <p className="text-xs text-muted-foreground">{t.brandColorDesc}</p>
             </div>
           </div>
           <div className="flex items-center gap-3 flex-wrap">
@@ -273,7 +408,7 @@ const DashboardAppearanceTab = () => {
         {/* Font */}
         <div className="rounded-xl border border-border bg-card p-6 space-y-4">
           <div className="flex items-center gap-3">
-            <Type className="h-4 w-4 text-muted-foreground" /> <p className="text-sm font-semibold text-foreground">Police d'écriture</p>
+            <Type className="h-4 w-4 text-muted-foreground" /> <p className="text-sm font-semibold text-foreground">{t.fontTitle}</p>
           </div>
           <Select value={font} onValueChange={setFont}>
             <SelectTrigger><SelectValue /></SelectTrigger>
@@ -286,7 +421,7 @@ const DashboardAppearanceTab = () => {
         {/* Button Animation */}
         <div className="rounded-xl border border-border bg-card p-6 space-y-4">
           <div className="flex items-center gap-3">
-            <MousePointerClick className="h-4 w-4 text-muted-foreground" /> <p className="text-sm font-semibold text-foreground">Animation du bouton d'achat</p>
+            <MousePointerClick className="h-4 w-4 text-muted-foreground" /> <p className="text-sm font-semibold text-foreground">{t.buttonAnimTitle}</p>
           </div>
           <Select value={buttonAnimation} onValueChange={setButtonAnimation}>
             <SelectTrigger className="w-48"><SelectValue /></SelectTrigger>
@@ -298,8 +433,8 @@ const DashboardAppearanceTab = () => {
 
         {/* Options */}
         <div className="rounded-xl border border-border bg-card p-6 space-y-4">
-          <p className="text-sm font-semibold text-foreground">Options d'affichage</p>
-          <ToggleOption icon={ShoppingCart} label="Afficher le bouton d'achat" desc="Bouton « Acheter » visible sur chaque carte produit" checked={showBuyButton} onChange={setShowBuyButton} />
+          <p className="text-sm font-semibold text-foreground">{t.displayOptionsTitle}</p>
+          <ToggleOption icon={ShoppingCart} label={t.showBuyBtnLabel} desc={t.showBuyBtnDesc} checked={showBuyButton} onChange={setShowBuyButton} />
         </div>
 
         {/* Vidéo de bienvenue */}
@@ -308,8 +443,8 @@ const DashboardAppearanceTab = () => {
             <div className="flex items-center gap-3">
               <Video className="h-4 w-4 text-muted-foreground" />
               <div>
-                <p className="text-sm font-semibold text-foreground">Vidéo de bienvenue</p>
-                <p className="text-xs text-muted-foreground">Configurez la vidéo d'accueil visible en bas de la section de bienvenue.</p>
+                <p className="text-sm font-semibold text-foreground">{t.welcomeVideoTitle}</p>
+                <p className="text-xs text-muted-foreground">{t.welcomeVideoDesc}</p>
               </div>
             </div>
             <div className="space-y-4 pt-2">
@@ -317,14 +452,14 @@ const DashboardAppearanceTab = () => {
                 <div className="flex items-start gap-3">
                   <Switch checked={showVideo} onCheckedChange={setShowVideo} />
                   <div>
-                    <p className="text-sm font-medium text-foreground">Afficher la vidéo de bienvenue</p>
-                    <p className="text-xs text-muted-foreground">Activer ou désactiver l'affichage de la vidéo sur la page d'accueil publique</p>
+                    <p className="text-sm font-medium text-foreground">{t.showWelcomeVideoLabel}</p>
+                    <p className="text-xs text-muted-foreground">{t.showWelcomeVideoDesc}</p>
                   </div>
                 </div>
               </div>
               {showVideo && (
                 <div className="space-y-2 pt-2 animate-in fade-in slide-in-from-top-1 duration-200">
-                  <label className="text-xs font-semibold text-foreground">Lien de la vidéo (YouTube, Vimeo, MP4, etc.)</label>
+                  <label className="text-xs font-semibold text-foreground">{t.videoLinkLabel}</label>
                   <Input
                     value={videoUrl}
                     onChange={(e) => setVideoUrl(e.target.value)}
@@ -339,7 +474,7 @@ const DashboardAppearanceTab = () => {
 
         {/* Sort Order */}
         <div className="rounded-xl border border-border bg-card p-6 space-y-4">
-          <p className="text-sm font-semibold text-foreground">Ordre d'affichage</p>
+          <p className="text-sm font-semibold text-foreground">{t.displayOrderTitle}</p>
           <div className="space-y-2">
             {SORT_OPTIONS.map((opt) => (
               <button key={opt.value} onClick={() => setSortOrder(opt.value)}
@@ -374,11 +509,11 @@ const DashboardAppearanceTab = () => {
                 <div className="h-2 w-2 rounded-full bg-yellow-500/50" />
                 <div className="h-2 w-2 rounded-full bg-green-500/50" />
               </div>
-              <span>{storeSlug ? `https://technova.com/store/${storeSlug}` : "votre-boutique.technova.app"}</span>
+              <span>{storeSlug ? `https://technova.com/store/${storeSlug}` : t.previewUrlPlaceholder}</span>
             </div>
             <div className="h-[650px] overflow-y-auto">
               <StorePreview
-                storeName={activeStore?.name || profile?.display_name || "Ma Boutique"}
+                storeName={activeStore?.name || profile?.display_name || t.previewDefaultStoreName}
                 storeDescription={activeStore?.description || ""}
                 logoUrl={activeStore?.logo_url || profile?.avatar_url || ""}
                 brandColor={brandColor}
@@ -386,6 +521,7 @@ const DashboardAppearanceTab = () => {
                 showBuyButton={showBuyButton}
                 products={realProducts}
                 bannerUrl={bannerUrl}
+                t={t}
               />
             </div>
           </div>
@@ -411,12 +547,12 @@ function ToggleOption({ icon: Icon, label, desc, checked, onChange }: {
   );
 }
 
-function StorePreview({ storeName, storeDescription, logoUrl, brandColor, font, showBuyButton, products, bannerUrl }: {
-  storeName: string; storeDescription: string; logoUrl: string; brandColor: string; font: string; showBuyButton: boolean; products: RealProduct[]; bannerUrl: string | null;
+function StorePreview({ storeName, storeDescription, logoUrl, brandColor, font, showBuyButton, products, bannerUrl, t }: {
+  storeName: string; storeDescription: string; logoUrl: string; brandColor: string; font: string; showBuyButton: boolean; products: RealProduct[]; bannerUrl: string | null; t: any;
 }) {
   const displayProducts = products.length > 0 ? products : [
-    { id: "1", title: "Exemple de produit", price: 5000, original_price: 8000, thumbnail_url: null, type: "file", description: null },
-    { id: "2", title: "Autre produit", price: 3000, original_price: null, thumbnail_url: null, type: "course", description: null },
+    { id: "1", title: t.previewExampleProd, price: 5000, original_price: 8000, thumbnail_url: null, type: "file", description: null },
+    { id: "2", title: t.previewOtherProd, price: 3000, original_price: null, thumbnail_url: null, type: "course", description: null },
   ];
 
   return (
@@ -430,21 +566,21 @@ function StorePreview({ storeName, storeDescription, logoUrl, brandColor, font, 
           <span className="font-bold text-gray-900 text-[10px]">{storeName}</span>
         </div>
         <div className="flex items-center gap-3">
-          <span className="text-[8px] font-medium text-gray-900" style={{ borderBottom: `1px solid ${brandColor}` }}>Produits</span>
-          <span className="text-[8px] text-gray-400">À propos</span>
-          <span className="text-[8px] text-gray-400">Contact</span>
+          <span className="text-[8px] font-medium text-gray-900" style={{ borderBottom: `1px solid ${brandColor}` }}>{t.previewTabProducts}</span>
+          <span className="text-[8px] text-gray-400">{t.previewTabAbout}</span>
+          <span className="text-[8px] text-gray-400">{t.previewTabContact}</span>
         </div>
       </div>
 
       {/* Title */}
       <div className="px-3 pt-4 pb-1">
-        <p className="text-[10px] font-bold text-gray-900">{`Découvrez les produits de ${storeName}`}</p>
+        <p className="text-[10px] font-bold text-gray-900">{`${t.previewDiscover}${storeName}`}</p>
       </div>
 
       {/* Search */}
       <div className="px-3 py-2">
         <div className="h-5 rounded-md border border-gray-200 bg-gray-50 flex items-center px-2">
-          <span className="text-[7px] text-gray-400">🔍 Rechercher…</span>
+          <span className="text-[7px] text-gray-400">{t.previewSearch}</span>
         </div>
       </div>
 
@@ -469,7 +605,7 @@ function StorePreview({ storeName, storeDescription, logoUrl, brandColor, font, 
               </div>
               <div className="p-1.5 space-y-0.5">
                 <p className="text-[8px] font-semibold text-gray-900 line-clamp-2">{p.title}</p>
-                <p className="text-[7px] text-gray-400">0% (0 avis)</p>
+                <p className="text-[7px] text-gray-400">{t.previewReviews}</p>
                 <div className="flex items-baseline gap-1">
                   {p.original_price && p.original_price > p.price && (
                     <span className="text-[6px] line-through text-gray-300">{p.original_price.toLocaleString()}</span>
@@ -478,7 +614,7 @@ function StorePreview({ storeName, storeDescription, logoUrl, brandColor, font, 
                 </div>
                 {showBuyButton && (
                   <button className="w-full text-[7px] text-white py-1 font-medium rounded-md" style={{ backgroundColor: brandColor }}>
-                    Acheter
+                    {t.previewBuyBtn}
                   </button>
                 )}
               </div>
@@ -489,7 +625,7 @@ function StorePreview({ storeName, storeDescription, logoUrl, brandColor, font, 
 
       {/* Footer */}
       <div className="border-t border-gray-100 py-2 text-center">
-        <span className="text-[7px] text-gray-300">Propulsé par <span className="font-medium" style={{ color: brandColor }}>TECHNOVA</span></span>
+        <span className="text-[7px] text-gray-300">{t.previewPoweredBy} <span className="font-medium" style={{ color: brandColor }}>TECHNOVA</span></span>
       </div>
     </div>
   );

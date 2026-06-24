@@ -18,6 +18,40 @@ interface CustomDomain {
   created_at: string;
 }
 
+const translations = {
+  fr: {
+    domainErrorValid: "Veuillez entrer un nom de domaine valide (ex: maboutique.com)",
+    domainErrorConn: "Erreur de connexion avec le serveur de domaine.",
+    domainErrorUsed: "Ce domaine est déjà utilisé",
+    domainErrorAdd: "Erreur lors de l'ajout du domaine",
+    domainSuccessConn: "Domaine connecté ! Configurez vos enregistrements DNS.",
+    domainErrorServer: "Erreur serveur lors de la connexion du domaine.",
+    domainErrorDeleteDb: "Erreur lors de la suppression de la base de données",
+    domainSuccessDelete: "Domaine supprimé avec succès",
+    domainErrorDelete: "Erreur lors de la suppression du domaine",
+    cardTitle: "Connecter un nom de domaine",
+    cardDesc: "Définissez un nom de domaine personnalisé pour votre boutique",
+    domainLabel: "Nom de domaine",
+    btnConnect: "Connecter",
+    currentUrlText: "Votre boutique est actuellement accessible à : ",
+  },
+  en: {
+    domainErrorValid: "Please enter a valid domain name (e.g., myshop.com)",
+    domainErrorConn: "Connection error with domain server.",
+    domainErrorUsed: "This domain is already in use",
+    domainErrorAdd: "Error adding domain",
+    domainSuccessConn: "Domain connected! Configure your DNS records.",
+    domainErrorServer: "Server error connecting domain.",
+    domainErrorDeleteDb: "Error removing domain from database",
+    domainSuccessDelete: "Domain deleted successfully",
+    domainErrorDelete: "Error deleting domain",
+    cardTitle: "Connect a Domain Name",
+    cardDesc: "Define a custom domain name for your shop",
+    domainLabel: "Domain Name",
+    btnConnect: "Connect",
+    currentUrlText: "Your shop is currently accessible at: ",
+  }
+};
 
 const DashboardDomainTab = () => {
   const { user } = useAuth();
@@ -27,6 +61,16 @@ const DashboardDomainTab = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
+
+  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+
+  useEffect(() => {
+    const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
+    window.addEventListener("technova_lang_changed", handleLangChange);
+    return () => window.removeEventListener("technova_lang_changed", handleLangChange);
+  }, []);
+
+  const t = translations[lang === 'en' ? 'en' : 'fr'];
 
   useEffect(() => {
     if (activeStore?.id) fetchDomain();
@@ -48,7 +92,7 @@ const DashboardDomainTab = () => {
     if (!domain.trim() || !user?.id || !activeStore?.id) return;
     const cleanDomain = domain.trim().replace(/^https?:\/\//, "").replace(/\/+$/, "");
     if (!/^[a-zA-Z0-9][a-zA-Z0-9-]*\.[a-zA-Z]{2,}$/.test(cleanDomain)) {
-      toast.error("Veuillez entrer un nom de domaine valide (ex: maboutique.com)");
+      toast.error(t.domainErrorValid);
       return;
     }
     setSaving(true);
@@ -63,7 +107,7 @@ const DashboardDomainTab = () => {
       
       if (!vercelRes.ok) {
         const errorData = await vercelRes.json();
-        toast.error(errorData.error?.message || "Erreur de connexion avec le serveur de domaine.");
+        toast.error(errorData.error?.message || t.domainErrorConn);
         setSaving(false);
         return;
       }
@@ -76,14 +120,14 @@ const DashboardDomainTab = () => {
         .single();
         
       if (error) {
-        toast.error(error.message.includes("duplicate") ? "Ce domaine est déjà utilisé" : "Erreur lors de l'ajout du domaine");
+        toast.error(error.message.includes("duplicate") ? t.domainErrorUsed : t.domainErrorAdd);
       } else {
         setCustomDomain(data as CustomDomain);
         setDomain("");
-        toast.success("Domaine connecté ! Configurez vos enregistrements DNS.");
+        toast.success(t.domainSuccessConn);
       }
     } catch (err) {
-      toast.error("Erreur serveur lors de la connexion du domaine.");
+      toast.error(t.domainErrorServer);
     } finally {
       setSaving(false);
     }
@@ -100,19 +144,17 @@ const DashboardDomainTab = () => {
       // 2. Supprimer de Supabase
       const { error } = await supabase.from("custom_domains").delete().eq("id", customDomain.id);
       if (error) {
-        toast.error("Erreur lors de la suppression de la base de données");
+        toast.error(t.domainErrorDeleteDb);
       } else {
         setCustomDomain(null);
-        toast.success("Domaine supprimé avec succès");
+        toast.success(t.domainSuccessDelete);
       }
     } catch (err) {
-      toast.error("Erreur lors de la suppression du domaine");
+      toast.error(t.domainErrorDelete);
     } finally {
       setDeleting(false);
     }
   };
-
-
 
   if (loading) {
     return (
@@ -128,10 +170,10 @@ const DashboardDomainTab = () => {
         <CardHeader>
           <div className="flex items-center gap-2">
             <Globe className="h-5 w-5 text-primary" />
-            <CardTitle className="text-lg">Connecter un nom de domaine</CardTitle>
+            <CardTitle className="text-lg">{t.cardTitle}</CardTitle>
           </div>
           <CardDescription>
-            Définissez un nom de domaine personnalisé pour votre boutique
+            {t.cardDesc}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -144,7 +186,7 @@ const DashboardDomainTab = () => {
           ) : (
             <div className="space-y-4">
               <div>
-                <Label htmlFor="domain">Nom de domaine</Label>
+                <Label htmlFor="domain">{t.domainLabel}</Label>
                 <div className="flex items-center gap-3 mt-1.5">
                   <div className="relative flex-1">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">https://</span>
@@ -158,12 +200,12 @@ const DashboardDomainTab = () => {
                   </div>
                   <Button onClick={handleSave} disabled={saving || !domain.trim()}>
                     {saving ? <Loader2 className="h-4 w-4 animate-spin mr-1.5" /> : null}
-                    Connecter
+                    {t.btnConnect}
                   </Button>
                 </div>
               </div>
               <p className="text-xs text-muted-foreground">
-                Votre boutique est actuellement accessible à : <span className="font-medium text-foreground">technova.com/store/{activeStore?.slug}</span>
+                {t.currentUrlText}<span className="font-medium text-foreground">technova.com/store/{activeStore?.slug}</span>
               </p>
             </div>
           )}

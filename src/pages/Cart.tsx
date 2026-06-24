@@ -6,16 +6,50 @@ import { Footer } from "@/components/site/shared";
 import { useCart } from "@/contexts/CartContext";
 import { useGeoPricing } from "@/contexts/GeoPricingContext";
 import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
+
+const translations = {
+  fr: {
+    cartTitle: "Votre panier",
+    emptyTitle: "Panier vide",
+    emptyDesc: "Explorez notre catalogue pour trouver des produits",
+    viewCatalog: "Voir le catalogue",
+    summary: "Résumé",
+    total: "Total",
+    checkoutBtn: "Payer maintenant",
+    secureNote: "Paiement sécurisé • Mobile Money & Cartes"
+  },
+  en: {
+    cartTitle: "Your cart",
+    emptyTitle: "Cart is empty",
+    emptyDesc: "Explore our catalog to find products",
+    viewCatalog: "View catalog",
+    summary: "Summary",
+    total: "Total",
+    checkoutBtn: "Pay now",
+    secureNote: "Secure payment • Mobile Money & Cards"
+  }
+};
 
 const Cart = () => {
-  const { items, removeFromCart, total, clearCart } = useCart();
+  const { items, removeFromCart, total } = useCart();
   const { formatPrice } = useGeoPricing();
+
+  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+
+  useEffect(() => {
+    const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
+    window.addEventListener("technova_lang_changed", handleLangChange);
+    return () => window.removeEventListener("technova_lang_changed", handleLangChange);
+  }, []);
+
+  const t = translations[lang === 'en' ? 'en' : 'fr'];
 
   return (
     <div className="min-h-screen bg-background">
       <Header />
       <div className="container mx-auto px-4 py-12">
-        <h1 className="mb-8 text-3xl font-bold text-foreground">Votre panier</h1>
+        <h1 className="mb-8 text-3xl font-bold text-foreground">{t.cartTitle}</h1>
 
         {items.length === 0 ? (
           <motion.div
@@ -24,11 +58,11 @@ const Cart = () => {
             className="py-20 text-center"
           >
             <ShoppingBag className="mx-auto mb-4 h-16 w-16 text-muted-foreground/30" />
-            <h2 className="mb-2 text-xl font-semibold text-foreground">Panier vide</h2>
-            <p className="mb-6 text-muted-foreground">Explorez notre catalogue pour trouver des produits</p>
+            <h2 className="mb-2 text-xl font-semibold text-foreground">{t.emptyTitle}</h2>
+            <p className="mb-6 text-muted-foreground">{t.emptyDesc}</p>
             <Link to="/products">
               <Button className="bg-primary text-primary-foreground">
-                Voir le catalogue
+                {t.viewCatalog}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
@@ -66,7 +100,7 @@ const Cart = () => {
 
             <div className="lg:col-span-1">
               <div className="sticky top-24 rounded-xl border border-border bg-card p-6">
-                <h2 className="mb-4 text-lg font-semibold text-card-foreground">Résumé</h2>
+                <h2 className="mb-4 text-lg font-semibold text-card-foreground">{t.summary}</h2>
                 <div className="mb-4 space-y-2">
                   {items.map((item) => (
                     <div key={item.product.id} className="flex justify-between text-sm">
@@ -77,7 +111,7 @@ const Cart = () => {
                 </div>
                 <div className="mb-6 border-t border-border pt-4">
                   <div className="flex justify-between text-lg font-bold">
-                    <span className="text-foreground">Total</span>
+                    <span className="text-foreground">{t.total}</span>
                     <span className="text-foreground">{formatPrice(total)}</span>
                   </div>
                 </div>
@@ -85,11 +119,11 @@ const Cart = () => {
                   size="lg"
                   className="w-full bg-gold-gradient text-accent-foreground py-6 text-base font-semibold hover:opacity-90"
                 >
-                  Payer maintenant
+                  {t.checkoutBtn}
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
                 <p className="mt-3 text-center text-xs text-muted-foreground">
-                  Paiement sécurisé • Mobile Money & Cartes
+                  {t.secureNote}
                 </p>
               </div>
             </div>

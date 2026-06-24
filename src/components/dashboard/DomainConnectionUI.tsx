@@ -14,12 +14,73 @@ interface DomainConnectionUIProps {
   brandColor: string;
 }
 
+const translations = {
+  fr: {
+    analyzing: "Analyse de votre domaine...",
+    hostUnidentified: "Hébergeur non identifié",
+    managedBy: "Géré par ",
+    dnsConfigTitle: "Configuration des DNS",
+    dnsConfigDesc: "Connectez-vous à votre fournisseur et ajoutez ces enregistrements.",
+    loginBtn: "Se connecter à ",
+    verificationRequired: "Vérification requise :",
+    verificationDesc: "Ce domaine est lié à un autre compte. Ajoutez cet enregistrement TXT pour prouver que vous en êtes le propriétaire.",
+    errorDetected: "Erreur détectée :",
+    errorDnsInvalid: "La configuration DNS est invalide ou n'est pas encore propagée.",
+    lookingUpDns: "Recherche des enregistrements DNS...",
+    dnsPropagationTitle: "Propagation DNS",
+    dnsPropagationFound: "Les enregistrements ont été trouvés.",
+    dnsPropagationWaiting: "En attente de vos enregistrements.",
+    sslTitle: "Génération du certificat SSL",
+    sslReady: "Votre domaine est sécurisé et prêt !",
+    sslWaiting: "En attente de la propagation.",
+    activeBadge: "Actif",
+    removeBtn: "Retirer ce domaine",
+    typeLabel: "Type",
+    nameLabel: "Nom",
+    valueLabel: "Valeur",
+  },
+  en: {
+    analyzing: "Analyzing your domain...",
+    hostUnidentified: "Host unidentified",
+    managedBy: "Managed by ",
+    dnsConfigTitle: "DNS Configuration",
+    dnsConfigDesc: "Log in to your provider and add these records.",
+    loginBtn: "Log in to ",
+    verificationRequired: "Verification required:",
+    verificationDesc: "This domain is linked to another account. Add this TXT record to prove ownership.",
+    errorDetected: "Error detected:",
+    errorDnsInvalid: "The DNS configuration is invalid or hasn't propagated yet.",
+    lookingUpDns: "Looking up DNS records...",
+    dnsPropagationTitle: "DNS Propagation",
+    dnsPropagationFound: "DNS records have been found.",
+    dnsPropagationWaiting: "Waiting for DNS records.",
+    sslTitle: "SSL Certificate Generation",
+    sslReady: "Your domain is secure and ready!",
+    sslWaiting: "Waiting for propagation.",
+    activeBadge: "Active",
+    removeBtn: "Remove this domain",
+    typeLabel: "Type",
+    nameLabel: "Name",
+    valueLabel: "Value",
+  }
+};
+
 export default function DomainConnectionUI({ domainRecord, onDelete, brandColor }: DomainConnectionUIProps) {
   const [provider, setProvider] = useState<DnsProvider | null>(null);
   const [detecting, setDetecting] = useState(true);
   const [vercelData, setVercelData] = useState<any>(null);
   const [deleting, setDeleting] = useState(false);
   const [copiedField, setCopiedField] = useState<string | null>(null);
+
+  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+
+  useEffect(() => {
+    const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
+    window.addEventListener("technova_lang_changed", handleLangChange);
+    return () => window.removeEventListener("technova_lang_changed", handleLangChange);
+  }, []);
+
+  const t = translations[lang === 'en' ? 'en' : 'fr'];
 
   const isApex = domainRecord.domain.split('.').length === 2;
 
@@ -97,7 +158,7 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
         <div className="mt-6 text-center z-10">
           <h3 className="text-lg font-semibold">{domainRecord.domain}</h3>
           <p className="text-sm text-muted-foreground mt-1">
-            {detecting ? "Analyse de votre domaine..." : provider ? `Géré par ${provider.name}` : "Hébergeur non identifié"}
+            {detecting ? t.analyzing : provider ? `${t.managedBy}${provider.name}` : t.hostUnidentified}
           </p>
         </div>
       </div>
@@ -113,15 +174,15 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
             <div className="flex-1 space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
-                  <h4 className="font-medium">Configuration des DNS</h4>
+                  <h4 className="font-medium">{t.dnsConfigTitle}</h4>
                   <p className="text-sm text-muted-foreground">
-                    Connectez-vous à votre fournisseur et ajoutez ces enregistrements.
+                    {t.dnsConfigDesc}
                   </p>
                 </div>
                 {provider && !isFullyConfigured && (
                   <Button variant="outline" size="sm" className="w-full sm:w-auto" asChild>
                     <a href={provider.loginUrl} target="_blank" rel="noopener noreferrer">
-                      Se connecter à {provider.name}
+                      {t.loginBtn}{provider.name}
                     </a>
                   </Button>
                 )}
@@ -130,15 +191,15 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
               {!isFullyConfigured && (
                 <div className="space-y-4 pt-2">
                   <div className="hidden sm:grid sm:grid-cols-[100px_1fr_1.5fr] gap-4 text-xs font-medium text-muted-foreground px-2">
-                    <span>Type</span>
-                    <span>Nom</span>
-                    <span>Valeur</span>
+                    <span>{t.typeLabel}</span>
+                    <span>{t.nameLabel}</span>
+                    <span>{t.valueLabel}</span>
                   </div>
                   
                   {isApex ? (
                     <div className="flex flex-col sm:grid sm:grid-cols-[100px_1fr_1.5fr] gap-2 sm:gap-4 bg-muted/10 sm:bg-transparent rounded-lg border sm:border-0 p-3 sm:p-0">
                       <div className="flex flex-col sm:block">
-                        <span className="text-[10px] uppercase font-bold text-muted-foreground sm:hidden mb-1">Type</span>
+                        <span className="text-[10px] uppercase font-bold text-muted-foreground sm:hidden mb-1">{t.typeLabel}</span>
                         <div className="flex items-center justify-between px-3 py-2.5 bg-background sm:bg-muted/30 rounded-md sm:rounded-lg border">
                           <span className="text-sm font-mono">A</span>
                           <button onClick={() => copyToClipboard('A', 'type1')} className="text-muted-foreground hover:text-foreground shrink-0 ml-2">
@@ -147,7 +208,7 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
                         </div>
                       </div>
                       <div className="flex flex-col sm:block">
-                        <span className="text-[10px] uppercase font-bold text-muted-foreground sm:hidden mb-1 mt-2 sm:mt-0">Nom</span>
+                        <span className="text-[10px] uppercase font-bold text-muted-foreground sm:hidden mb-1 mt-2 sm:mt-0">{t.nameLabel}</span>
                         <div className="flex items-center justify-between px-3 py-2.5 bg-background sm:bg-muted/30 rounded-md sm:rounded-lg border overflow-hidden">
                           <span className="text-sm font-mono truncate">@</span>
                           <button onClick={() => copyToClipboard('@', 'name1')} className="text-muted-foreground hover:text-foreground shrink-0 ml-2">
@@ -156,7 +217,7 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
                         </div>
                       </div>
                       <div className="flex flex-col sm:block">
-                        <span className="text-[10px] uppercase font-bold text-muted-foreground sm:hidden mb-1 mt-2 sm:mt-0">Valeur</span>
+                        <span className="text-[10px] uppercase font-bold text-muted-foreground sm:hidden mb-1 mt-2 sm:mt-0">{t.valueLabel}</span>
                         <div className="flex items-center justify-between px-3 py-2.5 bg-background sm:bg-muted/30 rounded-md sm:rounded-lg border overflow-hidden">
                           <span className="text-sm font-mono truncate">76.76.21.21</span>
                           <button onClick={() => copyToClipboard('76.76.21.21', 'val1')} className="text-muted-foreground hover:text-foreground shrink-0 ml-2">
@@ -172,13 +233,13 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
                       <div className="bg-yellow-500/10 border border-yellow-500/20 p-3 rounded-lg flex gap-3">
                         <AlertCircle className="h-5 w-5 text-yellow-600 shrink-0" />
                         <div className="text-sm text-yellow-600 dark:text-yellow-500">
-                          <strong>Vérification requise :</strong> Ce domaine est lié à un autre compte. Ajoutez cet enregistrement TXT pour prouver que vous en êtes le propriétaire.
+                          <strong>{t.verificationRequired}</strong> {t.verificationDesc}
                         </div>
                       </div>
                       {vercelData.verification.map((record: any, idx: number) => (
                         <div key={`verification-${idx}`} className="flex flex-col sm:grid sm:grid-cols-[100px_1fr_1.5fr] gap-2 sm:gap-4 bg-yellow-500/5 sm:bg-transparent rounded-lg border border-yellow-500/20 sm:border-0 p-3 sm:p-0">
                           <div className="flex flex-col sm:block">
-                            <span className="text-[10px] uppercase font-bold text-yellow-700/70 sm:hidden mb-1">Type</span>
+                            <span className="text-[10px] uppercase font-bold text-yellow-700/70 sm:hidden mb-1">{t.typeLabel}</span>
                             <div className="flex items-center justify-between px-3 py-2.5 bg-background/50 sm:bg-yellow-500/5 rounded-md sm:rounded-lg border sm:border-yellow-500/20">
                               <span className="text-sm font-mono text-yellow-700 dark:text-yellow-400">{record.type}</span>
                               <button onClick={() => copyToClipboard(record.type, `vtype-${idx}`)} className="text-yellow-600/70 hover:text-yellow-600 shrink-0 ml-2">
@@ -187,7 +248,7 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
                             </div>
                           </div>
                           <div className="flex flex-col sm:block">
-                            <span className="text-[10px] uppercase font-bold text-yellow-700/70 sm:hidden mb-1 mt-2 sm:mt-0">Nom</span>
+                            <span className="text-[10px] uppercase font-bold text-yellow-700/70 sm:hidden mb-1 mt-2 sm:mt-0">{t.nameLabel}</span>
                             <div className="flex items-center justify-between px-3 py-2.5 bg-background/50 sm:bg-yellow-500/5 rounded-md sm:rounded-lg border sm:border-yellow-500/20 overflow-hidden">
                               <span className="text-sm font-mono text-yellow-700 dark:text-yellow-400 truncate">{record.domain}</span>
                               <button onClick={() => copyToClipboard(record.domain, `vname-${idx}`)} className="text-yellow-600/70 hover:text-yellow-600 shrink-0 ml-2">
@@ -196,7 +257,7 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
                             </div>
                           </div>
                           <div className="flex flex-col sm:block">
-                            <span className="text-[10px] uppercase font-bold text-yellow-700/70 sm:hidden mb-1 mt-2 sm:mt-0">Valeur</span>
+                            <span className="text-[10px] uppercase font-bold text-yellow-700/70 sm:hidden mb-1 mt-2 sm:mt-0">{t.valueLabel}</span>
                             <div className="flex items-center justify-between px-3 py-2.5 bg-background/50 sm:bg-yellow-500/5 rounded-md sm:rounded-lg border sm:border-yellow-500/20 overflow-hidden">
                               <span className="text-sm font-mono text-yellow-700 dark:text-yellow-400 truncate">{record.value}</span>
                               <button onClick={() => copyToClipboard(record.value, `vval-${idx}`)} className="text-yellow-600/70 hover:text-yellow-600 shrink-0 ml-2">
@@ -211,7 +272,7 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
 
                   <div className="flex flex-col sm:grid sm:grid-cols-[100px_1fr_1.5fr] gap-2 sm:gap-4 bg-muted/10 sm:bg-transparent rounded-lg border sm:border-0 p-3 sm:p-0">
                     <div className="flex flex-col sm:block">
-                      <span className="text-[10px] uppercase font-bold text-muted-foreground sm:hidden mb-1">Type</span>
+                      <span className="text-[10px] uppercase font-bold text-muted-foreground sm:hidden mb-1">{t.typeLabel}</span>
                       <div className="flex items-center justify-between px-3 py-2.5 bg-background sm:bg-muted/30 rounded-md sm:rounded-lg border">
                         <span className="text-sm font-mono">CNAME</span>
                         <button onClick={() => copyToClipboard('CNAME', 'type2')} className="text-muted-foreground hover:text-foreground shrink-0 ml-2">
@@ -220,7 +281,7 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
                       </div>
                     </div>
                     <div className="flex flex-col sm:block">
-                      <span className="text-[10px] uppercase font-bold text-muted-foreground sm:hidden mb-1 mt-2 sm:mt-0">Nom</span>
+                      <span className="text-[10px] uppercase font-bold text-muted-foreground sm:hidden mb-1 mt-2 sm:mt-0">{t.nameLabel}</span>
                       <div className="flex items-center justify-between px-3 py-2.5 bg-background sm:bg-muted/30 rounded-md sm:rounded-lg border overflow-hidden">
                         <span className="text-sm font-mono truncate">{isApex ? 'www' : domainRecord.domain.split('.')[0]}</span>
                         <button onClick={() => copyToClipboard(isApex ? 'www' : domainRecord.domain.split('.')[0], 'name2')} className="text-muted-foreground hover:text-foreground shrink-0 ml-2">
@@ -229,7 +290,7 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
                       </div>
                     </div>
                     <div className="flex flex-col sm:block">
-                      <span className="text-[10px] uppercase font-bold text-muted-foreground sm:hidden mb-1 mt-2 sm:mt-0">Valeur</span>
+                      <span className="text-[10px] uppercase font-bold text-muted-foreground sm:hidden mb-1 mt-2 sm:mt-0">{t.valueLabel}</span>
                       <div className="flex items-center justify-between px-3 py-2.5 bg-background sm:bg-muted/30 rounded-md sm:rounded-lg border overflow-hidden">
                         <span className="text-sm font-mono truncate">cname.vercel-dns.com</span>
                         <button onClick={() => copyToClipboard('cname.vercel-dns.com', 'val2')} className="text-muted-foreground hover:text-foreground shrink-0 ml-2">
@@ -242,13 +303,13 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
                   {hasError && (
                     <div className="text-xs text-red-500 font-medium mt-2 flex items-center gap-1.5">
                       <AlertCircle className="h-3.5 w-3.5" />
-                      Erreur détectée : {vercelData?.error?.message || "La configuration DNS est invalide ou n'est pas encore propagée."}
+                      {t.errorDetected} {vercelData?.error?.message || t.errorDnsInvalid}
                     </div>
                   )}
 
                   <div className="flex items-center gap-2 mt-4 text-xs text-muted-foreground bg-muted/50 py-2 px-3 rounded-lg w-max">
                     <RefreshCw className="h-3 w-3 animate-spin" />
-                    Recherche des enregistrements DNS...
+                    {t.lookingUpDns}
                   </div>
                 </div>
               )}
@@ -263,9 +324,9 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
                {!isFullyConfigured ? <Loader2 className="h-4 w-4" /> : <CheckCircle2 className="h-4 w-4 text-green-600" />}
             </div>
             <div>
-              <h4 className="font-medium">Propagation DNS</h4>
+              <h4 className="font-medium">{t.dnsPropagationTitle}</h4>
               <p className="text-sm text-muted-foreground">
-                {isFullyConfigured ? "Les enregistrements ont été trouvés." : "En attente de vos enregistrements."}
+                {isFullyConfigured ? t.dnsPropagationFound : t.dnsPropagationWaiting}
               </p>
             </div>
           </div>
@@ -279,13 +340,13 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
             </div>
             <div className="flex-1 flex items-center justify-between">
               <div>
-                <h4 className="font-medium">Génération du certificat SSL</h4>
+                <h4 className="font-medium">{t.sslTitle}</h4>
                 <p className="text-sm text-muted-foreground">
-                  {isFullyConfigured ? "Votre domaine est sécurisé et prêt !" : "En attente de la propagation."}
+                  {isFullyConfigured ? t.sslReady : t.sslWaiting}
                 </p>
               </div>
               {isFullyConfigured && (
-                <Badge variant="default" className="bg-green-500 hover:bg-green-600">Actif</Badge>
+                <Badge variant="default" className="bg-green-500 hover:bg-green-600">{t.activeBadge}</Badge>
               )}
             </div>
           </div>
@@ -295,7 +356,7 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
       <div className="pt-4 flex justify-end border-t border-muted">
         <Button variant="destructive" onClick={handleDelete} disabled={deleting}>
           {deleting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Trash2 className="h-4 w-4 mr-2" />}
-          Retirer ce domaine
+          {t.removeBtn}
         </Button>
       </div>
     </div>

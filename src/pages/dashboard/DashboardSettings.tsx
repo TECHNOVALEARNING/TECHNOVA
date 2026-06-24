@@ -11,32 +11,60 @@ import DashboardOrderLookupTab from "@/components/dashboard/DashboardOrderLookup
 import { useActiveStore } from "@/hooks/useActiveStore";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
 
-const SETTINGS_CATEGORIES = [
-  {
-    title: "Boutique",
-    items: [
-      { id: "profile", title: "Identité de la boutique", desc: "Définissez le nom, le logo et la description de votre boutique.", icon: User },
-      { id: "appearance", title: "Apparence & Thème", desc: "Modifiez le thème, les couleurs et la mise en page.", icon: Palette },
-      { id: "domain", title: "Nom de domaine", desc: "Connectez et personnalisez le domaine de votre boutique.", icon: Globe },
-      { id: "legal", title: "Pages légales", desc: "Gérez vos mentions légales, politique de confidentialité, etc.", icon: Scale },
-      { id: "orders", title: "Recherche Commande", desc: "Recherchez et gérez les commandes via leur numéro.", icon: Search },
-    ]
+const translations = {
+  fr: {
+    title: "Paramètres",
+    detailedConfig: "Configuration détaillée",
+    subtitle: "Gérer votre boutique, votre apparence et votre compte",
+    visitStore: "Visiter la boutique",
+    catStore: "Boutique",
+    catMarketing: "Marketing & Communication",
+    catAccount: "Compte & Sécurité",
+    tabProfileTitle: "Identité de la boutique",
+    tabProfileDesc: "Définissez le nom, le logo et la description de votre boutique.",
+    tabAppearanceTitle: "Apparence & Thème",
+    tabAppearanceDesc: "Modifiez le thème, les couleurs et la mise en page.",
+    tabDomainTitle: "Nom de domaine",
+    tabDomainDesc: "Connectez et personnalisez le domaine de votre boutique.",
+    tabLegalTitle: "Pages légales",
+    tabLegalDesc: "Gérer vos mentions légales, politique de confidentialité, etc.",
+    tabOrdersTitle: "Recherche Commande",
+    tabOrdersDesc: "Recherchez et gérez les commandes via leur numéro.",
+    tabPixelsTitle: "Pixels & Tracking",
+    tabPixelsDesc: "Connectez Facebook Pixel, GTM et ajoutez vos scripts de suivi.",
+    tabTelegramTitle: "Notifications Telegram",
+    tabTelegramDesc: "Gérer les alertes pour suivre l'activité de votre boutique.",
+    tabAccountTitle: "Mon Profil & KYC",
+    tabAccountDesc: "Gérer vos informations personnelles et vérifiez votre identité.",
   },
-  {
-    title: "Marketing & Communication",
-    items: [
-      { id: "pixels", title: "Pixels & Tracking", desc: "Connectez Facebook Pixel, GTM et ajoutez vos scripts de suivi.", icon: Activity },
-      { id: "telegram", title: "Notifications Telegram", desc: "Gérez les alertes pour suivre l'activité de votre boutique.", icon: Send },
-    ]
-  },
-  {
-    title: "Compte & Sécurité",
-    items: [
-      { id: "account", title: "Mon Profil & KYC", desc: "Gérez vos informations personnelles et vérifiez votre identité.", icon: ShieldCheck },
-    ]
+  en: {
+    title: "Settings",
+    detailedConfig: "Detailed configuration",
+    subtitle: "Manage your shop, appearance, and account",
+    visitStore: "Visit Shop",
+    catStore: "Shop",
+    catMarketing: "Marketing & Communication",
+    catAccount: "Account & Security",
+    tabProfileTitle: "Shop Identity",
+    tabProfileDesc: "Define the name, logo, and description of your shop.",
+    tabAppearanceTitle: "Appearance & Theme",
+    tabAppearanceDesc: "Modify the theme, colors, and layout.",
+    tabDomainTitle: "Domain Name",
+    tabDomainDesc: "Connect and customize your shop's domain.",
+    tabLegalTitle: "Legal Pages",
+    tabLegalDesc: "Manage your legal notices, privacy policy, etc.",
+    tabOrdersTitle: "Order Lookup",
+    tabOrdersDesc: "Search and manage orders by their number.",
+    tabPixelsTitle: "Pixels & Tracking",
+    tabPixelsDesc: "Connect Facebook Pixel, GTM, and add tracking scripts.",
+    tabTelegramTitle: "Telegram Notifications",
+    tabTelegramDesc: "Manage alerts to track your shop's activity.",
+    tabAccountTitle: "My Profile & KYC",
+    tabAccountDesc: "Manage your personal information and verify your identity.",
   }
-];
+};
 
 const VALID_TABS = ["profile", "appearance", "pixels", "account", "domain", "telegram", "legal", "orders"];
 
@@ -45,8 +73,44 @@ const DashboardSettings = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const tabParam = searchParams.get("tab");
   const navigate = useNavigate();
+
+  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+
+  useEffect(() => {
+    const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
+    window.addEventListener("technova_lang_changed", handleLangChange);
+    return () => window.removeEventListener("technova_lang_changed", handleLangChange);
+  }, []);
+
+  const t = translations[lang === 'en' ? 'en' : 'fr'];
   
   const activeTab = tabParam && VALID_TABS.includes(tabParam) ? tabParam : null;
+
+  const categories = [
+    {
+      title: t.catStore,
+      items: [
+        { id: "profile", title: t.tabProfileTitle, desc: t.tabProfileDesc, icon: User },
+        { id: "appearance", title: t.tabAppearanceTitle, desc: t.tabAppearanceDesc, icon: Palette },
+        { id: "domain", title: t.tabDomainTitle, desc: t.tabDomainDesc, icon: Globe },
+        { id: "legal", title: t.tabLegalTitle, desc: t.tabLegalDesc, icon: Scale },
+        { id: "orders", title: t.tabOrdersTitle, desc: t.tabOrdersDesc, icon: Search },
+      ]
+    },
+    {
+      title: t.catMarketing,
+      items: [
+        { id: "pixels", title: t.tabPixelsTitle, desc: t.tabPixelsDesc, icon: Activity },
+        { id: "telegram", title: t.tabTelegramTitle, desc: t.tabTelegramDesc, icon: Send },
+      ]
+    },
+    {
+      title: t.catAccount,
+      items: [
+        { id: "account", title: t.tabAccountTitle, desc: t.tabAccountDesc, icon: ShieldCheck },
+      ]
+    }
+  ];
 
   const renderContent = () => {
     switch (activeTab) {
@@ -80,9 +144,9 @@ const DashboardSettings = () => {
               </Button>
             )}
             <div>
-              <h1 className="text-2xl sm:text-[26px] font-bold text-foreground tracking-tight">Paramètres</h1>
+              <h1 className="text-2xl sm:text-[26px] font-bold text-foreground tracking-tight">{t.title}</h1>
               <p className="text-sm text-muted-foreground mt-0.5">
-                {activeTab ? "Configuration détaillée" : "Gérez votre boutique, votre apparence et votre compte"}
+                {activeTab ? t.detailedConfig : t.subtitle}
               </p>
             </div>
           </div>
@@ -95,7 +159,7 @@ const DashboardSettings = () => {
               onClick={() => window.open(`https://technovalearning.com/store/${activeStore.slug}`, '_blank')}
             >
               <ExternalLink className="h-4 w-4" />
-              Visiter la boutique
+              {t.visitStore}
             </Button>
           )}
         </div>
@@ -103,7 +167,7 @@ const DashboardSettings = () => {
         {/* Dynamic Content */}
         {!activeTab ? (
           <div className="space-y-10 animate-in fade-in slide-in-from-bottom-2 duration-500">
-            {SETTINGS_CATEGORIES.map((category) => (
+            {categories.map((category) => (
               <div key={category.title}>
                 <h2 className="text-lg font-serif font-semibold text-foreground mb-4 pl-1">{category.title}</h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">

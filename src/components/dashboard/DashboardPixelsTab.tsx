@@ -6,12 +6,75 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Facebook, Music2, BarChart3, Save, Info } from "lucide-react";
 
+const translations = {
+  fr: {
+    fbPixelError: "L'ID du pixel Facebook doit être un nombre de 10 à 20 chiffres",
+    saveError: "Erreur lors de la sauvegarde",
+    saveSuccess: "Pixels sauvegardés !",
+    howItWorksTitle: "Comment ça marche ?",
+    howItWorksDesc: "Ajoutez vos identifiants de pixels publicitaires ci-dessous. Les événements suivants seront automatiquement suivis sur votre boutique :",
+    pageViewDesc: "Quand un visiteur arrive sur votre boutique",
+    viewContentDesc: "Quand un visiteur voit un produit",
+    addToCartDesc: "Quand un visiteur clique sur \"Acheter\"",
+    purchaseDesc: "Après un achat réussi",
+    fbPixelTitle: "Facebook / Meta Pixel",
+    fbPixelDesc: "Suivez les conversions de vos publicités Facebook & Instagram",
+    fbPixelHelp: "Trouvez votre Pixel ID dans le ",
+    metaEventsManager: "Gestionnaire d'événements Meta",
+    tiktokPixelTitle: "TikTok Pixel",
+    tiktokPixelDesc: "Suivez les conversions de vos campagnes TikTok Ads",
+    tiktokPixelHelp: "Trouvez votre Pixel ID dans le ",
+    googleAdsTitle: "Google Ads (gtag)",
+    googleAdsDesc: "Suivez les conversions de vos publicités Google",
+    googleAdsConversionId: "ID de conversion",
+    googleAdsHelp: "Trouvez votre ID dans ",
+    googleAdsToolsPath: " → Outils → Conversions",
+    saving: "Enregistrement...",
+    saveBtn: "Enregistrer les pixels",
+  },
+  en: {
+    fbPixelError: "The Facebook Pixel ID must be a number of 10 to 20 digits",
+    saveError: "Error saving changes",
+    saveSuccess: "Pixels saved!",
+    howItWorksTitle: "How does it work?",
+    howItWorksDesc: "Add your ad pixel identifiers below. The following events will be automatically tracked on your shop:",
+    pageViewDesc: "When a visitor lands on your shop",
+    viewContentDesc: "When a visitor views a product",
+    addToCartDesc: "When a visitor clicks \"Buy\"",
+    purchaseDesc: "After a successful purchase",
+    fbPixelTitle: "Facebook / Meta Pixel",
+    fbPixelDesc: "Track conversions from your Facebook & Instagram ads",
+    fbPixelHelp: "Find your Pixel ID in the ",
+    metaEventsManager: "Meta Events Manager",
+    tiktokPixelTitle: "TikTok Pixel",
+    tiktokPixelDesc: "Track conversions from your TikTok Ads campaigns",
+    tiktokPixelHelp: "Find your Pixel ID in the ",
+    googleAdsTitle: "Google Ads (gtag)",
+    googleAdsDesc: "Track conversions from your Google ads",
+    googleAdsConversionId: "Conversion ID",
+    googleAdsHelp: "Find your ID in ",
+    googleAdsToolsPath: " → Tools → Conversions",
+    saving: "Saving...",
+    saveBtn: "Save pixels",
+  }
+};
+
 const DashboardPixelsTab = () => {
   const { user, refreshProfile } = useAuth();
   const [facebookPixelId, setFacebookPixelId] = useState("");
   const [tiktokPixelId, setTiktokPixelId] = useState("");
   const [googleAdsId, setGoogleAdsId] = useState("");
   const [saving, setSaving] = useState(false);
+
+  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+
+  useEffect(() => {
+    const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
+    window.addEventListener("technova_lang_changed", handleLangChange);
+    return () => window.removeEventListener("technova_lang_changed", handleLangChange);
+  }, []);
+
+  const t = translations[lang === 'en' ? 'en' : 'fr'];
 
   useEffect(() => {
     if (!user) return;
@@ -37,7 +100,7 @@ const DashboardPixelsTab = () => {
     const gaClean = googleAdsId.trim();
 
     if (fbClean && !/^\d{10,20}$/.test(fbClean)) {
-      toast.error("L'ID du pixel Facebook doit être un nombre de 10 à 20 chiffres");
+      toast.error(t.fbPixelError);
       setSaving(false);
       return;
     }
@@ -51,9 +114,9 @@ const DashboardPixelsTab = () => {
 
     setSaving(false);
     if (error) {
-      toast.error("Erreur lors de la sauvegarde");
+      toast.error(t.saveError);
     } else {
-      toast.success("Pixels sauvegardés !");
+      toast.success(t.saveSuccess);
       refreshProfile();
     }
   };
@@ -64,13 +127,13 @@ const DashboardPixelsTab = () => {
         <div className="flex items-start gap-3 text-sm text-muted-foreground">
           <Info className="h-5 w-5 shrink-0 mt-0.5 text-primary" />
           <div>
-            <p className="font-medium text-foreground mb-1">Comment ça marche ?</p>
-            <p>Ajoutez vos identifiants de pixels publicitaires ci-dessous. Les événements suivants seront automatiquement suivis sur votre boutique :</p>
+            <p className="font-medium text-foreground mb-1">{t.howItWorksTitle}</p>
+            <p>{t.howItWorksDesc}</p>
             <ul className="mt-2 space-y-1 text-xs">
-              <li>• <strong>PageView</strong> — Quand un visiteur arrive sur votre boutique</li>
-              <li>• <strong>ViewContent</strong> — Quand un visiteur voit un produit</li>
-              <li>• <strong>AddToCart</strong> — Quand un visiteur clique sur "Acheter"</li>
-              <li>• <strong>Purchase</strong> — Après un achat réussi</li>
+              <li>• <strong>PageView</strong> — {t.pageViewDesc}</li>
+              <li>• <strong>ViewContent</strong> — {t.viewContentDesc}</li>
+              <li>• <strong>AddToCart</strong> — {t.addToCartDesc}</li>
+              <li>• <strong>Purchase</strong> — {t.purchaseDesc}</li>
             </ul>
           </div>
         </div>
@@ -83,8 +146,8 @@ const DashboardPixelsTab = () => {
             <Facebook className="h-5 w-5 text-[#1877F2]" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-foreground">Facebook / Meta Pixel</p>
-            <p className="text-xs text-muted-foreground">Suivez les conversions de vos publicités Facebook & Instagram</p>
+            <p className="text-sm font-semibold text-foreground">{t.fbPixelTitle}</p>
+            <p className="text-xs text-muted-foreground">{t.fbPixelDesc}</p>
           </div>
         </div>
         <div>
@@ -95,7 +158,7 @@ const DashboardPixelsTab = () => {
             placeholder="Ex: 1234567890123456"
           />
           <p className="text-xs text-muted-foreground mt-1">
-            Trouvez votre Pixel ID dans le <a href="https://business.facebook.com/events_manager" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Gestionnaire d'événements Meta</a>
+            {t.fbPixelHelp}<a href="https://business.facebook.com/events_manager" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">{t.metaEventsManager}</a>
           </p>
         </div>
       </div>
@@ -107,8 +170,8 @@ const DashboardPixelsTab = () => {
             <Music2 className="h-5 w-5 text-foreground" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-foreground">TikTok Pixel</p>
-            <p className="text-xs text-muted-foreground">Suivez les conversions de vos campagnes TikTok Ads</p>
+            <p className="text-sm font-semibold text-foreground">{t.tiktokPixelTitle}</p>
+            <p className="text-xs text-muted-foreground">{t.tiktokPixelDesc}</p>
           </div>
         </div>
         <div>
@@ -119,7 +182,7 @@ const DashboardPixelsTab = () => {
             placeholder="Ex: CXXXXXXXXXXXXXXXXX"
           />
           <p className="text-xs text-muted-foreground mt-1">
-            Trouvez votre Pixel ID dans le <a href="https://ads.tiktok.com/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">TikTok Ads Manager</a> → Assets → Events
+            {t.tiktokPixelHelp}<a href="https://ads.tiktok.com/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">TikTok Ads Manager</a> → Assets → Events
           </p>
         </div>
       </div>
@@ -131,26 +194,26 @@ const DashboardPixelsTab = () => {
             <BarChart3 className="h-5 w-5 text-[#4285F4]" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-foreground">Google Ads (gtag)</p>
-            <p className="text-xs text-muted-foreground">Suivez les conversions de vos publicités Google</p>
+            <p className="text-sm font-semibold text-foreground">{t.googleAdsTitle}</p>
+            <p className="text-xs text-muted-foreground">{t.googleAdsDesc}</p>
           </div>
         </div>
         <div>
-          <label className="text-sm font-medium text-foreground mb-1.5 block">ID de conversion</label>
+          <label className="text-sm font-medium text-foreground mb-1.5 block">{t.googleAdsConversionId}</label>
           <Input
             value={googleAdsId}
             onChange={(e) => setGoogleAdsId(e.target.value)}
             placeholder="Ex: AW-XXXXXXXXXX"
           />
           <p className="text-xs text-muted-foreground mt-1">
-            Trouvez votre ID dans <a href="https://ads.google.com/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Google Ads</a> → Outils → Conversions
+            {t.googleAdsHelp}<a href="https://ads.google.com/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Google Ads</a>{t.googleAdsToolsPath}
           </p>
         </div>
       </div>
 
       <Button onClick={handleSave} disabled={saving} className="w-full sm:w-auto gap-2">
         <Save className="h-4 w-4" />
-        {saving ? "Enregistrement..." : "Enregistrer les pixels"}
+        {saving ? t.saving : t.saveBtn}
       </Button>
     </div>
   );

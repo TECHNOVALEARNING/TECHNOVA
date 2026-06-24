@@ -11,6 +11,47 @@ import { toast } from "sonner";
 import logo from "@/assets/logo.png";
 import SEOHead from "@/components/SEOHead";
 
+const translations = {
+  fr: {
+    seoTitle: "Connexion",
+    seoDesc: "Connectez-vous à votre compte TECHNOVA pour gérer votre boutique et vos produits digitaux.",
+    heading: "Connexion",
+    subtitle: "Connectez-vous à votre compte pour gérer votre boutique.",
+    continueGoogle: "Continuer avec Google",
+    googleError: "Erreur lors de la connexion avec Google",
+    loginSuccess: "Connexion réussie !",
+    orEmail: "ou par email",
+    emailLabel: "Email",
+    passwordLabel: "Mot de passe",
+    forgotPassword: "Mot de passe oublié ?",
+    loginBtn: "Se connecter",
+    loggingIn: "Connexion...",
+    noAccount: "Pas encore de compte ?",
+    registerLink: "Créer un compte",
+    visualHeading: "Gérez votre business digital",
+    visualDesc: "Dashboard puissant, analytics en temps réel, paiements automatisés."
+  },
+  en: {
+    seoTitle: "Login",
+    seoDesc: "Log in to your TECHNOVA account to manage your storefront and digital products.",
+    heading: "Login",
+    subtitle: "Log in to your account to manage your storefront.",
+    continueGoogle: "Continue with Google",
+    googleError: "Error logging in with Google",
+    loginSuccess: "Login successful!",
+    orEmail: "or by email",
+    emailLabel: "Email",
+    passwordLabel: "Password",
+    forgotPassword: "Forgot password?",
+    loginBtn: "Log In",
+    loggingIn: "Logging in...",
+    noAccount: "Don't have an account yet?",
+    registerLink: "Create an account",
+    visualHeading: "Manage your digital business",
+    visualDesc: "Powerful dashboard, real-time analytics, automated payouts."
+  }
+};
+
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
@@ -18,6 +59,16 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
+
+  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+
+  useEffect(() => {
+    const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
+    window.addEventListener("technova_lang_changed", handleLangChange);
+    return () => window.removeEventListener("technova_lang_changed", handleLangChange);
+  }, []);
+
+  const t = translations[lang === 'en' ? 'en' : 'fr'];
 
   useEffect(() => {
     if (!authLoading && user) {
@@ -43,7 +94,7 @@ const Login = () => {
       return;
     }
 
-    toast.success("Connexion réussie !");
+    toast.success(t.loginSuccess);
   };
 
   const handleGoogleLogin = async () => {
@@ -59,7 +110,7 @@ const Login = () => {
     });
 
     if (error) {
-      toast.error("Erreur lors de la connexion avec Google");
+      toast.error(t.googleError);
       setLoading(false);
       return;
     }
@@ -71,7 +122,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex">
-      <SEOHead title="Connexion" description="Connectez-vous à votre compte TECHNOVA pour gérer votre boutique et vos produits digitaux." canonicalPath="/login" />
+      <SEOHead title={t.seoTitle} description={t.seoDesc} canonicalPath="/login" />
       {/* Left - Form */}
       <div className="flex-1 flex items-center justify-center px-6 py-12">
         <motion.div
@@ -84,9 +135,9 @@ const Login = () => {
             <span className="text-lg font-bold text-foreground">TECHNOVA</span>
           </Link>
 
-          <h1 className="text-2xl font-extrabold text-foreground mb-2">Connexion</h1>
+          <h1 className="text-2xl font-extrabold text-foreground mb-2">{t.heading}</h1>
           <p className="text-sm text-muted-foreground mb-8">
-            Connectez-vous à votre compte pour gérer votre boutique.
+            {t.subtitle}
           </p>
 
           {/* Google Button */}
@@ -103,7 +154,7 @@ const Login = () => {
               <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
               <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
             </svg>
-            Continuer avec Google
+            {t.continueGoogle}
           </Button>
 
           <div className="relative mb-6">
@@ -111,13 +162,13 @@ const Login = () => {
               <div className="w-full border-t border-border" />
             </div>
             <div className="relative flex justify-center text-xs">
-              <span className="bg-background px-3 text-muted-foreground">ou par email</span>
+              <span className="bg-background px-3 text-muted-foreground">{t.orEmail}</span>
             </div>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="text-sm font-medium text-foreground mb-1.5 block">Email</label>
+              <label className="text-sm font-medium text-foreground mb-1.5 block">{t.emailLabel}</label>
               <Input
                 type="email"
                 placeholder="vous@exemple.com"
@@ -129,9 +180,9 @@ const Login = () => {
             </div>
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label className="text-sm font-medium text-foreground">Mot de passe</label>
+                <label className="text-sm font-medium text-foreground">{t.passwordLabel}</label>
                 <Link to="/forgot-password" className="text-xs text-primary hover:underline">
-                  Mot de passe oublié ?
+                  {t.forgotPassword}
                 </Link>
               </div>
               <div className="relative">
@@ -154,14 +205,14 @@ const Login = () => {
             </div>
 
             <Button className="w-full py-5 text-sm font-semibold" disabled={isBusy}>
-              {isBusy ? "Connexion..." : "Se connecter"}
+              {isBusy ? t.loggingIn : t.loginBtn}
             </Button>
           </form>
 
           <p className="mt-6 text-center text-sm text-muted-foreground">
-            Pas encore de compte ?{" "}
+            {t.noAccount}{" "}
             <Link to="/register" className="font-medium text-primary hover:underline">
-              Créer un compte
+              {t.registerLink}
             </Link>
           </p>
         </motion.div>
@@ -173,10 +224,10 @@ const Login = () => {
         <div className="absolute bottom-20 left-10 h-48 w-48 rounded-full bg-primary/15 blur-[80px]" />
         <div className="relative text-center px-12">
           <h2 className="text-3xl font-extrabold text-background mb-4">
-            Gérez votre business digital
+            {t.visualHeading}
           </h2>
           <p className="text-background/50 text-lg max-w-md">
-            Dashboard puissant, analytics en temps réel, paiements automatisés.
+            {t.visualDesc}
           </p>
         </div>
       </div>

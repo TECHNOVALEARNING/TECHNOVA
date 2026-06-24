@@ -25,6 +25,37 @@ interface TicketMessage {
   created_at: string;
 }
 
+const translations = {
+  fr: {
+    unknownClient: "Client inconnu",
+    originalMsgPrefix: "Vous avez reçu une réponse concernant votre ticket : ",
+    sendError: "Erreur lors de l'envoi",
+    ticketClosed: "Ticket fermé",
+    ticketsTitle: "Tickets Commandes",
+    noTickets: "Aucun ticket reçu",
+    openBadge: "Ouvert",
+    closedBadge: "Fermé",
+    selectTicketPrompt: "Sélectionnez un ticket pour répondre",
+    btnClose: "Fermer",
+    replyPlaceholder: "Votre réponse (sera envoyée par email au client)...",
+    clientDefault: "Client",
+  },
+  en: {
+    unknownClient: "Unknown customer",
+    originalMsgPrefix: "You have received a reply regarding your ticket: ",
+    sendError: "Error sending reply",
+    ticketClosed: "Ticket closed",
+    ticketsTitle: "Order Tickets",
+    noTickets: "No tickets received",
+    openBadge: "Open",
+    closedBadge: "Closed",
+    selectTicketPrompt: "Select a ticket to reply",
+    btnClose: "Close",
+    replyPlaceholder: "Your reply (will be emailed to the customer)...",
+    clientDefault: "Customer",
+  }
+};
+
 const DashboardBuyerTicketsTab = () => {
   const { user } = useAuth();
   const [tickets, setTickets] = useState<BuyerTicket[]>([]);
@@ -34,6 +65,16 @@ const DashboardBuyerTicketsTab = () => {
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+
+  useEffect(() => {
+    const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
+    window.addEventListener("technova_lang_changed", handleLangChange);
+    return () => window.removeEventListener("technova_lang_changed", handleLangChange);
+  }, []);
+
+  const t = translations[lang === 'en' ? 'en' : 'fr'];
 
   useEffect(() => {
     if (user) loadTickets();
@@ -96,7 +137,7 @@ const DashboardBuyerTicketsTab = () => {
 
       const ticketsWithCustomers = tickets.map(ticket => ({
         ...ticket,
-        customers: customersMap[ticket.customer_id] || { name: "Client inconnu", email: "N/A" }
+        customers: customersMap[ticket.customer_id] || { name: t.unknownClient, email: "N/A" }
       }));
       setTickets(ticketsWithCustomers as any);
     } else {
@@ -136,13 +177,13 @@ const DashboardBuyerTicketsTab = () => {
           recipient_email: selectedTicket.customers.email,
           recipient_name: selectedTicket.customers.name,
           reply_message: input.trim(),
-          original_message: "Vous avez reçu une réponse concernant votre ticket : " + selectedTicket.subject,
+          original_message: t.originalMsgPrefix + selectedTicket.subject,
         },
       });
 
       setInput("");
     } catch (err: any) {
-      toast.error(err.message || "Erreur lors de l'envoi");
+      toast.error(err.message || t.sendError);
     } finally {
       setSending(false);
     }
@@ -160,14 +201,14 @@ const DashboardBuyerTicketsTab = () => {
     if (selectedTicket?.id === ticketId) {
       setSelectedTicket({ ...selectedTicket, status: "closed" });
     }
-    toast.success("Ticket fermé");
+    toast.success(t.ticketClosed);
   };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 h-[calc(100vh-280px)]">
       <div className="border border-border rounded-xl bg-card overflow-hidden flex flex-col">
         <div className="px-4 py-3 border-b border-border">
-          <p className="text-sm font-semibold text-foreground">Tickets Commandes</p>
+          <p className="text-sm font-semibold text-foreground">{t.ticketsTitle}</p>
         </div>
         <div className="flex-1 overflow-y-auto">
           {loading ? (
@@ -177,7 +218,7 @@ const DashboardBuyerTicketsTab = () => {
           ) : tickets.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
               <MessageCircle className="h-8 w-8 mx-auto mb-2 opacity-30" />
-              <p className="text-sm">Aucun ticket reçu</p>
+              <p className="text-sm">{t.noTickets}</p>
             </div>
           ) : (
             tickets.map((ticket) => (
@@ -189,14 +230,14 @@ const DashboardBuyerTicketsTab = () => {
                 }`}
               >
                 <div className="flex items-center justify-between mb-1">
-                  <p className="text-sm font-medium text-foreground truncate">{ticket.customers?.name || "Client"}</p>
+                  <p className="text-sm font-medium text-foreground truncate">{ticket.customers?.name || t.clientDefault}</p>
                   <Badge variant={ticket.status === "open" ? "default" : "secondary"} className="text-[10px]">
-                    {ticket.status === "open" ? "Ouvert" : "Fermé"}
+                    {ticket.status === "open" ? t.openBadge : t.closedBadge}
                   </Badge>
                 </div>
                 <p className="text-xs text-muted-foreground truncate">{ticket.subject}</p>
                 <p className="text-[10px] text-muted-foreground/60 mt-1">
-                  {new Date(ticket.created_at).toLocaleDateString("fr", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
+                  {new Date(ticket.created_at).toLocaleDateString(lang === "en" ? "en-US" : "fr-FR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
                 </p>
               </button>
             ))
@@ -208,20 +249,20 @@ const DashboardBuyerTicketsTab = () => {
         {!selectedTicket ? (
           <div className="flex-1 flex flex-col items-center justify-center text-muted-foreground">
             <MessageCircle className="h-12 w-12 mb-3 opacity-20" />
-            <p className="text-sm">Sélectionnez un ticket pour répondre</p>
+            <p className="text-sm">{t.selectTicketPrompt}</p>
           </div>
         ) : (
           <>
             <div className="px-4 py-3 border-b border-border flex items-center justify-between">
               <div>
-                <p className="text-sm font-semibold text-foreground">{selectedTicket.customers?.name || "Client"}</p>
+                <p className="text-sm font-semibold text-foreground">{selectedTicket.customers?.name || t.clientDefault}</p>
                 <p className="text-[11px] text-muted-foreground">{selectedTicket.customers?.email}</p>
               </div>
               <div className="flex items-center gap-2">
                 {selectedTicket.status === "open" && (
                   <Button variant="outline" size="sm" className="text-xs gap-1" onClick={() => closeTicket(selectedTicket.id)}>
                     <CheckCircle className="h-3 w-3" />
-                    Fermer
+                    {t.btnClose}
                   </Button>
                 )}
               </div>
@@ -255,7 +296,7 @@ const DashboardBuyerTicketsTab = () => {
                   <input
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    placeholder="Votre réponse (sera envoyée par email au client)..."
+                    placeholder={t.replyPlaceholder}
                     className="flex-1 bg-white dark:bg-black border border-border rounded-xl px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20"
                     disabled={sending}
                   />
