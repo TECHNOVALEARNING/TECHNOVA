@@ -23,16 +23,27 @@ export const Logo = ({ className = "" }: { className?: string }) => (
 /* ---------- Header ---------- */
 import { useEffect } from "react";
 import { Moon, Sun, Globe } from "lucide-react";
+import { buyerSupabase } from "@/integrations/supabase/buyer-client";
 
 export const Header = () => {
   const [open, setOpen] = useState(false);
   const { user, signOut } = useAuth();
   const [theme, setTheme] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_theme") || "light") : "light");
   const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+  const [hasBuyerSession, setHasBuyerSession] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
   const isHome = location.pathname === "/";
+
+  useEffect(() => {
+    const checkBuyer = async () => {
+      const { data: { session } } = await buyerSupabase.auth.getSession();
+      const hasSession = !!session || !!sessionStorage.getItem("buyer_session");
+      setHasBuyerSession(hasSession);
+    };
+    checkBuyer();
+  }, [user]);
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
@@ -123,13 +134,17 @@ export const Header = () => {
           <button onClick={() => setTheme(t => t === "light" ? "dark" : "light")} className="opacity-80 hover:opacity-100 transition-opacity">
             {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
           </button>
-          {user ? (
+          {hasBuyerSession ? (
+            <Link to="/mes-achats" className="ml-2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-[#0071e3] text-white hover:bg-[#0071e3]/90 h-10 px-4 py-2">
+              {lang === "fr" ? "Mes Achats" : "My Purchases"}
+            </Link>
+          ) : user ? (
             <Link to="/dashboard" className="ml-2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-[#0071e3] text-white hover:bg-[#0071e3]/90 h-10 px-4 py-2">
               Dashboard
             </Link>
           ) : (
             <Link to="/register" className="ml-2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-[#0071e3] text-white hover:bg-[#0071e3]/90 h-10 px-4 py-2">
-              Espace vendeur
+              {lang === "fr" ? "Espace vendeur" : "Seller Space"}
             </Link>
           )}
         </div>
@@ -184,27 +199,46 @@ export const Header = () => {
             <div className="h-px w-full bg-border/50 my-2" />
             
             {/* Actions (Login / Devenir vendeur / Dashboard) */}
+            {/* Actions (Login / Devenir vendeur / Dashboard) */}
             <div className="flex flex-col gap-3 pb-4">
-              {user ? (
+              {hasBuyerSession ? (
+                <>
+                  <Link to="/mes-achats" onClick={() => setOpen(false)} className="w-full text-center inline-flex items-center justify-center rounded-xl text-base font-medium bg-[#0071e3] text-white hover:bg-[#0071e3]/90 h-12 px-4 py-2 shadow-sm">
+                    {lang === "fr" ? "Mes Achats" : "My Purchases"}
+                  </Link>
+                  <button 
+                    onClick={async () => {
+                      sessionStorage.removeItem("buyer_session");
+                      await buyerSupabase.auth.signOut();
+                      setHasBuyerSession(false);
+                      await signOut();
+                      setOpen(false);
+                    }} 
+                    className="w-full text-center inline-flex items-center justify-center rounded-xl text-base font-medium border border-[color:var(--border)] hover:bg-muted/50 h-12 px-4 py-2"
+                  >
+                    {lang === "fr" ? "Déconnexion" : "Sign Out"}
+                  </button>
+                </>
+              ) : user ? (
                 <>
                   <Link to="/dashboard" onClick={() => setOpen(false)} className="w-full text-center inline-flex items-center justify-center rounded-xl text-base font-medium bg-[#0071e3] text-white hover:bg-[#0071e3]/90 h-12 px-4 py-2 shadow-sm">
                     Dashboard
                   </Link>
                   <button onClick={() => { signOut(); setOpen(false); }} className="w-full text-center inline-flex items-center justify-center rounded-xl text-base font-medium border border-[color:var(--border)] hover:bg-muted/50 h-12 px-4 py-2">
-                    Déconnexion
+                    {lang === "fr" ? "Déconnexion" : "Sign Out"}
                   </button>
                 </>
               ) : (
                 <>
                   <Link to="/register" onClick={() => setOpen(false)} className="w-full text-center inline-flex items-center justify-center rounded-xl text-base font-medium bg-[#0071e3] text-white hover:bg-[#0071e3]/90 h-12 px-4 py-2 shadow-sm">
-                    <Store className="h-5 w-5 mr-2" /> Espace vendeur
+                    <Store className="h-5 w-5 mr-2" /> {lang === "fr" ? "Espace vendeur" : "Seller Space"}
                   </Link>
                   <div className="grid grid-cols-2 gap-3">
                     <Link to="/login" onClick={() => setOpen(false)} className="w-full text-center inline-flex items-center justify-center rounded-xl text-[14px] font-medium border border-[color:var(--border)] bg-card hover:bg-muted/50 h-12 px-2">
-                      Connexion
+                      {lang === "fr" ? "Connexion" : "Sign In"}
                     </Link>
                     <Link to="/buyer-login" onClick={() => setOpen(false)} className="w-full text-center inline-flex items-center justify-center rounded-xl text-[14px] font-medium border border-[color:var(--border)] bg-card hover:bg-muted/50 h-12 px-2">
-                      <ShoppingBag className="h-4 w-4 mr-1.5" /> Achats
+                      <ShoppingBag className="h-4 w-4 mr-1.5" /> {lang === "fr" ? "Achats" : "Purchases"}
                     </Link>
                   </div>
                 </>
