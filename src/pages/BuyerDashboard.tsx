@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import BuyerContentDialog from "@/components/BuyerContentDialog";
 import { buyerSupabase as supabase } from "@/integrations/supabase/buyer-client";
+import { supabase as sellerSupabase } from "@/integrations/supabase/client";
 
 interface OrderWithProduct {
   id: string;
@@ -67,6 +68,8 @@ const BuyerDashboard = () => {
       // Check session expiry (30 min)
       if (Date.now() - session.authenticatedAt > SESSION_DURATION) {
         sessionStorage.removeItem("buyer_session");
+        supabase.auth.signOut();
+        sellerSupabase.auth.signOut();
         navigate(loginPath);
         return;
       }
@@ -96,6 +99,8 @@ const BuyerDashboard = () => {
 
     } catch {
       sessionStorage.removeItem("buyer_session");
+      supabase.auth.signOut();
+      sellerSupabase.auth.signOut();
       navigate(loginPath);
     }
   }, [navigate]);
@@ -103,6 +108,11 @@ const BuyerDashboard = () => {
   const handleLogout = async () => {
     sessionStorage.removeItem("buyer_session");
     await supabase.auth.signOut();
+    try {
+      await sellerSupabase.auth.signOut();
+    } catch (e) {
+      console.error(e);
+    }
     navigate(loginPath);
   };
 
@@ -118,10 +128,10 @@ const BuyerDashboard = () => {
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
         <div className="container mx-auto flex items-center justify-between px-6 py-3">
-          <Link to="/" className="flex items-center gap-2.5">
+          <a href={isPortal ? "https://technovalearning.com" : "/"} className="flex items-center gap-2.5">
             <img src={logo} alt="TECHNOVA" className="h-8 w-8 rounded-lg object-contain" />
             <span className="text-lg font-bold text-foreground">TECHNOVA</span>
-          </Link>
+          </a>
           <div className="flex items-center gap-3">
             <span className="text-sm text-muted-foreground hidden sm:inline">{customerName}</span>
             <Avatar className="h-8 w-8">
@@ -237,7 +247,7 @@ const BuyerDashboard = () => {
 
       <footer className="border-t border-border py-6 mt-8">
         <p className="text-center text-xs text-muted-foreground">
-          Propulsé par <Link to="/" className="text-primary hover:underline font-medium">TECHNOVA</Link>
+          Propulsé par <a href={isPortal ? "https://technovalearning.com" : "/"} className="text-primary hover:underline font-medium">TECHNOVA</a>
         </p>
       </footer>
 

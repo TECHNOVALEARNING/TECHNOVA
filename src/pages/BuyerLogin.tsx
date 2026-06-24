@@ -143,10 +143,10 @@ const BuyerLogin = () => {
           animate={{ opacity: 1, y: 0 }}
           className="w-full max-w-sm"
         >
-          <Link to="/" className="flex items-center gap-2.5 mb-12">
+          <a href={isPortal ? "https://technovalearning.com" : "/"} className="flex items-center gap-2.5 mb-12">
             <img src={logo} alt="TECHNOVA" className="h-8 w-8 rounded-lg object-contain" />
             <span className="text-lg font-bold text-foreground">TECHNOVA</span>
-          </Link>
+          </a>
 
           <div className="flex items-center gap-3 mb-6">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">

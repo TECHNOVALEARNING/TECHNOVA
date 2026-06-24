@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { buyerSupabase as supabase } from "@/integrations/supabase/buyer-client";
+import { supabase as sellerSupabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import logo from "@/assets/logo.png";
 
@@ -106,6 +107,8 @@ const BuyerOrderDetail = () => {
       if (Date.now() - session.authenticatedAt > SESSION_DURATION) throw new Error("expired");
     } catch {
       sessionStorage.removeItem("buyer_session");
+      supabase.auth.signOut();
+      sellerSupabase.auth.signOut();
       navigate(loginPath);
       return;
     }
@@ -180,10 +183,10 @@ const BuyerOrderDetail = () => {
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur-xl">
         <div className="container mx-auto flex items-center justify-between px-6 py-3">
-          <Link to="/" className="flex items-center gap-2.5">
+          <a href={isPortal ? "https://technovalearning.com" : "/"} className="flex items-center gap-2.5">
             <img src={logo} alt="TECHNOVA" className="h-8 w-8 rounded-lg object-contain" />
             <span className="text-lg font-bold text-foreground">TECHNOVA</span>
-          </Link>
+          </a>
           <Link to={dashboardPath}>
             <Button variant="ghost" size="sm" className="gap-1.5">
               <ArrowLeft className="h-4 w-4" /> Mes achats
