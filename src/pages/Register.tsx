@@ -15,8 +15,8 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 
 const translations = {
   fr: {
-    seoTitle: "Créer un compte",
-    seoDesc: "Créez votre compte TECHNOVA gratuitement et commencez à vendre vos produits digitaux en 5 minutes.",
+    seoTitle: "Devenir Vendeur — Vendez vos Produits Digitaux — TECHNOVA",
+    seoDesc: "Rejoignez TECHNOVA comme partenaire vendeur. Vendez vos produits digitaux, fixez vos prix, et touchez des clients en Europe, en Amérique et en Afrique.",
     visualHeading: "Lancez votre boutique en 5 minutes",
     visualDesc: "Fichiers, formations et licences — vendez vos produits digitaux avec TECHNOVA.",
     heading: "Créer un compte",
@@ -41,8 +41,8 @@ const translations = {
     verifyEmail: "Vérifiez votre email pour confirmer votre inscription !"
   },
   en: {
-    seoTitle: "Create an Account",
-    seoDesc: "Create your TECHNOVA account for free and start selling your digital products in 5 minutes.",
+    seoTitle: "Become a Seller — Sell your Digital Products — TECHNOVA",
+    seoDesc: "Join TECHNOVA as a partner seller. Sell your digital products, set your prices, and reach customers in Europe, America, and Africa.",
     visualHeading: "Launch your store in 5 minutes",
     visualDesc: "Files, courses, and licenses — sell your digital products with TECHNOVA.",
     heading: "Create an account",

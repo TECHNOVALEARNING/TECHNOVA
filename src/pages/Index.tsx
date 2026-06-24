@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Header, Footer, CourseCard, Course } from "@/components/site/shared";
 import { supabase } from "@/integrations/supabase/client";
 import logoImg from "@/assets/logo.png";
+import SEOHead from "@/components/SEOHead";
 
 
 
@@ -247,6 +248,11 @@ const Index = () => {
       <div className="bg-orb orb-3" />
 
       <Header />
+      <SEOHead 
+        title={lang === "en" ? "TECHNOVA Learning — Master AI, Data & Cybersecurity" : undefined}
+        description={lang === "en" ? "Certified online courses in AI, Data, Cybersecurity & Design. Learn at your own pace, from anywhere. Pay with Mobile Money or Visa." : undefined}
+        canonicalPath="/"
+      />
 
       {/* ============ HERO ============ */}
       <section id="home" style={{ position: "relative", zIndex: 1, padding: "140px 0 100px", overflow: "hidden" }}>

@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/accordion";
 import { supabase } from "@/integrations/supabase/client";
 import { useGeoPricing } from "@/contexts/GeoPricingContext";
+import SEOHead from "@/components/SEOHead";
 
 import ProductReportDialog from "@/components/store/ProductReportDialog";
 import { processDescriptionWithVideos } from "@/components/RichTextEditor";
@@ -350,8 +351,48 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
     navigate(url);
   };
 
+  const truncateText = (text: string | null, maxLen = 155) => {
+    if (!text) return "";
+    const plainText = text.replace(/<[^>]*>/g, "");
+    if (plainText.length <= maxLen) return plainText;
+    return plainText.substring(0, maxLen - 3) + "...";
+  };
+
+  const seoTitle = `${product.title} — ${storeName}`;
+  const seoDesc = truncateText(product.description) || `Achetez ${product.title} en ligne. Fichier, formation ou licence numérique de qualité.`;
+
+  const courseJsonLd = product.type === "course" ? {
+    "@type": "Course",
+    "name": product.title,
+    "description": truncateText(product.description, 300),
+    "provider": {
+      "@type": "Organization",
+      "name": "Technova Learning",
+      "sameAs": "https://www.technovalearning.com"
+    },
+    "hasCourseInstance": {
+      "@type": "CourseInstance",
+      "courseMode": "online",
+      "inLanguage": "fr"
+    },
+    "offers": {
+      "@type": "Offer",
+      "category": "Paid",
+      "price": String(product.price),
+      "priceCurrency": "XOF"
+    }
+  } : undefined;
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
+      <SEOHead 
+        title={seoTitle} 
+        description={seoDesc} 
+        jsonLd={courseJsonLd} 
+        ogImage={product.thumbnail_url || undefined} 
+        ogType="product" 
+        canonicalPath={customSlug ? `/${product.id}` : `/store/${profile.store_slug || slug}/${product.id}`} 
+      />
       {/* ─── HEADER ─── */}
       <header className="sticky top-0 z-40 border-b border-gray-100 bg-white/90 backdrop-blur-md">
         <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 h-14">

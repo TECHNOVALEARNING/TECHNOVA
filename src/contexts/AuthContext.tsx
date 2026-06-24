@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
+import { buyerSupabase } from "@/integrations/supabase/buyer-client";
 
 interface Profile {
   id: string;
@@ -215,6 +216,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const { error } = await supabase.auth.signOut();
       if (error) {
         console.error("Erreur déconnexion:", error.message);
+      }
+      try {
+        await buyerSupabase.auth.signOut();
+        sessionStorage.removeItem("buyer_session");
+      } catch (buyerErr) {
+        console.error("Erreur clearing buyer auth on seller signout:", buyerErr);
       }
       await syncSession(null);
     } finally {

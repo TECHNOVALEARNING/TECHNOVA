@@ -41,8 +41,8 @@ import heroImage from "@/assets/marketplace-hero.jpg";
 
 const translations = {
   fr: {
-    seoTitle: "Marketplace TECHNOVA · Produits numériques vérifiés",
-    seoDesc: "La marketplace #1 de produits numériques dans le monde. Vendeurs vérifiés KYC, paiements en ligne sécurisés, fichiers, formations et licences.",
+    seoTitle: "Marketplace Formations — Achetez & Vendez des Cours en Ligne",
+    seoDesc: "Une marketplace de formations en ligne où experts et apprenants se rencontrent. Vendez vos cours ou trouvez la formation qui vous correspond.",
     badge: "Marketplace #1 de produits numériques au niveau mondial",
     title: "Achetez en confiance.",
     titleHighlight: "Vendez sans limite.",
@@ -95,8 +95,8 @@ const translations = {
     ]
   },
   en: {
-    seoTitle: "Marketplace TECHNOVA · Verified Digital Products",
-    seoDesc: "#1 digital products marketplace worldwide. KYC-verified sellers, secure online payments, files, courses, and licenses.",
+    seoTitle: "Course Marketplace — Buy & Sell Classes Online",
+    seoDesc: "An online course marketplace where experts and learners meet. Sell your courses or find the training that suits you.",
     badge: "#1 digital products marketplace globally",
     title: "Buy with confidence.",
     titleHighlight: "Sell without limits.",

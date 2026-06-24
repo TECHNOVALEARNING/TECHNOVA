@@ -8,13 +8,14 @@ interface SEOHeadProps {
   ogImage?: string;
   ogType?: string;
   noindex?: boolean;
+  jsonLd?: any;
 }
 
-const SITE_NAME = "TECHNOVA";
-const SITE_URL = "https://technova.com";
-const DEFAULT_DESCRIPTION = "TECHNOVA est la plateforme pour vendre vos produits digitaux dans le monde : fichiers, formations et licences. Créez votre boutique et encaissez vos ventes en ligne.";
-const DEFAULT_IMAGE = `${SITE_URL}/og-image.jpg?v=technova-20260505`;
-const DEFAULT_KEYWORDS = "TECHNOVA, technova, vente produits digitaux, marketplace mondial, vendre en ligne, cours en ligne, fichiers numériques, licences digitales, boutique digitale, e-commerce, stripe";
+const SITE_NAME = "TECHNOVA Learning";
+const SITE_URL = "https://www.technovalearning.com";
+const DEFAULT_DESCRIPTION = "Formations certifiantes en IA, Data, Cybersécurité et Design. Apprenez à votre rythme, où que vous soyez. Paiement Mobile Money ou Visa.";
+const DEFAULT_IMAGE = `${SITE_URL}/og-image.jpg?v=technova-20260624`;
+const DEFAULT_KEYWORDS = "TECHNOVA, technova learning, formation en ligne intelligence artificielle, formation cybersécurité en ligne certifiante, formation data analyst en ligne, cours en ligne design UX/UI certifiant, formation en ligne paiement Mobile Money, MTN Money, Moov Money, Orange Money, Wave";
 
 const SEOHead = ({
   title,
@@ -24,8 +25,11 @@ const SEOHead = ({
   ogImage = DEFAULT_IMAGE,
   ogType = "website",
   noindex = false,
+  jsonLd,
 }: SEOHeadProps) => {
-  const fullTitle = title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} — Vendez vos produits digitaux dans le monde`;
+  const fullTitle = title 
+    ? (title.includes(SITE_NAME) ? title : `${title} | ${SITE_NAME}`) 
+    : `${SITE_NAME} — Formations Tech : IA, Data, Cybersécurité`;
   const canonicalUrl = `${SITE_URL}${canonicalPath}`;
 
   useEffect(() => {
@@ -76,49 +80,81 @@ const SEOHead = ({
     }
     canonical.href = canonicalUrl;
 
-    // JSON-LD
+    // Hreflang links for multilingual FR/EN
+    const setHreflang = (lang: string, href: string) => {
+      let el = document.querySelector(`link[hreflang="${lang}"]`) as HTMLLinkElement;
+      if (!el) {
+        el = document.createElement("link");
+        el.rel = "alternate";
+        el.hreflang = lang;
+        document.head.appendChild(el);
+      }
+      el.href = href;
+    };
+
+    const cleanPath = window.location.pathname === "/" ? "" : window.location.pathname;
+    setHreflang("fr", `${SITE_URL}${cleanPath}`);
+    setHreflang("en", `${SITE_URL}/en${cleanPath}`);
+    setHreflang("x-default", `${SITE_URL}${cleanPath}`);
+
+    // JSON-LD Graph
     const existingLD = document.querySelector('script[data-seo-jsonld]');
     if (existingLD) existingLD.remove();
 
-    const jsonLd = document.createElement("script");
-    jsonLd.type = "application/ld+json";
-    jsonLd.setAttribute("data-seo-jsonld", "true");
-    jsonLd.textContent = JSON.stringify({
+    const jsonLdElement = document.createElement("script");
+    jsonLdElement.type = "application/ld+json";
+    jsonLdElement.setAttribute("data-seo-jsonld", "true");
+
+    const graph = [
+      {
+        "@type": "WebSite",
+        name: SITE_NAME,
+        url: SITE_URL,
+        description: DEFAULT_DESCRIPTION,
+        potentialAction: {
+          "@type": "SearchAction",
+          target: `${SITE_URL}/products?q={search_term_string}`,
+          "query-input": "required name=search_term_string",
+        },
+      },
+      {
+        "@type": "Organization",
+        name: SITE_NAME,
+        url: SITE_URL,
+        logo: `${SITE_URL}/logo.png?v=technova-20260624`,
+        description: DEFAULT_DESCRIPTION,
+        sameAs: [
+          "https://www.facebook.com/share/18GYGMg9o8/",
+          "https://www.instagram.com/technova.learning?igsh=NGkwbjNocHUwMDE5",
+          "https://www.linkedin.com/company/130533963"
+        ],
+        contactPoint: {
+          "@type": "ContactPoint",
+          contactType: "customer service",
+          url: `${SITE_URL}/contact`,
+        },
+      },
+    ];
+
+    if (jsonLd) {
+      if (Array.isArray(jsonLd)) {
+        graph.push(...jsonLd);
+      } else {
+        graph.push(jsonLd);
+      }
+    }
+
+    jsonLdElement.textContent = JSON.stringify({
       "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "WebSite",
-          name: SITE_NAME,
-          url: SITE_URL,
-          description: DEFAULT_DESCRIPTION,
-          potentialAction: {
-            "@type": "SearchAction",
-            target: `${SITE_URL}/products?q={search_term_string}`,
-            "query-input": "required name=search_term_string",
-          },
-        },
-        {
-          "@type": "Organization",
-          name: SITE_NAME,
-          url: SITE_URL,
-          logo: `${SITE_URL}/logo.png?v=technova-20260504`,
-          description: DEFAULT_DESCRIPTION,
-          sameAs: [],
-          contactPoint: {
-            "@type": "ContactPoint",
-            contactType: "customer service",
-            url: `${SITE_URL}/contact`,
-          },
-        },
-      ],
+      "@graph": graph,
     });
-    document.head.appendChild(jsonLd);
+    document.head.appendChild(jsonLdElement);
 
     return () => {
       const ld = document.querySelector('script[data-seo-jsonld]');
       if (ld) ld.remove();
     };
-  }, [fullTitle, description, keywords, canonicalUrl, ogImage, ogType, noindex]);
+  }, [fullTitle, description, keywords, canonicalUrl, ogImage, ogType, noindex, jsonLd]);
 
   return null;
 };

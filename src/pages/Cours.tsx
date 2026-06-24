@@ -59,9 +59,16 @@ const Cours = () => {
     },
   });
 
+  const seoTitle = lang === "en" 
+    ? "Tech Products & Course Catalog — TECHNOVA" 
+    : "Catalogue de Produits & Formations Tech — TECHNOVA";
+  const seoDesc = lang === "en" 
+    ? "Discover our tech courses and digital products in AI, Data, Cybersecurity, and Design. Accessible from Europe, the USA, and worldwide."
+    : "Découvrez nos formations et produits digitaux en IA, Data, Cybersécurité et Design. Accessibles depuis l'Europe, les USA et le monde.";
+
   return (
     <div className="min-h-screen bg-background">
-      <SEOHead title="Vendre des cours en ligne" description="Créez et vendez vos cours en ligne : vidéos HD, modules structurés, certificats. Plateforme e-learning avec paiements en ligne sécurisés." canonicalPath="/cours" keywords="vendre cours en ligne, formation en ligne, e-learning, mondial, global" />
+      <SEOHead title={seoTitle} description={seoDesc} canonicalPath="/formations" />
       <Header />
       <section className="py-24 md:py-32 bg-mesh">
         <div className="container mx-auto px-6 text-center">

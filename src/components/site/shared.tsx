@@ -134,13 +134,13 @@ export const Header = () => {
           <button onClick={() => setTheme(t => t === "light" ? "dark" : "light")} className="opacity-80 hover:opacity-100 transition-opacity">
             {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
           </button>
-          {hasBuyerSession ? (
-            <Link to="/mes-achats" className="ml-2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-[#0071e3] text-white hover:bg-[#0071e3]/90 h-10 px-4 py-2">
-              {lang === "fr" ? "Mes Achats" : "My Purchases"}
-            </Link>
-          ) : user ? (
+          {user ? (
             <Link to="/dashboard" className="ml-2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-[#0071e3] text-white hover:bg-[#0071e3]/90 h-10 px-4 py-2">
               Dashboard
+            </Link>
+          ) : hasBuyerSession ? (
+            <Link to="/mes-achats" className="ml-2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-[#0071e3] text-white hover:bg-[#0071e3]/90 h-10 px-4 py-2">
+              {lang === "fr" ? "Mes Achats" : "My Purchases"}
             </Link>
           ) : (
             <Link to="/register" className="ml-2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-[#0071e3] text-white hover:bg-[#0071e3]/90 h-10 px-4 py-2">
@@ -201,7 +201,16 @@ export const Header = () => {
             {/* Actions (Login / Devenir vendeur / Dashboard) */}
             {/* Actions (Login / Devenir vendeur / Dashboard) */}
             <div className="flex flex-col gap-3 pb-4">
-              {hasBuyerSession ? (
+              {user ? (
+                <>
+                  <Link to="/dashboard" onClick={() => setOpen(false)} className="w-full text-center inline-flex items-center justify-center rounded-xl text-base font-medium bg-[#0071e3] text-white hover:bg-[#0071e3]/90 h-12 px-4 py-2 shadow-sm">
+                    Dashboard
+                  </Link>
+                  <button onClick={() => { signOut(); setOpen(false); }} className="w-full text-center inline-flex items-center justify-center rounded-xl text-base font-medium border border-[color:var(--border)] hover:bg-muted/50 h-12 px-4 py-2">
+                    {lang === "fr" ? "Déconnexion" : "Sign Out"}
+                  </button>
+                </>
+              ) : hasBuyerSession ? (
                 <>
                   <Link to="/mes-achats" onClick={() => setOpen(false)} className="w-full text-center inline-flex items-center justify-center rounded-xl text-base font-medium bg-[#0071e3] text-white hover:bg-[#0071e3]/90 h-12 px-4 py-2 shadow-sm">
                     {lang === "fr" ? "Mes Achats" : "My Purchases"}
@@ -216,15 +225,6 @@ export const Header = () => {
                     }} 
                     className="w-full text-center inline-flex items-center justify-center rounded-xl text-base font-medium border border-[color:var(--border)] hover:bg-muted/50 h-12 px-4 py-2"
                   >
-                    {lang === "fr" ? "Déconnexion" : "Sign Out"}
-                  </button>
-                </>
-              ) : user ? (
-                <>
-                  <Link to="/dashboard" onClick={() => setOpen(false)} className="w-full text-center inline-flex items-center justify-center rounded-xl text-base font-medium bg-[#0071e3] text-white hover:bg-[#0071e3]/90 h-12 px-4 py-2 shadow-sm">
-                    Dashboard
-                  </Link>
-                  <button onClick={() => { signOut(); setOpen(false); }} className="w-full text-center inline-flex items-center justify-center rounded-xl text-base font-medium border border-[color:var(--border)] hover:bg-muted/50 h-12 px-4 py-2">
                     {lang === "fr" ? "Déconnexion" : "Sign Out"}
                   </button>
                 </>

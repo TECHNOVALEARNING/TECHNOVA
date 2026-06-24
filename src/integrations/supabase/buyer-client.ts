@@ -5,6 +5,9 @@ import type { Database } from './types';
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY;
 
+const isBuyerCallback = window.location.pathname.includes('/buyer-auth/callback') || window.location.pathname.includes('/auth/callback');
+const isPortal = window.location.hostname.startsWith('portal.') || window.location.hostname.startsWith('client.');
+
 // Dedicated client for Buyer authentication to avoid overriding the Seller's session
 export const buyerSupabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
   auth: {
@@ -12,5 +15,6 @@ export const buyerSupabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLI
     storageKey: 'technova-buyer-auth-token',
     persistSession: true,
     autoRefreshToken: true,
+    detectSessionInUrl: isPortal || isBuyerCallback,
   }
 });
