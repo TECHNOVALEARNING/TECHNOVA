@@ -223,7 +223,7 @@ const BuyerDashboard = () => {
                       </a>
                     </p>
                   )}
-                  <Link to={`/orders/${o.id}`}>
+                  <Link to={isPortal ? `/orders/${o.id}` : `/mes-achats/${o.id}`}>
                     <Button className="w-full text-sm" size="sm">
                       Voir la commande
                     </Button>
