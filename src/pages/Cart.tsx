@@ -4,11 +4,12 @@ import { Trash2, ShoppingBag, ArrowRight } from "lucide-react";
 import { Header } from "@/components/site/shared";
 import { Footer } from "@/components/site/shared";
 import { useCart } from "@/contexts/CartContext";
-import { formatPrice } from "@/data/products";
+import { useGeoPricing } from "@/contexts/GeoPricingContext";
 import { Button } from "@/components/ui/button";
 
 const Cart = () => {
   const { items, removeFromCart, total, clearCart } = useCart();
+  const { formatPrice } = useGeoPricing();
 
   return (
     <div className="min-h-screen bg-background">

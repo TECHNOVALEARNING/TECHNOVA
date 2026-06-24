@@ -3,7 +3,8 @@ import { motion } from "framer-motion";
 import { ArrowLeft, Star, Users, ShoppingCart, CheckCircle } from "lucide-react";
 import { Header } from "@/components/site/shared";
 import { Footer } from "@/components/site/shared";
-import { products, formatPrice } from "@/data/products";
+import { products } from "@/data/products";
+import { useGeoPricing } from "@/contexts/GeoPricingContext";
 import { useCart } from "@/contexts/CartContext";
 import { Button } from "@/components/ui/button";
 
@@ -25,6 +26,7 @@ const SUBCAT_LABELS: Record<string, string> = {
 
 const ProductDetail = () => {
   const { id } = useParams();
+  const { formatPrice } = useGeoPricing();
   const product = products.find((p) => p.id === id);
   const { addToCart, items } = useCart();
   const inCart = product ? items.some((i) => i.product.id === product.id) : false;

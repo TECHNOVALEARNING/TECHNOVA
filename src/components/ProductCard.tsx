@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Product, useCart } from "@/contexts/CartContext";
-import { formatPrice } from "@/data/products";
+import { useGeoPricing } from "@/contexts/GeoPricingContext";
 
 const categoryLabels: Record<string, string> = {
   course: "Cours",
@@ -30,10 +30,13 @@ const getBadgeClass = (b: string) => {
 
 const ProductCard = ({ product, index = 0 }: { product: Product; index?: number }) => {
   const { addToCart, items } = useCart();
+  const { formatPrice, currency } = useGeoPricing();
   const inCart = items.some((i) => i.product.id === product.id);
 
-  const priceFcfa = formatPrice(product.price);
-  const priceUsd = (product.price / 563).toFixed(2) + " $";
+  const priceMain = formatPrice(product.price);
+  const priceSecondary = currency.code === "XOF"
+    ? (product.price / 600).toFixed(2) + " $"
+    : product.price.toLocaleString("fr-FR") + " FCFA";
 
   const renderStars = (r: number) => {
     const full = Math.floor(r);
@@ -99,8 +102,8 @@ const ProductCard = ({ product, index = 0 }: { product: Product; index?: number 
 
         <div className="price-row">
           <div>
-            <div className="price-main">{priceFcfa}</div>
-            <div className="price-usd">{priceUsd}</div>
+            <div className="price-main">{priceMain}</div>
+            <div className="price-usd">{priceSecondary}</div>
           </div>
         </div>
 

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
+import { useGeoPricing } from "@/contexts/GeoPricingContext";
 
 import StoreContactForm from "@/components/StoreContactForm";
 import StoreReviewSection from "@/components/store/StoreReviewSection";
@@ -74,6 +75,7 @@ type StoreTab = "products" | "about" | "contact" | "reviews";
 const StorePage = ({ customSlug }: { customSlug?: string }) => {
   const { slug: urlSlug } = useParams();
   const slug = customSlug || urlSlug;
+  const { formatPrice, currency } = useGeoPricing();
   const [store, setStore] = useState<StoreInfo | null>(null);
   const [ownerProfile, setOwnerProfile] = useState<OwnerProfile | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
@@ -431,8 +433,13 @@ const StorePage = ({ customSlug }: { customSlug?: string }) => {
                     };
                     const lb = LABEL_MAP[label] || {};
 
-                    const priceFcfa = product.price.toLocaleString() + " FCFA";
-                    const priceUsd = (product.price / 563).toFixed(2) + " $";
+                    const priceMain = formatPrice(product.price);
+                    const priceSecondary = currency.code === "XOF"
+                      ? (product.price / 600).toFixed(2) + " $"
+                      : product.price.toLocaleString("fr-FR") + " FCFA";
+                    const originalPriceFormatted = product.original_price
+                      ? formatPrice(product.original_price)
+                      : null;
 
                     return (
                       <motion.div
@@ -487,12 +494,12 @@ const StorePage = ({ customSlug }: { customSlug?: string }) => {
                           <div>
                             <div className="price-row">
                               <div>
-                                <div className="price-main">{priceFcfa}</div>
-                                <div className="price-usd">{priceUsd}</div>
+                                <div className="price-main">{priceMain}</div>
+                                <div className="price-usd">{priceSecondary}</div>
                               </div>
                               {product.original_price && product.original_price > product.price && (
                                 <span className="text-[11px] text-muted-foreground line-through">
-                                  {product.original_price.toLocaleString()} FCFA
+                                  {originalPriceFormatted}
                                 </span>
                               )}
                             </div>

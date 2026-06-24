@@ -82,6 +82,7 @@ import NotFound from "./pages/NotFound";
 import SupportChatbot from "./components/SupportChatbot";
 import { useCustomDomain, CustomDomainApp } from "./components/CustomDomainRouter";
 import { Loader2 } from "lucide-react";
+import { GeoPricingProvider } from "./contexts/GeoPricingContext";
 
 const queryClient = new QueryClient();
 
@@ -227,11 +228,13 @@ const AppContent = () => {
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <CartProvider>
-        <Toaster />
-        <Sonner />
-        <AppContent />
-      </CartProvider>
+      <GeoPricingProvider>
+        <CartProvider>
+          <Toaster />
+          <Sonner />
+          <AppContent />
+        </CartProvider>
+      </GeoPricingProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

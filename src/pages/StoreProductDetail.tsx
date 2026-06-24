@@ -29,6 +29,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { supabase } from "@/integrations/supabase/client";
+import { useGeoPricing } from "@/contexts/GeoPricingContext";
 
 import ProductReportDialog from "@/components/store/ProductReportDialog";
 import { processDescriptionWithVideos } from "@/components/RichTextEditor";
@@ -93,6 +94,7 @@ const typeLabels: Record<string, string> = {
 const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
   const { slug: urlSlug, productId } = useParams();
   const navigate = useNavigate();
+  const { formatPrice } = useGeoPricing();
   const slug = customSlug || urlSlug;
   const [profile, setProfile] = useState<Profile | null>(null);
   const [product, setProduct] = useState<Product | null>(null);
@@ -358,11 +360,11 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                 </h1>
                 <div className="mt-3 flex items-baseline gap-2">
                   <span className="text-2xl font-extrabold" style={{ color: brandColor }}>
-                    {product.price.toLocaleString()} FCFA
+                    {formatPrice(product.price)}
                   </span>
                   {product.original_price && product.original_price > product.price && (
                     <span className="text-sm text-gray-400 line-through">
-                      {product.original_price.toLocaleString()} FCFA
+                      {formatPrice(product.original_price)}
                     </span>
                   )}
                 </div>
@@ -566,11 +568,11 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                 <div>
                   <div className="flex items-baseline gap-2 flex-wrap">
                     <span className="text-3xl sm:text-4xl font-extrabold" style={{ color: brandColor }}>
-                      {product.price.toLocaleString()} FCFA
+                      {formatPrice(product.price)}
                     </span>
                     {product.original_price && product.original_price > product.price && (
                       <span className="text-base text-gray-400 line-through">
-                        {product.original_price.toLocaleString()}
+                        {formatPrice(product.original_price)}
                       </span>
                     )}
                     {discount && (
@@ -686,9 +688,9 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                       <div className="p-3 space-y-1">
                         <h3 className="text-sm font-semibold text-gray-900 line-clamp-2 leading-tight">{rp.title}</h3>
                         <div className="flex items-baseline gap-1.5">
-                          <span className="text-sm font-bold" style={{ color: brandColor }}>{rp.price.toLocaleString()} FCFA</span>
+                          <span className="text-sm font-bold" style={{ color: brandColor }}>{formatPrice(rp.price)}</span>
                           {rp.original_price && rp.original_price > rp.price && (
-                            <span className="text-[10px] line-through text-gray-300">{rp.original_price.toLocaleString()}</span>
+                            <span className="text-[10px] line-through text-gray-300">{formatPrice(rp.original_price)}</span>
                           )}
                         </div>
                       </div>
@@ -708,7 +710,7 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
             <div className="text-[10px] text-gray-400 uppercase tracking-wide">Prix</div>
             <div className="flex items-baseline gap-1.5">
               <span className="text-lg font-extrabold truncate" style={{ color: brandColor }}>
-                {product.price.toLocaleString()} FCFA
+                {formatPrice(product.price)}
               </span>
               {discount && (
                 <span className="text-[10px] font-bold text-emerald-600">-{discount}%</span>

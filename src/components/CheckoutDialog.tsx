@@ -3,6 +3,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
+import { useGeoPricing } from "@/contexts/GeoPricingContext";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -59,13 +60,34 @@ const CheckoutDialog = ({ open, onOpenChange, product, storeSlug, brandColor, fu
   const [shipPostal, setShipPostal] = useState("");
   const [shipCountry, setShipCountry] = useState("");
 
+  const { countryCode, loading: geoLoading } = useGeoPricing();
+
+  const map2LetterTo3Letter: Record<string, string> = {
+    BJ: "BEN", CI: "CIV", CM: "CMR", CD: "COD", CG: "COG",
+    GA: "GAB", KE: "KEN", RW: "RWA", SN: "SEN", SL: "SLE",
+    UG: "UGA", ZM: "ZMB"
+  };
+
   // Country & provider (PawaPay)
   const [country, setCountry] = useState<PawaPayCountry>(
-    () => pawapayCountries.find((c) => c.code === "BEN") || pawapayCountries[0]
+    () => pawapayCountries.find((c) => c.code === (map2LetterTo3Letter[countryCode] || "BEN")) || pawapayCountries[0]
   );
   const [provider, setProvider] = useState<PawaPayProvider>(country.deposit[0]);
   const [countryOpen, setCountryOpen] = useState(false);
   const [countrySearch, setCountrySearch] = useState("");
+
+  // Sync with detected country once it finishes loading
+  useEffect(() => {
+    if (!geoLoading && countryCode) {
+      const default3LetterCode = map2LetterTo3Letter[countryCode];
+      if (default3LetterCode) {
+        const found = pawapayCountries.find((c) => c.code === default3LetterCode);
+        if (found) {
+          setCountry(found);
+        }
+      }
+    }
+  }, [countryCode, geoLoading]);
 
   useEffect(() => {
     setProvider(country.deposit[0]);
