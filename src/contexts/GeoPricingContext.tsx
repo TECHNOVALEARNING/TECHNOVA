@@ -89,25 +89,40 @@ export const GeoPricingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     return CURRENCY_MAP["US"];
   };
 
-  const changeCountry = (code: string) => {
+  const applyCountryAndCurrency = (code: string) => {
     const cleanCode = code.toUpperCase();
     setCountryCode(cleanCode);
     setCurrency(resolveCurrency(cleanCode));
-    localStorage.setItem("tech_detected_country", cleanCode);
+  };
+
+  const changeCountry = (code: string) => {
+    const cleanCode = code.toUpperCase();
+    applyCountryAndCurrency(cleanCode);
+    localStorage.setItem("tech_user_country_override", cleanCode);
   };
 
   useEffect(() => {
     const detect = async () => {
-      // 1. Check local storage
-      const cached = localStorage.getItem("tech_detected_country");
-      if (cached) {
-        setCountryCode(cached);
-        setCurrency(resolveCurrency(cached));
+      // Clear legacy localStorage cache from previous versions
+      localStorage.removeItem("tech_detected_country");
+
+      // 1. Check for manual override first (highest priority)
+      const override = localStorage.getItem("tech_user_country_override");
+      if (override) {
+        applyCountryAndCurrency(override);
         setLoading(false);
         return;
       }
 
-      // 2. Fetch from ipapi.co
+      // 2. Check sessionStorage for session-based cache (to avoid duplicate API hits)
+      const cached = sessionStorage.getItem("tech_detected_country");
+      if (cached) {
+        applyCountryAndCurrency(cached);
+        setLoading(false);
+        return;
+      }
+
+      // 3. Fetch from ipapi.co
       try {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 2500);
@@ -118,7 +133,8 @@ export const GeoPricingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         if (res.ok) {
           const code = (await res.text()).trim().toUpperCase();
           if (code && code.length === 2) {
-            changeCountry(code);
+            applyCountryAndCurrency(code);
+            sessionStorage.setItem("tech_detected_country", code);
             setLoading(false);
             return;
           }
@@ -127,7 +143,7 @@ export const GeoPricingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         console.warn("ipapi.co failed, trying ip-api.com", e);
       }
 
-      // 3. Fallback to ip-api.com
+      // 4. Fallback to ip-api.com
       try {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 2500);
@@ -139,7 +155,8 @@ export const GeoPricingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
           const data = await res.json();
           const code = data.countryCode?.trim().toUpperCase();
           if (code && code.length === 2) {
-            changeCountry(code);
+            applyCountryAndCurrency(code);
+            sessionStorage.setItem("tech_detected_country", code);
             setLoading(false);
             return;
           }
@@ -148,14 +165,15 @@ export const GeoPricingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         console.warn("ip-api.com failed", e);
       }
 
-      // 4. Fallback to browser locale
+      // 5. Fallback to browser locale
       try {
         const locale = navigator.language || (navigator as any).userLanguage;
         if (locale) {
           const parts = locale.split("-");
           const code = parts[parts.length - 1].toUpperCase();
           if (code && code.length === 2) {
-            changeCountry(code);
+            applyCountryAndCurrency(code);
+            sessionStorage.setItem("tech_detected_country", code);
             setLoading(false);
             return;
           }
@@ -164,8 +182,9 @@ export const GeoPricingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         console.warn("locale detection failed", e);
       }
 
-      // 5. Ultimate default: Benin
-      changeCountry("BJ");
+      // 6. Ultimate default: Benin
+      applyCountryAndCurrency("BJ");
+      sessionStorage.setItem("tech_detected_country", "BJ");
       setLoading(false);
     };
 

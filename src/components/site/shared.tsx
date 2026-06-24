@@ -8,6 +8,7 @@ import {
 import { useState, type ReactNode } from "react";
 import siteLogo from "@/assets/logo.png";
 import { useAuth } from "@/contexts/AuthContext";
+import { useGeoPricing } from "@/contexts/GeoPricingContext";
 
 /* ---------- Logo ---------- */
 export const Logo = ({ className = "" }: { className?: string }) => (
@@ -583,6 +584,7 @@ const LABEL_MAP: Record<string, { cls: string; fr: string; en: string }> = {
 
 export const CourseCard = ({ c, i = 0 }: { c: Course; i?: number }) => {
   const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+  const { formatPrice, currency } = useGeoPricing();
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -590,12 +592,16 @@ export const CourseCard = ({ c, i = 0 }: { c: Course; i?: number }) => {
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
 
-  // Parse numerical price to format in FCFA and USD
+  // Parse numerical price to format
   const numericPrice = parseFloat(c.price.replace(/[^\d.]/g, "")) || 0;
   const numericOldPrice = c.oldPrice ? (parseFloat(c.oldPrice.replace(/[^\d.]/g, "")) || 0) : null;
   
-  const priceFcfa = numericPrice > 0 ? new Intl.NumberFormat('fr-FR').format(numericPrice) + " F" : "Gratuit";
-  const priceUsd = numericPrice > 0 ? (numericPrice / 563).toFixed(2) + " $" : "Free";
+  const priceMain = numericPrice > 0 ? formatPrice(numericPrice) : (lang === 'fr' ? "Gratuit" : "Free");
+  const priceSecondary = numericPrice > 0 ? (
+    currency.code === "XOF"
+      ? (numericPrice / 600).toFixed(2) + " $"
+      : numericPrice.toLocaleString("fr-FR") + " FCFA"
+  ) : "";
   
   // Stable hash based on course title to derive a fixed visual mock for stars rating, students count, and badge
   const hash = c.title.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
@@ -647,8 +653,8 @@ export const CourseCard = ({ c, i = 0 }: { c: Course; i?: number }) => {
         </div>
         <div className="price-row">
           <div>
-            <div className="price-main">{priceFcfa}</div>
-            <div className="price-usd">{priceUsd}</div>
+            <div className="price-main">{priceMain}</div>
+            <div className="price-usd">{priceSecondary}</div>
           </div>
         </div>
         <Link className="btn-buy" to={`/checkout/${c.slug}`}>
