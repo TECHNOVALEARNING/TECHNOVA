@@ -39,11 +39,78 @@ const FALLBACK_ARTICLES_DETAILS: { [key: string]: any } = {
 };
 
 const MOCK_LIST = [
-  { id: "795", title: "Comment les systèmes de recommandation...", category: "Actu", image: "https://inoutech.net/images/34803972-1920.jpg", date: "5 juin 2024", readingTime: "5 min" },
-  { id: "807", title: "Comment les technologies d'imagerie avancée...", category: "Actu", image: "https://inoutech.net/images/wp-807-600.jpg", date: "5 juin 2024", readingTime: "6 min" },
-  { id: "801", title: "Comment utiliser les casques VR pour l'entraînement...", category: "High tech", image: "https://inoutech.net/images/wp-801-600.jpg", date: "5 juin 2024", readingTime: "5 min" },
-  { id: "892", title: "Make integromat : passez à l'automatisation...", category: "High tech", image: "https://inoutech.net/images/wp-892-600.jpg", date: "30 juillet 2024", readingTime: "7 min" },
-  { id: "933", title: "10 clés pour collaborer avec une agence...", category: "Internet", image: "https://inoutech.net/images/wp-933-600.jpg", date: "28 septembre 2025", readingTime: "10 min" }
+  {
+    id: "795",
+    title: "Comment les systèmes de recommandation peuvent-ils être personnalisés pour améliorer l'expérience utilisateur dans les services de streaming?",
+    category: "Actu",
+    image: "https://inoutech.net/images/34803972-1920.jpg",
+    date: "5 juin 2024",
+    readingTime: "5 min"
+  },
+  {
+    id: "807",
+    title: "Comment les technologies d'imagerie avancée peuvent-elles être utilisées pour améliorer le diagnostic en oncologie?",
+    category: "Actu",
+    image: "https://inoutech.net/images/wp-807-600.jpg",
+    date: "5 juin 2024",
+    readingTime: "6 min"
+  },
+  {
+    id: "801",
+    title: "Comment utiliser les casques VR pour l'entraînement des pilotes de ligne?",
+    category: "High tech",
+    image: "https://inoutech.net/images/wp-801-600.jpg",
+    date: "5 juin 2024",
+    readingTime: "5 min"
+  },
+  {
+    id: "892",
+    title: "Make integromat : passez à l'automatisation facile",
+    category: "High tech",
+    image: "https://inoutech.net/images/wp-892-600.jpg",
+    date: "30 juillet 2024",
+    readingTime: "7 min"
+  },
+  {
+    id: "933",
+    title: "10 clés pour collaborer efficacement avec une agence de développement web",
+    category: "Internet",
+    image: "https://inoutech.net/images/wp-933-600.jpg",
+    date: "28 septembre 2025",
+    readingTime: "10 min"
+  },
+  {
+    id: "797",
+    title: "Comment développer un jeu d'énigmes qui exploite pleinement la réalité augmentée sur smartphone?",
+    category: "Jeux-video",
+    image: "https://inoutech.net/images/wp-797-600.jpg",
+    date: "5 juin 2024",
+    readingTime: "6 min"
+  },
+  {
+    id: "900",
+    title: "Découvrez les outils IA pour optimiser votre SEO facilement",
+    category: "Internet",
+    image: "https://inoutech.net/images/wp-900-600.jpg",
+    date: "29 septembre 2024",
+    readingTime: "5 min"
+  },
+  {
+    id: "813",
+    title: "Quelle est la meilleure méthode pour intégrer l'IA dans le service client des banques?",
+    category: "High tech",
+    image: "https://inoutech.net/images/wp-813-600.jpg",
+    date: "5 juin 2024",
+    readingTime: "5 min"
+  },
+  {
+    id: "898",
+    title: "Rôle et compétences d'un directeur de programme informatique freelance",
+    category: "Actu",
+    image: "https://inoutech.net/images/wp-898-600.jpg",
+    date: "27 septembre 2024",
+    readingTime: "5 min"
+  }
 ];
 
 export default function BlogPostDetail() {

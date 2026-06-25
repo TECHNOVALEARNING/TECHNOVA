@@ -82,85 +82,75 @@ async function scrapeArticleDetail(id: string) {
 // Helper to scrape list of articles from home or category HTML
 function parseArticlesList(html: string) {
   const articles: any[] = [];
-
-  // 1. Check for the category page pattern (article-card)
-  if (html.includes('class="article-card"')) {
-    const chunks = html.split('class="article-card"').slice(1);
-    for (const chunk of chunks) {
-      try {
-        const idMatch = chunk.match(/href="\/archives\/(\d+)"/);
-        if (!idMatch) continue;
-        const id = idMatch[1];
-
-        const imgMatch = chunk.match(/<img[^>]+src="([^"]+)"/);
-        let image = imgMatch ? imgMatch[1] : '';
-        if (image && !image.startsWith('http')) {
-          image = 'https://inoutech.net' + image;
-        }
-
-        const tagMatch = chunk.match(/class="article-card-tag">([^<]+)</) || chunk.match(/class="article-list-tag">([^<]+)</);
-        const category = tagMatch ? tagMatch[1].trim() : 'Actu';
-
-        const titleMatch = chunk.match(/<h2><a[^>]+>([^<]+)<\/a><\/h2>/) || chunk.match(/<h2>([^<]+)<\/h2>/);
-        const title = titleMatch ? titleMatch[1].replace(/&#039;/g, "'").replace(/&amp;/g, '&').replace(/&quot;/g, '"').trim() : '';
-
-        const descMatch = chunk.match(/<p>([^<]+)<\/p>/);
-        const excerpt = descMatch ? descMatch[1].replace(/&#039;/g, "'").replace(/&amp;/g, '&').replace(/&quot;/g, '"').trim() : '';
-
-        const metaSection = chunk.split('class="article-card-meta"')[1] || '';
-        const spans = metaSection.split('</span>');
-        const dateSpan = spans[0] ? spans[0].match(/<span>([^<]+)$/) || spans[0].match(/>([^<]+)$/) : null;
-        const date = dateSpan ? dateSpan[1].trim() : '5 juin 2024';
-
-        const readSpan = spans[1] ? spans[1].match(/>([^<&]+)/) : null;
-        const readingTime = readSpan ? readSpan[1].replace('de lecture', '').trim() : '5 min';
-
-        articles.push({ id, title, image, category, excerpt, date, readingTime });
-      } catch (e) {
-        console.error("Error parsing category article chunk", e);
+  
+  // Split by href="/archives/
+  const chunks = html.split('href="/archives/').slice(1);
+  
+  for (const chunk of chunks) {
+    try {
+      // 1. Get ID at the start of the chunk
+      const idMatch = chunk.match(/^(\d+)/);
+      if (!idMatch) continue;
+      const id = idMatch[1];
+      
+      // We only care about chunks that represent article cards or list items
+      if (!chunk.includes('class="article-card') && !chunk.includes('class="article-list-item')) {
+        continue;
       }
-    }
-  }
-
-  // 2. Check for the homepage pattern (article-list-item)
-  if (html.includes('class="article-list-item"')) {
-    const chunks = html.split('class="article-list-item"').slice(1);
-    for (const chunk of chunks) {
-      try {
-        const idMatch = chunk.match(/href="\/archives\/(\d+)"/);
-        if (!idMatch) continue;
-        const id = idMatch[1];
-
-        const imgMatch = chunk.match(/<img[^>]+src="([^"]+)"/);
-        let image = imgMatch ? imgMatch[1] : '';
-        if (image && !image.startsWith('http')) {
-          image = 'https://inoutech.net' + image;
-        }
-
-        const tagMatch = chunk.match(/class="article-list-tag">([^<]+)</);
-        const category = tagMatch ? tagMatch[1].trim() : 'Actu';
-
-        const titleMatch = chunk.match(/<h2>([^<]+)<\/h2>/) || chunk.match(/<h2><a[^>]*>([^<]+)<\/a><\/h2>/);
-        const title = titleMatch ? titleMatch[1].replace(/&#039;/g, "'").replace(/&amp;/g, '&').replace(/&quot;/g, '"').trim() : '';
-
-        const descMatch = chunk.match(/<p>([^<]+)<\/p>/);
-        const excerpt = descMatch ? descMatch[1].replace(/&#039;/g, "'").replace(/&amp;/g, '&').replace(/&quot;/g, '"').trim() : '';
-
-        const metaSection = chunk.split('class="article-list-meta"')[1] || '';
-        const spans = metaSection.split('</span>');
+      
+      // 2. Extract image
+      const imgMatch = chunk.match(/<img[^>]+src="([^"]+)"/);
+      let image = imgMatch ? imgMatch[1] : '';
+      if (image && !image.startsWith('http')) {
+        image = 'https://inoutech.net' + image;
+      }
+      
+      // 3. Extract category/tag
+      const tagMatch = chunk.match(/class="article-card-tag">([^<]+)</) || 
+                       chunk.match(/class="article-list-tag">([^<]+)</);
+      const category = tagMatch ? tagMatch[1].trim() : 'Actu';
+      
+      // 4. Extract title
+      const titleMatch = chunk.match(/<h2><a[^>]*>([^<]+)<\/a><\/h2>/) || 
+                         chunk.match(/<h2>([^<]+)<\/h2>/);
+      const title = titleMatch ? titleMatch[1]
+        .replace(/&#039;/g, "'")
+        .replace(/&amp;/g, '&')
+        .replace(/&quot;/g, '"')
+        .trim() : '';
+        
+      // 5. Extract excerpt
+      const descMatch = chunk.match(/<p>([^<]+)<\/p>/);
+      const excerpt = descMatch ? descMatch[1]
+        .replace(/&#039;/g, "'")
+        .replace(/&amp;/g, '&')
+        .replace(/&quot;/g, '"')
+        .trim() : '';
+        
+      // 6. Extract date and reading time
+      const metaSectionMatch = chunk.match(/class="article-(?:card|list)-meta"[^>]*>([^]+?)<\/div>/) || 
+                               chunk.match(/class="article-(?:card|list)-meta"[^>]*>([^]+?)<\/p>/);
+      
+      let date = '5 juin 2024';
+      let readingTime = '5 min';
+      
+      if (metaSectionMatch) {
+        const metaContent = metaSectionMatch[1];
+        const spans = metaContent.split('</span>');
+        
         const dateSpan = spans[0] ? spans[0].match(/>([^<]+)$/) || spans[0].match(/<span>([^<]+)$/) : null;
-        const date = dateSpan ? dateSpan[1].trim() : '5 juin 2024';
-
-        const readSpan = spans[1] ? spans[1].match(/>([^<&]+)/) || spans[1].match(/>([^<]+)$/) : null;
-        const readingTime = readSpan ? readSpan[1].replace('de lecture', '').trim() : '5 min';
-
-        articles.push({ id, title, image, category, excerpt, date, readingTime });
-      } catch (e) {
-        console.error("Error parsing homepage article chunk", e);
+        if (dateSpan) date = dateSpan[1].trim();
+        
+        const readSpan = spans[1] ? spans[1].match(/>([^<&]+)/) || spans[1].match(/<span>([^<&]+)/) : null;
+        if (readSpan) readingTime = readSpan[1].replace('de lecture', '').trim();
       }
+      
+      articles.push({ id, title, image, category, excerpt, date, readingTime });
+    } catch (e) {
+      console.error("Error parsing article chunk", e);
     }
   }
-
+  
   // Remove duplicates
   return Array.from(new Map(articles.map(item => [item.id, item])).values());
 }
