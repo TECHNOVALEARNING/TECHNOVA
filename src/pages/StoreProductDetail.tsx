@@ -793,16 +793,24 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                 <div className="space-y-2">
                   <p className="text-[11px] uppercase tracking-wide text-gray-400 font-semibold">Moyens de paiement</p>
                   <div className="flex items-center gap-1.5 flex-wrap">
-                    <div className="h-7 w-10 rounded-md bg-[#1A1F71] flex items-center justify-center">
+                    <div className="h-7 w-10 rounded-md bg-[#1A1F71] flex items-center justify-center shadow-sm">
                       <span className="text-[8px] font-bold text-white">VISA</span>
                     </div>
-                    <div className="h-7 w-10 rounded-md bg-[#EB001B] flex items-center justify-center">
+                    <div className="h-7 w-10 rounded-md bg-[#EB001B] flex items-center justify-center shadow-sm">
                       <span className="text-[8px] font-bold text-white">MC</span>
                     </div>
-                    <img src="/providers/mtn.svg" alt="MTN" className="h-7 w-7 rounded-full object-contain" />
-                    <img src="/providers/orange.svg" alt="Orange" className="h-7 w-7 rounded-full object-contain" />
-                    <img src="/providers/moov.svg" alt="Moov" className="h-7 w-7 rounded-full object-contain" />
-                    <img src="/providers/wave.svg" alt="Wave" className="h-7 w-7 rounded-full object-contain" />
+                    <div className="h-7 w-10 rounded-md bg-[#FFCC00] overflow-hidden flex items-center justify-center shadow-sm">
+                      <img src="/providers/mtn.svg" alt="MTN" className="h-full w-full object-contain p-0.5" />
+                    </div>
+                    <div className="h-7 w-10 rounded-md bg-[#FF7900] overflow-hidden flex items-center justify-center shadow-sm">
+                      <img src="/providers/orange.svg" alt="Orange" className="h-full w-full object-contain p-0.5" />
+                    </div>
+                    <div className="h-7 w-10 rounded-md bg-[#0066B3] overflow-hidden flex items-center justify-center shadow-sm">
+                      <img src="/providers/moov.svg" alt="Moov" className="h-full w-full object-contain p-0.5" />
+                    </div>
+                    <div className="h-7 w-10 rounded-md bg-[#1DC8F1] overflow-hidden flex items-center justify-center shadow-sm">
+                      <img src="/providers/wave.svg" alt="Wave" className="h-full w-full object-contain p-0.5" />
+                    </div>
                   </div>
                 </div>
 

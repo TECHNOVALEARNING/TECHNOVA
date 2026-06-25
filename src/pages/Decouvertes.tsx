@@ -89,14 +89,6 @@ const Decouvertes = () => {
       <main className="flex-1 pt-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full pb-16">
         {/* Hero Section */}
         <div className="text-center max-w-3xl mx-auto mt-8 mb-12">
-          <motion.div 
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[color:var(--blue-soft)] text-[color:var(--blue)] text-xs font-mono uppercase tracking-wider mb-4 border border-[color:var(--blue-light)]/20"
-          >
-            <Sparkles className="h-3 w-3" />
-            {lang === "fr" ? "Curations technologiques" : "Tech curation"}
-          </motion.div>
           
           <motion.h1 
             initial={{ opacity: 0, y: 15 }}

@@ -26,10 +26,6 @@ export default function ToolsDirectoryPage() {
         <section className="relative overflow-hidden border-b border-border pt-20 md:pt-28">
           <div className="absolute inset-0 bg-gradient-to-br from-[#0071e3]/5 to-transparent pointer-events-none" />
           <div className="container mx-auto px-4 pb-16 pt-8 md:pb-20 md:pt-12 relative z-10 text-center">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium mb-6 bg-primary/10 text-primary border border-primary/20">
-              <Sparkles className="w-4 h-4" />
-              <span>{lang === "fr" ? "Annuaire Officiel" : "Official Directory"}</span>
-            </div>
             <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 text-foreground">
               {lang === "fr" ? "Les Outils Qui " : "Tools That "} <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400">{lang === "fr" ? "Changent La Donne" : "Change The Game"}</span>
             </h1>

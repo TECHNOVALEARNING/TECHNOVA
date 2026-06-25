@@ -805,9 +805,6 @@ const Jobs = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />
         <div className="container mx-auto px-6 text-center relative z-10">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[color:var(--pastel-blue)] text-[color:var(--primary)] text-xs font-mono uppercase tracking-wider mb-4">
-              <Briefcase className="h-3 w-3" /> TechNova Careers
-            </span>
             <h1 className="text-4xl md:text-6xl font-extrabold text-foreground mb-6">
               {lang === "fr" ? "Espace " : "TechNova "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400">

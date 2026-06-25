@@ -178,6 +178,10 @@
     background-image: var(--gradient-primary);
   }
 
+  .bg-primary-gradient {
+    background-image: var(--gradient-primary);
+  }
+
   .bg-mesh {
     background-image: var(--gradient-mesh);
   }

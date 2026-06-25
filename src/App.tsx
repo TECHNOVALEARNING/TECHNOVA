@@ -46,6 +46,8 @@ import BuyerLogin from "./pages/BuyerLogin";
 import BuyerOAuthCallback from "./pages/BuyerOAuthCallback";
 import BuyerDashboard from "./pages/BuyerDashboard";
 import BuyerOrderDetail from "./pages/BuyerOrderDetail";
+import Blog from "./pages/Blog";
+import BlogPostDetail from "./pages/BlogPostDetail";
 
 import DashboardOverview from "./pages/dashboard/DashboardOverview";
 import DashboardProducts from "./pages/dashboard/DashboardProducts";
@@ -145,6 +147,8 @@ const AppContent = () => {
               <Route path="/fichiers" element={<Fichiers />} />
               <Route path="/licences" element={<LicencesPage />} />
               <Route path="/e-services" element={<EServices />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:id" element={<BlogPostDetail />} />
               
               <Route path="/about" element={<About />} />
               <Route path="/outils-digitaux" element={<ToolsDirectoryPage />} />

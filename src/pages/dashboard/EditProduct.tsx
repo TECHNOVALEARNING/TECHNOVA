@@ -870,17 +870,17 @@ const EditProduct = () => {
                         <>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
                         {[
-                          { id: "pdf", label: "Document (PDF)", icon: PdfIcon, color: "text-red-500", border: "border-red-200", bg: "bg-red-50" },
-                          { id: "audio", label: "Audio (MP3)", icon: FileAudio, color: "text-purple-500", border: "border-purple-200", bg: "bg-purple-50" },
-                          { id: "image", label: "Image (PNG/JPG)", icon: ImageIcon, color: "text-green-500", border: "border-green-200", bg: "bg-green-50" },
-                          { id: "video", label: "Vidéo (Lien)", icon: FileVideo, color: "text-blue-500", border: "border-blue-200", bg: "bg-blue-50" }
+                          { id: "pdf", label: "Document (PDF)", icon: PdfIcon, color: "text-red-500", border: "border-red-200 dark:border-red-900/50", bg: "bg-red-50 dark:bg-red-950/30" },
+                          { id: "audio", label: "Audio (MP3)", icon: FileAudio, color: "text-purple-500", border: "border-purple-200 dark:border-purple-900/50", bg: "bg-purple-50 dark:bg-purple-950/30" },
+                          { id: "image", label: "Image (PNG/JPG)", icon: ImageIcon, color: "text-green-500", border: "border-green-200 dark:border-green-900/50", bg: "bg-green-50 dark:bg-green-950/30" },
+                          { id: "video", label: "Vidéo (Lien)", icon: FileVideo, color: "text-blue-500", border: "border-blue-200 dark:border-blue-900/50", bg: "bg-blue-50 dark:bg-blue-950/30" }
                         ].map((fmt) => (
                           <button
                             key={fmt.id}
                             onClick={() => setFileFormat(fmt.id as any)}
                             className={`p-4 rounded-xl border-2 text-center transition-all ${
                               fileFormat === fmt.id
-                                ? `${fmt.border} ${fmt.bg} dark:bg-opacity-10 shadow-sm`
+                                ? `${fmt.border} ${fmt.bg} shadow-sm`
                                 : "border-border hover:border-muted-foreground/30"
                             }`}
                           >

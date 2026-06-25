@@ -484,7 +484,6 @@ const Index = () => {
         <div className="mx-auto" style={{ maxWidth: 1280, padding: "0 24px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 40, flexWrap: "wrap", gap: 16 }}>
             <div>
-              <span className="tn-eyebrow">{lang === 'fr' ? 'Formations' : 'Courses'}</span>
               <h2 className="section-title">
                 <span className="title-motion-wrap">
                   <span className="title-motion">
@@ -494,7 +493,7 @@ const Index = () => {
                 </span>
               </h2>
               <p className="section-sub" style={{ marginTop: 8 }}>
-                {lang === 'fr' ? 'Investissez dans votre avenir à petit prix.' : 'Invest in your future at a low price.'}
+                {lang === 'fr' ? 'Construisez votre avenir avec nos ebooks sélectionnés.' : 'Build your future with our selected ebooks.'}
               </p>
             </div>
           </div>

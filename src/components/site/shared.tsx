@@ -76,7 +76,7 @@ export const Header = () => {
     { to: "/templates", label: "Templates" },
     { to: "/#apps", label: lang === "fr" ? "Technova Apps" : "Technova Apps" },
     { to: "/blog", label: lang === "fr" ? "Blog" : "Blog" },
-    { to: "/premium", label: lang === "fr" ? "Espace Premium" : "Premium Space"}
+    // { to: "/premium", label: lang === "fr" ? "Espace Premium" : "Premium Space"}
   ];
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, to: string) => {
@@ -267,7 +267,7 @@ export const Footer = () => {
         <div className="sm:col-span-2">
           <Logo className="mb-2" />
           <p className="mt-4 text-white/70 max-w-md leading-relaxed text-sm sm:text-base">
-            {lang === 'fr' ? 'TECHNOVA Learning : la plateforme de formations & produits numériques à petit prix. Cybersécurité, IA, marketing, entrepreneuriat — apprenez ce que les entreprises recherchent vraiment.' : 'TECHNOVA Learning: the ultimate platform for digital courses & products at low prices. Cybersecurity, AI, marketing, entrepreneurship — learn what companies are really looking for.'}
+            {lang === 'fr' ? 'TECHNOVA Learning : la plateforme de formations & produits numériques. Cybersécurité, IA, marketing, entrepreneuriat — apprenez ce que les entreprises recherchent vraiment.' : 'TECHNOVA Learning: the ultimate platform for digital courses & products at low prices. Cybersecurity, AI, marketing, entrepreneurship — learn what companies are really looking for.'}
           </p>
         <div className="mt-6 flex flex-wrap gap-3">
           <a href="https://www.facebook.com/share/18GYGMg9o8/" className="h-10 w-10 rounded-full bg-card/10 hover:bg-[#1877F2] transition-colors flex items-center justify-center text-white shadow-sm hover:-translate-y-1 duration-300">
@@ -332,6 +332,7 @@ export const Footer = () => {
           {[
             { label: lang === 'fr' ? "Formations" : "Courses", href: "/formations" },
             { label: lang === 'fr' ? "À propos" : "About", href: "/about" },
+            { label: "Blog", href: "/blog" },
             { label: "FAQ", href: "/faq" },
           ].map((lnk) => (
             <li key={lnk.label} className="flex items-center gap-2">

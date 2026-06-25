@@ -159,9 +159,6 @@ const TemplatesPage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-blue-500/25 bg-[color:var(--blue-soft)] px-3.5 py-1 text-xs font-semibold text-[color:var(--blue)] backdrop-blur mb-6 animate-pulse">
-              <Sparkles className="h-3.5 w-3.5 animate-spin" style={{ animationDuration: "3s" }} /> {lang === "fr" ? "Ressources & Templates Premium" : "Premium Resources & Templates"}
-            </div>
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-[color:var(--text)] font-display leading-[1.15] mb-6" style={{ fontFamily: "'Outfit', sans-serif" }}>
               {lang === "fr" ? <>Optimisez votre <span className="bg-gradient-to-r from-blue-500 to-indigo-500 bg-clip-text text-transparent">Productivité</span></> : <>Optimize Your <span className="bg-gradient-to-r from-blue-500 to-indigo-500 bg-clip-text text-transparent">Productivity</span></>}
             </h1>
