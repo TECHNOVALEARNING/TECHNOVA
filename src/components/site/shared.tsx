@@ -63,8 +63,8 @@ export const Header = () => {
 
   const links = [
     { to: "/", label: lang === "fr" ? "Accueil" : "Home" },
-    { to: "/#courses", label: lang === "fr" ? "Nos Produits Digitaux" : "Our Digital Products" },
     { to: "/formations", label: lang === "fr" ? "Nos formations" : "Courses" },
+    { to: "/#courses", label: lang === "fr" ? "Nos Produits Digitaux" : "Our Digital Products" },
     { to: "/admin-products", label: lang === "fr" ? "Store" : "Store" },
   ];
 
@@ -74,10 +74,9 @@ export const Header = () => {
     { to: "/outils-digitaux", label: lang === "fr" ? "Outils de Productivité" : "Productivity Tools" },
     { to: "/decouvertes", label: lang === "fr" ? "Découvertes" : "Discoveries" },
     { to: "/templates", label: "Templates" },
-    { to: "/faq", label: "FAQ" },
     { to: "/#apps", label: lang === "fr" ? "Technova Apps" : "Technova Apps" },
-    { to: "/register", label: lang === "fr" ? "Espace Vendeur" : "Seller Space" },
-    { to: "/about", label: lang === "fr" ? "À propos" : "About" },
+    { to: "/blog", label: lang === "fr" ? "Blog" : "Blog" },
+    { to: "/premium", label: lang === "fr" ? "Espace Premium" : "Premium Space"}
   ];
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, to: string) => {
