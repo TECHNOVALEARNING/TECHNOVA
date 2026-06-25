@@ -304,12 +304,19 @@ const StorePage = ({ customSlug }: { customSlug?: string }) => {
             ))}
           </nav>
 
-          <a href="https://technovalearning.com/buyer-login">
-            <Button variant="outline" size="sm" className="text-xs gap-1.5 border-gray-200 text-gray-700 hover:bg-gray-50">
-              <ShoppingBag className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">Mes achats</span>
-            </Button>
-          </a>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Link to="/" className="text-xs text-gray-500 hover:text-gray-900 font-medium transition-colors">
+              <span className="hidden sm:inline">Accueil TECHNOVA</span>
+              <span className="sm:hidden">Accueil</span>
+            </Link>
+            <span className="text-gray-200">|</span>
+            <a href="https://technovalearning.com/buyer-login">
+              <Button variant="outline" size="sm" className="text-xs gap-1.5 border-gray-200 text-gray-700 hover:bg-gray-50">
+                <ShoppingBag className="h-3.5 w-3.5" />
+                <span className="hidden sm:inline">Mes achats</span>
+              </Button>
+            </a>
+          </div>
         </div>
         {/* Mobile nav */}
         <div className="md:hidden flex items-center gap-5 px-4 pb-2 border-t border-gray-50 pt-2 overflow-x-auto">

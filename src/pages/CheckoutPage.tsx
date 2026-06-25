@@ -82,11 +82,12 @@ const CheckoutPage = ({ customSlug }: { customSlug?: string }) => {
         <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-violet-100/60">
           <div className="max-w-6xl mx-auto flex items-center justify-between px-4 sm:px-6 h-14">
             <Link
-              to={storeSlug ? `/store/${storeSlug}` : "/"}
+              to={storeSlug ? (productId ? `/store/${storeSlug}/${productId}` : `/store/${storeSlug}`) : (productId ? `/${productId}` : "/")}
               className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900"
             >
               <ArrowLeft className="h-4 w-4" />
-              <span className="hidden sm:inline">Retour</span>
+              <span className="hidden sm:inline">Retour au produit</span>
+              <span className="sm:hidden">Retour</span>
             </Link>
             <div className="flex items-center gap-2">
               {logoUrl ? (
@@ -130,7 +131,7 @@ const CheckoutPage = ({ customSlug }: { customSlug?: string }) => {
           )}
 
           <p className="text-center text-[11px] text-gray-400 mt-8">
-            Propulsé par <span className="font-semibold text-gray-600">TECHNOVA</span> · Paiement chiffré bout-en-bout
+            Propulsé par <Link to="/" className="font-semibold text-gray-600 hover:underline">TECHNOVA</Link> · Paiement chiffré bout-en-bout
           </p>
         </main>
       </div>
