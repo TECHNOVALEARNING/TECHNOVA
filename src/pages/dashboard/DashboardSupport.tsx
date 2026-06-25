@@ -80,7 +80,10 @@ const DashboardSupport = () => {
         table: "support_messages",
         filter: `conversation_id=eq.${selectedConv.id}`,
       }, (payload) => {
-        setMessages((prev) => [...prev, payload.new as Message]);
+        setMessages((prev) => {
+          if (prev.some((m) => m.id === payload.new.id)) return prev;
+          return [...prev, payload.new as Message];
+        });
       })
       .subscribe();
 

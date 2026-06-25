@@ -94,7 +94,10 @@ const DashboardBuyerTicketsTab = () => {
         table: "support_ticket_messages",
         filter: `ticket_id=eq.${selectedTicket.id}`,
       }, (payload) => {
-        setMessages((prev) => [...prev, payload.new as TicketMessage]);
+        setMessages((prev) => {
+          if (prev.some((m) => m.id === payload.new.id)) return prev;
+          return [...prev, payload.new as TicketMessage];
+        });
       })
       .subscribe();
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -38,6 +38,15 @@ const SupportTicketDialog = ({ open, onOpenChange, orderId, productId, customerI
   const [customerEmail, setCustomerEmail] = useState("");
   const [displayOrderId, setDisplayOrderId] = useState(`#${orderId.slice(0, 8).toUpperCase()}`);
   const [sending, setSending] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const load = async () => {
     setLoading(true);
@@ -97,7 +106,10 @@ const SupportTicketDialog = ({ open, onOpenChange, orderId, productId, customerI
         table: "support_ticket_messages",
         filter: `ticket_id=eq.${activeTicket.id}`,
       }, (payload) => {
-        setMessages((prev) => [...prev, payload.new as Message]);
+        setMessages((prev) => {
+          if (prev.some((m) => m.id === payload.new.id)) return prev;
+          return [...prev, payload.new as Message];
+        });
       })
       .subscribe();
 
@@ -228,6 +240,7 @@ const SupportTicketDialog = ({ open, onOpenChange, orderId, productId, customerI
               {messages.length === 0 && (
                 <p className="text-center text-sm text-muted-foreground">Aucun message.</p>
               )}
+              <div ref={messagesEndRef} />
             </div>
             {activeTicket.status !== "closed" ? (
               <>

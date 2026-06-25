@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
@@ -36,6 +36,31 @@ const AdminSupport = () => {
   const [reply, setReply] = useState("");
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  useEffect(() => {
+    if (!selected) return;
+    const channel = supabase
+      .channel(`admin-support-msgs-${selected}`)
+      .on("postgres_changes", {
+        event: "INSERT",
+        schema: "public",
+        table: "support_messages",
+        filter: `conversation_id=eq.${selected}`,
+      }, (payload) => {
+        setMessages((prev) => {
+          if (prev.some((m) => m.id === payload.new.id)) return prev;
+          return [...prev, payload.new as Message];
+        });
+      })
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [selected]);
 
   useEffect(() => {
     if (user?.email !== "ancres707@gmail.com") return;
@@ -174,6 +199,7 @@ const AdminSupport = () => {
                       </p>
                     </div>
                   ))}
+                  <div ref={bottomRef} />
                 </div>
 
                 {/* Reply */}
