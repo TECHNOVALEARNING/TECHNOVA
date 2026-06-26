@@ -30,7 +30,11 @@ const SEOHead = ({
   const fullTitle = title 
     ? (title.includes(SITE_NAME) ? title : `${title} | ${SITE_NAME}`) 
     : `${SITE_NAME} — Formations Tech : IA, Data, Cybersécurité`;
-  const canonicalUrl = `${SITE_URL}${canonicalPath}`;
+
+  const isPortal = typeof window !== "undefined" && (window.location.hostname.startsWith("portal.") || window.location.hostname.startsWith("client."));
+  const canonicalUrl = isPortal && typeof window !== "undefined"
+    ? `${window.location.protocol}//${window.location.hostname}${canonicalPath}`
+    : `${SITE_URL}${canonicalPath}`;
 
   useEffect(() => {
     document.title = fullTitle;
@@ -92,10 +96,14 @@ const SEOHead = ({
       el.href = href;
     };
 
-    const cleanPath = window.location.pathname === "/" ? "" : window.location.pathname;
-    setHreflang("fr", `${SITE_URL}${cleanPath}`);
-    setHreflang("en", `${SITE_URL}/en${cleanPath}`);
-    setHreflang("x-default", `${SITE_URL}${cleanPath}`);
+    if (!isPortal) {
+      const cleanPath = window.location.pathname === "/" ? "" : window.location.pathname;
+      setHreflang("fr", `${SITE_URL}${cleanPath}`);
+      setHreflang("en", `${SITE_URL}/en${cleanPath}`);
+      setHreflang("x-default", `${SITE_URL}${cleanPath}`);
+    } else {
+      document.querySelectorAll('link[hreflang]').forEach(el => el.remove());
+    }
 
     // JSON-LD Graph
     const existingLD = document.querySelector('script[data-seo-jsonld]');
