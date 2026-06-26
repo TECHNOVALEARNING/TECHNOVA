@@ -80,12 +80,13 @@ const TechnovaApps = () => {
         : "A set of free web applications and digital tools to boost your team's productivity.",
       image: "https://i.pinimg.com/1200x/3b/c0/c5/3bc0c5e5cb3b8b85b448c7869823b35d.jpg",
       tags: ["Applications", "Outils digitaux"],
-      stats: lang === "fr" ? "Gratuit à vie" : "Free forever",
+      stats: lang === "fr" ? "Gratuit" : "Free",
       url: "/outils-digitaux",
       features: [
         lang === "fr" ? "CamScanner Pro" : "CamScanner Pro",
-        lang === "fr" ? "FL Studio 2022" : "FL Studio 2022",
-        lang === "fr" ? "Duolingo Pro" : "Duolingo Pro"
+        lang === "fr" ? "FL Studio" : "FL Studio",
+        lang === "fr" ? "Duolingo Pro" : "Duolingo Pro",
+        lang === "fr" ? "Mots mêlés" : "Crossword Puzzles"
       ]
     }
   ];

@@ -304,8 +304,10 @@ export const Footer = () => {
         <ul className="space-y-2.5 text-white/70 text-sm">
           {[
             { label: lang === 'fr' ? "Cybersécurité" : "Cybersecurity" },
-            { label: lang === 'fr' ? "Data et IA" : "Data & AI" },
+            { label: lang === 'fr' ? "IA et Data Science" : "AI and Data Science" },
             { label: lang === 'fr' ? "Développement web" : "Web Development" },
+            { label: lang === 'fr' ? "Bureautique" : "Office Tools" },
+            { label: lang === 'fr' ? "Graphisme" : "Graphics Design" },
           ].map((lnk) => (
             <li key={lnk.label} className="flex items-center gap-2">
               <ChevronRight className="h-3.5 w-3.5 flex-none text-[color:var(--primary)]" />
