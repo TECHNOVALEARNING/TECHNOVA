@@ -307,7 +307,7 @@ export const Footer = () => {
             { label: lang === 'fr' ? "IA et Data Science" : "AI and Data Science" },
             { label: lang === 'fr' ? "Développement web" : "Web Development" },
             { label: lang === 'fr' ? "Bureautique" : "Office Tools" },
-            { label: lang === 'fr' ? "Graphisme" : "Graphics Design" },
+            { label: lang === 'fr' ? "Design et montage" : "Design and editing" },
           ].map((lnk) => (
             <li key={lnk.label} className="flex items-center gap-2">
               <ChevronRight className="h-3.5 w-3.5 flex-none text-[color:var(--primary)]" />
