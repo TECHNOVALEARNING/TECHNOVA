@@ -6,18 +6,18 @@ import { motion } from "framer-motion";
 import { ArrowLeft, Calendar, Clock, User, Share2, Bookmark, CheckCircle2, ChevronRight, BookOpen } from "lucide-react";
 import { toast } from "sonner";
 
-// Static mock articles database for siecledigital.fr fallback
+// Fallback article details for when NewsData.io API is unavailable
 const FALLBACK_ARTICLES_DETAILS: { [key: string]: any } = {
-  "intelligence-artificielle-coute-plus-cher-salarie": {
-    id: "intelligence-artificielle-coute-plus-cher-salarie",
-    title: "Pourquoi l'intelligence artificielle coûte parfois plus cher qu'un salarié",
-    category: "Intelligence Artificielle",
+  "ia-generative-transforme-entreprises-francaises": {
+    id: "ia-generative-transforme-entreprises-francaises",
+    title: "L'IA générative transforme les entreprises françaises : bilan et perspectives",
+    category: "Technology",
     image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80",
-    author: "Siècle Digital",
+    author: "TECHNOVA",
     date: "24 juin 2026",
     readingTime: "6 min",
     content: `
-      <p class="lead">L'essor de l'<strong>IA générative</strong> pousse de nombreuses entreprises à investir massivement dans ces technologies. Pourtant, les coûts réels d'infrastructure, de formation et de maintenance dépassent souvent les attentes initiales. Tour d'horizon d'une réalité économique qui nuance l'enthousiasme ambiant.</p>
+      <p class="lead">L'essor de l'<strong>IA générative</strong> pousse de nombreuses entreprises françaises à investir massivement dans ces technologies. De la rédaction automatique à l'analyse prédictive, les cas d'usage se multiplient avec des résultats concrets.</p>
       
       <h2>Les coûts cachés de l'infrastructure IA</h2>
       <p>Derrière les promesses de productivité, les entreprises découvrent des factures salées. L'entraînement d'un modèle de langage performant nécessite des <strong>GPU de dernière génération</strong> dont le coût unitaire dépasse les 30 000 euros. À cela s'ajoutent les frais de cloud computing, de stockage de données et de bande passante qui explosent avec l'usage.</p>
@@ -42,106 +42,111 @@ const FALLBACK_ARTICLES_DETAILS: { [key: string]: any } = {
       <p>La solution optimale réside dans une approche hybride. Les entreprises les plus performantes utilisent l'IA pour <strong>augmenter les capacités</strong> de leurs employés plutôt que pour les remplacer. Cette stratégie permet de maximiser le retour sur investissement tout en préservant l'expertise humaine indispensable.</p>
     `
   },
-  "fuite-donnees-24-milliards-identifiants-exposes": {
-    id: "fuite-donnees-24-milliards-identifiants-exposes",
-    title: "Fuite de données : 24 milliards d'identifiants exposés sur le dark web",
-    category: "Cybersécurité",
-    image: "https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?w=800&q=80",
-    author: "Siècle Digital",
-    date: "25 juin 2026",
+  "levees-fonds-tech-europe-record-2026": {
+    id: "levees-fonds-tech-europe-record-2026",
+    title: "Les levées de fonds tech en Europe atteignent un record historique en 2026",
+    category: "Business",
+    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
+    author: "TECHNOVA",
+    date: "23 juin 2026",
     readingTime: "7 min",
     content: `
-      <p class="lead">Une base de données colossale contenant <strong>24 milliards d'identifiants volés</strong> a été découverte sur le dark web. Cette fuite d'une ampleur sans précédent soulève des questions cruciales sur la sécurité numérique à l'échelle mondiale.</p>
+      <p class="lead">L'écosystème tech européen confirme sa montée en puissance avec plus de <strong>45 milliards d'euros levés</strong> au premier semestre 2026, porté par l'IA, la cybersécurité et les cleantech.</p>
       
-      <h2>L'ampleur de la fuite</h2>
-      <p>Les chercheurs en cybersécurité ont identifié une compilation massive regroupant des identifiants provenant de centaines de fuites antérieures. Emails, mots de passe, numéros de téléphone : les données couvrent des services allant des <strong>réseaux sociaux aux banques en ligne</strong>.</p>
+      <h2>Un écosystème en pleine maturité</h2>
+      <p>L'Europe n'est plus le parent pauvre de l'investissement tech. Les fonds de capital-risque européens rivalisent désormais avec leurs homologues américains, avec des tickets moyens en <strong>hausse de 35%</strong> par rapport à 2025.</p>
       
-      <h2>Comment se protéger ?</h2>
-      <p>Face à cette menace, plusieurs mesures s'imposent :</p>
+      <h2>Les secteurs porteurs</h2>
+      <p>Trois secteurs concentrent l'essentiel des investissements :</p>
       <ul>
-        <li><strong>Authentification à deux facteurs (2FA) :</strong> Activez-la sur tous vos comptes sensibles.</li>
-        <li><strong>Gestionnaire de mots de passe :</strong> Utilisez des mots de passe uniques pour chaque service.</li>
-        <li><strong>Vérification des fuites :</strong> Des services comme Have I Been Pwned permettent de vérifier si vos données ont été compromises.</li>
+        <li><strong>Intelligence artificielle :</strong> 18 milliards d'euros, soit 40% du total. Les startups européennes d'IA attirent des investisseurs du monde entier.</li>
+        <li><strong>Cybersécurité :</strong> 8 milliards d'euros, portée par les nouvelles réglementations et la multiplication des cyberattaques.</li>
+        <li><strong>Cleantech :</strong> 7 milliards d'euros, soutenue par le Green Deal européen et la demande croissante en solutions durables.</li>
       </ul>
-      
-      <h2>Les conséquences légales</h2>
-      <p>Avec l'entrée en vigueur du RGPD renforcé et du projet de loi C-36 au Canada, les entreprises responsables de fuites de données font face à des <strong>amendes record</strong>. La CNIL a déjà prononcé plusieurs sanctions dépassant les 100 millions d'euros en 2026.</p>
+
+      <blockquote>
+        "L'Europe est en train de devenir le continent de référence pour l'innovation technologique responsable." — Commission Européenne
+      </blockquote>
+
+      <h2>La France en tête</h2>
+      <p>La France confirme sa position de leader avec <strong>12 milliards d'euros levés</strong>, devant l'Allemagne et le Royaume-Uni. Paris s'impose comme le hub incontournable de la tech européenne.</p>
     `
   }
 };
 
+// Fallback articles list matching Blog.tsx FALLBACK_ARTICLES
 const MOCK_LIST = [
   {
-    id: "intelligence-artificielle-coute-plus-cher-salarie",
-    title: "Pourquoi l'intelligence artificielle coûte parfois plus cher qu'un salarié",
-    category: "Intelligence Artificielle",
+    id: "ia-generative-transforme-entreprises-francaises",
+    title: "L'IA générative transforme les entreprises françaises : bilan et perspectives",
+    category: "Technology",
     image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80",
     date: "24 juin 2026",
     readingTime: "6 min"
   },
   {
-    id: "fuite-donnees-24-milliards-identifiants-exposes",
-    title: "Fuite de données : 24 milliards d'identifiants exposés sur le dark web",
-    category: "Cybersécurité",
-    image: "https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?w=800&q=80",
-    date: "25 juin 2026",
+    id: "levees-fonds-tech-europe-record-2026",
+    title: "Les levées de fonds tech en Europe atteignent un record historique en 2026",
+    category: "Business",
+    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
+    date: "23 juin 2026",
     readingTime: "7 min"
   },
   {
-    id: "francais-preferent-ia-recherches-en-ligne",
-    title: "Les Français préfèrent désormais l'IA pour leurs recherches en ligne",
-    category: "Intelligence Artificielle",
+    id: "chatgpt-depasse-2-milliards-utilisateurs",
+    title: "ChatGPT franchit le cap des 2 milliards d'utilisateurs actifs mensuels",
+    category: "Technology",
     image: "https://images.unsplash.com/photo-1655720828018-edd2daec9349?w=800&q=80",
-    date: "23 juin 2026",
+    date: "22 juin 2026",
     readingTime: "5 min"
   },
   {
-    id: "agents-ia-menacent-relation-marques-clients",
-    title: "69% des marketeurs craignent que les agents IA ne s'interposent entre les marques et leurs clients",
-    category: "Marketing",
-    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
-    date: "22 juin 2026",
+    id: "ordinateur-quantique-google-avancee-majeure",
+    title: "Google dévoile une avancée majeure en informatique quantique",
+    category: "Science",
+    image: "https://images.unsplash.com/photo-1507413245164-6160d8298b31?w=800&q=80",
+    date: "21 juin 2026",
     readingTime: "8 min"
   },
   {
-    id: "tiktok-lance-fonctionnalite-commerce-social",
-    title: "TikTok lance une nouvelle fonctionnalité de commerce social qui change la donne",
-    category: "Réseaux Sociaux",
-    image: "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=800&q=80",
-    date: "21 juin 2026",
-    readingTime: "5 min"
-  },
-  {
-    id: "apple-intelligence-disponible-france-wwdc",
-    title: "Apple Intelligence enfin disponible en France : ce qu'il faut savoir",
-    category: "Technologie",
+    id: "apple-vision-pro-2-annonce-wwdc",
+    title: "Apple annonce le Vision Pro 2 avec un prix enfin accessible",
+    category: "Technology",
     image: "https://images.unsplash.com/photo-1621768216002-5ac171876625?w=800&q=80",
     date: "20 juin 2026",
     readingTime: "6 min"
   },
   {
-    id: "startups-francaises-ia-levees-fonds-record",
-    title: "Les startups françaises de l'IA battent des records de levées de fonds en 2026",
-    category: "Business",
-    image: "https://images.unsplash.com/photo-1553729459-uj1xhkap7v0?w=800&q=80",
-    date: "19 juin 2026",
-    readingTime: "7 min"
-  },
-  {
-    id: "regulation-ia-europe-ai-act-premiers-effets",
-    title: "L'AI Act européen entre en vigueur : premiers effets concrets sur les entreprises",
-    category: "Société",
+    id: "regulation-ia-mondiale-g7-accord-historique",
+    title: "Le G7 signe un accord historique pour la régulation mondiale de l'IA",
+    category: "World",
     image: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=800&q=80",
-    date: "18 juin 2026",
+    date: "19 juin 2026",
     readingTime: "9 min"
   },
   {
-    id: "meta-threads-depasse-twitter-europe",
-    title: "Threads dépasse officiellement X (Twitter) en nombre d'utilisateurs actifs en Europe",
-    category: "Réseaux Sociaux",
-    image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&q=80",
+    id: "cybersecurite-attaques-ransomware-hausse-2026",
+    title: "Cybersécurité : les attaques ransomware en hausse de 60% en 2026",
+    category: "Technology",
+    image: "https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?w=800&q=80",
+    date: "18 juin 2026",
+    readingTime: "7 min"
+  },
+  {
+    id: "tesla-robot-optimus-production-masse",
+    title: "Tesla lance la production de masse de son robot humanoïde Optimus",
+    category: "Business",
+    image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&q=80",
     date: "17 juin 2026",
     readingTime: "5 min"
+  },
+  {
+    id: "sante-numerique-ia-diagnostic-medical",
+    title: "L'IA surpasse les médecins dans le diagnostic de certains cancers",
+    category: "Health",
+    image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80",
+    date: "16 juin 2026",
+    readingTime: "6 min"
   }
 ];
 
@@ -243,7 +248,7 @@ export default function BlogPostDetail() {
         title: matchedMeta.title,
         category: matchedMeta.category,
         image: matchedMeta.image,
-        author: "Siècle Digital",
+        author: "TECHNOVA",
         date: matchedMeta.date,
         readingTime: matchedMeta.readingTime,
         content: `
@@ -253,7 +258,7 @@ export default function BlogPostDetail() {
           <p>Le paysage numérique évolue à une vitesse vertigineuse. De l'<strong>intelligence artificielle</strong> aux <strong>réseaux sociaux</strong>, en passant par la <strong>cybersécurité</strong> et le <strong>marketing digital</strong>, chaque secteur connaît des transformations majeures qui redéfinissent les standards de l'industrie.</p>
           
           <blockquote>
-            "Le numérique n'est plus une option, c'est le socle sur lequel se construisent toutes les stratégies d'entreprise modernes." — Siècle Digital
+            "Le numérique n'est plus une option, c'est le socle sur lequel se construisent toutes les stratégies d'entreprise modernes." — TECHNOVA
           </blockquote>
 
           <h2>Les enjeux clés à surveiller</h2>
@@ -266,7 +271,7 @@ export default function BlogPostDetail() {
 
           <h2>Perspectives et recommandations</h2>
           <p>Pour rester compétitif dans cet écosystème en constante évolution, il est essentiel de maintenir une <strong>veille technologique active</strong> et d'investir dans la formation continue des équipes. Les entreprises qui sauront allier innovation technologique et expertise humaine seront celles qui tireront le mieux leur épingle du jeu.</p>
-          <p>Retrouvez toutes nos analyses et décryptages sur <strong>Siècle Digital</strong>, votre média de référence pour comprendre les enjeux du numérique.</p>
+          <p>Retrouvez toutes nos analyses et décryptages sur <strong>TECHNOVA</strong>, votre plateforme de référence pour comprendre les enjeux du numérique.</p>
         `
       });
     }

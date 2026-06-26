@@ -5,100 +5,100 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Search, Calendar, Clock, ArrowRight, BookOpen, Sparkles, Filter, Newspaper } from "lucide-react";
 import { Link } from "react-router-dom";
 
-// Pre-populated real articles from siecledigital.fr to act as a fallback and ensure local dev is perfect
+// Fallback articles displayed when the NewsData.io API is unavailable (e.g. local dev without Vercel)
 const FALLBACK_ARTICLES = [
   {
-    id: "intelligence-artificielle-coute-plus-cher-salarie",
-    title: "Pourquoi l'intelligence artificielle coûte parfois plus cher qu'un salarié",
-    category: "Intelligence Artificielle",
+    id: "ia-generative-transforme-entreprises-francaises",
+    title: "L'IA générative transforme les entreprises françaises : bilan et perspectives",
+    category: "Technology",
     image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80",
-    excerpt: "L'essor de l'IA générative pousse de nombreuses entreprises à investir massivement dans ces technologies, mais les coûts réels d'infrastructure, de formation et de maintenance dépassent souvent les attentes initiales...",
+    excerpt: "De la rédaction automatique à l'analyse prédictive, l'intelligence artificielle générative s'impose dans tous les secteurs. Les entreprises françaises accélèrent leur adoption avec des résultats concrets...",
     date: "24 juin 2026",
     readingTime: "6 min"
   },
   {
-    id: "fuite-donnees-24-milliards-identifiants-exposes",
-    title: "Fuite de données : 24 milliards d'identifiants exposés sur le dark web",
-    category: "Cybersécurité",
-    image: "https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?w=800&q=80",
-    excerpt: "Une base de données colossale contenant 24 milliards d'identifiants volés a été découverte sur le dark web. Retour sur l'une des plus grandes fuites de l'histoire numérique et ses conséquences pour les utilisateurs...",
-    date: "25 juin 2026",
+    id: "levees-fonds-tech-europe-record-2026",
+    title: "Les levées de fonds tech en Europe atteignent un record historique en 2026",
+    category: "Business",
+    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
+    excerpt: "L'écosystème tech européen confirme sa montée en puissance avec plus de 45 milliards d'euros levés au premier semestre 2026, porté par l'IA, la cybersécurité et les cleantech...",
+    date: "23 juin 2026",
     readingTime: "7 min"
   },
   {
-    id: "francais-preferent-ia-recherches-en-ligne",
-    title: "Les Français préfèrent désormais l'IA pour leurs recherches en ligne",
-    category: "Intelligence Artificielle",
+    id: "chatgpt-depasse-2-milliards-utilisateurs",
+    title: "ChatGPT franchit le cap des 2 milliards d'utilisateurs actifs mensuels",
+    category: "Technology",
     image: "https://images.unsplash.com/photo-1655720828018-edd2daec9349?w=800&q=80",
-    excerpt: "Une étude récente révèle un basculement majeur : plus de la moitié des internautes français déclarent préférer les réponses générées par l'IA aux résultats de recherche classiques de Google...",
-    date: "23 juin 2026",
+    excerpt: "OpenAI annonce que ChatGPT a dépassé les 2 milliards d'utilisateurs actifs mensuels, confirmant l'adoption massive de l'IA conversationnelle dans le quotidien des internautes du monde entier...",
+    date: "22 juin 2026",
     readingTime: "5 min"
   },
   {
-    id: "agents-ia-menacent-relation-marques-clients",
-    title: "69% des marketeurs craignent que les agents IA ne s'interposent entre les marques et leurs clients",
-    category: "Marketing",
-    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
-    excerpt: "Selon une étude menée auprès de responsables marketing en Europe, une majorité écrasante redoute que les agents IA et les LLM créent une barrière entre les marques et leurs audiences...",
-    date: "22 juin 2026",
+    id: "ordinateur-quantique-google-avancee-majeure",
+    title: "Google dévoile une avancée majeure en informatique quantique",
+    category: "Science",
+    image: "https://images.unsplash.com/photo-1507413245164-6160d8298b31?w=800&q=80",
+    excerpt: "Le nouveau processeur quantique de Google résout en minutes des calculs qui prendraient des milliers d'années aux supercalculateurs classiques. Une étape décisive vers l'informatique quantique pratique...",
+    date: "21 juin 2026",
     readingTime: "8 min"
   },
   {
-    id: "tiktok-lance-fonctionnalite-commerce-social",
-    title: "TikTok lance une nouvelle fonctionnalité de commerce social qui change la donne",
-    category: "Réseaux Sociaux",
-    image: "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=800&q=80",
-    excerpt: "TikTok accélère sa stratégie e-commerce avec une nouvelle fonctionnalité permettant aux créateurs de vendre directement depuis leurs vidéos. Une révolution pour le social commerce en France...",
-    date: "21 juin 2026",
-    readingTime: "5 min"
-  },
-  {
-    id: "apple-intelligence-disponible-france-wwdc",
-    title: "Apple Intelligence enfin disponible en France : ce qu'il faut savoir",
-    category: "Technologie",
+    id: "apple-vision-pro-2-annonce-wwdc",
+    title: "Apple annonce le Vision Pro 2 avec un prix enfin accessible",
+    category: "Technology",
     image: "https://images.unsplash.com/photo-1621768216002-5ac171876625?w=800&q=80",
-    excerpt: "Lors de la WWDC 2026, Apple a annoncé le déploiement d'Apple Intelligence en français. Siri repensé, résumé automatique, génération d'images — tour d'horizon des fonctionnalités qui arrivent sur iPhone...",
+    excerpt: "Lors de la WWDC 2026, Apple a présenté la deuxième génération de son casque de réalité mixte à un prix divisé par deux. Un pari pour démocratiser le spatial computing...",
     date: "20 juin 2026",
     readingTime: "6 min"
   },
   {
-    id: "startups-francaises-ia-levees-fonds-record",
-    title: "Les startups françaises de l'IA battent des records de levées de fonds en 2026",
-    category: "Business",
-    image: "https://images.unsplash.com/photo-1553729459-uj1xhkap7v0?w=800&q=80",
-    excerpt: "L'écosystème français de l'intelligence artificielle connaît une dynamique sans précédent avec plus de 3 milliards d'euros levés au premier semestre 2026. Mistral AI, Hugging Face et les nouveaux champions...",
-    date: "19 juin 2026",
-    readingTime: "7 min"
-  },
-  {
-    id: "regulation-ia-europe-ai-act-premiers-effets",
-    title: "L'AI Act européen entre en vigueur : premiers effets concrets sur les entreprises",
-    category: "Société",
+    id: "regulation-ia-mondiale-g7-accord-historique",
+    title: "Le G7 signe un accord historique pour la régulation mondiale de l'IA",
+    category: "World",
     image: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=800&q=80",
-    excerpt: "La réglementation européenne sur l'intelligence artificielle commence à produire ses effets. Entre obligations de transparence, classifications de risques et premières amendes, le paysage se redessine...",
-    date: "18 juin 2026",
+    excerpt: "Les dirigeants du G7 ont adopté un cadre commun pour encadrer le développement et l'utilisation de l'intelligence artificielle, avec des principes de transparence et de sécurité...",
+    date: "19 juin 2026",
     readingTime: "9 min"
   },
   {
-    id: "meta-threads-depasse-twitter-europe",
-    title: "Threads dépasse officiellement X (Twitter) en nombre d'utilisateurs actifs en Europe",
-    category: "Réseaux Sociaux",
-    image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&q=80",
-    excerpt: "Pour la première fois, Threads de Meta a dépassé X en nombre d'utilisateurs actifs mensuels sur le continent européen. Un basculement qui redéfinit le paysage des réseaux sociaux textuels...",
+    id: "cybersecurite-attaques-ransomware-hausse-2026",
+    title: "Cybersécurité : les attaques ransomware en hausse de 60% en 2026",
+    category: "Technology",
+    image: "https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?w=800&q=80",
+    excerpt: "Les experts en cybersécurité alertent sur l'explosion des attaques par rançongiciel, de plus en plus sophistiquées grâce à l'IA. Les PME sont particulièrement vulnérables face à cette menace grandissante...",
+    date: "18 juin 2026",
+    readingTime: "7 min"
+  },
+  {
+    id: "tesla-robot-optimus-production-masse",
+    title: "Tesla lance la production de masse de son robot humanoïde Optimus",
+    category: "Business",
+    image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&q=80",
+    excerpt: "Elon Musk annonce le début de la production industrielle du robot Optimus, avec un objectif de 10 000 unités d'ici fin 2026. Le robot sera d'abord déployé dans les usines Tesla...",
     date: "17 juin 2026",
     readingTime: "5 min"
+  },
+  {
+    id: "sante-numerique-ia-diagnostic-medical",
+    title: "L'IA surpasse les médecins dans le diagnostic de certains cancers",
+    category: "Health",
+    image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80",
+    excerpt: "Une étude publiée dans The Lancet démontre que les systèmes d'IA détectent certains cancers avec une précision de 97%, dépassant les performances des radiologues les plus expérimentés...",
+    date: "16 juin 2026",
+    readingTime: "6 min"
   }
 ];
 
 const CATEGORIES = [
   { slug: "All", fr: "Tout", en: "All", emoji: "✨" },
-  { slug: "intelligence-artificielle", fr: "Intelligence Artificielle", en: "AI", emoji: "🤖" },
-  { slug: "marketing", fr: "Marketing", en: "Marketing", emoji: "📈" },
-  { slug: "technologie", fr: "Technologie", en: "Technology", emoji: "💻" },
-  { slug: "cybersecurite", fr: "Cybersécurité", en: "Cybersecurity", emoji: "🔒" },
-  { slug: "reseaux-sociaux", fr: "Réseaux Sociaux", en: "Social Media", emoji: "📱" },
+  { slug: "technology", fr: "Technologie", en: "Technology", emoji: "💻" },
   { slug: "business", fr: "Business", en: "Business", emoji: "💼" },
-  { slug: "societe", fr: "Société", en: "Society", emoji: "🌍" }
+  { slug: "science", fr: "Science", en: "Science", emoji: "🔬" },
+  { slug: "health", fr: "Santé", en: "Health", emoji: "🏥" },
+  { slug: "entertainment", fr: "Divertissement", en: "Entertainment", emoji: "🎬" },
+  { slug: "sports", fr: "Sports", en: "Sports", emoji: "⚽" },
+  { slug: "world", fr: "Monde", en: "World", emoji: "🌍" }
 ];
 
 export default function Blog() {
