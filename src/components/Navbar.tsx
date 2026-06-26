@@ -19,7 +19,7 @@ const moreLinks = [
   { label: "Découvertes", href: "/decouvertes" },
   { label: "Templates", href: "/templates" },
   { label: "FAQ", href: "/faq" },
-  { label: "TECHNOVA APPS", href: "/#apps" },
+  { label: "TECHNOVA APPS", href: "/apps" },
   { label: "Devenir Vendeur", href: "/register" },
   { label: "À propos", href: "/about" },
 ];

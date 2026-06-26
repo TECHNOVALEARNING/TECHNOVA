@@ -74,8 +74,8 @@ export const Header = () => {
     { to: "/outils-digitaux", label: lang === "fr" ? "Outils de Productivité" : "Productivity Tools" },
     { to: "/decouvertes", label: lang === "fr" ? "Découvertes" : "Discoveries" },
     { to: "/templates", label: "Templates" },
-    { to: "/#apps", label: lang === "fr" ? "Technova Apps" : "Technova Apps" },
-    { to: "/blog", label: lang === "fr" ? "Blog" : "Blog" },
+    { to: "/apps", label: lang === "fr" ? "Technova Apps" : "Technova Apps" },
+    { to: "/blog", label: lang === "fr" ? "Blog & Actualités" : "Blog & News" },
     // { to: "/premium", label: lang === "fr" ? "Espace Premium" : "Premium Space"}
   ];
 
@@ -262,7 +262,7 @@ export const Footer = () => {
 
   return (
     <footer className="mt-24 sm:mt-32 bg-[#0B1221] text-white">
-      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8 py-12 sm:py-16 grid gap-10 sm:gap-12 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8 py-12 sm:py-16 grid gap-10 sm:gap-12 sm:grid-cols-2 lg:grid-cols-5">
         {/* Brand */}
         <div className="sm:col-span-2">
           <Logo className="mb-2" />
@@ -294,6 +294,25 @@ export const Footer = () => {
             <i className="fa-brands fa-youtube"></i>          
           </a>
         </div>
+      </div>
+
+      {/* Formations */}
+      <div>
+        <h4 className="font-display font-bold text-sm uppercase tracking-widest mb-5 text-white">
+          {lang === 'fr' ? 'Nos Formations' : 'Our Courses'}
+        </h4>
+        <ul className="space-y-2.5 text-white/70 text-sm">
+          {[
+            { label: lang === 'fr' ? "Cybersécurité" : "Cybersecurity" },
+            { label: lang === 'fr' ? "Data et IA" : "Data & AI" },
+            { label: lang === 'fr' ? "Développement web" : "Web Development" },
+          ].map((lnk) => (
+            <li key={lnk.label} className="flex items-center gap-2">
+              <ChevronRight className="h-3.5 w-3.5 flex-none text-[color:var(--primary)]" />
+              <a href={lnk.href} className="hover:text-white transition-colors">{lnk.label}</a>
+            </li>
+          ))}
+        </ul>
       </div>
 
       {/* Contact */}
