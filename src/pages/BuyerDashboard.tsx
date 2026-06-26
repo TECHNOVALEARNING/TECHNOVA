@@ -126,7 +126,11 @@ const BuyerDashboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <SEOHead title="Mon Espace Client — TECHNOVA" description="Accédez à vos formations et fichiers achetés." noindex />
+      <SEOHead 
+        title="Tableau de bord : Mes Produits & Formations Achetés — TECHNOVA" 
+        description="Consultez l'historique de vos commandes, téléchargez vos fichiers numériques et suivez vos formations en ligne achetées." 
+        noindex 
+      />
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
         <div className="container mx-auto flex items-center justify-between px-6 py-3">

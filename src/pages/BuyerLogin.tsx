@@ -138,7 +138,11 @@ const BuyerLogin = () => {
 
   return (
     <div className="min-h-screen flex">
-      <SEOHead title="Espace Client — TECHNOVA" description="Accédez à tous vos produits achetés sur la plateforme TECHNOVA." noindex />
+      <SEOHead 
+        title="Accès à mes Achats de Produits & Formations — TECHNOVA" 
+        description="Espace de connexion client sécurisé. Connectez-vous pour accéder à vos formations, télécharger vos fichiers numériques et retrouver toutes vos commandes sur la plateforme TECHNOVA."
+        keywords="connexion espace client, mes achats, télécharger produit numérique, accès formations en ligne, commandes technova"
+      />
       <div className="flex-1 flex items-center justify-center px-6 py-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
