@@ -77,63 +77,70 @@ const CheckoutPage = ({ customSlug }: { customSlug?: string }) => {
         title={`Paiement sécurisé — ${product?.title || "TECHNOVA"}`}
         description="Finalisez votre commande en toute sécurité via Mobile Money."
       />
-      <div className="min-h-screen bg-background">
-        {/* Top bar */}
-        <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-violet-100/60">
-          <div className="max-w-6xl mx-auto flex items-center justify-between px-4 sm:px-6 h-14">
-            <Link
-              to={storeSlug ? (productId ? `/store/${storeSlug}/${productId}` : `/store/${storeSlug}`) : (productId ? `/${productId}` : "/")}
-              className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              <span className="hidden sm:inline">Retour au produit</span>
-              <span className="sm:hidden">Retour</span>
-            </Link>
-            <div className="flex items-center gap-2">
-              {logoUrl ? (
-                <img src={logoUrl} alt={storeName} className="h-7 w-7 rounded-lg object-cover" />
-              ) : (
-                <div
-                  className="h-7 w-7 rounded-lg flex items-center justify-center text-white text-xs font-bold"
-                  style={{ backgroundColor: accent }}
-                >
-                  {storeName.charAt(0).toUpperCase()}
-                </div>
-              )}
-              <span className="text-sm font-bold text-gray-900">{storeName}</span>
-            </div>
-            <div className="hidden sm:flex items-center gap-3 text-[11px] text-gray-500">
-              <span className="flex items-center gap-1"><Lock className="h-3 w-3" /> SSL</span>
-              <span className="flex items-center gap-1"><ShieldCheck className="h-3 w-3" /> Sécurisé</span>
-            </div>
-          </div>
-        </header>
+      <div className="relative min-h-screen overflow-hidden bg-background text-foreground transition-colors duration-300">
+        {/* Background floating orbs */}
+        <div className="bg-orb orb-1" />
+        <div className="bg-orb orb-2" />
+        <div className="bg-orb orb-3" />
 
-        <main className="px-3 sm:px-6 py-6 sm:py-10">
-          {loading ? (
-            <div className="flex items-center justify-center py-32">
-              <Loader2 className="h-8 w-8 animate-spin text-violet-600" />
+        <div className="relative z-10">
+          {/* Top bar */}
+          <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-md border-b border-border shadow-sm">
+            <div className="max-w-6xl mx-auto flex items-center justify-between px-4 sm:px-6 h-16">
+              <Link
+                to={storeSlug ? (productId ? `/store/${storeSlug}/${productId}` : `/store/${storeSlug}`) : (productId ? `/product/${productId}` : "/")}
+                className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                <span className="hidden sm:inline">Retour au produit</span>
+                <span className="sm:hidden">Retour</span>
+              </Link>
+              <div className="flex items-center gap-2">
+                {logoUrl ? (
+                  <img src={logoUrl} alt={storeName} className="h-7 w-7 rounded-lg object-cover" />
+                ) : (
+                  <div
+                    className="h-7 w-7 rounded-lg flex items-center justify-center text-white text-xs font-bold"
+                    style={{ backgroundColor: accent }}
+                  >
+                    {storeName.charAt(0).toUpperCase()}
+                  </div>
+                )}
+                <span className="text-sm font-bold text-foreground">{storeName}</span>
+              </div>
+              <div className="hidden sm:flex items-center gap-3 text-[11px] text-muted-foreground">
+                <span className="flex items-center gap-1"><Lock className="h-3 w-3" /> SSL</span>
+                <span className="flex items-center gap-1"><ShieldCheck className="h-3 w-3" /> Sécurisé</span>
+              </div>
             </div>
-          ) : error || !product ? (
-            <div className="max-w-md mx-auto text-center py-24">
-              <p className="text-lg font-semibold text-gray-900 mb-2">{error || "Produit introuvable"}</p>
-              <Link to="/" className="text-sm text-violet-600 hover:underline">Retour à l'accueil</Link>
-            </div>
-          ) : (
-            <CheckoutDialog
-              fullPage
-              open
-              onOpenChange={(o) => { if (!o) { if (window.history.length > 1) navigate(-1); else window.close(); } }}
-              product={product}
-              storeSlug={storeSlug}
-              brandColor={brandColor}
-            />
-          )}
+          </header>
 
-          <p className="text-center text-[11px] text-gray-400 mt-8">
-            Propulsé par <Link to="/" className="font-semibold text-gray-600 hover:underline">TECHNOVA</Link> · Paiement chiffré bout-en-bout
-          </p>
-        </main>
+          <main className="px-3 sm:px-6 py-6 sm:py-10">
+            {loading ? (
+              <div className="flex items-center justify-center py-32">
+                <Loader2 className="h-8 w-8 animate-spin text-violet-600" />
+              </div>
+            ) : error || !product ? (
+              <div className="max-w-md mx-auto text-center py-24">
+                <p className="text-lg font-semibold text-foreground mb-2">{error || "Produit introuvable"}</p>
+                <Link to="/" className="text-sm text-violet-600 hover:underline">Retour à l'accueil</Link>
+              </div>
+            ) : (
+              <CheckoutDialog
+                fullPage
+                open
+                onOpenChange={(o) => { if (!o) { if (window.history.length > 1) navigate(-1); else window.close(); } }}
+                product={product}
+                storeSlug={storeSlug}
+                brandColor={brandColor}
+              />
+            )}
+
+            <p className="text-center text-[11px] text-muted-foreground mt-8">
+              Propulsé par <Link to="/" className="font-semibold text-foreground hover:underline">TECHNOVA</Link> · Paiement chiffré bout-en-bout
+            </p>
+          </main>
+        </div>
       </div>
     </>
   );

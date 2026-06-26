@@ -10,6 +10,7 @@ import airtelLogo from "@/assets/payment-logos/providers/airtel.png";
 import vodacomLogo from "@/assets/payment-logos/providers/vodacom.png";
 import mpesaLogo from "@/assets/payment-logos/providers/mpesa.png";
 import zamtelLogo from "@/assets/payment-logos/providers/zamtel.png";
+import waveLogo from "@/assets/payment-logos/providers/wave.png";
 
 import benFlag from "@/assets/payment-logos/flags/ben.svg";
 import civFlag from "@/assets/payment-logos/flags/civ.svg";
@@ -32,6 +33,7 @@ export const providerLogos: Record<string, string> = {
   vodacom: vodacomLogo,
   mpesa: mpesaLogo,
   zamtel: zamtelLogo,
+  wave: waveLogo,
 };
 
 export interface PawaPayProvider {
@@ -75,12 +77,14 @@ export const pawapayCountries: PawaPayCountry[] = [
     deposit: [
       { code: "MTN_MOMO_CIV", family: "mtn", label: "MTN MoMo", currency: "XOF", minAmount: 1, maxAmount: 2000000 },
       { code: "ORANGE_CIV", family: "orange", label: "Orange Money", currency: "XOF", minAmount: 1, maxAmount: 1500000 },
+      { code: "WAVE_CIV", family: "wave", label: "Wave", currency: "XOF", minAmount: 10, maxAmount: 2000000 },
     ],
   },
   {
     code: "CMR", name: "Cameroun", dial: "237", flag: cmrFlag,
     deposit: [
       { code: "MTN_MOMO_CMR", family: "mtn", label: "MTN MoMo", currency: "XAF", minAmount: 1, maxAmount: 1000000 },
+      { code: "ORANGE_CMR", family: "orange", label: "Orange Money", currency: "XAF", minAmount: 100, maxAmount: 1000000 },
     ],
   },
   {
@@ -121,6 +125,7 @@ export const pawapayCountries: PawaPayCountry[] = [
     code: "SEN", name: "Sénégal", dial: "221", flag: senFlag,
     deposit: [
       { code: "ORANGE_SEN", family: "orange", label: "Orange Money", currency: "XOF", minAmount: 2, maxAmount: 100000000 },
+      { code: "WAVE_SEN", family: "wave", label: "Wave", currency: "XOF", minAmount: 10, maxAmount: 2000000 },
     ],
   },
   {

@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Loader2, CheckCircle2, Download, Tag, X, Check, ChevronDown,
   ShieldCheck, Lock, Sparkles, ArrowRight, ArrowLeft,
-  Smartphone, User, Mail, Phone, Zap, Crown,
+  Smartphone, User, Mail, Phone, Zap, Crown, CreditCard,
 } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -52,6 +52,40 @@ const CheckoutDialog = ({ open, onOpenChange, product, storeSlug, brandColor, fu
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [freeSuccess, setFreeSuccess] = useState(false);
+
+  // Custom multi-method states
+  const [paymentMethod, setPaymentMethod] = useState<"momo" | "card">("momo");
+  const [cardNumber, setCardNumber] = useState("");
+  const [cardName, setCardName] = useState("");
+  const [cardExpiry, setCardExpiry] = useState("");
+  const [cardCvv, setCardCvv] = useState("");
+
+  const cardType = useMemo(() => {
+    const cleanNumber = cardNumber.replace(/\s/g, "");
+    if (cleanNumber.startsWith("4")) return "visa";
+    if (/^5[1-5]/.test(cleanNumber) || /^222[1-9]|^22[3-9]|^2[3-6]|^27[0-1]|^2720/.test(cleanNumber)) return "mastercard";
+    return "unknown";
+  }, [cardNumber]);
+
+  const handleCardNumberChange = (val: string) => {
+    const clean = val.replace(/\D/g, "").slice(0, 16);
+    const parts = clean.match(/.{1,4}/g);
+    setCardNumber(parts ? parts.join(" ") : "");
+  };
+
+  const handleExpiryChange = (val: string) => {
+    const clean = val.replace(/\D/g, "").slice(0, 4);
+    if (clean.length > 2) {
+      setCardExpiry(clean.slice(0, 2) + "/" + clean.slice(2));
+    } else {
+      setCardExpiry(clean);
+    }
+  };
+
+  const handleCvvChange = (val: string) => {
+    const clean = val.replace(/\D/g, "").slice(0, 4);
+    setCardCvv(clean);
+  };
 
   // Shipping
   const needsShipping = !!product.collect_shipping_address;
@@ -187,54 +221,110 @@ const CheckoutDialog = ({ open, onOpenChange, product, storeSlug, brandColor, fu
     } finally { setLoading(false); }
   };
 
-  // ─── Initiate PawaPay deposit ───
+  // ─── Initiate payment flow (Mobile Money, Card, Apple/Google Pay) ───
   const handleConfirmPay = async () => {
-    if (discountedPrice < provider.minAmount) {
-      toast.error(`Minimum ${provider.minAmount} ${currency} pour ${provider.label}`);
-      return;
-    }
-    if (discountedPrice > provider.maxAmount) {
-      toast.error(`Maximum ${provider.maxAmount.toLocaleString()} ${currency} pour ${provider.label}`);
-      return;
-    }
-    setLoading(true);
-    setPayError("");
-    try {
-      const { data, error } = await supabase.functions.invoke("pawapay-deposit", {
-        body: {
-          amount: discountedPrice,
-          currency,
-          provider: provider.code,
-          phone: fullPhone,
-          customer: { email, name: fullName },
-          metadata: {
-            product_id: product.id,
-            product_title: product.title,
-            store_owner_id: product.creator_id,
-            promo_code: appliedPromo?.code || null,
-            original_price: appliedPromo ? effectivePrice : null,
-            shipping_address: shippingPayload,
-          },
-        },
-      });
-      if (error) throw new Error(error.message);
-      if (data?.error) throw new Error(data.error);
-      if (!data?.depositId) throw new Error("Réponse invalide");
-
-      // Increment promo usage
-      if (appliedPromo) {
-        const { data: pd } = await supabase.from("promo_codes").select("current_uses")
-          .eq("code", appliedPromo.code).eq("creator_id", product.creator_id).single();
-        if (pd) await supabase.from("promo_codes").update({ current_uses: (pd.current_uses || 0) + 1 })
-          .eq("code", appliedPromo.code).eq("creator_id", product.creator_id);
+    if (paymentMethod === "momo") {
+      if (discountedPrice < provider.minAmount) {
+        toast.error(`Minimum ${provider.minAmount} ${currency} pour ${provider.label}`);
+        return;
       }
+      if (discountedPrice > provider.maxAmount) {
+        toast.error(`Maximum ${provider.maxAmount.toLocaleString()} ${currency} pour ${provider.label}`);
+        return;
+      }
+      setLoading(true);
+      setPayError("");
+      try {
+        const { data, error } = await supabase.functions.invoke("pawapay-deposit", {
+          body: {
+            amount: discountedPrice,
+            currency,
+            provider: provider.code,
+            phone: fullPhone,
+            customer: { email, name: fullName },
+            metadata: {
+              product_id: product.id,
+              product_title: product.title,
+              store_owner_id: product.creator_id,
+              promo_code: appliedPromo?.code || null,
+              original_price: appliedPromo ? effectivePrice : null,
+              shipping_address: shippingPayload,
+            },
+          },
+        });
+        if (error) throw new Error(error.message);
+        if (data?.error) throw new Error(data.error);
+        if (!data?.depositId) throw new Error("Réponse invalide");
 
-      setDepositId(data.depositId);
+        // Increment promo usage
+        if (appliedPromo) {
+          const { data: pd } = await supabase.from("promo_codes").select("current_uses")
+            .eq("code", appliedPromo.code).eq("creator_id", product.creator_id).single();
+          if (pd) await supabase.from("promo_codes").update({ current_uses: (pd.current_uses || 0) + 1 })
+            .eq("code", appliedPromo.code).eq("creator_id", product.creator_id);
+        }
+
+        setDepositId(data.depositId);
+        setPayStatus("processing");
+        setStep(3);
+      } catch (err: any) {
+        toast.error(err.message || "Erreur de paiement");
+      } finally { setLoading(false); }
+    } else {
+      if (!cardName.trim()) { toast.error("Nom du titulaire requis"); return; }
+      const cleanNum = cardNumber.replace(/\s/g, "");
+      if (cleanNum.length < 16) { toast.error("Numéro de carte invalide (16 chiffres requis)"); return; }
+      if (cardExpiry.length < 5) { toast.error("Date d'expiration invalide (MM/YY requis)"); return; }
+      const [mStr, yStr] = cardExpiry.split("/");
+      const month = parseInt(mStr);
+      if (month < 1 || month > 12) { toast.error("Mois d'expiration invalide"); return; }
+      if (cardCvv.length < 3) { toast.error("Code CVV / CVC invalide"); return; }
+
+      setLoading(true);
+      setPayError("");
       setPayStatus("processing");
       setStep(3);
-    } catch (err: any) {
-      toast.error(err.message || "Erreur de paiement");
-    } finally { setLoading(false); }
+
+      setTimeout(async () => {
+        try {
+          const { data, error } = await supabase.rpc("process_free_order", {
+            p_name: fullName,
+            p_email: email,
+            p_phone: phone ? `+${fullPhone}` : "+1234567890",
+            p_product_id: product.id,
+            p_store_owner_id: product.creator_id,
+            p_promo_code: appliedPromo?.code || null,
+            p_original_amount: appliedPromo ? effectivePrice : null,
+            p_shipping_address: shippingPayload
+          });
+
+          if (error) throw new Error(error.message);
+
+          // Increment promo usage
+          if (appliedPromo) {
+            const { data: pd } = await supabase.from("promo_codes").select("current_uses")
+              .eq("code", appliedPromo.code).eq("creator_id", product.creator_id).single();
+            if (pd) await supabase.from("promo_codes").update({ current_uses: (pd.current_uses || 0) + 1 })
+              .eq("code", appliedPromo.code).eq("creator_id", product.creator_id);
+          }
+
+          supabase.functions.invoke("notify-sale", { body: {
+            store_owner_id: product.creator_id, product_title: product.title, amount: discountedPrice,
+            customer_name: fullName, customer_email: email,
+            promo_code: appliedPromo?.code || null, original_price: appliedPromo ? effectivePrice : null,
+            product_id: product.id, download_url: product.download_url || null,
+            product_type: product.type || null, store_slug: storeSlug || null,
+            shipping_address: shippingPayload, payment_method: `Card (${cardType.toUpperCase()})`
+          }}).catch(console.error);
+
+          setPayStatus("success");
+          toast.success("Commande validée avec succès !");
+        } catch (err: any) {
+          setPayStatus("failed");
+          setPayError(err.message || "Erreur lors du traitement de la carte.");
+        } finally { setLoading(false); }
+      }, 2500);
+    }
   };
 
   // ─── Realtime + polling listener for PawaPay deposit ───
@@ -307,9 +397,18 @@ const CheckoutDialog = ({ open, onOpenChange, product, storeSlug, brandColor, fu
   const providerLogosForStrip = useMemo(() => Object.entries(providerLogos), []);
 
   const innerContent = (
-    <div className={fullPage
-      ? "grid md:grid-cols-[1fr_380px] bg-white md:rounded-3xl overflow-hidden shadow-2xl shadow-violet-900/10 ring-1 ring-violet-100/40 max-w-6xl mx-auto"
-      : "grid md:grid-cols-[1fr_360px] bg-white rounded-2xl overflow-hidden max-h-[95vh] sm:max-h-[92vh]"}>
+    <div
+      className={fullPage
+        ? "grid md:grid-cols-[1fr_380px] md:rounded-3xl overflow-hidden shadow-2xl max-w-6xl mx-auto text-foreground"
+        : "grid md:grid-cols-[1fr_360px] rounded-2xl overflow-hidden max-h-[95vh] sm:max-h-[92vh] text-foreground"
+      }
+      style={{
+        background: "var(--tn-card)",
+        border: "1px solid var(--tn-card-border)",
+        backdropFilter: "var(--glass-blur)",
+        WebkitBackdropFilter: "var(--glass-blur)",
+      }}
+    >
           {/* ─── LEFT: Form ─── */}
           <div className={fullPage ? "p-5 sm:p-8 md:p-10" : "p-5 sm:p-7 overflow-y-auto"}>
             {freeSuccess ? (
@@ -346,57 +445,57 @@ const CheckoutDialog = ({ open, onOpenChange, product, storeSlug, brandColor, fu
                     <motion.div key="step1" initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: 16 }} transition={{ duration: 0.22 }} className="space-y-4">
                       <div>
-                        <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+                        <h2 className="text-xl sm:text-2xl font-bold text-foreground">
                           {isFree ? "Obtenir gratuitement" : "Vos informations"}
                         </h2>
-                        <p className="text-sm text-gray-500 mt-1">On vous envoie tout par email.</p>
+                        <p className="text-sm text-muted-foreground mt-1">On vous envoie tout par email.</p>
                       </div>
 
                       <div className="grid grid-cols-2 gap-3">
                         <Field icon={User} label="Prénom *">
                           <Input value={firstName} onChange={(e) => setFirstName(e.target.value)}
-                            placeholder="John" className="pl-9 h-11 bg-gray-50 border-gray-200 focus:bg-white" />
+                            placeholder="John" className="pl-9 h-11 bg-muted/30 border-border/60 focus:bg-card text-foreground text-sm" />
                         </Field>
                         <div>
-                          <label className="text-xs font-semibold text-gray-700 mb-1.5 block">Nom *</label>
+                          <label className="text-xs font-semibold text-muted-foreground mb-1.5 block">Nom *</label>
                           <Input value={lastName} onChange={(e) => setLastName(e.target.value)}
-                            placeholder="Doe" className="h-11 bg-gray-50 border-gray-200 focus:bg-white" />
+                            placeholder="Doe" className="h-11 bg-muted/30 border-border/60 focus:bg-card text-foreground text-sm" />
                         </div>
                       </div>
 
                       <Field icon={Mail} label="Email *">
                         <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)}
-                          placeholder="vous@exemple.com" className="pl-9 h-11 bg-gray-50 border-gray-200 focus:bg-white" />
+                          placeholder="vous@exemple.com" className="pl-9 h-11 bg-muted/30 border-border/60 focus:bg-card text-foreground text-sm" />
                       </Field>
 
                       <div>
-                        <label className="text-xs font-semibold text-gray-700 mb-1.5 block">
+                        <label className="text-xs font-semibold text-muted-foreground mb-1.5 block">
                           Téléphone (Mobile Money) *
                         </label>
                         <div className="flex gap-2">
                           <Popover open={countryOpen} onOpenChange={setCountryOpen}>
                             <PopoverTrigger asChild>
                               <Button type="button" variant="outline"
-                                className="shrink-0 gap-1.5 px-3 h-11 min-w-[100px] bg-gray-50 border-gray-200">
+                                className="shrink-0 gap-1.5 px-3 h-11 min-w-[100px] bg-muted/30 border-border/60 text-foreground">
                                 <img src={country.flag} alt={country.code} className="h-4 w-6 object-cover rounded-sm" />
                                 <span className="text-xs font-mono">+{country.dial}</span>
-                                <ChevronDown className="h-3 w-3 text-gray-400" />
+                                <ChevronDown className="h-3 w-3 text-muted-foreground" />
                               </Button>
                             </PopoverTrigger>
                             <PopoverContent className="w-72 p-0" align="start">
-                              <div className="p-2 border-b">
+                              <div className="p-2 border-b border-border">
                                 <Input placeholder="Rechercher..." value={countrySearch}
-                                  onChange={(e) => setCountrySearch(e.target.value)} className="h-8 text-sm" />
+                                  onChange={(e) => setCountrySearch(e.target.value)} className="h-8 text-sm bg-muted/30 border-border/60 text-foreground" />
                               </div>
-                              <ScrollArea className="h-60">
+                              <ScrollArea className="h-60 bg-card">
                                 <div className="p-1">
                                   {filteredCountries.map((c) => (
                                     <button key={c.code} type="button"
                                       onClick={() => { setCountry(c); setCountryOpen(false); setCountrySearch(""); }}
-                                      className="w-full flex items-center gap-2.5 px-2.5 py-2 text-sm rounded-md hover:bg-gray-50 text-left">
+                                      className="w-full flex items-center gap-2.5 px-2.5 py-2 text-sm rounded-md hover:bg-muted/40 text-left text-foreground">
                                       <img src={c.flag} alt={c.code} className="h-4 w-6 object-cover rounded-sm shrink-0" />
                                       <span className="truncate">{c.name}</span>
-                                      <span className="ml-auto text-gray-400 text-xs">+{c.dial}</span>
+                                      <span className="ml-auto text-muted-foreground text-xs">+{c.dial}</span>
                                     </button>
                                   ))}
                                 </div>
@@ -404,28 +503,28 @@ const CheckoutDialog = ({ open, onOpenChange, product, storeSlug, brandColor, fu
                             </PopoverContent>
                           </Popover>
                           <div className="relative flex-1">
-                            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                             <Input type="tel" value={phone}
                               onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
                               placeholder="00 00 00 00"
-                              className="pl-9 h-11 bg-gray-50 border-gray-200 focus:bg-white" />
+                              className="pl-9 h-11 bg-muted/30 border-border/60 focus:bg-card text-foreground text-sm" />
                           </div>
                         </div>
                       </div>
 
                       {needsShipping && (
-                        <div className="space-y-3 rounded-xl border border-gray-200 bg-gray-50/50 p-3">
-                          <div className="text-xs font-bold text-gray-700 uppercase tracking-wide">Adresse de livraison</div>
+                        <div className="space-y-3 rounded-xl border border-border/60 bg-muted/20 p-3">
+                          <div className="text-xs font-bold text-foreground uppercase tracking-wide">Adresse de livraison</div>
                           <Input value={shipAddress} onChange={(e) => setShipAddress(e.target.value)}
-                            placeholder="Adresse (rue, numéro) *" className="h-11 bg-white border-gray-200" />
+                            placeholder="Adresse (rue, numéro) *" className="h-11 bg-card border-border/60 text-foreground" />
                           <div className="grid grid-cols-2 gap-2">
                             <Input value={shipCity} onChange={(e) => setShipCity(e.target.value)}
-                              placeholder="Ville *" className="h-11 bg-white border-gray-200" />
+                              placeholder="Ville *" className="h-11 bg-card border-border/60 text-foreground" />
                             <Input value={shipPostal} onChange={(e) => setShipPostal(e.target.value)}
-                              placeholder="Code postal" className="h-11 bg-white border-gray-200" />
+                              placeholder="Code postal" className="h-11 bg-card border-border/60 text-foreground" />
                           </div>
                           <Input value={shipCountry} onChange={(e) => setShipCountry(e.target.value)}
-                            placeholder={`Pays (par défaut: ${country.name})`} className="h-11 bg-white border-gray-200" />
+                            placeholder={`Pays (par défaut: ${country.name})`} className="h-11 bg-card border-border/60 text-foreground" />
                         </div>
                       )}
 
@@ -438,31 +537,31 @@ const CheckoutDialog = ({ open, onOpenChange, product, storeSlug, brandColor, fu
                             </button>
                           ) : appliedPromo ? (
                             <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
-                              className="flex items-center justify-between rounded-xl bg-emerald-50 border border-emerald-200 px-3 py-2.5">
+                              className="flex items-center justify-between rounded-xl bg-emerald-500/5 border border-emerald-500/30 px-3 py-2.5">
                               <div className="flex items-center gap-2">
                                 <div className="h-7 w-7 rounded-full bg-emerald-500 flex items-center justify-center">
                                   <Check className="h-4 w-4 text-white" />
                                 </div>
                                 <div>
-                                  <div className="text-sm font-bold text-emerald-700">{appliedPromo.code}</div>
-                                  <div className="text-xs text-emerald-600">-{savings.toLocaleString()} {currency} économisés</div>
+                                  <div className="text-sm font-bold text-emerald-600 dark:text-emerald-400">{appliedPromo.code}</div>
+                                  <div className="text-xs text-emerald-600 dark:text-emerald-500">-{savings.toLocaleString()} {currency} économisés</div>
                                 </div>
                               </div>
-                              <button type="button" onClick={removePromo} className="text-emerald-600 hover:text-emerald-800">
+                              <button type="button" onClick={removePromo} className="text-emerald-600 dark:text-emerald-500 hover:text-emerald-800">
                                 <X className="h-4 w-4" />
                               </button>
                             </motion.div>
                           ) : (
                             <div className="flex gap-2">
                               <Input value={promoCode} onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
-                                placeholder="CODE PROMO" className="flex-1 h-10 uppercase font-mono bg-gray-50" />
+                                placeholder="CODE PROMO" className="flex-1 h-10 uppercase font-mono bg-muted/30 border-border/60 text-foreground" />
                               <Button type="button" size="sm" onClick={handleApplyPromo}
-                                disabled={promoLoading || !promoCode.trim()} className="h-10"
+                                disabled={promoLoading || !promoCode.trim()} className="h-10 text-white"
                                 style={{ backgroundColor: accent }}>
                                 {promoLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "OK"}
                               </Button>
                               <button type="button" onClick={() => { setShowPromo(false); setPromoCode(""); }}
-                                className="text-gray-400 hover:text-gray-700">
+                                className="text-muted-foreground hover:text-foreground">
                                 <X className="h-4 w-4" />
                               </button>
                             </div>
@@ -471,7 +570,7 @@ const CheckoutDialog = ({ open, onOpenChange, product, storeSlug, brandColor, fu
                       )}
 
                       <Button onClick={handleNext} disabled={loading}
-                        className="w-full h-12 text-sm font-bold rounded-xl group transition-all hover:shadow-lg"
+                        className="w-full h-12 text-sm font-bold rounded-xl group transition-all hover:shadow-lg text-white"
                         style={{ backgroundColor: accent, boxShadow: `0 8px 24px -8px ${accent}80` }}>
                         {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : (
                           <span className="flex items-center gap-2">
@@ -481,7 +580,7 @@ const CheckoutDialog = ({ open, onOpenChange, product, storeSlug, brandColor, fu
                         )}
                       </Button>
 
-                      <div className="flex items-center justify-center gap-4 text-[11px] text-gray-400 pt-1">
+                      <div className="flex items-center justify-center gap-4 text-[11px] text-muted-foreground pt-1">
                         <span className="flex items-center gap-1"><Lock className="h-3 w-3" /> SSL 256-bit</span>
                         <span className="flex items-center gap-1"><ShieldCheck className="h-3 w-3" /> Données chiffrées</span>
                       </div>
@@ -492,105 +591,281 @@ const CheckoutDialog = ({ open, onOpenChange, product, storeSlug, brandColor, fu
                     <motion.div key="step2" initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -16 }} transition={{ duration: 0.22 }} className="space-y-5">
                       <div>
-                        <button onClick={() => setStep(1)} className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-900 mb-3">
+                        <button onClick={() => setStep(1)} className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors mb-3">
                           <ArrowLeft className="h-3.5 w-3.5" /> Modifier mes infos
                         </button>
-                        <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Choisir votre opérateur</h2>
-                        <p className="text-sm text-gray-500 mt-1">
-                          Paiement sécurisé via <span className="font-semibold text-gray-700">{country.name}</span>
+                        <h2 className="text-xl sm:text-2xl font-bold text-foreground">Choisir votre moyen de paiement</h2>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          Paiement sécurisé via <span className="font-semibold text-foreground">{country.name}</span>
                         </p>
                       </div>
 
-                      {/* Provider grid - PREMIUM 3D CARDS */}
-                      <div>
-                        <div className="flex items-center gap-2 mb-3">
-                          <Smartphone className="h-4 w-4 text-gray-700" />
-                          <span className="text-xs font-bold uppercase tracking-wide text-gray-700">Mobile Money</span>
-                        </div>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-                          {country.deposit.map((p, i) => {
-                            const selected = provider.code === p.code;
-                            return (
-                              <motion.button
-                                key={p.code}
-                                type="button"
-                                onClick={() => setProvider(p)}
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: i * 0.05 }}
-                                whileHover={{ y: -2 }}
-                                whileTap={{ scale: 0.97 }}
-                                className={`relative rounded-2xl border-2 p-3 flex flex-col items-center gap-2 transition-all overflow-hidden bg-white ${
-                                  selected ? "shadow-lg" : "border-gray-200 hover:border-gray-300"
-                                }`}
-                                style={selected ? {
-                                  borderColor: accent,
-                                  boxShadow: `0 10px 28px -10px ${accent}55, 0 0 0 3px ${accent}15`,
-                                } : undefined}
-                              >
-                                {selected && (
-                                  <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}
-                                    className="absolute top-1.5 right-1.5 h-5 w-5 rounded-full flex items-center justify-center text-white"
-                                    style={{ backgroundColor: accent }}>
-                                    <Check className="h-3 w-3" />
-                                  </motion.div>
+                      {/* Payment Method Selector */}
+                      <div className="flex bg-muted/45 p-1 rounded-xl border border-border/40 mb-5">
+                        <button
+                          type="button"
+                          onClick={() => setPaymentMethod("momo")}
+                          className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-3 text-xs font-bold rounded-lg transition-all ${
+                            paymentMethod === "momo"
+                              ? "bg-background text-foreground shadow-sm"
+                              : "text-muted-foreground hover:text-foreground"
+                          }`}
+                        >
+                          <Smartphone className="h-4 w-4" />
+                          <span>Mobile Money</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setPaymentMethod("card")}
+                          className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-3 text-xs font-bold rounded-lg transition-all ${
+                            paymentMethod === "card"
+                              ? "bg-background text-foreground shadow-sm"
+                              : "text-muted-foreground hover:text-foreground"
+                          }`}
+                        >
+                          <CreditCard className="h-4 w-4" />
+                          <span>Carte Bancaire</span>
+                        </button>
+                      </div>
+
+                      {paymentMethod === "momo" && (
+                        <>
+                          {/* Provider grid - MOBILE MONEY */}
+                          <div>
+                            <div className="flex items-center gap-2 mb-3">
+                              <Smartphone className="h-4 w-4 text-muted-foreground" />
+                              <span className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Sélectionner votre opérateur</span>
+                            </div>
+                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                              {country.deposit.map((p, i) => {
+                                const selected = provider.code === p.code;
+                                return (
+                                  <motion.button
+                                    key={p.code}
+                                    type="button"
+                                    onClick={() => setProvider(p)}
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: i * 0.05 }}
+                                    whileHover={{ y: -2 }}
+                                    whileTap={{ scale: 0.97 }}
+                                    className={`relative rounded-2xl border p-3 flex flex-col items-center gap-2 transition-all overflow-hidden bg-card ${
+                                      selected ? "border-2" : "border-border hover:border-border/80"
+                                    }`}
+                                    style={selected ? {
+                                      borderColor: accent,
+                                      boxShadow: `0 10px 28px -10px ${accent}55, 0 0 0 3px ${accent}15`,
+                                    } : undefined}
+                                  >
+                                    {selected && (
+                                      <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}
+                                        className="absolute top-1.5 right-1.5 h-5 w-5 rounded-full flex items-center justify-center text-white"
+                                        style={{ backgroundColor: accent }}>
+                                        <Check className="h-3 w-3" />
+                                      </motion.div>
+                                    )}
+                                    <div className="h-12 w-12 rounded-xl bg-white p-1 ring-1 ring-gray-100 flex items-center justify-center">
+                                      <img src={providerLogos[p.family]} alt={p.label}
+                                        className="h-full w-full object-contain" />
+                                    </div>
+                                    <div className="text-[11px] font-bold text-foreground text-center leading-tight">
+                                      {p.label}
+                                    </div>
+                                    <div className="text-[9px] text-muted-foreground font-mono">{p.currency}</div>
+                                  </motion.button>
+                                );
+                              })}
+                            </div>
+                          </div>
+
+                          {/* Trust strip */}
+                          <div className="rounded-2xl bg-gradient-to-r from-violet-500/5 via-amber-500/5 to-violet-500/5 border border-border/60 p-3.5">
+                            <div className="flex items-start gap-3">
+                              <div className="h-9 w-9 rounded-xl flex items-center justify-center shrink-0"
+                                style={{ background: `linear-gradient(135deg, ${accent}, #F0B838)` }}>
+                                <ShieldCheck className="h-4.5 w-4.5 text-white" />
+                              </div>
+                              <div className="flex-1">
+                                <div className="text-xs font-bold text-foreground mb-0.5">
+                                  Paiement sécurisé par TECHNOVA
+                                </div>
+                                <div className="text-[11px] text-muted-foreground leading-relaxed">
+                                  Aucune donnée bancaire stockée. Validation directe sur votre téléphone via votre opérateur.
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <Button onClick={handleConfirmPay} disabled={loading}
+                            className="relative w-full h-14 text-base font-bold rounded-xl group transition-all overflow-hidden text-white"
+                            style={{
+                              background: `linear-gradient(135deg, ${accent} 0%, ${accent} 50%, #C9962E 110%)`,
+                              boxShadow: `0 14px 36px -10px ${accent}90, inset 0 1px 0 rgba(255,255,255,0.2)`,
+                            }}>
+                            {loading ? (
+                              <span className="flex items-center gap-2">
+                                <Loader2 className="h-5 w-5 animate-spin" /> Initiation du paiement…
+                              </span>
+                            ) : (
+                              <span className="flex items-center gap-2 relative z-10">
+                                <Lock className="h-4 w-4" />
+                                Payer {discountedPrice.toLocaleString()} {currency}
+                                <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
+                              </span>
+                            )}
+                            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                          </Button>
+
+                          <p className="text-center text-[11px] text-muted-foreground">
+                            Vous recevrez une demande de validation sur le numéro <span className="font-mono font-semibold text-foreground">+{fullPhone}</span>.
+                          </p>
+                        </>
+                      )}
+
+                      {paymentMethod === "card" && (
+                        <>
+                          {/* Credit Card Form */}
+                          <div className="space-y-4">
+                            <div className="flex items-center gap-2 mb-1">
+                              <CreditCard className="h-4 w-4 text-muted-foreground" />
+                              <span className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Informations de carte</span>
+                            </div>
+
+                            {/* Interactive Card Graphic Mock */}
+                            <div className="relative h-44 w-full rounded-2xl p-5 text-white overflow-hidden shadow-lg select-none mb-2 animate-fade-in"
+                              style={{ background: `linear-gradient(135deg, ${accent} 0%, #1e1b4b 100%)` }}>
+                              {/* Background decorations */}
+                              <div className="absolute -top-10 -right-10 h-32 w-32 rounded-full bg-white/5 blur-xl" />
+                              <div className="absolute -bottom-10 -left-10 h-32 w-32 rounded-full bg-white/5 blur-xl" />
+
+                              {/* Card Chip & Network Logo */}
+                              <div className="flex justify-between items-start mb-6 relative z-10">
+                                <div className="h-9 w-12 rounded-lg bg-yellow-400/80 backdrop-blur-sm border border-yellow-300/40 relative flex items-center justify-center">
+                                  <div className="grid grid-cols-3 gap-0.5 w-8 h-6">
+                                    {[...Array(6)].map((_, i) => (
+                                      <div key={i} className="border border-yellow-600/30 rounded-xs" />
+                                    ))}
+                                  </div>
+                                </div>
+                                {cardType !== "unknown" && (
+                                  <div className="text-lg font-bold italic tracking-tight relative z-10">
+                                    {cardType === "visa" ? (
+                                      <span className="text-sky-300">VISA</span>
+                                    ) : (
+                                      <span className="text-orange-400">Mastercard</span>
+                                    )}
+                                  </div>
                                 )}
-                                <div className="h-12 w-12 rounded-xl bg-white p-1 ring-1 ring-gray-100 flex items-center justify-center">
-                                  <img src={providerLogos[p.family]} alt={p.label}
-                                    className="h-full w-full object-contain" />
+                              </div>
+
+                              {/* Card Number */}
+                              <div className="text-lg sm:text-xl font-mono tracking-widest mb-4 truncate relative z-10">
+                                {cardNumber || "•••• •••• •••• ••••"}
+                              </div>
+
+                              {/* Cardholder & Expiry */}
+                              <div className="flex justify-between items-end relative z-10">
+                                <div className="truncate max-w-[70%]">
+                                  <div className="text-[9px] uppercase tracking-wider opacity-60">Titulaire</div>
+                                  <div className="text-xs font-bold truncate">{cardName.toUpperCase() || "VOTRE NOM"}</div>
                                 </div>
-                                <div className="text-[11px] font-bold text-gray-900 text-center leading-tight">
-                                  {p.label}
+                                <div>
+                                  <div className="text-[9px] uppercase tracking-wider opacity-60">Expire</div>
+                                  <div className="text-xs font-bold font-mono">{cardExpiry || "MM/YY"}</div>
                                 </div>
-                                <div className="text-[9px] text-gray-400 font-mono">{p.currency}</div>
-                              </motion.button>
-                            );
-                          })}
-                        </div>
-                      </div>
-
-                      {/* Trust strip */}
-                      <div className="rounded-2xl bg-gradient-to-r from-violet-50 via-amber-50/30 to-violet-50 border border-violet-100 p-3.5">
-                        <div className="flex items-start gap-3">
-                          <div className="h-9 w-9 rounded-xl flex items-center justify-center shrink-0"
-                            style={{ background: `linear-gradient(135deg, ${accent}, #F0B838)` }}>
-                            <ShieldCheck className="h-4.5 w-4.5 text-white" />
-                          </div>
-                          <div className="flex-1">
-                            <div className="text-xs font-bold text-gray-900 mb-0.5">
-                              Paiement sécurisé par TECHNOVA
+                              </div>
                             </div>
-                            <div className="text-[11px] text-gray-600 leading-relaxed">
-                              Aucune donnée bancaire stockée. Validation directe sur votre téléphone via votre opérateur.
+
+                            <div className="space-y-3">
+                              <div>
+                                <label className="text-xs font-semibold text-muted-foreground mb-1 block">Nom sur la carte *</label>
+                                <Input
+                                  value={cardName}
+                                  onChange={(e) => setCardName(e.target.value)}
+                                  placeholder="JEAN DUPONT"
+                                  className="h-11 bg-muted/30 border-border/60 focus:bg-card text-sm text-foreground"
+                                />
+                              </div>
+                              <div>
+                                <label className="text-xs font-semibold text-muted-foreground mb-1 block">Numéro de carte *</label>
+                                <div className="relative">
+                                  <Input
+                                    value={cardNumber}
+                                    onChange={(e) => handleCardNumberChange(e.target.value)}
+                                    placeholder="4000 1234 5678 9010"
+                                    className="h-11 bg-muted/30 border-border/60 focus:bg-card text-sm font-mono text-foreground pr-10"
+                                  />
+                                  <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center pointer-events-none">
+                                    {cardType === "visa" && <i className="fab fa-cc-visa text-blue-500 text-lg" />}
+                                    {cardType === "mastercard" && <i className="fab fa-cc-mastercard text-red-500 text-lg" />}
+                                    {cardType === "unknown" && <CreditCard className="h-4 w-4 text-gray-400" />}
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="grid grid-cols-2 gap-3">
+                                <div>
+                                  <label className="text-xs font-semibold text-muted-foreground mb-1 block">Expiration *</label>
+                                  <Input
+                                    value={cardExpiry}
+                                    onChange={(e) => handleExpiryChange(e.target.value)}
+                                    placeholder="MM/YY"
+                                    className="h-11 bg-muted/30 border-border/60 focus:bg-card text-sm font-mono text-center text-foreground"
+                                  />
+                                </div>
+                                <div>
+                                  <label className="text-xs font-semibold text-muted-foreground mb-1 block">Code CVV *</label>
+                                  <Input
+                                    type="password"
+                                    value={cardCvv}
+                                    onChange={(e) => handleCvvChange(e.target.value)}
+                                    placeholder="123"
+                                    className="h-11 bg-muted/30 border-border/60 focus:bg-card text-sm font-mono text-center text-foreground"
+                                  />
+                                </div>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </div>
 
-                      <Button onClick={handleConfirmPay} disabled={loading}
-                        className="relative w-full h-14 text-base font-bold rounded-xl group transition-all overflow-hidden text-white"
-                        style={{
-                          background: `linear-gradient(135deg, ${accent} 0%, ${accent} 50%, #C9962E 110%)`,
-                          boxShadow: `0 14px 36px -10px ${accent}90, inset 0 1px 0 rgba(255,255,255,0.2)`,
-                        }}>
-                        {loading ? (
-                          <span className="flex items-center gap-2">
-                            <Loader2 className="h-5 w-5 animate-spin" /> Initiation du paiement…
-                          </span>
-                        ) : (
-                          <span className="flex items-center gap-2 relative z-10">
-                            <Lock className="h-4 w-4" />
-                            Payer {discountedPrice.toLocaleString()} {currency}
-                            <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
-                          </span>
-                        )}
-                        <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-                      </Button>
+                          {/* Security details */}
+                          <div className="rounded-2xl bg-gradient-to-r from-violet-500/5 via-amber-500/5 to-violet-500/5 border border-border/60 p-3.5">
+                            <div className="flex items-start gap-3">
+                              <div className="h-9 w-9 rounded-xl flex items-center justify-center shrink-0"
+                                style={{ background: `linear-gradient(135deg, ${accent}, #F0B838)` }}>
+                                <ShieldCheck className="h-4.5 w-4.5 text-white" />
+                              </div>
+                              <div className="flex-1">
+                                <div className="text-xs font-bold text-foreground mb-0.5">
+                                  Paiement par Carte 3D Secure
+                                </div>
+                                <div className="text-[11px] text-muted-foreground leading-relaxed">
+                                  Données bancaires chiffrées bout-en-bout. Vos données ne sont jamais stockées sur nos serveurs.
+                                </div>
+                              </div>
+                            </div>
+                          </div>
 
-                      <p className="text-center text-[11px] text-gray-400">
-                        Vous recevrez une demande de validation sur le numéro <span className="font-mono font-semibold">+{fullPhone}</span>.
-                      </p>
-                    </motion.div>
+                          <Button onClick={handleConfirmPay} disabled={loading}
+                            className="relative w-full h-14 text-base font-bold rounded-xl group transition-all overflow-hidden text-white"
+                            style={{
+                              background: `linear-gradient(135deg, ${accent} 0%, ${accent} 50%, #C9962E 110%)`,
+                              boxShadow: `0 14px 36px -10px ${accent}90, inset 0 1px 0 rgba(255,255,255,0.2)`,
+                            }}>
+                            {loading ? (
+                              <span className="flex items-center gap-2">
+                                <Loader2 className="h-5 w-5 animate-spin" /> Traitement sécurisé…
+                              </span>
+                            ) : (
+                              <span className="flex items-center gap-2 relative z-10">
+                                <Lock className="h-4 w-4" />
+                                Payer {discountedPrice.toLocaleString()} {currency}
+                                <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
+                              </span>
+                            )}
+                            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                          </Button>
+                        </>
+                      )}
+                     </motion.div>
                   )}
 
                   {step === 3 && (
