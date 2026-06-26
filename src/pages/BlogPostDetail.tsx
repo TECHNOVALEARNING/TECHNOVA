@@ -394,6 +394,10 @@ export default function BlogPostDetail() {
                   src={article.image} 
                   alt={article.title} 
                   className="w-full h-full object-cover"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = "https://images.unsplash.com/photo-1504711434969-e33886168d5c?w=800&q=80";
+                  }}
                 />
               </div>
 
@@ -422,6 +426,10 @@ export default function BlogPostDetail() {
                             src={rel.image} 
                             alt={rel.title} 
                             className="w-full h-full object-cover group-hover:scale-104 transition-transform duration-300"
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.src = "https://images.unsplash.com/photo-1504711434969-e33886168d5c?w=800&q=80";
+                            }}
                           />
                         </div>
                         <div className="p-4 flex-1 flex flex-col justify-between">

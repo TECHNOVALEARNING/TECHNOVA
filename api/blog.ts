@@ -91,7 +91,7 @@ function formatArticle(item: any): any {
           <h4 class="text-sm font-bold text-foreground">Lire la suite de l'article</h4>
           <p class="text-xs text-muted-foreground">Cet article est disponible en intégralité sur le site de ${sourceName}.</p>
         </div>
-        <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="px-4 py-2.5 text-xs font-bold text-white bg-primary hover:bg-primary/95 rounded-xl transition-all shrink-0 shadow-sm shadow-glow text-center inline-block">
+        <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="px-4 py-2.5 text-xs font-bold bg-primary hover:bg-primary/95 rounded-xl transition-all shrink-0 shadow-sm shadow-glow text-center inline-block" style="color: #ffffff !important; text-decoration: none !important;">
           Voir l'article complet sur ${sourceName}
         </a>
       </div>

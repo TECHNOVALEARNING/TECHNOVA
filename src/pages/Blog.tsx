@@ -331,6 +331,10 @@ export default function Blog() {
                       src={featuredArticle.image} 
                       alt={featuredArticle.title} 
                       className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-700 ease-out"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = "https://images.unsplash.com/photo-1504711434969-e33886168d5c?w=800&q=80";
+                      }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-60 pointer-events-none" />
                   </div>
@@ -390,6 +394,10 @@ export default function Blog() {
                           src={article.image} 
                           alt={article.title} 
                           className="w-full h-full object-cover group-hover:scale-104 transition-transform duration-500 ease-out"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.src = "https://images.unsplash.com/photo-1504711434969-e33886168d5c?w=800&q=80";
+                          }}
                         />
                         <span className="absolute top-3 left-3 px-2.5 py-1 rounded-lg text-[10px] font-extrabold uppercase tracking-widest bg-card/90 backdrop-blur-md text-foreground border border-border">
                           {article.category}
