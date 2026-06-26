@@ -6,109 +6,141 @@ import { motion } from "framer-motion";
 import { ArrowLeft, Calendar, Clock, User, Share2, Bookmark, CheckCircle2, ChevronRight, BookOpen } from "lucide-react";
 import { toast } from "sonner";
 
-// Static mock articles database for local development fallback
+// Static mock articles database for siecledigital.fr fallback
 const FALLBACK_ARTICLES_DETAILS: { [key: string]: any } = {
-  "795": {
-    id: "795",
-    title: "Comment les systèmes de recommandation peuvent-ils être personnalisés pour améliorer l'expérience utilisateur dans les services de streaming?",
-    category: "Actu",
-    image: "https://inoutech.net/images/34803972-1920.jpg",
-    author: "Enzo",
-    date: "5 juin 2024",
-    readingTime: "5 min",
+  "intelligence-artificielle-coute-plus-cher-salarie": {
+    id: "intelligence-artificielle-coute-plus-cher-salarie",
+    title: "Pourquoi l'intelligence artificielle coûte parfois plus cher qu'un salarié",
+    category: "Intelligence Artificielle",
+    image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80",
+    author: "Siècle Digital",
+    date: "24 juin 2026",
+    readingTime: "6 min",
     content: `
-      <p class="lead">Dans une ère où le numérique règne en maître, l'expérience utilisateur ne cesse d'évoluer grâce à l'exploitation de <strong>données</strong> précieuses. Les <strong>systèmes de recommandation</strong> sont au cœur de cette évolution, permettant d'offrir des recommandations personnalisées qui transforment l'expérience client. En particulier, dans le domaine des services de streaming comme <strong>Netflix</strong>, la personnalisation des recommandations est essentielle pour capter l'attention des utilisateurs et répondre à leurs préférences uniques.</p>
+      <p class="lead">L'essor de l'<strong>IA générative</strong> pousse de nombreuses entreprises à investir massivement dans ces technologies. Pourtant, les coûts réels d'infrastructure, de formation et de maintenance dépassent souvent les attentes initiales. Tour d'horizon d'une réalité économique qui nuance l'enthousiasme ambiant.</p>
       
-      <h2>L'importance des systèmes de recommandation pour les services de streaming</h2>
-      <p>Les <strong>systèmes de recommandation</strong> sont des outils puissants qui analysent les <strong>données</strong> des <strong>utilisateurs</strong> pour prédire leurs goûts et comportements. Dans les services de streaming, ils sont utilisés pour suggérer des <strong>contenus</strong> en adéquation avec les <strong>préférences</strong> des utilisateurs, réduisant ainsi le temps de recherche et augmentant la satisfaction.</p>
-      <p>Des algorithmes sophistiqués sont utilisés pour analyser les habitudes de visionnage, le genre de films préféré, la durée de visionnage, et bien d'autres facteurs. Ces <strong>données</strong> sont ensuite utilisées pour fournir des <strong>recommandations personnalisées</strong>, rendant chaque expérience utilisateur unique.</p>
+      <h2>Les coûts cachés de l'infrastructure IA</h2>
+      <p>Derrière les promesses de productivité, les entreprises découvrent des factures salées. L'entraînement d'un modèle de langage performant nécessite des <strong>GPU de dernière génération</strong> dont le coût unitaire dépasse les 30 000 euros. À cela s'ajoutent les frais de cloud computing, de stockage de données et de bande passante qui explosent avec l'usage.</p>
+      <p>Selon une étude récente, <strong>25 % des investissements</strong> consacrés à l'IA en France sont absorbés par la complexité technologique avant même d'atteindre des résultats concrets.</p>
       
-      <h2>La personnalisation des recommandations : une stratégie gagnante</h2>
-      <p>La <strong>personnalisation</strong> des <strong>recommandations</strong> est une stratégie qui repose sur la capacité à analyser et à interpréter les <strong>données</strong> des <strong>utilisateurs</strong>. En comprenant les goûts et les habitudes de chaque <strong>utilisateur</strong>, les services de streaming peuvent proposer du contenu qui correspond précisément à leurs attentes.</p>
-      <p>Par exemple, en analysant les séries et films que vous avez récemment regardés sur <strong>Netflix</strong>, le <strong>système de recommandation</strong> peut suggérer des contenus similaires qui pourraient vous intéresser. Cette approche sur mesure rend l'expérience plus agréable et incite les utilisateurs à passer plus de temps sur la plateforme.</p>
+      <h2>Formation et compétences : le maillon faible</h2>
+      <p>L'un des postes de dépenses les plus sous-estimés reste la <strong>formation des équipes</strong>. Les salariés doivent non seulement apprendre à utiliser les outils IA, mais aussi comprendre leurs limites pour éviter les erreurs coûteuses. Les entreprises qui réussissent sont celles qui investissent autant dans l'humain que dans la technologie.</p>
       
-      <h2>Comment les algorithmes de recommandation fonctionnent-ils?</h2>
-      <p>Les <strong>algorithmes</strong> de recommandation sont les moteurs qui alimentent les <strong>systèmes de recommandation</strong>. Ils utilisent des techniques d'apprentissage automatique pour analyser les <strong>données</strong> des <strong>utilisateurs</strong> et prédire leurs <strong>préférences</strong>.</p>
-      <p>Plusieurs types d'algorithmes peuvent être utilisés, chacun ayant ses propres forces. Par exemple, les algorithmes basés sur le filtrage collaboratif utilisent les données de tous les utilisateurs pour faire des prédictions, tandis que les algorithmes basés sur le contenu se concentrent sur les préférences individuelles de chaque utilisateur. En combinant ces approches, les services de streaming peuvent proposer des <strong>recommandations</strong> qui sont à la fois pertinentes et diversifiées.</p>
+      <blockquote>
+        "L'IA n'est pas un remplacement de l'humain, c'est un amplificateur. Mais un amplificateur coûte cher à installer et à maintenir." — Yann LeCun
+      </blockquote>
+
+      <h2>Le vrai calcul : TCO vs salaire</h2>
+      <p>Quand on compare le <strong>coût total de possession (TCO)</strong> d'une solution IA au salaire chargé d'un employé qualifié, les résultats surprennent :</p>
+      <ul>
+        <li><strong>Coûts d'abonnement :</strong> Les API des modèles comme GPT-4 ou Claude coûtent entre 20 et 60 dollars par million de tokens.</li>
+        <li><strong>Maintenance continue :</strong> Les modèles doivent être régulièrement affinés et mis à jour.</li>
+        <li><strong>Risques d'hallucination :</strong> Le coût de la vérification humaine des résultats annule parfois les gains de productivité.</li>
+      </ul>
+
+      <h2>Vers un équilibre humain-machine</h2>
+      <p>La solution optimale réside dans une approche hybride. Les entreprises les plus performantes utilisent l'IA pour <strong>augmenter les capacités</strong> de leurs employés plutôt que pour les remplacer. Cette stratégie permet de maximiser le retour sur investissement tout en préservant l'expertise humaine indispensable.</p>
+    `
+  },
+  "fuite-donnees-24-milliards-identifiants-exposes": {
+    id: "fuite-donnees-24-milliards-identifiants-exposes",
+    title: "Fuite de données : 24 milliards d'identifiants exposés sur le dark web",
+    category: "Cybersécurité",
+    image: "https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?w=800&q=80",
+    author: "Siècle Digital",
+    date: "25 juin 2026",
+    readingTime: "7 min",
+    content: `
+      <p class="lead">Une base de données colossale contenant <strong>24 milliards d'identifiants volés</strong> a été découverte sur le dark web. Cette fuite d'une ampleur sans précédent soulève des questions cruciales sur la sécurité numérique à l'échelle mondiale.</p>
       
-      <h2>Les défis de la personnalisation des systèmes de recommandation</h2>
-      <p>Bien que la personnalisation des <strong>systèmes de recommandation</strong> offre de nombreux avantages, elle présente également des défis. L'un des principaux est la gestion de la <strong>confidentialité</strong> des <strong>données</strong> des utilisateurs. Il est crucial de respecter la vie privée des utilisateurs tout en utilisant leurs données pour améliorer leur expérience.</p>
-      <p>Un autre défi est de maintenir un équilibre entre la pertinence et la diversité des recommandations. Si les <strong>recommandations</strong> sont trop personnalisées, les utilisateurs peuvent se retrouver dans une "bulle de filtres" où ils ne voient que du contenu très similaire à ce qu'ils ont déjà regardé. C'est pourquoi il est essentiel d'intégrer une certaine diversité dans les recommandations pour continuer à stimuler l'intérêt et la curiosité des utilisateurs.</p>
+      <h2>L'ampleur de la fuite</h2>
+      <p>Les chercheurs en cybersécurité ont identifié une compilation massive regroupant des identifiants provenant de centaines de fuites antérieures. Emails, mots de passe, numéros de téléphone : les données couvrent des services allant des <strong>réseaux sociaux aux banques en ligne</strong>.</p>
+      
+      <h2>Comment se protéger ?</h2>
+      <p>Face à cette menace, plusieurs mesures s'imposent :</p>
+      <ul>
+        <li><strong>Authentification à deux facteurs (2FA) :</strong> Activez-la sur tous vos comptes sensibles.</li>
+        <li><strong>Gestionnaire de mots de passe :</strong> Utilisez des mots de passe uniques pour chaque service.</li>
+        <li><strong>Vérification des fuites :</strong> Des services comme Have I Been Pwned permettent de vérifier si vos données ont été compromises.</li>
+      </ul>
+      
+      <h2>Les conséquences légales</h2>
+      <p>Avec l'entrée en vigueur du RGPD renforcé et du projet de loi C-36 au Canada, les entreprises responsables de fuites de données font face à des <strong>amendes record</strong>. La CNIL a déjà prononcé plusieurs sanctions dépassant les 100 millions d'euros en 2026.</p>
     `
   }
 };
 
 const MOCK_LIST = [
   {
-    id: "795",
-    title: "Comment les systèmes de recommandation peuvent-ils être personnalisés pour améliorer l'expérience utilisateur dans les services de streaming?",
-    category: "Actu",
-    image: "https://inoutech.net/images/34803972-1920.jpg",
-    date: "5 juin 2024",
-    readingTime: "5 min"
-  },
-  {
-    id: "807",
-    title: "Comment les technologies d'imagerie avancée peuvent-elles être utilisées pour améliorer le diagnostic en oncologie?",
-    category: "Actu",
-    image: "https://inoutech.net/images/wp-807-600.jpg",
-    date: "5 juin 2024",
+    id: "intelligence-artificielle-coute-plus-cher-salarie",
+    title: "Pourquoi l'intelligence artificielle coûte parfois plus cher qu'un salarié",
+    category: "Intelligence Artificielle",
+    image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80",
+    date: "24 juin 2026",
     readingTime: "6 min"
   },
   {
-    id: "801",
-    title: "Comment utiliser les casques VR pour l'entraînement des pilotes de ligne?",
-    category: "High tech",
-    image: "https://inoutech.net/images/wp-801-600.jpg",
-    date: "5 juin 2024",
-    readingTime: "5 min"
-  },
-  {
-    id: "892",
-    title: "Make integromat : passez à l'automatisation facile",
-    category: "High tech",
-    image: "https://inoutech.net/images/wp-892-600.jpg",
-    date: "30 juillet 2024",
+    id: "fuite-donnees-24-milliards-identifiants-exposes",
+    title: "Fuite de données : 24 milliards d'identifiants exposés sur le dark web",
+    category: "Cybersécurité",
+    image: "https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?w=800&q=80",
+    date: "25 juin 2026",
     readingTime: "7 min"
   },
   {
-    id: "933",
-    title: "10 clés pour collaborer efficacement avec une agence de développement web",
-    category: "Internet",
-    image: "https://inoutech.net/images/wp-933-600.jpg",
-    date: "28 septembre 2025",
-    readingTime: "10 min"
+    id: "francais-preferent-ia-recherches-en-ligne",
+    title: "Les Français préfèrent désormais l'IA pour leurs recherches en ligne",
+    category: "Intelligence Artificielle",
+    image: "https://images.unsplash.com/photo-1655720828018-edd2daec9349?w=800&q=80",
+    date: "23 juin 2026",
+    readingTime: "5 min"
   },
   {
-    id: "797",
-    title: "Comment développer un jeu d'énigmes qui exploite pleinement la réalité augmentée sur smartphone?",
-    category: "Jeux-video",
-    image: "https://inoutech.net/images/wp-797-600.jpg",
-    date: "5 juin 2024",
+    id: "agents-ia-menacent-relation-marques-clients",
+    title: "69% des marketeurs craignent que les agents IA ne s'interposent entre les marques et leurs clients",
+    category: "Marketing",
+    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
+    date: "22 juin 2026",
+    readingTime: "8 min"
+  },
+  {
+    id: "tiktok-lance-fonctionnalite-commerce-social",
+    title: "TikTok lance une nouvelle fonctionnalité de commerce social qui change la donne",
+    category: "Réseaux Sociaux",
+    image: "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=800&q=80",
+    date: "21 juin 2026",
+    readingTime: "5 min"
+  },
+  {
+    id: "apple-intelligence-disponible-france-wwdc",
+    title: "Apple Intelligence enfin disponible en France : ce qu'il faut savoir",
+    category: "Technologie",
+    image: "https://images.unsplash.com/photo-1621768216002-5ac171876625?w=800&q=80",
+    date: "20 juin 2026",
     readingTime: "6 min"
   },
   {
-    id: "900",
-    title: "Découvrez les outils IA pour optimiser votre SEO facilement",
-    category: "Internet",
-    image: "https://inoutech.net/images/wp-900-600.jpg",
-    date: "29 septembre 2024",
-    readingTime: "5 min"
+    id: "startups-francaises-ia-levees-fonds-record",
+    title: "Les startups françaises de l'IA battent des records de levées de fonds en 2026",
+    category: "Business",
+    image: "https://images.unsplash.com/photo-1553729459-uj1xhkap7v0?w=800&q=80",
+    date: "19 juin 2026",
+    readingTime: "7 min"
   },
   {
-    id: "813",
-    title: "Quelle est la meilleure méthode pour intégrer l'IA dans le service client des banques?",
-    category: "High tech",
-    image: "https://inoutech.net/images/wp-813-600.jpg",
-    date: "5 juin 2024",
-    readingTime: "5 min"
+    id: "regulation-ia-europe-ai-act-premiers-effets",
+    title: "L'AI Act européen entre en vigueur : premiers effets concrets sur les entreprises",
+    category: "Société",
+    image: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=800&q=80",
+    date: "18 juin 2026",
+    readingTime: "9 min"
   },
   {
-    id: "898",
-    title: "Rôle et compétences d'un directeur de programme informatique freelance",
-    category: "Actu",
-    image: "https://inoutech.net/images/wp-898-600.jpg",
-    date: "27 septembre 2024",
+    id: "meta-threads-depasse-twitter-europe",
+    title: "Threads dépasse officiellement X (Twitter) en nombre d'utilisateurs actifs en Europe",
+    category: "Réseaux Sociaux",
+    image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&q=80",
+    date: "17 juin 2026",
     readingTime: "5 min"
   }
 ];
@@ -193,15 +225,15 @@ export default function BlogPostDetail() {
   }, [id]);
 
   const loadFallbackArticle = (articleId: string) => {
-    // If it's 795, load the real article content we parsed
+    // If we have a pre-built article, load it
     if (FALLBACK_ARTICLES_DETAILS[articleId]) {
       setArticle(FALLBACK_ARTICLES_DETAILS[articleId]);
     } else {
       // Generate a nice-looking dynamic article content
       const matchedMeta = MOCK_LIST.find(a => a.id === articleId) || {
-        title: "Article Technologique Innovant",
-        category: "Actu",
-        image: "https://inoutech.net/images/34803972-1920.jpg",
+        title: "Article Digital & Innovation",
+        category: "Technologie",
+        image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80",
         date: "25 juin 2026",
         readingTime: "5 min"
       };
@@ -211,30 +243,30 @@ export default function BlogPostDetail() {
         title: matchedMeta.title,
         category: matchedMeta.category,
         image: matchedMeta.image,
-        author: "Redaction Technova",
+        author: "Siècle Digital",
         date: matchedMeta.date,
         readingTime: matchedMeta.readingTime,
         content: `
-          <p class="lead">Découvrez les détails et analyses profondes sur ce sujet passionnant de la tech. Cet article explore comment les nouvelles technologies transforment les usages et améliorent notre efficacité au quotidien.</p>
+          <p class="lead">Découvrez les détails et analyses profondes sur ce sujet au cœur de l'actualité digitale. Cet article explore comment les nouvelles technologies et tendances numériques transforment les usages professionnels et personnels.</p>
           
-          <h2>Introduction aux technologies émergentes</h2>
-          <p>L'intégration de nouveaux systèmes numériques est au cœur des préoccupations actuelles des entreprises et des consommateurs. Qu'il s'agisse d'intelligence artificielle, d'outils cloud, d'automatisation ou de réalité mixte, chaque brique technologique redéfinit nos façons de travailler.</p>
+          <h2>Un secteur en pleine mutation</h2>
+          <p>Le paysage numérique évolue à une vitesse vertigineuse. De l'<strong>intelligence artificielle</strong> aux <strong>réseaux sociaux</strong>, en passant par la <strong>cybersécurité</strong> et le <strong>marketing digital</strong>, chaque secteur connaît des transformations majeures qui redéfinissent les standards de l'industrie.</p>
           
           <blockquote>
-            "La technologie n'est qu'un outil. En termes de motivation des enfants et de travail en équipe, l'enseignant est le plus important." — Bill Gates
+            "Le numérique n'est plus une option, c'est le socle sur lequel se construisent toutes les stratégies d'entreprise modernes." — Siècle Digital
           </blockquote>
 
-          <h2>Pourquoi ce sujet est-il crucial aujourd'hui ?</h2>
-          <p>L'adoption rapide de ces technologies s'explique par les gains d'efficacité indéniables qu'elles procurent. Cependant, leur déploiement soulève également des défis notables :</p>
+          <h2>Les enjeux clés à surveiller</h2>
+          <p>Plusieurs tendances se dessinent et méritent une attention particulière :</p>
           <ul>
-            <li><strong>Sécurité des données :</strong> Le stockage et le transfert d'informations sensibles doivent être chiffrés et sécurisés.</li>
-            <li><strong>Courbe d'apprentissage :</strong> Les équipes nécessitent des formations adaptées pour maîtriser ces nouveaux environnements.</li>
-            <li><strong>Intégration :</strong> Les applications doivent communiquer de façon transparente via des APIs robustes.</li>
+            <li><strong>IA générative :</strong> L'intégration des modèles de langage dans les processus métier ouvre des perspectives inédites mais soulève des questions éthiques.</li>
+            <li><strong>Protection des données :</strong> Le RGPD et l'AI Act européen redessinent le cadre réglementaire pour les entreprises technologiques.</li>
+            <li><strong>Social commerce :</strong> Les plateformes sociales deviennent de véritables places de marché, estompant la frontière entre contenu et commerce.</li>
           </ul>
 
-          <h2>Perspectives futures et opportunités</h2>
-          <p>Le futur verra une intégration encore plus poussée de l'intelligence et du traitement des données en périphérie (Edge Computing), offrant des temps de réponse instantanés. Les opportunités de croissance pour les professionnels et les organisations qui prennent ce virage tôt sont exceptionnelles.</p>
-          <p>Pour en savoir plus, n'hésitez pas à vous inscrire aux formations de la plateforme TECHNOVA et à explorer nos guides pratiques.</p>
+          <h2>Perspectives et recommandations</h2>
+          <p>Pour rester compétitif dans cet écosystème en constante évolution, il est essentiel de maintenir une <strong>veille technologique active</strong> et d'investir dans la formation continue des équipes. Les entreprises qui sauront allier innovation technologique et expertise humaine seront celles qui tireront le mieux leur épingle du jeu.</p>
+          <p>Retrouvez toutes nos analyses et décryptages sur <strong>Siècle Digital</strong>, votre média de référence pour comprendre les enjeux du numérique.</p>
         `
       });
     }

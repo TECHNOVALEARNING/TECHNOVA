@@ -5,100 +5,100 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Search, Calendar, Clock, ArrowRight, BookOpen, Sparkles, Filter, Newspaper } from "lucide-react";
 import { Link } from "react-router-dom";
 
-// Pre-populated real articles from inoutech.net to act as a fallback and ensure local dev is perfect
+// Pre-populated real articles from siecledigital.fr to act as a fallback and ensure local dev is perfect
 const FALLBACK_ARTICLES = [
   {
-    id: "795",
-    title: "Comment les systèmes de recommandation peuvent-ils être personnalisés pour améliorer l'expérience utilisateur dans les services de streaming?",
-    category: "Actu",
-    image: "https://inoutech.net/images/34803972-1920.jpg",
-    excerpt: "Dans une ère où le numérique règne en maître, l'expérience utilisateur ne cesse d'évoluer grâce à l'exploitation de données précieuses. Les systèmes de recommandation sont au cœur de cette évolution...",
-    date: "5 juin 2024",
-    readingTime: "5 min"
-  },
-  {
-    id: "807",
-    title: "Comment les technologies d'imagerie avancée peuvent-elles être utilisées pour améliorer le diagnostic en oncologie?",
-    category: "Actu",
-    image: "https://inoutech.net/images/wp-807-600.jpg",
-    excerpt: "L'imagerie a fait des progrès incroyables ces dernières années. Les innovations technologiques en constant développement permettent désormais de repousser les limites de la médecine...",
-    date: "5 juin 2024",
+    id: "intelligence-artificielle-coute-plus-cher-salarie",
+    title: "Pourquoi l'intelligence artificielle coûte parfois plus cher qu'un salarié",
+    category: "Intelligence Artificielle",
+    image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80",
+    excerpt: "L'essor de l'IA générative pousse de nombreuses entreprises à investir massivement dans ces technologies, mais les coûts réels d'infrastructure, de formation et de maintenance dépassent souvent les attentes initiales...",
+    date: "24 juin 2026",
     readingTime: "6 min"
   },
   {
-    id: "801",
-    title: "Comment utiliser les casques VR pour l'entraînement des pilotes de ligne?",
-    category: "High tech",
-    image: "https://inoutech.net/images/wp-801-600.jpg",
-    excerpt: "Dans le monde de l'aviation, la technologie joue un rôle considérable pour améliorer les compétences des pilotes. L'utilisation de la réalité virtuelle offre des simulations plus immersives...",
-    date: "5 juin 2024",
-    readingTime: "5 min"
-  },
-  {
-    id: "892",
-    title: "Make integromat : passez à l'automatisation facile",
-    category: "High tech",
-    image: "https://inoutech.net/images/wp-892-600.jpg",
-    excerpt: "Vous souhaitez automatiser vos tâches professionnelles ou personnelles sans complexité de code ? Découvrez comment Make (ex Integromat) simplifie l'interconnexion de vos applications...",
-    date: "30 juillet 2024",
+    id: "fuite-donnees-24-milliards-identifiants-exposes",
+    title: "Fuite de données : 24 milliards d'identifiants exposés sur le dark web",
+    category: "Cybersécurité",
+    image: "https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?w=800&q=80",
+    excerpt: "Une base de données colossale contenant 24 milliards d'identifiants volés a été découverte sur le dark web. Retour sur l'une des plus grandes fuites de l'histoire numérique et ses conséquences pour les utilisateurs...",
+    date: "25 juin 2026",
     readingTime: "7 min"
   },
   {
-    id: "933",
-    title: "10 clés pour collaborer efficacement avec une agence de développement web",
-    category: "Internet",
-    image: "https://inoutech.net/images/wp-933-600.jpg",
-    excerpt: "Collaborer avec une agence de développement web exige une préparation rigoureuse. Découvrez les règles d'or pour réussir votre projet digital et bâtir une relation de confiance durable...",
-    date: "28 septembre 2025",
-    readingTime: "10 min"
+    id: "francais-preferent-ia-recherches-en-ligne",
+    title: "Les Français préfèrent désormais l'IA pour leurs recherches en ligne",
+    category: "Intelligence Artificielle",
+    image: "https://images.unsplash.com/photo-1655720828018-edd2daec9349?w=800&q=80",
+    excerpt: "Une étude récente révèle un basculement majeur : plus de la moitié des internautes français déclarent préférer les réponses générées par l'IA aux résultats de recherche classiques de Google...",
+    date: "23 juin 2026",
+    readingTime: "5 min"
   },
   {
-    id: "797",
-    title: "Comment développer un jeu d'énigmes qui exploite pleinement la réalité augmentée sur smartphone?",
-    category: "Jeux-video",
-    image: "https://inoutech.net/images/wp-797-600.jpg",
-    excerpt: "La réalité augmentée sur smartphone offre des opportunités créatives incroyables pour les concepteurs de jeux vidéo. Apprenez à concevoir des puzzles immersifs ancrés dans l'espace physique...",
-    date: "5 juin 2024",
+    id: "agents-ia-menacent-relation-marques-clients",
+    title: "69% des marketeurs craignent que les agents IA ne s'interposent entre les marques et leurs clients",
+    category: "Marketing",
+    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
+    excerpt: "Selon une étude menée auprès de responsables marketing en Europe, une majorité écrasante redoute que les agents IA et les LLM créent une barrière entre les marques et leurs audiences...",
+    date: "22 juin 2026",
+    readingTime: "8 min"
+  },
+  {
+    id: "tiktok-lance-fonctionnalite-commerce-social",
+    title: "TikTok lance une nouvelle fonctionnalité de commerce social qui change la donne",
+    category: "Réseaux Sociaux",
+    image: "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=800&q=80",
+    excerpt: "TikTok accélère sa stratégie e-commerce avec une nouvelle fonctionnalité permettant aux créateurs de vendre directement depuis leurs vidéos. Une révolution pour le social commerce en France...",
+    date: "21 juin 2026",
+    readingTime: "5 min"
+  },
+  {
+    id: "apple-intelligence-disponible-france-wwdc",
+    title: "Apple Intelligence enfin disponible en France : ce qu'il faut savoir",
+    category: "Technologie",
+    image: "https://images.unsplash.com/photo-1621768216002-5ac171876625?w=800&q=80",
+    excerpt: "Lors de la WWDC 2026, Apple a annoncé le déploiement d'Apple Intelligence en français. Siri repensé, résumé automatique, génération d'images — tour d'horizon des fonctionnalités qui arrivent sur iPhone...",
+    date: "20 juin 2026",
     readingTime: "6 min"
   },
   {
-    id: "900",
-    title: "Découvrez les outils IA pour optimiser votre SEO facilement",
-    category: "Internet",
-    image: "https://inoutech.net/images/wp-900-600.jpg",
-    excerpt: "Les outils d'intelligence artificielle révolutionnent l'optimisation SEO de vos sites internet. Génération de mots-clés, audit technique et création de contenu à forte valeur ajoutée...",
-    date: "29 septembre 2024",
-    readingTime: "5 min"
+    id: "startups-francaises-ia-levees-fonds-record",
+    title: "Les startups françaises de l'IA battent des records de levées de fonds en 2026",
+    category: "Business",
+    image: "https://images.unsplash.com/photo-1553729459-uj1xhkap7v0?w=800&q=80",
+    excerpt: "L'écosystème français de l'intelligence artificielle connaît une dynamique sans précédent avec plus de 3 milliards d'euros levés au premier semestre 2026. Mistral AI, Hugging Face et les nouveaux champions...",
+    date: "19 juin 2026",
+    readingTime: "7 min"
   },
   {
-    id: "813",
-    title: "Quelle est la meilleure méthode pour intégrer l'IA dans le service client des banques?",
-    category: "High tech",
-    image: "https://inoutech.net/images/wp-813-600.jpg",
-    excerpt: "Dans un monde en constante mutation, l'intégration de l'intelligence artificielle est un enjeu compétitif majeur pour le secteur bancaire afin de fluidifier et personnaliser l'expérience client...",
-    date: "5 juin 2024",
-    readingTime: "5 min"
+    id: "regulation-ia-europe-ai-act-premiers-effets",
+    title: "L'AI Act européen entre en vigueur : premiers effets concrets sur les entreprises",
+    category: "Société",
+    image: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=800&q=80",
+    excerpt: "La réglementation européenne sur l'intelligence artificielle commence à produire ses effets. Entre obligations de transparence, classifications de risques et premières amendes, le paysage se redessine...",
+    date: "18 juin 2026",
+    readingTime: "9 min"
   },
   {
-    id: "898",
-    title: "Rôle et compétences d'un directeur de programme informatique freelance",
-    category: "Actu",
-    image: "https://inoutech.net/images/wp-898-600.jpg",
-    excerpt: "Diriger des projets IT d'envergure en tant que consultant freelance demande une solide maîtrise technique, d'excellentes qualités relationnelles et un sens aigu de la gestion des risques...",
-    date: "27 septembre 2024",
+    id: "meta-threads-depasse-twitter-europe",
+    title: "Threads dépasse officiellement X (Twitter) en nombre d'utilisateurs actifs en Europe",
+    category: "Réseaux Sociaux",
+    image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&q=80",
+    excerpt: "Pour la première fois, Threads de Meta a dépassé X en nombre d'utilisateurs actifs mensuels sur le continent européen. Un basculement qui redéfinit le paysage des réseaux sociaux textuels...",
+    date: "17 juin 2026",
     readingTime: "5 min"
   }
 ];
 
 const CATEGORIES = [
   { slug: "All", fr: "Tout", en: "All", emoji: "✨" },
-  { slug: "actu", fr: "Actu", en: "News", emoji: "📰" },
-  { slug: "high-tech", fr: "High tech", en: "High Tech", emoji: "💻" },
-  { slug: "internet", fr: "Internet", en: "Internet", emoji: "🌐" },
-  { slug: "jeux-video", fr: "Jeux-video", en: "Gaming", emoji: "🎮" },
+  { slug: "intelligence-artificielle", fr: "Intelligence Artificielle", en: "AI", emoji: "🤖" },
   { slug: "marketing", fr: "Marketing", en: "Marketing", emoji: "📈" },
-  { slug: "materiel", fr: "Matériel", en: "Hardware", emoji: "🔌" },
-  { slug: "smartphones", fr: "Smartphones", en: "Smartphones", emoji: "📱" }
+  { slug: "technologie", fr: "Technologie", en: "Technology", emoji: "💻" },
+  { slug: "cybersecurite", fr: "Cybersécurité", en: "Cybersecurity", emoji: "🔒" },
+  { slug: "reseaux-sociaux", fr: "Réseaux Sociaux", en: "Social Media", emoji: "📱" },
+  { slug: "business", fr: "Business", en: "Business", emoji: "💼" },
+  { slug: "societe", fr: "Société", en: "Society", emoji: "🌍" }
 ];
 
 export default function Blog() {

@@ -188,13 +188,19 @@ const DashboardProducts = () => {
   };
 
   const handleCopyLink = (p: Product) => {
-    const url = `${window.location.origin}/products/${p.id}`;
+    const slug = profile?.store_slug;
+    const url = slug
+      ? `${window.location.origin}/store/${slug}/${p.id}`
+      : `${window.location.origin}/product/${p.id}`;
     navigator.clipboard.writeText(url);
     toast.success(t.copySuccess);
   };
 
   const handleShare = (p: Product) => {
-    const url = `${window.location.origin}/products/${p.id}`;
+    const slug = profile?.store_slug;
+    const url = slug
+      ? `${window.location.origin}/store/${slug}/${p.id}`
+      : `${window.location.origin}/product/${p.id}`;
     if (navigator.share) {
       navigator.share({ title: p.title, url });
     } else {
@@ -344,9 +350,9 @@ const DashboardProducts = () => {
                           <DropdownMenuItem onClick={() => {
                             const slug = profile?.store_slug;
                             if (slug) {
-                              window.open(`/store/${slug}/product/${p.id}`, "_blank");
+                              window.open(`/store/${slug}/${p.id}`, "_blank");
                             } else {
-                              navigate(`/products/${p.id}`);
+                              navigate(`/product/${p.id}`);
                             }
                           }}>
                             <Eye className="h-4 w-4 mr-2" /> {t.viewOnSite}
@@ -402,7 +408,14 @@ const DashboardProducts = () => {
                         <DropdownMenuItem onClick={() => navigate(`/dashboard/products/${p.id}/edit`)}>
                           <Pencil className="h-4 w-4 mr-2" /> {t.edit}
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => navigate(`/products/${p.id}`)}>
+                        <DropdownMenuItem onClick={() => {
+                          const slug = profile?.store_slug;
+                          if (slug) {
+                            navigate(`/store/${slug}/${p.id}`);
+                          } else {
+                            navigate(`/product/${p.id}`);
+                          }
+                        }}>
                           <Eye className="h-4 w-4 mr-2" /> {t.viewMobile}
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => handleDuplicate(p)}>

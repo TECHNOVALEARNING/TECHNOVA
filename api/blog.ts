@@ -4,150 +4,235 @@ import { IncomingMessage, ServerResponse } from 'http';
 const cache: { [key: string]: { data: any; expiry: number } } = {};
 const CACHE_TTL = 10 * 60 * 1000; // 10 minutes
 
-// Helper to scrape article details from article page
-async function scrapeArticleDetail(id: string) {
-  const url = `https://inoutech.net/archives/${id}`;
-  const res = await fetch(url);
+// Siècle Digital category mapping (URL slug → display name)
+const CATEGORY_MAP: Record<string, string> = {
+  'marketing': 'Marketing',
+  'technologie': 'Technologie',
+  'intelligence-artificielle': 'Intelligence Artificielle',
+  'cybersecurite': 'Cybersécurité',
+  'reseaux-sociaux': 'Réseaux Sociaux',
+  'business': 'Business',
+  'societe': 'Société',
+};
+
+// Helper to scrape article details from a siecledigital.fr article page
+async function scrapeArticleDetail(slug: string) {
+  const url = `https://siecledigital.fr/${slug}/`;
+  const res = await fetch(url, {
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+      'Accept-Language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7',
+      'Accept-Encoding': 'identity',
+      'Cache-Control': 'no-cache',
+    }
+  });
   if (!res.ok) {
-    throw new Error(`Failed to fetch article ${id}: ${res.statusText}`);
+    throw new Error(`Failed to fetch article ${slug}: ${res.statusText}`);
   }
   const html = await res.text();
 
-  const titleMatch = html.match(/<h1 class="article-cd-title">([^<]+)<\/h1>/);
-  const title = titleMatch ? titleMatch[1].replace(/&#039;/g, "'").replace(/&amp;/g, '&').trim() : '';
+  // Title: <h1 class="...">title</h1> or <title>
+  const titleMatch = html.match(/<h1[^>]*>([^<]+)<\/h1>/) || html.match(/<title>([^|<]+)/);
+  const title = titleMatch ? titleMatch[1]
+    .replace(/&#039;/g, "'")
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&#8217;/g, "'")
+    .replace(/&#8211;/g, '–')
+    .replace(/&#8230;/g, '…')
+    .trim() : '';
 
-  const catMatch = html.match(/class="article-hero-cat"[^>]*>([^<]+)<\/a>/) || html.match(/class="article-hero-cat">([^<]+)<\/a>/);
-  const category = catMatch ? catMatch[1].trim() : 'Actu';
+  // Category
+  const catMatch = html.match(/class="[^"]*entry-category[^"]*"[^>]*>([^<]+)<\/a>/) ||
+                   html.match(/class="[^"]*cat-links[^"]*"[^>]*>.*?<a[^>]*>([^<]+)<\/a>/) ||
+                   html.match(/rel="category tag">([^<]+)<\/a>/);
+  const category = catMatch ? catMatch[1].trim() : 'Technologie';
 
-  const imgMatch = html.match(/<div class="article-cd-image">[^]*?<img[^>]+src="([^"]+)"/) || html.match(/<picture>[^]*?<img[^>]+src="([^"]+)"/);
-  let image = imgMatch ? imgMatch[1] : '';
-  if (image && !image.startsWith('http')) {
-    image = 'https://inoutech.net' + image;
+  // Image: og:image meta tag is most reliable
+  const imgMatch = html.match(/property="og:image"\s+content="([^"]+)"/) ||
+                   html.match(/name="twitter:image"\s+content="([^"]+)"/) ||
+                   html.match(/<img[^>]+class="[^"]*wp-post-image[^"]*"[^>]+src="([^"]+)"/);
+  const image = imgMatch ? imgMatch[1] : '';
+
+  // Author
+  const authorMatch = html.match(/class="[^"]*author[^"]*"[^>]*>.*?<a[^>]*>([^<]+)<\/a>/) ||
+                      html.match(/class="[^"]*author-name[^"]*"[^>]*>([^<]+)</) ||
+                      html.match(/rel="author">([^<]+)</);
+  const author = authorMatch ? authorMatch[1].trim() : 'Siècle Digital';
+
+  // Date
+  const dateMatch = html.match(/class="[^"]*published[^"]*"[^>]*>([^<]+)</) ||
+                    html.match(/datetime="([^"]+)"/) ||
+                    html.match(/class="[^"]*entry-date[^"]*"[^>]*>([^<]+)</);
+  let date = dateMatch ? dateMatch[1].trim() : '';
+  // If datetime format, convert to readable
+  if (date.match(/^\d{4}-\d{2}-\d{2}/)) {
+    const d = new Date(date);
+    const months = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+    date = `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
   }
 
-  // Extract meta (author, date, reading time)
-  // <div class="article-hero-meta" ...> <span>Enzo</span>...<span>5 juin 2024</span>...<span>5 min de lecture</span> </div>
-  const metaMatch = html.match(/class="article-hero-meta"[^>]*>([^]+?)<\/div>/);
-  let author = 'Enzo';
-  let date = '5 juin 2024';
-  let readingTime = '5 min';
-  if (metaMatch) {
-    const metaContent = metaMatch[1];
-    const spans = metaContent.split('</span>');
-    const authorSpan = spans[0] ? spans[0].match(/<span>([^<]+)$/) || spans[0].match(/>([^<]+)$/) : null;
-    author = authorSpan ? authorSpan[1].trim() : 'Enzo';
+  // Reading time (estimate from content length)
+  const readingTime = '5 min';
 
-    const dateSpan = spans[1] ? spans[1].match(/>([^<]+)$/) : null;
-    date = dateSpan ? dateSpan[1].trim() : '5 juin 2024';
-
-    const readSpan = spans[2] ? spans[2].match(/>([^<]+)$/) : null;
-    readingTime = readSpan ? readSpan[1].replace('de lecture', '').trim() : '5 min';
-  }
-
-  // Content extraction: everything inside <div class="article-content"> ... </div>
+  // Content extraction: entry-content div
   let content = '';
-  const contentStartStr = '<div class="article-content">';
+  const contentStartStr = 'class="entry-content"';
   const contentStartIndex = html.indexOf(contentStartStr);
   if (contentStartIndex !== -1) {
-    const startPos = contentStartIndex + contentStartStr.length;
-    const nextSectionIndex = html.indexOf('<div class="article-tags">', startPos);
-    if (nextSectionIndex !== -1) {
-      content = html.substring(startPos, nextSectionIndex);
-      const lastDivIndex = content.lastIndexOf('</div>');
-      if (lastDivIndex !== -1) {
-        content = content.substring(0, lastDivIndex);
-      }
-    } else {
-      const articleCloseIndex = html.indexOf('</article>', startPos);
-      if (articleCloseIndex !== -1) {
-        content = html.substring(startPos, articleCloseIndex);
-        const lastDivIndex = content.lastIndexOf('</div>');
-        if (lastDivIndex !== -1) {
-          content = content.substring(0, lastDivIndex);
+    const tagStart = html.lastIndexOf('<', contentStartIndex);
+    const closingTag = html.indexOf('>', contentStartIndex) + 1;
+    // Find the matching closing div
+    let depth = 1;
+    let pos = closingTag;
+    while (depth > 0 && pos < html.length) {
+      const nextOpen = html.indexOf('<div', pos);
+      const nextClose = html.indexOf('</div>', pos);
+      if (nextClose === -1) break;
+      if (nextOpen !== -1 && nextOpen < nextClose) {
+        depth++;
+        pos = nextOpen + 4;
+      } else {
+        depth--;
+        if (depth === 0) {
+          content = html.substring(closingTag, nextClose);
         }
+        pos = nextClose + 6;
       }
     }
   }
 
+  // Fallback: look for article content
+  if (!content) {
+    const articleMatch = html.match(/<article[^>]*>([\s\S]*?)<\/article>/);
+    if (articleMatch) {
+      content = articleMatch[1];
+    }
+  }
+
   // Clean relative URLs inside the content
-  content = content.replace(/src="\/images\//g, 'src="https://inoutech.net/images/');
-  content = content.replace(/href="\/archives\//g, 'href="/blog/');
+  content = content.replace(/src="\//g, 'src="https://siecledigital.fr/');
+  content = content.replace(/href="\//g, 'href="/blog/');
 
-  // Clean HTML entities
-  title.replace(/&quot;/g, '"');
-
-  return { id, title, category, image, content, author, date, readingTime };
+  return { id: slug, title, category, image, content, author, date, readingTime };
 }
 
-// Helper to scrape list of articles from home or category HTML
+// Helper to scrape list of articles from siecledigital.fr homepage or category
 function parseArticlesList(html: string) {
   const articles: any[] = [];
   
-  // Split by href="/archives/
-  const chunks = html.split('href="/archives/').slice(1);
+  // WordPress typically uses <article> tags
+  const articleBlocks = html.split('<article').slice(1);
   
-  for (const chunk of chunks) {
+  for (const block of articleBlocks) {
     try {
-      // 1. Get ID at the start of the chunk
-      const idMatch = chunk.match(/^(\d+)/);
-      if (!idMatch) continue;
-      const id = idMatch[1];
+      // Close tag
+      const fullBlock = '<article' + block.split('</article>')[0] + '</article>';
       
-      // We only care about chunks that represent article cards or list items
-      if (!chunk.includes('class="article-card') && !chunk.includes('class="article-list-item')) {
-        continue;
-      }
+      // Extract link/slug from first <a href="https://siecledigital.fr/slug/">
+      const linkMatch = fullBlock.match(/href="https?:\/\/(?:www\.)?siecledigital\.fr\/([^"\/]+)\/?"/);
+      if (!linkMatch) continue;
+      const slug = linkMatch[1];
       
-      // 2. Extract image
-      const imgMatch = chunk.match(/<img[^>]+src="([^"]+)"/);
-      let image = imgMatch ? imgMatch[1] : '';
-      if (image && !image.startsWith('http')) {
-        image = 'https://inoutech.net' + image;
-      }
+      // Skip category/tag/page links
+      if (['category', 'tag', 'page', 'author', 'wp-content', 'feed'].includes(slug)) continue;
       
-      // 3. Extract category/tag
-      const tagMatch = chunk.match(/class="article-card-tag">([^<]+)</) || 
-                       chunk.match(/class="article-list-tag">([^<]+)</);
-      const category = tagMatch ? tagMatch[1].trim() : 'Actu';
+      // Extract image
+      const imgMatch = fullBlock.match(/src="(https?:\/\/[^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"/i) ||
+                       fullBlock.match(/data-src="(https?:\/\/[^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"/i);
+      const image = imgMatch ? imgMatch[1] : '';
       
-      // 4. Extract title
-      const titleMatch = chunk.match(/<h2><a[^>]*>([^<]+)<\/a><\/h2>/) || 
-                         chunk.match(/<h2>([^<]+)<\/h2>/);
-      const title = titleMatch ? titleMatch[1]
+      // Extract category
+      const catMatch = fullBlock.match(/rel="category tag">([^<]+)</) ||
+                       fullBlock.match(/class="[^"]*category[^"]*"[^>]*>([^<]+)</) ||
+                       fullBlock.match(/class="[^"]*cat[^"]*"[^>]*>([^<]+)</);
+      const category = catMatch ? catMatch[1].trim() : 'Technologie';
+      
+      // Extract title from <h2> or <h3>
+      const titleMatch = fullBlock.match(/<h[23][^>]*>.*?<a[^>]*>([^<]+)<\/a>/s) ||
+                         fullBlock.match(/<h[23][^>]*>([^<]+)<\/h[23]>/) ||
+                         fullBlock.match(/title="([^"]+)"/);
+      let title = titleMatch ? titleMatch[1]
         .replace(/&#039;/g, "'")
         .replace(/&amp;/g, '&')
         .replace(/&quot;/g, '"')
+        .replace(/&#8217;/g, "'")
+        .replace(/&#8211;/g, '–')
+        .replace(/&#8230;/g, '…')
         .trim() : '';
-        
-      // 5. Extract excerpt
-      const descMatch = chunk.match(/<p>([^<]+)<\/p>/);
+      
+      if (!title) continue;
+      
+      // Extract excerpt
+      const descMatch = fullBlock.match(/<p[^>]*>([^<]{20,})<\/p>/) ||
+                        fullBlock.match(/class="[^"]*excerpt[^"]*"[^>]*>([^<]+)</);
       const excerpt = descMatch ? descMatch[1]
         .replace(/&#039;/g, "'")
         .replace(/&amp;/g, '&')
         .replace(/&quot;/g, '"')
+        .replace(/&#8217;/g, "'")
+        .replace(/&#8230;/g, '…')
         .trim() : '';
-        
-      // 6. Extract date and reading time
-      const metaSectionMatch = chunk.match(/class="article-(?:card|list)-meta"[^>]*>([^]+?)<\/div>/) || 
-                               chunk.match(/class="article-(?:card|list)-meta"[^>]*>([^]+?)<\/p>/);
       
-      let date = '5 juin 2024';
-      let readingTime = '5 min';
-      
-      if (metaSectionMatch) {
-        const metaContent = metaSectionMatch[1];
-        const spans = metaContent.split('</span>');
-        
-        const dateSpan = spans[0] ? spans[0].match(/>([^<]+)$/) || spans[0].match(/<span>([^<]+)$/) : null;
-        if (dateSpan) date = dateSpan[1].trim();
-        
-        const readSpan = spans[1] ? spans[1].match(/>([^<&]+)/) || spans[1].match(/<span>([^<&]+)/) : null;
-        if (readSpan) readingTime = readSpan[1].replace('de lecture', '').trim();
+      // Extract date
+      const dateMatch = fullBlock.match(/datetime="([^"]+)"/) ||
+                        fullBlock.match(/class="[^"]*date[^"]*"[^>]*>([^<]+)</);
+      let date = dateMatch ? dateMatch[1].trim() : '';
+      if (date.match(/^\d{4}-\d{2}-\d{2}/)) {
+        const d = new Date(date);
+        const months = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+        date = `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
       }
       
-      articles.push({ id, title, image, category, excerpt, date, readingTime });
+      const readingTime = '5 min';
+      
+      articles.push({ id: slug, title, image, category, excerpt, date, readingTime });
     } catch (e) {
-      console.error("Error parsing article chunk", e);
+      console.error("Error parsing article block", e);
+    }
+  }
+  
+  // If WordPress article tags didn't work, try generic link-based parsing
+  if (articles.length === 0) {
+    const links = html.split('href="https://siecledigital.fr/').slice(1);
+    const seen = new Set<string>();
+    
+    for (const chunk of links) {
+      try {
+        const slugMatch = chunk.match(/^([a-z0-9-]+)\/?"/);
+        if (!slugMatch) continue;
+        const slug = slugMatch[1];
+        if (seen.has(slug)) continue;
+        if (['category', 'tag', 'page', 'author', 'wp-content', 'feed', 'a-propos', 'contact', 'mentions-legales', 'politique-de-confidentialite'].includes(slug)) continue;
+        if (slug.length < 10) continue; // Too short to be an article slug
+        
+        seen.add(slug);
+        
+        // Try to extract title from nearby text
+        const titleMatch = chunk.match(/title="([^"]+)"/) || chunk.match(/>([^<]{15,})</);
+        const title = titleMatch ? titleMatch[1]
+          .replace(/&#039;/g, "'")
+          .replace(/&amp;/g, '&')
+          .replace(/&#8217;/g, "'")
+          .trim() : slug.replace(/-/g, ' ');
+        
+        if (title === slug.replace(/-/g, ' ') && title.length < 15) continue;
+        
+        articles.push({
+          id: slug,
+          title,
+          image: '',
+          category: 'Technologie',
+          excerpt: '',
+          date: '',
+          readingTime: '5 min'
+        });
+        
+        if (articles.length >= 20) break;
+      } catch (e) {
+        // skip
+      }
     }
   }
   
@@ -179,6 +264,14 @@ export default async function handler(req: any, res: any) {
       return res.status(200).json(cache[cacheKey].data);
     }
 
+    const fetchHeaders = {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+      'Accept-Language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7',
+      'Accept-Encoding': 'identity',
+      'Cache-Control': 'no-cache',
+    };
+
     if (id) {
       // Scrape detailed article
       const article = await scrapeArticleDetail(id as string);
@@ -187,19 +280,34 @@ export default async function handler(req: any, res: any) {
     }
 
     // Scrape article list
-    let targetUrl = 'https://inoutech.net';
+    let targetUrl = 'https://siecledigital.fr';
     if (category) {
-      // mapping category names from navbar to path names if they are different
-      // Navbar links: /actu/, /high-tech/, /internet/, /jeux-video/, /marketing/, /materiel/, /smartphones/
       const cleanCat = (category as string).toLowerCase().trim();
-      targetUrl = `https://inoutech.net/${cleanCat}/`;
+      // Map category slugs to siecledigital.fr URL paths
+      const catPaths: Record<string, string> = {
+        'marketing': 'marketing',
+        'technologie': 'technologie',
+        'intelligence-artificielle': 'intelligence-artificielle',
+        'cybersecurite': 'cybersecurite',
+        'reseaux-sociaux': 'reseaux-sociaux',
+        'business': 'business',
+        'societe': 'societe',
+      };
+      const path = catPaths[cleanCat] || cleanCat;
+      targetUrl = `https://siecledigital.fr/category/${path}/`;
     }
 
-    const scrapeRes = await fetch(targetUrl);
+    const scrapeRes = await fetch(targetUrl, { headers: fetchHeaders });
     if (!scrapeRes.ok) {
       throw new Error(`Failed to fetch ${targetUrl}: ${scrapeRes.statusText}`);
     }
     const html = await scrapeRes.text();
+    
+    // Check if we got a Cloudflare challenge page
+    if (html.includes('Just a moment') || html.includes('challenge-platform') || html.length < 2000) {
+      throw new Error('Cloudflare challenge detected');
+    }
+    
     const articles = parseArticlesList(html);
 
     cache[cacheKey] = { data: articles, expiry: now + CACHE_TTL };

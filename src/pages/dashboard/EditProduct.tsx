@@ -499,7 +499,7 @@ const EditProduct = () => {
             </div>
           </div>
           <div className="flex items-center gap-2 flex-wrap pl-11 sm:pl-0">
-            <Button variant="outline" size="sm" onClick={() => navigate(`/products/${id}`)}>
+            <Button variant="outline" size="sm" onClick={() => navigate(`/product/${id}`)}>
               <Eye className="h-4 w-4 mr-1.5" /> Voir
             </Button>
             <Button
@@ -519,7 +519,7 @@ const EditProduct = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={() => {
-                  navigator.clipboard.writeText(`${window.location.origin}/products/${id}`);
+                  navigator.clipboard.writeText(`${window.location.origin}/product/${id}`);
                   toast.success("Lien copié");
                 }}>
                   <Link2 className="h-4 w-4 mr-2" /> Copier le lien
