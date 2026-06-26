@@ -699,7 +699,7 @@ const Index = () => {
       <section className="stats-section" style={{ padding: "90px 0", overflow: "hidden", zIndex: 1 }}>
         <canvas ref={canvasRef} style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", pointerEvents: "none", zIndex: 0 }} />
         <div className="mx-auto" style={{ maxWidth: 1280, padding: "0 24px", position: "relative", zIndex: 10 }}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "24px", textAlign: "center" }} className="grid grid-cols-2 md:grid-cols-4 max-sm:grid-cols-1">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 text-center">
             {/* Stat 1: Users */}
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
               <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: "3rem", fontWeight: 900, letterSpacing: "-0.04em", color: "var(--text)", marginBottom: 8 }}>
