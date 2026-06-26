@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { Header, Footer, CourseCard, Course } from "@/components/site/shared";
@@ -91,6 +91,139 @@ const isDirectVideo = (url: string) => {
 const Index = () => {
   const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
   const [isPlaying, setIsPlaying] = useState(false);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let animationId: number;
+    let time = 0;
+
+    const handleResize = () => {
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * window.devicePixelRatio;
+      canvas.height = rect.height * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize();
+
+    const draw = () => {
+      time += 0.45;
+      const width = canvas.width / window.devicePixelRatio;
+      const height = canvas.height / window.devicePixelRatio;
+
+      ctx.clearRect(0, 0, width, height);
+
+      const isDark = document.documentElement.classList.contains("dark") || 
+                     document.documentElement.getAttribute("data-theme") === "dark";
+
+      // Subtle ambient glowing radial gradient in the center
+      const glowGrad = ctx.createRadialGradient(
+        width / 2,
+        height / 2,
+        0,
+        width / 2,
+        height / 2,
+        Math.max(width, height) * 0.6
+      );
+      if (isDark) {
+        glowGrad.addColorStop(0, "rgba(168, 85, 247, 0.12)"); // Purple glow
+        glowGrad.addColorStop(0.5, "rgba(59, 130, 246, 0.04)");  // Blue glow
+        glowGrad.addColorStop(1, "rgba(0, 0, 0, 0)");
+      } else {
+        glowGrad.addColorStop(0, "rgba(168, 85, 247, 0.05)"); // Softer glow
+        glowGrad.addColorStop(0.5, "rgba(59, 130, 246, 0.02)");
+        glowGrad.addColorStop(1, "rgba(0, 0, 0, 0)");
+      }
+      ctx.fillStyle = glowGrad;
+      ctx.fillRect(0, 0, width, height);
+
+      // Linear stroke gradient for the ribbon
+      const ribbonGrad = ctx.createLinearGradient(0, 0, width, 0);
+      if (isDark) {
+        ribbonGrad.addColorStop(0, "rgba(245, 166, 35, 0)");
+        ribbonGrad.addColorStop(0.15, "rgba(245, 166, 35, 0.85)"); // Peach
+        ribbonGrad.addColorStop(0.35, "rgba(236, 72, 153, 0.9)");  // Pink/magenta
+        ribbonGrad.addColorStop(0.6, "rgba(168, 85, 247, 0.9)");   // Purple/violet
+        ribbonGrad.addColorStop(0.85, "rgba(59, 130, 246, 0.85)");  // Blue
+        ribbonGrad.addColorStop(1.0, "rgba(59, 130, 246, 0)");
+      } else {
+        ribbonGrad.addColorStop(0, "rgba(245, 166, 35, 0)");
+        ribbonGrad.addColorStop(0.15, "rgba(245, 124, 0, 0.8)");   // Saturated orange
+        ribbonGrad.addColorStop(0.35, "rgba(219, 39, 119, 0.85)");  // Pink
+        ribbonGrad.addColorStop(0.6, "rgba(124, 58, 237, 0.85)");   // Purple
+        ribbonGrad.addColorStop(0.85, "rgba(29, 78, 216, 0.8)");    // Saturated Blue
+        ribbonGrad.addColorStop(1.0, "rgba(29, 78, 216, 0)");
+      }
+      ctx.strokeStyle = ribbonGrad;
+
+      const numLines = 45;
+      const step = 8;
+      
+      for (let i = 0; i < numLines; i++) {
+        const v = -1 + (2 * i) / (numLines - 1);
+        
+        ctx.beginPath();
+        let first = true;
+        
+        for (let x = 0; x <= width; x += step) {
+          const u = x / width;
+          
+          // Wave equation forming a 3D ribbon
+          const spineY = height * (0.55 - u * 0.1) + Math.sin(u * Math.PI * 2.5 - time * 0.02) * 35;
+          const spineZ = Math.cos(u * Math.PI * 2.5 - time * 0.016) * 45;
+          
+          // Twist effect
+          const twist = u * Math.PI * 2.4 + time * 0.03;
+          
+          // Ribbon width pinch and spread
+          const ribbonWidth = (55 + Math.sin(u * Math.PI) * 25) * (1 - Math.abs(v) * 0.08);
+          
+          const yOffset = v * ribbonWidth * Math.cos(twist);
+          const zOffset = v * ribbonWidth * Math.sin(twist);
+          
+          // Project depth into height coordinate for 3D perspective
+          const yFinal = spineY + yOffset + zOffset * 0.22;
+          
+          if (first) {
+            ctx.moveTo(x, yFinal);
+            first = false;
+          } else {
+            ctx.lineTo(x, yFinal);
+          }
+        }
+        
+        // Draw glow pass
+        ctx.lineWidth = 3.5;
+        ctx.globalAlpha = isDark
+          ? (0.03 + (1 - Math.abs(v)) * 0.22) * 0.55
+          : (0.02 + (1 - Math.abs(v)) * 0.12) * 0.4;
+        ctx.stroke();
+
+        // Draw sharp pass
+        ctx.lineWidth = 1.15;
+        ctx.globalAlpha = isDark
+          ? 0.08 + (1 - Math.abs(v)) * 0.65
+          : 0.15 + (1 - Math.abs(v)) * 0.55;
+        ctx.stroke();
+      }
+
+      ctx.globalAlpha = 1.0;
+      animationId = requestAnimationFrame(draw);
+    };
+
+    animationId = requestAnimationFrame(draw);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      cancelAnimationFrame(animationId);
+    };
+  }, []);
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -164,6 +297,42 @@ const Index = () => {
     },
   });
 
+  const { data: stats } = useQuery({
+    queryKey: ["homepage_stats"],
+    queryFn: async () => {
+      // Count profiles
+      const { count: profilesCount } = await supabase
+        .from("profiles")
+        .select("*", { count: "exact", head: true });
+
+      // Count products
+      const { count: productsCount } = await supabase
+        .from("products")
+        .select("*", { count: "exact", head: true });
+
+      // Get reviews sentiment
+      const { data: reviews } = await supabase
+        .from("product_reviews")
+        .select("sentiment");
+
+      const totalReviews = reviews?.length || 0;
+      const positiveReviews = reviews?.filter((r: any) => r.sentiment === "positive").length || 0;
+      const satisfactionRate = totalReviews > 0 
+        ? Math.round((positiveReviews / totalReviews) * 100) 
+        : 95; // Default fallback
+
+      return {
+        users: profilesCount || 0,
+        products: productsCount || 0,
+        satisfaction: satisfactionRate
+      };
+    }
+  });
+
+  const usersCountDisplay = (stats?.users || 0) >= 300 ? "300+" : String(stats?.users || 0);
+  const satisfactionRateDisplay = `${stats?.satisfaction || 95}%`;
+  const productsCountDisplay = `${stats?.products || 0}+`;
+
   return (
     <div className="min-h-screen overflow-x-hidden transition-colors duration-300" style={{ background: "var(--bg, #f2f2f7)", color: "var(--text, #1d1d1f)", fontFamily: "'Manrope', -apple-system, sans-serif" }}>
       {/* Font import via style tag */}
@@ -226,6 +395,14 @@ const Index = () => {
         .pay-orange { background:#FF6B00; color:white; }
         .pay-wave { background:#1A73E8; color:white; }
         .pay-visa { background:white; border:1px solid rgba(0,0,0,0.12); color:#1a1f71; font-style:italic; }
+        .pay-mastercard { background:#D92F21; border:1px solid rgba(0,0,0,0.12); color:white; font-style:italic; }
+        .pay-apple { background:black; color:white; }
+        .pay-google { background:white; border:1px solid rgba(0,0,0,0.12); color:black; }
+        .stats-section {
+          background: linear-gradient(to bottom, var(--section-alt), var(--bg) 15%, var(--bg) 85%, var(--section-alt));
+          position: relative;
+          transition: background 0.3s, color 0.3s;
+        }
         @media (max-width: 1024px) {
           .hero-video-container {
             margin-top: 48px;
@@ -518,7 +695,53 @@ const Index = () => {
         </div>
       </section>
 
+      {/* ============ STATS SECTION ============ */}
+      <section className="stats-section" style={{ padding: "90px 0", overflow: "hidden", zIndex: 1 }}>
+        <canvas ref={canvasRef} style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", pointerEvents: "none", zIndex: 0 }} />
+        <div className="mx-auto" style={{ maxWidth: 1280, padding: "0 24px", position: "relative", zIndex: 10 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "24px", textAlign: "center" }} className="grid grid-cols-2 md:grid-cols-4 max-sm:grid-cols-1">
+            {/* Stat 1: Users */}
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+              <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: "3rem", fontWeight: 900, letterSpacing: "-0.04em", color: "var(--text)", marginBottom: 8 }}>
+                {usersCountDisplay}
+              </div>
+              <div style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--text-secondary)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                {lang === 'fr' ? "Nombre d'utilisateurs" : "Students Worldwide"}
+              </div>
+            </div>
 
+            {/* Stat 2: Satisfaction */}
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+              <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: "3rem", fontWeight: 900, letterSpacing: "-0.04em", color: "var(--text)", marginBottom: 8 }}>
+                {satisfactionRateDisplay}
+              </div>
+              <div style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--text-secondary)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                {lang === 'fr' ? "Taux de satisfaction" : "Satisfaction Rate"}
+              </div>
+            </div>
+
+            {/* Stat 3: Products */}
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+              <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: "3rem", fontWeight: 900, letterSpacing: "-0.04em", color: "var(--text)", marginBottom: 8 }}>
+                {productsCountDisplay}
+              </div>
+              <div style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--text-secondary)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                {lang === 'fr' ? "Nombre de Produits" : "Courses Available"}
+              </div>
+            </div>
+
+            {/* Stat 4: Companies */}
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+              <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: "3rem", fontWeight: 900, letterSpacing: "-0.04em", color: "var(--text)", marginBottom: 8 }}>
+                10+
+              </div>
+              <div style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--text-secondary)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                {lang === 'fr' ? "Nombre d'entreprises" : "Partner Companies"}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* ============ ABOUT ============ */}
       <section id="about" style={{ position: "relative", zIndex: 1, padding: "100px 0", background: "var(--section-alt)" }}>
@@ -590,6 +813,9 @@ const Index = () => {
             <span className="pay-badge pay-orange">Orange Money</span>
             <span className="pay-badge pay-wave">Wave</span>
             <span className="pay-badge pay-visa"><i className="fab fa-cc-visa" style={{ marginRight: 4 }} />VISA</span>
+            <span className="pay-badge pay-mastercard"><i className="fab fa-cc-mastercard" style={{ marginRight: 4 }} />Mastercard</span>
+            <span className="pay-badge pay-apple"><i className="fab fa-apple" style={{ marginRight: 4 }} />Apple Pay</span>
+            <span className="pay-badge pay-google"><i className="fab fa-google" style={{ marginRight: 4 }} />Google Pay</span>
           </div>
         </div>
       </section>
