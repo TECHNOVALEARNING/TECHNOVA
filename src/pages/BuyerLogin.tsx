@@ -7,6 +7,7 @@ import { ShoppingBag, Mail, ArrowLeft, Loader2 } from "lucide-react";
 import { buyerSupabase as supabase } from "@/integrations/supabase/buyer-client";
 import { toast } from "sonner";
 import logo from "@/assets/logo.png";
+import SEOHead from "@/components/SEOHead";
 
 const BuyerLogin = () => {
   const [email, setEmail] = useState("");
@@ -137,6 +138,7 @@ const BuyerLogin = () => {
 
   return (
     <div className="min-h-screen flex">
+      <SEOHead title="Espace Client — TECHNOVA" description="Accédez à tous vos produits achetés sur la plateforme TECHNOVA." noindex />
       <div className="flex-1 flex items-center justify-center px-6 py-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

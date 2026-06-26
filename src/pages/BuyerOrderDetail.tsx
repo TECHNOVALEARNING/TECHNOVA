@@ -21,6 +21,7 @@ import { buyerSupabase as supabase } from "@/integrations/supabase/buyer-client"
 import { supabase as sellerSupabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import logo from "@/assets/logo.png";
+import SEOHead from "@/components/SEOHead";
 
 import BuyerContentDialog from "@/components/BuyerContentDialog";
 import ProductReviewForm from "@/components/buyer/ProductReviewForm";
@@ -181,6 +182,7 @@ const BuyerOrderDetail = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead title="Détail de Commande — TECHNOVA" description="Affichage du détail et accès au téléchargement de votre commande." noindex />
       <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur-xl">
         <div className="container mx-auto flex items-center justify-between px-6 py-3">
           <a href={isPortal ? "https://technovalearning.com" : "/"} className="flex items-center gap-2.5">

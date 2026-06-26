@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Search, Package, ShoppingBag, FileText, GraduationCap, Key, Layers, LogOut } from "lucide-react";
 import logo from "@/assets/logo.png";
+import SEOHead from "@/components/SEOHead";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -125,6 +126,7 @@ const BuyerDashboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead title="Mon Espace Client — TECHNOVA" description="Accédez à vos formations et fichiers achetés." noindex />
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
         <div className="container mx-auto flex items-center justify-between px-6 py-3">

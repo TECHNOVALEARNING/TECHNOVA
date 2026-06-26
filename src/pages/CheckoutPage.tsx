@@ -75,7 +75,8 @@ const CheckoutPage = ({ customSlug }: { customSlug?: string }) => {
     <>
       <SEOHead
         title={`Paiement sécurisé — ${product?.title || "TECHNOVA"}`}
-        description="Finalisez votre commande en toute sécurité via Mobile Money."
+        description="Finalisez votre commande en toute sécurité."
+        noindex
       />
       <div className="relative min-h-screen overflow-hidden bg-background text-foreground transition-colors duration-300">
         {/* Background floating orbs */}

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { buyerSupabase as supabase } from "@/integrations/supabase/buyer-client";
 import { toast } from "sonner";
+import SEOHead from "@/components/SEOHead";
 
 
 const BuyerOAuthCallback = () => {
@@ -76,6 +77,7 @@ const BuyerOAuthCallback = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center">
+      <SEOHead title="Connexion client — TECHNOVA" description="Authentification de votre espace client." noindex />
       <div className="text-center">
         <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary mb-4" />
         <p className="text-sm text-muted-foreground">Connexion en cours…</p>
