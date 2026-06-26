@@ -29,6 +29,23 @@ const FALLBACK_IMAGES: Record<string, string> = {
   default: 'https://images.unsplash.com/photo-1504711434969-e33886168d5c?w=800&q=80',
 };
 
+// Format plain text content to HTML paragraphs
+function formatContentToHtml(content: string): string {
+  if (!content) return '';
+  const trimmed = content.trim();
+  if (trimmed.startsWith('<') && trimmed.endsWith('>')) {
+    return trimmed;
+  }
+  const safeContent = trimmed
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+  return safeContent
+    .split(/\n\s*\n/)
+    .map(para => `<p class="mb-4">${para.replace(/\n/g, '<br />')}</p>`)
+    .join('');
+}
+
 // Format a NewsData.io article to our internal format
 function formatArticle(item: any): any {
   const category = (item.category && item.category.length > 0)
@@ -55,6 +72,32 @@ function formatArticle(item: any): any {
   const textLength = (item.description || '').length + (item.content || '').length;
   const readingTime = Math.max(2, Math.round(textLength / 1000)) + ' min';
 
+  let rawContent = item.content || item.description || '';
+  let isPaidPlanRestricted = false;
+
+  if (rawContent === 'ONLY AVAILABLE IN PAID PLANS' || rawContent.includes('ONLY AVAILABLE IN PAID PLANS')) {
+    rawContent = item.description || '';
+    isPaidPlanRestricted = true;
+  }
+
+  let formattedContent = formatContentToHtml(rawContent);
+
+  // If restricted, append a link to read the full article on the original source
+  if (isPaidPlanRestricted && item.link) {
+    const sourceName = item.source_name || item.source_id || 'la source';
+    formattedContent += `
+      <div class="mt-8 p-6 rounded-2xl border border-primary/20 bg-primary/5 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="space-y-1">
+          <h4 class="text-sm font-bold text-foreground">Lire la suite de l'article</h4>
+          <p class="text-xs text-muted-foreground">Cet article est disponible en intégralité sur le site de ${sourceName}.</p>
+        </div>
+        <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="px-4 py-2.5 text-xs font-bold text-white bg-primary hover:bg-primary/95 rounded-xl transition-all shrink-0 shadow-sm shadow-glow text-center inline-block">
+          Voir l'article complet sur ${sourceName}
+        </a>
+      </div>
+    `;
+  }
+
   return {
     id: item.article_id || item.link || String(Math.random()),
     title: item.title || 'Sans titre',
@@ -64,7 +107,7 @@ function formatArticle(item: any): any {
     date,
     readingTime,
     // For article detail
-    content: item.content || item.description || '',
+    content: formattedContent,
     author: (item.creator && item.creator.length > 0) ? item.creator[0] : (item.source_name || item.source_id || 'TECHNOVA'),
     link: item.link || '',
     source: item.source_name || item.source_id || '',
@@ -101,12 +144,8 @@ export default async function handler(req: any, res: any) {
         return res.status(200).json(cache[cacheKey].data);
       }
 
-      // NewsData.io doesn't have a "get article by ID" endpoint.
-      // If the ID looks like a URL, we return a redirect hint.
-      // Otherwise, we search by title keywords from cache.
-      // Best approach: use the article_id in a search if possible
-      // For now, return any cached article or search
-      const searchUrl = `https://newsdata.io/api/1/latest?apikey=${apiKey}&language=fr&q=${encodeURIComponent(id.replace(/-/g, ' ').substring(0, 50))}`;
+      // Fetch specific article by ID from NewsData.io
+      const searchUrl = `https://newsdata.io/api/1/latest?apikey=${apiKey}&id=${encodeURIComponent(id)}`;
       const searchRes = await fetch(searchUrl);
       if (searchRes.ok) {
         const searchData = await searchRes.json();
