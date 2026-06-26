@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Star, Quote, TrendingUp, ShoppingBag, Users, DollarSign } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const testimonials = [
   {
@@ -41,10 +42,34 @@ const testimonials = [
 ];
 
 const AnimatedCounter = ({ target, suffix = "" }: { target: number; suffix?: string }) => {
+  const [count, setCount] = useState(0);
+  const [started, setStarted] = useState(false);
+
+  useEffect(() => {
+    if (!started) return;
+    const duration = 2000;
+    const steps = 60;
+    const increment = target / steps;
+    let current = 0;
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= target) {
+        setCount(target);
+        clearInterval(timer);
+      } else {
+        setCount(Math.floor(current));
+      }
+    }, duration / steps);
+    return () => clearInterval(timer);
+  }, [started, target]);
+
   return (
-    <span>
-      {target.toLocaleString()}{suffix}
-    </span>
+    <motion.span
+      onViewportEnter={() => setStarted(true)}
+      viewport={{ once: true }}
+    >
+      {count.toLocaleString()}{suffix}
+    </motion.span>
   );
 };
 

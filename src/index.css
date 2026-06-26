@@ -158,13 +158,9 @@
     transition: opacity 0.5s;
   }
   .dark .bg-orb { opacity: 0.12; }
-  .orb-1 { width: 700px; height: 700px; background: radial-gradient(circle, #0071e3, transparent 70%); top: -250px; left: -220px; animation: orbFloat1 18s ease-in-out infinite; }
-  .orb-2 { width: 550px; height: 550px; background: radial-gradient(circle, #409cff, transparent 70%); bottom: 15%; right: -180px; animation: orbFloat2 22s ease-in-out infinite; }
-  .orb-3 { width: 450px; height: 450px; background: radial-gradient(circle, #f5a623, transparent 70%); top: 50%; left: 38%; animation: orbFloat3 26s ease-in-out infinite; }
-
-  @keyframes orbFloat1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(40px,30px)} }
-  @keyframes orbFloat2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-30px,40px)} }
-  @keyframes orbFloat3 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(20px,-30px)} }
+  .orb-1 { width: 700px; height: 700px; background: radial-gradient(circle, #0071e3, transparent 70%); top: -250px; left: -220px; }
+  .orb-2 { width: 550px; height: 550px; background: radial-gradient(circle, #409cff, transparent 70%); bottom: 15%; right: -180px; }
+  .orb-3 { width: 450px; height: 450px; background: radial-gradient(circle, #f5a623, transparent 70%); top: 50%; left: 38%; }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
