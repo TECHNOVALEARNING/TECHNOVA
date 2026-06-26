@@ -659,11 +659,11 @@
   color: var(--blue);
   margin-bottom: 12px;
   display: block;
-  font-family: 'Figtree', sans-serif;
+  font-family: 'Outfit', sans-serif;
 }
 
 .section-title {
-  font-family: 'Figtree', sans-serif;
+  font-family: 'Outfit', sans-serif;
   font-size: clamp(1.9rem, 3vw, 2.9rem);
   font-weight: 900;
   letter-spacing: -0.035em;

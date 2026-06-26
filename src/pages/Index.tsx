@@ -162,8 +162,8 @@ const Index = () => {
       }
       ctx.strokeStyle = ribbonGrad;
 
-      const numLines = 45;
-      const step = 8;
+      const numLines = 22;
+      const step = 28;
       
       for (let i = 0; i < numLines; i++) {
         const v = -1 + (2 * i) / (numLines - 1);
