@@ -7,6 +7,27 @@ import { supabase } from "@/integrations/supabase/client";
 import { Search, Sparkles, SlidersHorizontal, PackageOpen } from "lucide-react";
 import SEOHead from "@/components/SEOHead";
 
+const SUBCAT_LABELS: Record<string, string> = {
+  notion: "Notion",
+  canva: "Canva & Design",
+  excel: "Excel & Finance",
+  dev: "Dev & Web",
+  marketing: "Marketing & Social",
+  other: "Autre"
+};
+
+const getDisplayCategory = (cat: string) => {
+  if (!cat) return "Formation";
+  if (cat === "template") return "Template";
+  if (cat.startsWith("template:")) {
+    const sub = cat.split(":")[1];
+    return `Template ${SUBCAT_LABELS[sub] || sub}`;
+  }
+  if (cat === "ebook") return "E-book";
+  if (cat === "formation") return "Formation";
+  return cat;
+};
+
 const AllProducts = () => {
   const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
   const [searchQuery, setSearchQuery] = useState("");
@@ -39,7 +60,7 @@ const AllProducts = () => {
       if (error) throw error;
 
       const active = (data || []).filter((p: any) => {
-        if (p.category === "discovery" || p.category === "template" || (p.category && p.category.startsWith("template:"))) {
+        if (p.category === "discovery") {
           return false;
         }
         try {
@@ -54,7 +75,7 @@ const AllProducts = () => {
         slug: p.id,
         title: p.title,
         cover: p.thumbnail_url || "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=800&q=80",
-        category: p.category || "Formation",
+        category: getDisplayCategory(p.category || "Formation"),
         level: lang === "fr" ? "Tous niveaux" : "All levels",
         price: `${p.price} FCFA`,
         oldPrice: p.original_price ? `${p.original_price} FCFA` : undefined,

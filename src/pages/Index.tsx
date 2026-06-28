@@ -9,6 +9,27 @@ import SEOHead from "@/components/SEOHead";
 
 
 
+const SUBCAT_LABELS: Record<string, string> = {
+  notion: "Notion",
+  canva: "Canva & Design",
+  excel: "Excel & Finance",
+  dev: "Dev & Web",
+  marketing: "Marketing & Social",
+  other: "Autre"
+};
+
+const getDisplayCategory = (cat: string) => {
+  if (!cat) return "Formation";
+  if (cat === "template") return "Template";
+  if (cat.startsWith("template:")) {
+    const sub = cat.split(":")[1];
+    return `Template ${SUBCAT_LABELS[sub] || sub}`;
+  }
+  if (cat === "ebook") return "E-book";
+  if (cat === "formation") return "Formation";
+  return cat;
+};
+
 const PARTNERS = [
   { icon: "fab fa-google", name: "Google" },
   { icon: "fab fa-microsoft", name: "Microsoft" },
@@ -274,7 +295,7 @@ const Index = () => {
         .limit(30);
       if (error) throw error;
       const active = (data || []).filter((p: any) => {
-        if (p.category === "discovery" || p.category === "template" || (p.category && p.category.startsWith("template:"))) {
+        if (p.category === "discovery") {
           return false;
         }
         try {
@@ -288,7 +309,7 @@ const Index = () => {
         slug: p.id,
         title: p.title,
         cover: p.thumbnail_url || "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=800&q=80",
-        category: p.category || "Formation",
+        category: getDisplayCategory(p.category || "Formation"),
         level: lang === "fr" ? "Tous niveaux" : "All levels",
         price: `${p.price} FCFA`,
         oldPrice: p.original_price ? `${p.original_price} FCFA` : undefined,
@@ -669,7 +690,7 @@ const Index = () => {
                 </span>
               </h2>
               <p className="section-sub" style={{ marginTop: 8 }}>
-                {lang === 'fr' ? 'Construisez votre avenir avec nos ebooks sélectionnés.' : 'Build your future with our selected ebooks.'}
+                {lang === 'fr' ? 'Construisez votre avenir avec nos ebooks et templates sélectionnés.' : 'Build your future with our selected ebooks and templates.'}
               </p>
             </div>
           </div>

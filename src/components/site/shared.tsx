@@ -73,7 +73,6 @@ export const Header = () => {
     { to: "/jobs", label: lang === "fr" ? "Emplois & Stages" : "Jobs & Internships" },
     { to: "/outils-digitaux", label: lang === "fr" ? "Outils de Productivité" : "Productivity Tools" },
     { to: "/decouvertes", label: lang === "fr" ? "Découvertes" : "Discoveries" },
-    { to: "/templates", label: "Templates" },
     { to: "/apps", label: lang === "fr" ? "Technova Apps" : "Technova Apps" },
     { to: "/blog", label: lang === "fr" ? "Blog & Actualités" : "Blog & News" },
     // { to: "/premium", label: lang === "fr" ? "Espace Premium" : "Premium Space"}

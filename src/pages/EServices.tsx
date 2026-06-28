@@ -183,7 +183,7 @@ const EServices = () => {
       image: "src/assets/humaniser.jpg",
       tags: ["React 19", "Express (Node.js)", "Tailwind CSS 4", "Gemini API", "Motion"],
       stats: "0.8s load time",
-      url: "https://humanizer-ai-technova.vercel.app"
+      url: "#"
     },
     {
       title: "Viral IA Agent",
@@ -194,7 +194,7 @@ const EServices = () => {
       image: "https://i.pinimg.com/736x/b1/bb/ac/b1bbac1e29f08c1c7b5fa1cdb8d5aebb.jpg",
       tags: ["HTML5 / CSS3", "Vanilla JS", "Gemini API", "Local Storage"],
       stats: "92% resolution rate",
-      url: "https://t.me/technova_bot"
+      url: "#"
     }
   ];
 
