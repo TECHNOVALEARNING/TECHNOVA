@@ -45,6 +45,7 @@ interface Project {
   tags: string[];
   stats: string;
   url: string;
+  upcoming?: boolean;
 }
 
 const EServices = () => {
@@ -183,7 +184,8 @@ const EServices = () => {
       image: "src/assets/humaniser.jpg",
       tags: ["React 19", "Express (Node.js)", "Tailwind CSS 4", "Gemini API", "Motion"],
       stats: "0.8s load time",
-      url: "#"
+      url: "#",
+      upcoming: true
     },
     {
       title: "Viral IA Agent",
@@ -194,7 +196,8 @@ const EServices = () => {
       image: "https://i.pinimg.com/736x/b1/bb/ac/b1bbac1e29f08c1c7b5fa1cdb8d5aebb.jpg",
       tags: ["HTML5 / CSS3", "Vanilla JS", "Gemini API", "Local Storage"],
       stats: "92% resolution rate",
-      url: "#"
+      url: "#",
+      upcoming: true
     }
   ];
 
@@ -396,20 +399,37 @@ const EServices = () => {
                     </div>
                     <div className="flex items-center justify-between text-[11px] text-[color:var(--text-secondary)] font-medium pt-3 border-t border-[color:var(--divider)]">
                       <span className="flex items-center gap-1">
-                        <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
-                        {lang === "fr" ? "Lancement réussi" : "Successful launch"}
+                        {project.upcoming ? (
+                          <>
+                            <Sparkles className="h-3.5 w-3.5 text-amber-500" />
+                            {lang === "fr" ? "En développement" : "In development"}
+                          </>
+                        ) : (
+                          <>
+                            <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
+                            {lang === "fr" ? "Lancement réussi" : "Successful launch"}
+                          </>
+                        )}
                       </span>
                       <span className="px-2 py-0.5 rounded bg-green-500/10 text-green-600 font-semibold">{project.stats}</span>
                     </div>
-                    <a
-                      href={project.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-4 flex items-center justify-center gap-1.5 w-full px-4 py-2.5 text-xs font-bold rounded-xl bg-[color:var(--blue-soft)] text-[color:var(--blue)] hover:bg-[color:var(--blue)] hover:text-white transition-all duration-200"
-                    >
-                      {lang === "fr" ? "Visiter le site" : "Visit website"}
-                      <ExternalLink className="h-3.5 w-3.5" />
-                    </a>
+                    {project.upcoming ? (
+                      <div
+                        className="mt-4 flex items-center justify-center gap-1.5 w-full px-4 py-2.5 text-xs font-bold rounded-xl bg-muted text-muted-foreground opacity-60 cursor-not-allowed"
+                      >
+                        {lang === "fr" ? "Bientôt disponible" : "Coming soon"}
+                      </div>
+                    ) : (
+                      <a
+                        href={project.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-4 flex items-center justify-center gap-1.5 w-full px-4 py-2.5 text-xs font-bold rounded-xl bg-[color:var(--blue-soft)] text-[color:var(--blue)] hover:bg-[color:var(--blue)] hover:text-white transition-all duration-200"
+                      >
+                        {lang === "fr" ? "Visiter le site" : "Visit website"}
+                        <ExternalLink className="h-3.5 w-3.5" />
+                      </a>
+                    )}
                   </div>
                 </div>
               </motion.div>
