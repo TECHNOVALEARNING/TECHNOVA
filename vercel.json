@@ -1,8 +1,25 @@
 {
+  "functions": {
+    "api/product-preview.ts": {
+      "includeFiles": "dist/index.html"
+    }
+  },
   "rewrites": [
     {
       "source": "/sitemap.xml",
       "destination": "/api/sitemap"
+    },
+    {
+      "source": "/product/:productId",
+      "destination": "/api/product-preview?productId=:productId"
+    },
+    {
+      "source": "/store/:slug/:productId",
+      "destination": "/api/product-preview?productId=:productId&slug=:slug"
+    },
+    {
+      "source": "/:productId([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})",
+      "destination": "/api/product-preview?productId=:productId"
     },
     {
       "source": "/(.*)",
