@@ -358,9 +358,12 @@ const Index = () => {
     <div className="min-h-screen overflow-x-hidden transition-colors duration-300" style={{ background: "var(--bg, #f2f2f7)", color: "var(--text, #1d1d1f)", fontFamily: "'Manrope', -apple-system, sans-serif" }}>
       {/* Font import via style tag */}
       <style>{`
-
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Manrope:wght@300;400;500;600&display=swap');
-        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+        @media (max-width: 768px) {
+          *, ::before, ::after {
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+          }
+        }
         :root {
           --blue: #0071e3; --blue-light: #409cff; --blue-soft: rgba(0,113,227,0.08);
           --accent: #f5a623; --bg: #f2f2f7; --surface: rgba(255,255,255,0.75);
@@ -554,7 +557,8 @@ const Index = () => {
                         src={getWelcomeVideoThumbnailUrl(welcomeVideoUrl)}
                         alt="Welcome video preview"
                         style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                        loading="lazy"
+                        loading="eager"
+                        fetchPriority="high"
                       />
                       {/* Dark overlay */}
                       <div className="absolute inset-0 bg-black/30 flex items-center justify-center transition-all hover:bg-black/40 duration-300">

@@ -60,8 +60,12 @@ const Decouvertes = () => {
       
       {/* Font imports and CSS variables */}
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Manrope:wght@300;400;500;600&display=swap');
-        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+        @media (max-width: 768px) {
+          *, ::before, ::after {
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+          }
+        }
         :root {
           --blue: #0071e3; --blue-light: #409cff; --blue-soft: rgba(0,113,227,0.08);
           --accent: #f5a623; --bg: #f2f2f7; --surface: rgba(255,255,255,0.75);
