@@ -266,7 +266,7 @@ const Index = () => {
   });
 
   const welcomeVideoUrl = (() => {
-    const defaultUrl = "https://drive.google.com/file/d/1k6vodZk-HmWM4Kb63sVXV4OCASDCCzsr/view?usp=drive_link";
+    const defaultUrl = "https://youtu.be/mAJIp5yVDiY";
     if (!storeInfo?.layout_sections) return defaultUrl;
     const sections = Array.isArray(storeInfo.layout_sections) ? storeInfo.layout_sections : [];
     const videoSection = sections.find((s: any) => s.type === "video");
