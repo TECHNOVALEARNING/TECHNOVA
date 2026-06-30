@@ -266,13 +266,14 @@ const Index = () => {
   });
 
   const welcomeVideoUrl = (() => {
-    if (!storeInfo?.layout_sections) return null;
+    const defaultUrl = "https://drive.google.com/file/d/1k6vodZk-HmWM4Kb63sVXV4OCASDCCzsr/view?usp=drive_link";
+    if (!storeInfo?.layout_sections) return defaultUrl;
     const sections = Array.isArray(storeInfo.layout_sections) ? storeInfo.layout_sections : [];
     const videoSection = sections.find((s: any) => s.type === "video");
     if (videoSection && videoSection.enabled) {
-      return videoSection.config?.video_url || null;
+      return videoSection.config?.video_url || defaultUrl;
     }
-    return null;
+    return defaultUrl;
   })();
 
   const { data: dbProducts = [] } = useQuery({
@@ -511,11 +512,11 @@ const Index = () => {
                 background: "var(--card)", 
                 backdropFilter: "var(--glass-blur)", 
                 WebkitBackdropFilter: "var(--glass-blur)",
-                border: "1px solid var(--card-border)", 
+                border: "none", 
                 borderRadius: "var(--radius-lg)", 
-                padding: 12,
+                padding: 0,
                 boxShadow: "var(--shadow-lg)",
-                animation: "heroImageFloat 6s ease-in-out infinite",
+                animation: "none",
                 overflow: "hidden"
               }}>
                 <div style={{ 
