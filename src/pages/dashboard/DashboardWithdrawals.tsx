@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { Wallet, ArrowDownToLine, Loader2, CheckCircle2, Clock, XCircle, Shield, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -130,6 +130,7 @@ const formatEta = (createdAt: string, status: string, providerCode: string | nul
 
 const DashboardWithdrawals = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const isAdmin = user?.email === ADMIN_EMAIL;
   const [withdrawals, setWithdrawals] = useState<Withdrawal[]>([]);
   const [loading, setLoading] = useState(true);
@@ -138,6 +139,7 @@ const DashboardWithdrawals = () => {
   const [totalWithdrawn, setTotalWithdrawn] = useState(0);
   const [availableBalance, setAvailableBalance] = useState(0);
   const [kycStatus, setKycStatus] = useState<string | null>(null);
+  const [commissionPct, setCommissionPct] = useState(0.10);
 
   const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
 
@@ -160,13 +162,16 @@ const DashboardWithdrawals = () => {
 
   const loadData = async () => {
     setLoading(true);
-    const [ordersRes, withdrawalsRes, kycRes] = await Promise.all([
+    const [ordersRes, withdrawalsRes, kycRes, feeRes] = await Promise.all([
       supabase.from("orders").select("amount, created_at").eq("store_owner_id", user!.id).eq("status", "completed"),
       supabase.from("withdrawals").select("*").eq("user_id", user!.id).order("created_at", { ascending: false }),
       supabase.from("identity_verifications").select("status").eq("user_id", user!.id).maybeSingle(),
+      supabase.from("platform_fees").select("value_pct").eq("key", "technova_commission_pct").maybeSingle(),
     ]);
 
     setKycStatus(isAdmin ? "approved" : (kycRes.data?.status || null));
+    const commPct = Number(feeRes.data?.value_pct ?? 10) / 100;
+    setCommissionPct(commPct);
 
     const now = new Date();
     const cutoff72h = new Date(now.getTime() - 72 * 60 * 60 * 1000);
@@ -174,14 +179,14 @@ const DashboardWithdrawals = () => {
     const sales = allOrders.reduce((s, o) => s + Number(o.amount), 0);
     const maturedSales = allOrders.filter(o => new Date(o.created_at) <= cutoff72h).reduce((s, o) => s + Number(o.amount), 0);
     const pendingSales = sales - maturedSales;
-    const commission = maturedSales * 0.10;
+    const commission = maturedSales * commPct;
     const gross = maturedSales - commission;
     const wds = (withdrawalsRes.data || []) as Withdrawal[];
     const withdrawn = wds.filter(w => ["pending", "processing", "completed"].includes(w.status))
       .reduce((s, w) => s + Number(w.amount) + Number(w.fee || 0), 0);
 
     setTotalSales(sales);
-    setPendingFunds(pendingSales * 0.9);
+    setPendingFunds(pendingSales * (1 - commPct));
     setTotalWithdrawn(withdrawn);
     setAvailableBalance(gross - withdrawn);
     setWithdrawals(wds);
@@ -221,8 +226,8 @@ const DashboardWithdrawals = () => {
             <p className="text-2xl font-bold text-foreground">{Math.floor(totalSales).toLocaleString("fr")} <span className="text-sm font-normal text-muted-foreground">FCFA</span></p>
           </div>
           <div className="rounded-xl border border-border bg-card p-5">
-            <p className="text-xs text-muted-foreground mb-1">{t.platformCommission}</p>
-            <p className="text-2xl font-bold text-muted-foreground">{Math.floor(totalSales * 0.10).toLocaleString("fr")} <span className="text-sm font-normal">FCFA</span></p>
+            <p className="text-xs text-muted-foreground mb-1">{t.platformCommission} ({commissionPct * 100}%)</p>
+            <p className="text-2xl font-bold text-muted-foreground">{Math.floor(totalSales * commissionPct).toLocaleString("fr")} <span className="text-sm font-normal">FCFA</span></p>
           </div>
           {pendingFunds > 0 && (
             <div className="rounded-xl border border-amber-200 bg-amber-50/50 p-5">
@@ -249,7 +254,7 @@ const DashboardWithdrawals = () => {
           <Button
             className="gap-2 rounded-full"
             disabled={!isAdmin && kycStatus !== "approved"}
-            onClick={() => window.open("/dashboard/withdrawals/new", "_blank", "noopener,noreferrer")}
+            onClick={() => navigate("/dashboard/withdrawals/new")}
           >
             <ArrowDownToLine className="h-4 w-4" /> {t.btnWithdraw}
           </Button>

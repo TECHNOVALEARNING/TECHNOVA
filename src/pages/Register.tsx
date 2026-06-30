@@ -7,6 +7,7 @@ import { Eye, EyeOff, ChevronDown, Search } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 import { useAuth } from "@/contexts/AuthContext";
+import { useGeoPricing } from "@/contexts/GeoPricingContext";
 import { toast } from "sonner";
 import logo from "@/assets/logo.png";
 import SEOHead from "@/components/SEOHead";
@@ -81,8 +82,18 @@ const Register = () => {
   const [countryOpen, setCountryOpen] = useState(false);
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
+  const { countryCode } = useGeoPricing();
 
   const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+
+  useEffect(() => {
+    if (countryCode) {
+      const match = countries.find((c) => c.code.toUpperCase() === countryCode.toUpperCase());
+      if (match) {
+        setSelectedCountry(match);
+      }
+    }
+  }, [countryCode]);
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");

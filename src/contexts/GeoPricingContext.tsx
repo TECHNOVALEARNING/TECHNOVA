@@ -143,12 +143,12 @@ export const GeoPricingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         console.warn("ipapi.co failed, trying ip-api.com", e);
       }
 
-      // 4. Fallback to ip-api.com
+      // 4. Fallback to freeipapi.com
       try {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 2500);
 
-        const res = await fetch("http://ip-api.com/json/", { signal: controller.signal });
+        const res = await fetch("https://freeipapi.com/api/json", { signal: controller.signal });
         clearTimeout(timeoutId);
 
         if (res.ok) {
@@ -162,7 +162,7 @@ export const GeoPricingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
           }
         }
       } catch (e) {
-        console.warn("ip-api.com failed", e);
+        console.warn("freeipapi.com failed", e);
       }
 
       // 5. Fallback to browser locale

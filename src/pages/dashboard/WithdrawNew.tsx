@@ -109,6 +109,7 @@ const WithdrawNew = () => {
   const [availableNet, setAvailableNet] = useState(0);
   const [kycStatus, setKycStatus] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [commissionPct, setCommissionPct] = useState(0.10);
 
   const [wallets, setWallets] = useState<WalletRow[]>([]);
   const [selectedWallet, setSelectedWallet] = useState<string | null>(null);
@@ -137,20 +138,24 @@ const WithdrawNew = () => {
     if (authLoading) return;
     if (!user) { navigate("/login"); return; }
     (async () => {
-      const [ordersRes, withdrawalsRes, kycRes, walletsRes] = await Promise.all([
+      const [ordersRes, withdrawalsRes, kycRes, walletsRes, feeRes] = await Promise.all([
         supabase.from("orders").select("amount, created_at").eq("store_owner_id", user.id).eq("status", "completed"),
-        supabase.from("withdrawals").select("amount, status").eq("user_id", user.id),
+        supabase.from("withdrawals").select("amount, fee, status").eq("user_id", user.id),
         supabase.from("identity_verifications").select("status").eq("user_id", user.id).maybeSingle(),
         supabase.from("wallets").select("*").eq("user_id", user.id).order("is_default", { ascending: false }),
+        supabase.from("platform_fees").select("value_pct").eq("key", "technova_commission_pct").maybeSingle(),
       ]);
       setKycStatus(isAdmin ? "approved" : (kycRes.data?.status || null));
+      const commPct = Number(feeRes.data?.value_pct ?? 10) / 100;
+      setCommissionPct(commPct);
+
       const cutoff = new Date(Date.now() - 72 * 60 * 60 * 1000);
       const matured = (ordersRes.data || []).filter(o => new Date(o.created_at) <= cutoff)
         .reduce((s, o) => s + Number(o.amount), 0);
-      const net = matured * (1 - COMMISSION);
+      const net = matured * (1 - commPct);
       const withdrawn = (withdrawalsRes.data || [])
         .filter(w => ["pending", "processing", "completed"].includes(w.status))
-        .reduce((s, w) => s + Number(w.amount), 0);
+        .reduce((s, w) => s + Number(w.amount) + Number(w.fee || 0), 0);
       setAvailableNet(net - withdrawn);
       const wList = (walletsRes.data as WalletRow[]) || [];
       setWallets(wList);
@@ -190,7 +195,7 @@ const WithdrawNew = () => {
       if (error || data?.error) {
         if (data?.needs_setup) {
           toast.error(t.toastCreatePin);
-          window.open("/dashboard/wallet", "_blank");
+          navigate("/dashboard/wallet");
           return;
         }
         throw new Error(data?.error || error?.message);
@@ -214,8 +219,7 @@ const WithdrawNew = () => {
       if (error || data?.error) throw new Error(data?.error || error?.message);
       toast.success(t.toastSuccess);
       setTimeout(() => {
-        if (window.history.length > 1) navigate("/dashboard/withdrawals");
-        else window.close();
+        navigate("/dashboard/withdrawals");
       }, 800);
     } catch (e: any) { toast.error(e.message); }
     finally { setSubmitting(false); }
@@ -276,7 +280,7 @@ const WithdrawNew = () => {
       <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-amber-50/40">
         <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-violet-100/60">
           <div className="max-w-5xl mx-auto flex items-center justify-between px-4 sm:px-6 h-14">
-            <button onClick={() => (window.history.length > 1 ? navigate(-1) : window.close())} className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900">
+            <button onClick={() => (window.history.length > 1 ? navigate(-1) : navigate("/dashboard/withdrawals"))} className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900">
               <ArrowLeft className="h-4 w-4" /> <span className="hidden sm:inline">{t.back}</span>
             </button>
             <span className="text-sm font-bold text-gray-900">{t.headerTitle}</span>
@@ -305,7 +309,7 @@ const WithdrawNew = () => {
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <label className="text-xs font-semibold text-gray-700">{t.receivingWallet}</label>
-                  <button onClick={() => window.open("/dashboard/wallet", "_blank")} className="text-[11px] text-violet-600 hover:underline flex items-center gap-1">
+                  <button onClick={() => navigate("/dashboard/wallet")} className="text-[11px] text-violet-600 hover:underline flex items-center gap-1">
                     <Plus className="h-3 w-3" /> {t.manageWallets}
                   </button>
                 </div>
@@ -313,7 +317,7 @@ const WithdrawNew = () => {
                   <div className="rounded-xl border-2 border-dashed border-gray-200 p-6 text-center bg-gray-50">
                     <WalletIcon className="h-8 w-8 mx-auto text-gray-400 mb-2" />
                     <p className="text-sm text-gray-600 mb-3">{t.noWallet}</p>
-                    <Button size="sm" onClick={() => window.open("/dashboard/wallet", "_blank")}
+                    <Button size="sm" onClick={() => navigate("/dashboard/wallet")}
                       style={{ background: "linear-gradient(135deg, #7C2DCC 0%, #C9962E 130%)" }}>
                       {t.createWallet}
                     </Button>
@@ -332,7 +336,7 @@ const WithdrawNew = () => {
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-1.5">
                               <p className="font-semibold text-sm text-gray-900 truncate">{w.name}</p>
-                              {w.is_default && <Star className="h-3 w-3 text-amber-500 fill-amber-500" />}
+                              {w.is_default && <Star className="h-3.5 w-3.5 text-amber-500 fill-amber-500" />}
                             </div>
                             <p className="text-[11px] text-gray-500 font-mono">{w.phone} • {p.label}</p>
                           </div>
@@ -378,7 +382,12 @@ const WithdrawNew = () => {
                 </div>
                 <div className="text-sm text-white/70 mb-6">FCFA</div>
                 <div className="space-y-3 text-sm">
-                  <div className="flex items-center justify-between"><span className="text-white/70">{t.sidebarCommission}</span><span className="font-semibold text-amber-300">{t.sidebarCommissionSub}</span></div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-white/70">{t.sidebarCommission}</span>
+                    <span className="font-semibold text-amber-300">
+                      {commissionPct * 100}% ({lang === 'fr' ? 'déjà déduit' : 'already deducted'})
+                    </span>
+                  </div>
                   <div className="flex items-center justify-between"><span className="text-white/70">{t.sidebarFees}</span><span className="font-semibold text-amber-300">{t.sidebarFeesSub}</span></div>
                   <div className="flex items-center justify-between"><span className="text-white/70">{t.sidebarMaturity}</span><span className="font-semibold">{t.sidebarMaturitySub}</span></div>
                   <div className="flex items-center justify-between"><span className="text-white/70">{t.sidebarMin}</span><span className="font-semibold">{t.sidebarMinSub}</span></div>

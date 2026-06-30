@@ -1,6 +1,6 @@
-﻿// Set or reset the wallet PIN (4 digits)
+// Set or reset the wallet PIN (4 digits)
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import * as bcrypt from "https://deno.land/x/bcrypt@v0.4.1/mod.ts";
+import bcrypt from "https://esm.sh/bcryptjs@2.4.3";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -30,11 +30,11 @@ Deno.serve(async (req) => {
     const { data: existing } = await admin.from("wallet_pins").select("pin_hash").eq("user_id", user.id).maybeSingle();
     if (existing) {
       if (!currentPin) return j({ error: "PIN actuel requis pour modifier" }, 400);
-      const ok = await bcrypt.compare(String(currentPin), existing.pin_hash);
+      const ok = bcrypt.compareSync(String(currentPin), existing.pin_hash);
       if (!ok) return j({ error: "PIN actuel incorrect" }, 403);
     }
 
-    const hash = await bcrypt.hash(String(pin));
+    const hash = bcrypt.hashSync(String(pin), 10);
     const { error } = await admin.from("wallet_pins").upsert({
       user_id: user.id,
       pin_hash: hash,

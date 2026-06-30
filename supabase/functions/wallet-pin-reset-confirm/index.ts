@@ -1,6 +1,6 @@
-﻿// Verify OTP and set a new wallet PIN.
+// Verify OTP and set a new wallet PIN.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import * as bcrypt from "https://deno.land/x/bcrypt@v0.4.1/mod.ts";
+import bcrypt from "https://esm.sh/bcryptjs@2.4.3";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -48,7 +48,7 @@ Deno.serve(async (req) => {
     await admin.from("login_otps").update({ used: true }).eq("id", otp.id);
 
     // Reset PIN
-    const hash = bcrypt.hashSync(String(new_pin));
+    const hash = bcrypt.hashSync(String(new_pin), 10);
     const { error } = await admin.from("wallet_pins").upsert({
       user_id: user.id,
       pin_hash: hash,

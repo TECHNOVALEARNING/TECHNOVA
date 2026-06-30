@@ -27,6 +27,7 @@ import { buyerSupabase } from "@/integrations/supabase/buyer-client";
 
 export const Header = () => {
   const [open, setOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const { user, signOut } = useAuth();
   const [theme, setTheme] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_theme") || "light") : "light");
   const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
@@ -106,16 +107,25 @@ export const Header = () => {
           ))}
           
           {/* Dropdown "Plus" */}
-          <div className="relative group">
-            <button className="flex items-center gap-1 hover:text-[color:var(--primary)] text-muted-foreground transition-colors story-link font-medium text-sm">
-              {lang === "fr" ? "Plus" : "More"} <ChevronDown className="h-3.5 w-3.5 transition-transform group-hover:rotate-180" />
+          <div className="relative" onMouseLeave={() => setDropdownOpen(false)}>
+            <button 
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+              onMouseEnter={() => setDropdownOpen(true)}
+              className="flex items-center gap-1 hover:text-[color:var(--primary)] text-muted-foreground transition-colors story-link font-medium text-sm"
+            >
+              {lang === "fr" ? "Plus" : "More"} <ChevronDown className={`h-3.5 w-3.5 transition-transform ${dropdownOpen ? "rotate-180" : ""}`} />
             </button>
-            <div className="absolute top-full right-0 mt-2 w-48 rounded-xl border border-border bg-white dark:bg-[#1c1c1e] p-2 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+            <div className={`absolute top-full right-0 mt-2 w-48 rounded-xl border border-border bg-white dark:bg-[#1c1c1e] p-2 shadow-xl transition-all ${
+              dropdownOpen ? "opacity-100 visible" : "opacity-0 invisible"
+            }`}>
               {moreDropdownLinks.map((l) => (
                 <Link
                   key={l.label}
                   to={l.to}
-                  onClick={(e) => handleNavClick(e, l.to)}
+                  onClick={(e) => {
+                    setDropdownOpen(false);
+                    handleNavClick(e, l.to);
+                  }}
                   className="block rounded-lg px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
                 >
                   {l.label}
@@ -281,15 +291,15 @@ export const Footer = () => {
               <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
             </svg>
           </a>
-          <a href="#" className="h-10 w-10 rounded-full bg-card/10 hover:bg-black transition-colors flex items-center justify-center text-white shadow-sm hover:-translate-y-1 duration-300">
+          <a href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer" className="h-10 w-10 rounded-full bg-card/10 hover:bg-black transition-colors flex items-center justify-center text-white shadow-sm hover:-translate-y-1 duration-300">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
               <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
             </svg>
           </a>
-          <a href="https://www.linkedin.com/company/130533963" className="h-10 w-10 rounded-full bg-card/10 hover:bg-[#1877F2] transition-colors flex items-center justify-center text-white shadow-sm hover:-translate-y-1 duration-300">
+          <a href="https://www.linkedin.com/company/130533963" target="_blank" rel="noopener noreferrer" className="h-10 w-10 rounded-full bg-card/10 hover:bg-[#1877F2] transition-colors flex items-center justify-center text-white shadow-sm hover:-translate-y-1 duration-300">
             <i className="fa-brands fa-linkedin-in"></i>
           </a>
-          <a href="#" className="h-10 w-10 rounded-full bg-card/10 hover:bg-red-700 transition-colors flex items-center justify-center text-white shadow-sm hover:-translate-y-1 duration-300">
+          <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" className="h-10 w-10 rounded-full bg-card/10 hover:bg-red-700 transition-colors flex items-center justify-center text-white shadow-sm hover:-translate-y-1 duration-300">
             <i className="fa-brands fa-youtube"></i>          
           </a>
         </div>
@@ -302,15 +312,15 @@ export const Footer = () => {
         </h4>
         <ul className="space-y-2.5 text-white/70 text-sm">
           {[
-            { label: lang === 'fr' ? "Cybersécurité" : "Cybersecurity" },
-            { label: lang === 'fr' ? "IA et Data Science" : "AI and Data Science" },
-            { label: lang === 'fr' ? "Développement web" : "Web Development" },
-            { label: lang === 'fr' ? "Bureautique" : "Office Tools" },
-            { label: lang === 'fr' ? "Design et montage" : "Design and editing" },
+            { label: lang === 'fr' ? "Cybersécurité" : "Cybersecurity", href: "/admin-products?q=securite" },
+            { label: lang === 'fr' ? "IA et Data Science" : "AI and Data Science", href: "/admin-products?q=IA" },
+            { label: lang === 'fr' ? "Développement web" : "Web Development", href: "/admin-products?q=dev" },
+            { label: lang === 'fr' ? "Bureautique" : "Office Tools", href: "/admin-products?q=bureautique" },
+            { label: lang === 'fr' ? "Design et montage" : "Design and editing", href: "/admin-products?category=design" },
           ].map((lnk) => (
             <li key={lnk.label} className="flex items-center gap-2">
               <ChevronRight className="h-3.5 w-3.5 flex-none text-[color:var(--primary)]" />
-              <a href={lnk.href} className="hover:text-white transition-colors">{lnk.label}</a>
+              <Link to={lnk.href} className="hover:text-white transition-colors">{lnk.label}</Link>
             </li>
           ))}
         </ul>

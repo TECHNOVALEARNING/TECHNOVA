@@ -6,10 +6,26 @@ import { Input } from "@/components/ui/input";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useGeoPricing } from "@/contexts/GeoPricingContext";
 import { toast } from "sonner";
 import { pawapayCountries, providerLogos, type PawaPayCountry, type PawaPayProvider } from "@/data/pawapayProviders";
 import SEOHead from "@/components/SEOHead";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+
+const iso2ToIso3: Record<string, string> = {
+  BJ: "BEN",
+  CI: "CIV",
+  CM: "CMR",
+  CD: "COD",
+  CG: "COG",
+  GA: "GAB",
+  KE: "KEN",
+  RW: "RWA",
+  SN: "SEN",
+  SL: "SLE",
+  UG: "UGA",
+  ZM: "ZMB"
+};
 
 interface WalletRow {
   id: string;
@@ -130,6 +146,7 @@ const translations = {
 const Wallet = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
+  const { countryCode } = useGeoPricing();
 
   const [phase, setPhase] = useState<"loading" | "setup" | "unlock" | "ready">("loading");
   const [hasPin, setHasPin] = useState(false);
@@ -160,6 +177,18 @@ const Wallet = () => {
   const t = translations[lang === 'en' ? 'en' : 'fr'];
 
   useEffect(() => { setProvider(country.deposit[0]); }, [country.code]);
+
+  useEffect(() => {
+    if (countryCode) {
+      const iso3 = iso2ToIso3[countryCode.toUpperCase()];
+      if (iso3) {
+        const match = pawapayCountries.find(c => c.code === iso3);
+        if (match) {
+          setCountry(match);
+        }
+      }
+    }
+  }, [countryCode]);
 
   useEffect(() => {
     if (authLoading) return;
@@ -388,7 +417,7 @@ const Wallet = () => {
       <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-amber-50/40">
         <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-violet-100/60">
           <div className="max-w-5xl mx-auto flex items-center justify-between px-4 sm:px-6 h-14">
-            <button onClick={() => (window.history.length > 1 ? navigate(-1) : window.close())} className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900">
+            <button onClick={() => (window.history.length > 1 ? navigate(-1) : navigate("/dashboard/withdrawals"))} className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900">
               <ArrowLeft className="h-4 w-4" /> <span className="hidden sm:inline">{t.back}</span>
             </button>
             <span className="text-sm font-bold text-gray-900 flex items-center gap-1.5">

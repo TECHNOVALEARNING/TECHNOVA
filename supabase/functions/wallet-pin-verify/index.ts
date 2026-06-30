@@ -1,6 +1,6 @@
-﻿// Verify wallet PIN, return short-lived unlock token (15 min)
+// Verify wallet PIN, return short-lived unlock token (15 min)
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import * as bcrypt from "https://deno.land/x/bcrypt@v0.4.1/mod.ts";
+import bcrypt from "https://esm.sh/bcryptjs@2.4.3";
 import { create, getNumericDate } from "https://deno.land/x/djwt@v3.0.2/mod.ts";
 
 const corsHeaders = {
@@ -44,7 +44,7 @@ Deno.serve(async (req) => {
       return j({ error: "Wallet verrouillé temporairement. Réessayez plus tard." }, 429);
     }
 
-    const ok = await bcrypt.compare(String(pin), row.pin_hash);
+    const ok = bcrypt.compareSync(String(pin), row.pin_hash);
     if (!ok) {
       const attempts = (row.failed_attempts || 0) + 1;
       const lock = attempts >= 5 ? new Date(Date.now() + 15 * 60 * 1000).toISOString() : null;
