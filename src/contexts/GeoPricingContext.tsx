@@ -165,13 +165,13 @@ export const GeoPricingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         console.warn("freeipapi.com failed", e);
       }
 
-      // 5. Fallback to browser locale
+      // 5. Fallback to browser locale (only if explicitly in CURRENCY_MAP and not FR/US/GB to avoid false European defaults for West African users)
       try {
         const locale = navigator.language || (navigator as any).userLanguage;
         if (locale) {
           const parts = locale.split("-");
           const code = parts[parts.length - 1].toUpperCase();
-          if (code && code.length === 2) {
+          if (code && code.length === 2 && CURRENCY_MAP[code] && code !== "FR" && code !== "US" && code !== "GB") {
             applyCountryAndCurrency(code);
             sessionStorage.setItem("tech_detected_country", code);
             setLoading(false);
