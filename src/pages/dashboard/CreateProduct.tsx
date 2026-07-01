@@ -814,6 +814,9 @@ const CreateProduct = () => {
                         <SelectItem value="education">🎓 Éducation</SelectItem>
                         <SelectItem value="lifestyle">🌿 Lifestyle</SelectItem>
                         <SelectItem value="creative">🎬 Créatif</SelectItem>
+                        <SelectItem value="divertissement">🎮 Divertissement</SelectItem>
+                        <SelectItem value="sante_bien_etre">❤️ Santé et bien être</SelectItem>
+                        <SelectItem value="developpement_personnel">✨ Développement personnel</SelectItem>
                         {user?.email === "ancres707@gmail.com" && (
                           <>
                             <SelectItem value="template">📋 Templates</SelectItem>

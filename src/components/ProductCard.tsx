@@ -8,6 +8,16 @@ const categoryLabels: Record<string, string> = {
   formation: "Formation",
   ebook: "E-book",
   template: "Template",
+  business: "Business",
+  design: "Design",
+  tech: "Tech & Code",
+  marketing: "Marketing",
+  education: "Éducation",
+  lifestyle: "Lifestyle",
+  creative: "Créatif",
+  divertissement: "Divertissement",
+  sante_bien_etre: "Santé et bien être",
+  developpement_personnel: "Développement personnel",
 };
 
 const SUBCAT_LABELS: Record<string, string> = {

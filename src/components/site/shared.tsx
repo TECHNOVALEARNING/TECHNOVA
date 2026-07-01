@@ -28,6 +28,7 @@ import { buyerSupabase } from "@/integrations/supabase/buyer-client";
 export const Header = () => {
   const [open, setOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [infoDropdownOpen, setInfoDropdownOpen] = useState(false);
   const { user, signOut } = useAuth();
   const [theme, setTheme] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_theme") || "light") : "light");
   const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
@@ -75,8 +76,11 @@ export const Header = () => {
     { to: "/outils-digitaux", label: lang === "fr" ? "Outils de Productivité" : "Productivity Tools" },
     { to: "/decouvertes", label: lang === "fr" ? "Découvertes" : "Discoveries" },
     { to: "/apps", label: lang === "fr" ? "Technova Apps" : "Technova Apps" },
-    { to: "/blog", label: lang === "fr" ? "Blog & Actualités" : "Blog & News" },
-    // { to: "/premium", label: lang === "fr" ? "Espace Premium" : "Premium Space"}
+  ];
+
+  const infoDropdownLinks = [
+    { to: "/blog", label: lang === "fr" ? "Blog" : "Blog" },
+    { to: "/blog", label: lang === "fr" ? "Actualités" : "News" },
   ];
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, to: string) => {
@@ -106,6 +110,34 @@ export const Header = () => {
             </Link>
           ))}
           
+          {/* Dropdown "Informez-vous" */}
+          <div className="relative" onMouseLeave={() => setInfoDropdownOpen(false)}>
+            <button 
+              onClick={() => setInfoDropdownOpen(!infoDropdownOpen)}
+              onMouseEnter={() => setInfoDropdownOpen(true)}
+              className="flex items-center gap-1 hover:text-[color:var(--primary)] text-muted-foreground transition-colors story-link font-medium text-sm"
+            >
+              {lang === "fr" ? "Informez-vous" : "Get Informed"} <ChevronDown className={`h-3.5 w-3.5 transition-transform ${infoDropdownOpen ? "rotate-180" : ""}`} />
+            </button>
+            <div className={`absolute top-full left-0 mt-2 w-48 rounded-xl border border-white/20 dark:border-white/10 bg-white/75 dark:bg-[#1c1c1e]/75 backdrop-blur-md p-2 shadow-xl transition-all before:content-[''] before:absolute before:-top-2 before:left-0 before:right-0 before:h-2 ${
+              infoDropdownOpen ? "opacity-100 visible" : "opacity-0 invisible"
+            }`}>
+              {infoDropdownLinks.map((l) => (
+                <Link
+                  key={l.label}
+                  to={l.to}
+                  onClick={(e) => {
+                    setInfoDropdownOpen(false);
+                    handleNavClick(e, l.to);
+                  }}
+                  className="block rounded-lg px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors"
+                >
+                  {l.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+
           {/* Dropdown "Plus" */}
           <div className="relative" onMouseLeave={() => setDropdownOpen(false)}>
             <button 
@@ -115,7 +147,7 @@ export const Header = () => {
             >
               {lang === "fr" ? "Plus" : "More"} <ChevronDown className={`h-3.5 w-3.5 transition-transform ${dropdownOpen ? "rotate-180" : ""}`} />
             </button>
-            <div className={`absolute top-full right-0 mt-2 w-48 rounded-xl border border-border bg-white dark:bg-[#1c1c1e] p-2 shadow-xl transition-all before:content-[''] before:absolute before:-top-2 before:left-0 before:right-0 before:h-2 ${
+            <div className={`absolute top-full right-0 mt-2 w-48 rounded-xl border border-white/20 dark:border-white/10 bg-white/75 dark:bg-[#1c1c1e]/75 backdrop-blur-md p-2 shadow-xl transition-all before:content-[''] before:absolute before:-top-2 before:left-0 before:right-0 before:h-2 ${
               dropdownOpen ? "opacity-100 visible" : "opacity-0 invisible"
             }`}>
               {moreDropdownLinks.map((l) => (
@@ -126,7 +158,7 @@ export const Header = () => {
                     setDropdownOpen(false);
                     handleNavClick(e, l.to);
                   }}
-                  className="block rounded-lg px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+                  className="block rounded-lg px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors"
                 >
                   {l.label}
                 </Link>
@@ -184,6 +216,25 @@ export const Header = () => {
             </div>
             
             <div className="h-px w-full bg-border/50 my-1" />
+
+            {/* Mobile "Informez-vous" section */}
+            <div className="space-y-2">
+              <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider pl-1">
+                {lang === "fr" ? "Informez-vous" : "Get Informed"}
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                {infoDropdownLinks.map((l) => (
+                  <Link
+                    key={l.label}
+                    to={l.to}
+                    onClick={(e) => { setOpen(false); handleNavClick(e, l.to); }}
+                    className="py-3 px-2 font-medium rounded-xl bg-muted/40 hover:bg-muted/60 border border-border/50 text-[14px] text-center transition-colors"
+                  >
+                    {l.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
 
             {/* Mobile "Plus" section */}
             <div className="space-y-2">

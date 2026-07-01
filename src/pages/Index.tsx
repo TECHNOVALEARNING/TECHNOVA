@@ -18,6 +18,20 @@ const SUBCAT_LABELS: Record<string, string> = {
   other: "Autre"
 };
 
+const CATEGORY_LABELS: Record<string, string> = {
+  business: "Business",
+  design: "Design",
+  tech: "Tech & Code",
+  marketing: "Marketing",
+  education: "Éducation",
+  lifestyle: "Lifestyle",
+  creative: "Créatif",
+  divertissement: "Divertissement",
+  sante_bien_etre: "Santé et bien être",
+  developpement_personnel: "Développement personnel",
+  other: "Autre"
+};
+
 const getDisplayCategory = (cat: string) => {
   if (!cat) return "Formation";
   if (cat === "template") return "Template";
@@ -27,7 +41,7 @@ const getDisplayCategory = (cat: string) => {
   }
   if (cat === "ebook") return "E-book";
   if (cat === "formation") return "Formation";
-  return cat;
+  return CATEGORY_LABELS[cat] || (cat.charAt(0).toUpperCase() + cat.slice(1));
 };
 
 const PARTNERS = [

@@ -14,6 +14,16 @@ const categoryLabels: Record<string, Record<string, string>> = {
   formation: { fr: "Formation", en: "Training" },
   ebook: { fr: "E-book", en: "E-book" },
   template: { fr: "Template", en: "Template" },
+  business: { fr: "Business & Finance", en: "Business & Finance" },
+  design: { fr: "Design & Créativité", en: "Design & Creativity" },
+  tech: { fr: "Développement & Tech", en: "Development & Tech" },
+  marketing: { fr: "Marketing Digital", en: "Digital Marketing" },
+  education: { fr: "Éducation & Apprentissage", en: "Education & Learning" },
+  lifestyle: { fr: "Lifestyle", en: "Lifestyle" },
+  creative: { fr: "Créatif", en: "Creative" },
+  divertissement: { fr: "Divertissement", en: "Entertainment" },
+  sante_bien_etre: { fr: "Santé et bien être", en: "Health & Well-being" },
+  developpement_personnel: { fr: "Développement personnel", en: "Personal Development" },
 };
 
 const SUBCAT_LABELS: Record<string, Record<string, string>> = {

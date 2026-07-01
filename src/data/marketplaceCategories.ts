@@ -14,6 +14,9 @@ export const MARKETPLACE_CATEGORIES: MarketplaceCategory[] = [
   { key: "education", label: "Éducation", emoji: "🎓", description: "Cours, tutoriels, formations" },
   { key: "lifestyle", label: "Lifestyle", emoji: "🌿", description: "Bien-être, productivité, loisirs" },
   { key: "creative", label: "Créatif", emoji: "🎬", description: "Vidéo, musique, photo, contenu" },
+  { key: "divertissement", label: "Divertissement", emoji: "🎮", description: "Jeux, films, loisirs, divertissement" },
+  { key: "sante_bien_etre", label: "Santé et bien être", emoji: "❤️", description: "Santé, bien-être, sport" },
+  { key: "developpement_personnel", label: "Développement personnel", emoji: "✨", description: "Croissance personnelle, motivation" },
   { key: "other", label: "Autres", emoji: "✨", description: "Tout le reste" },
 ];
 

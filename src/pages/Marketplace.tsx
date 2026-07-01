@@ -158,6 +158,9 @@ const categoryLabels: Record<string, Record<string, string>> = {
   education: { fr: "Éducation", en: "Education" },
   lifestyle: { fr: "Lifestyle", en: "Lifestyle" },
   creative: { fr: "Créatif", en: "Creative" },
+  divertissement: { fr: "Divertissement", en: "Entertainment" },
+  sante_bien_etre: { fr: "Santé et bien être", en: "Health & Well-being" },
+  developpement_personnel: { fr: "Développement personnel", en: "Personal Development" },
   other: { fr: "Autres", en: "Others" },
 };
 
