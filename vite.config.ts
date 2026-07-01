@@ -23,6 +23,9 @@ const apiPlugin = () => ({
             // Standardize request
             const mockReq = Object.assign(req, { query });
 
+            const originalSetHeader = res.setHeader.bind(res);
+            const originalEnd = res.end.bind(res);
+
             // Standardize response methods
             const mockRes = Object.assign(res, {
               status(code: number) {
@@ -30,16 +33,16 @@ const apiPlugin = () => ({
                 return this;
               },
               json(data: any) {
-                res.setHeader("Content-Type", "application/json");
-                res.end(JSON.stringify(data));
+                originalSetHeader("Content-Type", "application/json");
+                originalEnd(JSON.stringify(data));
                 return this;
               },
               setHeader(name: string, value: string) {
-                res.setHeader(name, value);
+                originalSetHeader(name, value);
                 return this;
               },
               end(data?: string) {
-                res.end(data);
+                originalEnd(data);
                 return this;
               }
             });

@@ -80,7 +80,7 @@ export const Header = () => {
 
   const infoDropdownLinks = [
     { to: "/blog", label: lang === "fr" ? "Blog" : "Blog" },
-    { to: "/blog", label: lang === "fr" ? "Actualités" : "News" },
+    { to: "/actualites", label: lang === "fr" ? "Actualités" : "News" },
   ];
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, to: string) => {

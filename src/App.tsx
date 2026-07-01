@@ -47,6 +47,8 @@ import BuyerDashboard from "./pages/BuyerDashboard";
 import BuyerOrderDetail from "./pages/BuyerOrderDetail";
 import Blog from "./pages/Blog";
 import BlogPostDetail from "./pages/BlogPostDetail";
+import Actualites from "./pages/Actualites";
+import ActualitesDetail from "./pages/ActualitesDetail";
 import TechnovaApps from "./pages/TechnovaApps";
 
 import DashboardOverview from "./pages/dashboard/DashboardOverview";
@@ -149,6 +151,8 @@ const AppContent = () => {
               <Route path="/e-services" element={<EServices />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:id" element={<BlogPostDetail />} />
+              <Route path="/actualites" element={<Actualites />} />
+              <Route path="/actualites/:id" element={<ActualitesDetail />} />
               <Route path="/apps" element={<TechnovaApps />} />
               
               <Route path="/about" element={<About />} />
