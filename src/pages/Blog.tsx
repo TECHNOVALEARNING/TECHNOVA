@@ -8,49 +8,103 @@ import { Link } from "react-router-dom";
 // Fallback articles displayed when the NewsData.io API is unavailable
 const BLOG_ARTICLES = [
   {
-    id: "devenir-developpeur-fullstack-2026",
-    title: "Le guide ultime pour devenir Développeur Full-Stack en 2026",
-    category: "Développement",
+    id: "introduction-produits-plr-droits-revente",
+    title: "Le Guide Complet des Produits PLR : Créez et Vendez vos Produits Numériques en 1 Clic",
+    category: "Digital PLR",
     image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&q=80",
-    excerpt: "La demande de développeurs polyvalents ne faiblit pas. Découvrez le parcours d'apprentissage, les langages clés (TypeScript, Next.js) et les compétences indispensables pour vous lancer cette année...",
-    date: "30 juin 2026",
+    excerpt: "Qu'est-ce que le PLR (Private Label Rights) et comment l'utiliser pour générer des revenus en ligne passifs ? Découvrez les secrets pour acquérir, personnaliser et revendre des e-books, formations et templates sous votre propre marque...",
+    date: "1 juillet 2026",
     readingTime: "8 min"
   },
   {
-    id: "intelligence-artificielle-productivite",
-    title: "Comment doubler votre productivité avec l'Intelligence Artificielle au quotidien",
-    category: "IA & Data",
+    id: "comment-personnaliser-un-ebook-plr",
+    title: "5 Étapes pour Transformer un E-book PLR en Best-Seller Unique",
+    category: "Marketing",
     image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80",
-    excerpt: "L'IA n'est pas réservée aux experts. Apprenez à intégrer ChatGPT, Claude et Midjourney dans vos flux de travail pour gagner des heures précieuses chaque jour...",
-    date: "28 juin 2026",
+    excerpt: "Acheter un produit PLR ne suffit pas, il faut savoir le démarquer de la concurrence. Découvrez nos techniques de personnalisation pour créer une offre irrésistible que vos clients s'arracheront...",
+    date: "29 juin 2026",
     readingTime: "6 min"
   },
   {
-    id: "securiser-donnees-entreprise",
-    title: "Sécuriser ses données en ligne : 5 bonnes pratiques indispensables",
-    category: "Cybersécurité",
+    id: "tunnel-de-vente-produits-digitaux",
+    title: "Comment Construire un Tunnel de Vente qui Convertit pour vos Info-produits",
+    category: "Tunnels de Vente",
     image: "https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?w=800&q=80",
-    excerpt: "À l'ère du travail hybride, la cybersécurité est l'affaire de tous. Protégez votre entreprise et vos données personnelles contre les attaques de phishing et les ransomwares...",
-    date: "25 juin 2026",
+    excerpt: "Découvrez la structure exacte d'un tunnel de vente optimisé pour vendre vos produits PLR en automatique : de la page de capture à l'upsell, maximisez la valeur moyenne de chaque commande...",
+    date: "26 juin 2026",
+    readingTime: "7 min"
+  },
+  {
+    id: "niches-rentables-produits-digitaux",
+    title: "Top 4 des Niches les plus Rentables pour Vendre des Produits Numériques en 2026",
+    category: "Niches Riches",
+    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80",
+    excerpt: "Toutes les thématiques ne se valent pas. Découvrez les niches à forte demande (finances, productivité, bien-être) où les clients recherchent activement des e-books et formations à acheter...",
+    date: "24 juin 2026",
     readingTime: "5 min"
   },
   {
-    id: "reussir-transition-tech",
-    title: "Réussir sa transition professionnelle dans le digital : témoignages et conseils",
-    category: "Carrière",
-    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80",
-    excerpt: "Vous songez à vous reconvertir ? De nombreux professionnels ont sauté le pas vers le design, le code ou le marketing. Découvrez leurs clés de succès et nos formations adaptées...",
+    id: "systeme-io-vs-shopify-produits-digitaux",
+    title: "Système.io vs Shopify : Quelle Plateforme Choisir pour Vendre vos PLR ?",
+    category: "Tunnels de Vente",
+    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
+    excerpt: "Vous hésitez entre Shopify et Système.io pour lancer votre boutique de produits digitaux ? Découvrez notre comparatif complet sur les tarifs, la facilité de création de tunnels de vente...",
     date: "22 juin 2026",
+    readingTime: "8 min"
+  },
+  {
+    id: "strategie-email-marketing-infoproduits",
+    title: "L'E-mail Marketing pour Info-Preneurs : 3 Séquences Automatiques pour Exploser vos Ventes",
+    category: "Marketing",
+    image: "https://images.unsplash.com/photo-1557200134-90327ee9fafa?w=800&q=80",
+    excerpt: "L'e-mail reste le canal le plus rentable du web. Apprenez à mettre en place des séquences automatisées d'accueil, d'abandon de panier et de relance pour convertir vos leads en acheteurs...",
+    date: "20 juin 2026",
+    readingTime: "6 min"
+  },
+  {
+    id: "comment-creer-une-offre-irresistible",
+    title: "Comment Packager vos Produits Digitaux pour Créer une Offre Irrésistible",
+    category: "Digital PLR",
+    image: "https://images.unsplash.com/photo-1513151233558-d860c5398176?w=800&q=80",
+    excerpt: "Un produit ne se vend pas seul, c'est l'offre qui fait la vente. Découvrez comment combiner vos e-books, templates et audio PLR dans un bundle irrésistible qui multiplie la valeur...",
+    date: "18 juin 2026",
     readingTime: "7 min"
+  },
+  {
+    id: "affiliation-produits-numeriques",
+    title: "Recruter des Affiliés : La Méthode Ultime pour Vendre vos Info-produits Sans Budget",
+    category: "Marketing",
+    image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&q=80",
+    excerpt: "Et si d'autres personnes faisaient la promotion de vos produits pour vous ? Découvrez comment mettre en place un programme d'affiliation attractif et recruter vos premiers partenaires...",
+    date: "15 juin 2026",
+    readingTime: "6 min"
+  },
+  {
+    id: "creer-formation-video-depuis-plr",
+    title: "Comment Transformer un E-book PLR en Formation Vidéo à Succès",
+    category: "Digital PLR",
+    image: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=800&q=80",
+    excerpt: "Les formations vidéo se vendent 10 fois plus cher que les e-books. Découvrez notre guide étape par étape pour enregistrer une formation vidéo à partir d'une simple trame d'e-book PLR...",
+    date: "12 juin 2026",
+    readingTime: "9 min"
+  },
+  {
+    id: "gagner-ses-premiers-euros-en-ligne",
+    title: "Plan d'Action 30 Jours : Gagner ses Premiers 1000€ avec la Vente de Fichiers Numériques",
+    category: "Niches Riches",
+    image: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=800&q=80",
+    excerpt: "Vous débutez de zéro ? Suivez ce plan d'action quotidien sur 30 jours pour choisir votre niche, packager votre offre PLR et lancer vos premières campagnes de vente...",
+    date: "10 juin 2026",
+    readingTime: "10 min"
   }
 ];
 
 const CATEGORIES = [
   { slug: "All", fr: "Tout", en: "All", emoji: "✨" },
-  { slug: "Développement", fr: "Développement", en: "Development", emoji: "💻" },
-  { slug: "IA & Data", fr: "IA & Data", en: "AI & Data", emoji: "🤖" },
-  { slug: "Cybersécurité", fr: "Cybersécurité", en: "Cybersecurity", emoji: "🔒" },
-  { slug: "Carrière", fr: "Carrière", en: "Career", emoji: "💼" }
+  { slug: "Digital PLR", fr: "Digital PLR", en: "Digital PLR", emoji: "📦" },
+  { slug: "Marketing", fr: "Marketing", en: "Marketing", emoji: "🚀" },
+  { slug: "Tunnels de Vente", fr: "Tunnels de Vente", en: "Sales Funnels", emoji: "⚡" },
+  { slug: "Niches Riches", fr: "Niches Riches", en: "Profitable Niches", emoji: "💰" }
 ];
 
 export default function Blog() {

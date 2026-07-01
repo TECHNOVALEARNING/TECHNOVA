@@ -9,93 +9,218 @@ import { toast } from "sonner";
 // Fallback article details for when NewsData.io API is unavailable
 // Fallback article details for when NewsData.io API is unavailable
 const FALLBACK_ARTICLES_DETAILS: { [key: string]: any } = {
-  "devenir-developpeur-fullstack-2026": {
-    id: "devenir-developpeur-fullstack-2026",
-    title: "Le guide ultime pour devenir Développeur Full-Stack en 2026",
-    category: "Développement",
+  "introduction-produits-plr-droits-revente": {
+    id: "introduction-produits-plr-droits-revente",
+    title: "Le Guide Complet des Produits PLR : Créez et Vendez vos Produits Numériques en 1 Clic",
+    category: "Digital PLR",
     image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&q=80",
-    author: "TECHNOVA",
-    date: "30 juin 2026",
+    author: "Captivateur",
+    date: "1 juillet 2026",
     readingTime: "8 min",
     content: `
-      <p class="lead">Le métier de développeur full-stack reste l'un des profils les plus recherchés en 2026. Capable d'intervenir à la fois sur le front-end et le back-end, ce développeur polyvalent est indispensable au succès des projets web.</p>
+      <p class="lead">Le Private Label Rights (PLR) ou Droits de Label Privé est l'un des raccourcis les plus puissants pour lancer un business numérique en 2026. Il permet d'acheter un produit existant, d'y apposer sa marque et de le revendre à 100% de profit.</p>
       
-      <h2>Pourquoi le Full-Stack est-il incontournable ?</h2>
-      <p>Avec l'avènement de frameworks modernes comme Next.js ou Remix, la frontière entre le code client (front-end) et le code serveur (back-end) s'est estompée. Un développeur full-stack comprend l'ensemble du cycle de développement, de la gestion de base de données à l'optimisation des performances d'affichage.</p>
+      <h2>Qu'est-ce que le PLR exactement ?</h2>
+      <p>Contrairement aux droits de revente simples (Master Resell Rights), le PLR vous donne l'autorisation légale de modifier le contenu, d'y ajouter votre nom comme auteur, de le découper en plusieurs articles, de changer le format (par exemple transformer un e-book en formation vidéo) et de fixer votre propre prix.</p>
       
-      <h2>La stack technique à maîtriser en 2026</h2>
+      <h2>Pourquoi utiliser le PLR ?</h2>
       <ul>
-        <li><strong>Langage :</strong> TypeScript est devenu obligatoire. Sa robustesse permet d'éviter la majorité des bugs en cours de développement.</li>
-        <li><strong>Front-end :</strong> React, Next.js ou Tailwind CSS pour concevoir des interfaces réactives et esthétiques.</li>
-        <li><strong>Back-end & Bases de données :</strong> Node.js, Express, PostgreSQL ou Supabase pour le stockage et l'authentification sécurisée.</li>
-        <li><strong>DevOps :</strong> Git, GitHub Actions pour l'intégration continue, et Vercel ou Docker pour les déploiements.</li>
+        <li><strong>Gain de temps massif :</strong> Pas besoin de passer 3 mois à rédiger 150 pages d'e-book ou à concevoir des templates complexes.</li>
+        <li><strong>Économie d'argent :</strong> Recruter un rédacteur professionnel ou un designer coûte des milliers d'euros. Une licence PLR ne coûte qu'une fraction de ce prix.</li>
+        <li><strong>Focus sur la vente :</strong> Vous pouvez dédier 95% de votre énergie au marketing, au copywriting et à la création de votre tunnel de vente.</li>
       </ul>
       
       <blockquote>
-        "Le meilleur code est celui qui résout un problème complexe de manière simple." — TECHNOVA
+        "Le secret des infopreneurs à succès n'est pas d'écrire plus de contenu, c'est de mieux packager et mieux distribuer des solutions existantes." — Captivateur
       </blockquote>
 
-      <h2>Conseils pour débuter votre apprentissage</h2>
-      <p>Ne tentez pas de tout apprendre en même temps. Commencez par maîtriser HTML, CSS et JavaScript de base, puis progressez pas à pas vers React et Node.js. L'important est de pratiquer en créant vos propres projets réels.</p>
+      <h2>Comment réussir avec le PLR ?</h2>
+      <p>Pour ne pas ressembler à vos concurrents qui revendent le même fichier brut, vous devez absolument personnaliser le produit. Changez le titre pour le rendre accrocheur, concevez une nouvelle couverture moderne en 3D sur Canva, et ajoutez-y votre touche personnelle ou des exemples locaux.</p>
     `
   },
-  "intelligence-artificielle-productivite": {
-    id: "intelligence-artificielle-productivite",
-    title: "Comment doubler votre productivité avec l'Intelligence Artificielle au quotidien",
-    category: "IA & Data",
+  "comment-personnaliser-un-ebook-plr": {
+    id: "comment-personnaliser-un-ebook-plr",
+    title: "5 Étapes pour Transformer un E-book PLR en Best-Seller Unique",
+    category: "Marketing",
     image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80",
-    author: "TECHNOVA",
-    date: "28 juin 2026",
+    author: "Captivateur",
+    date: "29 juin 2026",
     readingTime: "6 min",
     content: `
-      <p class="lead">L'intelligence artificielle n'est plus réservée aux ingénieurs et chercheurs. Elle s'invite aujourd'hui dans nos outils de tous les jours pour nous libérer des tâches répétitives et stimuler notre créativité.</p>
+      <p class="lead">Acquérir un e-book PLR de qualité est une excellente première étape. Mais pour le vendre à un prix premium et vous démarquer de la concurrence, vous devez le transformer en un produit unique.</p>
       
-      <h2>Les 3 piliers de la productivité IA</h2>
-      <p>Pour tirer le meilleur parti des modèles d'IA générative (ChatGPT, Claude, Gemini), structurez votre approche autour de trois axes fondamentaux :</p>
-      <ol>
-        <li><strong>Automatisation des tâches administratives :</strong> Rédaction de courriels, synthèse de documents longs et création de comptes-rendus de réunions.</li>
-        <li><strong>Recherche et apprentissage rapide :</strong> Utiliser l'IA comme un tuteur personnel pour expliquer un concept technique ou pour effectuer des analyses de données complexes en quelques secondes.</li>
-        <li><strong>Co-création et idéation :</strong> Brainstormer des idées d'articles, générer des maquettes de design ou écrire des morceaux de code de démarrage.</li>
-      </ol>
+      <h2>1. Redéfinir l'Angle Marketing</h2>
+      <p>Si votre e-book s'appelle "Introduction au Marketing Digital", renommez-le avec un titre axé sur un résultat concret, par exemple : "La Méthode pas-à-pas pour générer vos 1000 premiers euros sur Instagram". Ciblez une sous-niche spécifique pour maximiser l'intérêt.</p>
       
-      <h2>Le secret réside dans le Prompting</h2>
-      <p>Savoir poser les bonnes questions à l'IA (le prompt engineering) est la compétence clé. Un bon prompt doit spécifier : le rôle de l'IA, le contexte de la tâche, les consignes claires et le format de réponse souhaité.</p>
+      <h2>2. Refondre le Design Visuel</h2>
+      <p>La première impression fait 80% de la vente. Utilisez un outil comme Canva pour concevoir une couverture 3D irrésistible. Changez la mise en page interne, utilisez les polices modernes et harmonisez les couleurs selon la charte graphique de votre marque.</p>
+
+      <h2>3. Augmenter la Valeur Perçue avec des Bonus</h2>
+      <p>Ajoutez des fiches mémo, des check-lists, des feuilles de calcul ou un court tutoriel vidéo. Packager l'e-book avec ces ressources gratuites augmente drastiquement la conversion et justifie un tarif plus élevé.</p>
     `
   },
-  "securiser-donnees-entreprise": {
-    id: "securiser-donnees-entreprise",
-    title: "Sécuriser ses données en ligne : 5 bonnes pratiques indispensables",
-    category: "Cybersécurité",
+  "tunnel-de-vente-produits-digitaux": {
+    id: "tunnel-de-vente-produits-digitaux",
+    title: "Comment Construire un Tunnel de Vente qui Convertit pour vos Info-produits",
+    category: "Tunnels de Vente",
     image: "https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?w=800&q=80",
-    author: "TECHNOVA",
-    date: "25 juin 2026",
-    readingTime: "5 min",
-    content: `
-      <p class="lead">À l'ère de la transformation digitale et du télétravail, la protection des données personnelles et professionnelles est devenue une priorité absolue. Voici les gestes indispensables pour sécuriser votre environnement numérique.</p>
-      
-      <h2>1. Utilisez un gestionnaire de mots de passe</h2>
-      <p>N'utilisez jamais le même mot de passe sur plusieurs sites. Un gestionnaire de mots de passe (comme Bitwarden ou 1Password) génère des clés complexes et uniques pour chaque service, vous protégeant efficacement contre les fuites de données.</p>
-      
-      <h2>2. Activez l'authentification à double facteur (2FA)</h2>
-      <p>La double identification ajoute une couche de sécurité cruciale : même si un pirate découvre votre mot de passe, il ne pourra pas accéder à votre compte sans le code temporaire envoyé sur votre téléphone ou application d'authentification.</p>
-    `
-  },
-  "reussir-transition-tech": {
-    id: "reussir-transition-tech",
-    title: "Réussir sa transition professionnelle dans le digital : témoignages et conseils",
-    category: "Carrière",
-    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80",
-    author: "TECHNOVA",
-    date: "22 juin 2026",
+    author: "Captivateur",
+    date: "26 juin 2026",
     readingTime: "7 min",
     content: `
-      <p class="lead">Changer de voie professionnelle pour s'orienter vers la technologie et le digital est un défi stimulant. Découvrez nos conseils pratiques pour mener à bien votre reconversion.</p>
+      <p class="lead">Créer un produit ne sert à rien si vous n'avez pas un système automatisé pour le vendre. C'est là qu'interviennent les tunnels de vente.</p>
       
-      <h2>Identifiez vos compétences transférables</h2>
-      <p>Que vous veniez du commerce, de la comptabilité, de la santé ou de l'enseignement, vous possédez des soft skills très recherchées dans la tech : rigueur, gestion de projet, communication, ou résolution de conflits. Mettez-les en avant !</p>
+      <h2>L'architecture type d'un tunnel de vente rentable</h2>
+      <p>Un bon tunnel de vente guide l'utilisateur pas-à-pas du premier contact jusqu'à l'achat :</p>
+      <ol>
+        <li><strong>Page de Capture (Landing Page) :</strong> Offrez un cadeau gratuit (lead magnet) en échange de l'adresse e-mail de vos visiteurs.</li>
+        <li><strong>Page de Vente (Sales Page) :</strong> Présentez immédiatement après une offre irrésistible à bas prix (Tripwire) entre 7€ et 27€ pour transformer le prospect en client.</li>
+        <li><strong>Order Bump :</strong> Proposez une option complémentaire rapide à cocher sur le formulaire de paiement (par exemple un cahier d'exercices pour 4,99€).</li>
+        <li><strong>Upsell (Vente Additionnelle) :</strong> Offrez un produit haut de gamme (comme une formation vidéo complète) immédiatement après la validation du premier achat.</li>
+      </ol>
       
-      <h2>Se former intelligemment</h2>
-      <p>Il n'est pas nécessaire de retourner à l'université pour 5 ans. Les formations certifiantes en ligne, les bootcamps ou les parcours en alternance vous permettent d'acquérir les compétences techniques requises de manière accélérée et opérationnelle.</p>
+      <h2>L'automatisation des e-mails</h2>
+      <p>Mettez en place une séquence d'e-mails de suivi (email nurture sequence) pour apporter de la valeur à ceux qui n'ont pas acheté le Tripwire au début, et présentez vos autres produits digitaux.</p>
+    `
+  },
+  "niches-rentables-produits-digitaux": {
+    id: "niches-rentables-produits-digitaux",
+    title: "Top 4 des Niches les plus Rentables pour Vendre des Produits Numériques en 2026",
+    category: "Niches Riches",
+    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80",
+    author: "Captivateur",
+    date: "24 juin 2026",
+    readingTime: "5 min",
+    content: `
+      <p class="lead">Le choix de la thématique est le facteur numéro 1 de réussite dans la vente de produits numériques. Voici les grandes familles de niches qui performent le mieux.</p>
+      
+      <h2>1. Le Business en Ligne & Le Web Marketing</h2>
+      <p>Tout ce qui aide les entreprises ou particuliers à gagner de l'argent ou à se développer : e-commerce, investissement immobilier, affiliation, publicité en ligne, copywriting. Les clients sont prêts à investir car l'offre a un retour sur investissement direct.</p>
+      
+      <h2>2. Le Développement Personnel</h2>
+      <p>La confiance en soi, la productivité, la gestion du stress, la prise de parole en public, ou l'apprentissage de langues. Ce sont des sujets intemporels (evergreen) qui touchent au bien-être de l'individu.</p>
+
+      <h2>3. La Santé & Le Fitness</h2>
+      <p>Les programmes de perte de poids, les recettes saines (keto, vegan), la musculation à la maison, la méditation ou le yoga. C'est une niche passionnelle et à forte récurrence d'achat.</p>
+    `
+  },
+  "systeme-io-vs-shopify-produits-digitaux": {
+    id: "systeme-io-vs-shopify-produits-digitaux",
+    title: "Système.io vs Shopify : Quelle Plateforme Choisir pour Vendre vos PLR ?",
+    category: "Tunnels de Vente",
+    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
+    author: "Captivateur",
+    date: "22 juin 2026",
+    readingTime: "8 min",
+    content: `
+      <p class="lead">Le choix de l'infrastructure de vente est crucial pour commercialiser vos fichiers et produits numériques PLR. Shopify et Système.io sont les deux géants francophones.</p>
+      
+      <h2>Système.io : Le Roi des Tunnels de Vente</h2>
+      <p>Système.io a été spécialement conçu pour les infopreneurs. Il intègre nativement l'hébergement de formations, l'envoi d'e-mails de masse automatisés, la création de tunnels de vente en 1 clic et la gestion de programmes d'affiliation.</p>
+      <p><strong>Avantages :</strong> Tarifs abordables, aucun outil tiers requis, tunnels de vente ultra-rapides et taux de conversion élevés pour les offres uniques.</p>
+      
+      <h2>Shopify : La Référence E-commerce</h2>
+      <p>Shopify est idéal si vous souhaitez créer un catalogue multi-produits avec une esthétique de marque forte. Bien qu'orienté produit physique au départ, il excelle pour vendre des fichiers numériques grâce à ses applications dédiées.</p>
+      <p><strong>Avantages :</strong> Personnalisation visuelle totale, catalogue complet de thèmes, gestion des paniers d'achat avancée et écosystème d'applications colossal.</p>
+    `
+  },
+  "strategie-email-marketing-infoproduits": {
+    id: "strategie-email-marketing-infoproduits",
+    title: "L'E-mail Marketing pour Info-Preneurs : 3 Séquences Automatiques pour Exploser vos Ventes",
+    category: "Marketing",
+    image: "https://images.unsplash.com/photo-1557200134-90327ee9fafa?w=800&q=80",
+    author: "Captivateur",
+    date: "20 juin 2026",
+    readingTime: "6 min",
+    content: `
+      <p class="lead">L'e-mail marketing génère en moyenne un retour sur investissement de 40 pour 1. Pour les info-preneurs, c'est l'outil numéro 1 pour vendre des e-books et formations en automatique.</p>
+      
+      <h2>1. La Séquence de Bienvenue (Welcome Sequence)</h2>
+      <p>Délivrez immédiatement le cadeau gratuit promis sur votre page de capture. Profitez-en pour vous présenter, raconter votre histoire (storytelling) et établir votre crédibilité. À la fin du 3ème e-mail, proposez votre offre principale.</p>
+      
+      <h2>2. La Séquence d'Abandon de Panier</h2>
+      <p>Près de 70% des visiteurs ajoutent un produit au panier sans finaliser l'achat. Renvoyez-leur un rappel automatique après 4 heures, puis 24 heures en offrant de répondre à leurs questions ou en ajoutant un bonus de dernière minute.</p>
+
+      <h2>3. La Séquence Promotionnelle Flash</h2>
+      <p>Créez des promotions limitées dans le temps (48h à 72h). Utilisez l'urgence et la rareté (fermeture des portes ou hausse de tarif imminente) pour pousser vos prospects tièdes à l'action.</p>
+    `
+  },
+  "comment-creer-une-offre-irresistible": {
+    id: "comment-creer-une-offre-irresistible",
+    title: "Comment Packager vos Produits Digitaux pour Créer une Offre Irrésistible",
+    category: "Digital PLR",
+    image: "https://images.unsplash.com/photo-1513151233558-d860c5398176?w=800&q=80",
+    author: "Captivateur",
+    date: "18 juin 2026",
+    readingTime: "7 min",
+    content: `
+      <p class="lead">Les gens n'achètent pas des fichiers PDF bruts. Ils achètent des résultats et des transformations. Apprenez à transformer un simple produit en une offre que l'on ne peut pas refuser.</p>
+      
+      <h2>Empilez la Valeur avec des Bonus Stratégiques</h2>
+      <p>Au lieu de vendre uniquement votre e-book PLR principal, ajoutez 3 ou 4 bonus qui résolvent le problème suivant de votre client. Par exemple, si l'e-book enseigne la perte de poids, offrez un plan de repas hebdomadaire, un journal de suivi imprimable et un accès à un groupe privé.</p>
+      
+      <h2>Utilisez l'Urgence et la Rareté</h2>
+      <p>Limitez votre offre dans le temps ou en quantité. Proposez un tarif spécial de lancement pour les 100 premiers acheteurs ou pour les prochaines 24 heures.</p>
+    `
+  },
+  "affiliation-produits-numeriques": {
+    id: "affiliation-produits-numeriques",
+    title: "Recruter des Affiliés : La Méthode Ultime pour Vendre vos Info-produits Sans Budget",
+    category: "Marketing",
+    image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&q=80",
+    author: "Captivateur",
+    date: "15 juin 2026",
+    readingTime: "6 min",
+    content: `
+      <p class="lead">L'affiliation consiste à faire la promotion de vos produits par d'autres partenaires en échange d'une commission sur les ventes. C'est le meilleur moyen de scaler vos ventes rapidement.</p>
+      
+      <h2>Fixez des Commissions Attractives</h2>
+      <p>Les produits numériques ayant des coûts marginaux proches de zéro, vous pouvez vous permettre d'offrir des commissions généreuses (généralement entre 40% et 60%). Cela motive fortement les affiliés à pousser votre offre.</p>
+      
+      <h2>Fournissez un Kit Promotionnel Clé en Main</h2>
+      <p>Facilitez le travail de vos affiliés en leur fournissant des bannières publicitaires, des visuels de couverture 3D, des exemples d'e-mails prêts à envoyer et des publications pour les réseaux sociaux.</p>
+    `
+  },
+  "creer-formation-video-depuis-plr": {
+    id: "creer-formation-video-depuis-plr",
+    title: "Comment Transformer un E-book PLR en Formation Vidéo à Succès",
+    category: "Digital PLR",
+    image: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=800&q=80",
+    author: "Captivateur",
+    date: "12 juin 2026",
+    readingTime: "9 min",
+    content: `
+      <p class="lead">Les e-books se vendent généralement entre 7€ et 27€, tandis que les formations vidéo se vendent facilement entre 97€ et 297€. Transformer votre PLR écrit en vidéo est le meilleur moyen d'augmenter votre panier moyen.</p>
+      
+      <h2>Étape 1 : Structurer la trame à partir de l'E-book</h2>
+      <p>Utilisez la table des matières de votre e-book PLR pour définir les modules de votre formation. Chaque chapitre devient une leçon vidéo d'une durée de 5 à 15 minutes.</p>
+      
+      <h2>Étape 2 : Préparer des Supports Visuels simples</h2>
+      <p>Diapositives claires reprenant les points clés. Pas besoin de lire le texte ; utilisez les diapositives comme guide visuel pour votre explication.</p>
+      
+      <h2>Étape 3 : Enregistrer l'écran et le micro</h2>
+      <p>Utilisez des logiciels gratuits comme OBS Studio ou Loom pour filmer votre écran et votre webcam. Veillez à avoir un son clair : l'audio est plus important que la vidéo dans les produits d'information.</p>
+    `
+  },
+  "gagner-ses-premiers-euros-en-ligne": {
+    id: "gagner-ses-premiers-euros-en-ligne",
+    title: "Plan d'Action 30 Jours : Gagner ses Premiers 1000€ avec la Vente de Fichiers Numériques",
+    category: "Niches Riches",
+    image: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=800&q=80",
+    author: "Captivateur",
+    date: "10 juin 2026",
+    readingTime: "10 min",
+    content: `
+      <p class="lead">Vous souhaitez vous lancer mais ne savez pas par où commencer ? Suivez ce programme d'action rigoureux sur 30 jours pour générer vos premiers gains.</p>
+      
+      <h2>Jours 1 à 10 : Recherche & Packaging</h2>
+      <p>Choisissez une niche rentable (comme le marketing ou le développement personnel). Achetez 2 ou 3 bons produits PLR sur cette thématique, personnalisez-les, regroupez-les et concevez des couvertures 3D professionnelles.</p>
+      
+      <h2>Jours 11 à 20 : Configuration du Tunnel</h2>
+      <p>Créez votre compte sur Système.io ou Shopify. Construisez votre page de capture, votre page de commande simplifiée et configurez la livraison automatique du produit par e-mail.</p>
+      
+      <h2>Jours 21 à 30 : Trafic & Lancement</h2>
+      <p>Créez du contenu court sur TikTok, Instagram ou YouTube Shorts en donnant des conseils gratuits liés à votre e-book, et redirigez les spectateurs vers votre lien en bio. Lancez de petites campagnes promotionnelles pour attirer vos premiers clients.</p>
     `
   }
 };
@@ -103,36 +228,84 @@ const FALLBACK_ARTICLES_DETAILS: { [key: string]: any } = {
 // Fallback articles list matching Blog.tsx
 const MOCK_LIST = [
   {
-    id: "devenir-developpeur-fullstack-2026",
-    title: "Le guide ultime pour devenir Développeur Full-Stack en 2026",
-    category: "Développement",
+    id: "introduction-produits-plr-droits-revente",
+    title: "Le Guide Complet des Produits PLR : Créez et Vendez vos Produits Numériques en 1 Clic",
+    category: "Digital PLR",
     image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&q=80",
-    date: "30 juin 2026",
+    date: "1 juillet 2026",
     readingTime: "8 min"
   },
   {
-    id: "intelligence-artificielle-productivite",
-    title: "Comment doubler votre productivité avec l'Intelligence Artificielle au quotidien",
-    category: "IA & Data",
+    id: "comment-personnaliser-un-ebook-plr",
+    title: "5 Étapes pour Transformer un E-book PLR en Best-Seller Unique",
+    category: "Marketing",
     image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80",
-    date: "28 juin 2026",
+    date: "29 juin 2026",
     readingTime: "6 min"
   },
   {
-    id: "securiser-donnees-entreprise",
-    title: "Sécuriser ses données en ligne : 5 bonnes pratiques indispensables",
-    category: "Cybersécurité",
+    id: "tunnel-de-vente-produits-digitaux",
+    title: "Comment Construire un Tunnel de Vente qui Convertit pour vos Info-produits",
+    category: "Tunnels de Vente",
     image: "https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?w=800&q=80",
-    date: "25 juin 2026",
+    date: "26 juin 2026",
+    readingTime: "7 min"
+  },
+  {
+    id: "niches-rentables-produits-digitaux",
+    title: "Top 4 des Niches les plus Rentables pour Vendre des Produits Numériques en 2026",
+    category: "Niches Riches",
+    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80",
+    date: "24 juin 2026",
     readingTime: "5 min"
   },
   {
-    id: "reussir-transition-tech",
-    title: "Réussir sa transition professionnelle dans le digital : témoignages et conseils",
-    category: "Carrière",
-    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80",
+    id: "systeme-io-vs-shopify-produits-digitaux",
+    title: "Système.io vs Shopify : Quelle Plateforme Choisir pour Vendre vos PLR ?",
+    category: "Tunnels de Vente",
+    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
     date: "22 juin 2026",
+    readingTime: "8 min"
+  },
+  {
+    id: "strategie-email-marketing-infoproduits",
+    title: "L'E-mail Marketing pour Info-Preneurs : 3 Séquences Automatiques pour Exploser vos Ventes",
+    category: "Marketing",
+    image: "https://images.unsplash.com/photo-1557200134-90327ee9fafa?w=800&q=80",
+    date: "20 juin 2026",
+    readingTime: "6 min"
+  },
+  {
+    id: "comment-creer-une-offre-irresistible",
+    title: "Comment Packager vos Produits Digitaux pour Créer une Offre Irrésistible",
+    category: "Digital PLR",
+    image: "https://images.unsplash.com/photo-1513151233558-d860c5398176?w=800&q=80",
+    date: "18 juin 2026",
     readingTime: "7 min"
+  },
+  {
+    id: "affiliation-produits-numeriques",
+    title: "Recruter des Affiliés : La Méthode Ultime pour Vendre vos Info-produits Sans Budget",
+    category: "Marketing",
+    image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&q=80",
+    date: "15 juin 2026",
+    readingTime: "6 min"
+  },
+  {
+    id: "creer-formation-video-depuis-plr",
+    title: "Comment Transformer un E-book PLR en Formation Vidéo à Succès",
+    category: "Digital PLR",
+    image: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=800&q=80",
+    date: "12 juin 2026",
+    readingTime: "9 min"
+  },
+  {
+    id: "gagner-ses-premiers-euros-en-ligne",
+    title: "Plan d'Action 30 Jours : Gagner ses Premiers 1000€ avec la Vente de Fichiers Numériques",
+    category: "Niches Riches",
+    image: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=800&q=80",
+    date: "10 juin 2026",
+    readingTime: "10 min"
   }
 ];
 
