@@ -330,7 +330,7 @@ const CheckoutDialog = ({ open, onOpenChange, product, storeSlug, brandColor, fu
         sandbox: isSandbox,
         name: fullName,
         email: email,
-        phone: phone ? `+${fullPhone}` : "",
+        phone: phone || "",
         theme: accent,
         data: JSON.stringify({
           product_id: product.id,
