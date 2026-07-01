@@ -221,73 +221,39 @@ const CheckoutDialog = ({ open, onOpenChange, product, storeSlug, brandColor, fu
     } finally { setLoading(false); }
   };
 
-  // ─── Initiate payment flow (Mobile Money, Card, Apple/Google Pay) ───
+  // ─── Load KKiaPay SDK dynamically ───
+  useEffect(() => {
+    const scriptId = "kkiapay-sdk-script";
+    if (!document.getElementById(scriptId)) {
+      const script = document.createElement("script");
+      script.id = scriptId;
+      script.src = "https://cdn.kkiapay.me/k.js";
+      script.async = true;
+      document.body.appendChild(script);
+    }
+  }, []);
+
+  // ─── Initiate payment flow (KKiaPay) ───
   const handleConfirmPay = async () => {
-    if (paymentMethod === "momo") {
-      if (discountedPrice < provider.minAmount) {
-        toast.error(`Minimum ${provider.minAmount} ${currency} pour ${provider.label}`);
-        return;
+    setLoading(true);
+    setPayError("");
+    setPayStatus("processing");
+    setStep(3);
+
+    try {
+      const win = window as any;
+      if (typeof win.openKkiapayWidget === "undefined") {
+        throw new Error("Le module de paiement KKiaPay n'a pas pu être chargé. Veuillez rafraîchir la page.");
       }
-      if (discountedPrice > provider.maxAmount) {
-        toast.error(`Maximum ${provider.maxAmount.toLocaleString()} ${currency} pour ${provider.label}`);
-        return;
-      }
-      setLoading(true);
-      setPayError("");
-      try {
-        const { data, error } = await supabase.functions.invoke("pawapay-deposit", {
-          body: {
-            amount: discountedPrice,
-            currency,
-            provider: provider.code,
-            phone: fullPhone,
-            customer: { email, name: fullName },
-            metadata: {
-              product_id: product.id,
-              product_title: product.title,
-              store_owner_id: product.creator_id,
-              promo_code: appliedPromo?.code || null,
-              original_price: appliedPromo ? effectivePrice : null,
-              shipping_address: shippingPayload,
-            },
-          },
-        });
-        if (error) throw new Error(error.message);
-        if (data?.error) throw new Error(data.error);
-        if (!data?.depositId) throw new Error("Réponse invalide");
 
-        // Increment promo usage
-        if (appliedPromo) {
-          const { data: pd } = await supabase.from("promo_codes").select("current_uses")
-            .eq("code", appliedPromo.code).eq("creator_id", product.creator_id).single();
-          if (pd) await supabase.from("promo_codes").update({ current_uses: (pd.current_uses || 0) + 1 })
-            .eq("code", appliedPromo.code).eq("creator_id", product.creator_id);
-        }
+      // Subscribe to success event
+      win.addSuccessListener(async (response: any) => {
+        console.log("KKiaPay payment successful:", response);
+        const transactionId = response.transactionId;
 
-        setDepositId(data.depositId);
-        setPayStatus("processing");
-        setStep(3);
-      } catch (err: any) {
-        toast.error(err.message || "Erreur de paiement");
-      } finally { setLoading(false); }
-    } else {
-      if (!cardName.trim()) { toast.error("Nom du titulaire requis"); return; }
-      const cleanNum = cardNumber.replace(/\s/g, "");
-      if (cleanNum.length < 16) { toast.error("Numéro de carte invalide (16 chiffres requis)"); return; }
-      if (cardExpiry.length < 5) { toast.error("Date d'expiration invalide (MM/YY requis)"); return; }
-      const [mStr, yStr] = cardExpiry.split("/");
-      const month = parseInt(mStr);
-      if (month < 1 || month > 12) { toast.error("Mois d'expiration invalide"); return; }
-      if (cardCvv.length < 3) { toast.error("Code CVV / CVC invalide"); return; }
-
-      setLoading(true);
-      setPayError("");
-      setPayStatus("processing");
-      setStep(3);
-
-      setTimeout(async () => {
         try {
-          const { data, error } = await supabase.rpc("process_free_order", {
+          // Register successful order in database via process_free_order RPC
+          const { data: rpcData, error: rpcErr } = await supabase.rpc("process_free_order", {
             p_name: fullName,
             p_email: email,
             p_phone: phone ? `+${fullPhone}` : "+1234567890",
@@ -298,78 +264,86 @@ const CheckoutDialog = ({ open, onOpenChange, product, storeSlug, brandColor, fu
             p_shipping_address: shippingPayload
           });
 
-          if (error) throw new Error(error.message);
+          if (rpcErr) throw new Error(rpcErr.message);
 
-          // Increment promo usage
+          // Update promo usage in database
           if (appliedPromo) {
-            const { data: pd } = await supabase.from("promo_codes").select("current_uses")
-              .eq("code", appliedPromo.code).eq("creator_id", product.creator_id).single();
-            if (pd) await supabase.from("promo_codes").update({ current_uses: (pd.current_uses || 0) + 1 })
-              .eq("code", appliedPromo.code).eq("creator_id", product.creator_id);
+            const { data: pd } = await supabase
+              .from("promo_codes")
+              .select("current_uses")
+              .eq("code", appliedPromo.code)
+              .eq("creator_id", product.creator_id)
+              .single();
+            if (pd) {
+              await supabase
+                .from("promo_codes")
+                 .update({ current_uses: (pd.current_uses || 0) + 1 })
+                 .eq("code", appliedPromo.code)
+                 .eq("creator_id", product.creator_id);
+            }
           }
 
-          supabase.functions.invoke("notify-sale", { body: {
-            store_owner_id: product.creator_id, product_title: product.title, amount: discountedPrice,
-            customer_name: fullName, customer_email: email,
-            promo_code: appliedPromo?.code || null, original_price: appliedPromo ? effectivePrice : null,
-            product_id: product.id, download_url: product.download_url || null,
-            product_type: product.type || null, store_slug: storeSlug || null,
-            shipping_address: shippingPayload, payment_method: `Card (${cardType.toUpperCase()})`
-          }}).catch(console.error);
+          // Trigger notify-sale edge function for order fulfillment and emails
+          await supabase.functions.invoke("notify-sale", {
+            body: {
+              store_owner_id: product.creator_id,
+              product_title: product.title,
+              amount: discountedPrice,
+              customer_name: fullName,
+              customer_email: email,
+              promo_code: appliedPromo?.code || null,
+              original_price: appliedPromo ? effectivePrice : null,
+              product_id: product.id,
+              download_url: product.download_url || null,
+              product_type: product.type || null,
+              store_slug: storeSlug || null,
+              shipping_address: shippingPayload,
+              payment_method: "KkiaPay"
+            }
+          });
 
           setPayStatus("success");
-          toast.success("Commande validée avec succès !");
-        } catch (err: any) {
+          toast.success("Paiement validé avec succès !");
+        } catch (dbErr: any) {
+          console.error("Order processing database error:", dbErr);
           setPayStatus("failed");
-          setPayError(err.message || "Erreur lors du traitement de la carte.");
-        } finally { setLoading(false); }
-      }, 2500);
+          setPayError(dbErr.message || "Erreur de validation de la commande.");
+        }
+      });
+
+      // Subscribe to failed/closed event
+      win.addFailedListener((error: any) => {
+        console.error("KKiaPay payment failed:", error);
+        setPayStatus("failed");
+        setPayError("Le paiement a échoué ou a été annulé par l'utilisateur.");
+        toast.error("Le paiement a échoué.");
+      });
+
+      // Launch KKiaPay Widget overlay
+      win.openKkiapayWidget({
+        amount: Math.round(discountedPrice),
+        position: "center",
+        key: "66f8c797296c0b3d27ed3dc27381a466b76066e1",
+        sandbox: true,
+        name: fullName,
+        email: email,
+        phone: phone ? `+${fullPhone}` : "",
+        theme: accent,
+        data: JSON.stringify({
+          product_id: product.id,
+          product_title: product.title,
+          store_owner_id: product.creator_id
+        })
+      });
+    } catch (err: any) {
+      console.error("KKiaPay launch error:", err);
+      setPayStatus("failed");
+      setPayError(err.message || "Erreur lors de l'ouverture du module de paiement.");
+      toast.error(err.message || "Erreur d'initialisation");
+    } finally {
+      setLoading(false);
     }
   };
-
-  // ─── Realtime + polling listener for PawaPay deposit ───
-  useEffect(() => {
-    if (step !== 3 || !depositId) return;
-
-    const channel = supabase
-      .channel(`pp-${depositId}`)
-      .on("postgres_changes", {
-        event: "UPDATE", schema: "public", table: "payment_events",
-        filter: `pawapay_deposit_id=eq.${depositId}`,
-      }, (payload) => {
-        const ns = (payload.new as any)?.status;
-        if (ns === "success") setPayStatus("success");
-        else if (ns === "failed") { setPayStatus("failed"); setPayError("Paiement refusé ou expiré."); }
-      })
-      .subscribe();
-
-    // Poll fallback every 5s for max ~3min
-    let attempts = 0;
-    pollRef.current = window.setInterval(async () => {
-      attempts++;
-      try {
-        const { data } = await supabase.functions.invoke("pawapay-status", { body: { depositId, kind: "deposit" } });
-        if (data?.status === "COMPLETED") { setPayStatus("success"); }
-        else if (data?.status === "FAILED" || data?.status === "REJECTED") {
-          setPayStatus("failed"); setPayError("Paiement refusé."); }
-      } catch {}
-      if (attempts > 36) { // ~3min
-        if (pollRef.current) { clearInterval(pollRef.current); pollRef.current = null; }
-      }
-    }, 5000);
-
-    return () => {
-      supabase.removeChannel(channel);
-      if (pollRef.current) { clearInterval(pollRef.current); pollRef.current = null; }
-    };
-  }, [step, depositId]);
-
-  // Stop polling on terminal states
-  useEffect(() => {
-    if ((payStatus === "success" || payStatus === "failed") && pollRef.current) {
-      clearInterval(pollRef.current); pollRef.current = null;
-    }
-  }, [payStatus]);
 
   const handleNext = () => {
     if (!firstName.trim() || !lastName.trim()) { toast.error("Nom complet requis"); return; }
@@ -594,278 +568,72 @@ const CheckoutDialog = ({ open, onOpenChange, product, storeSlug, brandColor, fu
                         <button onClick={() => setStep(1)} className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors mb-3">
                           <ArrowLeft className="h-3.5 w-3.5" /> Modifier mes infos
                         </button>
-                        <h2 className="text-xl sm:text-2xl font-bold text-foreground">Choisir votre moyen de paiement</h2>
+                        <h2 className="text-xl sm:text-2xl font-bold text-foreground">Confirmer votre commande</h2>
                         <p className="text-sm text-muted-foreground mt-1">
-                          Paiement sécurisé via <span className="font-semibold text-foreground">{country.name}</span>
+                          Veuillez vérifier vos informations avant de procéder au paiement.
                         </p>
                       </div>
 
-                      {/* Payment Method Selector */}
-                      <div className="flex bg-muted/45 p-1 rounded-xl border border-border/40 mb-5">
-                        <button
-                          type="button"
-                          onClick={() => setPaymentMethod("momo")}
-                          className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-3 text-xs font-bold rounded-lg transition-all ${
-                            paymentMethod === "momo"
-                              ? "bg-background text-foreground shadow-sm"
-                              : "text-muted-foreground hover:text-foreground"
-                          }`}
-                        >
-                          <Smartphone className="h-4 w-4" />
-                          <span>Mobile Money</span>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setPaymentMethod("card")}
-                          className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-3 text-xs font-bold rounded-lg transition-all ${
-                            paymentMethod === "card"
-                              ? "bg-background text-foreground shadow-sm"
-                              : "text-muted-foreground hover:text-foreground"
-                          }`}
-                        >
-                          <CreditCard className="h-4 w-4" />
-                          <span>Carte Bancaire</span>
-                        </button>
+                      {/* Summary of Customer Info */}
+                      <div className="rounded-2xl border border-border/60 bg-muted/20 p-4 space-y-3">
+                        <div className="flex justify-between items-center text-sm border-b border-border/40 pb-2">
+                          <span className="text-muted-foreground">Nom complet :</span>
+                          <span className="font-semibold text-foreground">{fullName}</span>
+                        </div>
+                        <div className="flex justify-between items-center text-sm border-b border-border/40 pb-2">
+                          <span className="text-muted-foreground">E-mail :</span>
+                          <span className="font-semibold text-foreground break-all">{email}</span>
+                        </div>
+                        <div className="flex justify-between items-center text-sm">
+                          <span className="text-muted-foreground">Téléphone :</span>
+                          <span className="font-mono font-semibold text-foreground">+{fullPhone}</span>
+                        </div>
+                        {needsShipping && (
+                          <div className="text-xs text-muted-foreground border-t border-border/40 pt-2">
+                            <span className="font-semibold block mb-0.5 text-foreground">Adresse de livraison :</span>
+                            {shipAddress}, {shipCity} ({shipPostal}) - {shipCountry || country.name}
+                          </div>
+                        )}
                       </div>
 
-                      {paymentMethod === "momo" && (
-                        <>
-                          {/* Provider grid - MOBILE MONEY */}
-                          <div>
-                            <div className="flex items-center gap-2 mb-3">
-                              <Smartphone className="h-4 w-4 text-muted-foreground" />
-                              <span className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Sélectionner votre opérateur</span>
+                      {/* Trust badge / Payment info */}
+                      <div className="rounded-2xl bg-gradient-to-r from-violet-500/5 via-amber-500/5 to-violet-500/5 border border-border/60 p-4">
+                        <div className="flex items-start gap-3">
+                          <div className="h-9 w-9 rounded-xl flex items-center justify-center shrink-0"
+                            style={{ background: `linear-gradient(135deg, ${accent}, #F0B838)` }}>
+                            <ShieldCheck className="h-5 w-5 text-white" />
+                          </div>
+                          <div className="flex-1">
+                            <div className="text-xs font-bold text-foreground mb-0.5">
+                              Paiement 100% sécurisé via KKiaPay
                             </div>
-                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-                              {country.deposit.map((p, i) => {
-                                const selected = provider.code === p.code;
-                                return (
-                                  <motion.button
-                                    key={p.code}
-                                    type="button"
-                                    onClick={() => setProvider(p)}
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: i * 0.05 }}
-                                    whileHover={{ y: -2 }}
-                                    whileTap={{ scale: 0.97 }}
-                                    className={`relative rounded-2xl border p-3 flex flex-col items-center gap-2 transition-all overflow-hidden bg-card ${
-                                      selected ? "border-2" : "border-border hover:border-border/80"
-                                    }`}
-                                    style={selected ? {
-                                      borderColor: accent,
-                                      boxShadow: `0 10px 28px -10px ${accent}55, 0 0 0 3px ${accent}15`,
-                                    } : undefined}
-                                  >
-                                    {selected && (
-                                      <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}
-                                        className="absolute top-1.5 right-1.5 h-5 w-5 rounded-full flex items-center justify-center text-white"
-                                        style={{ backgroundColor: accent }}>
-                                        <Check className="h-3 w-3" />
-                                      </motion.div>
-                                    )}
-                                    <div className="h-12 w-12 rounded-xl bg-white p-1 ring-1 ring-gray-100 flex items-center justify-center">
-                                      <img src={providerLogos[p.family]} alt={p.label}
-                                        className="h-full w-full object-contain" />
-                                    </div>
-                                    <div className="text-[11px] font-bold text-foreground text-center leading-tight">
-                                      {p.label}
-                                    </div>
-                                    <div className="text-[9px] text-muted-foreground font-mono">{p.currency}</div>
-                                  </motion.button>
-                                );
-                              })}
+                            <div className="text-[11px] text-muted-foreground leading-relaxed">
+                              Réglez instantanément par Mobile Money (MTN, Moov, Orange, Wave) ou par Carte Bancaire. Aucune coordonnée bancaire n'est conservée.
                             </div>
                           </div>
+                        </div>
+                      </div>
 
-                          {/* Trust strip */}
-                          <div className="rounded-2xl bg-gradient-to-r from-violet-500/5 via-amber-500/5 to-violet-500/5 border border-border/60 p-3.5">
-                            <div className="flex items-start gap-3">
-                              <div className="h-9 w-9 rounded-xl flex items-center justify-center shrink-0"
-                                style={{ background: `linear-gradient(135deg, ${accent}, #F0B838)` }}>
-                                <ShieldCheck className="h-4.5 w-4.5 text-white" />
-                              </div>
-                              <div className="flex-1">
-                                <div className="text-xs font-bold text-foreground mb-0.5">
-                                  Paiement sécurisé par TECHNOVA
-                                </div>
-                                <div className="text-[11px] text-muted-foreground leading-relaxed">
-                                  Aucune donnée bancaire stockée. Validation directe sur votre téléphone via votre opérateur.
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-
-                          <Button onClick={handleConfirmPay} disabled={loading}
-                            className="relative w-full h-14 text-base font-bold rounded-xl group transition-all overflow-hidden text-white"
-                            style={{
-                              background: `linear-gradient(135deg, ${accent} 0%, ${accent} 50%, #C9962E 110%)`,
-                              boxShadow: `0 14px 36px -10px ${accent}90, inset 0 1px 0 rgba(255,255,255,0.2)`,
-                            }}>
-                            {loading ? (
-                              <span className="flex items-center gap-2">
-                                <Loader2 className="h-5 w-5 animate-spin" /> Initiation du paiement…
-                              </span>
-                            ) : (
-                              <span className="flex items-center gap-2 relative z-10">
-                                <Lock className="h-4 w-4" />
-                                Payer {discountedPrice.toLocaleString()} {currency}
-                                <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
-                              </span>
-                            )}
-                            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-                          </Button>
-
-                          <p className="text-center text-[11px] text-muted-foreground">
-                            Vous recevrez une demande de validation sur le numéro <span className="font-mono font-semibold text-foreground">+{fullPhone}</span>.
-                          </p>
-                        </>
-                      )}
-
-                      {paymentMethod === "card" && (
-                        <>
-                          {/* Credit Card Form */}
-                          <div className="space-y-4">
-                            <div className="flex items-center gap-2 mb-1">
-                              <CreditCard className="h-4 w-4 text-muted-foreground" />
-                              <span className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Informations de carte</span>
-                            </div>
-
-                            {/* Interactive Card Graphic Mock */}
-                            <div className="relative h-44 w-full rounded-2xl p-5 text-white overflow-hidden shadow-lg select-none mb-2 animate-fade-in"
-                              style={{ background: `linear-gradient(135deg, ${accent} 0%, #1e1b4b 100%)` }}>
-                              {/* Background decorations */}
-                              <div className="absolute -top-10 -right-10 h-32 w-32 rounded-full bg-white/5 blur-xl" />
-                              <div className="absolute -bottom-10 -left-10 h-32 w-32 rounded-full bg-white/5 blur-xl" />
-
-                              {/* Card Chip & Network Logo */}
-                              <div className="flex justify-between items-start mb-6 relative z-10">
-                                <div className="h-9 w-12 rounded-lg bg-yellow-400/80 backdrop-blur-sm border border-yellow-300/40 relative flex items-center justify-center">
-                                  <div className="grid grid-cols-3 gap-0.5 w-8 h-6">
-                                    {[...Array(6)].map((_, i) => (
-                                      <div key={i} className="border border-yellow-600/30 rounded-xs" />
-                                    ))}
-                                  </div>
-                                </div>
-                                {cardType !== "unknown" && (
-                                  <div className="text-lg font-bold italic tracking-tight relative z-10">
-                                    {cardType === "visa" ? (
-                                      <span className="text-sky-300">VISA</span>
-                                    ) : (
-                                      <span className="text-orange-400">Mastercard</span>
-                                    )}
-                                  </div>
-                                )}
-                              </div>
-
-                              {/* Card Number */}
-                              <div className="text-lg sm:text-xl font-mono tracking-widest mb-4 truncate relative z-10">
-                                {cardNumber || "•••• •••• •••• ••••"}
-                              </div>
-
-                              {/* Cardholder & Expiry */}
-                              <div className="flex justify-between items-end relative z-10">
-                                <div className="truncate max-w-[70%]">
-                                  <div className="text-[9px] uppercase tracking-wider opacity-60">Titulaire</div>
-                                  <div className="text-xs font-bold truncate">{cardName.toUpperCase() || "VOTRE NOM"}</div>
-                                </div>
-                                <div>
-                                  <div className="text-[9px] uppercase tracking-wider opacity-60">Expire</div>
-                                  <div className="text-xs font-bold font-mono">{cardExpiry || "MM/YY"}</div>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className="space-y-3">
-                              <div>
-                                <label className="text-xs font-semibold text-muted-foreground mb-1 block">Nom sur la carte *</label>
-                                <Input
-                                  value={cardName}
-                                  onChange={(e) => setCardName(e.target.value)}
-                                  placeholder="JEAN DUPONT"
-                                  className="h-11 bg-muted/30 border-border/60 focus:bg-card text-sm text-foreground"
-                                />
-                              </div>
-                              <div>
-                                <label className="text-xs font-semibold text-muted-foreground mb-1 block">Numéro de carte *</label>
-                                <div className="relative">
-                                  <Input
-                                    value={cardNumber}
-                                    onChange={(e) => handleCardNumberChange(e.target.value)}
-                                    placeholder="4000 1234 5678 9010"
-                                    className="h-11 bg-muted/30 border-border/60 focus:bg-card text-sm font-mono text-foreground pr-10"
-                                  />
-                                  <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center pointer-events-none">
-                                    {cardType === "visa" && <i className="fab fa-cc-visa text-blue-500 text-lg" />}
-                                    {cardType === "mastercard" && <i className="fab fa-cc-mastercard text-red-500 text-lg" />}
-                                    {cardType === "unknown" && <CreditCard className="h-4 w-4 text-gray-400" />}
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="grid grid-cols-2 gap-3">
-                                <div>
-                                  <label className="text-xs font-semibold text-muted-foreground mb-1 block">Expiration *</label>
-                                  <Input
-                                    value={cardExpiry}
-                                    onChange={(e) => handleExpiryChange(e.target.value)}
-                                    placeholder="MM/YY"
-                                    className="h-11 bg-muted/30 border-border/60 focus:bg-card text-sm font-mono text-center text-foreground"
-                                  />
-                                </div>
-                                <div>
-                                  <label className="text-xs font-semibold text-muted-foreground mb-1 block">Code CVV *</label>
-                                  <Input
-                                    type="password"
-                                    value={cardCvv}
-                                    onChange={(e) => handleCvvChange(e.target.value)}
-                                    placeholder="123"
-                                    className="h-11 bg-muted/30 border-border/60 focus:bg-card text-sm font-mono text-center text-foreground"
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Security details */}
-                          <div className="rounded-2xl bg-gradient-to-r from-violet-500/5 via-amber-500/5 to-violet-500/5 border border-border/60 p-3.5">
-                            <div className="flex items-start gap-3">
-                              <div className="h-9 w-9 rounded-xl flex items-center justify-center shrink-0"
-                                style={{ background: `linear-gradient(135deg, ${accent}, #F0B838)` }}>
-                                <ShieldCheck className="h-4.5 w-4.5 text-white" />
-                              </div>
-                              <div className="flex-1">
-                                <div className="text-xs font-bold text-foreground mb-0.5">
-                                  Paiement par Carte 3D Secure
-                                </div>
-                                <div className="text-[11px] text-muted-foreground leading-relaxed">
-                                  Données bancaires chiffrées bout-en-bout. Vos données ne sont jamais stockées sur nos serveurs.
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-
-                          <Button onClick={handleConfirmPay} disabled={loading}
-                            className="relative w-full h-14 text-base font-bold rounded-xl group transition-all overflow-hidden text-white"
-                            style={{
-                              background: `linear-gradient(135deg, ${accent} 0%, ${accent} 50%, #C9962E 110%)`,
-                              boxShadow: `0 14px 36px -10px ${accent}90, inset 0 1px 0 rgba(255,255,255,0.2)`,
-                            }}>
-                            {loading ? (
-                              <span className="flex items-center gap-2">
-                                <Loader2 className="h-5 w-5 animate-spin" /> Traitement sécurisé…
-                              </span>
-                            ) : (
-                              <span className="flex items-center gap-2 relative z-10">
-                                <Lock className="h-4 w-4" />
-                                Payer {discountedPrice.toLocaleString()} {currency}
-                                <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
-                              </span>
-                            )}
-                            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-                          </Button>
-                        </>
-                      )}
-                     </motion.div>
+                      <Button onClick={handleConfirmPay} disabled={loading}
+                        className="relative w-full h-14 text-base font-bold rounded-xl group transition-all overflow-hidden text-white"
+                        style={{
+                          background: `linear-gradient(135deg, ${accent} 0%, ${accent} 50%, #C9962E 110%)`,
+                          boxShadow: `0 14px 36px -10px ${accent}90, inset 0 1px 0 rgba(255,255,255,0.2)`,
+                        }}>
+                        {loading ? (
+                          <span className="flex items-center gap-2">
+                            <Loader2 className="h-5 w-5 animate-spin" /> Initialisation...
+                          </span>
+                        ) : (
+                          <span className="flex items-center gap-2 relative z-10">
+                            <Lock className="h-4 w-4" />
+                            Payer {discountedPrice.toLocaleString()} {currency}
+                            <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
+                          </span>
+                        )}
+                        <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                      </Button>
+                    </motion.div>
                   )}
 
                   {step === 3 && (
@@ -1112,31 +880,26 @@ const PayProcessingView = ({
       </div>
 
       <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
-        Validez sur votre téléphone
+        Paiement en cours
       </h3>
       <p className="text-sm text-gray-500 mb-1">
-        Une demande de paiement a été envoyée à
+        Veuillez finaliser votre transaction sur le widget sécurisé KKiaPay.
       </p>
-      <p className="text-sm font-mono font-bold text-gray-900 mb-5">+{phone}</p>
+      <p className="text-sm font-mono font-bold text-gray-900 mb-5">Montant : {amount.toLocaleString()} {currency}</p>
 
       <div className="w-full max-w-sm rounded-2xl border border-gray-200 bg-gray-50 p-4 mb-4">
-        <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-white ring-1 ring-gray-100 p-1 flex items-center justify-center">
-            <img src={providerLogos[provider.family]} alt={provider.label} className="h-full w-full object-contain" />
-          </div>
-          <div className="flex-1 text-left">
-            <div className="text-xs text-gray-500">{provider.label}</div>
-            <div className="text-base font-bold text-gray-900">{amount.toLocaleString()} {currency}</div>
-          </div>
+        <div className="flex items-center justify-center gap-3">
           <Loader2 className="h-5 w-5 animate-spin" style={{ color: accent }} />
+          <div className="text-sm text-gray-700 font-semibold">Attente de confirmation...</div>
         </div>
       </div>
 
       <ol className="space-y-2 text-left w-full max-w-sm text-xs text-gray-600 mb-4">
         {[
-          "Vérifiez les notifications de votre téléphone",
-          "Composez votre code PIN Mobile Money pour valider",
-          "Cette page se mettra à jour automatiquement",
+          "Suivez les instructions dans la fenêtre KKiaPay",
+          "Saisissez votre numéro ou vos coordonnées de carte",
+          "Validez avec votre code PIN ou OTP reçu par SMS",
+          "Cette page se mettra à jour automatiquement après validation"
         ].map((s, i) => (
           <li key={i} className="flex items-start gap-2">
             <div className="h-4 w-4 rounded-full text-white flex items-center justify-center text-[9px] font-bold shrink-0 mt-0.5"
@@ -1147,10 +910,6 @@ const PayProcessingView = ({
           </li>
         ))}
       </ol>
-
-      <p className="text-[11px] text-gray-400">
-        L'attente peut prendre jusqu'à 2 minutes selon votre opérateur.
-      </p>
     </div>
   );
 };
