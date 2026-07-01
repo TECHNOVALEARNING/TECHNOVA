@@ -261,14 +261,25 @@ const Index = () => {
     };
   }, []);
 
+  const [isLoadedDelayed, setIsLoadedDelayed] = useState(false);
+
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
     window.addEventListener("technova_lang_changed", handleLangChange);
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
 
+  useEffect(() => {
+    // Delay loading the heavy video scripts/frames slightly to improve core web vitals
+    const timer = setTimeout(() => {
+      setIsLoadedDelayed(true);
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, []);
+
   const { data: storeInfo } = useQuery({
     queryKey: ["public_store_home"],
+    staleTime: 1000 * 60 * 10, // Cache for 10 minutes
     queryFn: async () => {
       const { data, error } = await supabase
         .from("stores")
@@ -293,6 +304,7 @@ const Index = () => {
 
   const { data: dbProducts = [] } = useQuery({
     queryKey: ["public_products_home"],
+    staleTime: 1000 * 60 * 10, // Cache for 10 minutes
     queryFn: async () => {
       // Find the administrator's profile id from their store
       const { data: storeData } = await supabase
@@ -336,6 +348,7 @@ const Index = () => {
 
   const { data: stats } = useQuery({
     queryKey: ["homepage_stats"],
+    staleTime: 1000 * 60 * 15, // Cache for 15 minutes since this is static/aggregated
     queryFn: async () => {
       // Count profiles
       const { count: profilesCount } = await supabase
@@ -546,7 +559,7 @@ const Index = () => {
                   }
                 }}
                 >
-                  {welcomeVideoUrl && isPlaying ? (
+                  {welcomeVideoUrl && isPlaying && isLoadedDelayed ? (
                     isDirectVideo(welcomeVideoUrl) ? (
                       <video 
                         src={welcomeVideoUrl} 
