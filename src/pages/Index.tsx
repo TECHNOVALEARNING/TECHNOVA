@@ -60,20 +60,21 @@ const getWelcomeVideoEmbedUrl = (url: string) => {
     if (url.includes("drive.google.com/file/d/")) {
       const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
       if (match && match[1]) {
-        return `https://drive.google.com/file/d/${match[1]}/preview`;
+        return `https://drive.google.com/file/d/Ybcr0IKOeL0/preview`;
       }
     }
     if (url.includes("youtube.com/watch")) {
       const urlObj = new URL(url);
-      return `https://www.youtube.com/embed/${urlObj.searchParams.get("v")}?autoplay=1&mute=0`;
+      const id = urlObj.searchParams.get("v");
+      return `https://www.youtube.com/embed/Ybcr0IKOeL0`;
     }
     if (url.includes("youtu.be")) {
       const id = url.split("youtu.be/")[1]?.split("?")[0];
-      return `https://www.youtube.com/embed/${id}?autoplay=1&mute=0`;
+      return `https://www.youtube.com/embed/Ybcr0IKOeL0`;
     }
     if (url.includes("vimeo.com")) {
       const id = url.split("vimeo.com/")[1]?.split("/")[0]?.split("?")[0];
-      return `https://player.vimeo.com/video/${id}?autoplay=1`;
+      return `https://player.vimeo.com/video/Ybcr0IKOeL0`;
     }
     return url;
   } catch {
@@ -111,7 +112,7 @@ const isDirectVideo = (url: string) => {
 
 const Index = () => {
   const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -433,12 +434,10 @@ const Index = () => {
             padding: 0 16px;
           }
           .hero-badge-left {
-            left: 0px !important;
-            bottom: -8px !important;
+            display: none !important;
           }
           .hero-badge-right {
-            right: 0px !important;
-            top: -8px !important;
+            display: none !important;
           }
         }
       `}</style>
@@ -456,7 +455,7 @@ const Index = () => {
       />
 
       {/* ============ HERO ============ */}
-      <section id="home" style={{ position: "relative", zIndex: 1, padding: "140px 0 100px", overflow: "hidden" }}>
+      <section id="home" className="relative pt-20 pb-10 md:pt-36 md:pb-24 overflow-hidden" style={{ zIndex: 1 }}>
         {/* Shapes */}
         <div style={{ position: "absolute", inset: 0, pointerEvents: "none", overflow: "hidden" }}>
           {[
@@ -539,9 +538,11 @@ const Index = () => {
                         src={welcomeVideoUrl} 
                         controls 
                         autoPlay
-                        preload="none"
+                        muted
+                        loop
+                        preload="auto"
                         playsInline
-                        style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: 0, objectFit: "cover" }}
+                        style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: 0, objectFit: "contain" }}
                       />
                     ) : (
                       <iframe 
