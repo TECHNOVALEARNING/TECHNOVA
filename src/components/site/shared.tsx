@@ -119,7 +119,7 @@ export const Header = () => {
             >
               {lang === "fr" ? "Informez-vous" : "Get Informed"} <ChevronDown className={`h-3.5 w-3.5 transition-transform ${infoDropdownOpen ? "rotate-180" : ""}`} />
             </button>
-            <div className={`absolute top-full left-0 mt-2 w-48 rounded-xl border border-border bg-card p-2 shadow-xl transition-all before:content-[''] before:absolute before:-top-2 before:left-0 before:right-0 before:h-2 ${
+            <div className={`absolute top-full left-0 mt-2 w-48 rounded-xl border border-border bg-white dark:bg-[#1c1c1e] p-2 shadow-xl transition-all before:content-[''] before:absolute before:-top-2 before:left-0 before:right-0 before:h-2 ${
               infoDropdownOpen ? "opacity-100 visible" : "opacity-0 invisible"
             }`}>
               {infoDropdownLinks.map((l) => (
@@ -147,7 +147,7 @@ export const Header = () => {
             >
               {lang === "fr" ? "Plus" : "More"} <ChevronDown className={`h-3.5 w-3.5 transition-transform ${dropdownOpen ? "rotate-180" : ""}`} />
             </button>
-            <div className={`absolute top-full right-0 mt-2 w-48 rounded-xl border border-border bg-card p-2 shadow-xl transition-all before:content-[''] before:absolute before:-top-2 before:left-0 before:right-0 before:h-2 ${
+            <div className={`absolute top-full right-0 mt-2 w-48 rounded-xl border border-border bg-white dark:bg-[#1c1c1e] p-2 shadow-xl transition-all before:content-[''] before:absolute before:-top-2 before:left-0 before:right-0 before:h-2 ${
               dropdownOpen ? "opacity-100 visible" : "opacity-0 invisible"
             }`}>
               {moreDropdownLinks.map((l) => (
