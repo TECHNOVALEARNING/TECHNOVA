@@ -320,11 +320,14 @@ const CheckoutDialog = ({ open, onOpenChange, product, storeSlug, brandColor, fu
       });
 
       // Launch KKiaPay Widget overlay
+      const kkiapayKey = import.meta.env.VITE_KKIAPAY_PUBLIC_KEY || "66f8c797296c0b3d27ed3dc27381a466b76066e1";
+      const isSandbox = import.meta.env.VITE_KKIAPAY_SANDBOX === "true";
+
       win.openKkiapayWidget({
         amount: Math.round(discountedPrice),
         position: "center",
-        key: "66f8c797296c0b3d27ed3dc27381a466b76066e1",
-        sandbox: true,
+        key: kkiapayKey,
+        sandbox: isSandbox,
         name: fullName,
         email: email,
         phone: phone ? `+${fullPhone}` : "",
