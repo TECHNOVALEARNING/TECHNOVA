@@ -563,15 +563,7 @@ const Jobs = () => {
   const [showFilters, setShowFilters] = useState(false);
   
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
-  const [liveJobs, setLiveJobs] = useState<Job[]>([]);
-  const [isLoadingLive, setIsLoadingLive] = useState(true);
-  const [jobDetailLoading, setJobDetailLoading] = useState(false);
-  const [liveJobDetails, setLiveJobDetails] = useState<{
-    description: string;
-    education: string;
-    experience: string;
-    deadline: string;
-  } | null>(null);
+  const [isLoadingLive, setIsLoadingLive] = useState(false);
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -579,186 +571,11 @@ const Jobs = () => {
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
 
-  // Fetch live jobs from cDiscussion via CORS Proxy dynamically on load
-  useEffect(() => {
-    const fetchLiveJobs = async () => {
-      try {
-        setIsLoadingLive(true);
-        const targetUrl = "https://www.cdiscussion.com/offres-emploi?type_offre=Offre+d%27emploi";
-        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
-        const res = await fetch(proxyUrl);
-        if (!res.ok) throw new Error("CORS Proxy error fetching cDiscussion jobs");
-        const json = await res.json();
-        const html = json.contents;
-
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, "text/html");
-
-        const cardElements = doc.querySelectorAll(".card.glass-card");
-        if (cardElements.length === 0) {
-          throw new Error("cDiscussion job cards DOM layout changed or proxy returned empty content");
-        }
-
-        const jobs: Job[] = [];
-        cardElements.forEach((el, index) => {
-          const titleLink = el.querySelector("h5 a.stretched-link");
-          const titleText = titleLink?.textContent?.trim() || "";
-          const href = titleLink?.getAttribute("href") || "";
-
-          const matchJobId = href.match(/details-job=(\d+)/);
-          const jobId = matchJobId ? matchJobId[1] : `live-${index}`;
-          const absoluteLink = `https://www.cdiscussion.com/offres-emploi${href}`;
-
-          const companyElement = el.querySelector("i.fa-building")?.parentElement;
-          const companyName = companyElement?.textContent?.trim() || "Entreprise Anonyme";
-
-          const locationElement = el.querySelector("i.fa-map-marker-alt")?.parentElement;
-          const locationName = locationElement?.textContent?.trim() || "International";
-
-          // Extract metadata from listing badges
-          const badgeList = el.querySelectorAll(".badge");
-          let jobType = "Offre d'emploi";
-          let eduText = "Non spécifié";
-          let expText = "Non spécifié";
-
-          badgeList.forEach((badge) => {
-            const text = badge.textContent?.trim() || "";
-            const icon = badge.querySelector("i");
-            if (icon) {
-              if (icon.classList.contains("fa-graduation-cap")) {
-                eduText = text;
-              } else if (icon.classList.contains("fa-briefcase")) {
-                expText = text;
-              }
-            } else {
-              if (text === "Offre d'emploi" || text === "Stage") {
-                jobType = text;
-              }
-            }
-          });
-
-          // Check flex tags just in case
-          const metaDiv = el.querySelector(".d-flex.flex-wrap.gap-2.small.text-muted");
-          if (metaDiv) {
-            const eduCap = metaDiv.querySelector("i.fa-graduation-cap");
-            if (eduCap && eduCap.parentElement) {
-              eduText = eduCap.parentElement.textContent?.trim() || eduText;
-            }
-            const briefCase = metaDiv.querySelector("i.fa-briefcase");
-            if (briefCase && briefCase.parentElement) {
-              expText = briefCase.parentElement.textContent?.trim() || expText;
-            }
-          }
-
-          jobs.push({
-            id: jobId,
-            title: { fr: titleText, en: titleText },
-            company: companyName,
-            location: { fr: locationName, en: locationName },
-            type: { fr: jobType, en: jobType === "Offre d'emploi" ? "Job Offer" : "Internship" },
-            category: guessCategory(titleText),
-            education: eduText,
-            experience: { fr: expText, en: expText },
-            publishedAt: { fr: "Récemment", en: "Recently" },
-            description: {
-              fr: "Chargement des détails en direct depuis le portail cDiscussion...",
-              en: "Loading live job description from cDiscussion portal..."
-            },
-            requirements: {
-              fr: ["Veuillez vous référer à l'offre officielle sur cDiscussion.com pour les critères."],
-              en: ["Please refer to the official listing on cDiscussion.com for requirements."]
-            },
-            responsibilities: {
-              fr: ["Veuillez vous référer à l'offre officielle sur cDiscussion.com pour les missions."],
-              en: ["Please refer to the official listing on cDiscussion.com for responsibilities."]
-            },
-            salary: "Selon profil",
-            contactEmail: "contact@cdiscussion.com",
-            liveUrl: absoluteLink
-          });
-        });
-
-        setLiveJobs(jobs);
-      } catch (err) {
-        console.error("Failed to load live jobs, falling back to static seeds:", err);
-      } finally {
-        setIsLoadingLive(false);
-      }
-    };
-
-    fetchLiveJobs();
-  }, []);
-
-  const handleViewJobDetails = async (job: Job) => {
+  const handleViewJobDetails = (job: Job) => {
     setSelectedJob(job);
-    setLiveJobDetails(null);
-
-    // If it is a crawled live job, scrape description body dynamically
-    if (job.liveUrl) {
-      try {
-        setJobDetailLoading(true);
-        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(job.liveUrl)}`;
-        const res = await fetch(proxyUrl);
-        if (!res.ok) throw new Error("Failed to fetch job detail HTML page");
-        const json = await res.json();
-        const html = json.contents;
-
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, "text/html");
-
-        const jobContentEl = doc.querySelector(".job-content");
-        let descHtml = jobContentEl?.innerHTML || "";
-
-        // Check if there is an iframe (PDF list document)
-        const iframe = doc.querySelector(".job-content iframe");
-        if (iframe) {
-          const iframeSrc = iframe.getAttribute("src");
-          if (iframeSrc) {
-            descHtml += `<div class="mt-6 p-5 border border-dashed border-primary/40 rounded-2xl bg-secondary/10 text-center">
-              <p class="mb-3 font-semibold text-foreground">Cette offre contient une description au format PDF.</p>
-              <a href="${iframeSrc}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-xl hover:bg-primary/90 transition shadow-md font-semibold text-sm">
-                Ouvrir le PDF de l'offre
-              </a>
-            </div>`;
-          }
-        }
-
-        if (!descHtml) {
-          const mainCardBody = doc.querySelector(".col-lg-8 .card-body");
-          descHtml = mainCardBody?.innerHTML || "";
-        }
-
-        let edu = job.education;
-        let exp = job.experience.fr;
-        let dead = "Non spécifiée";
-
-        const listItems = doc.querySelectorAll(".col-lg-4 ul li");
-        listItems.forEach((li) => {
-          const txt = li.textContent?.trim() || "";
-          if (txt.includes("Études:")) {
-            edu = txt.replace("Études:", "").trim();
-          } else if (txt.includes("Expérience:")) {
-            exp = txt.replace("Expérience:", "").trim();
-          } else if (txt.includes("Date limite:")) {
-            dead = txt.replace("Date limite:", "").trim();
-          }
-        });
-
-        setLiveJobDetails({
-          description: descHtml,
-          education: edu,
-          experience: exp,
-          deadline: dead
-        });
-      } catch (err) {
-        console.error("Failed to load details dynamically:", err);
-      } finally {
-        setJobDetailLoading(false);
-      }
-    }
   };
 
-  const displayedJobsList = liveJobs.length > 0 ? liveJobs : JOBS_DATA;
+  const displayedJobsList = JOBS_DATA;
 
   // Filter Jobs
   const filteredJobs = displayedJobsList.filter((job) => {
@@ -1105,103 +922,68 @@ const Jobs = () => {
                       <DollarSign className="h-4 w-4 text-emerald-500" />
                       {selectedJob.salary}
                     </span>
-                    {liveJobDetails?.deadline && (
-                      <span className="flex items-center gap-1.5">
-                        <Clock className="h-4 w-4 text-amber-500" />
-                        <strong>{lang === "fr" ? "Date limite :" : "Deadline:"}</strong> {liveJobDetails.deadline}
-                      </span>
-                    )}
                   </div>
                 </div>
 
                 {/* Description */}
                 <div className="space-y-2">
                   <h4 className="text-sm font-bold text-foreground uppercase tracking-wider">Description</h4>
-                  {jobDetailLoading ? (
-                    <div className="flex items-center justify-center py-8">
-                      <Loader2 className="h-6 w-6 animate-spin text-primary" />
-                      <span className="ml-2 text-sm text-muted-foreground">
-                        {lang === "fr" ? "Chargement des détails en direct..." : "Loading live job details..."}
-                      </span>
-                    </div>
-                  ) : liveJobDetails ? (
-                    <div 
-                      className="text-sm sm:text-base text-muted-foreground leading-relaxed space-y-3 max-h-[40vh] overflow-y-auto pr-2"
-                      dangerouslySetInnerHTML={{ __html: liveJobDetails.description }}
-                    />
-                  ) : (
-                    <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-                      {selectedJob.description[lang as "fr" | "en"]}
-                    </p>
-                  )}
+                  <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                    {selectedJob.description[lang as "fr" | "en"]}
+                  </p>
                 </div>
 
-                {/* Requirements (Only show if not live scraped job, or if details failed) */}
-                {(!selectedJob.liveUrl || (!jobDetailLoading && !liveJobDetails)) && (
-                  <div className="space-y-2">
-                    <h4 className="text-sm font-bold text-foreground uppercase tracking-wider">
-                      {lang === "fr" ? "Profil recherché" : "Requirements"}
-                    </h4>
-                    <ul className="space-y-2">
-                      {selectedJob.requirements[lang as "fr" | "en"].map((req, i) => (
-                        <li key={i} className="flex gap-2.5 items-start text-sm text-muted-foreground">
-                          <span className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center flex-none mt-0.5">
-                            <Check className="h-3 w-3 text-primary" />
-                          </span>
-                          <span>{req}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+                {/* Requirements */}
+                <div className="space-y-2">
+                  <h4 className="text-sm font-bold text-foreground uppercase tracking-wider">
+                    {lang === "fr" ? "Profil recherché" : "Requirements"}
+                  </h4>
+                  <ul className="space-y-2">
+                    {selectedJob.requirements[lang as "fr" | "en"].map((req, i) => (
+                      <li key={i} className="flex gap-2.5 items-start text-sm text-muted-foreground">
+                        <span className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center flex-none mt-0.5">
+                          <Check className="h-3 w-3 text-primary" />
+                        </span>
+                        <span>{req}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
 
-                {/* Responsibilities (Only show if not live scraped job, or if details failed) */}
-                {(!selectedJob.liveUrl || (!jobDetailLoading && !liveJobDetails)) && (
-                  <div className="space-y-2">
-                    <h4 className="text-sm font-bold text-foreground uppercase tracking-wider">
-                      {lang === "fr" ? "Missions" : "Responsibilities"}
-                    </h4>
-                    <ul className="space-y-2">
-                      {selectedJob.responsibilities[lang as "fr" | "en"].map((resp, i) => (
-                        <li key={i} className="flex gap-2.5 items-start text-sm text-muted-foreground">
-                          <span className="h-5 w-5 rounded-full bg-blue-400/10 flex items-center justify-center flex-none mt-0.5">
-                            <ChevronRight className="h-3 w-3 text-blue-500" />
-                          </span>
-                          <span>{resp}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+                {/* Responsibilities */}
+                <div className="space-y-2">
+                  <h4 className="text-sm font-bold text-foreground uppercase tracking-wider">
+                    {lang === "fr" ? "Missions" : "Responsibilities"}
+                  </h4>
+                  <ul className="space-y-2">
+                    {selectedJob.responsibilities[lang as "fr" | "en"].map((resp, i) => (
+                      <li key={i} className="flex gap-2.5 items-start text-sm text-muted-foreground">
+                        <span className="h-5 w-5 rounded-full bg-blue-400/10 flex items-center justify-center flex-none mt-0.5">
+                          <ChevronRight className="h-3 w-3 text-blue-500" />
+                        </span>
+                        <span>{resp}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
 
                 {/* Footer Apply */}
                 <div className="border-t border-border pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
                   <div className="text-xs text-muted-foreground text-center sm:text-left">
                     <span className="block font-semibold text-foreground/80 mb-0.5">
-                      {selectedJob.liveUrl ? (lang === "fr" ? "Postuler via le portail" : "Apply via portal") : (lang === "fr" ? "Postuler en direct" : "Apply directly")}
+                      {lang === "fr" ? "Postuler en direct" : "Apply directly"}
                     </span>
-                    {selectedJob.liveUrl ? "cDiscussion.com" : selectedJob.contactEmail}
+                    {selectedJob.contactEmail}
                   </div>
                   <Button 
                     asChild 
                     className="w-full sm:w-auto rounded-xl bg-gradient-to-r from-primary to-blue-500 hover:from-primary/95 hover:to-blue-600/95 py-3.5 h-auto text-sm font-semibold shadow-md text-white px-8"
                   >
                     <a 
-                      href={selectedJob.liveUrl || `mailto:${selectedJob.contactEmail}?subject=Candidature - ${selectedJob.title[lang as "fr" | "en"]}`}
-                      target={selectedJob.liveUrl ? "_blank" : undefined}
-                      rel={selectedJob.liveUrl ? "noopener noreferrer" : undefined}
+                      href={`mailto:${selectedJob.contactEmail}?subject=Candidature - ${selectedJob.title[lang as "fr" | "en"]}`}
                     >
-                      {selectedJob.liveUrl ? (
-                        <>
-                          <Briefcase className="h-4 w-4 mr-1.5" />
-                          {lang === "fr" ? "Postuler sur cDiscussion" : "Apply on cDiscussion"}
-                        </>
-                      ) : (
-                        <>
-                          <Mail className="h-4 w-4 mr-2" />
-                          {lang === "fr" ? "Envoyer ma candidature" : "Send Application"}
-                        </>
-                      )}
+                      <Mail className="h-4 w-4 mr-2" />
+                      {lang === "fr" ? "Envoyer ma candidature" : "Send Application"}
                     </a>
                   </Button>
                 </div>
