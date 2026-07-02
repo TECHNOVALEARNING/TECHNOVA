@@ -50,7 +50,7 @@ const translations = {
     domainLabel: "Domain Name",
     btnConnect: "Connect",
     currentUrlText: "Your shop is currently accessible at: ",
-  }
+  },
 };
 
 const DashboardDomainTab = () => {
@@ -62,7 +62,9 @@ const DashboardDomainTab = () => {
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
-  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+  const [lang, setLang] = useState(() =>
+    typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
+  );
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -70,7 +72,7 @@ const DashboardDomainTab = () => {
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
 
-  const t = translations[lang === 'en' ? 'en' : 'fr'];
+  const t = translations[lang === "en" ? "en" : "fr"];
 
   useEffect(() => {
     if (activeStore?.id) fetchDomain();
@@ -90,21 +92,24 @@ const DashboardDomainTab = () => {
 
   const handleSave = async () => {
     if (!domain.trim() || !user?.id || !activeStore?.id) return;
-    const cleanDomain = domain.trim().replace(/^https?:\/\//, "").replace(/\/+$/, "");
+    const cleanDomain = domain
+      .trim()
+      .replace(/^https?:\/\//, "")
+      .replace(/\/+$/, "");
     if (!/^[a-zA-Z0-9][a-zA-Z0-9-]*\.[a-zA-Z]{2,}$/.test(cleanDomain)) {
       toast.error(t.domainErrorValid);
       return;
     }
     setSaving(true);
-    
+
     try {
       // 1. Ajouter le domaine sur Vercel via l'API proxy
       const vercelRes = await fetch("/api/domains", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ domain: cleanDomain })
+        body: JSON.stringify({ domain: cleanDomain }),
       });
-      
+
       if (!vercelRes.ok) {
         const errorData = await vercelRes.json();
         toast.error(errorData.error?.message || t.domainErrorConn);
@@ -115,10 +120,15 @@ const DashboardDomainTab = () => {
       // 2. Sauvegarder dans notre base de données
       const { data, error } = await supabase
         .from("custom_domains")
-        .insert({ domain: cleanDomain, store_id: activeStore.id, owner_id: user.id, status: "pending" })
+        .insert({
+          domain: cleanDomain,
+          store_id: activeStore.id,
+          owner_id: user.id,
+          status: "pending",
+        })
         .select()
         .single();
-        
+
       if (error) {
         toast.error(error.message.includes("duplicate") ? t.domainErrorUsed : t.domainErrorAdd);
       } else {
@@ -136,11 +146,11 @@ const DashboardDomainTab = () => {
   const handleDelete = async () => {
     if (!customDomain) return;
     setDeleting(true);
-    
+
     try {
       // 1. Supprimer de Vercel
       await fetch(`/api/domains?domain=${customDomain.domain}`, { method: "DELETE" });
-      
+
       // 2. Supprimer de Supabase
       const { error } = await supabase.from("custom_domains").delete().eq("id", customDomain.id);
       if (error) {
@@ -172,16 +182,14 @@ const DashboardDomainTab = () => {
             <Globe className="h-5 w-5 text-primary" />
             <CardTitle className="text-lg">{t.cardTitle}</CardTitle>
           </div>
-          <CardDescription>
-            {t.cardDesc}
-          </CardDescription>
+          <CardDescription>{t.cardDesc}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           {customDomain ? (
-            <DomainConnectionUI 
-              domainRecord={customDomain} 
-              onDelete={handleDelete} 
-              brandColor={activeStore?.brand_color || "#2563EB"} 
+            <DomainConnectionUI
+              domainRecord={customDomain}
+              onDelete={handleDelete}
+              brandColor={activeStore?.brand_color || "#2563EB"}
             />
           ) : (
             <div className="space-y-4">
@@ -189,7 +197,9 @@ const DashboardDomainTab = () => {
                 <Label htmlFor="domain">{t.domainLabel}</Label>
                 <div className="flex items-center gap-3 mt-1.5">
                   <div className="relative flex-1">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">https://</span>
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
+                      https://
+                    </span>
                     <Input
                       id="domain"
                       value={domain}
@@ -205,7 +215,10 @@ const DashboardDomainTab = () => {
                 </div>
               </div>
               <p className="text-xs text-muted-foreground">
-                {t.currentUrlText}<span className="font-medium text-foreground">technova.com/store/{activeStore?.slug}</span>
+                {t.currentUrlText}
+                <span className="font-medium text-foreground">
+                  technova.com/store/{activeStore?.slug}
+                </span>
               </p>
             </div>
           )}

@@ -7,16 +7,37 @@ import { Button } from "@/components/ui/button";
 import SEOHead from "@/components/SEOHead";
 
 const features = [
-  { icon: FileText, title: "Tous les formats", desc: "PDFs, e-books, templates, presets, fichiers audio, vidéo, ZIP et plus encore." },
-  { icon: Download, title: "Livraison instantanée", desc: "Vos clients reçoivent leur fichier immédiatement après le paiement." },
-  { icon: Shield, title: "Protection DRM", desc: "Protégez vos fichiers contre le piratage avec nos systèmes de sécurité." },
-  { icon: Zap, title: "Upload rapide", desc: "Uploadez des fichiers jusqu'à 5 Go en quelques secondes." },
+  {
+    icon: FileText,
+    title: "Tous les formats",
+    desc: "PDFs, e-books, templates, presets, fichiers audio, vidéo, ZIP et plus encore.",
+  },
+  {
+    icon: Download,
+    title: "Livraison instantanée",
+    desc: "Vos clients reçoivent leur fichier immédiatement après le paiement.",
+  },
+  {
+    icon: Shield,
+    title: "Protection DRM",
+    desc: "Protégez vos fichiers contre le piratage avec nos systèmes de sécurité.",
+  },
+  {
+    icon: Zap,
+    title: "Upload rapide",
+    desc: "Uploadez des fichiers jusqu'à 5 Go en quelques secondes.",
+  },
 ];
 
 const Fichiers = () => {
   return (
     <div className="min-h-screen bg-background">
-      <SEOHead title="Vendre des fichiers digitaux" description="Vendez vos fichiers digitaux : PDFs, e-books, templates, presets. Livraison instantanée, protection DRM et paiements sécurisés." canonicalPath="/fichiers" keywords="vendre fichiers digitaux, ebook, template, preset, PDF, mondial, global" />
+      <SEOHead
+        title="Vendre des fichiers digitaux"
+        description="Vendez vos fichiers digitaux : PDFs, e-books, templates, presets. Livraison instantanée, protection DRM et paiements sécurisés."
+        canonicalPath="/fichiers"
+        keywords="vendre fichiers digitaux, ebook, template, preset, PDF, mondial, global"
+      />
       <Header />
       <section className="py-24 md:py-32 bg-mesh">
         <div className="container mx-auto px-6 text-center">
@@ -28,10 +49,14 @@ const Fichiers = () => {
               Vendez vos <span className="text-gradient">fichiers digitaux</span> sans limites
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-10">
-              E-books, templates, presets, musiques — uploadez et vendez n'importe quel type de fichier digital à travers le monde.
+              E-books, templates, presets, musiques — uploadez et vendez n'importe quel type de
+              fichier digital à travers le monde.
             </p>
             <Link to="/register">
-              <Button size="lg" className="px-8 py-6 text-base font-semibold shadow-lg shadow-primary/25">
+              <Button
+                size="lg"
+                className="px-8 py-6 text-base font-semibold shadow-lg shadow-primary/25"
+              >
                 Commencer à vendre <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
@@ -43,8 +68,14 @@ const Fichiers = () => {
         <div className="container mx-auto px-6">
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
             {features.map((f, i) => (
-              <motion.div key={f.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-                className="rounded-2xl border border-border bg-card p-6 hover:shadow-lg hover:border-primary/20 transition-all">
+              <motion.div
+                key={f.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="rounded-2xl border border-border bg-card p-6 hover:shadow-lg hover:border-primary/20 transition-all"
+              >
                 <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10">
                   <f.icon className="h-5 w-5 text-primary" />
                 </div>

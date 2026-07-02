@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Upload, Loader2, ImageIcon, X } from "lucide-react";
 import { toast } from "sonner";
@@ -69,7 +75,8 @@ export const VisualSearchDialog = ({ open, onOpenChange }: Props) => {
             <ImageIcon className="h-5 w-5 text-primary" /> Recherche par image
           </DialogTitle>
           <DialogDescription>
-            Téléchargez une photo, notre IA identifie ce que vous cherchez et trouve les produits correspondants.
+            Téléchargez une photo, notre IA identifie ce que vous cherchez et trouve les produits
+            correspondants.
           </DialogDescription>
         </DialogHeader>
 
@@ -117,7 +124,8 @@ export const VisualSearchDialog = ({ open, onOpenChange }: Props) => {
             {results.length > 0 && (
               <div>
                 <h4 className="mb-3 font-semibold text-foreground">
-                  {results.length} produit{results.length > 1 ? "s" : ""} trouvé{results.length > 1 ? "s" : ""}
+                  {results.length} produit{results.length > 1 ? "s" : ""} trouvé
+                  {results.length > 1 ? "s" : ""}
                 </h4>
                 <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
                   {results.map((p, i) => (

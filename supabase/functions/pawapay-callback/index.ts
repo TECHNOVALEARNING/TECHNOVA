@@ -23,7 +23,11 @@ Deno.serve(async (req) => {
 
     const raw = await req.text();
     let body: any;
-    try { body = JSON.parse(raw); } catch { return new Response("OK", { status: 200 }); }
+    try {
+      body = JSON.parse(raw);
+    } catch {
+      return new Response("OK", { status: 200 });
+    }
 
     console.log("[pawapay-callback] received", JSON.stringify(body).slice(0, 500));
 
@@ -69,11 +73,16 @@ Deno.serve(async (req) => {
 
 async function handleDeposit(supabase: any, depositId: string, tx: any, status?: string) {
   const localStatus =
-    status === "COMPLETED" ? "success" :
-    status === "FAILED" || status === "REJECTED" ? "failed" :
-    "initiated";
+    status === "COMPLETED"
+      ? "success"
+      : status === "FAILED" || status === "REJECTED"
+        ? "failed"
+        : "initiated";
 
-  await supabase.from("payment_events").update({ status: localStatus }).eq("pawapay_deposit_id", depositId);
+  await supabase
+    .from("payment_events")
+    .update({ status: localStatus })
+    .eq("pawapay_deposit_id", depositId);
 
   if (status !== "COMPLETED") return;
 
@@ -156,7 +165,9 @@ async function handleDeposit(supabase: any, depositId: string, tx: any, status?:
   let pendingLicenseKey: string | null = null;
   if (product?.type === "license") {
     pendingLicenseKey = await generateLicense(supabase, {
-      productId, customerId, storeOwnerId,
+      productId,
+      customerId,
+      storeOwnerId,
       orderId: newOrder?.id || null,
       maxActivations: product.license_max_activations || 1,
       validityDays: product.license_validity_days || null,
@@ -165,7 +176,10 @@ async function handleDeposit(supabase: any, depositId: string, tx: any, status?:
 
   // Notification email
   const { data: sellerProfile } = await supabase
-    .from("profiles").select("store_slug").eq("id", storeOwnerId).single();
+    .from("profiles")
+    .select("store_slug")
+    .eq("id", storeOwnerId)
+    .single();
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   fetch(`${supabaseUrl}/functions/v1/notify-sale`, {
     method: "POST",
@@ -204,9 +218,11 @@ async function handleDeposit(supabase: any, depositId: string, tx: any, status?:
 
 async function handlePayout(supabase: any, payoutId: string, tx: any, status?: string) {
   const newStatus =
-    status === "COMPLETED" ? "completed" :
-    status === "FAILED" || status === "REJECTED" ? "failed" :
-    "processing";
+    status === "COMPLETED"
+      ? "completed"
+      : status === "FAILED" || status === "REJECTED"
+        ? "failed"
+        : "processing";
 
   const { data: withdrawal } = await supabase
     .from("withdrawals")
@@ -215,30 +231,51 @@ async function handlePayout(supabase: any, payoutId: string, tx: any, status?: s
     .maybeSingle();
   if (!withdrawal) return;
 
-  await supabase.from("withdrawals").update({
-    status: newStatus,
-    processed_at: status === "COMPLETED" || status === "FAILED" ? new Date().toISOString() : null,
-  }).eq("id", withdrawal.id);
+  await supabase
+    .from("withdrawals")
+    .update({
+      status: newStatus,
+      processed_at: status === "COMPLETED" || status === "FAILED" ? new Date().toISOString() : null,
+    })
+    .eq("id", withdrawal.id);
 
-  const title = status === "COMPLETED" ? "Retrait effectué ✅" : status === "FAILED" || status === "REJECTED" ? "Retrait échoué ❌" : "Retrait en cours";
-  const message = status === "COMPLETED"
-    ? `Votre retrait de ${withdrawal.amount} FCFA vers ${withdrawal.phone_number} a été effectué avec succès.`
-    : status === "FAILED" || status === "REJECTED"
-    ? `Votre retrait de ${withdrawal.amount} FCFA a échoué. Le montant reste disponible.`
-    : `Votre retrait est en cours de traitement.`;
+  const title =
+    status === "COMPLETED"
+      ? "Retrait effectué ✅"
+      : status === "FAILED" || status === "REJECTED"
+        ? "Retrait échoué ❌"
+        : "Retrait en cours";
+  const message =
+    status === "COMPLETED"
+      ? `Votre retrait de ${withdrawal.amount} FCFA vers ${withdrawal.phone_number} a été effectué avec succès.`
+      : status === "FAILED" || status === "REJECTED"
+        ? `Votre retrait de ${withdrawal.amount} FCFA a échoué. Le montant reste disponible.`
+        : `Votre retrait est en cours de traitement.`;
 
   await supabase.from("notifications").insert({
     user_id: withdrawal.user_id,
     title,
     message,
-    type: status === "COMPLETED" ? "success" : status === "FAILED" || status === "REJECTED" ? "error" : "info",
+    type:
+      status === "COMPLETED"
+        ? "success"
+        : status === "FAILED" || status === "REJECTED"
+          ? "error"
+          : "info",
   });
 }
 
-async function generateLicense(supabase: any, p: {
-  productId: string; customerId: string; storeOwnerId: string;
-  orderId: string | null; maxActivations: number; validityDays: number | null;
-}): Promise<string | null> {
+async function generateLicense(
+  supabase: any,
+  p: {
+    productId: string;
+    customerId: string;
+    storeOwnerId: string;
+    orderId: string | null;
+    maxActivations: number;
+    validityDays: number | null;
+  },
+): Promise<string | null> {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   let key = "";
   for (let attempt = 0; attempt < 5; attempt++) {
@@ -247,7 +284,11 @@ async function generateLicense(supabase: any, p: {
       if (s > 0) key += "-";
       for (let i = 0; i < 4; i++) key += chars.charAt(Math.floor(Math.random() * chars.length));
     }
-    const { data: exists } = await supabase.from("licenses").select("id").eq("license_key", key).maybeSingle();
+    const { data: exists } = await supabase
+      .from("licenses")
+      .select("id")
+      .eq("license_key", key)
+      .maybeSingle();
     if (!exists) break;
   }
   const { error } = await supabase.from("licenses").insert({
@@ -267,4 +308,10 @@ async function generateLicense(supabase: any, p: {
   return key;
 }
 
-function safeJson(s: string) { try { return JSON.parse(s); } catch { return null; } }
+function safeJson(s: string) {
+  try {
+    return JSON.parse(s);
+  } catch {
+    return null;
+  }
+}

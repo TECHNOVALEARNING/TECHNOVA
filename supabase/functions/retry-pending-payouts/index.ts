@@ -33,7 +33,9 @@ Deno.serve(async (req) => {
 
     if (error) return j({ error: error.message }, 500);
 
-    let verified = 0, completed = 0, failed = 0;
+    let verified = 0,
+      completed = 0,
+      failed = 0;
 
     for (const w of processings || []) {
       verified++;
@@ -50,9 +52,13 @@ Deno.serve(async (req) => {
         const isFailed = ["failed", "cancelled", "canceled", "rejected"].includes(status);
 
         if (isSuccess) {
-          await admin.from("withdrawals").update({
-            status: "completed", processed_at: new Date().toISOString(),
-          }).eq("id", w.id);
+          await admin
+            .from("withdrawals")
+            .update({
+              status: "completed",
+              processed_at: new Date().toISOString(),
+            })
+            .eq("id", w.id);
           await admin.from("notifications").insert({
             user_id: w.user_id,
             title: "Retrait effectué ✅",
@@ -61,9 +67,13 @@ Deno.serve(async (req) => {
           });
           completed++;
         } else if (isFailed) {
-          await admin.from("withdrawals").update({
-            status: "failed", processed_at: new Date().toISOString(),
-          }).eq("id", w.id);
+          await admin
+            .from("withdrawals")
+            .update({
+              status: "failed",
+              processed_at: new Date().toISOString(),
+            })
+            .eq("id", w.id);
           await admin.from("notifications").insert({
             user_id: w.user_id,
             title: "Retrait échoué ❌",
@@ -84,6 +94,9 @@ Deno.serve(async (req) => {
   }
 
   function j(b: unknown, s = 200) {
-    return new Response(JSON.stringify(b), { status: s, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    return new Response(JSON.stringify(b), {
+      status: s,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 });

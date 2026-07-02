@@ -1,14 +1,42 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { BarChart3, Eye, ShoppingCart, CreditCard, TrendingUp, Calendar, Users, Globe, Monitor, Smartphone, Tablet, Link2, ExternalLink } from "lucide-react";
+import {
+  BarChart3,
+  Eye,
+  ShoppingCart,
+  CreditCard,
+  TrendingUp,
+  Calendar,
+  Users,
+  Globe,
+  Monitor,
+  Smartphone,
+  Tablet,
+  Link2,
+  ExternalLink,
+} from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { subDays, startOfDay, format, eachDayOfInterval } from "date-fns";
 import { fr } from "date-fns/locale";
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 
 type TrafficTab = "medium" | "source" | "referrer";
 
@@ -44,9 +72,21 @@ const DashboardAnalytics = () => {
     const startDate = startOfDay(subDays(new Date(), days)).toISOString();
 
     const [visitsRes, ordersRes, customersRes] = await Promise.all([
-      supabase.from("store_visits").select("*").eq("store_owner_id", user.id).gte("created_at", startDate),
-      supabase.from("orders").select("*").eq("store_owner_id", user.id).gte("created_at", startDate),
-      supabase.from("orders").select("customer_id, customers(name, email)").eq("store_owner_id", user.id).gte("created_at", startDate),
+      supabase
+        .from("store_visits")
+        .select("*")
+        .eq("store_owner_id", user.id)
+        .gte("created_at", startDate),
+      supabase
+        .from("orders")
+        .select("*")
+        .eq("store_owner_id", user.id)
+        .gte("created_at", startDate),
+      supabase
+        .from("orders")
+        .select("customer_id, customers(name, email)")
+        .eq("store_owner_id", user.id)
+        .gte("created_at", startDate),
     ]);
 
     const v = visitsRes.data || [];
@@ -75,8 +115,10 @@ const DashboardAnalytics = () => {
       const dayStr = format(day, "yyyy-MM-dd");
       return {
         date: format(day, "dd MMM", { locale: fr }),
-        visites: v.filter((x: any) => format(new Date(x.created_at), "yyyy-MM-dd") === dayStr).length,
-        ventes: o.filter((x: any) => format(new Date(x.created_at), "yyyy-MM-dd") === dayStr).length,
+        visites: v.filter((x: any) => format(new Date(x.created_at), "yyyy-MM-dd") === dayStr)
+          .length,
+        ventes: o.filter((x: any) => format(new Date(x.created_at), "yyyy-MM-dd") === dayStr)
+          .length,
       };
     });
     setChartData(chart);
@@ -90,7 +132,9 @@ const DashboardAnalytics = () => {
       const c = v.country || "Inconnu";
       map[c] = (map[c] || 0) + 1;
     });
-    return Object.entries(map).sort((a, b) => b[1] - a[1]).slice(0, 10);
+    return Object.entries(map)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10);
   })();
 
   // Device breakdown
@@ -140,7 +184,9 @@ const DashboardAnalytics = () => {
       }
       map[source] = (map[source] || 0) + 1;
     });
-    return Object.entries(map).sort((a, b) => b[1] - a[1]).slice(0, 10);
+    return Object.entries(map)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10);
   })();
 
   // Referrer URLs
@@ -151,7 +197,9 @@ const DashboardAnalytics = () => {
       if (!ref) return;
       map[ref] = (map[ref] || 0) + 1;
     });
-    return Object.entries(map).sort((a, b) => b[1] - a[1]).slice(0, 15);
+    return Object.entries(map)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 15);
   })();
 
   const deviceIcon = (type: string) => {
@@ -160,11 +208,13 @@ const DashboardAnalytics = () => {
     return <Monitor className="h-4 w-4 text-muted-foreground" />;
   };
 
-  const startDateLabel = format(subDays(new Date(), parseInt(period)), "MMMM dd, yyyy", { locale: fr });
+  const startDateLabel = format(subDays(new Date(), parseInt(period)), "MMMM dd, yyyy", {
+    locale: fr,
+  });
   const endDateLabel = format(new Date(), "MMMM dd, yyyy", { locale: fr });
 
   const maxBarValue = (data: [string, number][]) => {
-    const max = Math.max(...data.map(d => d[1]), 1);
+    const max = Math.max(...data.map((d) => d[1]), 1);
     return max;
   };
 
@@ -200,25 +250,71 @@ const DashboardAnalytics = () => {
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="bg-muted/50">
-            <TabsTrigger value="summary" className="gap-2"><BarChart3 className="h-4 w-4" />Résumé</TabsTrigger>
-            <TabsTrigger value="sales" className="gap-2"><CreditCard className="h-4 w-4" />Ventes</TabsTrigger>
-            <TabsTrigger value="visits" className="gap-2"><Eye className="h-4 w-4" />Visites</TabsTrigger>
-            <TabsTrigger value="customers" className="gap-2"><Users className="h-4 w-4" />Clients</TabsTrigger>
-            <TabsTrigger value="conversion" className="gap-2"><TrendingUp className="h-4 w-4" />Taux de conversion</TabsTrigger>
+            <TabsTrigger value="summary" className="gap-2">
+              <BarChart3 className="h-4 w-4" />
+              Résumé
+            </TabsTrigger>
+            <TabsTrigger value="sales" className="gap-2">
+              <CreditCard className="h-4 w-4" />
+              Ventes
+            </TabsTrigger>
+            <TabsTrigger value="visits" className="gap-2">
+              <Eye className="h-4 w-4" />
+              Visites
+            </TabsTrigger>
+            <TabsTrigger value="customers" className="gap-2">
+              <Users className="h-4 w-4" />
+              Clients
+            </TabsTrigger>
+            <TabsTrigger value="conversion" className="gap-2">
+              <TrendingUp className="h-4 w-4" />
+              Taux de conversion
+            </TabsTrigger>
           </TabsList>
 
           {/* SUMMARY TAB */}
           <TabsContent value="summary" className="space-y-6 mt-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {[
-                { label: "Visites", value: stats.totalVisits, icon: Eye, color: "text-blue-500", bg: "bg-blue-500/10" },
-                { label: "Ventes", value: stats.totalSales, icon: ShoppingCart, color: "text-emerald-500", bg: "bg-emerald-500/10" },
-                { label: "Revenu", value: `${stats.totalRevenue.toLocaleString()} F`, icon: CreditCard, color: "text-purple-500", bg: "bg-purple-500/10" },
-                { label: "Conversion", value: `${stats.conversionRate}%`, icon: TrendingUp, color: "text-amber-500", bg: "bg-amber-500/10" },
+                {
+                  label: "Visites",
+                  value: stats.totalVisits,
+                  icon: Eye,
+                  color: "text-blue-500",
+                  bg: "bg-blue-500/10",
+                },
+                {
+                  label: "Ventes",
+                  value: stats.totalSales,
+                  icon: ShoppingCart,
+                  color: "text-emerald-500",
+                  bg: "bg-emerald-500/10",
+                },
+                {
+                  label: "Revenu",
+                  value: `${stats.totalRevenue.toLocaleString()} F`,
+                  icon: CreditCard,
+                  color: "text-purple-500",
+                  bg: "bg-purple-500/10",
+                },
+                {
+                  label: "Conversion",
+                  value: `${stats.conversionRate}%`,
+                  icon: TrendingUp,
+                  color: "text-amber-500",
+                  bg: "bg-amber-500/10",
+                },
               ].map((card, i) => (
-                <motion.div key={card.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}
-                  className="rounded-xl border border-border bg-card p-5">
-                  <div className={`h-10 w-10 rounded-xl flex items-center justify-center ${card.bg} mb-3`}>
+                <motion.div
+                  key={card.label}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.08 }}
+                  className="rounded-xl border border-border bg-card p-5"
+                >
+                  <div
+                    className={`h-10 w-10 rounded-xl flex items-center justify-center ${card.bg} mb-3`}
+                  >
                     <card.icon className={`h-5 w-5 ${card.color}`} />
                   </div>
                   <p className="text-2xl font-bold text-foreground">{card.value}</p>
@@ -227,7 +323,12 @@ const DashboardAnalytics = () => {
               ))}
             </div>
             {/* Summary chart */}
-            <ChartBlock loading={loading} chartData={chartData} dataKeys={["visites", "ventes"]} title="Aperçu global" />
+            <ChartBlock
+              loading={loading}
+              chartData={chartData}
+              dataKeys={["visites", "ventes"]}
+              title="Aperçu global"
+            />
           </TabsContent>
 
           {/* SALES TAB */}
@@ -236,7 +337,13 @@ const DashboardAnalytics = () => {
               <p className="text-3xl font-bold text-foreground">{stats.totalSales}</p>
               <p className="text-sm text-muted-foreground mt-1">Nombre total de ventes</p>
             </div>
-            <ChartBlock loading={loading} chartData={chartData} dataKeys={["ventes"]} title="Ventes quotidiennes" color="#10b981" />
+            <ChartBlock
+              loading={loading}
+              chartData={chartData}
+              dataKeys={["ventes"]}
+              title="Ventes quotidiennes"
+              color="#10b981"
+            />
           </TabsContent>
 
           {/* VISITS TAB */}
@@ -248,7 +355,14 @@ const DashboardAnalytics = () => {
             </div>
 
             {/* Visits chart */}
-            <ChartBlock loading={loading} chartData={chartData} dataKeys={["visites"]} title="Visites quotidiennes" color="hsl(var(--primary))" gradientId="visits" />
+            <ChartBlock
+              loading={loading}
+              chartData={chartData}
+              dataKeys={["visites"]}
+              title="Visites quotidiennes"
+              color="hsl(var(--primary))"
+              gradientId="visits"
+            />
 
             {/* Country + Devices side by side */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -263,11 +377,20 @@ const DashboardAnalytics = () => {
                       <div key={country} className="flex items-center gap-3">
                         <Globe className="h-4 w-4 text-muted-foreground shrink-0" />
                         <div className="flex-1 flex items-center gap-2">
-                          <div className="h-7 rounded-md bg-blue-100 dark:bg-blue-900/30" style={{ width: `${Math.max(10, (count / maxBarValue(countryData)) * 100)}%` }}>
-                            <span className="px-2 text-sm font-medium text-foreground whitespace-nowrap">{country}</span>
+                          <div
+                            className="h-7 rounded-md bg-blue-100 dark:bg-blue-900/30"
+                            style={{
+                              width: `${Math.max(10, (count / maxBarValue(countryData)) * 100)}%`,
+                            }}
+                          >
+                            <span className="px-2 text-sm font-medium text-foreground whitespace-nowrap">
+                              {country}
+                            </span>
                           </div>
                         </div>
-                        <span className="text-sm font-semibold text-foreground tabular-nums">{count}</span>
+                        <span className="text-sm font-semibold text-foreground tabular-nums">
+                          {count}
+                        </span>
                       </div>
                     ))}
                   </div>
@@ -285,11 +408,20 @@ const DashboardAnalytics = () => {
                       <div key={device} className="flex items-center gap-3">
                         {deviceIcon(device)}
                         <div className="flex-1 flex items-center gap-2">
-                          <div className="h-7 rounded-md bg-blue-100 dark:bg-blue-900/30" style={{ width: `${Math.max(10, (count / maxBarValue(deviceData)) * 100)}%` }}>
-                            <span className="px-2 text-sm font-medium text-foreground whitespace-nowrap">{device}</span>
+                          <div
+                            className="h-7 rounded-md bg-blue-100 dark:bg-blue-900/30"
+                            style={{
+                              width: `${Math.max(10, (count / maxBarValue(deviceData)) * 100)}%`,
+                            }}
+                          >
+                            <span className="px-2 text-sm font-medium text-foreground whitespace-nowrap">
+                              {device}
+                            </span>
                           </div>
                         </div>
-                        <span className="text-sm font-semibold text-foreground tabular-nums">{count}</span>
+                        <span className="text-sm font-semibold text-foreground tabular-nums">
+                          {count}
+                        </span>
                       </div>
                     ))}
                   </div>
@@ -310,19 +442,32 @@ const DashboardAnalytics = () => {
                         : "bg-muted text-muted-foreground hover:bg-muted/80"
                     }`}
                   >
-                    {tab === "medium" ? "Sources de trafic (Medium)" : tab === "source" ? "Sources de trafic" : "Référents"}
+                    {tab === "medium"
+                      ? "Sources de trafic (Medium)"
+                      : tab === "source"
+                        ? "Sources de trafic"
+                        : "Référents"}
                   </button>
                 ))}
               </div>
 
               {trafficTab === "medium" && (
-                <TrafficList data={trafficMedium} icon={<Link2 className="h-4 w-4 text-muted-foreground" />} />
+                <TrafficList
+                  data={trafficMedium}
+                  icon={<Link2 className="h-4 w-4 text-muted-foreground" />}
+                />
               )}
               {trafficTab === "source" && (
-                <TrafficList data={trafficSources} icon={<Globe className="h-4 w-4 text-muted-foreground" />} />
+                <TrafficList
+                  data={trafficSources}
+                  icon={<Globe className="h-4 w-4 text-muted-foreground" />}
+                />
               )}
               {trafficTab === "referrer" && (
-                <TrafficList data={referrerUrls} icon={<ExternalLink className="h-4 w-4 text-muted-foreground" />} />
+                <TrafficList
+                  data={referrerUrls}
+                  icon={<ExternalLink className="h-4 w-4 text-muted-foreground" />}
+                />
               )}
             </div>
           </TabsContent>
@@ -339,7 +484,9 @@ const DashboardAnalytics = () => {
           <TabsContent value="conversion" className="space-y-6 mt-6">
             <div className="rounded-xl border border-border bg-card p-6">
               <p className="text-3xl font-bold text-foreground">{stats.conversionRate}%</p>
-              <p className="text-sm text-muted-foreground mt-1">Taux de conversion (visites → ventes)</p>
+              <p className="text-sm text-muted-foreground mt-1">
+                Taux de conversion (visites → ventes)
+              </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="rounded-xl border border-border bg-card p-5">
@@ -363,13 +510,29 @@ const DashboardAnalytics = () => {
 };
 
 // Reusable chart block
-const ChartBlock = ({ loading, chartData, dataKeys, title, color, gradientId }: {
-  loading: boolean; chartData: any[]; dataKeys: string[]; title: string; color?: string; gradientId?: string;
+const ChartBlock = ({
+  loading,
+  chartData,
+  dataKeys,
+  title,
+  color,
+  gradientId,
+}: {
+  loading: boolean;
+  chartData: any[];
+  dataKeys: string[];
+  title: string;
+  color?: string;
+  gradientId?: string;
 }) => {
   const colors = ["hsl(var(--primary))", "#10b981", "#f97316"];
   return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-      className="rounded-xl border border-border bg-card p-6">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.2 }}
+      className="rounded-xl border border-border bg-card p-6"
+    >
       <h3 className="text-base font-semibold text-foreground mb-4">{title}</h3>
       {loading ? (
         <div className="h-64 flex items-center justify-center">
@@ -387,11 +550,35 @@ const ChartBlock = ({ loading, chartData, dataKeys, title, color, gradientId }: 
               ))}
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-            <XAxis dataKey="date" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }} axisLine={{ stroke: "hsl(var(--border))" }} />
-            <YAxis tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }} axisLine={{ stroke: "hsl(var(--border))" }} allowDecimals={false} />
-            <Tooltip contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: "8px", color: "hsl(var(--foreground))" }} />
+            <XAxis
+              dataKey="date"
+              tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }}
+              axisLine={{ stroke: "hsl(var(--border))" }}
+            />
+            <YAxis
+              tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }}
+              axisLine={{ stroke: "hsl(var(--border))" }}
+              allowDecimals={false}
+            />
+            <Tooltip
+              contentStyle={{
+                backgroundColor: "hsl(var(--card))",
+                border: "1px solid hsl(var(--border))",
+                borderRadius: "8px",
+                color: "hsl(var(--foreground))",
+              }}
+            />
             {dataKeys.map((key, i) => (
-              <Area key={key} type="monotone" dataKey={key} stroke={color || colors[i]} fillOpacity={1} fill={`url(#grad-${key})`} strokeWidth={2} name={key.charAt(0).toUpperCase() + key.slice(1)} />
+              <Area
+                key={key}
+                type="monotone"
+                dataKey={key}
+                stroke={color || colors[i]}
+                fillOpacity={1}
+                fill={`url(#grad-${key})`}
+                strokeWidth={2}
+                name={key.charAt(0).toUpperCase() + key.slice(1)}
+              />
             ))}
           </AreaChart>
         </ResponsiveContainer>
@@ -407,7 +594,7 @@ const ChartBlock = ({ loading, chartData, dataKeys, title, color, gradientId }: 
 
 // Reusable traffic list component
 const TrafficList = ({ data, icon }: { data: [string, number][]; icon: React.ReactNode }) => {
-  const max = Math.max(...data.map(d => d[1]), 1);
+  const max = Math.max(...data.map((d) => d[1]), 1);
   return data.length === 0 ? (
     <p className="text-sm text-muted-foreground">Aucune donnée</p>
   ) : (
@@ -416,8 +603,13 @@ const TrafficList = ({ data, icon }: { data: [string, number][]; icon: React.Rea
         <div key={label} className="flex items-center gap-3">
           <div className="shrink-0">{icon}</div>
           <div className="flex-1 flex items-center">
-            <div className="h-7 rounded-md bg-blue-100 dark:bg-blue-900/30" style={{ width: `${Math.max(8, (count / max) * 100)}%` }}>
-              <span className="px-2 text-sm font-medium text-foreground whitespace-nowrap truncate block leading-7">{label}</span>
+            <div
+              className="h-7 rounded-md bg-blue-100 dark:bg-blue-900/30"
+              style={{ width: `${Math.max(8, (count / max) * 100)}%` }}
+            >
+              <span className="px-2 text-sm font-medium text-foreground whitespace-nowrap truncate block leading-7">
+                {label}
+              </span>
             </div>
           </div>
           <span className="text-sm font-semibold text-foreground tabular-nums">{count}</span>

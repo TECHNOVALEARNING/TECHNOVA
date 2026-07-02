@@ -172,10 +172,22 @@ const ProductReviewForm = ({ productId, customerId, brandColor = "#2563EB" }: Pr
           className="flex-1"
           style={{ backgroundColor: brandColor }}
         >
-          {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : existing ? "Mettre à jour" : "Publier mon avis"}
+          {saving ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : existing ? (
+            "Mettre à jour"
+          ) : (
+            "Publier mon avis"
+          )}
         </Button>
         {existing && (
-          <Button variant="outline" size="icon" onClick={remove} disabled={saving} title="Supprimer">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={remove}
+            disabled={saving}
+            title="Supprimer"
+          >
             <Trash2 className="h-4 w-4" />
           </Button>
         )}

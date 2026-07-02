@@ -39,22 +39,32 @@ async function tg(method: string, body: unknown) {
 }
 
 async function send(chatId: number, text: string) {
-  return tg("sendMessage", { chat_id: chatId, text, parse_mode: "HTML", disable_web_page_preview: true });
+  return tg("sendMessage", {
+    chat_id: chatId,
+    text,
+    parse_mode: "HTML",
+    disable_web_page_preview: true,
+  });
 }
 
-async function aiReply(history: { role: "user" | "assistant"; content: string }[]): Promise<string> {
+async function aiReply(
+  history: { role: "user" | "assistant"; content: string }[],
+): Promise<string> {
   const apiKey = Deno.env.get("GEMINI_API_KEY");
   if (!apiKey) return "L'IA n'est pas configurée.";
 
-  const res = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      model: "gemini-2.5-flash",
-      messages: [{ role: "system", content: SYSTEM_PROMPT }, ...history.slice(-10)],
-      max_tokens: 600,
-    }),
-  });
+  const res = await fetch(
+    "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
+    {
+      method: "POST",
+      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "gemini-2.5-flash",
+        messages: [{ role: "system", content: SYSTEM_PROMPT }, ...history.slice(-10)],
+        max_tokens: 600,
+      }),
+    },
+  );
 
   if (!res.ok) {
     const txt = await res.text();
@@ -99,7 +109,10 @@ async function handleCommand(ctx: CommandCtx): Promise<boolean> {
     case "/link": {
       const token = args[0]?.toUpperCase();
       if (!token) {
-        await send(chatId, "❌ Usage : <code>/link CODE</code>\n\nGénère un code depuis ton dashboard Technova → Réglages → Telegram.");
+        await send(
+          chatId,
+          "❌ Usage : <code>/link CODE</code>\n\nGénère un code depuis ton dashboard Technova → Réglages → Telegram.",
+        );
         return true;
       }
       const { data: tk } = await supabase
@@ -109,7 +122,10 @@ async function handleCommand(ctx: CommandCtx): Promise<boolean> {
         .maybeSingle();
 
       if (!tk || tk.used_at || new Date(tk.expires_at) < new Date()) {
-        await send(chatId, "❌ Code invalide ou expiré. Génère un nouveau code dans ton dashboard.");
+        await send(
+          chatId,
+          "❌ Code invalide ou expiré. Génère un nouveau code dans ton dashboard.",
+        );
         return true;
       }
 
@@ -128,7 +144,10 @@ async function handleCommand(ctx: CommandCtx): Promise<boolean> {
         await send(chatId, "❌ Erreur lors de la liaison. Réessaie.");
         return true;
       }
-      await supabase.from("telegram_link_tokens").update({ used_at: new Date().toISOString() }).eq("token", token);
+      await supabase
+        .from("telegram_link_tokens")
+        .update({ used_at: new Date().toISOString() })
+        .eq("token", token);
 
       // If linked user is admin, also register as admin chat
       const { data: prof } = await supabase
@@ -138,10 +157,12 @@ async function handleCommand(ctx: CommandCtx): Promise<boolean> {
         .maybeSingle();
       const { data: authUser } = await supabase.auth.admin.getUserById(tk.user_id);
       if (authUser?.user?.email === ADMIN_EMAIL) {
-        await supabase.from("telegram_admin_chats").upsert(
-          { chat_id: chatId, username: ctx.username ?? null, first_name: ctx.firstName ?? null },
-          { onConflict: "chat_id" },
-        );
+        await supabase
+          .from("telegram_admin_chats")
+          .upsert(
+            { chat_id: chatId, username: ctx.username ?? null, first_name: ctx.firstName ?? null },
+            { onConflict: "chat_id" },
+          );
       }
 
       await send(
@@ -279,7 +300,10 @@ serve(async () => {
         const escalate = reply.includes("[ESCALATE]");
         reply = reply.replace("[ESCALATE]", "").trim();
         await send(chatId, reply);
-        await supabase.from("telegram_messages").update({ ai_reply: reply }).eq("update_id", u.update_id);
+        await supabase
+          .from("telegram_messages")
+          .update({ ai_reply: reply })
+          .eq("update_id", u.update_id);
 
         if (escalate) {
           // notify admin chats

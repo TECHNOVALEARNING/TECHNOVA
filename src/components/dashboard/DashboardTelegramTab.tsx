@@ -23,7 +23,8 @@ const translations = {
     unlinkError: "Erreur lors de la suppression",
     unlinkSuccess: "Compte Telegram délié",
     title: "Notifications Telegram",
-    subtitle: "Recevez vos ventes, retraits et alertes directement sur Telegram, et discutez avec l'assistant IA.",
+    subtitle:
+      "Recevez vos ventes, retraits et alertes directement sur Telegram, et discutez avec l'assistant IA.",
     linkedAccount: "Compte lié",
     userDefault: "Utilisateur",
     chatIdLabel: "Chat ID : ",
@@ -44,7 +45,8 @@ const translations = {
     unlinkError: "Error unlinking account",
     unlinkSuccess: "Telegram account unlinked",
     title: "Telegram Notifications",
-    subtitle: "Receive sales, withdrawals, and alerts directly on Telegram, and chat with the AI assistant.",
+    subtitle:
+      "Receive sales, withdrawals, and alerts directly on Telegram, and chat with the AI assistant.",
     linkedAccount: "Linked account",
     userDefault: "User",
     chatIdLabel: "Chat ID: ",
@@ -58,7 +60,7 @@ const translations = {
     codeHelpText: "Copy the complete command and send it to the bot. Code valid for 15 min.",
     generateNewCodeBtn: "Generate a new code",
     generateCodeBtn: "Generate my linking code",
-  }
+  },
 };
 
 const DashboardTelegramTab = () => {
@@ -68,7 +70,9 @@ const DashboardTelegramTab = () => {
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
 
-  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+  const [lang, setLang] = useState(() =>
+    typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
+  );
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -76,7 +80,7 @@ const DashboardTelegramTab = () => {
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
 
-  const t = translations[lang === 'en' ? 'en' : 'fr'];
+  const t = translations[lang === "en" ? "en" : "fr"];
 
   const load = async () => {
     if (!user) return;
@@ -144,9 +148,7 @@ const DashboardTelegramTab = () => {
           <Send className="h-5 w-5 text-primary" />
           {t.title}
         </h2>
-        <p className="text-sm text-muted-foreground mt-1">
-          {t.subtitle}
-        </p>
+        <p className="text-sm text-muted-foreground mt-1">{t.subtitle}</p>
       </div>
 
       {link ? (
@@ -161,7 +163,10 @@ const DashboardTelegramTab = () => {
                 {link.first_name ?? t.userDefault}
                 {link.username ? ` · @${link.username}` : ""}
               </p>
-              <p className="text-xs text-muted-foreground mt-1">{t.chatIdLabel}{link.chat_id}</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                {t.chatIdLabel}
+                {link.chat_id}
+              </p>
             </div>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -192,7 +197,8 @@ const DashboardTelegramTab = () => {
                 >
                   @{BOT_USERNAME}
                 </a>
-                {t.step1Suffix}<strong>{t.step1Start}</strong>.
+                {t.step1Suffix}
+                <strong>{t.step1Start}</strong>.
               </span>
             </li>
             <li className="flex gap-3">
@@ -202,7 +208,8 @@ const DashboardTelegramTab = () => {
             <li className="flex gap-3">
               <span className="font-bold text-primary">3.</span>
               <span>
-                {t.step3}<code className="px-1.5 py-0.5 bg-muted rounded text-xs">/link VOTRE_CODE</code>
+                {t.step3}
+                <code className="px-1.5 py-0.5 bg-muted rounded text-xs">/link VOTRE_CODE</code>
               </span>
             </li>
           </ol>
@@ -215,16 +222,18 @@ const DashboardTelegramTab = () => {
                   <Copy className="h-4 w-4" />
                 </Button>
               </div>
-              <p className="text-xs text-muted-foreground">
-                {t.codeHelpText}
-              </p>
+              <p className="text-xs text-muted-foreground">{t.codeHelpText}</p>
               <Button variant="link" size="sm" className="px-0" onClick={generateToken}>
                 {t.generateNewCodeBtn}
               </Button>
             </div>
           ) : (
             <Button onClick={generateToken} disabled={generating} className="w-full sm:w-auto">
-              {generating ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Send className="h-4 w-4 mr-2" />}
+              {generating ? (
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              ) : (
+                <Send className="h-4 w-4 mr-2" />
+              )}
               {t.generateCodeBtn}
             </Button>
           )}

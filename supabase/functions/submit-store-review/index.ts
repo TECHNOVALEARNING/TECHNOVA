@@ -6,7 +6,8 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const LOGO_URL = "https://nexozjpjbhqfjplrogvz.supabase.co/storage/v1/object/public/store-assets/brand/technova-logo.png";
+const LOGO_URL =
+  "https://nexozjpjbhqfjplrogvz.supabase.co/storage/v1/object/public/store-assets/brand/technova-logo.png";
 
 const escapeHtml = (value: string) =>
   value
@@ -62,16 +63,17 @@ serve(async (req) => {
 
     if (!hasOrder) throw new Error("Seuls les clients de cette boutique peuvent laisser un avis");
 
-    const { error } = await supabase
-      .from("store_reviews")
-      .upsert({
+    const { error } = await supabase.from("store_reviews").upsert(
+      {
         store_id: storeId,
         customer_id: customerId,
         sentiment,
         title: title?.trim() || null,
         comment: comment.trim(),
         is_public: true,
-      }, { onConflict: "store_id,customer_id" });
+      },
+      { onConflict: "store_id,customer_id" },
+    );
 
     if (error) throw error;
 
@@ -95,7 +97,10 @@ serve(async (req) => {
         body: JSON.stringify({
           from: "Technova <noreply@mail.technova.com>",
           to: [ownerEmail],
-          subject: sentiment === "positive" ? "Nouvel avis positif sur votre boutique" : "Nouvel avis négatif sur votre boutique",
+          subject:
+            sentiment === "positive"
+              ? "Nouvel avis positif sur votre boutique"
+              : "Nouvel avis négatif sur votre boutique",
           html: `
             <div style="font-family:Arial,sans-serif;max-width:620px;margin:0 auto;padding:24px;background:#f8fafc;">
               <div style="background:${sentiment === "positive" ? "linear-gradient(135deg,#059669,#10b981)" : "linear-gradient(135deg,#b91c1c,#ef4444)"};border-radius:20px;padding:28px 24px;text-align:center;">

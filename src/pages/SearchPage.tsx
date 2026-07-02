@@ -28,7 +28,8 @@ const translations = {
     filtersBtn: "Filtres",
     filtersTitle: "Filtres & tri",
     viewResults: "Voir",
-    resultsText: (total: number) => `${total} produit${total > 1 ? "s" : ""} trouvé${total > 1 ? "s" : ""}`,
+    resultsText: (total: number) =>
+      `${total} produit${total > 1 ? "s" : ""} trouvé${total > 1 ? "s" : ""}`,
     noProducts: "Aucun produit trouvé",
     noProductsDesc: "Essayez d'autres mots-clés ou retirez certains filtres.",
     productType: "Type de produit",
@@ -49,7 +50,7 @@ const translations = {
       { key: "standard", label: "Verify Standard" },
       { key: "pro", label: "Verify Pro" },
       { key: "premium", label: "Verify Premium" },
-    ]
+    ],
   },
   en: {
     seoTitle: "Search · TECHNOVA",
@@ -82,8 +83,8 @@ const translations = {
       { key: "standard", label: "Verify Standard" },
       { key: "pro", label: "Verify Pro" },
       { key: "premium", label: "Verify Premium" },
-    ]
-  }
+    ],
+  },
 };
 
 const categoryLabels: Record<string, Record<string, string>> = {
@@ -119,7 +120,9 @@ const SearchPage = () => {
   const [loading, setLoading] = useState(true);
   const [sheetOpen, setSheetOpen] = useState(false);
 
-  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+  const [lang, setLang] = useState(() =>
+    typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
+  );
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -127,15 +130,13 @@ const SearchPage = () => {
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
 
-  const t = translations[lang === 'en' ? 'en' : 'fr'];
+  const t = translations[lang === "en" ? "en" : "fr"];
 
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        const url = new URL(
-          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/marketplace-search`,
-        );
+        const url = new URL(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/marketplace-search`);
         if (q) url.searchParams.set("q", q);
         if (category) url.searchParams.set("category", category);
         if (type) url.searchParams.set("type", type);
@@ -287,7 +288,11 @@ const SearchPage = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         canonicalPath="/search"
-        title={q ? `${lang === 'en' ? 'Search' : 'Recherche'} : ${q} · TECHNOVA` : `Marketplace · TECHNOVA`}
+        title={
+          q
+            ? `${lang === "en" ? "Search" : "Recherche"} : ${q} · TECHNOVA`
+            : `Marketplace · TECHNOVA`
+        }
         description={t.seoDesc}
       />
       <Header />
@@ -315,15 +320,13 @@ const SearchPage = () => {
                 {q
                   ? `« ${q} »`
                   : activeCat
-                  ? `${activeCat.emoji} ${categoryLabels[activeCat.key]?.[lang] || activeCat.label}`
-                  : activeType
-                  ? `${activeType.emoji} ${productTypeLabels[activeType.key]?.[lang] || activeType.label}`
-                  : t.allProducts}
+                    ? `${activeCat.emoji} ${categoryLabels[activeCat.key]?.[lang] || activeCat.label}`
+                    : activeType
+                      ? `${activeType.emoji} ${productTypeLabels[activeType.key]?.[lang] || activeType.label}`
+                      : t.allProducts}
               </h1>
               <p className="text-xs text-muted-foreground sm:text-sm">
-                {loading
-                  ? t.searching
-                  : t.resultsText(total)}
+                {loading ? t.searching : t.resultsText(total)}
               </p>
             </div>
 
@@ -400,20 +403,13 @@ const SearchPage = () => {
           {loading ? (
             <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 xl:grid-cols-4">
               {Array.from({ length: 8 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="aspect-square animate-pulse rounded-2xl bg-secondary"
-                />
+                <div key={i} className="aspect-square animate-pulse rounded-2xl bg-secondary" />
               ))}
             </div>
           ) : products.length === 0 ? (
             <div className="rounded-2xl border border-dashed border-border bg-card/40 p-8 text-center sm:p-12">
-              <p className="text-base font-semibold text-foreground sm:text-lg">
-                {t.noProducts}
-              </p>
-              <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
-                {t.noProductsDesc}
-              </p>
+              <p className="text-base font-semibold text-foreground sm:text-lg">{t.noProducts}</p>
+              <p className="mt-1 text-xs text-muted-foreground sm:text-sm">{t.noProductsDesc}</p>
             </div>
           ) : (
             <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 xl:grid-cols-4">
@@ -430,13 +426,7 @@ const SearchPage = () => {
   );
 };
 
-const Chip = ({
-  children,
-  onRemove,
-}: {
-  children: React.ReactNode;
-  onRemove: () => void;
-}) => (
+const Chip = ({ children, onRemove }: { children: React.ReactNode; onRemove: () => void }) => (
   <button
     onClick={onRemove}
     className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary hover:bg-primary/20"

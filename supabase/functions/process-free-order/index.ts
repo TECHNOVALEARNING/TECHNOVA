@@ -26,7 +26,8 @@ Deno.serve(async (req) => {
 
   try {
     const body = (await req.json()) as FreeOrderBody;
-    if (!body.customer?.email || !body.customer?.name) return json({ error: "Client incomplet" }, 400);
+    if (!body.customer?.email || !body.customer?.name)
+      return json({ error: "Client incomplet" }, 400);
     if (!body.metadata?.product_id || !body.metadata?.store_owner_id)
       return json({ error: "Produit requis" }, 400);
 
@@ -49,7 +50,10 @@ Deno.serve(async (req) => {
 
     if (existing?.id) {
       customerId = existing.id;
-      await admin.from("customers").update({ name, phone: `+${phone}` }).eq("id", customerId);
+      await admin
+        .from("customers")
+        .update({ name, phone: `+${phone}` })
+        .eq("id", customerId);
     } else {
       const { data: created, error: createErr } = await admin
         .from("customers")
@@ -76,11 +80,18 @@ Deno.serve(async (req) => {
 
     // Increment promo usage if any
     if (body.metadata.promo_code) {
-      const { data: pd } = await admin.from("promo_codes").select("current_uses")
-        .eq("code", body.metadata.promo_code).eq("creator_id", body.metadata.store_owner_id).single();
+      const { data: pd } = await admin
+        .from("promo_codes")
+        .select("current_uses")
+        .eq("code", body.metadata.promo_code)
+        .eq("creator_id", body.metadata.store_owner_id)
+        .single();
       if (pd) {
-        await admin.from("promo_codes").update({ current_uses: (pd.current_uses || 0) + 1 })
-          .eq("code", body.metadata.promo_code).eq("creator_id", body.metadata.store_owner_id);
+        await admin
+          .from("promo_codes")
+          .update({ current_uses: (pd.current_uses || 0) + 1 })
+          .eq("code", body.metadata.promo_code)
+          .eq("creator_id", body.metadata.store_owner_id);
       }
     }
 
@@ -99,7 +110,7 @@ Deno.serve(async (req) => {
         product_type: body.metadata.product_type || null,
         store_slug: body.metadata.store_slug || null,
         shipping_address: body.metadata.shipping_address || null,
-      }
+      },
     });
 
     return json({ success: true, customerId });

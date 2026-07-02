@@ -47,35 +47,38 @@ Génère une description HTML riche, engageante et professionnelle qui donne env
 Réponds UNIQUEMENT avec le HTML de la description, sans aucun commentaire.`;
     }
 
-    const response = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${Deno.env.get("GEMINI_API_KEY")}`,
-        "Content-Type": "application/json",
+    const response = await fetch(
+      "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${Deno.env.get("GEMINI_API_KEY")}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "gemini-2.5-flash",
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: userPrompt },
+          ],
+          temperature: mode === "title" ? 0.9 : 0.7,
+          max_tokens: mode === "title" ? 50 : 1500,
+        }),
       },
-      body: JSON.stringify({
-        model: "gemini-2.5-flash",
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: userPrompt }
-        ],
-        temperature: mode === "title" ? 0.9 : 0.7,
-        max_tokens: mode === "title" ? 50 : 1500,
-      }),
-    });
+    );
 
     const data = await response.json();
     const resultText = data.choices?.[0]?.message?.content || "";
 
     return new Response(
       JSON.stringify({ description: resultText.trim(), title: resultText.trim() }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   } catch (error) {
     console.error("Error:", error);
-    return new Response(
-      JSON.stringify({ error: error.message }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 });

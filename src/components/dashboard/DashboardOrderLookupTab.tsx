@@ -12,7 +12,8 @@ const translations = {
     orderNotFoundLong: "Commande introuvable. Vérifiez l'identifiant.",
     searchError: "Erreur lors de la recherche",
     title: "Recherche de Commande",
-    subtitle: "Saisissez le numéro de commande complet ou les 8 premiers caractères pour retrouver les détails d'un achat.",
+    subtitle:
+      "Saisissez le numéro de commande complet ou les 8 premiers caractères pour retrouver les détails d'un achat.",
     btnSearch: "Rechercher",
   },
   en: {
@@ -20,9 +21,10 @@ const translations = {
     orderNotFoundLong: "Order not found. Check the ID.",
     searchError: "Error searching for order",
     title: "Order Lookup",
-    subtitle: "Enter the complete order number or the first 8 characters to find the purchase details.",
+    subtitle:
+      "Enter the complete order number or the first 8 characters to find the purchase details.",
     btnSearch: "Search",
-  }
+  },
 };
 
 const DashboardOrderLookupTab = () => {
@@ -30,7 +32,9 @@ const DashboardOrderLookupTab = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+  const [lang, setLang] = useState(() =>
+    typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
+  );
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -38,17 +42,21 @@ const DashboardOrderLookupTab = () => {
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
 
-  const t = translations[lang === 'en' ? 'en' : 'fr'];
+  const t = translations[lang === "en" ? "en" : "fr"];
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!orderId.trim()) return;
 
     setLoading(true);
-    let searchId = orderId.trim();
+    const searchId = orderId.trim();
     try {
       if (searchId.length === 8) {
-        const { data } = await supabase.from("orders").select("id").order("created_at", { ascending: false }).limit(5000);
+        const { data } = await supabase
+          .from("orders")
+          .select("id")
+          .order("created_at", { ascending: false })
+          .limit(5000);
         if (data) {
           const found = data.find((o) => o.id.toUpperCase().startsWith(searchId.toUpperCase()));
           if (found) {
@@ -58,7 +66,11 @@ const DashboardOrderLookupTab = () => {
         }
         toast.error(t.orderNotFoundShort);
       } else {
-        const { data, error } = await supabase.from("orders").select("id").eq("id", searchId).maybeSingle();
+        const { data, error } = await supabase
+          .from("orders")
+          .select("id")
+          .eq("id", searchId)
+          .maybeSingle();
         if (error || !data) {
           toast.error(t.orderNotFoundLong);
         } else {
@@ -79,9 +91,7 @@ const DashboardOrderLookupTab = () => {
           <Search className="h-8 w-8 text-primary" />
         </div>
         <h2 className="text-2xl font-bold text-foreground">{t.title}</h2>
-        <p className="text-sm text-muted-foreground">
-          {t.subtitle}
-        </p>
+        <p className="text-sm text-muted-foreground">{t.subtitle}</p>
       </div>
 
       <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-3">

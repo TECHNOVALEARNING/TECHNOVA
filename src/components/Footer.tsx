@@ -16,10 +16,16 @@ const Footer = () => {
               La plateforme #1 pour vendre vos produits digitaux dans le monde entier.
             </p>
             <div className="flex flex-col gap-2 mt-3">
-              <a href="mailto:contact@technova.com" className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline">
+              <a
+                href="mailto:contact@technova.com"
+                className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
+              >
                 <Mail className="h-3.5 w-3.5" /> contact@technova.com
               </a>
-              <a href="tel:+2290157385885" className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline">
+              <a
+                href="tel:+2290157385885"
+                className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
+              >
                 <Phone className="h-3.5 w-3.5" /> +229 01 57 38 58 85
               </a>
             </div>
@@ -34,7 +40,12 @@ const Footer = () => {
                 { label: "Licences", href: "/licences" },
               ].map((item) => (
                 <li key={item.label}>
-                  <Link to={item.href} className="text-sm text-muted-foreground hover:text-foreground transition-colors">{item.label}</Link>
+                  <Link
+                    to={item.href}
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    {item.label}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -43,11 +54,14 @@ const Footer = () => {
           <div>
             <h4 className="text-sm font-semibold text-foreground mb-4">Entreprise</h4>
             <ul className="space-y-2.5">
-              {[
-                { label: "Tarifs", href: "/pricing" },
-              ].map((item) => (
+              {[{ label: "Tarifs", href: "/pricing" }].map((item) => (
                 <li key={item.label}>
-                  <Link to={item.href} className="text-sm text-muted-foreground hover:text-foreground transition-colors">{item.label}</Link>
+                  <Link
+                    to={item.href}
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    {item.label}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -63,7 +77,12 @@ const Footer = () => {
                 { label: "Remboursement", href: "/refund-policy" },
               ].map((item) => (
                 <li key={item.label}>
-                  <Link to={item.href} className="text-sm text-muted-foreground hover:text-foreground transition-colors">{item.label}</Link>
+                  <Link
+                    to={item.href}
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    {item.label}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -75,10 +94,30 @@ const Footer = () => {
             © 2026 TECHNOVA. Tous droits réservés.
           </p>
           <div className="flex flex-wrap justify-center gap-x-4 gap-y-1">
-            <Link to="/privacy" className="text-xs text-muted-foreground hover:text-foreground transition-colors">Confidentialité</Link>
-            <Link to="/terms" className="text-xs text-muted-foreground hover:text-foreground transition-colors">Conditions</Link>
-            <Link to="/legal" className="text-xs text-muted-foreground hover:text-foreground transition-colors">Mentions légales</Link>
-            <Link to="/refund-policy" className="text-xs text-muted-foreground hover:text-foreground transition-colors">Remboursement</Link>
+            <Link
+              to="/privacy"
+              className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Confidentialité
+            </Link>
+            <Link
+              to="/terms"
+              className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Conditions
+            </Link>
+            <Link
+              to="/legal"
+              className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Mentions légales
+            </Link>
+            <Link
+              to="/refund-policy"
+              className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Remboursement
+            </Link>
           </div>
         </div>
       </div>

@@ -3,7 +3,8 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 serve(async (req) => {
@@ -19,16 +20,16 @@ serve(async (req) => {
     const { license_key, device_id, device_name } = await req.json();
 
     if (!license_key || typeof license_key !== "string") {
-      return new Response(
-        JSON.stringify({ success: false, error: "license_key is required" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ success: false, error: "license_key is required" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     if (!device_id || typeof device_id !== "string" || device_id.length > 255) {
       return new Response(
         JSON.stringify({ success: false, error: "device_id is required (max 255 chars)" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
 
@@ -48,18 +49,18 @@ serve(async (req) => {
       .maybeSingle();
 
     if (error || !license) {
-      return new Response(
-        JSON.stringify({ success: false, error: "License not found" }),
-        { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ success: false, error: "License not found" }), {
+        status: 404,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     // Check revoked
     if (license.status === "revoked") {
-      return new Response(
-        JSON.stringify({ success: false, error: "License has been revoked" }),
-        { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ success: false, error: "License has been revoked" }), {
+        status: 403,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     // Check expiration
@@ -69,10 +70,10 @@ serve(async (req) => {
         .update({ status: "expired", updated_at: new Date().toISOString() })
         .eq("id", license.id);
 
-      return new Response(
-        JSON.stringify({ success: false, error: "License has expired" }),
-        { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ success: false, error: "License has expired" }), {
+        status: 403,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     // Check if this device is already activated
@@ -96,7 +97,7 @@ serve(async (req) => {
             activated_at: existingActivation.activated_at,
           },
         }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
 
@@ -117,7 +118,7 @@ serve(async (req) => {
             max: license.max_activations,
           },
         }),
-        { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
 
@@ -136,10 +137,10 @@ serve(async (req) => {
 
     if (activationError) {
       console.error("Activation error:", activationError);
-      return new Response(
-        JSON.stringify({ success: false, error: "Failed to activate license" }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ success: false, error: "Failed to activate license" }), {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     // Update license status & set expiry on first activation
@@ -199,13 +200,13 @@ serve(async (req) => {
         },
         expires_at: updates.expires_at || license.expires_at,
       }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   } catch (error: any) {
     console.error("Activate license error:", error);
-    return new Response(
-      JSON.stringify({ success: false, error: error.message }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return new Response(JSON.stringify({ success: false, error: error.message }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 });

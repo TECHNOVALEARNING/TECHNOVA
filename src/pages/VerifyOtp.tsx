@@ -90,7 +90,10 @@ const VerifyOtp = () => {
   }
 
   const maskedEmail = user.email
-    ? user.email.replace(/^(.{2})(.*)(@.+)$/, (_, a, b, c) => a + "•".repeat(Math.max(2, b.length)) + c)
+    ? user.email.replace(
+        /^(.{2})(.*)(@.+)$/,
+        (_, a, b, c) => a + "•".repeat(Math.max(2, b.length)) + c,
+      )
     : "";
 
   return (
@@ -112,12 +115,7 @@ const VerifyOtp = () => {
           </div>
 
           <div className="flex justify-center mb-6">
-            <InputOTP
-              maxLength={6}
-              value={code}
-              onChange={setCode}
-              disabled={verifying}
-            >
+            <InputOTP maxLength={6} value={code} onChange={setCode} disabled={verifying}>
               <InputOTPGroup>
                 <InputOTPSlot index={0} className="h-12 w-12 text-lg" />
                 <InputOTPSlot index={1} className="h-12 w-12 text-lg" />
@@ -145,11 +143,7 @@ const VerifyOtp = () => {
               disabled={sending || cooldown > 0}
               className="text-primary hover:underline disabled:text-muted-foreground disabled:no-underline disabled:cursor-not-allowed"
             >
-              {sending
-                ? "Envoi..."
-                : cooldown > 0
-                ? `Renvoyer (${cooldown}s)`
-                : "Renvoyer le code"}
+              {sending ? "Envoi..." : cooldown > 0 ? `Renvoyer (${cooldown}s)` : "Renvoyer le code"}
             </button>
 
             <button
@@ -166,7 +160,8 @@ const VerifyOtp = () => {
           </div>
 
           <p className="mt-6 text-xs text-center text-muted-foreground">
-            Le code est valable 10 minutes. Vous serez ensuite reconnecté pour 5 jours sans avoir besoin de revérifier.
+            Le code est valable 10 minutes. Vous serez ensuite reconnecté pour 5 jours sans avoir
+            besoin de revérifier.
           </p>
         </div>
       </div>

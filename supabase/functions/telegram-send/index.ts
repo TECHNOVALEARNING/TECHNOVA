@@ -10,10 +10,7 @@ const corsHeaders = {
 
 const GATEWAY_URL = "https://connector-gateway.lovable.dev/telegram";
 
-type SendTarget =
-  | { chat_id: number | string }
-  | { user_id: string }
-  | { admin: true };
+type SendTarget = { chat_id: number | string } | { user_id: string } | { admin: true };
 
 interface SendRequest {
   target: SendTarget;
@@ -22,7 +19,12 @@ interface SendRequest {
   disable_web_page_preview?: boolean;
 }
 
-async function sendOne(chatId: number | string, text: string, parseMode = "HTML", noPreview = true) {
+async function sendOne(
+  chatId: number | string,
+  text: string,
+  parseMode = "HTML",
+  noPreview = true,
+) {
   const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
   const TELEGRAM_API_KEY = Deno.env.get("TELEGRAM_API_KEY");
   if (!GEMINI_API_KEY) throw new Error("GEMINI_API_KEY missing");
@@ -90,11 +92,17 @@ serve(async (req) => {
     }
 
     const results = await Promise.allSettled(
-      targets.map((id) => sendOne(id, body.text, body.parse_mode ?? "HTML", body.disable_web_page_preview ?? true)),
+      targets.map((id) =>
+        sendOne(id, body.text, body.parse_mode ?? "HTML", body.disable_web_page_preview ?? true),
+      ),
     );
 
     return new Response(
-      JSON.stringify({ ok: true, sent: results.filter((r) => r.status === "fulfilled").length, total: targets.length }),
+      JSON.stringify({
+        ok: true,
+        sent: results.filter((r) => r.status === "fulfilled").length,
+        total: targets.length,
+      }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   } catch (e) {

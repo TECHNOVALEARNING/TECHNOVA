@@ -64,7 +64,8 @@ const BuyerProtectedRoute = ({ children }: { children: ReactNode }) => {
     );
   }
   if (status === "login") return <Navigate to="/buyer-login" replace />;
-  if (status === "otp") return <Navigate to="/buyer-verify-otp" replace state={{ from: location.pathname }} />;
+  if (status === "otp")
+    return <Navigate to="/buyer-verify-otp" replace state={{ from: location.pathname }} />;
   return <>{children}</>;
 };
 

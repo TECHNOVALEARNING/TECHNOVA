@@ -42,17 +42,32 @@ const btnAnimClass = (anim: string) => {
   return "";
 };
 
-const radius = (corner: string) => corner === "square" ? "rounded-none" : "rounded-xl";
-const radiusSm = (corner: string) => corner === "square" ? "rounded-none" : "rounded-lg";
+const radius = (corner: string) => (corner === "square" ? "rounded-none" : "rounded-xl");
+const radiusSm = (corner: string) => (corner === "square" ? "rounded-none" : "rounded-lg");
 
 const typeLabels: Record<string, string> = {
-  file: "Fichier", course: "Cours", license: "Licence", bundle: "Bundle",
+  file: "Fichier",
+  course: "Cours",
+  license: "Licence",
+  bundle: "Bundle",
 };
 
 // ─────────────────────────────────────────────────────
 // THEME 1: FEED — Single column, social-media style
 // ─────────────────────────────────────────────────────
-export const FeedLayout = ({ products, brandColor, cornerStyle, buttonAnimation, showBuyBtn, showFeatured, slug, storeName, storeDescription, bannerUrl, onBuy }: ThemeProps) => {
+export const FeedLayout = ({
+  products,
+  brandColor,
+  cornerStyle,
+  buttonAnimation,
+  showBuyBtn,
+  showFeatured,
+  slug,
+  storeName,
+  storeDescription,
+  bannerUrl,
+  onBuy,
+}: ThemeProps) => {
   const featured = showFeatured ? products.slice(0, 1) : [];
   const rest = showFeatured ? products.slice(1) : products;
 
@@ -64,17 +79,29 @@ export const FeedLayout = ({ products, brandColor, cornerStyle, buttonAnimation,
           key={product.id}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className={cn("overflow-hidden border border-gray-100 bg-white shadow-sm", radius(cornerStyle))}
+          className={cn(
+            "overflow-hidden border border-gray-100 bg-white shadow-sm",
+            radius(cornerStyle),
+          )}
         >
           <Link to={`/store/${slug}/${product.id}`}>
             <div className="relative aspect-[4/3] overflow-hidden bg-gray-50">
               {product.thumbnail_url ? (
-                <img src={product.thumbnail_url} alt={product.title} className="h-full w-full object-cover hover:scale-105 transition-transform duration-700" />
+                <img
+                  src={product.thumbnail_url}
+                  alt={product.title}
+                  className="h-full w-full object-cover hover:scale-105 transition-transform duration-700"
+                />
               ) : (
-                <div className="h-full w-full flex items-center justify-center"><Package className="h-16 w-16 text-gray-200" /></div>
+                <div className="h-full w-full flex items-center justify-center">
+                  <Package className="h-16 w-16 text-gray-200" />
+                </div>
               )}
               <div className="absolute top-4 left-4">
-                <span className="text-xs font-bold px-3 py-1.5 rounded-full text-white" style={{ backgroundColor: brandColor }}>
+                <span
+                  className="text-xs font-bold px-3 py-1.5 rounded-full text-white"
+                  style={{ backgroundColor: brandColor }}
+                >
                   ⭐ Vedette
                 </span>
               </div>
@@ -92,7 +119,9 @@ export const FeedLayout = ({ products, brandColor, cornerStyle, buttonAnimation,
               </span>
             </div>
             <Link to={`/store/${slug}/${product.id}`}>
-              <h2 className="text-xl font-bold text-gray-900 hover:opacity-70 transition-opacity">{product.title}</h2>
+              <h2 className="text-xl font-bold text-gray-900 hover:opacity-70 transition-opacity">
+                {product.title}
+              </h2>
             </Link>
             {product.description && (
               <p className="text-sm text-gray-500 line-clamp-2">{product.description}</p>
@@ -100,13 +129,21 @@ export const FeedLayout = ({ products, brandColor, cornerStyle, buttonAnimation,
             <div className="flex items-center justify-between pt-2">
               <div className="flex items-baseline gap-2">
                 {product.original_price && product.original_price > product.price && (
-                  <span className="text-sm line-through text-gray-300">{product.original_price.toLocaleString()} FCFA</span>
+                  <span className="text-sm line-through text-gray-300">
+                    {product.original_price.toLocaleString()} FCFA
+                  </span>
                 )}
-                <span className="text-2xl font-extrabold" style={{ color: brandColor }}>{product.price.toLocaleString()} FCFA</span>
+                <span className="text-2xl font-extrabold" style={{ color: brandColor }}>
+                  {product.price.toLocaleString()} FCFA
+                </span>
               </div>
               {showBuyBtn && (
                 <button
-                  className={cn("text-sm font-bold text-white px-6 py-3 transition-all hover:opacity-90 hover:scale-105", radiusSm(cornerStyle), btnAnimClass(buttonAnimation))}
+                  className={cn(
+                    "text-sm font-bold text-white px-6 py-3 transition-all hover:opacity-90 hover:scale-105",
+                    radiusSm(cornerStyle),
+                    btnAnimClass(buttonAnimation),
+                  )}
                   style={{ backgroundColor: brandColor }}
                   onClick={() => onBuy(product)}
                 >
@@ -125,29 +162,53 @@ export const FeedLayout = ({ products, brandColor, cornerStyle, buttonAnimation,
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: i * 0.06 }}
-          className={cn("flex gap-4 p-4 border border-gray-100 bg-white hover:shadow-md transition-all", radius(cornerStyle))}
+          className={cn(
+            "flex gap-4 p-4 border border-gray-100 bg-white hover:shadow-md transition-all",
+            radius(cornerStyle),
+          )}
         >
           <Link to={`/store/${slug}/${product.id}`} className="flex-shrink-0">
-            <div className={cn("h-28 w-28 sm:h-32 sm:w-32 overflow-hidden bg-gray-50", radiusSm(cornerStyle))}>
+            <div
+              className={cn(
+                "h-28 w-28 sm:h-32 sm:w-32 overflow-hidden bg-gray-50",
+                radiusSm(cornerStyle),
+              )}
+            >
               {product.thumbnail_url ? (
-                <img src={product.thumbnail_url} alt={product.title} className="h-full w-full object-cover" />
+                <img
+                  src={product.thumbnail_url}
+                  alt={product.title}
+                  className="h-full w-full object-cover"
+                />
               ) : (
-                <div className="h-full w-full flex items-center justify-center"><Package className="h-8 w-8 text-gray-200" /></div>
+                <div className="h-full w-full flex items-center justify-center">
+                  <Package className="h-8 w-8 text-gray-200" />
+                </div>
               )}
             </div>
           </Link>
           <div className="flex-1 flex flex-col justify-between min-w-0">
             <div>
-              <span className="text-[10px] font-semibold uppercase text-gray-400">{typeLabels[product.type] || product.type}</span>
+              <span className="text-[10px] font-semibold uppercase text-gray-400">
+                {typeLabels[product.type] || product.type}
+              </span>
               <Link to={`/store/${slug}/${product.id}`}>
-                <h3 className="text-sm font-bold text-gray-900 line-clamp-2 hover:opacity-70 transition-opacity mt-0.5">{product.title}</h3>
+                <h3 className="text-sm font-bold text-gray-900 line-clamp-2 hover:opacity-70 transition-opacity mt-0.5">
+                  {product.title}
+                </h3>
               </Link>
             </div>
             <div className="flex items-center justify-between mt-2">
-              <span className="text-base font-extrabold" style={{ color: brandColor }}>{product.price.toLocaleString()} FCFA</span>
+              <span className="text-base font-extrabold" style={{ color: brandColor }}>
+                {product.price.toLocaleString()} FCFA
+              </span>
               {showBuyBtn && (
                 <button
-                  className={cn("text-xs font-semibold text-white px-4 py-2 transition-opacity hover:opacity-90", radiusSm(cornerStyle), btnAnimClass(buttonAnimation))}
+                  className={cn(
+                    "text-xs font-semibold text-white px-4 py-2 transition-opacity hover:opacity-90",
+                    radiusSm(cornerStyle),
+                    btnAnimClass(buttonAnimation),
+                  )}
                   style={{ backgroundColor: brandColor }}
                   onClick={() => onBuy(product)}
                 >
@@ -165,7 +226,15 @@ export const FeedLayout = ({ products, brandColor, cornerStyle, buttonAnimation,
 // ─────────────────────────────────────────────────────
 // THEME 2: MINIMAL — Ultra clean 2-column grid
 // ─────────────────────────────────────────────────────
-export const MinimalLayout = ({ products, brandColor, cornerStyle, buttonAnimation, showBuyBtn, slug, onBuy }: ThemeProps) => (
+export const MinimalLayout = ({
+  products,
+  brandColor,
+  cornerStyle,
+  buttonAnimation,
+  showBuyBtn,
+  slug,
+  onBuy,
+}: ThemeProps) => (
   <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
       {products.map((product, i) => (
@@ -177,11 +246,22 @@ export const MinimalLayout = ({ products, brandColor, cornerStyle, buttonAnimati
           className="group"
         >
           <Link to={`/store/${slug}/${product.id}`}>
-            <div className={cn("relative aspect-square overflow-hidden bg-gray-50 mb-4", radius(cornerStyle))}>
+            <div
+              className={cn(
+                "relative aspect-square overflow-hidden bg-gray-50 mb-4",
+                radius(cornerStyle),
+              )}
+            >
               {product.thumbnail_url ? (
-                <img src={product.thumbnail_url} alt={product.title} className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                <img
+                  src={product.thumbnail_url}
+                  alt={product.title}
+                  className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-700"
+                />
               ) : (
-                <div className="h-full w-full flex items-center justify-center"><Package className="h-12 w-12 text-gray-200" /></div>
+                <div className="h-full w-full flex items-center justify-center">
+                  <Package className="h-12 w-12 text-gray-200" />
+                </div>
               )}
               {discount(product) && (
                 <span className="absolute top-3 right-3 text-xs font-bold px-2.5 py-1 rounded-full bg-black text-white">
@@ -197,20 +277,32 @@ export const MinimalLayout = ({ products, brandColor, cornerStyle, buttonAnimati
             </div>
           </Link>
           <div className="space-y-1.5">
-            <span className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">{typeLabels[product.type] || product.type}</span>
+            <span className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">
+              {typeLabels[product.type] || product.type}
+            </span>
             <Link to={`/store/${slug}/${product.id}`}>
-              <h3 className="text-base font-semibold text-gray-900 group-hover:opacity-70 transition-opacity">{product.title}</h3>
+              <h3 className="text-base font-semibold text-gray-900 group-hover:opacity-70 transition-opacity">
+                {product.title}
+              </h3>
             </Link>
             <div className="flex items-center justify-between">
               <div className="flex items-baseline gap-2">
                 {product.original_price && product.original_price > product.price && (
-                  <span className="text-xs line-through text-gray-300">{product.original_price.toLocaleString()}</span>
+                  <span className="text-xs line-through text-gray-300">
+                    {product.original_price.toLocaleString()}
+                  </span>
                 )}
-                <span className="text-lg font-bold" style={{ color: brandColor }}>{product.price.toLocaleString()} FCFA</span>
+                <span className="text-lg font-bold" style={{ color: brandColor }}>
+                  {product.price.toLocaleString()} FCFA
+                </span>
               </div>
               {showBuyBtn && (
                 <button
-                  className={cn("text-xs font-semibold text-white px-4 py-2 transition-all hover:opacity-90 hover:scale-105", radiusSm(cornerStyle), btnAnimClass(buttonAnimation))}
+                  className={cn(
+                    "text-xs font-semibold text-white px-4 py-2 transition-all hover:opacity-90 hover:scale-105",
+                    radiusSm(cornerStyle),
+                    btnAnimClass(buttonAnimation),
+                  )}
                   style={{ backgroundColor: brandColor }}
                   onClick={() => onBuy(product)}
                 >
@@ -228,7 +320,19 @@ export const MinimalLayout = ({ products, brandColor, cornerStyle, buttonAnimati
 // ─────────────────────────────────────────────────────
 // THEME 3: MAGAZINE — Hero feature + editorial grid
 // ─────────────────────────────────────────────────────
-export const MagazineLayout = ({ products, brandColor, cornerStyle, buttonAnimation, showBuyBtn, showFeatured, slug, storeName, storeDescription, bannerUrl, onBuy }: ThemeProps) => {
+export const MagazineLayout = ({
+  products,
+  brandColor,
+  cornerStyle,
+  buttonAnimation,
+  showBuyBtn,
+  showFeatured,
+  slug,
+  storeName,
+  storeDescription,
+  bannerUrl,
+  onBuy,
+}: ThemeProps) => {
   const featured = showFeatured && products.length > 0 ? products[0] : null;
   const rest = showFeatured ? products.slice(1) : products;
 
@@ -244,28 +348,49 @@ export const MagazineLayout = ({ products, brandColor, cornerStyle, buttonAnimat
           <div className="grid md:grid-cols-2 min-h-[400px]">
             <div className="relative overflow-hidden">
               {featured.thumbnail_url ? (
-                <img src={featured.thumbnail_url} alt={featured.title} className="h-full w-full object-cover" />
+                <img
+                  src={featured.thumbnail_url}
+                  alt={featured.title}
+                  className="h-full w-full object-cover"
+                />
               ) : (
-                <div className="h-full min-h-[300px] flex items-center justify-center bg-gray-800"><Package className="h-16 w-16 text-gray-600" /></div>
+                <div className="h-full min-h-[300px] flex items-center justify-center bg-gray-800">
+                  <Package className="h-16 w-16 text-gray-600" />
+                </div>
               )}
             </div>
             <div className="p-8 md:p-12 flex flex-col justify-center space-y-4">
-              <span className="text-xs font-bold uppercase tracking-widest" style={{ color: brandColor }}>
+              <span
+                className="text-xs font-bold uppercase tracking-widest"
+                style={{ color: brandColor }}
+              >
                 ⭐ Produit vedette
               </span>
-              <h2 className="text-3xl md:text-4xl font-extrabold text-white leading-tight">{featured.title}</h2>
+              <h2 className="text-3xl md:text-4xl font-extrabold text-white leading-tight">
+                {featured.title}
+              </h2>
               {featured.description && (
-                <p className="text-gray-400 text-sm leading-relaxed line-clamp-3">{featured.description}</p>
+                <p className="text-gray-400 text-sm leading-relaxed line-clamp-3">
+                  {featured.description}
+                </p>
               )}
               <div className="flex items-center gap-4 pt-2">
-                <span className="text-3xl font-extrabold text-white">{featured.price.toLocaleString()} FCFA</span>
+                <span className="text-3xl font-extrabold text-white">
+                  {featured.price.toLocaleString()} FCFA
+                </span>
                 {featured.original_price && featured.original_price > featured.price && (
-                  <span className="text-lg line-through text-gray-500">{featured.original_price.toLocaleString()}</span>
+                  <span className="text-lg line-through text-gray-500">
+                    {featured.original_price.toLocaleString()}
+                  </span>
                 )}
               </div>
               {showBuyBtn && (
                 <button
-                  className={cn("w-fit text-sm font-bold text-white px-8 py-3 mt-2 transition-all hover:opacity-90 hover:scale-105", radiusSm(cornerStyle), btnAnimClass(buttonAnimation))}
+                  className={cn(
+                    "w-fit text-sm font-bold text-white px-8 py-3 mt-2 transition-all hover:opacity-90 hover:scale-105",
+                    radiusSm(cornerStyle),
+                    btnAnimClass(buttonAnimation),
+                  )}
                   style={{ backgroundColor: brandColor }}
                   onClick={() => onBuy(featured)}
                 >
@@ -296,36 +421,55 @@ export const MagazineLayout = ({ products, brandColor, cornerStyle, buttonAnimat
                 className={cn(
                   "group bg-white border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300",
                   radius(cornerStyle),
-                  isLarge && "sm:col-span-2 lg:col-span-1"
+                  isLarge && "sm:col-span-2 lg:col-span-1",
                 )}
               >
                 <Link to={`/store/${slug}/${product.id}`}>
                   <div className="relative aspect-[4/3] overflow-hidden bg-gray-50">
                     {product.thumbnail_url ? (
-                      <img src={product.thumbnail_url} alt={product.title} className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      <img
+                        src={product.thumbnail_url}
+                        alt={product.title}
+                        className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
                     ) : (
-                      <div className="h-full w-full flex items-center justify-center"><Package className="h-10 w-10 text-gray-200" /></div>
+                      <div className="h-full w-full flex items-center justify-center">
+                        <Package className="h-10 w-10 text-gray-200" />
+                      </div>
                     )}
                     {disc && (
-                      <span className="absolute top-3 right-3 text-xs font-bold px-2.5 py-1 rounded-full text-white" style={{ backgroundColor: brandColor }}>
+                      <span
+                        className="absolute top-3 right-3 text-xs font-bold px-2.5 py-1 rounded-full text-white"
+                        style={{ backgroundColor: brandColor }}
+                      >
                         -{disc}%
                       </span>
                     )}
                   </div>
                 </Link>
                 <div className="p-5 space-y-2">
-                  <span className="text-[10px] font-semibold uppercase tracking-wider text-gray-400">{typeLabels[product.type] || product.type}</span>
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-gray-400">
+                    {typeLabels[product.type] || product.type}
+                  </span>
                   <Link to={`/store/${slug}/${product.id}`}>
-                    <h3 className="text-base font-bold text-gray-900 line-clamp-2 hover:opacity-70">{product.title}</h3>
+                    <h3 className="text-base font-bold text-gray-900 line-clamp-2 hover:opacity-70">
+                      {product.title}
+                    </h3>
                   </Link>
                   {product.description && (
                     <p className="text-xs text-gray-400 line-clamp-2">{product.description}</p>
                   )}
                   <div className="flex items-center justify-between pt-2">
-                    <span className="text-lg font-extrabold" style={{ color: brandColor }}>{product.price.toLocaleString()} FCFA</span>
+                    <span className="text-lg font-extrabold" style={{ color: brandColor }}>
+                      {product.price.toLocaleString()} FCFA
+                    </span>
                     {showBuyBtn && (
                       <button
-                        className={cn("text-xs font-semibold text-white px-4 py-2 transition-all hover:opacity-90", radiusSm(cornerStyle), btnAnimClass(buttonAnimation))}
+                        className={cn(
+                          "text-xs font-semibold text-white px-4 py-2 transition-all hover:opacity-90",
+                          radiusSm(cornerStyle),
+                          btnAnimClass(buttonAnimation),
+                        )}
                         style={{ backgroundColor: brandColor }}
                         onClick={() => onBuy(product)}
                       >
@@ -346,12 +490,26 @@ export const MagazineLayout = ({ products, brandColor, cornerStyle, buttonAnimat
 // ─────────────────────────────────────────────────────
 // THEME 4: STARTER — Split layout (Oreo-like)
 // ─────────────────────────────────────────────────────
-export const StarterLayout = ({ products, brandColor, cornerStyle, buttonAnimation, showBuyBtn, slug, storeName, storeDescription, onBuy }: ThemeProps) => (
+export const StarterLayout = ({
+  products,
+  brandColor,
+  cornerStyle,
+  buttonAnimation,
+  showBuyBtn,
+  slug,
+  storeName,
+  storeDescription,
+  onBuy,
+}: ThemeProps) => (
   <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 space-y-8">
     {/* Intro section */}
     <div className="text-center space-y-3 pb-4">
-      <h1 className="text-3xl font-extrabold text-gray-900">{storeDescription || `Bienvenue chez ${storeName}`}</h1>
-      <p className="text-gray-400 text-sm max-w-lg mx-auto">Découvrez notre sélection de produits digitaux de qualité</p>
+      <h1 className="text-3xl font-extrabold text-gray-900">
+        {storeDescription || `Bienvenue chez ${storeName}`}
+      </h1>
+      <p className="text-gray-400 text-sm max-w-lg mx-auto">
+        Découvrez notre sélection de produits digitaux de qualité
+      </p>
       <div className="h-1 w-16 mx-auto rounded-full" style={{ backgroundColor: brandColor }} />
     </div>
 
@@ -365,14 +523,26 @@ export const StarterLayout = ({ products, brandColor, cornerStyle, buttonAnimati
           initial={{ opacity: 0, x: isReversed ? 30 : -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: i * 0.08 }}
-          className={cn("grid md:grid-cols-2 gap-0 border border-gray-100 overflow-hidden bg-white hover:shadow-lg transition-shadow", radius(cornerStyle))}
+          className={cn(
+            "grid md:grid-cols-2 gap-0 border border-gray-100 overflow-hidden bg-white hover:shadow-lg transition-shadow",
+            radius(cornerStyle),
+          )}
         >
-          <Link to={`/store/${slug}/${product.id}`} className={cn("relative overflow-hidden bg-gray-50", isReversed && "md:order-2")}>
+          <Link
+            to={`/store/${slug}/${product.id}`}
+            className={cn("relative overflow-hidden bg-gray-50", isReversed && "md:order-2")}
+          >
             <div className="aspect-[4/3] md:aspect-auto md:h-full">
               {product.thumbnail_url ? (
-                <img src={product.thumbnail_url} alt={product.title} className="h-full w-full object-cover hover:scale-105 transition-transform duration-700" />
+                <img
+                  src={product.thumbnail_url}
+                  alt={product.title}
+                  className="h-full w-full object-cover hover:scale-105 transition-transform duration-700"
+                />
               ) : (
-                <div className="h-full min-h-[250px] flex items-center justify-center"><Package className="h-16 w-16 text-gray-200" /></div>
+                <div className="h-full min-h-[250px] flex items-center justify-center">
+                  <Package className="h-16 w-16 text-gray-200" />
+                </div>
               )}
               {disc && (
                 <span className="absolute top-4 left-4 text-xs font-bold px-3 py-1 rounded-full text-white bg-red-500">
@@ -381,17 +551,29 @@ export const StarterLayout = ({ products, brandColor, cornerStyle, buttonAnimati
               )}
             </div>
           </Link>
-          <div className={cn("p-8 md:p-10 flex flex-col justify-center space-y-4", isReversed && "md:order-1")}>
+          <div
+            className={cn(
+              "p-8 md:p-10 flex flex-col justify-center space-y-4",
+              isReversed && "md:order-1",
+            )}
+          >
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full" style={{ backgroundColor: `${brandColor}15`, color: brandColor }}>
+              <span
+                className="text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full"
+                style={{ backgroundColor: `${brandColor}15`, color: brandColor }}
+              >
                 {typeLabels[product.type] || product.type}
               </span>
             </div>
             <Link to={`/store/${slug}/${product.id}`}>
-              <h2 className="text-2xl font-extrabold text-gray-900 hover:opacity-70 transition-opacity">{product.title}</h2>
+              <h2 className="text-2xl font-extrabold text-gray-900 hover:opacity-70 transition-opacity">
+                {product.title}
+              </h2>
             </Link>
             {product.description && (
-              <p className="text-sm text-gray-500 leading-relaxed line-clamp-3">{product.description}</p>
+              <p className="text-sm text-gray-500 leading-relaxed line-clamp-3">
+                {product.description}
+              </p>
             )}
             <div className="flex items-center gap-3">
               <ThumbsUp className="h-4 w-4 text-gray-300" />
@@ -400,13 +582,21 @@ export const StarterLayout = ({ products, brandColor, cornerStyle, buttonAnimati
             <div className="flex items-center justify-between pt-4 border-t border-gray-50">
               <div>
                 {product.original_price && product.original_price > product.price && (
-                  <span className="text-sm line-through text-gray-300 block">{product.original_price.toLocaleString()} FCFA</span>
+                  <span className="text-sm line-through text-gray-300 block">
+                    {product.original_price.toLocaleString()} FCFA
+                  </span>
                 )}
-                <span className="text-2xl font-extrabold" style={{ color: brandColor }}>{product.price.toLocaleString()} FCFA</span>
+                <span className="text-2xl font-extrabold" style={{ color: brandColor }}>
+                  {product.price.toLocaleString()} FCFA
+                </span>
               </div>
               {showBuyBtn && (
                 <button
-                  className={cn("text-sm font-bold text-white px-6 py-3 transition-all hover:opacity-90 hover:scale-105 shadow-lg", radiusSm(cornerStyle), btnAnimClass(buttonAnimation))}
+                  className={cn(
+                    "text-sm font-bold text-white px-6 py-3 transition-all hover:opacity-90 hover:scale-105 shadow-lg",
+                    radiusSm(cornerStyle),
+                    btnAnimClass(buttonAnimation),
+                  )}
                   style={{ backgroundColor: brandColor, boxShadow: `0 4px 14px ${brandColor}40` }}
                   onClick={() => onBuy(product)}
                 >
@@ -424,16 +614,35 @@ export const StarterLayout = ({ products, brandColor, cornerStyle, buttonAnimati
 // ─────────────────────────────────────────────────────
 // THEME 5: STARTER PRO — Hero banner + categories + premium grid
 // ─────────────────────────────────────────────────────
-export const StarterProLayout = ({ products, brandColor, cornerStyle, buttonAnimation, showBuyBtn, showFeatured, slug, storeName, storeDescription, bannerUrl, onBuy }: ThemeProps) => {
+export const StarterProLayout = ({
+  products,
+  brandColor,
+  cornerStyle,
+  buttonAnimation,
+  showBuyBtn,
+  showFeatured,
+  slug,
+  storeName,
+  storeDescription,
+  bannerUrl,
+  onBuy,
+}: ThemeProps) => {
   const types = [...new Set(products.map((p) => p.type))];
   const featured = showFeatured && products.length > 2 ? products.slice(0, 3) : [];
 
   return (
     <div className="space-y-10">
       {/* Hero banner */}
-      <div className="relative overflow-hidden" style={{ background: `linear-gradient(135deg, ${brandColor}, ${brandColor}dd)` }}>
+      <div
+        className="relative overflow-hidden"
+        style={{ background: `linear-gradient(135deg, ${brandColor}, ${brandColor}dd)` }}
+      >
         {bannerUrl && (
-          <img src={bannerUrl} alt="Banner" className="absolute inset-0 h-full w-full object-cover opacity-20" />
+          <img
+            src={bannerUrl}
+            alt="Banner"
+            className="absolute inset-0 h-full w-full object-cover opacity-20"
+          />
         )}
         <div className="relative max-w-7xl mx-auto px-6 py-16 md:py-24 text-center text-white space-y-5">
           <motion.h1
@@ -459,8 +668,12 @@ export const StarterProLayout = ({ products, brandColor, cornerStyle, buttonAnim
             transition={{ delay: 0.2 }}
             className="flex items-center justify-center gap-6 text-sm text-white/60"
           >
-            <span className="flex items-center gap-1.5"><Package className="h-4 w-4" /> {products.length} produits</span>
-            <span className="flex items-center gap-1.5"><Star className="h-4 w-4" /> {types.length} catégories</span>
+            <span className="flex items-center gap-1.5">
+              <Package className="h-4 w-4" /> {products.length} produits
+            </span>
+            <span className="flex items-center gap-1.5">
+              <Star className="h-4 w-4" /> {types.length} catégories
+            </span>
           </motion.div>
         </div>
       </div>
@@ -472,10 +685,19 @@ export const StarterProLayout = ({ products, brandColor, cornerStyle, buttonAnim
             {types.map((t) => (
               <span
                 key={t}
-                className={cn("text-xs font-semibold px-4 py-2 border transition-colors cursor-pointer hover:text-white", radiusSm(cornerStyle))}
+                className={cn(
+                  "text-xs font-semibold px-4 py-2 border transition-colors cursor-pointer hover:text-white",
+                  radiusSm(cornerStyle),
+                )}
                 style={{ borderColor: brandColor, color: brandColor }}
-                onMouseEnter={(e) => { (e.target as HTMLElement).style.backgroundColor = brandColor; (e.target as HTMLElement).style.color = 'white'; }}
-                onMouseLeave={(e) => { (e.target as HTMLElement).style.backgroundColor = 'transparent'; (e.target as HTMLElement).style.color = brandColor; }}
+                onMouseEnter={(e) => {
+                  (e.target as HTMLElement).style.backgroundColor = brandColor;
+                  (e.target as HTMLElement).style.color = "white";
+                }}
+                onMouseLeave={(e) => {
+                  (e.target as HTMLElement).style.backgroundColor = "transparent";
+                  (e.target as HTMLElement).style.color = brandColor;
+                }}
               >
                 {typeLabels[t] || t}
               </span>
@@ -497,15 +719,24 @@ export const StarterProLayout = ({ products, brandColor, cornerStyle, buttonAnim
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.08 }}
-                className={cn("relative overflow-hidden border-2 bg-white group", radius(cornerStyle))}
+                className={cn(
+                  "relative overflow-hidden border-2 bg-white group",
+                  radius(cornerStyle),
+                )}
                 style={{ borderColor: `${brandColor}30` }}
               >
                 <Link to={`/store/${slug}/${product.id}`}>
                   <div className="aspect-video overflow-hidden bg-gray-50">
                     {product.thumbnail_url ? (
-                      <img src={product.thumbnail_url} alt={product.title} className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      <img
+                        src={product.thumbnail_url}
+                        alt={product.title}
+                        className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
                     ) : (
-                      <div className="h-full w-full flex items-center justify-center"><Package className="h-8 w-8 text-gray-200" /></div>
+                      <div className="h-full w-full flex items-center justify-center">
+                        <Package className="h-8 w-8 text-gray-200" />
+                      </div>
                     )}
                   </div>
                 </Link>
@@ -514,10 +745,16 @@ export const StarterProLayout = ({ products, brandColor, cornerStyle, buttonAnim
                     <h3 className="font-bold text-gray-900 line-clamp-1">{product.title}</h3>
                   </Link>
                   <div className="flex items-center justify-between">
-                    <span className="font-extrabold" style={{ color: brandColor }}>{product.price.toLocaleString()} FCFA</span>
+                    <span className="font-extrabold" style={{ color: brandColor }}>
+                      {product.price.toLocaleString()} FCFA
+                    </span>
                     {showBuyBtn && (
                       <button
-                        className={cn("text-xs font-semibold text-white px-3 py-1.5", radiusSm(cornerStyle), btnAnimClass(buttonAnimation))}
+                        className={cn(
+                          "text-xs font-semibold text-white px-3 py-1.5",
+                          radiusSm(cornerStyle),
+                          btnAnimClass(buttonAnimation),
+                        )}
                         style={{ backgroundColor: brandColor }}
                         onClick={() => onBuy(product)}
                       >
@@ -527,7 +764,12 @@ export const StarterProLayout = ({ products, brandColor, cornerStyle, buttonAnim
                   </div>
                 </div>
                 <div className="absolute top-3 left-3">
-                  <span className="text-[10px] font-bold px-2 py-1 rounded-full text-white" style={{ backgroundColor: brandColor }}>⭐ Vedette</span>
+                  <span
+                    className="text-[10px] font-bold px-2 py-1 rounded-full text-white"
+                    style={{ backgroundColor: brandColor }}
+                  >
+                    ⭐ Vedette
+                  </span>
                 </div>
               </motion.div>
             ))}
@@ -538,7 +780,9 @@ export const StarterProLayout = ({ products, brandColor, cornerStyle, buttonAnim
       {/* Main product grid - 3 or 4 columns */}
       <div className="max-w-7xl mx-auto px-6 pb-16">
         <h3 className="text-lg font-bold text-gray-900 mb-5">
-          {showFeatured && featured.length > 0 ? "Tous les produits" : `${products.length} produits disponibles`}
+          {showFeatured && featured.length > 0
+            ? "Tous les produits"
+            : `${products.length} produits disponibles`}
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
           {(showFeatured ? products.slice(3) : products).map((product, i) => {
@@ -549,17 +793,29 @@ export const StarterProLayout = ({ products, brandColor, cornerStyle, buttonAnim
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.04 }}
-                className={cn("group bg-white border border-gray-100 overflow-hidden hover:shadow-lg hover:shadow-gray-100/80 transition-all duration-300", radius(cornerStyle))}
+                className={cn(
+                  "group bg-white border border-gray-100 overflow-hidden hover:shadow-lg hover:shadow-gray-100/80 transition-all duration-300",
+                  radius(cornerStyle),
+                )}
               >
                 <Link to={`/store/${slug}/${product.id}`}>
                   <div className="relative aspect-square overflow-hidden bg-gray-50">
                     {product.thumbnail_url ? (
-                      <img src={product.thumbnail_url} alt={product.title} className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      <img
+                        src={product.thumbnail_url}
+                        alt={product.title}
+                        className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
                     ) : (
-                      <div className="h-full w-full flex items-center justify-center"><Package className="h-10 w-10 text-gray-200" /></div>
+                      <div className="h-full w-full flex items-center justify-center">
+                        <Package className="h-10 w-10 text-gray-200" />
+                      </div>
                     )}
                     {disc && (
-                      <span className="absolute top-3 right-3 text-xs font-bold px-2.5 py-1 rounded-full text-white" style={{ backgroundColor: brandColor }}>
+                      <span
+                        className="absolute top-3 right-3 text-xs font-bold px-2.5 py-1 rounded-full text-white"
+                        style={{ backgroundColor: brandColor }}
+                      >
                         -{disc}%
                       </span>
                     )}
@@ -567,7 +823,9 @@ export const StarterProLayout = ({ products, brandColor, cornerStyle, buttonAnim
                 </Link>
                 <div className="p-4 space-y-2">
                   <Link to={`/store/${slug}/${product.id}`}>
-                    <h3 className="text-sm font-semibold text-gray-900 line-clamp-2 hover:opacity-70 transition-opacity">{product.title}</h3>
+                    <h3 className="text-sm font-semibold text-gray-900 line-clamp-2 hover:opacity-70 transition-opacity">
+                      {product.title}
+                    </h3>
                   </Link>
                   <div className="flex items-center gap-1.5">
                     <ThumbsUp className="h-3.5 w-3.5 text-gray-300" />
@@ -575,13 +833,21 @@ export const StarterProLayout = ({ products, brandColor, cornerStyle, buttonAnim
                   </div>
                   <div className="flex items-baseline gap-2">
                     {product.original_price && product.original_price > product.price && (
-                      <span className="text-xs line-through text-gray-300">{product.original_price.toLocaleString()} FCFA</span>
+                      <span className="text-xs line-through text-gray-300">
+                        {product.original_price.toLocaleString()} FCFA
+                      </span>
                     )}
-                    <span className="text-base font-bold" style={{ color: brandColor }}>{product.price.toLocaleString()} FCFA</span>
+                    <span className="text-base font-bold" style={{ color: brandColor }}>
+                      {product.price.toLocaleString()} FCFA
+                    </span>
                   </div>
                   {showBuyBtn && (
                     <button
-                      className={cn("w-full text-sm font-semibold text-white py-2.5 transition-opacity hover:opacity-90 mt-1", radiusSm(cornerStyle), btnAnimClass(buttonAnimation))}
+                      className={cn(
+                        "w-full text-sm font-semibold text-white py-2.5 transition-opacity hover:opacity-90 mt-1",
+                        radiusSm(cornerStyle),
+                        btnAnimClass(buttonAnimation),
+                      )}
                       style={{ backgroundColor: brandColor }}
                       onClick={() => onBuy(product)}
                     >

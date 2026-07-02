@@ -118,12 +118,20 @@ const StoreReviewSection = ({ storeId, storeName }: StoreReviewSectionProps) => 
       <div className="flex flex-col gap-4 rounded-3xl border border-border bg-card p-6 shadow-sm sm:flex-row sm:items-end sm:justify-between">
         <div>
           <div className="mb-3 flex items-center gap-2">
-            <Badge variant="outline" className="border-border bg-background">Avis publics</Badge>
-            <Badge variant="outline" className="border-emerald-500/20 bg-emerald-500/10 text-emerald-700">
+            <Badge variant="outline" className="border-border bg-background">
+              Avis publics
+            </Badge>
+            <Badge
+              variant="outline"
+              className="border-emerald-500/20 bg-emerald-500/10 text-emerald-700"
+            >
               <PlusCircle className="mr-1 h-3.5 w-3.5" />
               {summary.positive} positifs
             </Badge>
-            <Badge variant="outline" className="border-destructive/20 bg-destructive/10 text-destructive">
+            <Badge
+              variant="outline"
+              className="border-destructive/20 bg-destructive/10 text-destructive"
+            >
               <MinusCircle className="mr-1 h-3.5 w-3.5" />
               {summary.negative} négatifs
             </Badge>
@@ -136,7 +144,14 @@ const StoreReviewSection = ({ storeId, storeName }: StoreReviewSectionProps) => 
           </p>
         </div>
 
-        <Button onClick={() => buyerSession ? setOpen(true) : toast.info("Connectez-vous à Mes achats pour laisser un avis.") } className="gap-2">
+        <Button
+          onClick={() =>
+            buyerSession
+              ? setOpen(true)
+              : toast.info("Connectez-vous à Mes achats pour laisser un avis.")
+          }
+          className="gap-2"
+        >
           <MessageSquarePlus className="h-4 w-4" />
           Laisser un avis
         </Button>
@@ -153,7 +168,10 @@ const StoreReviewSection = ({ storeId, storeName }: StoreReviewSectionProps) => 
       ) : (
         <div className="grid gap-4">
           {reviews.map((review) => (
-            <article key={review.id} className="rounded-3xl border border-border bg-card p-5 shadow-sm">
+            <article
+              key={review.id}
+              className="rounded-3xl border border-border bg-card p-5 shadow-sm"
+            >
               <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
                 <div>
                   <p className="font-semibold text-foreground">{review.reviewer_name}</p>
@@ -167,15 +185,19 @@ const StoreReviewSection = ({ storeId, storeName }: StoreReviewSectionProps) => 
                 </div>
                 <Badge
                   variant="outline"
-                  className={review.sentiment === "positive"
-                    ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-700"
-                    : "border-destructive/20 bg-destructive/10 text-destructive"}
+                  className={
+                    review.sentiment === "positive"
+                      ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-700"
+                      : "border-destructive/20 bg-destructive/10 text-destructive"
+                  }
                 >
                   <Star className="mr-1 h-3.5 w-3.5" />
                   {review.sentiment === "positive" ? "Avis positif" : "Avis négatif"}
                 </Badge>
               </div>
-              {review.title ? <h3 className="mb-2 text-base font-semibold text-foreground">{review.title}</h3> : null}
+              {review.title ? (
+                <h3 className="mb-2 text-base font-semibold text-foreground">{review.title}</h3>
+              ) : null}
               <p className="text-sm leading-6 text-muted-foreground">{review.comment}</p>
             </article>
           ))}

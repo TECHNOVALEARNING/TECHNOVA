@@ -60,27 +60,35 @@ serve(async (req) => {
 
     // Check if user wants human support
     const lastMessage = messages[messages.length - 1]?.content?.toLowerCase() || "";
-    const wantsHuman = /parler.*(support|humain|admin|agent|quelqu'un|personne)|contacter.*(support|admin)|besoin.*(aide|humain)|transfert|escalade/i.test(lastMessage);
+    const wantsHuman =
+      /parler.*(support|humain|admin|agent|quelqu'un|personne)|contacter.*(support|admin)|besoin.*(aide|humain)|transfert|escalade/i.test(
+        lastMessage,
+      );
 
     const systemMessage = {
       role: "system",
-      content: SYSTEM_PROMPT + (wantsHuman
-        ? `\n\nL'utilisateur veut parler à un humain. Réponds-lui que tu vas créer un ticket de support et qu'un membre de l'équipe le contactera très bientôt. Demande-lui de décrire brièvement son problème si ce n'est pas déjà fait. Termine ta réponse par exactement: [ESCALATE]`
-        : ""),
+      content:
+        SYSTEM_PROMPT +
+        (wantsHuman
+          ? `\n\nL'utilisateur veut parler à un humain. Réponds-lui que tu vas créer un ticket de support et qu'un membre de l'équipe le contactera très bientôt. Demande-lui de décrire brièvement son problème si ce n'est pas déjà fait. Termine ta réponse par exactement: [ESCALATE]`
+          : ""),
     };
 
-    const response = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${GEMINI_API_KEY}`,
+    const response = await fetch(
+      "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${GEMINI_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: "gemini-2.5-flash",
+          messages: [systemMessage, ...messages],
+          max_tokens: 1024,
+        }),
       },
-      body: JSON.stringify({
-        model: "gemini-2.5-flash",
-        messages: [systemMessage, ...messages],
-        max_tokens: 1024,
-      }),
-    });
+    );
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -89,25 +97,32 @@ serve(async (req) => {
     }
 
     const data = await response.json();
-    const aiMessage = data.choices?.[0]?.message?.content || "Désolé, je n'ai pas pu générer une réponse.";
+    const aiMessage =
+      data.choices?.[0]?.message?.content || "Désolé, je n'ai pas pu générer une réponse.";
 
     const shouldEscalate = aiMessage.includes("[ESCALATE]");
     const cleanMessage = aiMessage.replace("[ESCALATE]", "").trim();
 
-    return new Response(JSON.stringify({
-      message: cleanMessage,
-      escalate: shouldEscalate,
-    }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({
+        message: cleanMessage,
+        escalate: shouldEscalate,
+      }),
+      {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      },
+    );
   } catch (error) {
     console.error("Error:", error);
-    return new Response(JSON.stringify({
-      message: "Désolé, une erreur est survenue. Veuillez réessayer.",
-      escalate: false,
-    }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({
+        message: "Désolé, une erreur est survenue. Veuillez réessayer.",
+        escalate: false,
+      }),
+      {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      },
+    );
   }
 });

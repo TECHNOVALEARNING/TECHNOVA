@@ -32,7 +32,7 @@ const SUBCAT_LABELS: Record<string, Record<string, string>> = {
   excel: { fr: "Excel", en: "Excel" },
   dev: { fr: "Dev", en: "Dev" },
   marketing: { fr: "Marketing", en: "Marketing" },
-  other: { fr: "Autre", en: "Other" }
+  other: { fr: "Autre", en: "Other" },
 };
 
 const translations = {
@@ -42,7 +42,7 @@ const translations = {
     students: "étudiants",
     alreadyInCart: "Déjà dans le panier",
     addToCart: "Ajouter au panier",
-    features: ["Accès à vie", "Téléchargement immédiat", "Paiement sécurisé"]
+    features: ["Accès à vie", "Téléchargement immédiat", "Paiement sécurisé"],
   },
   en: {
     notFound: "Product not found",
@@ -50,8 +50,8 @@ const translations = {
     students: "students",
     alreadyInCart: "Already in cart",
     addToCart: "Add to cart",
-    features: ["Lifetime access", "Immediate download", "Secure payment"]
-  }
+    features: ["Lifetime access", "Immediate download", "Secure payment"],
+  },
 };
 
 const ProductDetail = () => {
@@ -61,7 +61,9 @@ const ProductDetail = () => {
   const { addToCart, items } = useCart();
   const inCart = product ? items.some((i) => i.product.id === product.id) : false;
 
-  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+  const [lang, setLang] = useState(() =>
+    typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
+  );
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -69,7 +71,7 @@ const ProductDetail = () => {
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
 
-  const t = translations[lang === 'en' ? 'en' : 'fr'];
+  const t = translations[lang === "en" ? "en" : "fr"];
 
   if (!product) {
     return (
@@ -109,7 +111,8 @@ const ProductDetail = () => {
                 {product.category === "course" && "📚"}
                 {product.category === "formation" && "🎓"}
                 {product.category === "ebook" && "📄"}
-                {(product.category === "template" || product.category?.startsWith("template:")) && "📋"}
+                {(product.category === "template" || product.category?.startsWith("template:")) &&
+                  "📋"}
               </span>
             </div>
           </motion.div>
@@ -124,7 +127,7 @@ const ProductDetail = () => {
               <span className="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
                 {product.category?.startsWith("template:")
                   ? `Template ${SUBCAT_LABELS[product.category.split(":")[1]]?.[lang] || product.category.split(":")[1]}`
-                  : (categoryLabels[product.category]?.[lang] || product.category)}
+                  : categoryLabels[product.category]?.[lang] || product.category}
               </span>
               {product.badge && (
                 <span className="rounded-full bg-gold-gradient px-3 py-1 text-sm font-semibold text-accent-foreground">
@@ -143,12 +146,16 @@ const ProductDetail = () => {
               {product.students && (
                 <div className="flex items-center gap-1 text-muted-foreground">
                   <Users className="h-4 w-4" />
-                  <span className="text-sm">{product.students} {t.students}</span>
+                  <span className="text-sm">
+                    {product.students} {t.students}
+                  </span>
                 </div>
               )}
             </div>
 
-            <p className="mb-8 text-lg text-muted-foreground leading-relaxed">{product.description}</p>
+            <p className="mb-8 text-lg text-muted-foreground leading-relaxed">
+              {product.description}
+            </p>
 
             <div className="mb-8 rounded-xl border border-border bg-card p-6">
               <div className="mb-4 text-3xl font-bold text-foreground">

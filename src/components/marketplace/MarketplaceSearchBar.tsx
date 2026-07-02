@@ -30,9 +30,7 @@ export const MarketplaceSearchBar = ({ variant = "hero", defaultValue = "" }: Pr
           isHero ? "p-1.5 pl-4 sm:p-2 sm:pl-5" : "p-1 pl-3 sm:p-1.5 sm:pl-4"
         }`}
       >
-        <Search
-          className={`shrink-0 text-muted-foreground ${isHero ? "h-5 w-5" : "h-4 w-4"}`}
-        />
+        <Search className={`shrink-0 text-muted-foreground ${isHero ? "h-5 w-5" : "h-4 w-4"}`} />
         <input
           ref={inputRef}
           type="search"

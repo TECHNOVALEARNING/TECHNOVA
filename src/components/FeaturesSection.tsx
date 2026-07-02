@@ -1,21 +1,34 @@
 import { motion } from "framer-motion";
-import { FileText, GraduationCap, Key, Smartphone, Shield, Zap, Globe, BarChart3, CreditCard } from "lucide-react";
+import {
+  FileText,
+  GraduationCap,
+  Key,
+  Smartphone,
+  Shield,
+  Zap,
+  Globe,
+  BarChart3,
+  CreditCard,
+} from "lucide-react";
 
 const productFeatures = [
   {
     icon: FileText,
     title: "Fichiers digitaux",
-    description: "E-books, PDFs, templates, fichiers audio/vidéo. Upload et livraison automatique après achat.",
+    description:
+      "E-books, PDFs, templates, fichiers audio/vidéo. Upload et livraison automatique après achat.",
   },
   {
     icon: GraduationCap,
     title: "Cours en ligne",
-    description: "Créez des formations complètes avec modules, vidéos, quiz et certificats de complétion.",
+    description:
+      "Créez des formations complètes avec modules, vidéos, quiz et certificats de complétion.",
   },
   {
     icon: Key,
     title: "Licences logicielles",
-    description: "Vendez des clés de licence avec génération automatique et gestion des activations.",
+    description:
+      "Vendez des clés de licence avec génération automatique et gestion des activations.",
   },
 ];
 
@@ -23,12 +36,14 @@ const platformFeatures = [
   {
     icon: Smartphone,
     title: "Moyens de paiement globaux",
-    description: "Cartes bancaires, Stripe, PayPal, Mobile Money — tous les modes de paiements internationaux et locaux en un clic.",
+    description:
+      "Cartes bancaires, Stripe, PayPal, Mobile Money — tous les modes de paiements internationaux et locaux en un clic.",
   },
   {
     icon: Shield,
     title: "Paiements sécurisés",
-    description: "Transactions sécurisées via cartes de crédit, comptes bancaires et passerelles de paiement locales et internationales.",
+    description:
+      "Transactions sécurisées via cartes de crédit, comptes bancaires et passerelles de paiement locales et internationales.",
   },
   {
     icon: Zap,
@@ -64,12 +79,15 @@ const FeaturesSection = () => {
             viewport={{ once: true }}
             className="mb-16 text-center"
           >
-            <p className="text-sm font-semibold text-primary mb-3 uppercase tracking-wider">Produits</p>
+            <p className="text-sm font-semibold text-primary mb-3 uppercase tracking-wider">
+              Produits
+            </p>
             <h2 className="text-3xl font-extrabold text-foreground md:text-5xl mb-4">
               Vendez vos produits digitaux instantanément
             </h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Uploadez vos contenus, fixez vos prix. TECHNOVA gère les paiements, la livraison et vos clients.
+              Uploadez vos contenus, fixez vos prix. TECHNOVA gère les paiements, la livraison et
+              vos clients.
             </p>
           </motion.div>
 
@@ -86,8 +104,12 @@ const FeaturesSection = () => {
                 <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 transition-colors group-hover:bg-primary/15">
                   <feature.icon className="h-5 w-5 text-primary" />
                 </div>
-                <h3 className="mb-2 text-base font-semibold text-card-foreground">{feature.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{feature.description}</p>
+                <h3 className="mb-2 text-base font-semibold text-card-foreground">
+                  {feature.title}
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {feature.description}
+                </p>
               </motion.div>
             ))}
           </div>
@@ -103,7 +125,9 @@ const FeaturesSection = () => {
             viewport={{ once: true }}
             className="mb-16 text-center"
           >
-            <p className="text-sm font-semibold text-primary mb-3 uppercase tracking-wider">Fonctionnalités</p>
+            <p className="text-sm font-semibold text-primary mb-3 uppercase tracking-wider">
+              Fonctionnalités
+            </p>
             <h2 className="text-3xl font-extrabold text-foreground md:text-5xl mb-4">
               Tout ce dont vous avez besoin
             </h2>
@@ -127,7 +151,9 @@ const FeaturesSection = () => {
                 </div>
                 <div>
                   <h3 className="mb-1 text-sm font-semibold text-foreground">{feature.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{feature.description}</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {feature.description}
+                  </p>
                 </div>
               </motion.div>
             ))}

@@ -16,7 +16,9 @@ const BuyerLogin = () => {
   const [loading, setLoading] = useState(false);
   const [customerName, setCustomerName] = useState("");
   const navigate = useNavigate();
-  const isPortal = window.location.hostname.startsWith("portal.") || window.location.hostname.startsWith("client.");
+  const isPortal =
+    window.location.hostname.startsWith("portal.") ||
+    window.location.hostname.startsWith("client.");
   const dashboardPath = isPortal ? "/dashboard" : "/mes-achats";
 
   useEffect(() => {
@@ -25,7 +27,8 @@ const BuyerLogin = () => {
       if (!session) return;
       try {
         setLoading(true);
-        let customerName = session.user?.user_metadata?.full_name || session.user?.email?.split("@")[0] || "Client";
+        let customerName =
+          session.user?.user_metadata?.full_name || session.user?.email?.split("@")[0] || "Client";
         let customerEmail = session.user?.email || "";
         let customerId = session.user?.id || "";
         let orders = [];
@@ -38,14 +41,17 @@ const BuyerLogin = () => {
           orders = data.orders || [];
         }
 
-        sessionStorage.setItem("buyer_session", JSON.stringify({
-          email: customerEmail,
-          customerName: customerName,
-          customerId: customerId,
-          orders: orders,
-          authenticatedAt: Date.now(),
-        }));
-        
+        sessionStorage.setItem(
+          "buyer_session",
+          JSON.stringify({
+            email: customerEmail,
+            customerName: customerName,
+            customerId: customerId,
+            orders: orders,
+            authenticatedAt: Date.now(),
+          }),
+        );
+
         navigate(dashboardPath, { replace: true });
       } catch (err) {
         console.error(err);
@@ -53,7 +59,7 @@ const BuyerLogin = () => {
         setLoading(false);
       }
     };
-    
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session && !sessionStorage.getItem("buyer_session")) {
         checkSession(session);
@@ -62,7 +68,9 @@ const BuyerLogin = () => {
       }
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === "SIGNED_IN" && session) {
         checkSession(session);
       }
@@ -120,13 +128,16 @@ const BuyerLogin = () => {
         }
       }
       // Store buyer session in sessionStorage (kept for legacy paths)
-      sessionStorage.setItem("buyer_session", JSON.stringify({
-        email: email.trim().toLowerCase(),
-        customerName: data.customer?.name || customerName,
-        customerId: data.customer?.id,
-        orders: data.orders || [],
-        authenticatedAt: Date.now(),
-      }));
+      sessionStorage.setItem(
+        "buyer_session",
+        JSON.stringify({
+          email: email.trim().toLowerCase(),
+          customerName: data.customer?.name || customerName,
+          customerId: data.customer?.id,
+          orders: data.orders || [],
+          authenticatedAt: Date.now(),
+        }),
+      );
       toast.success("Connexion réussie !");
       navigate(dashboardPath, { replace: true });
     } catch (err: any) {
@@ -138,8 +149,8 @@ const BuyerLogin = () => {
 
   return (
     <div className="min-h-screen flex">
-      <SEOHead 
-        title="Accès à mes Achats de Produits & Formations — TECHNOVA" 
+      <SEOHead
+        title="Accès à mes Achats de Produits & Formations — TECHNOVA"
         description="Espace de connexion client sécurisé. Connectez-vous pour accéder à vos formations, télécharger vos fichiers numériques et retrouver toutes vos commandes sur la plateforme TECHNOVA."
         keywords="connexion espace client, mes achats, télécharger produit numérique, accès formations en ligne, commandes technova"
       />
@@ -149,7 +160,10 @@ const BuyerLogin = () => {
           animate={{ opacity: 1, y: 0 }}
           className="w-full max-w-sm"
         >
-          <a href={isPortal ? "https://technovalearning.com" : "/"} className="flex items-center gap-2.5 mb-12">
+          <a
+            href={isPortal ? "https://technovalearning.com" : "/"}
+            className="flex items-center gap-2.5 mb-12"
+          >
             <img src={logo} alt="TECHNOVA" className="h-8 w-8 rounded-lg object-contain" />
             <span className="text-lg font-bold text-foreground">TECHNOVA</span>
           </a>
@@ -178,7 +192,7 @@ const BuyerLogin = () => {
                   try {
                     setLoading(true);
                     const redirectUrl = `${window.location.origin}/buyer-auth/callback`;
-                      
+
                     const { error } = await supabase.auth.signInWithOAuth({
                       provider: "google",
                       options: {
@@ -193,11 +207,27 @@ const BuyerLogin = () => {
                 }}
                 disabled={loading}
               >
-                <svg className="mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
-                  <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.7 17.74 9.5 24 9.5z"></path>
-                  <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path>
-                  <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path>
-                  <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path>
+                <svg
+                  className="mr-2 h-5 w-5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 48 48"
+                >
+                  <path
+                    fill="#EA4335"
+                    d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.7 17.74 9.5 24 9.5z"
+                  ></path>
+                  <path
+                    fill="#4285F4"
+                    d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"
+                  ></path>
+                  <path
+                    fill="#FBBC05"
+                    d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"
+                  ></path>
+                  <path
+                    fill="#34A853"
+                    d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
+                  ></path>
                   <path fill="none" d="M0 0h48v48H0z"></path>
                 </svg>
                 Continuer avec Google
@@ -208,7 +238,9 @@ const BuyerLogin = () => {
                   <div className="w-full border-t border-border" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-2 text-muted-foreground">Ou avec votre email</span>
+                  <span className="bg-background px-2 text-muted-foreground">
+                    Ou avec votre email
+                  </span>
                 </div>
               </div>
 
@@ -228,17 +260,26 @@ const BuyerLogin = () => {
                   </div>
                 </div>
                 <Button className="w-full py-5 text-sm font-semibold" disabled={loading}>
-                  {loading ? <><Loader2 className="h-4 w-4 animate-spin mr-2" /> Envoi...</> : "Recevoir un code par email"}
+                  {loading ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin mr-2" /> Envoi...
+                    </>
+                  ) : (
+                    "Recevoir un code par email"
+                  )}
                 </Button>
               </form>
             </div>
           ) : (
             <form onSubmit={handleVerifyOtp} className="space-y-4">
               <p className="text-sm text-muted-foreground mb-4">
-                Un code à 6 chiffres a été envoyé à <strong className="text-foreground">{email}</strong>
+                Un code à 6 chiffres a été envoyé à{" "}
+                <strong className="text-foreground">{email}</strong>
               </p>
               <div>
-                <label className="text-sm font-medium text-foreground mb-1.5 block">Code de vérification</label>
+                <label className="text-sm font-medium text-foreground mb-1.5 block">
+                  Code de vérification
+                </label>
                 <Input
                   type="text"
                   placeholder="123456"
@@ -249,20 +290,35 @@ const BuyerLogin = () => {
                   required
                 />
               </div>
-              <Button className="w-full py-5 text-sm font-semibold" disabled={loading || otp.length !== 6}>
-                {loading ? <><Loader2 className="h-4 w-4 animate-spin mr-2" /> Vérification...</> : "Se connecter"}
+              <Button
+                className="w-full py-5 text-sm font-semibold"
+                disabled={loading || otp.length !== 6}
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin mr-2" /> Vérification...
+                  </>
+                ) : (
+                  "Se connecter"
+                )}
               </Button>
               <div className="flex items-center justify-between">
                 <button
                   type="button"
-                  onClick={() => { setStep("email"); setOtp(""); }}
+                  onClick={() => {
+                    setStep("email");
+                    setOtp("");
+                  }}
                   className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
                 >
                   <ArrowLeft className="h-3 w-3" /> Changer d'email
                 </button>
                 <button
                   type="button"
-                  onClick={() => { setOtp(""); handleSendOtp(new Event("submit") as any); }}
+                  onClick={() => {
+                    setOtp("");
+                    handleSendOtp(new Event("submit") as any);
+                  }}
                   className="text-sm text-primary hover:underline"
                 >
                   Renvoyer le code
@@ -288,7 +344,8 @@ const BuyerLogin = () => {
             Retrouvez tous vos achats
           </h2>
           <p className="text-background/50 text-lg max-w-md">
-            Accédez à vos fichiers, formations et licences achetés sur n'importe quelle boutique TECHNOVA.
+            Accédez à vos fichiers, formations et licences achetés sur n'importe quelle boutique
+            TECHNOVA.
           </p>
         </div>
       </div>

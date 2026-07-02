@@ -13,9 +13,11 @@ interface SEOHeadProps {
 
 const SITE_NAME = "TECHNOVA Learning";
 const SITE_URL = "https://www.technovalearning.com";
-const DEFAULT_DESCRIPTION = "Formations certifiantes en IA, Data, Cybersécurité et Design. Apprenez à votre rythme, où que vous soyez. Paiement Mobile Money ou Visa.";
+const DEFAULT_DESCRIPTION =
+  "Formations certifiantes en IA, Data, Cybersécurité et Design. Apprenez à votre rythme, où que vous soyez. Paiement Mobile Money ou Visa.";
 const DEFAULT_IMAGE = `${SITE_URL}/og-image.jpg?v=technova-20260624`;
-const DEFAULT_KEYWORDS = "TECHNOVA, technova learning, formation en ligne intelligence artificielle, formation cybersécurité en ligne certifiante, formation data analyst en ligne, cours en ligne design UX/UI certifiant, formation en ligne paiement Mobile Money, MTN Money, Moov Money, Orange Money, Wave";
+const DEFAULT_KEYWORDS =
+  "TECHNOVA, technova learning, formation en ligne intelligence artificielle, formation cybersécurité en ligne certifiante, formation data analyst en ligne, cours en ligne design UX/UI certifiant, formation en ligne paiement Mobile Money, MTN Money, Moov Money, Orange Money, Wave";
 
 const SEOHead = ({
   title,
@@ -27,14 +29,20 @@ const SEOHead = ({
   noindex = false,
   jsonLd,
 }: SEOHeadProps) => {
-  const fullTitle = title 
-    ? (title.includes(SITE_NAME) ? title : `${title} | ${SITE_NAME}`) 
+  const fullTitle = title
+    ? title.includes(SITE_NAME)
+      ? title
+      : `${title} | ${SITE_NAME}`
     : `${SITE_NAME} — Formations Tech : IA, Data, Cybersécurité`;
 
-  const isPortal = typeof window !== "undefined" && (window.location.hostname.startsWith("portal.") || window.location.hostname.startsWith("client."));
-  const canonicalUrl = isPortal && typeof window !== "undefined"
-    ? `${window.location.protocol}//${window.location.hostname}${canonicalPath}`
-    : `${SITE_URL}${canonicalPath}`;
+  const isPortal =
+    typeof window !== "undefined" &&
+    (window.location.hostname.startsWith("portal.") ||
+      window.location.hostname.startsWith("client."));
+  const canonicalUrl =
+    isPortal && typeof window !== "undefined"
+      ? `${window.location.protocol}//${window.location.hostname}${canonicalPath}`
+      : `${SITE_URL}${canonicalPath}`;
 
   useEffect(() => {
     document.title = fullTitle;
@@ -102,11 +110,11 @@ const SEOHead = ({
       setHreflang("en", `${SITE_URL}/en${cleanPath}`);
       setHreflang("x-default", `${SITE_URL}${cleanPath}`);
     } else {
-      document.querySelectorAll('link[hreflang]').forEach(el => el.remove());
+      document.querySelectorAll("link[hreflang]").forEach((el) => el.remove());
     }
 
     // JSON-LD Graph
-    const existingLD = document.querySelector('script[data-seo-jsonld]');
+    const existingLD = document.querySelector("script[data-seo-jsonld]");
     if (existingLD) existingLD.remove();
 
     const jsonLdElement = document.createElement("script");
@@ -134,7 +142,7 @@ const SEOHead = ({
         sameAs: [
           "https://www.facebook.com/share/18GYGMg9o8/",
           "https://www.instagram.com/technova.learning?igsh=NGkwbjNocHUwMDE5",
-          "https://www.linkedin.com/company/130533963"
+          "https://www.linkedin.com/company/130533963",
         ],
         contactPoint: {
           "@type": "ContactPoint",
@@ -159,7 +167,7 @@ const SEOHead = ({
     document.head.appendChild(jsonLdElement);
 
     return () => {
-      const ld = document.querySelector('script[data-seo-jsonld]');
+      const ld = document.querySelector("script[data-seo-jsonld]");
       if (ld) ld.remove();
     };
   }, [fullTitle, description, keywords, canonicalUrl, ogImage, ogType, noindex, jsonLd]);

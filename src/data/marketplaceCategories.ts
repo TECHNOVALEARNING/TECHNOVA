@@ -7,16 +7,51 @@ export interface MarketplaceCategory {
 }
 
 export const MARKETPLACE_CATEGORIES: MarketplaceCategory[] = [
-  { key: "business", label: "Business", emoji: "💼", description: "Stratégie, finance, entrepreneuriat" },
+  {
+    key: "business",
+    label: "Business",
+    emoji: "💼",
+    description: "Stratégie, finance, entrepreneuriat",
+  },
   { key: "design", label: "Design", emoji: "🎨", description: "Graphisme, UI/UX, illustrations" },
-  { key: "tech", label: "Tech & Code", emoji: "💻", description: "Développement, logiciels, scripts" },
+  {
+    key: "tech",
+    label: "Tech & Code",
+    emoji: "💻",
+    description: "Développement, logiciels, scripts",
+  },
   { key: "marketing", label: "Marketing", emoji: "📈", description: "Pub, SEO, copywriting, ads" },
-  { key: "education", label: "Éducation", emoji: "🎓", description: "Cours, tutoriels, formations" },
-  { key: "lifestyle", label: "Lifestyle", emoji: "🌿", description: "Bien-être, productivité, loisirs" },
+  {
+    key: "education",
+    label: "Éducation",
+    emoji: "🎓",
+    description: "Cours, tutoriels, formations",
+  },
+  {
+    key: "lifestyle",
+    label: "Lifestyle",
+    emoji: "🌿",
+    description: "Bien-être, productivité, loisirs",
+  },
   { key: "creative", label: "Créatif", emoji: "🎬", description: "Vidéo, musique, photo, contenu" },
-  { key: "divertissement", label: "Divertissement", emoji: "🎮", description: "Jeux, films, loisirs, divertissement" },
-  { key: "sante_bien_etre", label: "Santé et bien être", emoji: "❤️", description: "Santé, bien-être, sport" },
-  { key: "developpement_personnel", label: "Développement personnel", emoji: "✨", description: "Croissance personnelle, motivation" },
+  {
+    key: "divertissement",
+    label: "Divertissement",
+    emoji: "🎮",
+    description: "Jeux, films, loisirs, divertissement",
+  },
+  {
+    key: "sante_bien_etre",
+    label: "Santé et bien être",
+    emoji: "❤️",
+    description: "Santé, bien-être, sport",
+  },
+  {
+    key: "developpement_personnel",
+    label: "Développement personnel",
+    emoji: "✨",
+    description: "Croissance personnelle, motivation",
+  },
   { key: "other", label: "Autres", emoji: "✨", description: "Tout le reste" },
 ];
 

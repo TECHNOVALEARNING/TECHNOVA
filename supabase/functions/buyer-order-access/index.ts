@@ -20,17 +20,22 @@ Deno.serve(async (req) => {
 
     const { data: order, error: orderErr } = await admin
       .from("orders")
-      .select(`
+      .select(
+        `
         id, amount, status, created_at, product_id, store_owner_id, customer_id,
         products(id, title, type, thumbnail_url, download_url, description),
         customers(id, name, email)
-      `)
+      `,
+      )
       .eq("id", order_id)
       .maybeSingle();
 
     if (orderErr) return json({ error: orderErr.message }, 400);
     if (!order) return json({ error: "Commande introuvable" }, 404);
-    if (email && (order.customers?.email || "").toLowerCase() !== String(email).toLowerCase().trim()) {
+    if (
+      email &&
+      (order.customers?.email || "").toLowerCase() !== String(email).toLowerCase().trim()
+    ) {
       return json({ error: "Email différent de celui de la commande" }, 403);
     }
 

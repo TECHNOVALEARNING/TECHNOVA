@@ -4,8 +4,20 @@ import { Tag, Mail, Plus, Trash2, Send, Loader2, Copy, Check, Package } from "lu
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
@@ -79,9 +91,21 @@ const DashboardMarketing = () => {
   const loadData = async () => {
     setLoading(true);
     const [promoRes, campRes, prodRes] = await Promise.all([
-      supabase.from("promo_codes").select("*").eq("creator_id", user!.id).order("created_at", { ascending: false }),
-      supabase.from("email_campaigns").select("*").eq("creator_id", user!.id).order("created_at", { ascending: false }),
-      supabase.from("products").select("id, title, type, price").eq("creator_id", user!.id).order("title"),
+      supabase
+        .from("promo_codes")
+        .select("*")
+        .eq("creator_id", user!.id)
+        .order("created_at", { ascending: false }),
+      supabase
+        .from("email_campaigns")
+        .select("*")
+        .eq("creator_id", user!.id)
+        .order("created_at", { ascending: false }),
+      supabase
+        .from("products")
+        .select("id, title, type, price")
+        .eq("creator_id", user!.id)
+        .order("title"),
     ]);
     if (promoRes.data) setPromoCodes(promoRes.data as any);
     if (campRes.data) setCampaigns(campRes.data as any);
@@ -97,10 +121,8 @@ const DashboardMarketing = () => {
   };
 
   const toggleProductSelection = (productId: string) => {
-    setSelectedProductIds(prev =>
-      prev.includes(productId)
-        ? prev.filter(id => id !== productId)
-        : [...prev, productId]
+    setSelectedProductIds((prev) =>
+      prev.includes(productId) ? prev.filter((id) => id !== productId) : [...prev, productId],
     );
   };
 
@@ -121,22 +143,32 @@ const DashboardMarketing = () => {
       product_ids: promoScope === "specific" ? selectedProductIds : null,
     } as any);
     setSavingPromo(false);
-    if (error) { toast.error(error.message); return; }
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     toast.success("Code promo créé !");
     setPromoOpen(false);
-    setPromoCode(""); setDiscountValue(""); setMaxUses(""); setExpiresAt("");
-    setPromoScope("all"); setSelectedProductIds([]);
+    setPromoCode("");
+    setDiscountValue("");
+    setMaxUses("");
+    setExpiresAt("");
+    setPromoScope("all");
+    setSelectedProductIds([]);
     loadData();
   };
 
   const togglePromo = async (id: string, active: boolean) => {
-    await supabase.from("promo_codes").update({ is_active: active } as any).eq("id", id);
-    setPromoCodes(prev => prev.map(p => p.id === id ? { ...p, is_active: active } : p));
+    await supabase
+      .from("promo_codes")
+      .update({ is_active: active } as any)
+      .eq("id", id);
+    setPromoCodes((prev) => prev.map((p) => (p.id === id ? { ...p, is_active: active } : p)));
   };
 
   const deletePromo = async (id: string) => {
     await supabase.from("promo_codes").delete().eq("id", id);
-    setPromoCodes(prev => prev.filter(p => p.id !== id));
+    setPromoCodes((prev) => prev.filter((p) => p.id !== id));
     toast.success("Code supprimé");
   };
 
@@ -146,7 +178,7 @@ const DashboardMarketing = () => {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  const getProductName = (id: string) => products.find(p => p.id === id)?.title || id;
+  const getProductName = (id: string) => products.find((p) => p.id === id)?.title || id;
 
   const createCampaign = async () => {
     if (!user || !campaignSubject.trim() || !campaignContent.trim()) return;
@@ -158,10 +190,14 @@ const DashboardMarketing = () => {
       creator_id: user.id,
     } as any);
     setSavingCampaign(false);
-    if (error) { toast.error(error.message); return; }
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     toast.success("Campagne créée !");
     setCampaignOpen(false);
-    setCampaignSubject(""); setCampaignContent("");
+    setCampaignSubject("");
+    setCampaignContent("");
     loadData();
   };
 
@@ -183,7 +219,7 @@ const DashboardMarketing = () => {
 
   const deleteCampaign = async (id: string) => {
     await supabase.from("email_campaigns").delete().eq("id", id);
-    setCampaigns(prev => prev.filter(c => c.id !== id));
+    setCampaigns((prev) => prev.filter((c) => c.id !== id));
     toast.success("Campagne supprimée");
   };
 
@@ -192,13 +228,19 @@ const DashboardMarketing = () => {
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Marketing</h1>
-          <p className="text-sm text-muted-foreground mt-1">Boostez vos ventes avec des promotions et campagnes</p>
+          <p className="text-sm text-muted-foreground mt-1">
+            Boostez vos ventes avec des promotions et campagnes
+          </p>
         </div>
 
         <Tabs defaultValue="promos" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="promos" className="gap-2"><Tag className="h-4 w-4" /> Codes promo</TabsTrigger>
-            <TabsTrigger value="campaigns" className="gap-2"><Mail className="h-4 w-4" /> Campagnes email</TabsTrigger>
+            <TabsTrigger value="promos" className="gap-2">
+              <Tag className="h-4 w-4" /> Codes promo
+            </TabsTrigger>
+            <TabsTrigger value="campaigns" className="gap-2">
+              <Mail className="h-4 w-4" /> Campagnes email
+            </TabsTrigger>
           </TabsList>
 
           {/* Promo codes tab */}
@@ -206,7 +248,9 @@ const DashboardMarketing = () => {
             <div className="flex justify-end">
               <Dialog open={promoOpen} onOpenChange={setPromoOpen}>
                 <DialogTrigger asChild>
-                  <Button size="sm" className="gap-2 rounded-full"><Plus className="h-4 w-4" /> Nouveau code</Button>
+                  <Button size="sm" className="gap-2 rounded-full">
+                    <Plus className="h-4 w-4" /> Nouveau code
+                  </Button>
                 </DialogTrigger>
                 <DialogContent className="max-h-[90vh] overflow-y-auto">
                   <DialogHeader>
@@ -216,15 +260,23 @@ const DashboardMarketing = () => {
                     <div>
                       <label className="text-sm font-medium mb-1 block">Code</label>
                       <div className="flex gap-2">
-                        <Input value={promoCode} onChange={(e) => setPromoCode(e.target.value.toUpperCase())} placeholder="CODE2025" />
-                        <Button variant="outline" size="sm" onClick={generateCode} type="button">Générer</Button>
+                        <Input
+                          value={promoCode}
+                          onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+                          placeholder="CODE2025"
+                        />
+                        <Button variant="outline" size="sm" onClick={generateCode} type="button">
+                          Générer
+                        </Button>
                       </div>
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                       <div>
                         <label className="text-sm font-medium mb-1 block">Type</label>
                         <Select value={discountType} onValueChange={(v: any) => setDiscountType(v)}>
-                          <SelectTrigger><SelectValue /></SelectTrigger>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="percent">Pourcentage (%)</SelectItem>
                             <SelectItem value="amount">Montant fixe (FCFA)</SelectItem>
@@ -233,17 +285,31 @@ const DashboardMarketing = () => {
                       </div>
                       <div>
                         <label className="text-sm font-medium mb-1 block">Valeur</label>
-                        <Input type="number" value={discountValue} onChange={(e) => setDiscountValue(e.target.value)} placeholder={discountType === "percent" ? "20" : "5000"} />
+                        <Input
+                          type="number"
+                          value={discountValue}
+                          onChange={(e) => setDiscountValue(e.target.value)}
+                          placeholder={discountType === "percent" ? "20" : "5000"}
+                        />
                       </div>
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                       <div>
                         <label className="text-sm font-medium mb-1 block">Utilisations max</label>
-                        <Input type="number" value={maxUses} onChange={(e) => setMaxUses(e.target.value)} placeholder="Illimité" />
+                        <Input
+                          type="number"
+                          value={maxUses}
+                          onChange={(e) => setMaxUses(e.target.value)}
+                          placeholder="Illimité"
+                        />
                       </div>
                       <div>
                         <label className="text-sm font-medium mb-1 block">Expire le</label>
-                        <Input type="date" value={expiresAt} onChange={(e) => setExpiresAt(e.target.value)} />
+                        <Input
+                          type="date"
+                          value={expiresAt}
+                          onChange={(e) => setExpiresAt(e.target.value)}
+                        />
                       </div>
                     </div>
 
@@ -251,7 +317,9 @@ const DashboardMarketing = () => {
                     <div>
                       <label className="text-sm font-medium mb-2 block">Appliquer à</label>
                       <Select value={promoScope} onValueChange={(v: any) => setPromoScope(v)}>
-                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="all">Tous les produits</SelectItem>
                           <SelectItem value="specific">Produits spécifiques</SelectItem>
@@ -262,21 +330,31 @@ const DashboardMarketing = () => {
                     {promoScope === "specific" && (
                       <div>
                         <label className="text-sm font-medium mb-2 block">
-                          Sélectionner les produits ({selectedProductIds.length} sélectionné{selectedProductIds.length > 1 ? "s" : ""})
+                          Sélectionner les produits ({selectedProductIds.length} sélectionné
+                          {selectedProductIds.length > 1 ? "s" : ""})
                         </label>
                         <div className="max-h-48 overflow-y-auto border border-border rounded-lg divide-y divide-border">
                           {products.length === 0 ? (
-                            <p className="text-sm text-muted-foreground text-center py-4">Aucun produit créé</p>
+                            <p className="text-sm text-muted-foreground text-center py-4">
+                              Aucun produit créé
+                            </p>
                           ) : (
                             products.map((product) => (
-                              <label key={product.id} className="flex items-center gap-3 px-3 py-2.5 hover:bg-muted/50 cursor-pointer">
+                              <label
+                                key={product.id}
+                                className="flex items-center gap-3 px-3 py-2.5 hover:bg-muted/50 cursor-pointer"
+                              >
                                 <Checkbox
                                   checked={selectedProductIds.includes(product.id)}
                                   onCheckedChange={() => toggleProductSelection(product.id)}
                                 />
                                 <div className="flex-1 min-w-0">
-                                  <p className="text-sm font-medium text-foreground truncate">{product.title}</p>
-                                  <p className="text-xs text-muted-foreground">{product.price} FCFA • {product.type}</p>
+                                  <p className="text-sm font-medium text-foreground truncate">
+                                    {product.title}
+                                  </p>
+                                  <p className="text-xs text-muted-foreground">
+                                    {product.price} FCFA • {product.type}
+                                  </p>
                                 </div>
                               </label>
                             ))
@@ -285,7 +363,11 @@ const DashboardMarketing = () => {
                       </div>
                     )}
 
-                    <Button onClick={createPromoCode} disabled={savingPromo || !promoCode.trim() || !discountValue} className="w-full">
+                    <Button
+                      onClick={createPromoCode}
+                      disabled={savingPromo || !promoCode.trim() || !discountValue}
+                      className="w-full"
+                    >
                       {savingPromo ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
                       Créer le code
                     </Button>
@@ -295,7 +377,9 @@ const DashboardMarketing = () => {
             </div>
 
             {loading ? (
-              <div className="flex justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
+              <div className="flex justify-center py-12">
+                <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+              </div>
             ) : promoCodes.length === 0 ? (
               <div className="text-center py-12 text-muted-foreground">
                 <Tag className="h-10 w-10 mx-auto mb-3 opacity-30" />
@@ -304,35 +388,60 @@ const DashboardMarketing = () => {
             ) : (
               <div className="space-y-3">
                 {promoCodes.map((promo) => (
-                  <div key={promo.id} className="flex items-center justify-between p-4 rounded-xl border border-border bg-card">
+                  <div
+                    key={promo.id}
+                    className="flex items-center justify-between p-4 rounded-xl border border-border bg-card"
+                  >
                     <div className="flex items-center gap-4">
-                      <button onClick={() => copyCode(promo.id, promo.code)} className="font-mono font-bold text-foreground bg-secondary px-3 py-1 rounded-lg text-sm flex items-center gap-1.5 hover:bg-secondary/80">
+                      <button
+                        onClick={() => copyCode(promo.id, promo.code)}
+                        className="font-mono font-bold text-foreground bg-secondary px-3 py-1 rounded-lg text-sm flex items-center gap-1.5 hover:bg-secondary/80"
+                      >
                         {promo.code}
-                        {copiedId === promo.id ? <Check className="h-3 w-3 text-green-500" /> : <Copy className="h-3 w-3 text-muted-foreground" />}
+                        {copiedId === promo.id ? (
+                          <Check className="h-3 w-3 text-green-500" />
+                        ) : (
+                          <Copy className="h-3 w-3 text-muted-foreground" />
+                        )}
                       </button>
                       <div>
                         <p className="text-sm text-foreground font-medium">
-                          {promo.discount_percent ? `-${promo.discount_percent}%` : `-${promo.discount_amount} FCFA`}
+                          {promo.discount_percent
+                            ? `-${promo.discount_percent}%`
+                            : `-${promo.discount_amount} FCFA`}
                         </p>
                         <div className="flex items-center gap-2 flex-wrap">
                           <p className="text-xs text-muted-foreground">
-                            {promo.current_uses}{promo.max_uses ? `/${promo.max_uses}` : ""} utilisations
-                            {promo.expires_at && ` • Expire le ${new Date(promo.expires_at).toLocaleDateString("fr")}`}
+                            {promo.current_uses}
+                            {promo.max_uses ? `/${promo.max_uses}` : ""} utilisations
+                            {promo.expires_at &&
+                              ` • Expire le ${new Date(promo.expires_at).toLocaleDateString("fr")}`}
                           </p>
                           {promo.product_ids && promo.product_ids.length > 0 ? (
                             <Badge variant="outline" className="text-[10px] gap-1">
                               <Package className="h-2.5 w-2.5" />
-                              {promo.product_ids.length} produit{promo.product_ids.length > 1 ? "s" : ""}
+                              {promo.product_ids.length} produit
+                              {promo.product_ids.length > 1 ? "s" : ""}
                             </Badge>
                           ) : (
-                            <Badge variant="secondary" className="text-[10px]">Tous les produits</Badge>
+                            <Badge variant="secondary" className="text-[10px]">
+                              Tous les produits
+                            </Badge>
                           )}
                         </div>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
-                      <Switch checked={promo.is_active} onCheckedChange={(v) => togglePromo(promo.id, v)} />
-                      <Button variant="ghost" size="icon" onClick={() => deletePromo(promo.id)} className="text-destructive hover:text-destructive">
+                      <Switch
+                        checked={promo.is_active}
+                        onCheckedChange={(v) => togglePromo(promo.id, v)}
+                      />
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => deletePromo(promo.id)}
+                        className="text-destructive hover:text-destructive"
+                      >
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
@@ -347,7 +456,9 @@ const DashboardMarketing = () => {
             <div className="flex justify-end">
               <Dialog open={campaignOpen} onOpenChange={setCampaignOpen}>
                 <DialogTrigger asChild>
-                  <Button size="sm" className="gap-2 rounded-full"><Plus className="h-4 w-4" /> Nouvelle campagne</Button>
+                  <Button size="sm" className="gap-2 rounded-full">
+                    <Plus className="h-4 w-4" /> Nouvelle campagne
+                  </Button>
                 </DialogTrigger>
                 <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
                   <DialogHeader>
@@ -356,23 +467,41 @@ const DashboardMarketing = () => {
                   <div className="space-y-4 pt-2">
                     <div>
                       <label className="text-sm font-medium mb-1 block">Objet de l'email</label>
-                      <Input value={campaignSubject} onChange={(e) => setCampaignSubject(e.target.value)} placeholder="Ex: Nouvelle offre exclusive pour vous !" />
+                      <Input
+                        value={campaignSubject}
+                        onChange={(e) => setCampaignSubject(e.target.value)}
+                        placeholder="Ex: Nouvelle offre exclusive pour vous !"
+                      />
                     </div>
                     <div>
                       <label className="text-sm font-medium mb-1 block">Destinataires</label>
                       <Select value={recipientType} onValueChange={setRecipientType}>
-                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="all_customers">Tous les clients</SelectItem>
-                          <SelectItem value="recent_buyers">Acheteurs récents (30 jours)</SelectItem>
+                          <SelectItem value="recent_buyers">
+                            Acheteurs récents (30 jours)
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                     <div>
                       <label className="text-sm font-medium mb-1 block">Contenu</label>
-                      <RichTextEditor content={campaignContent} onChange={setCampaignContent} placeholder="Rédigez votre email ici..." />
+                      <RichTextEditor
+                        content={campaignContent}
+                        onChange={setCampaignContent}
+                        placeholder="Rédigez votre email ici..."
+                      />
                     </div>
-                    <Button onClick={createCampaign} disabled={savingCampaign || !campaignSubject.trim() || !campaignContent.trim()} className="w-full">
+                    <Button
+                      onClick={createCampaign}
+                      disabled={
+                        savingCampaign || !campaignSubject.trim() || !campaignContent.trim()
+                      }
+                      className="w-full"
+                    >
                       {savingCampaign ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
                       Enregistrer le brouillon
                     </Button>
@@ -382,7 +511,9 @@ const DashboardMarketing = () => {
             </div>
 
             {loading ? (
-              <div className="flex justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
+              <div className="flex justify-center py-12">
+                <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+              </div>
             ) : campaigns.length === 0 ? (
               <div className="text-center py-12 text-muted-foreground">
                 <Mail className="h-10 w-10 mx-auto mb-3 opacity-30" />
@@ -391,22 +522,45 @@ const DashboardMarketing = () => {
             ) : (
               <div className="space-y-3">
                 {campaigns.map((c) => (
-                  <div key={c.id} className="flex items-center justify-between p-4 rounded-xl border border-border bg-card">
+                  <div
+                    key={c.id}
+                    className="flex items-center justify-between p-4 rounded-xl border border-border bg-card"
+                  >
                     <div>
                       <p className="text-sm font-semibold text-foreground">{c.subject}</p>
                       <p className="text-xs text-muted-foreground">
-                        {c.status === "sent" ? `Envoyée à ${c.sent_count} client(s) le ${new Date(c.sent_at!).toLocaleDateString("fr")}` : "Brouillon"}
-                        {" • "}{c.recipient_type === "all_customers" ? "Tous les clients" : "Acheteurs récents"}
+                        {c.status === "sent"
+                          ? `Envoyée à ${c.sent_count} client(s) le ${new Date(c.sent_at!).toLocaleDateString("fr")}`
+                          : "Brouillon"}
+                        {" • "}
+                        {c.recipient_type === "all_customers"
+                          ? "Tous les clients"
+                          : "Acheteurs récents"}
                       </p>
                     </div>
                     <div className="flex items-center gap-2">
                       {c.status === "draft" && (
-                        <Button size="sm" variant="outline" className="gap-1.5 rounded-full" onClick={() => sendCampaign(c)} disabled={sendingId === c.id}>
-                          {sendingId === c.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <Send className="h-3 w-3" />}
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="gap-1.5 rounded-full"
+                          onClick={() => sendCampaign(c)}
+                          disabled={sendingId === c.id}
+                        >
+                          {sendingId === c.id ? (
+                            <Loader2 className="h-3 w-3 animate-spin" />
+                          ) : (
+                            <Send className="h-3 w-3" />
+                          )}
                           Envoyer
                         </Button>
                       )}
-                      <Button variant="ghost" size="icon" onClick={() => deleteCampaign(c.id)} className="text-destructive hover:text-destructive">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => deleteCampaign(c.id)}
+                        className="text-destructive hover:text-destructive"
+                      >
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>

@@ -57,11 +57,13 @@ export default function NotificationBell() {
         },
         (payload) => {
           setNotifications((prev) => [payload.new as Notification, ...prev].slice(0, 20));
-        }
+        },
       )
       .subscribe();
 
-    return () => { supabase.removeChannel(channel); };
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [user]);
 
   // Close on outside click
@@ -107,10 +109,7 @@ export default function NotificationBell() {
           <div className="flex items-center justify-between px-4 py-3 border-b border-border">
             <h3 className="text-sm font-semibold text-foreground">Notifications</h3>
             {unreadCount > 0 && (
-              <button
-                onClick={markAllRead}
-                className="text-xs text-primary hover:underline"
-              >
+              <button onClick={markAllRead} className="text-xs text-primary hover:underline">
                 Tout marquer comme lu
               </button>
             )}
@@ -125,16 +124,23 @@ export default function NotificationBell() {
               notifications.map((n) => (
                 <button
                   key={n.id}
-                  onClick={() => { markRead(n.id); }}
+                  onClick={() => {
+                    markRead(n.id);
+                  }}
                   className={cn(
                     "w-full text-left px-4 py-3 hover:bg-secondary/50 transition-colors flex gap-3",
-                    !n.is_read && "bg-primary/5"
+                    !n.is_read && "bg-primary/5",
                   )}
                 >
                   <span className="text-lg shrink-0 mt-0.5">{typeIcons[n.type] || "🔔"}</span>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
-                      <p className={cn("text-sm truncate", !n.is_read ? "font-semibold text-foreground" : "text-muted-foreground")}>
+                      <p
+                        className={cn(
+                          "text-sm truncate",
+                          !n.is_read ? "font-semibold text-foreground" : "text-muted-foreground",
+                        )}
+                      >
                         {n.title}
                       </p>
                       {!n.is_read && <div className="h-2 w-2 rounded-full bg-primary shrink-0" />}

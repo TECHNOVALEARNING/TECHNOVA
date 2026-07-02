@@ -18,7 +18,9 @@ const Decouvertes = () => {
   const [discoveries, setDiscoveries] = useState<Discovery[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+  const [lang, setLang] = useState(() =>
+    typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
+  );
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -49,15 +51,23 @@ const Decouvertes = () => {
     fetchDiscoveries();
   }, []);
 
-  const filtered = discoveries.filter(d => 
-    d.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    (d.description || "").toLowerCase().includes(searchTerm.toLowerCase())
+  const filtered = discoveries.filter(
+    (d) =>
+      d.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (d.description || "").toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   return (
-    <div className="min-h-screen flex flex-col transition-colors duration-300" style={{ background: "var(--bg, #f2f2f7)", color: "var(--text, #1d1d1f)", fontFamily: "'Manrope', -apple-system, sans-serif" }}>
+    <div
+      className="min-h-screen flex flex-col transition-colors duration-300"
+      style={{
+        background: "var(--bg, #f2f2f7)",
+        color: "var(--text, #1d1d1f)",
+        fontFamily: "'Manrope', -apple-system, sans-serif",
+      }}
+    >
       <Header />
-      
+
       {/* Font imports and CSS variables */}
       <style>{`
         @media (max-width: 768px) {
@@ -93,8 +103,7 @@ const Decouvertes = () => {
       <main className="flex-1 pt-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full pb-16">
         {/* Hero Section */}
         <div className="text-center max-w-3xl mx-auto mt-8 mb-12">
-          
-          <motion.h1 
+          <motion.h1
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
@@ -102,14 +111,14 @@ const Decouvertes = () => {
           >
             {lang === "fr" ? "Découvertes Technologiques" : "Tech Discoveries"}
           </motion.h1>
-          
-          <motion.p 
+
+          <motion.p
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
             className="text-lg text-muted-foreground leading-relaxed"
           >
-            {lang === "fr" 
+            {lang === "fr"
               ? "Explorez une sélection de sites web, outils innovants et ressources incroyables pour booster votre productivité."
               : "Explore a curated selection of innovative websites, tools, and incredible resources to boost your productivity."}
           </motion.p>
@@ -133,7 +142,9 @@ const Decouvertes = () => {
         {loading ? (
           <div className="flex flex-col items-center justify-center py-24 gap-4">
             <Loader2 className="h-8 w-8 animate-spin text-[color:var(--blue)]" />
-            <p className="text-sm text-muted-foreground">{lang === "fr" ? "Chargement des découvertes..." : "Loading discoveries..."}</p>
+            <p className="text-sm text-muted-foreground">
+              {lang === "fr" ? "Chargement des découvertes..." : "Loading discoveries..."}
+            </p>
           </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-20 bg-background/30 rounded-3xl border border-dashed border-border max-w-lg mx-auto">
@@ -144,7 +155,7 @@ const Decouvertes = () => {
               {lang === "fr" ? "Aucune découverte trouvée" : "No discoveries found"}
             </h3>
             <p className="text-sm text-muted-foreground px-6">
-              {lang === "fr" 
+              {lang === "fr"
                 ? "Revenez plus tard ou modifiez votre recherche pour explorer les sites ajoutés par l'administrateur."
                 : "Check back later or adjust your search to explore the sites curated by the admin."}
             </p>
@@ -162,18 +173,13 @@ const Decouvertes = () => {
                 {/* Image Wrap */}
                 <div className="course-img-wrap">
                   {d.thumbnail_url ? (
-                    <img 
-                      src={d.thumbnail_url} 
-                      alt={d.title} 
-                    />
+                    <img src={d.thumbnail_url} alt={d.title} />
                   ) : (
                     <div className="flex flex-col items-center justify-center w-full h-full bg-gradient-to-br from-primary/5 to-accent/10">
                       <Globe className="h-12 w-12 text-muted-foreground/30" />
                     </div>
                   )}
-                  <span className="course-badge">
-                    {lang === "fr" ? "Découverte" : "Discovery"}
-                  </span>
+                  <span className="course-badge">{lang === "fr" ? "Découverte" : "Discovery"}</span>
                 </div>
 
                 {/* Card Content */}
@@ -182,15 +188,15 @@ const Decouvertes = () => {
                     <h3 className="course-title line-clamp-2 hover:text-[color:var(--blue)] transition-colors mb-3">
                       {d.title}
                     </h3>
-                    <div 
+                    <div
                       className="text-xs text-muted-foreground leading-relaxed line-clamp-4 mb-4"
                       dangerouslySetInnerHTML={{ __html: d.description || "" }}
                     />
                   </div>
 
-                  <a 
-                    href={d.download_url || "#"} 
-                    target="_blank" 
+                  <a
+                    href={d.download_url || "#"}
+                    target="_blank"
                     rel="noopener noreferrer"
                     className="btn-buy mt-auto py-2.5 text-center flex items-center justify-center"
                   >

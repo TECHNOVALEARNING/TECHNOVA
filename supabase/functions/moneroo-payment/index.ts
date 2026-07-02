@@ -16,18 +16,15 @@ Deno.serve(async (req) => {
     const MONEROO_SECRET_KEY = Deno.env.get("MONEROO_SECRET_KEY");
 
     if (!MONEROO_SECRET_KEY) {
-      return new Response(
-        JSON.stringify({ error: "Moneroo secret key not configured" }),
-        {
-          status: 500,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
-      );
+      return new Response(JSON.stringify({ error: "Moneroo secret key not configured" }), {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     const admin = createClient(
       Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
     );
 
     if (action === "initialize") {
@@ -37,14 +34,19 @@ Deno.serve(async (req) => {
       const name = customer?.name?.trim();
       const phone = customer?.phone?.trim();
 
-      if (!amount || !email || !name || !phone || !metadata?.product_id || !metadata?.store_owner_id || !return_url) {
-        return new Response(
-          JSON.stringify({ error: "Paramètres de paiement incomplets" }),
-          {
-            status: 400,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          }
-        );
+      if (
+        !amount ||
+        !email ||
+        !name ||
+        !phone ||
+        !metadata?.product_id ||
+        !metadata?.store_owner_id ||
+        !return_url
+      ) {
+        return new Response(JSON.stringify({ error: "Paramètres de paiement incomplets" }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
       }
 
       // Create or update customer server-side (bypasses client RLS issues)
@@ -56,21 +58,15 @@ Deno.serve(async (req) => {
         .maybeSingle();
 
       if (existingError) {
-        return new Response(
-          JSON.stringify({ error: `Erreur client: ${existingError.message}` }),
-          {
-            status: 400,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          }
-        );
+        return new Response(JSON.stringify({ error: `Erreur client: ${existingError.message}` }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
       }
 
       if (existingCustomer?.id) {
         customerId = existingCustomer.id;
-        await admin
-          .from("customers")
-          .update({ name, phone })
-          .eq("id", customerId);
+        await admin.from("customers").update({ name, phone }).eq("id", customerId);
       } else {
         const { data: newCustomer, error: createError } = await admin
           .from("customers")
@@ -84,7 +80,7 @@ Deno.serve(async (req) => {
             {
               status: 400,
               headers: { ...corsHeaders, "Content-Type": "application/json" },
-            }
+            },
           );
         }
 
@@ -121,13 +117,10 @@ Deno.serve(async (req) => {
 
       if (!response.ok) {
         console.error("Moneroo init error:", JSON.stringify(data));
-        return new Response(
-          JSON.stringify({ error: data.message || "Erreur Moneroo" }),
-          {
-            status: 400,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          }
-        );
+        return new Response(JSON.stringify({ error: data.message || "Erreur Moneroo" }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
       }
 
       // Save payment event with Moneroo transaction ID for realtime tracking
@@ -152,36 +145,27 @@ Deno.serve(async (req) => {
       const { transaction_id } = body;
 
       if (!transaction_id) {
-        return new Response(
-          JSON.stringify({ error: "transaction_id requis" }),
-          {
-            status: 400,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          }
-        );
+        return new Response(JSON.stringify({ error: "transaction_id requis" }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
       }
 
-      const response = await fetch(
-        `https://api.moneroo.io/v1/payments/${transaction_id}/verify`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${MONEROO_SECRET_KEY}`,
-            Accept: "application/json",
-          },
-        }
-      );
+      const response = await fetch(`https://api.moneroo.io/v1/payments/${transaction_id}/verify`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${MONEROO_SECRET_KEY}`,
+          Accept: "application/json",
+        },
+      });
 
       const data = await response.json();
 
       if (!response.ok) {
-        return new Response(
-          JSON.stringify({ error: data.message || "Erreur de vérification" }),
-          {
-            status: 400,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          }
-        );
+        return new Response(JSON.stringify({ error: data.message || "Erreur de vérification" }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
       }
 
       // Update payment_events status for realtime UI update

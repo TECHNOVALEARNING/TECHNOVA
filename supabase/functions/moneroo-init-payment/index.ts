@@ -41,7 +41,9 @@ Deno.serve(async (req) => {
 
     const body = await req.json();
     const {
-      amount, currency = "XOF", description,
+      amount,
+      currency = "XOF",
+      description,
       customer, // { email, first_name, last_name, phone }
       metadata, // { product_id, store_owner_id, ... }
       return_url,
@@ -56,11 +58,16 @@ Deno.serve(async (req) => {
     );
 
     // Upsert customer
-    const fullName = `${customer.first_name || ""} ${customer.last_name || ""}`.trim() || customer.email;
+    const fullName =
+      `${customer.first_name || ""} ${customer.last_name || ""}`.trim() || customer.email;
     const { data: cust, error: custErr } = await supabase
       .from("customers")
-      .upsert({ name: fullName, phone: customer.phone || "", email: customer.email }, { onConflict: "email" })
-      .select("id").single();
+      .upsert(
+        { name: fullName, phone: customer.phone || "", email: customer.email },
+        { onConflict: "email" },
+      )
+      .select("id")
+      .single();
     if (custErr) return j({ error: custErr.message }, 400);
 
     // Create pending order
@@ -77,7 +84,8 @@ Deno.serve(async (req) => {
         shipping_address: metadata?.shipping_address || null,
         payment_method: "moneroo",
       } as any)
-      .select("id").single();
+      .select("id")
+      .single();
     if (ordErr) return j({ error: ordErr.message }, 400);
 
     const payload = {
@@ -118,7 +126,14 @@ Deno.serve(async (req) => {
 
     await supabase.from("orders").update({ moneroo_transaction_id: moneroo_id }).eq("id", order.id);
 
-    return j({ success: true, order_id: order.id, customer_id: cust.id, customer_name: fullName, moneroo_id, checkout_url });
+    return j({
+      success: true,
+      order_id: order.id,
+      customer_id: cust.id,
+      customer_name: fullName,
+      moneroo_id,
+      checkout_url,
+    });
   } catch (err: any) {
     console.error("[moneroo-init-payment] error", err);
     return j({ error: err.message }, 500);

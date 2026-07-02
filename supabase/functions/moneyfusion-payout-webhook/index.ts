@@ -45,10 +45,13 @@ Deno.serve(async (req) => {
 
     if (event === "payout.session.completed") {
       // Payout successful
-      await supabase.from("withdrawals").update({
-        status: "completed",
-        processed_at: new Date().toISOString(),
-      }).eq("id", withdrawal.id);
+      await supabase
+        .from("withdrawals")
+        .update({
+          status: "completed",
+          processed_at: new Date().toISOString(),
+        })
+        .eq("id", withdrawal.id);
 
       // Notify user
       await supabase.from("notifications").insert({
@@ -59,12 +62,14 @@ Deno.serve(async (req) => {
       });
 
       console.log("Withdrawal completed:", withdrawal.id);
-
     } else if (event === "payout.session.cancelled") {
       // Payout failed/cancelled
-      await supabase.from("withdrawals").update({
-        status: "failed",
-      }).eq("id", withdrawal.id);
+      await supabase
+        .from("withdrawals")
+        .update({
+          status: "failed",
+        })
+        .eq("id", withdrawal.id);
 
       // Notify user
       await supabase.from("notifications").insert({

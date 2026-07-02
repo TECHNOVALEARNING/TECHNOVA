@@ -9,7 +9,6 @@ const productTypes = [
   { emoji: "📁", label: "Fichiers", href: "/fichiers" },
   { emoji: "🎓", label: "Cours", href: "/cours" },
   { emoji: "🔑", label: "Licences", href: "/licences" },
-  
 ];
 
 const HeroSection = () => {
@@ -17,7 +16,7 @@ const HeroSection = () => {
     <>
       {/* Hero */}
       <section className="relative overflow-hidden bg-mesh py-24 md:py-36">
-        <div 
+        <div
           className="absolute inset-0 opacity-[0.03]"
           style={{
             backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgb(0,0,0)'%3e%3cpath d='M0 .5H31.5V32'/%3e%3c/svg%3e")`,
@@ -35,7 +34,9 @@ const HeroSection = () => {
                 className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-background/80 px-4 py-1.5 shadow-sm backdrop-blur-sm"
               >
                 <span className="flex h-2 w-2 rounded-full bg-primary" />
-                <span className="text-xs font-medium text-muted-foreground">+1M$ reversés aux créateurs</span>
+                <span className="text-xs font-medium text-muted-foreground">
+                  +1M$ reversés aux créateurs
+                </span>
               </motion.div>
 
               <motion.h1
@@ -54,7 +55,7 @@ const HeroSection = () => {
                 transition={{ duration: 0.5, delay: 0.2 }}
                 className="mb-10 text-lg text-muted-foreground md:text-xl leading-relaxed"
               >
-                Créez votre boutique en 5 minutes, vendez vos produits digitaux dans le monde entier 
+                Créez votre boutique en 5 minutes, vendez vos produits digitaux dans le monde entier
                 et recevez vos revenus rapidement.
               </motion.p>
 
@@ -65,7 +66,10 @@ const HeroSection = () => {
                 className="flex flex-col items-center gap-4 sm:flex-row md:justify-start sm:justify-center"
               >
                 <Link to="/register">
-                  <Button size="lg" className="px-8 py-6 text-base font-semibold shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all">
+                  <Button
+                    size="lg"
+                    className="px-8 py-6 text-base font-semibold shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all"
+                  >
                     Créer une boutique gratuite
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
@@ -162,12 +166,17 @@ const HeroSection = () => {
                   </div>
                 </div>
               </div>
-              
+
               {/* Dashboard content */}
               <div className="p-6 md:p-8 bg-background">
                 <div className="grid gap-4 md:grid-cols-4 mb-6">
                   {[
-                    { label: "Revenus du mois", value: "2 450 000 FCFA", change: "+24%", icon: TrendingUp },
+                    {
+                      label: "Revenus du mois",
+                      value: "2 450 000 FCFA",
+                      change: "+24%",
+                      icon: TrendingUp,
+                    },
                     { label: "Ventes", value: "342", change: "+18%", icon: Zap },
                     { label: "Clients actifs", value: "1 247", change: "+12%", icon: Users },
                     { label: "Pays touchés", value: "23", change: "+3", icon: Globe },
@@ -186,7 +195,9 @@ const HeroSection = () => {
                 {/* Revenue chart mockup */}
                 <div className="rounded-xl border border-border bg-card p-6">
                   <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-sm font-semibold text-card-foreground">Évolution des revenus</h3>
+                    <h3 className="text-sm font-semibold text-card-foreground">
+                      Évolution des revenus
+                    </h3>
                     <span className="text-xs text-muted-foreground">12 derniers mois</span>
                   </div>
                   <div className="flex items-end gap-2 h-40">
@@ -206,8 +217,26 @@ const HeroSection = () => {
                     ))}
                   </div>
                   <div className="flex justify-between mt-2">
-                    {["Jan", "Fév", "Mar", "Avr", "Mai", "Jun", "Jul", "Aoû", "Sep", "Oct", "Nov", "Déc"].map((m) => (
-                      <span key={m} className="text-[10px] text-muted-foreground flex-1 text-center">{m}</span>
+                    {[
+                      "Jan",
+                      "Fév",
+                      "Mar",
+                      "Avr",
+                      "Mai",
+                      "Jun",
+                      "Jul",
+                      "Aoû",
+                      "Sep",
+                      "Oct",
+                      "Nov",
+                      "Déc",
+                    ].map((m) => (
+                      <span
+                        key={m}
+                        className="text-[10px] text-muted-foreground flex-1 text-center"
+                      >
+                        {m}
+                      </span>
                     ))}
                   </div>
                 </div>
@@ -223,8 +252,15 @@ const HeroSection = () => {
       {/* Speed & Payment section */}
       <section className="py-24 bg-secondary/30">
         <div className="container mx-auto px-6">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-16">
-            <p className="text-sm font-semibold text-primary mb-3 uppercase tracking-wider">Rapidité</p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <p className="text-sm font-semibold text-primary mb-3 uppercase tracking-wider">
+              Rapidité
+            </p>
             <h2 className="text-3xl md:text-5xl font-extrabold text-foreground mb-4">
               Des paiements à la vitesse de l'éclair
             </h2>
@@ -235,18 +271,41 @@ const HeroSection = () => {
 
           <div className="grid gap-8 md:grid-cols-3 max-w-4xl mx-auto">
             {[
-              { step: "1", title: "Client achète", desc: "Paiement sécurisé via Mobile Money ou carte bancaire en quelques secondes.", time: "~10s" },
-              { step: "2", title: "Livraison instantanée", desc: "Le client reçoit immédiatement son produit digital par email et dans son espace.", time: "Immédiat" },
-              { step: "3", title: "Vous êtes payé", desc: "Vos revenus sont reversés automatiquement sur votre compte.", time: "24-72h" },
+              {
+                step: "1",
+                title: "Client achète",
+                desc: "Paiement sécurisé via Mobile Money ou carte bancaire en quelques secondes.",
+                time: "~10s",
+              },
+              {
+                step: "2",
+                title: "Livraison instantanée",
+                desc: "Le client reçoit immédiatement son produit digital par email et dans son espace.",
+                time: "Immédiat",
+              },
+              {
+                step: "3",
+                title: "Vous êtes payé",
+                desc: "Vos revenus sont reversés automatiquement sur votre compte.",
+                time: "24-72h",
+              },
             ].map((s, i) => (
-              <motion.div key={s.step} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.15 }}
-                className="relative text-center">
+              <motion.div
+                key={s.step}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.15 }}
+                className="relative text-center"
+              >
                 <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-primary-foreground text-xl font-bold shadow-lg shadow-primary/25">
                   {s.step}
                 </div>
                 <h3 className="text-lg font-semibold text-foreground mb-2">{s.title}</h3>
                 <p className="text-sm text-muted-foreground mb-3">{s.desc}</p>
-                <span className="inline-block rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">{s.time}</span>
+                <span className="inline-block rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+                  {s.time}
+                </span>
                 {i < 2 && (
                   <div className="hidden md:block absolute top-7 -right-4 w-8">
                     <ArrowRight className="h-5 w-5 text-muted-foreground/30" />
@@ -268,7 +327,13 @@ const HeroSection = () => {
               { num: "40+", label: "Pays supportés" },
               { num: "99.9%", label: "Disponibilité" },
             ].map((stat, i) => (
-              <motion.div key={stat.label} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+              >
                 <p className="text-4xl md:text-5xl font-extrabold text-gradient mb-2">{stat.num}</p>
                 <p className="text-muted-foreground text-sm">{stat.label}</p>
               </motion.div>

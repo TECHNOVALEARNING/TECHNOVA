@@ -136,7 +136,7 @@ const AppContent = () => {
           <div className="bg-orb orb-1" />
           <div className="bg-orb orb-2" />
           <div className="bg-orb orb-3" />
-          
+
           <div className="relative z-10">
             <Routes>
               <Route path="/" element={<Index />} />
@@ -154,7 +154,7 @@ const AppContent = () => {
               <Route path="/actualites" element={<Actualites />} />
               <Route path="/actualites/:id" element={<ActualitesDetail />} />
               <Route path="/apps" element={<TechnovaApps />} />
-              
+
               <Route path="/about" element={<About />} />
               <Route path="/outils-digitaux" element={<ToolsDirectoryPage />} />
               <Route path="/decouvertes" element={<Decouvertes />} />
@@ -186,44 +186,289 @@ const AppContent = () => {
               <Route path="/buyer-auth/callback" element={<BuyerOAuthCallback />} />
               <Route path="/mes-achats" element={<BuyerDashboard />} />
               <Route path="/mes-achats/:orderId" element={<BuyerOrderDetail />} />
-              
-              <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
-              <Route path="/dashboard" element={<ProtectedRoute><DashboardOverview /></ProtectedRoute>} />
-              <Route path="/dashboard/products" element={<ProtectedRoute><DashboardProducts /></ProtectedRoute>} />
-              <Route path="/dashboard/profile" element={<ProtectedRoute><DashboardSettings /></ProtectedRoute>} />
-              <Route path="/dashboard/settings" element={<ProtectedRoute><DashboardSettings /></ProtectedRoute>} />
-              <Route path="/dashboard/products/new" element={<ProtectedRoute><CreateProduct /></ProtectedRoute>} />
-              <Route path="/dashboard/products/:id/edit" element={<ProtectedRoute><EditProduct /></ProtectedRoute>} />
-              <Route path="/dashboard/sales" element={<ProtectedRoute><DashboardSales /></ProtectedRoute>} />
-              <Route path="/dashboard/clients" element={<ProtectedRoute><DashboardClients /></ProtectedRoute>} />
-              <Route path="/dashboard/licenses" element={<ProtectedRoute><DashboardLicenses /></ProtectedRoute>} />
-              <Route path="/dashboard/others" element={<ProtectedRoute><DashboardOthers /></ProtectedRoute>} />
-              <Route path="/dashboard/revenue" element={<ProtectedRoute><DashboardRevenue /></ProtectedRoute>} />
-              <Route path="/dashboard/analytics" element={<ProtectedRoute><DashboardAnalytics /></ProtectedRoute>} />
-              <Route path="/dashboard/marketing" element={<ProtectedRoute><DashboardMarketing /></ProtectedRoute>} />
-              <Route path="/dashboard/affiliation" element={<ProtectedRoute><DashboardAffiliation /></ProtectedRoute>} />
-              <Route path="/dashboard/automations" element={<ProtectedRoute><DashboardAutomations /></ProtectedRoute>} />
-              <Route path="/dashboard/withdrawals" element={<ProtectedRoute><DashboardWithdrawals /></ProtectedRoute>} />
-              <Route path="/dashboard/withdrawals/new" element={<ProtectedRoute><WithdrawNew /></ProtectedRoute>} />
-              <Route path="/dashboard/wallet" element={<ProtectedRoute><Wallet /></ProtectedRoute>} />
-              <Route path="/dashboard/webhooks" element={<ProtectedRoute><DashboardWebhooks /></ProtectedRoute>} />
-              <Route path="/dashboard/appearance" element={<ProtectedRoute><DashboardSettings /></ProtectedRoute>} />
-              <Route path="/dashboard/domain" element={<ProtectedRoute><DashboardSettings /></ProtectedRoute>} />
-              <Route path="/dashboard/pixels" element={<ProtectedRoute><DashboardSettings /></ProtectedRoute>} />
-              <Route path="/dashboard/account" element={<ProtectedRoute><DashboardSettings /></ProtectedRoute>} />
-              <Route path="/dashboard/telegram" element={<ProtectedRoute><DashboardSettings /></ProtectedRoute>} />
-              <Route path="/dashboard/stores" element={<ProtectedRoute><DashboardStores /></ProtectedRoute>} />
-              <Route path="/dashboard/support" element={<ProtectedRoute><DashboardSupport /></ProtectedRoute>} />
-              
-              <Route path="/admin" element={<ProtectedRoute requireAdmin><AdminDashboard /></ProtectedRoute>} />
-              <Route path="/admin/kyc" element={<ProtectedRoute requireAdmin><AdminKYC /></ProtectedRoute>} />
-              <Route path="/admin/users" element={<ProtectedRoute requireAdmin><AdminUsers /></ProtectedRoute>} />
-              <Route path="/admin/withdrawals" element={<ProtectedRoute requireAdmin><AdminWithdrawals /></ProtectedRoute>} />
-              <Route path="/admin/support" element={<ProtectedRoute requireAdmin><AdminSupport /></ProtectedRoute>} />
-              <Route path="/admin/moderation" element={<ProtectedRoute requireAdmin><AdminModeration /></ProtectedRoute>} />
-              
-              <Route path="/dashboard/badge" element={<ProtectedRoute><DashboardBadge /></ProtectedRoute>} />
-              <Route path="/admin/badges" element={<ProtectedRoute requireAdmin><AdminBadges /></ProtectedRoute>} />
+
+              <Route
+                path="/onboarding"
+                element={
+                  <ProtectedRoute>
+                    <Onboarding />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <DashboardOverview />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/products"
+                element={
+                  <ProtectedRoute>
+                    <DashboardProducts />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/profile"
+                element={
+                  <ProtectedRoute>
+                    <DashboardSettings />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/settings"
+                element={
+                  <ProtectedRoute>
+                    <DashboardSettings />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/products/new"
+                element={
+                  <ProtectedRoute>
+                    <CreateProduct />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/products/:id/edit"
+                element={
+                  <ProtectedRoute>
+                    <EditProduct />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/sales"
+                element={
+                  <ProtectedRoute>
+                    <DashboardSales />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/clients"
+                element={
+                  <ProtectedRoute>
+                    <DashboardClients />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/licenses"
+                element={
+                  <ProtectedRoute>
+                    <DashboardLicenses />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/others"
+                element={
+                  <ProtectedRoute>
+                    <DashboardOthers />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/revenue"
+                element={
+                  <ProtectedRoute>
+                    <DashboardRevenue />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/analytics"
+                element={
+                  <ProtectedRoute>
+                    <DashboardAnalytics />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/marketing"
+                element={
+                  <ProtectedRoute>
+                    <DashboardMarketing />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/affiliation"
+                element={
+                  <ProtectedRoute>
+                    <DashboardAffiliation />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/automations"
+                element={
+                  <ProtectedRoute>
+                    <DashboardAutomations />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/withdrawals"
+                element={
+                  <ProtectedRoute>
+                    <DashboardWithdrawals />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/withdrawals/new"
+                element={
+                  <ProtectedRoute>
+                    <WithdrawNew />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/wallet"
+                element={
+                  <ProtectedRoute>
+                    <Wallet />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/webhooks"
+                element={
+                  <ProtectedRoute>
+                    <DashboardWebhooks />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/appearance"
+                element={
+                  <ProtectedRoute>
+                    <DashboardSettings />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/domain"
+                element={
+                  <ProtectedRoute>
+                    <DashboardSettings />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/pixels"
+                element={
+                  <ProtectedRoute>
+                    <DashboardSettings />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/account"
+                element={
+                  <ProtectedRoute>
+                    <DashboardSettings />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/telegram"
+                element={
+                  <ProtectedRoute>
+                    <DashboardSettings />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/stores"
+                element={
+                  <ProtectedRoute>
+                    <DashboardStores />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/support"
+                element={
+                  <ProtectedRoute>
+                    <DashboardSupport />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/admin"
+                element={
+                  <ProtectedRoute requireAdmin>
+                    <AdminDashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/kyc"
+                element={
+                  <ProtectedRoute requireAdmin>
+                    <AdminKYC />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/users"
+                element={
+                  <ProtectedRoute requireAdmin>
+                    <AdminUsers />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/withdrawals"
+                element={
+                  <ProtectedRoute requireAdmin>
+                    <AdminWithdrawals />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/support"
+                element={
+                  <ProtectedRoute requireAdmin>
+                    <AdminSupport />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/moderation"
+                element={
+                  <ProtectedRoute requireAdmin>
+                    <AdminModeration />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/dashboard/badge"
+                element={
+                  <ProtectedRoute>
+                    <DashboardBadge />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/badges"
+                element={
+                  <ProtectedRoute requireAdmin>
+                    <AdminBadges />
+                  </ProtectedRoute>
+                }
+              />
 
               <Route path="*" element={<NotFound />} />
             </Routes>

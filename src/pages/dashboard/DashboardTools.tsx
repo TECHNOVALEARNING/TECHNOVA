@@ -1,7 +1,16 @@
 import { NavLink } from "react-router-dom";
 import {
-  Key, DollarSign, BarChart3, BadgeCheck, Megaphone, Link2,
-  Zap, Webhook, MessageCircle, HelpCircle, ArrowUpRight,
+  Key,
+  DollarSign,
+  BarChart3,
+  BadgeCheck,
+  Megaphone,
+  Link2,
+  Zap,
+  Webhook,
+  MessageCircle,
+  HelpCircle,
+  ArrowUpRight,
 } from "lucide-react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { motion } from "framer-motion";
@@ -11,25 +20,66 @@ const groups = [
     label: "Revenus & Performance",
     items: [
       { title: "Licences", desc: "Gérez vos clés produit", url: "/dashboard/licenses", icon: Key },
-      { title: "Revenus", desc: "Suivi détaillé des ventes", url: "/dashboard/revenue", icon: DollarSign },
-      { title: "Analytiques", desc: "Statistiques & rapports", url: "/dashboard/analytics", icon: BarChart3 },
+      {
+        title: "Revenus",
+        desc: "Suivi détaillé des ventes",
+        url: "/dashboard/revenue",
+        icon: DollarSign,
+      },
+      {
+        title: "Analytiques",
+        desc: "Statistiques & rapports",
+        url: "/dashboard/analytics",
+        icon: BarChart3,
+      },
     ],
   },
   {
     label: "Croissance",
     items: [
-      { title: "Badge Verify", desc: "Vérification de confiance", url: "/dashboard/badge", icon: BadgeCheck },
-      { title: "Marketing", desc: "Campagnes & promotions", url: "/dashboard/marketing", icon: Megaphone },
-      { title: "Affiliation", desc: "Programme de partenaires", url: "/dashboard/affiliation", icon: Link2 },
+      {
+        title: "Badge Verify",
+        desc: "Vérification de confiance",
+        url: "/dashboard/badge",
+        icon: BadgeCheck,
+      },
+      {
+        title: "Marketing",
+        desc: "Campagnes & promotions",
+        url: "/dashboard/marketing",
+        icon: Megaphone,
+      },
+      {
+        title: "Affiliation",
+        desc: "Programme de partenaires",
+        url: "/dashboard/affiliation",
+        icon: Link2,
+      },
     ],
   },
   {
     label: "Automation & Support",
     items: [
-      { title: "Automatisations", desc: "Flux automatiques", url: "/dashboard/automations", icon: Zap },
+      {
+        title: "Automatisations",
+        desc: "Flux automatiques",
+        url: "/dashboard/automations",
+        icon: Zap,
+      },
       { title: "Webhooks", desc: "Intégrations API", url: "/dashboard/webhooks", icon: Webhook },
-      { title: "Messages", desc: "Tickets & support client", url: "/dashboard/support", icon: MessageCircle },
-      { title: "Centre d'aide", desc: "Documentation & FAQ", url: "/faq", icon: HelpCircle, external: true as const },
+      {
+        title: "Messages",
+        desc: "Tickets & support client",
+        url: "/dashboard/support",
+        icon: MessageCircle,
+      },
+      {
+        title: "Centre d'aide",
+        desc: "Documentation & FAQ",
+        url: "/faq",
+        icon: HelpCircle,
+        external: true as const,
+      },
     ],
   },
 ];
@@ -40,9 +90,7 @@ export default function DashboardTools() {
       <div className="max-w-6xl mx-auto space-y-8">
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
           <h1 className="text-3xl font-extrabold text-foreground">Outils</h1>
-          <p className="text-muted-foreground mt-1">
-            Tous vos outils avancés au même endroit.
-          </p>
+          <p className="text-muted-foreground mt-1">Tous vos outils avancés au même endroit.</p>
         </motion.div>
 
         {groups.map((g, gi) => (
@@ -69,15 +117,21 @@ export default function DashboardTools() {
                           <h3 className="text-sm font-bold text-foreground">{item.title}</h3>
                           <ArrowUpRight className="h-4 w-4 text-muted-foreground/40 group-hover:text-primary transition-colors" />
                         </div>
-                        <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">{item.desc}</p>
+                        <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">
+                          {item.desc}
+                        </p>
                       </div>
                     </div>
                   </motion.div>
                 );
                 return "external" in item && item.external ? (
-                  <a key={item.title} href={item.url} target="_blank" rel="noopener noreferrer">{Inner}</a>
+                  <a key={item.title} href={item.url} target="_blank" rel="noopener noreferrer">
+                    {Inner}
+                  </a>
                 ) : (
-                  <NavLink key={item.title} to={item.url}>{Inner}</NavLink>
+                  <NavLink key={item.title} to={item.url}>
+                    {Inner}
+                  </NavLink>
                 );
               })}
             </div>

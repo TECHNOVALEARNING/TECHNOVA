@@ -9,14 +9,21 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
 } from "@/components/ui/dialog";
-import {
-  Shield, CheckCircle2, XCircle, Clock, Eye, Loader2, Search,
-} from "lucide-react";
+import { Shield, CheckCircle2, XCircle, Clock, Eye, Loader2, Search } from "lucide-react";
 
 const ADMIN_EMAIL = "ancres707@gmail.com";
 
@@ -46,7 +53,10 @@ const aiRecommendationConfig: Record<string, { label: string; color: string; bg:
   reject: { label: "❌ Rejet suggéré", color: "text-red-700", bg: "bg-red-50 border-red-200" },
 };
 
-const statusBadge: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
+const statusBadge: Record<
+  string,
+  { label: string; variant: "default" | "secondary" | "destructive" | "outline" }
+> = {
   pending: { label: "En attente", variant: "secondary" },
   approved: { label: "Approuvé", variant: "default" },
   rejected: { label: "Rejeté", variant: "destructive" },
@@ -140,7 +150,9 @@ const AdminKYC = () => {
           <Shield className="h-6 w-6 text-primary" />
           <div>
             <h1 className="text-2xl font-bold text-foreground">Administration KYC</h1>
-            <p className="text-sm text-muted-foreground">Gérez les demandes de vérification d'identité</p>
+            <p className="text-sm text-muted-foreground">
+              Gérez les demandes de vérification d'identité
+            </p>
           </div>
         </div>
 
@@ -151,7 +163,9 @@ const AdminKYC = () => {
               key={key}
               onClick={() => setFilter(key)}
               className={`p-4 rounded-xl border text-left transition-all ${
-                filter === key ? "border-primary bg-primary/5" : "border-border bg-card hover:border-primary/30"
+                filter === key
+                  ? "border-primary bg-primary/5"
+                  : "border-border bg-card hover:border-primary/30"
               }`}
             >
               <p className="text-2xl font-bold text-foreground">{counts[key]}</p>
@@ -179,9 +193,7 @@ const AdminKYC = () => {
             <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
           </div>
         ) : filtered.length === 0 ? (
-          <div className="text-center py-12 text-muted-foreground">
-            Aucune demande trouvée
-          </div>
+          <div className="text-center py-12 text-muted-foreground">Aucune demande trouvée</div>
         ) : (
           <div className="rounded-xl border border-border bg-card overflow-hidden">
             <Table>
@@ -199,18 +211,28 @@ const AdminKYC = () => {
                 {filtered.map((req) => (
                   <TableRow key={req.id}>
                     <TableCell className="text-sm font-medium">
-                      {req.full_name || <span className="text-muted-foreground italic">Non renseigné</span>}
+                      {req.full_name || (
+                        <span className="text-muted-foreground italic">Non renseigné</span>
+                      )}
                     </TableCell>
                     <TableCell className="text-sm">
                       {new Date(req.submitted_at).toLocaleDateString("fr-FR", {
-                        day: "2-digit", month: "short", year: "numeric",
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
                       })}
                     </TableCell>
                     <TableCell className="text-sm capitalize">{req.document_type}</TableCell>
                     <TableCell>
                       {req.ai_recommendation ? (
-                        <span className={`text-xs font-medium ${aiRecommendationConfig[req.ai_recommendation]?.color || ""}`}>
-                          {req.ai_recommendation === "approve" ? "✅" : req.ai_recommendation === "reject" ? "❌" : "⚠️"}
+                        <span
+                          className={`text-xs font-medium ${aiRecommendationConfig[req.ai_recommendation]?.color || ""}`}
+                        >
+                          {req.ai_recommendation === "approve"
+                            ? "✅"
+                            : req.ai_recommendation === "reject"
+                              ? "❌"
+                              : "⚠️"}
                         </span>
                       ) : (
                         <span className="text-xs text-muted-foreground">—</span>
@@ -235,7 +257,13 @@ const AdminKYC = () => {
       </div>
 
       {/* Detail Dialog */}
-      <Dialog open={!!selected} onOpenChange={() => { setSelected(null); setRejectionReason(""); }}>
+      <Dialog
+        open={!!selected}
+        onOpenChange={() => {
+          setSelected(null);
+          setRejectionReason("");
+        }}
+      >
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
@@ -248,13 +276,20 @@ const AdminKYC = () => {
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
                   <p className="text-muted-foreground">Nom complet</p>
-                  <p className="font-medium">{selected.full_name || <span className="italic text-muted-foreground">Non renseigné</span>}</p>
+                  <p className="font-medium">
+                    {selected.full_name || (
+                      <span className="italic text-muted-foreground">Non renseigné</span>
+                    )}
+                  </p>
                 </div>
                 <div>
                   <p className="text-muted-foreground">Localisation</p>
                   <p className="font-medium">
-                    {selected.city && selected.country ? `${selected.city}, ${selected.country}` : 
-                     selected.country || <span className="italic text-muted-foreground">Non renseigné</span>}
+                    {selected.city && selected.country
+                      ? `${selected.city}, ${selected.country}`
+                      : selected.country || (
+                          <span className="italic text-muted-foreground">Non renseigné</span>
+                        )}
                   </p>
                 </div>
                 <div>
@@ -284,14 +319,22 @@ const AdminKYC = () => {
                   <div>
                     <p className="text-xs text-muted-foreground mb-1">Recto</p>
                     <a href={selected.document_front_url} target="_blank" rel="noreferrer">
-                      <img src={selected.document_front_url} alt="Recto" className="rounded-lg border w-full h-32 object-cover" />
+                      <img
+                        src={selected.document_front_url}
+                        alt="Recto"
+                        className="rounded-lg border w-full h-32 object-cover"
+                      />
                     </a>
                   </div>
                   {selected.document_back_url && (
                     <div>
                       <p className="text-xs text-muted-foreground mb-1">Verso</p>
                       <a href={selected.document_back_url} target="_blank" rel="noreferrer">
-                        <img src={selected.document_back_url} alt="Verso" className="rounded-lg border w-full h-32 object-cover" />
+                        <img
+                          src={selected.document_back_url}
+                          alt="Verso"
+                          className="rounded-lg border w-full h-32 object-cover"
+                        />
                       </a>
                     </div>
                   )}
@@ -299,7 +342,11 @@ const AdminKYC = () => {
                     <div>
                       <p className="text-xs text-muted-foreground mb-1">Selfie</p>
                       <a href={selected.selfie_url} target="_blank" rel="noreferrer">
-                        <img src={selected.selfie_url} alt="Selfie" className="rounded-lg border w-full h-32 object-cover" />
+                        <img
+                          src={selected.selfie_url}
+                          alt="Selfie"
+                          className="rounded-lg border w-full h-32 object-cover"
+                        />
                       </a>
                     </div>
                   )}
@@ -308,9 +355,13 @@ const AdminKYC = () => {
 
               {/* AI Analysis */}
               {selected.ai_recommendation && (
-                <div className={`p-4 rounded-lg border ${aiRecommendationConfig[selected.ai_recommendation]?.bg || "bg-muted border-border"}`}>
+                <div
+                  className={`p-4 rounded-lg border ${aiRecommendationConfig[selected.ai_recommendation]?.bg || "bg-muted border-border"}`}
+                >
                   <div className="flex items-center justify-between mb-2">
-                    <span className={`text-sm font-semibold ${aiRecommendationConfig[selected.ai_recommendation]?.color}`}>
+                    <span
+                      className={`text-sm font-semibold ${aiRecommendationConfig[selected.ai_recommendation]?.color}`}
+                    >
                       🤖 Analyse IA : {aiRecommendationConfig[selected.ai_recommendation]?.label}
                     </span>
                     {selected.ai_confidence !== null && (
@@ -319,7 +370,9 @@ const AdminKYC = () => {
                       </span>
                     )}
                   </div>
-                  <p className="text-sm text-foreground/80 whitespace-pre-line">{selected.ai_analysis_details}</p>
+                  <p className="text-sm text-foreground/80 whitespace-pre-line">
+                    {selected.ai_analysis_details}
+                  </p>
                   {selected.ai_analyzed_at && (
                     <p className="text-xs text-muted-foreground mt-2">
                       Analysé le {new Date(selected.ai_analyzed_at).toLocaleString("fr-FR")}
@@ -357,11 +410,19 @@ const AdminKYC = () => {
                       onClick={() => handleAction("reject")}
                       disabled={processing}
                     >
-                      {processing ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <XCircle className="h-4 w-4 mr-1" />}
+                      {processing ? (
+                        <Loader2 className="h-4 w-4 animate-spin mr-1" />
+                      ) : (
+                        <XCircle className="h-4 w-4 mr-1" />
+                      )}
                       Rejeter
                     </Button>
                     <Button onClick={() => handleAction("approve")} disabled={processing}>
-                      {processing ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <CheckCircle2 className="h-4 w-4 mr-1" />}
+                      {processing ? (
+                        <Loader2 className="h-4 w-4 animate-spin mr-1" />
+                      ) : (
+                        <CheckCircle2 className="h-4 w-4 mr-1" />
+                      )}
                       Approuver
                     </Button>
                   </DialogFooter>

@@ -1,7 +1,13 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { Navigate, useLocation } from "react-router-dom";
 
-const ProtectedRoute = ({ children, requireAdmin }: { children: React.ReactNode, requireAdmin?: boolean }) => {
+const ProtectedRoute = ({
+  children,
+  requireAdmin,
+}: {
+  children: React.ReactNode;
+  requireAdmin?: boolean;
+}) => {
   const { user, profile, loading } = useAuth();
   const location = useLocation();
 

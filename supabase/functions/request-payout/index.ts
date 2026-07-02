@@ -3,19 +3,20 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 // Map country dial codes to Moneroo country suffixes
 const countryDialToSuffix: Record<string, string> = {
-  "229": "bj",  // Bénin
-  "225": "ci",  // Côte d'Ivoire
-  "228": "tg",  // Togo
-  "223": "ml",  // Mali
-  "221": "sn",  // Sénégal
-  "226": "bf",  // Burkina Faso
-  "227": "ne",  // Niger
-  "237": "cm",  // Cameroun
+  "229": "bj", // Bénin
+  "225": "ci", // Côte d'Ivoire
+  "228": "tg", // Togo
+  "223": "ml", // Mali
+  "221": "sn", // Sénégal
+  "226": "bf", // Burkina Faso
+  "227": "ne", // Niger
+  "237": "cm", // Cameroun
 };
 
 // Get Moneroo payout method based on operator and phone country
@@ -51,7 +52,10 @@ serve(async (req) => {
     const userClient = createClient(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY")!, {
       global: { headers: { Authorization: authHeader } },
     });
-    const { data: { user }, error: authError } = await userClient.auth.getUser(token);
+    const {
+      data: { user },
+      error: authError,
+    } = await userClient.auth.getUser(token);
     if (authError || !user) throw new Error("Non authentifié");
 
     const { amount, phoneNumber, operator } = await req.json();
@@ -68,7 +72,11 @@ serve(async (req) => {
       .eq("status", "completed");
 
     const totalSales = (orders || []).reduce((sum: number, o: any) => sum + Number(o.amount), 0);
-    const { data: feeRow } = await supabase.from("platform_fees").select("value_pct").eq("key", "technova_commission_pct").maybeSingle();
+    const { data: feeRow } = await supabase
+      .from("platform_fees")
+      .select("value_pct")
+      .eq("key", "technova_commission_pct")
+      .maybeSingle();
     const commissionPct = Number(feeRow?.value_pct ?? 5) / 100;
     const commission = totalSales * commissionPct;
     const grossAvailable = totalSales - commission;
@@ -79,7 +87,10 @@ serve(async (req) => {
       .eq("user_id", user.id)
       .in("status", ["pending", "processing", "completed"]);
 
-    const totalWithdrawn = (withdrawals || []).reduce((sum: number, w: any) => sum + Number(w.amount), 0);
+    const totalWithdrawn = (withdrawals || []).reduce(
+      (sum: number, w: any) => sum + Number(w.amount),
+      0,
+    );
     const availableBalance = grossAvailable - totalWithdrawn;
 
     if (amount > availableBalance) {
@@ -125,9 +136,9 @@ serve(async (req) => {
         const payoutRes = await fetch("https://api.moneroo.io/v1/payouts/initialize", {
           method: "POST",
           headers: {
-            "Authorization": `Bearer ${monerooKey}`,
+            Authorization: `Bearer ${monerooKey}`,
             "Content-Type": "application/json",
-            "Accept": "application/json",
+            Accept: "application/json",
           },
           body: JSON.stringify({
             amount: Math.round(amount),
@@ -153,22 +164,35 @@ serve(async (req) => {
         const payoutData = await payoutRes.json();
 
         if (payoutRes.ok && payoutData?.data?.id) {
-          await supabase.from("withdrawals").update({
-            moneroo_reference: payoutData.data.id,
-            status: "processing",
-          }).eq("id", withdrawal.id);
+          await supabase
+            .from("withdrawals")
+            .update({
+              moneroo_reference: payoutData.data.id,
+              status: "processing",
+            })
+            .eq("id", withdrawal.id);
         } else {
           console.error("Moneroo payout error:", payoutData);
-          await supabase.from("withdrawals").update({
-            status: "failed",
-          }).eq("id", withdrawal.id);
+          await supabase
+            .from("withdrawals")
+            .update({
+              status: "failed",
+            })
+            .eq("id", withdrawal.id);
           throw new Error(payoutData?.message || "Erreur Moneroo lors du payout");
         }
       } catch (payoutErr: any) {
-        if (payoutErr.message?.includes("Moneroo") || payoutErr.message?.includes("Erreur") || payoutErr.message?.includes("minimum")) throw payoutErr;
+        if (
+          payoutErr.message?.includes("Moneroo") ||
+          payoutErr.message?.includes("Erreur") ||
+          payoutErr.message?.includes("minimum")
+        )
+          throw payoutErr;
         console.error("Payout request failed:", payoutErr);
         await supabase.from("withdrawals").update({ status: "failed" }).eq("id", withdrawal.id);
-        throw new Error("Erreur de connexion au service de paiement: " + (payoutErr.message || "erreur inconnue"));
+        throw new Error(
+          "Erreur de connexion au service de paiement: " + (payoutErr.message || "erreur inconnue"),
+        );
       }
     } else {
       await supabase.from("withdrawals").update({ status: "pending" }).eq("id", withdrawal.id);
@@ -182,15 +206,14 @@ serve(async (req) => {
       type: "info",
     });
 
-    return new Response(
-      JSON.stringify({ success: true, withdrawal_id: withdrawal.id }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return new Response(JSON.stringify({ success: true, withdrawal_id: withdrawal.id }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   } catch (error: any) {
     console.error("Error:", error);
-    return new Response(
-      JSON.stringify({ error: error.message }),
-      { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 400,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 });

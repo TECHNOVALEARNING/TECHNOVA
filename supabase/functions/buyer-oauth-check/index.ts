@@ -1,13 +1,14 @@
 // Verifies an OAuth-authenticated buyer has a customer record, returns last_otp_verified_at
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') {
+  if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
@@ -19,17 +20,20 @@ Deno.serve(async (req) => {
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) {
       return new Response(JSON.stringify({ error: "Missing authorization header" }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
     const userClient = createClient(SUPABASE_URL, ANON_KEY, {
       global: { headers: { Authorization: authHeader } },
     });
-    const { data: { user }, error: userErr } = await userClient.auth.getUser();
+    const {
+      data: { user },
+      error: userErr,
+    } = await userClient.auth.getUser();
     if (userErr || !user || !user.email) {
       return new Response(JSON.stringify({ error: "Session invalide" }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
@@ -44,12 +48,16 @@ Deno.serve(async (req) => {
       .maybeSingle();
 
     if (!customer) {
-      return new Response(JSON.stringify({
-        error: "Aucun achat trouvé pour cet email. Effectuez un premier achat pour accéder au portail.",
-        no_customer: true,
-      }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      return new Response(
+        JSON.stringify({
+          error:
+            "Aucun achat trouvé pour cet email. Effectuez un premier achat pour accéder au portail.",
+          no_customer: true,
+        }),
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
+      );
     }
 
     // Link auth_id if missing
@@ -57,21 +65,24 @@ Deno.serve(async (req) => {
       await admin.from("customers").update({ auth_id: user.id }).eq("id", customer.id);
     }
 
-    return new Response(JSON.stringify({
-      success: true,
-      customer: {
-        id: customer.id,
-        name: customer.name || (user.user_metadata?.full_name as string) || "Client",
-        email: customer.email,
+    return new Response(
+      JSON.stringify({
+        success: true,
+        customer: {
+          id: customer.id,
+          name: customer.name || (user.user_metadata?.full_name as string) || "Client",
+          email: customer.email,
+        },
+        last_otp_verified_at: customer.last_otp_verified_at,
+      }),
+      {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       },
-      last_otp_verified_at: customer.last_otp_verified_at,
-    }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    );
   } catch (error) {
     console.error("Error:", error);
     return new Response(JSON.stringify({ error: "Internal server error" }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 });

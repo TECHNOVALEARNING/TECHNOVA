@@ -3,7 +3,8 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 async function computeHmac(secret: string, payload: string): Promise<string> {
@@ -12,7 +13,7 @@ async function computeHmac(secret: string, payload: string): Promise<string> {
     new TextEncoder().encode(secret),
     { name: "HMAC", hash: "SHA-256" },
     false,
-    ["sign"]
+    ["sign"],
   );
   const sig = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(payload));
   return Array.from(new Uint8Array(sig))
@@ -33,10 +34,10 @@ serve(async (req) => {
     const { event, store_owner_id, payload } = await req.json();
 
     if (!event || !store_owner_id) {
-      return new Response(
-        JSON.stringify({ error: "event and store_owner_id required" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: "event and store_owner_id required" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     console.log(`Dispatching webhooks for event: ${event}, store: ${store_owner_id}`);
@@ -51,18 +52,17 @@ serve(async (req) => {
 
     if (fetchError) {
       console.error("Error fetching webhooks:", fetchError);
-      return new Response(
-        JSON.stringify({ error: "Failed to fetch webhooks" }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: "Failed to fetch webhooks" }), {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     if (!webhooks || webhooks.length === 0) {
       console.log("No active webhooks found for this event");
-      return new Response(
-        JSON.stringify({ dispatched: 0 }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ dispatched: 0 }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     // Filter by product_id if webhook has product filter
@@ -133,26 +133,27 @@ serve(async (req) => {
           attempt: 1,
         });
 
-        console.log(`Webhook ${wh.id} -> ${wh.url}: ${success ? "OK" : "FAILED"} (${responseStatus}) in ${Date.now() - startTime}ms`);
+        console.log(
+          `Webhook ${wh.id} -> ${wh.url}: ${success ? "OK" : "FAILED"} (${responseStatus}) in ${Date.now() - startTime}ms`,
+        );
 
         return { webhook_id: wh.id, success, status: responseStatus };
-      })
+      }),
     );
 
     const dispatched = results.filter((r) => r.status === "fulfilled").length;
     const succeeded = results.filter(
-      (r) => r.status === "fulfilled" && (r.value as any).success
+      (r) => r.status === "fulfilled" && (r.value as any).success,
     ).length;
 
-    return new Response(
-      JSON.stringify({ dispatched, succeeded }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return new Response(JSON.stringify({ dispatched, succeeded }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   } catch (error: any) {
     console.error("Dispatch webhook error:", error);
-    return new Response(
-      JSON.stringify({ error: error.message }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 });

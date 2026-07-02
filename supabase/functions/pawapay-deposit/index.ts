@@ -42,7 +42,8 @@ Deno.serve(async (req) => {
     if (!body.amount || body.amount <= 0) return json({ error: "Montant invalide" }, 400);
     if (!body.provider) return json({ error: "Opérateur requis" }, 400);
     if (!body.phone || body.phone.length < 8) return json({ error: "Numéro invalide" }, 400);
-    if (!body.customer?.email || !body.customer?.name) return json({ error: "Client incomplet" }, 400);
+    if (!body.customer?.email || !body.customer?.name)
+      return json({ error: "Client incomplet" }, 400);
     if (!body.metadata?.product_id || !body.metadata?.store_owner_id)
       return json({ error: "Produit requis" }, 400);
 
@@ -65,7 +66,10 @@ Deno.serve(async (req) => {
 
     if (existing?.id) {
       customerId = existing.id;
-      await admin.from("customers").update({ name, phone: `+${phone}` }).eq("id", customerId);
+      await admin
+        .from("customers")
+        .update({ name, phone: `+${phone}` })
+        .eq("id", customerId);
     } else {
       const { data: created, error: createErr } = await admin
         .from("customers")
@@ -99,9 +103,7 @@ Deno.serve(async (req) => {
         { customer_id: customerId },
         { product_id: body.metadata.product_id },
         { store_owner_id: body.metadata.store_owner_id },
-        ...(body.metadata.promo_code
-          ? [{ promo_code: String(body.metadata.promo_code) }]
-          : []),
+        ...(body.metadata.promo_code ? [{ promo_code: String(body.metadata.promo_code) }] : []),
         ...(body.metadata.original_price
           ? [{ original_price: String(body.metadata.original_price) }]
           : []),

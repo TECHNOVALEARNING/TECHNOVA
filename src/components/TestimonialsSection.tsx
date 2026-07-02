@@ -64,19 +64,29 @@ const AnimatedCounter = ({ target, suffix = "" }: { target: number; suffix?: str
   }, [started, target]);
 
   return (
-    <motion.span
-      onViewportEnter={() => setStarted(true)}
-      viewport={{ once: true }}
-    >
-      {count.toLocaleString()}{suffix}
+    <motion.span onViewportEnter={() => setStarted(true)} viewport={{ once: true }}>
+      {count.toLocaleString()}
+      {suffix}
     </motion.span>
   );
 };
 
 const liveStats = [
-  { icon: ShoppingBag, label: "Ventes aujourd'hui", value: 147, suffix: "+", color: "text-primary" },
+  {
+    icon: ShoppingBag,
+    label: "Ventes aujourd'hui",
+    value: 147,
+    suffix: "+",
+    color: "text-primary",
+  },
   { icon: Users, label: "Créateurs actifs", value: 10842, suffix: "", color: "text-primary" },
-  { icon: DollarSign, label: "Reversés ce mois", value: 45, suffix: "M FCFA", color: "text-primary" },
+  {
+    icon: DollarSign,
+    label: "Reversés ce mois",
+    value: 45,
+    suffix: "M FCFA",
+    color: "text-primary",
+  },
   { icon: TrendingUp, label: "Taux de croissance", value: 34, suffix: "%", color: "text-primary" },
 ];
 
@@ -136,12 +146,15 @@ const TestimonialsSection = () => {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <p className="text-sm font-semibold text-primary mb-3 uppercase tracking-wider">Témoignages</p>
+            <p className="text-sm font-semibold text-primary mb-3 uppercase tracking-wider">
+              Témoignages
+            </p>
             <h2 className="text-3xl md:text-5xl font-extrabold text-foreground mb-4">
               Ils nous font confiance
             </h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Des créateurs africains qui transforment leurs compétences en revenus grâce à TECHNOVA.
+              Des créateurs africains qui transforment leurs compétences en revenus grâce à
+              TECHNOVA.
             </p>
           </motion.div>
 
@@ -156,10 +169,8 @@ const TestimonialsSection = () => {
                 className="group relative rounded-2xl border border-border bg-card p-6 transition-all hover:shadow-xl hover:border-primary/20"
               >
                 <Quote className="h-8 w-8 text-primary/15 mb-4" />
-                
-                <p className="text-sm text-muted-foreground leading-relaxed mb-6">
-                  "{t.text}"
-                </p>
+
+                <p className="text-sm text-muted-foreground leading-relaxed mb-6">"{t.text}"</p>
 
                 {/* Rating */}
                 <div className="flex gap-0.5 mb-4">

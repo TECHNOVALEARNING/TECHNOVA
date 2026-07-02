@@ -2,7 +2,8 @@
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 Deno.serve(async (req) => {
@@ -15,10 +16,10 @@ Deno.serve(async (req) => {
     const MONEYFUSION_API_URL = Deno.env.get("MONEYFUSION_API_URL");
 
     if (!MONEYFUSION_API_URL) {
-      return new Response(
-        JSON.stringify({ error: "MoneyFusion API URL not configured" }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: "MoneyFusion API URL not configured" }), {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
@@ -32,18 +33,26 @@ Deno.serve(async (req) => {
       const name = customer?.name?.trim();
       const phone = customer?.phone?.trim();
 
-      if (!amount || !email || !name || !phone || !metadata?.product_id || !metadata?.store_owner_id || !return_url) {
-        return new Response(
-          JSON.stringify({ error: "Paramètres de paiement incomplets" }),
-          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
+      if (
+        !amount ||
+        !email ||
+        !name ||
+        !phone ||
+        !metadata?.product_id ||
+        !metadata?.store_owner_id ||
+        !return_url
+      ) {
+        return new Response(JSON.stringify({ error: "Paramètres de paiement incomplets" }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
       }
 
       // MoneyFusion requires minimum 200 FCFA
       if (Number(amount) < 200) {
         return new Response(
           JSON.stringify({ error: "Le montant minimum de paiement est de 200 FCFA" }),
-          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
         );
       }
 
@@ -56,10 +65,10 @@ Deno.serve(async (req) => {
         .maybeSingle();
 
       if (existingError) {
-        return new Response(
-          JSON.stringify({ error: `Erreur client: ${existingError.message}` }),
-          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
+        return new Response(JSON.stringify({ error: `Erreur client: ${existingError.message}` }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
       }
 
       if (existingCustomer?.id) {
@@ -75,7 +84,7 @@ Deno.serve(async (req) => {
         if (createError) {
           return new Response(
             JSON.stringify({ error: `Erreur création client: ${createError.message}` }),
-            { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+            { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
           );
         }
         customerId = newCustomer.id;
@@ -96,13 +105,15 @@ Deno.serve(async (req) => {
         body: JSON.stringify({
           totalPrice: Math.round(Number(amount)),
           article: [{ [metadata.product_title || "Produit"]: Math.round(Number(amount)) }],
-          personal_Info: [{
-            customer_id: customerId,
-            product_id: metadata.product_id,
-            store_owner_id: metadata.store_owner_id,
-            promo_code: metadata.promo_code || null,
-            original_price: metadata.original_price || null,
-          }],
+          personal_Info: [
+            {
+              customer_id: customerId,
+              product_id: metadata.product_id,
+              store_owner_id: metadata.store_owner_id,
+              promo_code: metadata.promo_code || null,
+              original_price: metadata.original_price || null,
+            },
+          ],
           numeroSend: cleanPhone,
           nomclient: name,
           return_url: return_url,
@@ -116,8 +127,10 @@ Deno.serve(async (req) => {
       if (!data.statut) {
         console.error("MoneyFusion payin error:", JSON.stringify(data));
         return new Response(
-          JSON.stringify({ error: data.message || "Erreur MoneyFusion lors de l'initialisation du paiement" }),
-          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          JSON.stringify({
+            error: data.message || "Erreur MoneyFusion lors de l'initialisation du paiement",
+          }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
         );
       }
 
@@ -125,10 +138,10 @@ Deno.serve(async (req) => {
       const paymentUrl = data.url;
 
       if (!paymentToken || !paymentUrl) {
-        return new Response(
-          JSON.stringify({ error: "Réponse MoneyFusion incomplète" }),
-          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
+        return new Response(JSON.stringify({ error: "Réponse MoneyFusion incomplète" }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
       }
 
       // Save payment event with token as transaction reference
@@ -148,7 +161,7 @@ Deno.serve(async (req) => {
             checkout_url: paymentUrl,
           },
         }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
 
@@ -156,26 +169,26 @@ Deno.serve(async (req) => {
       const { transaction_id } = body;
 
       if (!transaction_id) {
-        return new Response(
-          JSON.stringify({ error: "transaction_id requis" }),
-          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
+        return new Response(JSON.stringify({ error: "transaction_id requis" }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
       }
 
       // Call MoneyFusion verification endpoint
       const response = await fetch(
         `https://www.pay.moneyfusion.net/paiementNotif/${transaction_id}`,
-        { method: "GET" }
+        { method: "GET" },
       );
 
       const data = await response.json();
       console.log("MoneyFusion verify response:", JSON.stringify(data));
 
       if (!data.statut) {
-        return new Response(
-          JSON.stringify({ error: data.message || "Erreur de vérification" }),
-          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
+        return new Response(JSON.stringify({ error: data.message || "Erreur de vérification" }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
       }
 
       // Map MoneyFusion status to internal status
@@ -203,7 +216,7 @@ Deno.serve(async (req) => {
             transaction_id,
           },
         }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
 

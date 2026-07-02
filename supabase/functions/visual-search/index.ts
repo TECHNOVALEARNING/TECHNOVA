@@ -3,8 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
 Deno.serve(async (req) => {
@@ -68,17 +67,16 @@ Deno.serve(async (req) => {
         );
       }
       if (aiResp.status === 402) {
-        return new Response(
-          JSON.stringify({ error: "Crédits IA épuisés." }),
-          { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } },
-        );
+        return new Response(JSON.stringify({ error: "Crédits IA épuisés." }), {
+          status: 402,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
       }
       throw new Error("AI vision failed");
     }
 
     const aiData = await aiResp.json();
-    const keywords: string =
-      aiData.choices?.[0]?.message?.content?.trim() || "";
+    const keywords: string = aiData.choices?.[0]?.message?.content?.trim() || "";
 
     // 2) Use the keywords to search products
     const supabase = createClient(
@@ -92,9 +90,7 @@ Deno.serve(async (req) => {
       .filter((t) => t.length > 2)
       .slice(0, 8);
 
-    const orFilter = terms
-      .map((t) => `title.ilike.%${t}%,description.ilike.%${t}%`)
-      .join(",");
+    const orFilter = terms.map((t) => `title.ilike.%${t}%,description.ilike.%${t}%`).join(",");
 
     let query = supabase
       .from("products")
@@ -125,18 +121,14 @@ Deno.serve(async (req) => {
       store: creators[p.creator_id] || null,
     }));
 
-    return new Response(
-      JSON.stringify({ keywords, products: enriched }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } },
-    );
+    return new Response(JSON.stringify({ keywords, products: enriched }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   } catch (err) {
     console.error("visual-search error:", err);
-    return new Response(
-      JSON.stringify({ error: err instanceof Error ? err.message : "Unknown" }),
-      {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      },
-    );
+    return new Response(JSON.stringify({ error: err instanceof Error ? err.message : "Unknown" }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 });

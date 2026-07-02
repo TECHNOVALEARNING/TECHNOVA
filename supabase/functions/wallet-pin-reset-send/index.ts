@@ -3,8 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
 Deno.serve(async (req) => {
@@ -20,7 +19,9 @@ Deno.serve(async (req) => {
     const userClient = createClient(SUPABASE_URL, ANON, {
       global: { headers: { Authorization: authHeader } },
     });
-    const { data: { user } } = await userClient.auth.getUser();
+    const {
+      data: { user },
+    } = await userClient.auth.getUser();
     if (!user || !user.email) return j({ error: "Session invalide" }, 401);
 
     const admin = createClient(SUPABASE_URL, SERVICE);
@@ -76,7 +77,8 @@ Deno.serve(async (req) => {
       return j({ error: "Erreur d'envoi de l'email" }, 502);
     }
 
-    await admin.from("login_otps")
+    await admin
+      .from("login_otps")
       .update({ used: true })
       .eq("user_id", user.id)
       .eq("email", `pinreset:${user.email}`)
@@ -96,6 +98,9 @@ Deno.serve(async (req) => {
     return j({ error: e.message || "Erreur serveur" }, 500);
   }
   function j(b: unknown, s = 200) {
-    return new Response(JSON.stringify(b), { status: s, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    return new Response(JSON.stringify(b), {
+      status: s,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 });

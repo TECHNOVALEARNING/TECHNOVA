@@ -1,8 +1,23 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import {
-  Users, Key, DollarSign, Wallet, BarChart3, BadgeCheck, Megaphone,
-  Zap, Webhook, MessageCircle, Settings, HelpCircle, LogOut, Shield,
-  Store, Plus, Check, Package,
+  Users,
+  Key,
+  DollarSign,
+  Wallet,
+  BarChart3,
+  BadgeCheck,
+  Megaphone,
+  Zap,
+  Webhook,
+  MessageCircle,
+  Settings,
+  HelpCircle,
+  LogOut,
+  Shield,
+  Store,
+  Plus,
+  Check,
+  Package,
 } from "lucide-react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { useAuth } from "@/contexts/AuthContext";
@@ -71,7 +86,7 @@ const translations = {
     newStore: "New",
     signOut: "Sign out",
     creator: "Creator",
-  }
+  },
 };
 
 export default function DashboardMenu() {
@@ -80,7 +95,9 @@ export default function DashboardMenu() {
   const { activeStore, activeStores, setActiveStoreId } = useActiveStore();
   const isAdmin = user?.email === "ancres707@gmail.com";
 
-  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+  const [lang, setLang] = useState(() =>
+    typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
+  );
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -88,7 +105,7 @@ export default function DashboardMenu() {
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
 
-  const t = translations[lang === 'en' ? 'en' : 'fr'];
+  const t = translations[lang === "en" ? "en" : "fr"];
 
   const drawerSections = [
     {
@@ -137,7 +154,11 @@ export default function DashboardMenu() {
         <div className="flex items-center gap-3 p-4 rounded-2xl dash-glass relative overflow-hidden transition-all duration-300">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-accent shadow-lg shadow-primary/25">
             {activeStore?.logo_url ? (
-              <img src={activeStore.logo_url} alt="" className="h-12 w-12 rounded-xl object-cover" />
+              <img
+                src={activeStore.logo_url}
+                alt=""
+                className="h-12 w-12 rounded-xl object-cover"
+              />
             ) : (
               <img src={logo} alt="TECHNOVA" className="h-6 w-6 object-contain" />
             )}
@@ -147,7 +168,8 @@ export default function DashboardMenu() {
               {activeStore?.name || "TECHNOVA"}
             </p>
             <p className="text-xs text-muted-foreground truncate">
-              {activeStores.length} {activeStores.length !== 1 ? t.activeStoresPlural : t.activeStores}
+              {activeStores.length}{" "}
+              {activeStores.length !== 1 ? t.activeStoresPlural : t.activeStores}
             </p>
           </div>
         </div>
@@ -186,7 +208,9 @@ export default function DashboardMenu() {
 
         {/* Sections */}
         {drawerSections.map((section) => {
-          const filteredItems = section.items.filter(item => isAdmin || item.title !== t.licences);
+          const filteredItems = section.items.filter(
+            (item) => isAdmin || item.title !== t.licences,
+          );
           return (
             <div key={section.label}>
               <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground mb-2 px-1">
@@ -199,7 +223,9 @@ export default function DashboardMenu() {
                       <div className="h-9 w-9 rounded-lg flex items-center justify-center bg-secondary text-foreground shrink-0">
                         <item.icon className="h-4 w-4" />
                       </div>
-                      <span className="text-xs font-semibold text-foreground truncate">{item.title}</span>
+                      <span className="text-xs font-semibold text-foreground truncate">
+                        {item.title}
+                      </span>
                     </div>
                   );
                   return "external" in item && item.external ? (
@@ -232,7 +258,9 @@ export default function DashboardMenu() {
                   <div className="h-9 w-9 rounded-lg flex items-center justify-center bg-accent/15 text-accent shrink-0">
                     <item.icon className="h-4 w-4" />
                   </div>
-                  <span className="text-xs font-semibold text-foreground truncate">{item.title}</span>
+                  <span className="text-xs font-semibold text-foreground truncate">
+                    {item.title}
+                  </span>
                 </NavLink>
               ))}
             </div>

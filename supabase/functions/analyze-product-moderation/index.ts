@@ -36,7 +36,9 @@ serve(async (req) => {
 
     const { data: product } = await adminClient
       .from("products")
-      .select("id, title, description, type, price, original_price, thumbnail_url, download_url, creator_id")
+      .select(
+        "id, title, description, type, price, original_price, thumbnail_url, download_url, creator_id",
+      )
       .eq("id", productId)
       .eq("creator_id", user.id)
       .single();
@@ -100,53 +102,57 @@ Décision attendue :
       },
     ];
 
-    const response = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${lovableApiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "gemini-2.5-flash",
-        messages,
-        tools: [
-          {
-            type: "function",
-            function: {
-              name: "return_product_review",
-              description: "Retourne la décision de modération du produit",
-              parameters: {
-                type: "object",
-                properties: {
-                  status: {
-                    type: "string",
-                    enum: ["approved", "needs_review", "rejected"],
+    const response = await fetch(
+      "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${lovableApiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "gemini-2.5-flash",
+          messages,
+          tools: [
+            {
+              type: "function",
+              function: {
+                name: "return_product_review",
+                description: "Retourne la décision de modération du produit",
+                parameters: {
+                  type: "object",
+                  properties: {
+                    status: {
+                      type: "string",
+                      enum: ["approved", "needs_review", "rejected"],
+                    },
+                    summary: { type: "string" },
+                    issues: {
+                      type: "array",
+                      items: { type: "string" },
+                    },
+                    suggested_fixes: {
+                      type: "array",
+                      items: { type: "string" },
+                    },
                   },
-                  summary: { type: "string" },
-                  issues: {
-                    type: "array",
-                    items: { type: "string" },
-                  },
-                  suggested_fixes: {
-                    type: "array",
-                    items: { type: "string" },
-                  },
+                  required: ["status", "summary", "issues", "suggested_fixes"],
+                  additionalProperties: false,
                 },
-                required: ["status", "summary", "issues", "suggested_fixes"],
-                additionalProperties: false,
               },
             },
+          ],
+          tool_choice: {
+            type: "function",
+            function: { name: "return_product_review" },
           },
-        ],
-        tool_choice: {
-          type: "function",
-          function: { name: "return_product_review" },
-        },
-      }),
-    });
+        }),
+      },
+    );
 
     if (!response.ok) {
-      if (response.status === 429) throw new Error("Rate limit IA atteint, réessayez dans un instant.");
+      if (response.status === 429)
+        throw new Error("Rate limit IA atteint, réessayez dans un instant.");
       if (response.status === 402) throw new Error("Crédits IA insuffisants.");
       throw new Error(await response.text());
     }
@@ -157,7 +163,7 @@ Décision attendue :
 
     // Map needs_review to warning for DB enum, but keep the logic
     const isNeedsReview = parsed.status === "needs_review";
-    const dbStatus = isNeedsReview ? "warning" : (parsed.status || "warning");
+    const dbStatus = isNeedsReview ? "warning" : parsed.status || "warning";
 
     const review = {
       status: parsed.status || "approved",
@@ -167,18 +173,16 @@ Décision attendue :
       reviewed_at: new Date().toISOString(),
     };
 
-    await adminClient
-      .from("product_moderation_reviews")
-      .insert({
-        product_id: product.id,
-        creator_id: user.id,
-        status: dbStatus,
-        summary: review.summary,
-        issues: review.issues,
-        suggested_fixes: review.suggested_fixes,
-        raw_result: payload,
-        reviewed_at: review.reviewed_at,
-      });
+    await adminClient.from("product_moderation_reviews").insert({
+      product_id: product.id,
+      creator_id: user.id,
+      status: dbStatus,
+      summary: review.summary,
+      issues: review.issues,
+      suggested_fixes: review.suggested_fixes,
+      raw_result: payload,
+      reviewed_at: review.reviewed_at,
+    });
 
     // For needs_review: silently send email to admin, don't show popup to creator
     if (isNeedsReview && resendApiKey) {

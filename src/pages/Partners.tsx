@@ -17,9 +17,15 @@ const benefitsData = [
 const translations = {
   fr: {
     seoTitle: "Devenir partenaire",
-    seoDesc: "Rejoignez le programme partenaire TECHNOVA. Gagnez jusqu'à 30% de commissions récurrentes en référant des créateurs.",
-    heading: <>Devenez <span className="text-gradient">partenaire</span> TECHNOVA</>,
-    subtitle: "Rejoignez notre programme partenaire et gagnez des commissions en recommandant la plateforme.",
+    seoDesc:
+      "Rejoignez le programme partenaire TECHNOVA. Gagnez jusqu'à 30% de commissions récurrentes en référant des créateurs.",
+    heading: (
+      <>
+        Devenez <span className="text-gradient">partenaire</span> TECHNOVA
+      </>
+    ),
+    subtitle:
+      "Rejoignez notre programme partenaire et gagnez des commissions en recommandant la plateforme.",
     btnLabel: "Devenir partenaire",
     commissionsTitle: "Commissions attractives",
     commissionsDesc: "Gagnez jusqu'à 30% de commissions récurrentes sur chaque client référé.",
@@ -32,8 +38,13 @@ const translations = {
   },
   en: {
     seoTitle: "Become a Partner",
-    seoDesc: "Join the TECHNOVA partner program. Earn up to 30% recurring commissions by referring creators.",
-    heading: <>Become a TECHNOVA <span className="text-gradient">Partner</span></>,
+    seoDesc:
+      "Join the TECHNOVA partner program. Earn up to 30% recurring commissions by referring creators.",
+    heading: (
+      <>
+        Become a TECHNOVA <span className="text-gradient">Partner</span>
+      </>
+    ),
     subtitle: "Join our partner program and earn commissions by recommending the platform.",
     btnLabel: "Become a partner",
     commissionsTitle: "Attractive Commissions",
@@ -44,11 +55,13 @@ const translations = {
     supportDesc: "A dedicated partner manager to assist you in your growth.",
     dashboardTitle: "Partner Dashboard",
     dashboardDesc: "Track your performance, commissions, and payouts in real-time.",
-  }
+  },
 };
 
 const Partners = () => {
-  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+  const [lang, setLang] = useState(() =>
+    typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
+  );
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -56,7 +69,7 @@ const Partners = () => {
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
 
-  const t = translations[lang === 'en' ? 'en' : 'fr'];
+  const t = translations[lang === "en" ? "en" : "fr"];
 
   return (
     <div className="min-h-screen bg-background">
@@ -68,11 +81,12 @@ const Partners = () => {
             <h1 className="text-4xl md:text-6xl font-extrabold text-foreground mb-6">
               {t.heading}
             </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-10">
-              {t.subtitle}
-            </p>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-10">{t.subtitle}</p>
             <Link to="/register">
-              <Button size="lg" className="px-8 py-6 text-base font-semibold shadow-lg shadow-primary/25">
+              <Button
+                size="lg"
+                className="px-8 py-6 text-base font-semibold shadow-lg shadow-primary/25"
+              >
                 {t.btnLabel} <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
@@ -86,8 +100,14 @@ const Partners = () => {
             {benefitsData.map((b, i) => {
               const Icon = b.icon;
               return (
-                <motion.div key={b.key} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-                  className="rounded-2xl border border-border bg-card p-6 text-center">
+                <motion.div
+                  key={b.key}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  className="rounded-2xl border border-border bg-card p-6 text-center"
+                >
                   <div className="mb-4 mx-auto flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10">
                     <Icon className="h-5 w-5 text-primary" />
                   </div>

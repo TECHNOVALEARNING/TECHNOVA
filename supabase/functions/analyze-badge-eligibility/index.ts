@@ -26,7 +26,7 @@ Deno.serve(async (req) => {
   try {
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
     );
     const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
 
@@ -35,12 +35,12 @@ Deno.serve(async (req) => {
     try {
       const body = await req.json();
       targetUserId = body?.user_id ?? null;
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
 
     // Get all sellers (users who have at least 1 product)
-    let sellersQuery = supabase
-      .from("profiles")
-      .select("id, display_name");
+    let sellersQuery = supabase.from("profiles").select("id, display_name");
     if (targetUserId) sellersQuery = sellersQuery.eq("id", targetUserId);
 
     const { data: sellers, error: sellersErr } = await sellersQuery;
@@ -111,36 +111,39 @@ Critères d'évaluation:
 Réponds en JSON strict: {"score": <0-100>, "is_eligible": <bool>, "reasoning": "<1-2 phrases>"}`;
 
         try {
-          const aiResp = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${GEMINI_API_KEY}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              model: "gemini-2.5-flash",
-              messages: [{ role: "user", content: prompt }],
-              tools: [
-                {
-                  type: "function",
-                  function: {
-                    name: "submit_evaluation",
-                    description: "Soumet l'évaluation du vendeur",
-                    parameters: {
-                      type: "object",
-                      properties: {
-                        score: { type: "number" },
-                        is_eligible: { type: "boolean" },
-                        reasoning: { type: "string" },
+          const aiResp = await fetch(
+            "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
+            {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${GEMINI_API_KEY}`,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                model: "gemini-2.5-flash",
+                messages: [{ role: "user", content: prompt }],
+                tools: [
+                  {
+                    type: "function",
+                    function: {
+                      name: "submit_evaluation",
+                      description: "Soumet l'évaluation du vendeur",
+                      parameters: {
+                        type: "object",
+                        properties: {
+                          score: { type: "number" },
+                          is_eligible: { type: "boolean" },
+                          reasoning: { type: "string" },
+                        },
+                        required: ["score", "is_eligible", "reasoning"],
                       },
-                      required: ["score", "is_eligible", "reasoning"],
                     },
                   },
-                },
-              ],
-              tool_choice: { type: "function", function: { name: "submit_evaluation" } },
-            }),
-          });
+                ],
+                tool_choice: { type: "function", function: { name: "submit_evaluation" } },
+              }),
+            },
+          );
 
           if (aiResp.ok) {
             const aiData = await aiResp.json();
@@ -203,7 +206,10 @@ Réponds en JSON strict: {"score": <0-100>, "is_eligible": <bool>, "reasoning": 
             message: `Félicitations ! Vous êtes éligible au badge ${computedGrade.toUpperCase()}. Activez-le depuis votre dashboard.`,
             type: "success",
           });
-        } else if (existingBadge.status === "pending_payment" && existingBadge.grade !== computedGrade) {
+        } else if (
+          existingBadge.status === "pending_payment" &&
+          existingBadge.grade !== computedGrade
+        ) {
           // Upgrade pending grade
           await supabase
             .from("verified_badges")

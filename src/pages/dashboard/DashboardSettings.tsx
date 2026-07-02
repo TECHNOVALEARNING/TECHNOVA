@@ -1,5 +1,19 @@
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
-import { ArrowLeft, User, Palette, Settings, ExternalLink, Activity, Globe, Send, Scale, ArrowRight, ShieldCheck, CreditCard, Search } from "lucide-react";
+import {
+  ArrowLeft,
+  User,
+  Palette,
+  Settings,
+  ExternalLink,
+  Activity,
+  Globe,
+  Send,
+  Scale,
+  ArrowRight,
+  ShieldCheck,
+  CreditCard,
+  Search,
+} from "lucide-react";
 import DashboardProfileTab from "@/components/dashboard/DashboardProfileTab";
 import DashboardAppearanceTab from "@/components/dashboard/DashboardAppearanceTab";
 import DashboardAccountTab from "@/components/dashboard/DashboardAccountTab";
@@ -63,10 +77,19 @@ const translations = {
     tabTelegramDesc: "Manage alerts to track your shop's activity.",
     tabAccountTitle: "My Profile & KYC",
     tabAccountDesc: "Manage your personal information and verify your identity.",
-  }
+  },
 };
 
-const VALID_TABS = ["profile", "appearance", "pixels", "account", "domain", "telegram", "legal", "orders"];
+const VALID_TABS = [
+  "profile",
+  "appearance",
+  "pixels",
+  "account",
+  "domain",
+  "telegram",
+  "legal",
+  "orders",
+];
 
 const DashboardSettings = () => {
   const { activeStore } = useActiveStore();
@@ -74,7 +97,9 @@ const DashboardSettings = () => {
   const tabParam = searchParams.get("tab");
   const navigate = useNavigate();
 
-  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+  const [lang, setLang] = useState(() =>
+    typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
+  );
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -82,8 +107,8 @@ const DashboardSettings = () => {
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
 
-  const t = translations[lang === 'en' ? 'en' : 'fr'];
-  
+  const t = translations[lang === "en" ? "en" : "fr"];
+
   const activeTab = tabParam && VALID_TABS.includes(tabParam) ? tabParam : null;
 
   const categories = [
@@ -95,56 +120,66 @@ const DashboardSettings = () => {
         { id: "domain", title: t.tabDomainTitle, desc: t.tabDomainDesc, icon: Globe },
         { id: "legal", title: t.tabLegalTitle, desc: t.tabLegalDesc, icon: Scale },
         { id: "orders", title: t.tabOrdersTitle, desc: t.tabOrdersDesc, icon: Search },
-      ]
+      ],
     },
     {
       title: t.catMarketing,
       items: [
         { id: "pixels", title: t.tabPixelsTitle, desc: t.tabPixelsDesc, icon: Activity },
         { id: "telegram", title: t.tabTelegramTitle, desc: t.tabTelegramDesc, icon: Send },
-      ]
+      ],
     },
     {
       title: t.catAccount,
       items: [
         { id: "account", title: t.tabAccountTitle, desc: t.tabAccountDesc, icon: ShieldCheck },
-      ]
-    }
+      ],
+    },
   ];
 
   const renderContent = () => {
     switch (activeTab) {
-      case "profile": return <DashboardProfileTab />;
-      case "appearance": return <DashboardAppearanceTab />;
-      case "pixels": return <DashboardPixelsTab />;
-      case "account": return <DashboardAccountTab />;
-      case "domain": return <DashboardDomainTab />;
-      case "telegram": return <DashboardTelegramTab />;
-      case "legal": return <DashboardLegalTab />;
-      case "orders": return <DashboardOrderLookupTab />;
-      default: return null;
+      case "profile":
+        return <DashboardProfileTab />;
+      case "appearance":
+        return <DashboardAppearanceTab />;
+      case "pixels":
+        return <DashboardPixelsTab />;
+      case "account":
+        return <DashboardAccountTab />;
+      case "domain":
+        return <DashboardDomainTab />;
+      case "telegram":
+        return <DashboardTelegramTab />;
+      case "legal":
+        return <DashboardLegalTab />;
+      case "orders":
+        return <DashboardOrderLookupTab />;
+      default:
+        return null;
     }
   };
 
   return (
     <DashboardLayout>
       <div className="max-w-[1200px] w-full pb-10">
-        
         {/* Header Section */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div className="flex items-center gap-3">
             {activeTab && (
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="h-9 w-9 rounded-full bg-muted/50 hover:bg-muted shrink-0" 
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-9 w-9 rounded-full bg-muted/50 hover:bg-muted shrink-0"
                 onClick={() => setSearchParams({})}
               >
                 <ArrowLeft className="h-4 w-4 text-foreground" />
               </Button>
             )}
             <div>
-              <h1 className="text-2xl sm:text-[26px] font-bold text-foreground tracking-tight">{t.title}</h1>
+              <h1 className="text-2xl sm:text-[26px] font-bold text-foreground tracking-tight">
+                {t.title}
+              </h1>
               <p className="text-sm text-muted-foreground mt-0.5">
                 {activeTab ? t.detailedConfig : t.subtitle}
               </p>
@@ -156,7 +191,9 @@ const DashboardSettings = () => {
               variant="outline"
               size="sm"
               className="gap-2 rounded-full shadow-sm"
-              onClick={() => window.open(`https://technovalearning.com/store/${activeStore.slug}`, '_blank')}
+              onClick={() =>
+                window.open(`https://technovalearning.com/store/${activeStore.slug}`, "_blank")
+              }
             >
               <ExternalLink className="h-4 w-4" />
               {t.visitStore}
@@ -169,7 +206,9 @@ const DashboardSettings = () => {
           <div className="space-y-10 animate-in fade-in slide-in-from-bottom-2 duration-500">
             {categories.map((category) => (
               <div key={category.title}>
-                <h2 className="text-lg font-serif font-semibold text-foreground mb-4 pl-1">{category.title}</h2>
+                <h2 className="text-lg font-serif font-semibold text-foreground mb-4 pl-1">
+                  {category.title}
+                </h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
                   {category.items.map((item) => (
                     <div

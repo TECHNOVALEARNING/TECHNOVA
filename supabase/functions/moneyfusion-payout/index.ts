@@ -2,7 +2,8 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 const MONEYFUSION_API_URL = "https://pay.moneyfusion.net/api/v1/withdraw";
@@ -35,9 +36,18 @@ function extractCountryCode(phoneNumber: string): { countryCode: string; localPh
   const cleanPhone = phoneNumber.replace(/\s+/g, "").replace(/^\+/, "");
 
   const dialToCountry: Record<string, string> = {
-    "229": "bj", "225": "ci", "228": "tg", "223": "ml",
-    "221": "sn", "226": "bf", "224": "gn", "237": "cm",
-    "233": "gh", "243": "cd", "241": "ga", "254": "ke",
+    "229": "bj",
+    "225": "ci",
+    "228": "tg",
+    "223": "ml",
+    "221": "sn",
+    "226": "bf",
+    "224": "gn",
+    "237": "cm",
+    "233": "gh",
+    "243": "cd",
+    "241": "ga",
+    "254": "ke",
     "242": "cg",
   };
 
@@ -73,7 +83,10 @@ Deno.serve(async (req) => {
     const userClient = createClient(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY")!, {
       global: { headers: { Authorization: authHeader } },
     });
-    const { data: { user }, error: authError } = await userClient.auth.getUser(token);
+    const {
+      data: { user },
+      error: authError,
+    } = await userClient.auth.getUser(token);
     if (authError || !user) throw new Error("Non authentifié");
 
     const { amount, phoneNumber, operator } = await req.json();
@@ -90,7 +103,11 @@ Deno.serve(async (req) => {
       .eq("status", "completed");
 
     const totalSales = (orders || []).reduce((sum: number, o: any) => sum + Number(o.amount), 0);
-    const { data: feeRow } = await supabase.from("platform_fees").select("value_pct").eq("key", "technova_commission_pct").maybeSingle();
+    const { data: feeRow } = await supabase
+      .from("platform_fees")
+      .select("value_pct")
+      .eq("key", "technova_commission_pct")
+      .maybeSingle();
     const commissionPct = Number(feeRow?.value_pct ?? 5) / 100;
     const commission = totalSales * commissionPct;
     const grossAvailable = totalSales - commission;
@@ -101,7 +118,10 @@ Deno.serve(async (req) => {
       .eq("user_id", user.id)
       .in("status", ["pending", "processing", "completed"]);
 
-    const totalWithdrawn = (withdrawals || []).reduce((sum: number, w: any) => sum + Number(w.amount), 0);
+    const totalWithdrawn = (withdrawals || []).reduce(
+      (sum: number, w: any) => sum + Number(w.amount),
+      0,
+    );
     const availableBalance = grossAvailable - totalWithdrawn;
 
     if (amount > availableBalance) {
@@ -159,18 +179,26 @@ Deno.serve(async (req) => {
       }
 
       // Save tokenPay as reference
-      await supabase.from("withdrawals").update({
-        moneroo_reference: data.tokenPay,
-        status: "processing",
-      }).eq("id", withdrawal.id);
-
+      await supabase
+        .from("withdrawals")
+        .update({
+          moneroo_reference: data.tokenPay,
+          status: "processing",
+        })
+        .eq("id", withdrawal.id);
     } catch (payoutErr: any) {
-      if (payoutErr.message?.includes("MoneyFusion") || payoutErr.message?.includes("Solde") || payoutErr.message?.includes("minimum")) {
+      if (
+        payoutErr.message?.includes("MoneyFusion") ||
+        payoutErr.message?.includes("Solde") ||
+        payoutErr.message?.includes("minimum")
+      ) {
         throw payoutErr;
       }
       console.error("Payout request failed:", payoutErr);
       await supabase.from("withdrawals").update({ status: "failed" }).eq("id", withdrawal.id);
-      throw new Error("Erreur de connexion au service de retrait: " + (payoutErr.message || "erreur inconnue"));
+      throw new Error(
+        "Erreur de connexion au service de retrait: " + (payoutErr.message || "erreur inconnue"),
+      );
     }
 
     // Notify user
@@ -181,15 +209,14 @@ Deno.serve(async (req) => {
       type: "info",
     });
 
-    return new Response(
-      JSON.stringify({ success: true, withdrawal_id: withdrawal.id }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return new Response(JSON.stringify({ success: true, withdrawal_id: withdrawal.id }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   } catch (error: any) {
     console.error("Error:", error);
-    return new Response(
-      JSON.stringify({ error: error.message }),
-      { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 400,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 });

@@ -8,15 +8,39 @@ import SEOHead from "@/components/SEOHead";
 import { useState, useEffect } from "react";
 
 const benefitsFr = [
-  { icon: ShieldCheck, title: "Aucun abonnement", desc: "Pas de frais mensuels, pas de frais cachés. Vous ne payez que quand vous vendez." },
-  { icon: Zap, title: "Paiement instantané", desc: "Recevez 90% du montant de chaque vente directement sur votre compte." },
-  { icon: Globe, title: "Tout inclus", desc: "Boutique en ligne, analytics, gestion clients, paiements Mobile Money & carte bancaire." },
+  {
+    icon: ShieldCheck,
+    title: "Aucun abonnement",
+    desc: "Pas de frais mensuels, pas de frais cachés. Vous ne payez que quand vous vendez.",
+  },
+  {
+    icon: Zap,
+    title: "Paiement instantané",
+    desc: "Recevez 90% du montant de chaque vente directement sur votre compte.",
+  },
+  {
+    icon: Globe,
+    title: "Tout inclus",
+    desc: "Boutique en ligne, analytics, gestion clients, paiements Mobile Money & carte bancaire.",
+  },
 ];
 
 const benefitsEn = [
-  { icon: ShieldCheck, title: "No subscription", desc: "No monthly fees, no hidden costs. You only pay when you sell." },
-  { icon: Zap, title: "Instant payout", desc: "Receive 90% of the amount of each sale directly to your account." },
-  { icon: Globe, title: "All inclusive", desc: "Online store, analytics, customer management, Mobile Money & credit card payments." },
+  {
+    icon: ShieldCheck,
+    title: "No subscription",
+    desc: "No monthly fees, no hidden costs. You only pay when you sell.",
+  },
+  {
+    icon: Zap,
+    title: "Instant payout",
+    desc: "Receive 90% of the amount of each sale directly to your account.",
+  },
+  {
+    icon: Globe,
+    title: "All inclusive",
+    desc: "Online store, analytics, customer management, Mobile Money & credit card payments.",
+  },
 ];
 
 const includedFr = [
@@ -48,10 +72,17 @@ const includedEn = [
 const translations = {
   fr: {
     seoTitle: "Tarifs - TechNova",
-    seoDesc: "Tarifs TECHNOVA : 0% de frais d'inscription, commission de seulement 5%. Vendez vos produits digitaux sans abonnement. Paiements en ligne sécurisés.",
+    seoDesc:
+      "Tarifs TECHNOVA : 0% de frais d'inscription, commission de seulement 5%. Vendez vos produits digitaux sans abonnement. Paiements en ligne sécurisés.",
     eyebrow: "Modèle simple à la commission",
-    heroTitle: <>0 FCFA pour commencer. <br />5% par vente.</>,
-    heroDesc: "Pas d'abonnement, pas de frais cachés. Créez votre boutique gratuitement et ne payez qu'une commission de 5% uniquement quand vous réalisez une vente.",
+    heroTitle: (
+      <>
+        0 FCFA pour commencer. <br />
+        5% par vente.
+      </>
+    ),
+    heroDesc:
+      "Pas d'abonnement, pas de frais cachés. Créez votre boutique gratuitement et ne payez qu'une commission de 5% uniquement quand vous réalisez une vente.",
     ctaHero: "Créer ma boutique gratuite",
     howItWorks: "Comment ça marche ?",
     transparency: "Un modèle transparent aligné sur votre succès",
@@ -60,15 +91,23 @@ const translations = {
     commissionLabel: "Commission TECHNOVA (5%)",
     includedTitle: "Tout est inclus, sans frais supplémentaires",
     readyToSell: "Prêt à vendre ?",
-    ctaBottomDesc: "Rejoignez des milliers de créateurs qui vendent déjà leurs produits digitaux sur TECHNOVA.",
+    ctaBottomDesc:
+      "Rejoignez des milliers de créateurs qui vendent déjà leurs produits digitaux sur TECHNOVA.",
     ctaBottomBtn: "Créer ma boutique maintenant",
   },
   en: {
     seoTitle: "Pricing - TechNova",
-    seoDesc: "TECHNOVA Pricing: 0% registration fees, only 5% commission. Sell your digital products without subscription. Secure online payments.",
+    seoDesc:
+      "TECHNOVA Pricing: 0% registration fees, only 5% commission. Sell your digital products without subscription. Secure online payments.",
     eyebrow: "Simple commission-based model",
-    heroTitle: <>0 FCFA to start. <br />5% per sale.</>,
-    heroDesc: "No subscription, no hidden fees. Create your store for free and pay only a 5% commission when you make a sale.",
+    heroTitle: (
+      <>
+        0 FCFA to start. <br />
+        5% per sale.
+      </>
+    ),
+    heroDesc:
+      "No subscription, no hidden fees. Create your store for free and pay only a 5% commission when you make a sale.",
     ctaHero: "Create my free storefront",
     howItWorks: "How it works?",
     transparency: "A transparent model aligned with your success",
@@ -77,13 +116,16 @@ const translations = {
     commissionLabel: "TECHNOVA Commission (5%)",
     includedTitle: "Everything is included, at no extra cost",
     readyToSell: "Ready to sell?",
-    ctaBottomDesc: "Join thousands of creators who already sell their digital products on TECHNOVA.",
+    ctaBottomDesc:
+      "Join thousands of creators who already sell their digital products on TECHNOVA.",
     ctaBottomBtn: "Create my storefront now",
-  }
+  },
 };
 
 const Pricing = () => {
-  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+  const [lang, setLang] = useState(() =>
+    typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
+  );
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -91,13 +133,18 @@ const Pricing = () => {
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
 
-  const t = translations[lang === 'en' ? 'en' : 'fr'];
-  const benefits = lang === 'en' ? benefitsEn : benefitsFr;
-  const included = lang === 'en' ? includedEn : includedFr;
+  const t = translations[lang === "en" ? "en" : "fr"];
+  const benefits = lang === "en" ? benefitsEn : benefitsFr;
+  const included = lang === "en" ? includedEn : includedFr;
 
   return (
     <div className="min-h-screen bg-background">
-      <SEOHead title={t.seoTitle} description={t.seoDesc} canonicalPath="/pricing" keywords="tarifs vente produits digitaux, commission, prix, stripe, cartes, mondial" />
+      <SEOHead
+        title={t.seoTitle}
+        description={t.seoDesc}
+        canonicalPath="/pricing"
+        keywords="tarifs vente produits digitaux, commission, prix, stripe, cartes, mondial"
+      />
       <Header />
 
       {/* Hero */}
@@ -111,11 +158,12 @@ const Pricing = () => {
             <h1 className="text-4xl md:text-6xl font-extrabold text-foreground mb-6">
               {t.heroTitle}
             </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-10">
-              {t.heroDesc}
-            </p>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-10">{t.heroDesc}</p>
             <Link to="/register">
-              <Button size="lg" className="px-8 py-6 text-base font-semibold shadow-lg shadow-primary/25">
+              <Button
+                size="lg"
+                className="px-8 py-6 text-base font-semibold shadow-lg shadow-primary/25"
+              >
                 {t.ctaHero}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -127,8 +175,15 @@ const Pricing = () => {
       {/* How it works */}
       <section className="py-24 bg-background">
         <div className="container mx-auto px-6">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-extrabold text-foreground mb-4">{t.howItWorks}</h2>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-3xl md:text-4xl font-extrabold text-foreground mb-4">
+              {t.howItWorks}
+            </h2>
             <p className="text-muted-foreground text-lg max-w-xl mx-auto">{t.transparency}</p>
           </motion.div>
 
@@ -186,7 +241,9 @@ const Pricing = () => {
             className="max-w-3xl mx-auto"
           >
             <div className="rounded-2xl border border-primary/20 bg-card p-8 shadow-lg">
-              <h3 className="text-xl font-bold text-foreground mb-6 text-center">{t.includedTitle}</h3>
+              <h3 className="text-xl font-bold text-foreground mb-6 text-center">
+                {t.includedTitle}
+              </h3>
               <div className="grid gap-3 sm:grid-cols-2">
                 {included.map((f) => (
                   <div key={f} className="flex items-center gap-2.5">
@@ -203,13 +260,20 @@ const Pricing = () => {
       {/* CTA */}
       <section className="py-20 bg-secondary/30">
         <div className="container mx-auto px-6 text-center">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-foreground mb-4">{t.readyToSell}</h2>
-            <p className="text-muted-foreground text-lg mb-8 max-w-lg mx-auto">
-              {t.ctaBottomDesc}
-            </p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-3xl md:text-4xl font-extrabold text-foreground mb-4">
+              {t.readyToSell}
+            </h2>
+            <p className="text-muted-foreground text-lg mb-8 max-w-lg mx-auto">{t.ctaBottomDesc}</p>
             <Link to="/register">
-              <Button size="lg" className="px-8 py-6 text-base font-semibold shadow-lg shadow-primary/25">
+              <Button
+                size="lg"
+                className="px-8 py-6 text-base font-semibold shadow-lg shadow-primary/25"
+              >
                 {t.ctaBottomBtn}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>

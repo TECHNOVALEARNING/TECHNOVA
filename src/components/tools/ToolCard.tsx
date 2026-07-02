@@ -21,12 +21,13 @@ export function ToolCard({ tool }: ToolCardProps) {
       <div className="p-4 sm:p-6 flex-1 flex flex-col">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 mb-4 min-w-0">
           <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-white p-2 border border-border/50 shadow-sm flex items-center justify-center shrink-0 overflow-hidden transition-transform group-hover:scale-105">
-            <img 
-              src={tool.logoUrl} 
-              alt={`${tool.name} logo`} 
+            <img
+              src={tool.logoUrl}
+              alt={`${tool.name} logo`}
               className="w-full h-full object-contain"
               onError={(e) => {
-                (e.target as HTMLImageElement).src = "https://placehold.co/100x100/f1f5f9/94a3b8?text=" + tool.name.charAt(0);
+                (e.target as HTMLImageElement).src =
+                  "https://placehold.co/100x100/f1f5f9/94a3b8?text=" + tool.name.charAt(0);
               }}
             />
           </div>
@@ -36,7 +37,11 @@ export function ToolCard({ tool }: ToolCardProps) {
             </h3>
             <div className="flex flex-wrap gap-1 mt-1.5 hidden sm:flex">
               {tool.categories.slice(0, 2).map((cat) => (
-                <Badge key={cat} variant="secondary" className="text-[9px] sm:text-[10px] px-1.5 py-0.5 truncate max-w-full font-normal bg-secondary/50">
+                <Badge
+                  key={cat}
+                  variant="secondary"
+                  className="text-[9px] sm:text-[10px] px-1.5 py-0.5 truncate max-w-full font-normal bg-secondary/50"
+                >
                   {cat}
                 </Badge>
               ))}
@@ -61,13 +66,14 @@ export function ToolCard({ tool }: ToolCardProps) {
             </div>
           )}
 
-          <Button 
-            asChild 
-            className="w-full gap-1.5 sm:gap-2 group-hover:bg-primary group-hover:text-primary-foreground transition-all h-8 sm:h-10 text-xs sm:text-sm px-2" 
+          <Button
+            asChild
+            className="w-full gap-1.5 sm:gap-2 group-hover:bg-primary group-hover:text-primary-foreground transition-all h-8 sm:h-10 text-xs sm:text-sm px-2"
             variant={tool.isFeatured ? "default" : "outline"}
           >
             <a href={tool.websiteUrl} target="_blank" rel="noopener noreferrer">
-              <span className="truncate">Visiter le site</span> <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4 shrink-0" />
+              <span className="truncate">Visiter le site</span>{" "}
+              <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4 shrink-0" />
             </a>
           </Button>
         </div>

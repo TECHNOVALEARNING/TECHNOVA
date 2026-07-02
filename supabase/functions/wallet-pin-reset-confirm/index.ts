@@ -4,8 +4,7 @@ import bcrypt from "https://esm.sh/bcryptjs@2.4.3";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
 Deno.serve(async (req) => {
@@ -21,12 +20,15 @@ Deno.serve(async (req) => {
     const userClient = createClient(SUPABASE_URL, ANON, {
       global: { headers: { Authorization: authHeader } },
     });
-    const { data: { user } } = await userClient.auth.getUser();
+    const {
+      data: { user },
+    } = await userClient.auth.getUser();
     if (!user || !user.email) return j({ error: "Session invalide" }, 401);
 
     const { code, new_pin } = await req.json();
     if (!/^\d{6}$/.test(String(code || ""))) return j({ error: "Code OTP invalide" }, 400);
-    if (!/^\d{4}$/.test(String(new_pin || ""))) return j({ error: "Le PIN doit contenir 4 chiffres" }, 400);
+    if (!/^\d{4}$/.test(String(new_pin || "")))
+      return j({ error: "Le PIN doit contenir 4 chiffres" }, 400);
 
     const admin = createClient(SUPABASE_URL, SERVICE);
 
@@ -64,6 +66,9 @@ Deno.serve(async (req) => {
     return j({ error: e.message || "Erreur serveur" }, 500);
   }
   function j(b: unknown, s = 200) {
-    return new Response(JSON.stringify(b), { status: s, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    return new Response(JSON.stringify(b), {
+      status: s,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 });

@@ -17,7 +17,7 @@ const translations = {
     summary: "Résumé",
     total: "Total",
     checkoutBtn: "Payer maintenant",
-    secureNote: "Paiement sécurisé • Mobile Money & Cartes"
+    secureNote: "Paiement sécurisé • Mobile Money & Cartes",
   },
   en: {
     cartTitle: "Your cart",
@@ -27,15 +27,17 @@ const translations = {
     summary: "Summary",
     total: "Total",
     checkoutBtn: "Pay now",
-    secureNote: "Secure payment • Mobile Money & Cards"
-  }
+    secureNote: "Secure payment • Mobile Money & Cards",
+  },
 };
 
 const Cart = () => {
   const { items, removeFromCart, total } = useCart();
   const { formatPrice } = useGeoPricing();
 
-  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+  const [lang, setLang] = useState(() =>
+    typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
+  );
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -43,7 +45,7 @@ const Cart = () => {
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
 
-  const t = translations[lang === 'en' ? 'en' : 'fr'];
+  const t = translations[lang === "en" ? "en" : "fr"];
 
   return (
     <div className="min-h-screen bg-background">
@@ -82,11 +84,17 @@ const Cart = () => {
                     {item.product.category === "course" && "📚"}
                     {item.product.category === "formation" && "🎓"}
                     {item.product.category === "ebook" && "📄"}
-                    {(item.product.category === "template" || item.product.category?.startsWith("template:")) && "📋"}
+                    {(item.product.category === "template" ||
+                      item.product.category?.startsWith("template:")) &&
+                      "📋"}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-card-foreground truncate">{item.product.title}</h3>
-                    <p className="text-sm text-muted-foreground">{formatPrice(item.product.price)}</p>
+                    <h3 className="font-semibold text-card-foreground truncate">
+                      {item.product.title}
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      {formatPrice(item.product.price)}
+                    </p>
                   </div>
                   <button
                     onClick={() => removeFromCart(item.product.id)}
@@ -104,8 +112,12 @@ const Cart = () => {
                 <div className="mb-4 space-y-2">
                   {items.map((item) => (
                     <div key={item.product.id} className="flex justify-between text-sm">
-                      <span className="text-muted-foreground truncate mr-2">{item.product.title}</span>
-                      <span className="text-foreground flex-shrink-0">{formatPrice(item.product.price)}</span>
+                      <span className="text-muted-foreground truncate mr-2">
+                        {item.product.title}
+                      </span>
+                      <span className="text-foreground flex-shrink-0">
+                        {formatPrice(item.product.price)}
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -122,9 +134,7 @@ const Cart = () => {
                   {t.checkoutBtn}
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
-                <p className="mt-3 text-center text-xs text-muted-foreground">
-                  {t.secureNote}
-                </p>
+                <p className="mt-3 text-center text-xs text-muted-foreground">{t.secureNote}</p>
               </div>
             </div>
           </div>

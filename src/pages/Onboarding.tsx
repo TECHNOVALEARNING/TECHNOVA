@@ -9,8 +9,16 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import {
-  Store, Paintbrush, FileText, Hash, Phone,
-  ArrowRight, ArrowLeft, Check, Sparkles, Rocket,
+  Store,
+  Paintbrush,
+  FileText,
+  Hash,
+  Phone,
+  ArrowRight,
+  ArrowLeft,
+  Check,
+  Sparkles,
+  Rocket,
 } from "lucide-react";
 
 const BRAND_COLORS = [
@@ -25,11 +33,27 @@ const BRAND_COLORS = [
 ];
 
 const STEPS = [
-  { icon: Store, title: "Nom de votre boutique", subtitle: "Comment vos clients vont vous connaître" },
-  { icon: Paintbrush, title: "Couleur de votre marque", subtitle: "Choisissez la couleur qui représente votre marque" },
-  { icon: FileText, title: "Décrivez votre boutique", subtitle: "Une brève description de ce que vous proposez" },
+  {
+    icon: Store,
+    title: "Nom de votre boutique",
+    subtitle: "Comment vos clients vont vous connaître",
+  },
+  {
+    icon: Paintbrush,
+    title: "Couleur de votre marque",
+    subtitle: "Choisissez la couleur qui représente votre marque",
+  },
+  {
+    icon: FileText,
+    title: "Décrivez votre boutique",
+    subtitle: "Une brève description de ce que vous proposez",
+  },
   { icon: Hash, title: "Mots-clés", subtitle: "Aidez les clients à vous trouver plus facilement" },
-  { icon: Phone, title: "Votre WhatsApp", subtitle: "Pour que vos clients puissent vous contacter" },
+  {
+    icon: Phone,
+    title: "Votre WhatsApp",
+    subtitle: "Pour que vos clients puissent vous contacter",
+  },
 ];
 
 const Onboarding = () => {
@@ -47,12 +71,18 @@ const Onboarding = () => {
 
   const canNext = () => {
     switch (step) {
-      case 0: return storeName.trim().length >= 2;
-      case 1: return !!brandColor;
-      case 2: return description.trim().length >= 5;
-      case 3: return true; // optional
-      case 4: return true; // optional
-      default: return false;
+      case 0:
+        return storeName.trim().length >= 2;
+      case 1:
+        return !!brandColor;
+      case 2:
+        return description.trim().length >= 5;
+      case 3:
+        return true; // optional
+      case 4:
+        return true; // optional
+      default:
+        return false;
     }
   };
 
@@ -76,26 +106,31 @@ const Onboarding = () => {
       .replace(/\s+/g, "-")
       .replace(/-+/g, "-");
 
-    const { error: profileError } = await supabase.from("profiles").update({
-      display_name: storeName.trim(),
-      store_slug: slug,
-      store_brand_color: brandColor,
-      store_description: description.trim(),
-      store_keywords: keywords.trim() || null,
-      contact: whatsapp.trim() || null,
-      onboarding_completed: true,
-      updated_at: new Date().toISOString(),
-    } as any).eq("id", user.id);
+    const { error: profileError } = await supabase
+      .from("profiles")
+      .update({
+        display_name: storeName.trim(),
+        store_slug: slug,
+        store_brand_color: brandColor,
+        store_description: description.trim(),
+        store_keywords: keywords.trim() || null,
+        contact: whatsapp.trim() || null,
+        onboarding_completed: true,
+        updated_at: new Date().toISOString(),
+      } as any)
+      .eq("id", user.id);
 
     // Create the first store in the stores table to ensure dashboard settings work
-    const { error: storeError } = await supabase.from("stores").insert([{
-      owner_id: user.id,
-      name: storeName.trim(),
-      slug: slug,
-      description: description.trim() || null,
-      brand_color: brandColor,
-      keywords: keywords.trim() || null
-    }]);
+    const { error: storeError } = await supabase.from("stores").insert([
+      {
+        owner_id: user.id,
+        name: storeName.trim(),
+        slug: slug,
+        description: description.trim() || null,
+        brand_color: brandColor,
+        keywords: keywords.trim() || null,
+      },
+    ]);
 
     setSaving(false);
 
@@ -131,7 +166,10 @@ const Onboarding = () => {
       {/* Header */}
       <div className="container mx-auto px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: brandColor }}>
+          <div
+            className="h-8 w-8 rounded-lg flex items-center justify-center"
+            style={{ backgroundColor: brandColor }}
+          >
             <span className="text-xs font-extrabold text-white">E</span>
           </div>
           <span className="text-sm font-bold text-foreground">TECHNOVA</span>
@@ -184,7 +222,12 @@ const Onboarding = () => {
                       >
                         Votre boutique sera accessible à :{" "}
                         <span className="font-medium" style={{ color: brandColor }}>
-                          {window.location.origin}/store/{storeName.trim().toLowerCase().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-")}
+                          {window.location.origin}/store/
+                          {storeName
+                            .trim()
+                            .toLowerCase()
+                            .replace(/[^a-z0-9\s-]/g, "")
+                            .replace(/\s+/g, "-")}
                         </span>
                       </motion.p>
                     )}
@@ -200,7 +243,9 @@ const Onboarding = () => {
                           onClick={() => setBrandColor(c.value)}
                           className={cn(
                             "h-12 w-12 rounded-full transition-all ring-2 ring-offset-2 ring-offset-background",
-                            brandColor === c.value ? "ring-foreground scale-110" : "ring-transparent hover:scale-105"
+                            brandColor === c.value
+                              ? "ring-foreground scale-110"
+                              : "ring-transparent hover:scale-105",
                           )}
                           style={{ backgroundColor: c.value }}
                           title={c.name}
@@ -214,7 +259,10 @@ const Onboarding = () => {
                     <div className="flex items-center justify-center gap-2">
                       <span className="text-xs text-muted-foreground">Couleur personnalisée :</span>
                       <label className="h-8 w-8 rounded-full border-2 border-dashed border-border flex items-center justify-center cursor-pointer hover:border-muted-foreground transition-colors overflow-hidden">
-                        <div className="h-full w-full rounded-full" style={{ backgroundColor: brandColor }} />
+                        <div
+                          className="h-full w-full rounded-full"
+                          style={{ backgroundColor: brandColor }}
+                        />
                         <input
                           type="color"
                           value={brandColor}
@@ -236,7 +284,9 @@ const Onboarding = () => {
                       maxLength={200}
                       autoFocus
                     />
-                    <p className="text-xs text-right text-muted-foreground">{description.length}/200</p>
+                    <p className="text-xs text-right text-muted-foreground">
+                      {description.length}/200
+                    </p>
                   </div>
                 )}
 
@@ -277,12 +327,7 @@ const Onboarding = () => {
 
           {/* Navigation */}
           <div className="flex items-center justify-between mt-10">
-            <Button
-              variant="ghost"
-              onClick={handleBack}
-              disabled={step === 0}
-              className="gap-2"
-            >
+            <Button variant="ghost" onClick={handleBack} disabled={step === 0} className="gap-2">
               <ArrowLeft className="h-4 w-4" />
               Retour
             </Button>

@@ -1,5 +1,18 @@
 import { motion } from "framer-motion";
-import { Store, Globe, Zap, Brain, Users, BarChart3, ArrowRight, Bell, Mail, ShoppingCart, TrendingUp, CheckCircle } from "lucide-react";
+import {
+  Store,
+  Globe,
+  Zap,
+  Brain,
+  Users,
+  BarChart3,
+  ArrowRight,
+  Bell,
+  Mail,
+  ShoppingCart,
+  TrendingUp,
+  CheckCircle,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
@@ -7,7 +20,8 @@ const features = [
   {
     tag: "Boutique",
     title: "Lancez votre boutique en ligne en 2 minutes",
-    description: "Personnalisez votre boutique avec votre logo, couleurs et style. Offrez une expérience unique à vos clients, sans compétences techniques.",
+    description:
+      "Personnalisez votre boutique avec votre logo, couleurs et style. Offrez une expérience unique à vos clients, sans compétences techniques.",
     cta: { label: "Créer une boutique gratuite", href: "/register" },
     align: "left" as const,
     mockup: (
@@ -50,7 +64,8 @@ const features = [
   {
     tag: "Paiements",
     title: "Vendez sans frontières, acceptez tous les paiements",
-    description: "Vos clients paient via Mobile Money, Orange Money, Wave, MTN, cartes bancaires. TECHNOVA gère les devises et les conversions automatiquement.",
+    description:
+      "Vos clients paient via Mobile Money, Orange Money, Wave, MTN, cartes bancaires. TECHNOVA gère les devises et les conversions automatiquement.",
     cta: { label: "Commencer à vendre", href: "/register" },
     align: "right" as const,
     mockup: (
@@ -62,7 +77,12 @@ const features = [
           </div>
           <div className="space-y-2">
             {[
-              { flag: "🇨🇮", country: "Côte d'Ivoire", method: "Orange Money", amount: "45 000 FCFA" },
+              {
+                flag: "🇨🇮",
+                country: "Côte d'Ivoire",
+                method: "Orange Money",
+                amount: "45 000 FCFA",
+              },
               { flag: "🇸🇳", country: "Sénégal", method: "Wave", amount: "32 000 FCFA" },
               { flag: "🇨🇲", country: "Cameroun", method: "MTN MoMo", amount: "28 000 FCFA" },
               { flag: "🇫🇷", country: "France", method: "Carte Visa", amount: "€42.00" },
@@ -92,7 +112,8 @@ const features = [
   {
     tag: "Automatisations",
     title: "Automatisez votre business. Gagnez du temps.",
-    description: "Livraison auto après achat, emails de remerciement, relance de paniers abandonnés. Votre boutique tourne 24/7 sans effort.",
+    description:
+      "Livraison auto après achat, emails de remerciement, relance de paniers abandonnés. Votre boutique tourne 24/7 sans effort.",
     cta: { label: "Découvrir les automations", href: "/register" },
     align: "left" as const,
     mockup: (
@@ -103,10 +124,30 @@ const features = [
         </div>
         <div className="space-y-3">
           {[
-            { trigger: "Nouvel achat", action: "Envoyer email + livrer fichier", icon: Mail, active: true },
-            { trigger: "Panier abandonné", action: "Relance email après 1h", icon: ShoppingCart, active: true },
-            { trigger: "Nouvelle inscription", action: "Email de bienvenue", icon: Bell, active: true },
-            { trigger: "Vente > 50 000 F", action: "Notification admin", icon: TrendingUp, active: false },
+            {
+              trigger: "Nouvel achat",
+              action: "Envoyer email + livrer fichier",
+              icon: Mail,
+              active: true,
+            },
+            {
+              trigger: "Panier abandonné",
+              action: "Relance email après 1h",
+              icon: ShoppingCart,
+              active: true,
+            },
+            {
+              trigger: "Nouvelle inscription",
+              action: "Email de bienvenue",
+              icon: Bell,
+              active: true,
+            },
+            {
+              trigger: "Vente > 50 000 F",
+              action: "Notification admin",
+              icon: TrendingUp,
+              active: false,
+            },
           ].map((wf, i) => (
             <motion.div
               key={i}
@@ -116,15 +157,23 @@ const features = [
               transition={{ delay: i * 0.1 }}
               className="flex items-start gap-3 rounded-lg border border-border bg-background p-3"
             >
-              <div className={`h-8 w-8 rounded-lg flex items-center justify-center shrink-0 ${wf.active ? 'bg-primary/10' : 'bg-muted'}`}>
-                <wf.icon className={`h-4 w-4 ${wf.active ? 'text-primary' : 'text-muted-foreground'}`} />
+              <div
+                className={`h-8 w-8 rounded-lg flex items-center justify-center shrink-0 ${wf.active ? "bg-primary/10" : "bg-muted"}`}
+              >
+                <wf.icon
+                  className={`h-4 w-4 ${wf.active ? "text-primary" : "text-muted-foreground"}`}
+                />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-[11px] font-semibold text-foreground">{wf.trigger}</p>
                 <p className="text-[9px] text-muted-foreground">{wf.action}</p>
               </div>
-              <div className={`mt-1 h-4 w-8 rounded-full ${wf.active ? 'bg-primary' : 'bg-muted'} relative`}>
-                <div className={`absolute top-0.5 h-3 w-3 rounded-full bg-card shadow ${wf.active ? 'right-0.5' : 'left-0.5'}`} />
+              <div
+                className={`mt-1 h-4 w-8 rounded-full ${wf.active ? "bg-primary" : "bg-muted"} relative`}
+              >
+                <div
+                  className={`absolute top-0.5 h-3 w-3 rounded-full bg-card shadow ${wf.active ? "right-0.5" : "left-0.5"}`}
+                />
               </div>
             </motion.div>
           ))}
@@ -135,7 +184,8 @@ const features = [
   {
     tag: "IA intégrée",
     title: "L'intelligence artificielle au service de vos ventes",
-    description: "Rédigez vos descriptions produits, corrigez vos textes et générez des titres accrocheurs en un clic. L'IA vous assiste à chaque étape.",
+    description:
+      "Rédigez vos descriptions produits, corrigez vos textes et générez des titres accrocheurs en un clic. L'IA vous assiste à chaque étape.",
     cta: { label: "Essayer l'IA", href: "/register" },
     align: "right" as const,
     mockup: (
@@ -147,13 +197,15 @@ const features = [
         <div className="space-y-3">
           <div className="rounded-lg bg-secondary/50 border border-border p-3">
             <p className="text-[10px] text-muted-foreground mb-1">Prompt</p>
-            <p className="text-xs text-foreground">"Réécris cette description de produit pour maximiser les conversions"</p>
+            <p className="text-xs text-foreground">
+              "Réécris cette description de produit pour maximiser les conversions"
+            </p>
           </div>
           <div className="rounded-lg bg-primary/5 border border-primary/20 p-3">
             <p className="text-[10px] text-primary mb-1 font-semibold">✨ Résultat IA</p>
             <p className="text-xs text-foreground leading-relaxed">
-              "Transformez votre expertise en revenus passifs avec cette formation complète. 
-              Plus de 5 000 créateurs l'ont adoptée — rejoignez-les dès maintenant."
+              "Transformez votre expertise en revenus passifs avec cette formation complète. Plus de
+              5 000 créateurs l'ont adoptée — rejoignez-les dès maintenant."
             </p>
           </div>
           <div className="flex gap-2">
@@ -171,7 +223,8 @@ const features = [
   {
     tag: "Affiliation",
     title: "Boostez vos ventes avec notre réseau d'affiliés",
-    description: "Listez vos produits sur notre réseau d'affiliation. Définissez vos commissions. Des milliers de partenaires promeuvent vos créations.",
+    description:
+      "Listez vos produits sur notre réseau d'affiliation. Définissez vos commissions. Des milliers de partenaires promeuvent vos créations.",
     cta: { label: "Rejoindre le réseau", href: "/register" },
     align: "left" as const,
     mockup: (
@@ -186,7 +239,10 @@ const features = [
             { label: "Clics", value: "2 340" },
             { label: "Revenus", value: "890K" },
           ].map((s) => (
-            <div key={s.label} className="rounded-lg bg-background border border-border p-2.5 text-center">
+            <div
+              key={s.label}
+              className="rounded-lg bg-background border border-border p-2.5 text-center"
+            >
               <p className="text-sm font-extrabold text-foreground">{s.value}</p>
               <p className="text-[9px] text-muted-foreground">{s.label}</p>
             </div>
@@ -194,9 +250,15 @@ const features = [
         </div>
         <div className="space-y-2">
           {["Aminata K.", "Moussa D.", "Fatou B."].map((name, i) => (
-            <div key={i} className="flex items-center gap-2 rounded-lg border border-border bg-background p-2">
+            <div
+              key={i}
+              className="flex items-center gap-2 rounded-lg border border-border bg-background p-2"
+            >
               <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center text-[10px] font-bold text-primary">
-                {name.split(' ').map(n => n[0]).join('')}
+                {name
+                  .split(" ")
+                  .map((n) => n[0])
+                  .join("")}
               </div>
               <div className="flex-1">
                 <p className="text-[10px] font-semibold text-foreground">{name}</p>
@@ -212,7 +274,8 @@ const features = [
   {
     tag: "Analytics",
     title: "Prenez les bonnes décisions avec des statistiques claires",
-    description: "Suivez vos revenus en temps réel. Identifiez vos meilleurs produits. Analysez vos taux de conversion avec des dashboards intuitifs.",
+    description:
+      "Suivez vos revenus en temps réel. Identifiez vos meilleurs produits. Analysez vos taux de conversion avec des dashboards intuitifs.",
     cta: { label: "Voir mon dashboard", href: "/register" },
     align: "right" as const,
     mockup: (
@@ -262,7 +325,9 @@ const FeatureMockups = () => {
           viewport={{ once: true }}
           className="text-center mb-20"
         >
-          <p className="text-sm font-semibold text-primary mb-3 uppercase tracking-wider">Fonctionnalités</p>
+          <p className="text-sm font-semibold text-primary mb-3 uppercase tracking-wider">
+            Fonctionnalités
+          </p>
           <h2 className="text-3xl md:text-5xl font-extrabold text-foreground mb-4">
             Tout ce dont vous avez besoin pour réussir
           </h2>
@@ -291,9 +356,7 @@ const FeatureMockups = () => {
                 <h3 className="text-2xl md:text-3xl font-extrabold text-foreground mb-4">
                   {feature.title}
                 </h3>
-                <p className="text-muted-foreground leading-relaxed mb-6">
-                  {feature.description}
-                </p>
+                <p className="text-muted-foreground leading-relaxed mb-6">{feature.description}</p>
                 <Link to={feature.cta.href}>
                   <Button variant="outline" className="font-semibold">
                     {feature.cta.label}
@@ -303,9 +366,7 @@ const FeatureMockups = () => {
               </div>
 
               {/* Mockup */}
-              <div className="md:[direction:ltr]">
-                {feature.mockup}
-              </div>
+              <div className="md:[direction:ltr]">{feature.mockup}</div>
             </motion.div>
           ))}
         </div>

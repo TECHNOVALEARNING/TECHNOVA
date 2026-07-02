@@ -1,8 +1,17 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence, Reorder } from "framer-motion";
 import {
-  Plus, Trash2, GripVertical, Video, FileText, Upload,
-  Clock, Link as LinkIcon, Download, Layers, BookOpen
+  Plus,
+  Trash2,
+  GripVertical,
+  Video,
+  FileText,
+  Upload,
+  Clock,
+  Link as LinkIcon,
+  Download,
+  Layers,
+  BookOpen,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -88,7 +97,7 @@ const translations = {
     resourceLabel: "Downloadable resource (Optional)",
     existingResource: "Existing saved resource",
     uploadPlaceholder: "Click to upload a file (PDF, ZIP...)",
-  }
+  },
 };
 
 const safeUUID = () => {
@@ -151,7 +160,9 @@ const getEmbedUrl = (url: string) => {
 
 const CourseLessonsManager = ({ modules, onModulesChange }: CourseLessonsManagerProps) => {
   const [editingLessonId, setEditingLessonId] = useState<string | null>(null);
-  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+  const [lang, setLang] = useState(() =>
+    typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
+  );
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -159,11 +170,11 @@ const CourseLessonsManager = ({ modules, onModulesChange }: CourseLessonsManager
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
 
-  const t = translations[lang === 'en' ? 'en' : 'fr'];
+  const t = translations[lang === "en" ? "en" : "fr"];
 
   const findLessonAndModule = (lessonId: string) => {
     for (const m of modules) {
-      const l = m.lessons.find(x => x.id === lessonId);
+      const l = m.lessons.find((x) => x.id === lessonId);
       if (l) return { module: m, lesson: l };
     }
     return null;
@@ -174,11 +185,11 @@ const CourseLessonsManager = ({ modules, onModulesChange }: CourseLessonsManager
   };
 
   const updateModule = (id: string, changes: Partial<Module>) => {
-    onModulesChange(modules.map(m => m.id === id ? { ...m, ...changes } : m));
+    onModulesChange(modules.map((m) => (m.id === id ? { ...m, ...changes } : m)));
   };
 
   const removeModule = (id: string) => {
-    onModulesChange(modules.filter(m => m.id !== id).map((m, i) => ({ ...m, position: i })));
+    onModulesChange(modules.filter((m) => m.id !== id).map((m, i) => ({ ...m, position: i })));
   };
 
   const handleReorderModules = (reordered: Module[]) => {
@@ -186,47 +197,57 @@ const CourseLessonsManager = ({ modules, onModulesChange }: CourseLessonsManager
   };
 
   const addLesson = (moduleId: string) => {
-    onModulesChange(modules.map(m => {
-      if (m.id === moduleId) {
-        const newLesson = createLesson(m.lessons.length, moduleId);
-        setTimeout(() => setEditingLessonId(newLesson.id), 50);
-        return { ...m, lessons: [...m.lessons, newLesson] };
-      }
-      return m;
-    }));
+    onModulesChange(
+      modules.map((m) => {
+        if (m.id === moduleId) {
+          const newLesson = createLesson(m.lessons.length, moduleId);
+          setTimeout(() => setEditingLessonId(newLesson.id), 50);
+          return { ...m, lessons: [...m.lessons, newLesson] };
+        }
+        return m;
+      }),
+    );
   };
 
   const updateLesson = (moduleId: string, lessonId: string, changes: Partial<Lesson>) => {
-    onModulesChange(modules.map(m => {
-      if (m.id === moduleId) {
-        return {
-          ...m,
-          lessons: m.lessons.map(l => l.id === lessonId ? { ...l, ...changes } : l)
-        };
-      }
-      return m;
-    }));
+    onModulesChange(
+      modules.map((m) => {
+        if (m.id === moduleId) {
+          return {
+            ...m,
+            lessons: m.lessons.map((l) => (l.id === lessonId ? { ...l, ...changes } : l)),
+          };
+        }
+        return m;
+      }),
+    );
   };
 
   const removeLesson = (moduleId: string, lessonId: string) => {
-    onModulesChange(modules.map(m => {
-      if (m.id === moduleId) {
-        return {
-          ...m,
-          lessons: m.lessons.filter(l => l.id !== lessonId).map((l, i) => ({ ...l, position: i }))
-        };
-      }
-      return m;
-    }));
+    onModulesChange(
+      modules.map((m) => {
+        if (m.id === moduleId) {
+          return {
+            ...m,
+            lessons: m.lessons
+              .filter((l) => l.id !== lessonId)
+              .map((l, i) => ({ ...l, position: i })),
+          };
+        }
+        return m;
+      }),
+    );
   };
 
   const handleReorderLessons = (moduleId: string, reordered: Lesson[]) => {
-    onModulesChange(modules.map(m => {
-      if (m.id === moduleId) {
-        return { ...m, lessons: reordered.map((l, i) => ({ ...l, position: i })) };
-      }
-      return m;
-    }));
+    onModulesChange(
+      modules.map((m) => {
+        if (m.id === moduleId) {
+          return { ...m, lessons: reordered.map((l, i) => ({ ...l, position: i })) };
+        }
+        return m;
+      }),
+    );
   };
 
   const editingContext = editingLessonId ? findLessonAndModule(editingLessonId) : null;
@@ -236,15 +257,9 @@ const CourseLessonsManager = ({ modules, onModulesChange }: CourseLessonsManager
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-base font-semibold text-foreground">{t.title}</h3>
-          <p className="text-sm text-muted-foreground">
-            {t.description}
-          </p>
+          <p className="text-sm text-muted-foreground">{t.description}</p>
         </div>
-        <Button
-          type="button"
-          onClick={addModule}
-          className="gap-2"
-        >
+        <Button type="button" onClick={addModule} className="gap-2">
           <Plus className="h-4 w-4" />
           {t.addModule}
         </Button>
@@ -268,11 +283,7 @@ const CourseLessonsManager = ({ modules, onModulesChange }: CourseLessonsManager
         >
           <AnimatePresence initial={false}>
             {modules.map((module, mIndex) => (
-              <Reorder.Item
-                key={module.id}
-                value={module}
-                className="list-none"
-              >
+              <Reorder.Item key={module.id} value={module} className="list-none">
                 <div className="rounded-xl border border-border bg-card overflow-hidden">
                   <div className="flex items-center gap-3 p-4 bg-muted/30 border-b border-border">
                     <div className="cursor-grab active:cursor-grabbing text-muted-foreground hover:text-foreground transition-colors">
@@ -310,11 +321,7 @@ const CourseLessonsManager = ({ modules, onModulesChange }: CourseLessonsManager
                         className="space-y-2"
                       >
                         {module.lessons.map((lesson, lIndex) => (
-                          <Reorder.Item
-                            key={lesson.id}
-                            value={lesson}
-                            className="list-none"
-                          >
+                          <Reorder.Item key={lesson.id} value={lesson} className="list-none">
                             <div className="flex items-center gap-3 p-3 rounded-lg border border-border bg-background hover:border-primary/30 transition-colors group">
                               <div className="cursor-grab active:cursor-grabbing text-muted-foreground/50 hover:text-foreground transition-colors">
                                 <GripVertical className="h-4 w-4" />
@@ -322,22 +329,33 @@ const CourseLessonsManager = ({ modules, onModulesChange }: CourseLessonsManager
                               <div className="h-6 w-6 rounded-md bg-primary/10 flex items-center justify-center shrink-0">
                                 <span className="text-xs font-bold text-primary">{lIndex + 1}</span>
                               </div>
-                              <div className="flex-1 min-w-0 cursor-pointer" onClick={() => setEditingLessonId(lesson.id)}>
+                              <div
+                                className="flex-1 min-w-0 cursor-pointer"
+                                onClick={() => setEditingLessonId(lesson.id)}
+                              >
                                 <p className="text-sm font-medium truncate group-hover:text-primary transition-colors">
                                   {lesson.title || t.untitledLesson}
                                 </p>
                                 <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
                                   {lesson.video_url && (
-                                    <span className="flex items-center gap-1"><Video className="h-3 w-3"/> {t.videoConfigured}</span>
+                                    <span className="flex items-center gap-1">
+                                      <Video className="h-3 w-3" /> {t.videoConfigured}
+                                    </span>
                                   )}
                                   {lesson.content && lesson.content !== "<p></p>" && (
-                                    <span className="flex items-center gap-1"><FileText className="h-3 w-3"/> {t.richText}</span>
+                                    <span className="flex items-center gap-1">
+                                      <FileText className="h-3 w-3" /> {t.richText}
+                                    </span>
                                   )}
                                   {(lesson.resourceFile || lesson.resource_url) && (
-                                    <span className="flex items-center gap-1"><Download className="h-3 w-3"/> {t.resource}</span>
+                                    <span className="flex items-center gap-1">
+                                      <Download className="h-3 w-3" /> {t.resource}
+                                    </span>
                                   )}
                                   {lesson.duration_minutes && (
-                                    <span className="flex items-center gap-1"><Clock className="h-3 w-3"/> {lesson.duration_minutes} min</span>
+                                    <span className="flex items-center gap-1">
+                                      <Clock className="h-3 w-3" /> {lesson.duration_minutes} min
+                                    </span>
                                   )}
                                 </div>
                               </div>
@@ -366,7 +384,7 @@ const CourseLessonsManager = ({ modules, onModulesChange }: CourseLessonsManager
                         ))}
                       </Reorder.Group>
                     )}
-                    
+
                     <Button
                       type="button"
                       variant="ghost"
@@ -392,13 +410,17 @@ const CourseLessonsManager = ({ modules, onModulesChange }: CourseLessonsManager
               <SheetHeader className="mb-6">
                 <SheetTitle>{t.editLessonTitle}</SheetTitle>
               </SheetHeader>
-              
+
               <div className="space-y-6">
                 <div>
                   <label className="text-sm font-medium mb-1 block">{t.lessonTitleLabel}</label>
-                  <Input 
+                  <Input
                     value={editingContext.lesson.title}
-                    onChange={(e) => updateLesson(editingContext.module.id, editingContext.lesson.id, { title: e.target.value })}
+                    onChange={(e) =>
+                      updateLesson(editingContext.module.id, editingContext.lesson.id, {
+                        title: e.target.value,
+                      })
+                    }
                     placeholder={t.lessonTitlePlaceholder}
                   />
                 </div>
@@ -406,10 +428,14 @@ const CourseLessonsManager = ({ modules, onModulesChange }: CourseLessonsManager
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="text-sm font-medium mb-1 block">{t.durationLabel}</label>
-                    <Input 
+                    <Input
                       type="number"
                       value={editingContext.lesson.duration_minutes || ""}
-                      onChange={(e) => updateLesson(editingContext.module.id, editingContext.lesson.id, { duration_minutes: e.target.value ? parseInt(e.target.value) : null })}
+                      onChange={(e) =>
+                        updateLesson(editingContext.module.id, editingContext.lesson.id, {
+                          duration_minutes: e.target.value ? parseInt(e.target.value) : null,
+                        })
+                      }
                       placeholder="Ex: 15"
                     />
                   </div>
@@ -421,61 +447,73 @@ const CourseLessonsManager = ({ modules, onModulesChange }: CourseLessonsManager
                     <div className="bg-muted border border-border flex items-center px-3 rounded-md">
                       <LinkIcon className="h-4 w-4 text-muted-foreground" />
                     </div>
-                    <Input 
+                    <Input
                       value={editingContext.lesson.video_url}
-                      onChange={(e) => updateLesson(editingContext.module.id, editingContext.lesson.id, { video_url: e.target.value })}
+                      onChange={(e) =>
+                        updateLesson(editingContext.module.id, editingContext.lesson.id, {
+                          video_url: e.target.value,
+                        })
+                      }
                       placeholder={t.videoUrlPlaceholder}
                     />
                   </div>
-                  {editingContext.lesson.video_url && editingContext.lesson.video_url.trim().startsWith("http") && (
-                    <div className="aspect-[16/9] w-full rounded-lg overflow-hidden border border-border bg-black/5 mt-3">
-                      <iframe 
-                        src={getEmbedUrl(editingContext.lesson.video_url)} 
-                        className="w-full h-full border-0" 
-                        allow="autoplay; fullscreen; picture-in-picture"
-                        allowFullScreen 
-                      />
-                    </div>
-                  )}
+                  {editingContext.lesson.video_url &&
+                    editingContext.lesson.video_url.trim().startsWith("http") && (
+                      <div className="aspect-[16/9] w-full rounded-lg overflow-hidden border border-border bg-black/5 mt-3">
+                        <iframe
+                          src={getEmbedUrl(editingContext.lesson.video_url)}
+                          className="w-full h-full border-0"
+                          allow="autoplay; fullscreen; picture-in-picture"
+                          allowFullScreen
+                        />
+                      </div>
+                    )}
                 </div>
 
                 <div>
                   <label className="text-sm font-medium mb-1 block">{t.writtenContentLabel}</label>
-                  <RichTextEditor 
+                  <RichTextEditor
                     content={editingContext.lesson.content}
-                    onChange={(content) => updateLesson(editingContext.module.id, editingContext.lesson.id, { content })}
+                    onChange={(content) =>
+                      updateLesson(editingContext.module.id, editingContext.lesson.id, { content })
+                    }
                     placeholder={t.writtenContentPlaceholder}
                   />
                 </div>
 
                 <div>
                   <label className="text-sm font-medium mb-1 block">{t.resourceLabel}</label>
-                  <div 
+                  <div
                     className="border-2 border-dashed rounded-lg p-6 text-center cursor-pointer hover:bg-muted/50 transition-colors"
-                    onClick={() => document.getElementById(`resource-upload-${editingContext.lesson.id}`)?.click()}
+                    onClick={() =>
+                      document
+                        .getElementById(`resource-upload-${editingContext.lesson.id}`)
+                        ?.click()
+                    }
                   >
                     <Upload className="h-6 w-6 text-muted-foreground mx-auto mb-2" />
                     <p className="text-sm font-medium">
-                      {editingContext.lesson.resourceFile 
-                        ? `📎 ${editingContext.lesson.resourceFile.name}` 
-                        : editingContext.lesson.resource_url 
-                          ? `📎 ${t.existingResource}` 
+                      {editingContext.lesson.resourceFile
+                        ? `📎 ${editingContext.lesson.resourceFile.name}`
+                        : editingContext.lesson.resource_url
+                          ? `📎 ${t.existingResource}`
                           : t.uploadPlaceholder}
                     </p>
-                    <input 
+                    <input
                       id={`resource-upload-${editingContext.lesson.id}`}
-                      type="file" 
+                      type="file"
                       className="hidden"
                       onChange={(e) => {
                         const file = e.target.files?.[0];
                         if (file) {
-                          updateLesson(editingContext.module.id, editingContext.lesson.id, { resourceFile: file });
+                          updateLesson(editingContext.module.id, editingContext.lesson.id, {
+                            resourceFile: file,
+                          });
                         }
                       }}
                     />
                   </div>
                 </div>
-
               </div>
             </>
           )}

@@ -11,43 +11,232 @@ export interface CurrencyDetails {
 
 export const CURRENCY_MAP: Record<string, CurrencyDetails> = {
   // West African CFA (XOF)
-  BJ: { code: "XOF", symbol: "FCFA", rate: 1, locale: "fr-BJ", symbolPosition: "suffix", decimals: 0 },
-  CI: { code: "XOF", symbol: "FCFA", rate: 1, locale: "fr-CI", symbolPosition: "suffix", decimals: 0 },
-  SN: { code: "XOF", symbol: "FCFA", rate: 1, locale: "fr-SN", symbolPosition: "suffix", decimals: 0 },
-  TG: { code: "XOF", symbol: "FCFA", rate: 1, locale: "fr-TG", symbolPosition: "suffix", decimals: 0 },
-  NE: { code: "XOF", symbol: "FCFA", rate: 1, locale: "fr-NE", symbolPosition: "suffix", decimals: 0 },
-  ML: { code: "XOF", symbol: "FCFA", rate: 1, locale: "fr-ML", symbolPosition: "suffix", decimals: 0 },
-  BF: { code: "XOF", symbol: "FCFA", rate: 1, locale: "fr-BF", symbolPosition: "suffix", decimals: 0 },
-  GW: { code: "XOF", symbol: "FCFA", rate: 1, locale: "pt-GW", symbolPosition: "suffix", decimals: 0 },
+  BJ: {
+    code: "XOF",
+    symbol: "FCFA",
+    rate: 1,
+    locale: "fr-BJ",
+    symbolPosition: "suffix",
+    decimals: 0,
+  },
+  CI: {
+    code: "XOF",
+    symbol: "FCFA",
+    rate: 1,
+    locale: "fr-CI",
+    symbolPosition: "suffix",
+    decimals: 0,
+  },
+  SN: {
+    code: "XOF",
+    symbol: "FCFA",
+    rate: 1,
+    locale: "fr-SN",
+    symbolPosition: "suffix",
+    decimals: 0,
+  },
+  TG: {
+    code: "XOF",
+    symbol: "FCFA",
+    rate: 1,
+    locale: "fr-TG",
+    symbolPosition: "suffix",
+    decimals: 0,
+  },
+  NE: {
+    code: "XOF",
+    symbol: "FCFA",
+    rate: 1,
+    locale: "fr-NE",
+    symbolPosition: "suffix",
+    decimals: 0,
+  },
+  ML: {
+    code: "XOF",
+    symbol: "FCFA",
+    rate: 1,
+    locale: "fr-ML",
+    symbolPosition: "suffix",
+    decimals: 0,
+  },
+  BF: {
+    code: "XOF",
+    symbol: "FCFA",
+    rate: 1,
+    locale: "fr-BF",
+    symbolPosition: "suffix",
+    decimals: 0,
+  },
+  GW: {
+    code: "XOF",
+    symbol: "FCFA",
+    rate: 1,
+    locale: "pt-GW",
+    symbolPosition: "suffix",
+    decimals: 0,
+  },
 
   // Central African CFA (XAF)
-  CM: { code: "XAF", symbol: "FCFA", rate: 1, locale: "fr-CM", symbolPosition: "suffix", decimals: 0 },
-  CG: { code: "XAF", symbol: "FCFA", rate: 1, locale: "fr-CG", symbolPosition: "suffix", decimals: 0 },
-  GA: { code: "XAF", symbol: "FCFA", rate: 1, locale: "fr-GA", symbolPosition: "suffix", decimals: 0 },
-  TD: { code: "XAF", symbol: "FCFA", rate: 1, locale: "fr-TD", symbolPosition: "suffix", decimals: 0 },
-  CF: { code: "XAF", symbol: "FCFA", rate: 1, locale: "fr-CF", symbolPosition: "suffix", decimals: 0 },
-  GQ: { code: "XAF", symbol: "FCFA", rate: 1, locale: "es-GQ", symbolPosition: "suffix", decimals: 0 },
+  CM: {
+    code: "XAF",
+    symbol: "FCFA",
+    rate: 1,
+    locale: "fr-CM",
+    symbolPosition: "suffix",
+    decimals: 0,
+  },
+  CG: {
+    code: "XAF",
+    symbol: "FCFA",
+    rate: 1,
+    locale: "fr-CG",
+    symbolPosition: "suffix",
+    decimals: 0,
+  },
+  GA: {
+    code: "XAF",
+    symbol: "FCFA",
+    rate: 1,
+    locale: "fr-GA",
+    symbolPosition: "suffix",
+    decimals: 0,
+  },
+  TD: {
+    code: "XAF",
+    symbol: "FCFA",
+    rate: 1,
+    locale: "fr-TD",
+    symbolPosition: "suffix",
+    decimals: 0,
+  },
+  CF: {
+    code: "XAF",
+    symbol: "FCFA",
+    rate: 1,
+    locale: "fr-CF",
+    symbolPosition: "suffix",
+    decimals: 0,
+  },
+  GQ: {
+    code: "XAF",
+    symbol: "FCFA",
+    rate: 1,
+    locale: "es-GQ",
+    symbolPosition: "suffix",
+    decimals: 0,
+  },
 
   // Other African Currencies
-  KE: { code: "KES", symbol: "KSh", rate: 4.6, locale: "en-KE", symbolPosition: "prefix", decimals: 0 },
-  RW: { code: "RWF", symbol: "RF", rate: 0.46, locale: "rw-RW", symbolPosition: "prefix", decimals: 0 },
-  UG: { code: "UGX", symbol: "USh", rate: 0.16, locale: "en-UG", symbolPosition: "prefix", decimals: 0 },
-  ZM: { code: "ZMW", symbol: "ZK", rate: 23, locale: "en-ZM", symbolPosition: "prefix", decimals: 0 },
-  CD: { code: "CDF", symbol: "FC", rate: 0.21, locale: "fr-CD", symbolPosition: "suffix", decimals: 0 },
-  SL: { code: "SLE", symbol: "Le", rate: 26, locale: "en-SL", symbolPosition: "prefix", decimals: 0 },
+  KE: {
+    code: "KES",
+    symbol: "KSh",
+    rate: 4.6,
+    locale: "en-KE",
+    symbolPosition: "prefix",
+    decimals: 0,
+  },
+  RW: {
+    code: "RWF",
+    symbol: "RF",
+    rate: 0.46,
+    locale: "rw-RW",
+    symbolPosition: "prefix",
+    decimals: 0,
+  },
+  UG: {
+    code: "UGX",
+    symbol: "USh",
+    rate: 0.16,
+    locale: "en-UG",
+    symbolPosition: "prefix",
+    decimals: 0,
+  },
+  ZM: {
+    code: "ZMW",
+    symbol: "ZK",
+    rate: 23,
+    locale: "en-ZM",
+    symbolPosition: "prefix",
+    decimals: 0,
+  },
+  CD: {
+    code: "CDF",
+    symbol: "FC",
+    rate: 0.21,
+    locale: "fr-CD",
+    symbolPosition: "suffix",
+    decimals: 0,
+  },
+  SL: {
+    code: "SLE",
+    symbol: "Le",
+    rate: 26,
+    locale: "en-SL",
+    symbolPosition: "prefix",
+    decimals: 0,
+  },
 
   // Europe (EUR)
-  FR: { code: "EUR", symbol: "€", rate: 655.957, locale: "fr-FR", symbolPosition: "suffix", decimals: 2 },
-  DE: { code: "EUR", symbol: "€", rate: 655.957, locale: "de-DE", symbolPosition: "suffix", decimals: 2 },
-  IT: { code: "EUR", symbol: "€", rate: 655.957, locale: "it-IT", symbolPosition: "suffix", decimals: 2 },
-  ES: { code: "EUR", symbol: "€", rate: 655.957, locale: "es-ES", symbolPosition: "suffix", decimals: 2 },
-  BE: { code: "EUR", symbol: "€", rate: 655.957, locale: "fr-BE", symbolPosition: "suffix", decimals: 2 },
+  FR: {
+    code: "EUR",
+    symbol: "€",
+    rate: 655.957,
+    locale: "fr-FR",
+    symbolPosition: "suffix",
+    decimals: 2,
+  },
+  DE: {
+    code: "EUR",
+    symbol: "€",
+    rate: 655.957,
+    locale: "de-DE",
+    symbolPosition: "suffix",
+    decimals: 2,
+  },
+  IT: {
+    code: "EUR",
+    symbol: "€",
+    rate: 655.957,
+    locale: "it-IT",
+    symbolPosition: "suffix",
+    decimals: 2,
+  },
+  ES: {
+    code: "EUR",
+    symbol: "€",
+    rate: 655.957,
+    locale: "es-ES",
+    symbolPosition: "suffix",
+    decimals: 2,
+  },
+  BE: {
+    code: "EUR",
+    symbol: "€",
+    rate: 655.957,
+    locale: "fr-BE",
+    symbolPosition: "suffix",
+    decimals: 2,
+  },
 
   // UK (GBP)
-  GB: { code: "GBP", symbol: "£", rate: 760, locale: "en-GB", symbolPosition: "prefix", decimals: 2 },
+  GB: {
+    code: "GBP",
+    symbol: "£",
+    rate: 760,
+    locale: "en-GB",
+    symbolPosition: "prefix",
+    decimals: 2,
+  },
 
   // USA & Global Fallback
-  US: { code: "USD", symbol: "$", rate: 600, locale: "en-US", symbolPosition: "prefix", decimals: 2 }
+  US: {
+    code: "USD",
+    symbol: "$",
+    rate: 600,
+    locale: "en-US",
+    symbolPosition: "prefix",
+    decimals: 2,
+  },
 };
 
 export const DEFAULT_CURRENCY: CurrencyDetails = {
@@ -56,7 +245,7 @@ export const DEFAULT_CURRENCY: CurrencyDetails = {
   rate: 1,
   locale: "fr-BJ",
   symbolPosition: "suffix",
-  decimals: 0
+  decimals: 0,
 };
 
 interface GeoPricingContextType {
@@ -78,11 +267,18 @@ export const GeoPricingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const resolveCurrency = (code: string): CurrencyDetails => {
     const match = CURRENCY_MAP[code.toUpperCase()];
     if (match) return match;
-    
+
     // Check if it's a Euro country not explicitly listed
     const eurCountries = ["AT", "FI", "GR", "IE", "PT", "NL", "LU"];
     if (eurCountries.includes(code.toUpperCase())) {
-      return { code: "EUR", symbol: "€", rate: 655.957, locale: "fr-FR", symbolPosition: "suffix", decimals: 2 };
+      return {
+        code: "EUR",
+        symbol: "€",
+        rate: 655.957,
+        locale: "fr-FR",
+        symbolPosition: "suffix",
+        decimals: 2,
+      };
     }
 
     // Default to USD for other international countries
@@ -129,7 +325,7 @@ export const GeoPricingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
         const res = await fetch("https://ipapi.co/country/", { signal: controller.signal });
         clearTimeout(timeoutId);
-        
+
         if (res.ok) {
           const code = (await res.text()).trim().toUpperCase();
           if (code && code.length === 2) {
@@ -171,7 +367,14 @@ export const GeoPricingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         if (locale) {
           const parts = locale.split("-");
           const code = parts[parts.length - 1].toUpperCase();
-          if (code && code.length === 2 && CURRENCY_MAP[code] && code !== "FR" && code !== "US" && code !== "GB") {
+          if (
+            code &&
+            code.length === 2 &&
+            CURRENCY_MAP[code] &&
+            code !== "FR" &&
+            code !== "US" &&
+            code !== "GB"
+          ) {
             applyCountryAndCurrency(code);
             sessionStorage.setItem("tech_detected_country", code);
             setLoading(false);
@@ -213,7 +416,9 @@ export const GeoPricingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   };
 
   return (
-    <GeoPricingContext.Provider value={{ countryCode, currency, formatPrice, convertPrice, changeCountry, loading }}>
+    <GeoPricingContext.Provider
+      value={{ countryCode, currency, formatPrice, convertPrice, changeCountry, loading }}
+    >
       {children}
     </GeoPricingContext.Provider>
   );

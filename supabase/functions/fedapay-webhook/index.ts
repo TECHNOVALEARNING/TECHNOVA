@@ -14,7 +14,8 @@ Deno.serve(async (req) => {
     const payload = await req.text();
 
     // Log signature for debugging (FedaPay signature format: t=timestamp,s=hash)
-    const signature = req.headers.get("X-FEDAPAY-SIGNATURE") || req.headers.get("x-fedapay-signature");
+    const signature =
+      req.headers.get("X-FEDAPAY-SIGNATURE") || req.headers.get("x-fedapay-signature");
     if (signature) {
       console.log("FedaPay signature received:", signature.substring(0, 50) + "...");
     }
@@ -53,15 +54,19 @@ Deno.serve(async (req) => {
         return new Response("OK", { status: 200 });
       }
 
-      await supabase.from("withdrawals").update({
-        status: newStatus,
-        processed_at: new Date().toISOString(),
-      }).eq("id", withdrawal.id);
+      await supabase
+        .from("withdrawals")
+        .update({
+          status: newStatus,
+          processed_at: new Date().toISOString(),
+        })
+        .eq("id", withdrawal.id);
 
       const notifTitle = newStatus === "completed" ? "Retrait effectué ✅" : "Retrait échoué ❌";
-      const notifMessage = newStatus === "completed"
-        ? `Votre retrait de ${withdrawal.amount} FCFA vers ${withdrawal.phone_number} a été effectué avec succès.`
-        : `Votre retrait de ${withdrawal.amount} FCFA vers ${withdrawal.phone_number} a échoué. Veuillez réessayer.`;
+      const notifMessage =
+        newStatus === "completed"
+          ? `Votre retrait de ${withdrawal.amount} FCFA vers ${withdrawal.phone_number} a été effectué avec succès.`
+          : `Votre retrait de ${withdrawal.amount} FCFA vers ${withdrawal.phone_number} a échoué. Veuillez réessayer.`;
 
       await supabase.from("notifications").insert({
         user_id: withdrawal.user_id,
@@ -93,15 +98,26 @@ Deno.serve(async (req) => {
     }
 
     // Handle payment/transaction events
-    if (eventName === "transaction.approved" || eventName === "transaction.declined" ||
-        eventName === "transaction.canceled" || eventName === "transaction.transferred") {
-
+    if (
+      eventName === "transaction.approved" ||
+      eventName === "transaction.declined" ||
+      eventName === "transaction.canceled" ||
+      eventName === "transaction.transferred"
+    ) {
       const transactionId = String(entity?.id);
       const meta = entity?.custom_metadata || {};
-      const isSuccess = eventName === "transaction.approved" || eventName === "transaction.transferred";
+      const isSuccess =
+        eventName === "transaction.approved" || eventName === "transaction.transferred";
       const paymentStatus = isSuccess ? "success" : "failed";
 
-      console.log("Payment event:", eventName, "transaction:", transactionId, "metadata:", JSON.stringify(meta));
+      console.log(
+        "Payment event:",
+        eventName,
+        "transaction:",
+        transactionId,
+        "metadata:",
+        JSON.stringify(meta),
+      );
 
       // Update payment_events status
       if (transactionId) {

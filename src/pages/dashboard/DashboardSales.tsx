@@ -50,7 +50,7 @@ const translations = {
     colDate: "Date",
     colStatus: "Status",
     defaultProduct: "Product",
-  }
+  },
 };
 
 const DashboardSales = () => {
@@ -58,7 +58,9 @@ const DashboardSales = () => {
   const [orders, setOrders] = useState<OrderWithProduct[]>([]);
   const [stats, setStats] = useState({ total: 0, thisMonth: 0, growth: "0%" });
 
-  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+  const [lang, setLang] = useState(() =>
+    typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
+  );
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -66,15 +68,17 @@ const DashboardSales = () => {
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
 
-  const t = translations[lang === 'en' ? 'en' : 'fr'];
-  const dateLocale = lang === 'en' ? enUS : fr;
+  const t = translations[lang === "en" ? "en" : "fr"];
+  const dateLocale = lang === "en" ? enUS : fr;
 
   useEffect(() => {
     if (!user) return;
     const fetch = async () => {
       const { data } = await supabase
         .from("orders")
-        .select("id, amount, status, created_at, promo_code, original_amount, products(title, thumbnail_url), customers(name, email)")
+        .select(
+          "id, amount, status, created_at, promo_code, original_amount, products(title, thumbnail_url), customers(name, email)",
+        )
         .eq("store_owner_id", user.id)
         .order("created_at", { ascending: false });
 
@@ -95,22 +99,49 @@ const DashboardSales = () => {
       const now = new Date();
       const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
       const prevMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-      const thisMonth = mapped.filter((o) => new Date(o.created_at) >= monthStart).reduce((s, o) => s + o.amount, 0);
-      const lastMonth = mapped.filter((o) => {
-        const d = new Date(o.created_at);
-        return d >= prevMonthStart && d < monthStart;
-      }).reduce((s, o) => s + o.amount, 0);
+      const thisMonth = mapped
+        .filter((o) => new Date(o.created_at) >= monthStart)
+        .reduce((s, o) => s + o.amount, 0);
+      const lastMonth = mapped
+        .filter((o) => {
+          const d = new Date(o.created_at);
+          return d >= prevMonthStart && d < monthStart;
+        })
+        .reduce((s, o) => s + o.amount, 0);
 
-      const growth = lastMonth > 0 ? Math.round(((thisMonth - lastMonth) / lastMonth) * 100) : thisMonth > 0 ? 100 : 0;
+      const growth =
+        lastMonth > 0
+          ? Math.round(((thisMonth - lastMonth) / lastMonth) * 100)
+          : thisMonth > 0
+            ? 100
+            : 0;
       setStats({ total: totalSales, thisMonth, growth: `${growth >= 0 ? "+" : ""}${growth}%` });
     };
     fetch();
   }, [user]);
 
   const statCards = [
-    { label: t.totalSales, value: `${stats.total.toLocaleString()} F`, icon: ShoppingCart, gradient: "from-primary/10 to-primary/5", iconColor: "text-primary bg-primary/15" },
-    { label: t.thisMonth, value: `${stats.thisMonth.toLocaleString()} F`, icon: Calendar, gradient: "from-blue-500/10 to-blue-500/5", iconColor: "text-blue-600 bg-blue-500/15" },
-    { label: t.growth, value: stats.growth, icon: TrendingUp, gradient: "from-emerald-500/10 to-emerald-500/5", iconColor: "text-emerald-600 bg-emerald-500/15" },
+    {
+      label: t.totalSales,
+      value: `${stats.total.toLocaleString()} F`,
+      icon: ShoppingCart,
+      gradient: "from-primary/10 to-primary/5",
+      iconColor: "text-primary bg-primary/15",
+    },
+    {
+      label: t.thisMonth,
+      value: `${stats.thisMonth.toLocaleString()} F`,
+      icon: Calendar,
+      gradient: "from-blue-500/10 to-blue-500/5",
+      iconColor: "text-blue-600 bg-blue-500/15",
+    },
+    {
+      label: t.growth,
+      value: stats.growth,
+      icon: TrendingUp,
+      gradient: "from-emerald-500/10 to-emerald-500/5",
+      iconColor: "text-emerald-600 bg-emerald-500/15",
+    },
   ];
 
   return (
@@ -130,7 +161,9 @@ const DashboardSales = () => {
               transition={{ delay: i * 0.08 }}
               className={`rounded-2xl border border-border/50 bg-gradient-to-br ${s.gradient} p-4 sm:p-5`}
             >
-              <div className={`h-9 w-9 rounded-xl flex items-center justify-center ${s.iconColor} mb-3`}>
+              <div
+                className={`h-9 w-9 rounded-xl flex items-center justify-center ${s.iconColor} mb-3`}
+              >
                 <s.icon className="h-4 w-4" />
               </div>
               <p className="text-xl sm:text-2xl font-bold text-foreground">{s.value}</p>
@@ -159,35 +192,60 @@ const DashboardSales = () => {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border bg-muted/30">
-                    <th className="text-left p-4 font-medium text-muted-foreground text-xs uppercase tracking-wider">{t.colProduct}</th>
-                    <th className="text-left p-4 font-medium text-muted-foreground text-xs uppercase tracking-wider">{t.colCustomer}</th>
-                    <th className="text-left p-4 font-medium text-muted-foreground text-xs uppercase tracking-wider">{t.colAmount}</th>
-                    <th className="text-left p-4 font-medium text-muted-foreground text-xs uppercase tracking-wider">{t.colPromo}</th>
-                    <th className="text-left p-4 font-medium text-muted-foreground text-xs uppercase tracking-wider">{t.colDate}</th>
-                    <th className="text-left p-4 font-medium text-muted-foreground text-xs uppercase tracking-wider">{t.colStatus}</th>
+                    <th className="text-left p-4 font-medium text-muted-foreground text-xs uppercase tracking-wider">
+                      {t.colProduct}
+                    </th>
+                    <th className="text-left p-4 font-medium text-muted-foreground text-xs uppercase tracking-wider">
+                      {t.colCustomer}
+                    </th>
+                    <th className="text-left p-4 font-medium text-muted-foreground text-xs uppercase tracking-wider">
+                      {t.colAmount}
+                    </th>
+                    <th className="text-left p-4 font-medium text-muted-foreground text-xs uppercase tracking-wider">
+                      {t.colPromo}
+                    </th>
+                    <th className="text-left p-4 font-medium text-muted-foreground text-xs uppercase tracking-wider">
+                      {t.colDate}
+                    </th>
+                    <th className="text-left p-4 font-medium text-muted-foreground text-xs uppercase tracking-wider">
+                      {t.colStatus}
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   {orders.map((o) => (
-                    <tr key={o.id} className="border-b border-border last:border-0 hover:bg-muted/20 transition-colors">
+                    <tr
+                      key={o.id}
+                      className="border-b border-border last:border-0 hover:bg-muted/20 transition-colors"
+                    >
                       <td className="p-4">
                         <div className="flex items-center gap-3">
                           <div className="h-9 w-9 rounded-xl bg-secondary flex items-center justify-center overflow-hidden shrink-0">
                             {o.product?.thumbnail_url ? (
-                              <img src={o.product.thumbnail_url} alt="" className="h-full w-full object-cover" />
+                              <img
+                                src={o.product.thumbnail_url}
+                                alt=""
+                                className="h-full w-full object-cover"
+                              />
                             ) : (
                               <Package className="h-4 w-4 text-muted-foreground/40" />
                             )}
                           </div>
-                          <span className="font-medium text-foreground truncate max-w-[200px]">{o.product?.title || t.defaultProduct}</span>
+                          <span className="font-medium text-foreground truncate max-w-[200px]">
+                            {o.product?.title || t.defaultProduct}
+                          </span>
                         </div>
                       </td>
                       <td className="p-4 text-muted-foreground">{o.customer?.name || "—"}</td>
                       <td className="p-4">
                         <div>
-                          <span className="font-semibold text-foreground">{o.amount.toLocaleString()} F</span>
+                          <span className="font-semibold text-foreground">
+                            {o.amount.toLocaleString()} F
+                          </span>
                           {o.original_amount && o.original_amount > o.amount && (
-                            <span className="block text-xs text-muted-foreground line-through">{o.original_amount.toLocaleString()} F</span>
+                            <span className="block text-xs text-muted-foreground line-through">
+                              {o.original_amount.toLocaleString()} F
+                            </span>
                           )}
                         </div>
                       </td>
@@ -201,7 +259,11 @@ const DashboardSales = () => {
                           <span className="text-muted-foreground text-xs">—</span>
                         )}
                       </td>
-                      <td className="p-4 text-muted-foreground">{format(new Date(o.created_at), "dd MMM yyyy HH:mm", { locale: dateLocale })}</td>
+                      <td className="p-4 text-muted-foreground">
+                        {format(new Date(o.created_at), "dd MMM yyyy HH:mm", {
+                          locale: dateLocale,
+                        })}
+                      </td>
                       <td className="p-4">
                         <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-600">
                           <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
@@ -226,17 +288,28 @@ const DashboardSales = () => {
                 >
                   <div className="h-11 w-11 rounded-xl bg-secondary flex items-center justify-center overflow-hidden shrink-0">
                     {o.product?.thumbnail_url ? (
-                      <img src={o.product.thumbnail_url} alt="" className="h-full w-full object-cover" />
+                      <img
+                        src={o.product.thumbnail_url}
+                        alt=""
+                        className="h-full w-full object-cover"
+                      />
                     ) : (
                       <Package className="h-4 w-4 text-muted-foreground/40" />
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-foreground truncate">{o.product?.title || t.defaultProduct}</p>
-                    <p className="text-xs text-muted-foreground">{o.customer?.name || "—"} · {format(new Date(o.created_at), "dd MMM", { locale: dateLocale })}</p>
+                    <p className="text-sm font-medium text-foreground truncate">
+                      {o.product?.title || t.defaultProduct}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {o.customer?.name || "—"} ·{" "}
+                      {format(new Date(o.created_at), "dd MMM", { locale: dateLocale })}
+                    </p>
                   </div>
                   <div className="text-right shrink-0">
-                    <p className="text-sm font-bold text-foreground">{o.amount.toLocaleString()} F</p>
+                    <p className="text-sm font-bold text-foreground">
+                      {o.amount.toLocaleString()} F
+                    </p>
                     <span className="inline-flex items-center gap-1 text-[10px] font-medium text-emerald-600">
                       <span className="h-1 w-1 rounded-full bg-emerald-500" />
                       {o.status}

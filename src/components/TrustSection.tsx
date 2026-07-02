@@ -1,5 +1,14 @@
 import { motion } from "framer-motion";
-import { ShieldCheck, Fingerprint, Lock, Scale, Sparkles, BadgeCheck, AlertTriangle, Eye } from "lucide-react";
+import {
+  ShieldCheck,
+  Fingerprint,
+  Lock,
+  Scale,
+  Sparkles,
+  BadgeCheck,
+  AlertTriangle,
+  Eye,
+} from "lucide-react";
 
 const pillars = [
   {
@@ -61,7 +70,8 @@ const TrustSection = () => {
           </h2>
           <p className="text-muted-foreground text-base md:text-lg leading-relaxed">
             Nous avons construit TECHNOVA avec la sécurité au cœur du système. Acheteurs et vendeurs
-            évoluent dans un environnement contrôlé, transparent et conforme aux standards internationaux.
+            évoluent dans un environnement contrôlé, transparent et conforme aux standards
+            internationaux.
           </p>
         </motion.div>
 

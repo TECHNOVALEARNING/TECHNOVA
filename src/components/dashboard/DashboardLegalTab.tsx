@@ -20,13 +20,15 @@ const translations = {
     privacyPolicy: "Politique de confidentialité (RGPD)",
     promptGenerate: "Génère un document complet de",
     promptStore: "pour la boutique en ligne",
-    promptInclude: "Inclus toutes les sections nécessaires (identité du vendeur, hébergeur, propriété intellectuelle, données personnelles, cookies, droits du consommateur, etc.). Format HTML avec h2, h3, p, ul, li.",
+    promptInclude:
+      "Inclus toutes les sections nécessaires (identité du vendeur, hébergeur, propriété intellectuelle, données personnelles, cookies, droits du consommateur, etc.). Format HTML avec h2, h3, p, ul, li.",
     selectStoreMessage: "Sélectionnez une boutique pour gérer ses mentions légales.",
     htmlAllowed: "Contenu HTML autorisé",
     generating: "Génération…",
     generateAi: "Générer avec l'IA",
     cardTitle: "Mentions légales de votre boutique",
-    cardDesc: "Ces pages s'affichent en bas de votre boutique. Personnalisez-les selon votre activité et votre pays.",
+    cardDesc:
+      "Ces pages s'affichent en bas de votre boutique. Personnalisez-les selon votre activité et votre pays.",
     tabLegal: "Mentions légales",
     tabTerms: "CGU/CGV",
     tabPrivacy: "Confidentialité",
@@ -34,8 +36,10 @@ const translations = {
     legalPlaceholder: "<h2>Mentions légales</h2><p>Éditeur du site...</p>",
     termsPlaceholder: "<h2>Conditions générales</h2>",
     privacyPlaceholder: "<h2>Politique de confidentialité</h2>",
-    disclaimerDesc: "Court texte d'avertissement affiché en bas de votre boutique (avant le copyright).",
-    disclaimerPlaceholder: "Ce site n'est en aucun cas affilié à Facebook ou Meta. Les informations fournies sont à titre informatif uniquement et ne constituent pas un conseil professionnel ou financier.",
+    disclaimerDesc:
+      "Court texte d'avertissement affiché en bas de votre boutique (avant le copyright).",
+    disclaimerPlaceholder:
+      "Ce site n'est en aucun cas affilié à Facebook ou Meta. Les informations fournies sont à titre informatif uniquement et ne constituent pas un conseil professionnel ou financier.",
     saving: "Enregistrement…",
     saveBtn: "Enregistrer",
   },
@@ -49,13 +53,15 @@ const translations = {
     privacyPolicy: "Privacy policy (GDPR)",
     promptGenerate: "Generate a comprehensive",
     promptStore: "document for the online shop",
-    promptInclude: "Include all necessary sections (seller identity, hosting, intellectual property, personal data, cookies, consumer rights, etc.). HTML format with h2, h3, p, ul, li.",
+    promptInclude:
+      "Include all necessary sections (seller identity, hosting, intellectual property, personal data, cookies, consumer rights, etc.). HTML format with h2, h3, p, ul, li.",
     selectStoreMessage: "Select a shop to manage its legal notice.",
     htmlAllowed: "HTML content allowed",
     generating: "Generating…",
     generateAi: "Generate with AI",
     cardTitle: "Legal pages of your shop",
-    cardDesc: "These pages are displayed at the bottom of your shop. Customize them according to your activity and country.",
+    cardDesc:
+      "These pages are displayed at the bottom of your shop. Customize them according to your activity and country.",
     tabLegal: "Legal Notice",
     tabTerms: "Terms",
     tabPrivacy: "Privacy",
@@ -64,10 +70,11 @@ const translations = {
     termsPlaceholder: "<h2>Terms of Use</h2>",
     privacyPlaceholder: "<h2>Privacy Policy</h2>",
     disclaimerDesc: "Short warning text displayed at the bottom of your shop (before copyright).",
-    disclaimerPlaceholder: "This site is in no way affiliated with Facebook or Meta. The information provided is for informational purposes only and does not constitute professional or financial advice.",
+    disclaimerPlaceholder:
+      "This site is in no way affiliated with Facebook or Meta. The information provided is for informational purposes only and does not constitute professional or financial advice.",
     saving: "Saving…",
     saveBtn: "Save",
-  }
+  },
 };
 
 const DashboardLegalTab = () => {
@@ -79,7 +86,9 @@ const DashboardLegalTab = () => {
   const [saving, setSaving] = useState(false);
   const [generating, setGenerating] = useState<string | null>(null);
 
-  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+  const [lang, setLang] = useState(() =>
+    typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
+  );
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -87,7 +96,7 @@ const DashboardLegalTab = () => {
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
 
-  const t = translations[lang === 'en' ? 'en' : 'fr'];
+  const t = translations[lang === "en" ? "en" : "fr"];
 
   useEffect(() => {
     if (!activeStore) return;
@@ -119,7 +128,7 @@ const DashboardLegalTab = () => {
 
   const generateWithAI = async (
     type: "legal_notice" | "terms" | "privacy",
-    setter: (v: string) => void
+    setter: (v: string) => void,
   ) => {
     if (!activeStore) return;
     setGenerating(type);
@@ -207,9 +216,7 @@ const DashboardLegalTab = () => {
             <Scale className="h-4 w-4 text-primary" />
             {t.cardTitle}
           </CardTitle>
-          <CardDescription>
-            {t.cardDesc}
-          </CardDescription>
+          <CardDescription>{t.cardDesc}</CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="legal" className="w-full">
@@ -256,9 +263,7 @@ const DashboardLegalTab = () => {
               />
             </TabsContent>
             <TabsContent value="disclaimer" className="mt-4 space-y-3">
-              <Label className="text-xs text-muted-foreground">
-                {t.disclaimerDesc}
-              </Label>
+              <Label className="text-xs text-muted-foreground">{t.disclaimerDesc}</Label>
               <Textarea
                 value={disclaimer}
                 onChange={(e) => setDisclaimer(e.target.value)}

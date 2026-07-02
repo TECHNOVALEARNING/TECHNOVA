@@ -1,12 +1,30 @@
 import { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
-import { Key, Loader2, Search, Copy, Ban, Eye, CheckCircle2, XCircle, Clock, AlertTriangle, Monitor } from "lucide-react";
+import {
+  Key,
+  Loader2,
+  Search,
+  Copy,
+  Ban,
+  Eye,
+  CheckCircle2,
+  XCircle,
+  Clock,
+  AlertTriangle,
+  Monitor,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
@@ -39,7 +57,10 @@ interface Activation {
   deactivated_at: string | null;
 }
 
-const statusConfig: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline"; icon: any }> = {
+const statusConfig: Record<
+  string,
+  { label: string; variant: "default" | "secondary" | "destructive" | "outline"; icon: any }
+> = {
   pending_activation: { label: "En attente", variant: "outline", icon: Clock },
   active: { label: "Active", variant: "default", icon: CheckCircle2 },
   expired: { label: "Expirée", variant: "secondary", icon: AlertTriangle },
@@ -109,9 +130,17 @@ const DashboardLicenses = () => {
       return;
     }
     toast.success("Licence révoquée");
-    setLicenses((prev) => prev.map((l) => l.id === id ? { ...l, status: "revoked", revoked_at: new Date().toISOString() } : l));
+    setLicenses((prev) =>
+      prev.map((l) =>
+        l.id === id ? { ...l, status: "revoked", revoked_at: new Date().toISOString() } : l,
+      ),
+    );
     if (selectedLicense?.id === id) {
-      setSelectedLicense({ ...selectedLicense, status: "revoked", revoked_at: new Date().toISOString() });
+      setSelectedLicense({
+        ...selectedLicense,
+        status: "revoked",
+        revoked_at: new Date().toISOString(),
+      });
     }
   };
 
@@ -127,7 +156,11 @@ const DashboardLicenses = () => {
     }
     toast.success("Device désactivé");
     setActivations((prev) =>
-      prev.map((a) => a.id === activationId ? { ...a, is_active: false, deactivated_at: new Date().toISOString() } : a)
+      prev.map((a) =>
+        a.id === activationId
+          ? { ...a, is_active: false, deactivated_at: new Date().toISOString() }
+          : a,
+      ),
     );
   };
 
@@ -172,7 +205,11 @@ const DashboardLicenses = () => {
             { label: "Actives", value: stats.active, color: "bg-emerald-500/10 text-emerald-600" },
             { label: "En attente", value: stats.pending, color: "bg-amber-500/10 text-amber-600" },
             { label: "Expirées", value: stats.expired, color: "bg-muted text-muted-foreground" },
-            { label: "Révoquées", value: stats.revoked, color: "bg-destructive/10 text-destructive" },
+            {
+              label: "Révoquées",
+              value: stats.revoked,
+              color: "bg-destructive/10 text-destructive",
+            },
           ].map((s) => (
             <div key={s.label} className="p-3 rounded-xl border border-border bg-card text-center">
               <p className={`text-xl font-bold ${s.color.split(" ")[1]}`}>{s.value}</p>
@@ -238,16 +275,22 @@ const DashboardLicenses = () => {
                     </div>
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
-                        <p className="text-sm font-mono font-semibold text-foreground">{l.license_key}</p>
+                        <p className="text-sm font-mono font-semibold text-foreground">
+                          {l.license_key}
+                        </p>
                         <button
-                          onClick={(e) => { e.stopPropagation(); copyKey(l.license_key); }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            copyKey(l.license_key);
+                          }}
                           className="text-muted-foreground hover:text-foreground"
                         >
                           <Copy className="h-3 w-3" />
                         </button>
                       </div>
                       <p className="text-xs text-muted-foreground truncate">
-                        {l.products?.title || "Produit"} • {l.customers?.name || l.customers?.email || "Client"}
+                        {l.products?.title || "Produit"} •{" "}
+                        {l.customers?.name || l.customers?.email || "Client"}
                       </p>
                     </div>
                   </div>
@@ -276,8 +319,14 @@ const DashboardLicenses = () => {
               <div className="space-y-5">
                 {/* Key */}
                 <div className="flex items-center gap-2 p-3 rounded-lg bg-muted">
-                  <p className="font-mono font-bold text-sm flex-1">{selectedLicense.license_key}</p>
-                  <Button variant="ghost" size="icon" onClick={() => copyKey(selectedLicense.license_key)}>
+                  <p className="font-mono font-bold text-sm flex-1">
+                    {selectedLicense.license_key}
+                  </p>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => copyKey(selectedLicense.license_key)}
+                  >
                     <Copy className="h-4 w-4" />
                   </Button>
                 </div>
@@ -286,7 +335,10 @@ const DashboardLicenses = () => {
                 <div className="grid grid-cols-2 gap-3 text-sm">
                   <div>
                     <p className="text-muted-foreground text-xs">Statut</p>
-                    <Badge variant={statusConfig[selectedLicense.status]?.variant || "outline"} className="mt-1 gap-1">
+                    <Badge
+                      variant={statusConfig[selectedLicense.status]?.variant || "outline"}
+                      className="mt-1 gap-1"
+                    >
                       {statusConfig[selectedLicense.status]?.label || selectedLicense.status}
                     </Badge>
                   </div>
@@ -297,7 +349,9 @@ const DashboardLicenses = () => {
                   <div>
                     <p className="text-muted-foreground text-xs">Client</p>
                     <p className="font-medium">{selectedLicense.customers?.name || "—"}</p>
-                    <p className="text-xs text-muted-foreground">{selectedLicense.customers?.email}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {selectedLicense.customers?.email}
+                    </p>
                   </div>
                   <div>
                     <p className="text-muted-foreground text-xs">Max activations</p>
@@ -305,7 +359,9 @@ const DashboardLicenses = () => {
                   </div>
                   <div>
                     <p className="text-muted-foreground text-xs">Créée le</p>
-                    <p className="font-medium">{new Date(selectedLicense.created_at).toLocaleDateString("fr")}</p>
+                    <p className="font-medium">
+                      {new Date(selectedLicense.created_at).toLocaleDateString("fr")}
+                    </p>
                   </div>
                   <div>
                     <p className="text-muted-foreground text-xs">Expire le</p>
@@ -348,7 +404,10 @@ const DashboardLicenses = () => {
                   ) : (
                     <div className="space-y-2">
                       {activations.map((a) => (
-                        <div key={a.id} className="flex items-center justify-between p-3 rounded-lg border border-border text-sm">
+                        <div
+                          key={a.id}
+                          className="flex items-center justify-between p-3 rounded-lg border border-border text-sm"
+                        >
                           <div className="min-w-0">
                             <div className="flex items-center gap-2">
                               {a.is_active ? (
@@ -359,7 +418,14 @@ const DashboardLicenses = () => {
                               <p className="font-medium truncate">{a.device_name || a.device_id}</p>
                             </div>
                             <p className="text-xs text-muted-foreground mt-0.5">
-                              {a.ip_address} • {new Date(a.activated_at).toLocaleDateString("fr", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}
+                              {a.ip_address} •{" "}
+                              {new Date(a.activated_at).toLocaleDateString("fr", {
+                                day: "numeric",
+                                month: "short",
+                                year: "numeric",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}
                             </p>
                           </div>
                           {a.is_active && selectedLicense.status !== "revoked" && (

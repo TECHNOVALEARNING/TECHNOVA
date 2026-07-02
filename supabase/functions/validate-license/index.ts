@@ -3,7 +3,8 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 serve(async (req) => {
@@ -19,10 +20,10 @@ serve(async (req) => {
     const { license_key } = await req.json();
 
     if (!license_key || typeof license_key !== "string" || license_key.length > 50) {
-      return new Response(
-        JSON.stringify({ valid: false, error: "license_key is required" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ valid: false, error: "license_key is required" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     const key = license_key.trim().toUpperCase();
@@ -35,17 +36,17 @@ serve(async (req) => {
       .maybeSingle();
 
     if (error || !license) {
-      return new Response(
-        JSON.stringify({ valid: false, error: "License not found" }),
-        { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ valid: false, error: "License not found" }), {
+        status: 404,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     // Check status
     if (license.status === "revoked") {
       return new Response(
         JSON.stringify({ valid: false, error: "License has been revoked", status: "revoked" }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
 
@@ -59,8 +60,13 @@ serve(async (req) => {
           .eq("id", license.id);
       }
       return new Response(
-        JSON.stringify({ valid: false, error: "License has expired", status: "expired", expires_at: license.expires_at }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        JSON.stringify({
+          valid: false,
+          error: "License has expired",
+          status: "expired",
+          expires_at: license.expires_at,
+        }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
 
@@ -97,13 +103,13 @@ serve(async (req) => {
         expires_at: license.expires_at,
         created_at: license.created_at,
       }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   } catch (error: any) {
     console.error("Validate license error:", error);
-    return new Response(
-      JSON.stringify({ valid: false, error: error.message }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return new Response(JSON.stringify({ valid: false, error: error.message }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 });

@@ -7,7 +7,8 @@ const corsHeaders = {
 };
 
 const ADMIN_EMAILS = ["ancres707@gmail.com"];
-const LOGO_URL = "https://nexozjpjbhqfjplrogvz.supabase.co/storage/v1/object/public/store-assets/brand/technova-logo.png";
+const LOGO_URL =
+  "https://nexozjpjbhqfjplrogvz.supabase.co/storage/v1/object/public/store-assets/brand/technova-logo.png";
 
 const getAuthenticatedUser = async (req: Request, supabaseUrl: string, anonKey: string) => {
   const authHeader = req.headers.get("Authorization");
@@ -93,7 +94,9 @@ serve(async (req) => {
       ]);
 
       const submitterProfile = submitterProfileResult.data;
-      const adminUser = adminUsersResult.data?.users?.find((entry: any) => ADMIN_EMAILS.includes(entry.email));
+      const adminUser = adminUsersResult.data?.users?.find((entry: any) =>
+        ADMIN_EMAILS.includes(entry.email),
+      );
       const submitterName = submitterProfile?.display_name || user.email || "Un utilisateur";
 
       if (adminUser) {
@@ -172,7 +175,11 @@ serve(async (req) => {
     ]);
 
     const sellerEmail = authUserResult.data.user?.email;
-    const sellerName = sellerProfileResult.data?.display_name || verification.full_name || sellerEmail || "Utilisateur";
+    const sellerName =
+      sellerProfileResult.data?.display_name ||
+      verification.full_name ||
+      sellerEmail ||
+      "Utilisateur";
 
     if (action === "approve") {
       const { error } = await supabaseAdmin
@@ -185,7 +192,8 @@ serve(async (req) => {
       await supabaseAdmin.from("notifications").insert({
         user_id: verification.user_id,
         title: "Identité vérifiée ✅",
-        message: "Votre vérification d'identité a été approuvée. Vous pouvez maintenant effectuer des retraits.",
+        message:
+          "Votre vérification d'identité a été approuvée. Vous pouvez maintenant effectuer des retraits.",
         type: "success",
       });
 

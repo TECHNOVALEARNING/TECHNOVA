@@ -4,7 +4,8 @@ export const products: Product[] = [
   {
     id: "1",
     title: "Maîtrisez le Marketing Digital",
-    description: "Formation complète pour dominer le marketing digital. Stratégies, réseaux sociaux, et croissance.",
+    description:
+      "Formation complète pour dominer le marketing digital. Stratégies, réseaux sociaux, et croissance.",
     price: 25000,
     currency: "XOF",
     category: "course",
@@ -27,7 +28,8 @@ export const products: Product[] = [
   {
     id: "3",
     title: "Templates Notion pour Entrepreneurs",
-    description: "Pack de 15 templates Notion prêts à l'emploi pour gérer votre business efficacement.",
+    description:
+      "Pack de 15 templates Notion prêts à l'emploi pour gérer votre business efficacement.",
     price: 7500,
     currency: "XOF",
     category: "template",

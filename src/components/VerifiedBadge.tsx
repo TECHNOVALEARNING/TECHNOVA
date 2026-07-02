@@ -18,7 +18,15 @@ interface VerifiedBadgeProps {
 
 const config: Record<
   BadgeGrade,
-  { short: string; label: string; description: string; icon: any; gradient: string; ring: string; text: string }
+  {
+    short: string;
+    label: string;
+    description: string;
+    icon: any;
+    gradient: string;
+    ring: string;
+    text: string;
+  }
 > = {
   standard: {
     short: "Standard",

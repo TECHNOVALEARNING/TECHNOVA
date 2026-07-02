@@ -23,7 +23,7 @@ const META: Record<LegalKind, { title: string; icon: any; field: keyof StoreLega
   privacy: { title: "Politique de confidentialité", icon: Shield, field: "privacy_policy" },
 };
 
-const StoreLegalPage = ({ kind, customSlug }: { kind: LegalKind, customSlug?: string }) => {
+const StoreLegalPage = ({ kind, customSlug }: { kind: LegalKind; customSlug?: string }) => {
   const { slug: urlSlug } = useParams();
   const slug = customSlug || urlSlug;
   const [store, setStore] = useState<StoreLegal | null>(null);
@@ -35,7 +35,9 @@ const StoreLegalPage = ({ kind, customSlug }: { kind: LegalKind, customSlug?: st
       setLoading(true);
       const { data } = await supabase
         .from("stores")
-        .select("id, name, slug, logo_url, brand_color, legal_notice, terms_of_use, privacy_policy" as any)
+        .select(
+          "id, name, slug, logo_url, brand_color, legal_notice, terms_of_use, privacy_policy" as any,
+        )
         .eq("slug", slug)
         .eq("is_archived", false)
         .maybeSingle();
@@ -67,20 +69,33 @@ const StoreLegalPage = ({ kind, customSlug }: { kind: LegalKind, customSlug?: st
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <SEOHead title={`${meta.title} — ${store.name}`} description={`${meta.title} de la boutique ${store.name}.`} />
+      <SEOHead
+        title={`${meta.title} — ${store.name}`}
+        description={`${meta.title} de la boutique ${store.name}.`}
+      />
       <header className="bg-white border-b border-gray-100">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
           <Link to={`/store/${store.slug}`} className="flex items-center gap-2.5">
             {store.logo_url ? (
-              <img src={store.logo_url} alt={store.name} className="h-8 w-8 rounded-lg object-cover" />
+              <img
+                src={store.logo_url}
+                alt={store.name}
+                className="h-8 w-8 rounded-lg object-cover"
+              />
             ) : (
-              <div className="h-8 w-8 rounded-lg flex items-center justify-center text-white text-xs font-bold" style={{ backgroundColor: brandColor }}>
+              <div
+                className="h-8 w-8 rounded-lg flex items-center justify-center text-white text-xs font-bold"
+                style={{ backgroundColor: brandColor }}
+              >
                 {store.name.charAt(0)?.toUpperCase()}
               </div>
             )}
             <span className="font-semibold text-gray-900">{store.name}</span>
           </Link>
-          <Link to={`/store/${store.slug}`} className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900">
+          <Link
+            to={`/store/${store.slug}`}
+            className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900"
+          >
             <ArrowLeft className="h-4 w-4" /> Retour
           </Link>
         </div>
@@ -89,7 +104,10 @@ const StoreLegalPage = ({ kind, customSlug }: { kind: LegalKind, customSlug?: st
       <main className="max-w-3xl mx-auto px-4 sm:px-6 py-10">
         <div className="bg-white rounded-2xl border border-gray-100 p-6 sm:p-10">
           <div className="flex items-center gap-3 mb-6">
-            <div className="h-10 w-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: `${brandColor}15`, color: brandColor }}>
+            <div
+              className="h-10 w-10 rounded-xl flex items-center justify-center"
+              style={{ backgroundColor: `${brandColor}15`, color: brandColor }}
+            >
               <Icon className="h-5 w-5" />
             </div>
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{meta.title}</h1>

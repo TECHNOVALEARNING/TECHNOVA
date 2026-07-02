@@ -3,10 +3,34 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
-import { Eye, RotateCcw, Save, Paintbrush, Type, MousePointerClick, ArrowUpDown, Star, ShoppingCart, Sparkles, Check, Package, ImagePlus, X, Loader2, AlertCircle, Video } from "lucide-react";
+import {
+  Eye,
+  RotateCcw,
+  Save,
+  Paintbrush,
+  Type,
+  MousePointerClick,
+  ArrowUpDown,
+  Star,
+  ShoppingCart,
+  Sparkles,
+  Check,
+  Package,
+  ImagePlus,
+  X,
+  Loader2,
+  AlertCircle,
+  Video,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import StoreSelector from "./StoreSelector";
 import { useActiveStore } from "@/hooks/useActiveStore";
@@ -37,7 +61,8 @@ const translations = {
     welcomeVideoTitle: "Vidéo de bienvenue",
     welcomeVideoDesc: "Configurez la vidéo d'accueil visible en bas de la section de bienvenue.",
     showWelcomeVideoLabel: "Afficher la vidéo de bienvenue",
-    showWelcomeVideoDesc: "Activer ou désactiver l'affichage de la vidéo sur la page d'accueil publique",
+    showWelcomeVideoDesc:
+      "Activer ou désactiver l'affichage de la vidéo sur la page d'accueil publique",
     videoLinkLabel: "Lien de la vidéo (YouTube, Vimeo, MP4, etc.)",
     displayOrderTitle: "Ordre d'affichage",
     noStoreTitle: "Aucune boutique",
@@ -140,7 +165,7 @@ const translations = {
     sortPriceDescDesc: "Highlight premium products",
     sortPriceAsc: "Cheapest first",
     sortPriceAscDesc: "Prioritize affordable products",
-  }
+  },
 };
 
 interface RealProduct {
@@ -155,7 +180,15 @@ interface RealProduct {
 
 const DashboardAppearanceTab = () => {
   const { user, profile } = useAuth();
-  const { stores, activeStore, activeStoreId, setActiveStoreId, updateStore, isLoading, hasStores } = useActiveStore();
+  const {
+    stores,
+    activeStore,
+    activeStoreId,
+    setActiveStoreId,
+    updateStore,
+    isLoading,
+    hasStores,
+  } = useActiveStore();
 
   const [brandColor, setBrandColor] = useState("#2563EB");
   const [font, setFont] = useState("Inter");
@@ -169,7 +202,9 @@ const DashboardAppearanceTab = () => {
   const [videoUrl, setVideoUrl] = useState("");
   const [showVideo, setShowVideo] = useState(false);
 
-  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+  const [lang, setLang] = useState(() =>
+    typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
+  );
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -177,7 +212,7 @@ const DashboardAppearanceTab = () => {
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
 
-  const t = translations[lang === 'en' ? 'en' : 'fr'];
+  const t = translations[lang === "en" ? "en" : "fr"];
 
   const BRAND_COLORS = [
     { name: t.colorBlue, value: "#2563EB" },
@@ -210,8 +245,10 @@ const DashboardAppearanceTab = () => {
       setShowBuyButton(activeStore.show_buy_button ?? true);
       setSortOrder(activeStore.sort_order || "recent");
       setBannerUrl(activeStore.banner_url || null);
-      
-      const sections = Array.isArray(activeStore.layout_sections) ? activeStore.layout_sections : [];
+
+      const sections = Array.isArray(activeStore.layout_sections)
+        ? activeStore.layout_sections
+        : [];
       const videoSection = sections.find((s: any) => s.type === "video");
       setVideoUrl(videoSection?.config?.video_url || "");
       setShowVideo(videoSection?.enabled ?? false);
@@ -237,7 +274,9 @@ const DashboardAppearanceTab = () => {
     if (!user || !activeStoreId) return;
     setSaving(true);
     try {
-      const currentSections = Array.isArray(activeStore?.layout_sections) ? activeStore.layout_sections : [];
+      const currentSections = Array.isArray(activeStore?.layout_sections)
+        ? activeStore.layout_sections
+        : [];
       let videoSectionExists = false;
       const newSections = currentSections.map((sec: any) => {
         if (sec.type === "video") {
@@ -248,8 +287,11 @@ const DashboardAppearanceTab = () => {
             config: {
               ...sec.config,
               video_url: videoUrl,
-              video_type: videoUrl.includes("youtube.com") || videoUrl.includes("youtu.be") ? "youtube" : "direct"
-            }
+              video_type:
+                videoUrl.includes("youtube.com") || videoUrl.includes("youtu.be")
+                  ? "youtube"
+                  : "direct",
+            },
           };
         }
         return sec;
@@ -263,26 +305,36 @@ const DashboardAppearanceTab = () => {
           config: {
             title: "Vidéo de bienvenue",
             video_url: videoUrl,
-            video_type: videoUrl.includes("youtube.com") || videoUrl.includes("youtu.be") ? "youtube" : "direct"
-          }
+            video_type:
+              videoUrl.includes("youtube.com") || videoUrl.includes("youtu.be")
+                ? "youtube"
+                : "direct",
+          },
         });
       }
 
       await updateStore.mutateAsync({
-        brand_color: brandColor, font,
+        brand_color: brandColor,
+        font,
         button_animation: buttonAnimation,
         show_buy_button: showBuyButton,
-        sort_order: sortOrder, banner_url: bannerUrl,
+        sort_order: sortOrder,
+        banner_url: bannerUrl,
         layout_sections: newSections,
       } as any);
 
-      await supabase.from("profiles").update({
-        store_brand_color: brandColor, store_font: font,
-        store_button_animation: buttonAnimation,
-        store_show_buy_button: showBuyButton,
-        store_sort_order: sortOrder, store_banner_url: bannerUrl,
-        updated_at: new Date().toISOString(),
-      } as any).eq("id", user.id);
+      await supabase
+        .from("profiles")
+        .update({
+          store_brand_color: brandColor,
+          store_font: font,
+          store_button_animation: buttonAnimation,
+          store_show_buy_button: showBuyButton,
+          store_sort_order: sortOrder,
+          store_banner_url: bannerUrl,
+          updated_at: new Date().toISOString(),
+        } as any)
+        .eq("id", user.id);
 
       toast.success(t.saveSuccess);
     } catch {
@@ -292,9 +344,14 @@ const DashboardAppearanceTab = () => {
   };
 
   const handleReset = () => {
-    setBrandColor("#2563EB"); setFont("Inter"); setButtonAnimation("none");
-    setShowBuyButton(true); setSortOrder("recent"); setBannerUrl(null);
-    setVideoUrl(""); setShowVideo(false);
+    setBrandColor("#2563EB");
+    setFont("Inter");
+    setButtonAnimation("none");
+    setShowBuyButton(true);
+    setSortOrder("recent");
+    setBannerUrl(null);
+    setVideoUrl("");
+    setShowVideo(false);
   };
 
   const handleBannerUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -303,8 +360,14 @@ const DashboardAppearanceTab = () => {
     setUploadingBanner(true);
     const ext = file.name.split(".").pop();
     const path = `${user.id}/banner-${activeStoreId}.${ext}`;
-    const { error } = await supabase.storage.from("product-assets").upload(path, file, { upsert: true });
-    if (error) { toast.error(t.uploadError); setUploadingBanner(false); return; }
+    const { error } = await supabase.storage
+      .from("product-assets")
+      .upload(path, file, { upsert: true });
+    if (error) {
+      toast.error(t.uploadError);
+      setUploadingBanner(false);
+      return;
+    }
     const { data: urlData } = supabase.storage.from("product-assets").getPublicUrl(path);
     setBannerUrl(urlData.publicUrl + "?t=" + Date.now());
     setUploadingBanner(false);
@@ -312,7 +375,12 @@ const DashboardAppearanceTab = () => {
   };
 
   if (isLoading) {
-    return <div className="animate-pulse space-y-4"><div className="h-10 bg-muted rounded w-48" /><div className="h-32 bg-muted rounded" /></div>;
+    return (
+      <div className="animate-pulse space-y-4">
+        <div className="h-10 bg-muted rounded w-48" />
+        <div className="h-32 bg-muted rounded" />
+      </div>
+    );
   }
 
   if (!hasStores) {
@@ -322,7 +390,13 @@ const DashboardAppearanceTab = () => {
           <AlertCircle className="h-5 w-5 text-muted-foreground shrink-0" />
           <div>
             <p className="text-sm font-medium text-foreground">{t.noStoreTitle}</p>
-            <p className="text-xs text-muted-foreground">{t.noStoreDesc}<a href="/dashboard/stores" className="text-primary hover:underline">{t.noStoreLinkText}</a>.</p>
+            <p className="text-xs text-muted-foreground">
+              {t.noStoreDesc}
+              <a href="/dashboard/stores" className="text-primary hover:underline">
+                {t.noStoreLinkText}
+              </a>
+              .
+            </p>
           </div>
         </div>
       </div>
@@ -336,7 +410,11 @@ const DashboardAppearanceTab = () => {
       {/* Left: Settings */}
       <div className="flex-1 max-w-2xl space-y-6">
         <div className="flex items-center gap-3 flex-wrap">
-          <StoreSelector stores={stores} activeStoreId={activeStoreId} onSelect={setActiveStoreId} />
+          <StoreSelector
+            stores={stores}
+            activeStoreId={activeStoreId}
+            onSelect={setActiveStoreId}
+          />
           {storeSlug && (
             <Button variant="outline" size="sm" className="gap-2" asChild>
               <a href={`/store/${storeSlug}`} target="_blank" rel="noopener noreferrer">
@@ -364,20 +442,30 @@ const DashboardAppearanceTab = () => {
           {bannerUrl ? (
             <div className="relative rounded-lg overflow-hidden border border-border">
               <img src={bannerUrl} alt="Bannière" className="w-full aspect-[3/1] object-cover" />
-              <button onClick={() => setBannerUrl(null)}
-                className="absolute top-2 right-2 h-7 w-7 rounded-full bg-background/80 backdrop-blur flex items-center justify-center border border-border hover:bg-destructive hover:text-destructive-foreground transition-colors">
+              <button
+                onClick={() => setBannerUrl(null)}
+                className="absolute top-2 right-2 h-7 w-7 rounded-full bg-background/80 backdrop-blur flex items-center justify-center border border-border hover:bg-destructive hover:text-destructive-foreground transition-colors"
+              >
                 <X className="h-4 w-4" />
               </button>
             </div>
           ) : (
             <label className="flex flex-col items-center justify-center aspect-[3/1] rounded-lg border-2 border-dashed border-border hover:border-muted-foreground/50 cursor-pointer transition-colors bg-secondary/30">
-              {uploadingBanner ? <Loader2 className="h-8 w-8 text-muted-foreground animate-spin" /> : (
+              {uploadingBanner ? (
+                <Loader2 className="h-8 w-8 text-muted-foreground animate-spin" />
+              ) : (
                 <>
                   <ImagePlus className="h-8 w-8 text-muted-foreground/50 mb-2" />
                   <span className="text-xs text-muted-foreground">{t.bannerUploadClick}</span>
                 </>
               )}
-              <input type="file" accept="image/*" onChange={handleBannerUpload} className="sr-only" disabled={uploadingBanner} />
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleBannerUpload}
+                className="sr-only"
+                disabled={uploadingBanner}
+              />
             </label>
           )}
         </div>
@@ -393,14 +481,26 @@ const DashboardAppearanceTab = () => {
           </div>
           <div className="flex items-center gap-3 flex-wrap">
             {BRAND_COLORS.map((c) => (
-              <button key={c.value} onClick={() => setBrandColor(c.value)}
-                className={cn("h-10 w-10 rounded-full transition-all ring-2 ring-offset-2 ring-offset-background",
-                  brandColor === c.value ? "ring-foreground scale-110" : "ring-transparent hover:scale-105"
-                )} style={{ backgroundColor: c.value }} />
+              <button
+                key={c.value}
+                onClick={() => setBrandColor(c.value)}
+                className={cn(
+                  "h-10 w-10 rounded-full transition-all ring-2 ring-offset-2 ring-offset-background",
+                  brandColor === c.value
+                    ? "ring-foreground scale-110"
+                    : "ring-transparent hover:scale-105",
+                )}
+                style={{ backgroundColor: c.value }}
+              />
             ))}
             <label className="h-10 w-10 rounded-full border-2 border-dashed border-border flex items-center justify-center cursor-pointer hover:border-muted-foreground transition-colors">
               <Paintbrush className="h-4 w-4 text-muted-foreground" />
-              <input type="color" value={brandColor} onChange={(e) => setBrandColor(e.target.value)} className="sr-only" />
+              <input
+                type="color"
+                value={brandColor}
+                onChange={(e) => setBrandColor(e.target.value)}
+                className="sr-only"
+              />
             </label>
           </div>
         </div>
@@ -408,12 +508,19 @@ const DashboardAppearanceTab = () => {
         {/* Font */}
         <div className="rounded-xl border border-border bg-card p-6 space-y-4">
           <div className="flex items-center gap-3">
-            <Type className="h-4 w-4 text-muted-foreground" /> <p className="text-sm font-semibold text-foreground">{t.fontTitle}</p>
+            <Type className="h-4 w-4 text-muted-foreground" />{" "}
+            <p className="text-sm font-semibold text-foreground">{t.fontTitle}</p>
           </div>
           <Select value={font} onValueChange={setFont}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
             <SelectContent>
-              {FONTS.map((f) => <SelectItem key={f.value} value={f.value}>{f.label}</SelectItem>)}
+              {FONTS.map((f) => (
+                <SelectItem key={f.value} value={f.value}>
+                  {f.label}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -421,12 +528,19 @@ const DashboardAppearanceTab = () => {
         {/* Button Animation */}
         <div className="rounded-xl border border-border bg-card p-6 space-y-4">
           <div className="flex items-center gap-3">
-            <MousePointerClick className="h-4 w-4 text-muted-foreground" /> <p className="text-sm font-semibold text-foreground">{t.buttonAnimTitle}</p>
+            <MousePointerClick className="h-4 w-4 text-muted-foreground" />{" "}
+            <p className="text-sm font-semibold text-foreground">{t.buttonAnimTitle}</p>
           </div>
           <Select value={buttonAnimation} onValueChange={setButtonAnimation}>
-            <SelectTrigger className="w-48"><SelectValue /></SelectTrigger>
+            <SelectTrigger className="w-48">
+              <SelectValue />
+            </SelectTrigger>
             <SelectContent>
-              {BUTTON_ANIMATIONS.map((a) => <SelectItem key={a.value} value={a.value}>{a.label}</SelectItem>)}
+              {BUTTON_ANIMATIONS.map((a) => (
+                <SelectItem key={a.value} value={a.value}>
+                  {a.label}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -434,7 +548,13 @@ const DashboardAppearanceTab = () => {
         {/* Options */}
         <div className="rounded-xl border border-border bg-card p-6 space-y-4">
           <p className="text-sm font-semibold text-foreground">{t.displayOptionsTitle}</p>
-          <ToggleOption icon={ShoppingCart} label={t.showBuyBtnLabel} desc={t.showBuyBtnDesc} checked={showBuyButton} onChange={setShowBuyButton} />
+          <ToggleOption
+            icon={ShoppingCart}
+            label={t.showBuyBtnLabel}
+            desc={t.showBuyBtnDesc}
+            checked={showBuyButton}
+            onChange={setShowBuyButton}
+          />
         </div>
 
         {/* Vidéo de bienvenue */}
@@ -459,7 +579,9 @@ const DashboardAppearanceTab = () => {
               </div>
               {showVideo && (
                 <div className="space-y-2 pt-2 animate-in fade-in slide-in-from-top-1 duration-200">
-                  <label className="text-xs font-semibold text-foreground">{t.videoLinkLabel}</label>
+                  <label className="text-xs font-semibold text-foreground">
+                    {t.videoLinkLabel}
+                  </label>
                   <Input
                     value={videoUrl}
                     onChange={(e) => setVideoUrl(e.target.value)}
@@ -477,10 +599,16 @@ const DashboardAppearanceTab = () => {
           <p className="text-sm font-semibold text-foreground">{t.displayOrderTitle}</p>
           <div className="space-y-2">
             {SORT_OPTIONS.map((opt) => (
-              <button key={opt.value} onClick={() => setSortOrder(opt.value)}
-                className={cn("w-full flex items-center gap-4 rounded-xl border-2 p-4 transition-all text-left",
-                  sortOrder === opt.value ? "border-primary bg-primary/5" : "border-border hover:border-muted-foreground/30"
-                )}>
+              <button
+                key={opt.value}
+                onClick={() => setSortOrder(opt.value)}
+                className={cn(
+                  "w-full flex items-center gap-4 rounded-xl border-2 p-4 transition-all text-left",
+                  sortOrder === opt.value
+                    ? "border-primary bg-primary/5"
+                    : "border-border hover:border-muted-foreground/30",
+                )}
+              >
                 <div className="h-10 w-10 rounded-lg bg-secondary flex items-center justify-center shrink-0">
                   <opt.icon className="h-5 w-5 text-muted-foreground" />
                 </div>
@@ -489,7 +617,10 @@ const DashboardAppearanceTab = () => {
                   <p className="text-xs text-muted-foreground">{opt.desc}</p>
                 </div>
                 {sortOrder === opt.value && (
-                  <div className="h-5 w-5 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: brandColor }}>
+                  <div
+                    className="h-5 w-5 rounded-full flex items-center justify-center shrink-0"
+                    style={{ backgroundColor: brandColor }}
+                  >
                     <Check className="h-3 w-3 text-white" />
                   </div>
                 )}
@@ -509,7 +640,9 @@ const DashboardAppearanceTab = () => {
                 <div className="h-2 w-2 rounded-full bg-yellow-500/50" />
                 <div className="h-2 w-2 rounded-full bg-green-500/50" />
               </div>
-              <span>{storeSlug ? `https://technova.com/store/${storeSlug}` : t.previewUrlPlaceholder}</span>
+              <span>
+                {storeSlug ? `https://technova.com/store/${storeSlug}` : t.previewUrlPlaceholder}
+              </span>
             </div>
             <div className="h-[650px] overflow-y-auto">
               <StorePreview
@@ -531,8 +664,18 @@ const DashboardAppearanceTab = () => {
   );
 };
 
-function ToggleOption({ icon: Icon, label, desc, checked, onChange }: {
-  icon: any; label: string; desc: string; checked: boolean; onChange: (v: boolean) => void;
+function ToggleOption({
+  icon: Icon,
+  label,
+  desc,
+  checked,
+  onChange,
+}: {
+  icon: any;
+  label: string;
+  desc: string;
+  checked: boolean;
+  onChange: (v: boolean) => void;
 }) {
   return (
     <div className="flex items-center justify-between gap-3">
@@ -547,26 +690,75 @@ function ToggleOption({ icon: Icon, label, desc, checked, onChange }: {
   );
 }
 
-function StorePreview({ storeName, storeDescription, logoUrl, brandColor, font, showBuyButton, products, bannerUrl, t }: {
-  storeName: string; storeDescription: string; logoUrl: string; brandColor: string; font: string; showBuyButton: boolean; products: RealProduct[]; bannerUrl: string | null; t: any;
+function StorePreview({
+  storeName,
+  storeDescription,
+  logoUrl,
+  brandColor,
+  font,
+  showBuyButton,
+  products,
+  bannerUrl,
+  t,
+}: {
+  storeName: string;
+  storeDescription: string;
+  logoUrl: string;
+  brandColor: string;
+  font: string;
+  showBuyButton: boolean;
+  products: RealProduct[];
+  bannerUrl: string | null;
+  t: any;
 }) {
-  const displayProducts = products.length > 0 ? products : [
-    { id: "1", title: t.previewExampleProd, price: 5000, original_price: 8000, thumbnail_url: null, type: "file", description: null },
-    { id: "2", title: t.previewOtherProd, price: 3000, original_price: null, thumbnail_url: null, type: "course", description: null },
-  ];
+  const displayProducts =
+    products.length > 0
+      ? products
+      : [
+          {
+            id: "1",
+            title: t.previewExampleProd,
+            price: 5000,
+            original_price: 8000,
+            thumbnail_url: null,
+            type: "file",
+            description: null,
+          },
+          {
+            id: "2",
+            title: t.previewOtherProd,
+            price: 3000,
+            original_price: null,
+            thumbnail_url: null,
+            type: "course",
+            description: null,
+          },
+        ];
 
   return (
     <div style={{ fontFamily: font }} className="bg-white min-h-full text-gray-900">
       {/* Header */}
       <div className="border-b border-gray-100 px-3 py-2 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="h-5 w-5 rounded-md flex items-center justify-center text-[8px] font-bold text-white overflow-hidden" style={{ backgroundColor: brandColor }}>
-            {logoUrl ? <img src={logoUrl} className="h-full w-full object-cover" /> : storeName.charAt(0).toUpperCase()}
+          <div
+            className="h-5 w-5 rounded-md flex items-center justify-center text-[8px] font-bold text-white overflow-hidden"
+            style={{ backgroundColor: brandColor }}
+          >
+            {logoUrl ? (
+              <img src={logoUrl} className="h-full w-full object-cover" />
+            ) : (
+              storeName.charAt(0).toUpperCase()
+            )}
           </div>
           <span className="font-bold text-gray-900 text-[10px]">{storeName}</span>
         </div>
         <div className="flex items-center gap-3">
-          <span className="text-[8px] font-medium text-gray-900" style={{ borderBottom: `1px solid ${brandColor}` }}>{t.previewTabProducts}</span>
+          <span
+            className="text-[8px] font-medium text-gray-900"
+            style={{ borderBottom: `1px solid ${brandColor}` }}
+          >
+            {t.previewTabProducts}
+          </span>
           <span className="text-[8px] text-gray-400">{t.previewTabAbout}</span>
           <span className="text-[8px] text-gray-400">{t.previewTabContact}</span>
         </div>
@@ -587,8 +779,10 @@ function StorePreview({ storeName, storeDescription, logoUrl, brandColor, font, 
       {/* Product Grid */}
       <div className="px-3 pb-4 grid grid-cols-2 gap-3">
         {displayProducts.slice(0, 6).map((p) => {
-          const disc = p.original_price && p.original_price > p.price
-            ? Math.round(((p.original_price - p.price) / p.original_price) * 100) : null;
+          const disc =
+            p.original_price && p.original_price > p.price
+              ? Math.round(((p.original_price - p.price) / p.original_price) * 100)
+              : null;
           return (
             <div key={p.id} className="bg-white border border-gray-100 rounded-lg overflow-hidden">
               <div className="relative aspect-square bg-gray-50 flex items-center justify-center">
@@ -598,7 +792,10 @@ function StorePreview({ storeName, storeDescription, logoUrl, brandColor, font, 
                   <Package className="h-5 w-5 text-gray-200" />
                 )}
                 {disc && (
-                  <span className="absolute top-1 right-1 text-[6px] font-bold px-1 py-0.5 rounded-full text-white" style={{ backgroundColor: brandColor }}>
+                  <span
+                    className="absolute top-1 right-1 text-[6px] font-bold px-1 py-0.5 rounded-full text-white"
+                    style={{ backgroundColor: brandColor }}
+                  >
                     {disc}% OFF
                   </span>
                 )}
@@ -608,12 +805,19 @@ function StorePreview({ storeName, storeDescription, logoUrl, brandColor, font, 
                 <p className="text-[7px] text-gray-400">{t.previewReviews}</p>
                 <div className="flex items-baseline gap-1">
                   {p.original_price && p.original_price > p.price && (
-                    <span className="text-[6px] line-through text-gray-300">{p.original_price.toLocaleString()}</span>
+                    <span className="text-[6px] line-through text-gray-300">
+                      {p.original_price.toLocaleString()}
+                    </span>
                   )}
-                  <span className="text-[8px] font-bold" style={{ color: brandColor }}>{p.price.toLocaleString()} FCFA</span>
+                  <span className="text-[8px] font-bold" style={{ color: brandColor }}>
+                    {p.price.toLocaleString()} FCFA
+                  </span>
                 </div>
                 {showBuyButton && (
-                  <button className="w-full text-[7px] text-white py-1 font-medium rounded-md" style={{ backgroundColor: brandColor }}>
+                  <button
+                    className="w-full text-[7px] text-white py-1 font-medium rounded-md"
+                    style={{ backgroundColor: brandColor }}
+                  >
                     {t.previewBuyBtn}
                   </button>
                 )}
@@ -625,7 +829,12 @@ function StorePreview({ storeName, storeDescription, logoUrl, brandColor, font, 
 
       {/* Footer */}
       <div className="border-t border-gray-100 py-2 text-center">
-        <span className="text-[7px] text-gray-300">{t.previewPoweredBy} <span className="font-medium" style={{ color: brandColor }}>TECHNOVA</span></span>
+        <span className="text-[7px] text-gray-300">
+          {t.previewPoweredBy}{" "}
+          <span className="font-medium" style={{ color: brandColor }}>
+            TECHNOVA
+          </span>
+        </span>
       </div>
     </div>
   );

@@ -3,7 +3,17 @@ import { Header, Footer } from "@/components/site/shared";
 import SEOHead from "@/components/SEOHead";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Calendar, Clock, User, Share2, Bookmark, CheckCircle2, ChevronRight, BookOpen } from "lucide-react";
+import {
+  ArrowLeft,
+  Calendar,
+  Clock,
+  User,
+  Share2,
+  Bookmark,
+  CheckCircle2,
+  ChevronRight,
+  BookOpen,
+} from "lucide-react";
 import { toast } from "sonner";
 
 // Fallback article details for when NewsData.io API is unavailable
@@ -36,7 +46,7 @@ const FALLBACK_ARTICLES_DETAILS: { [key: string]: any } = {
 
       <h2>Comment réussir avec le PLR ?</h2>
       <p>Pour ne pas ressembler à vos concurrents qui revendent le même fichier brut, vous devez absolument personnaliser le produit. Changez le titre pour le rendre accrocheur, concevez une nouvelle couverture moderne en 3D sur Canva, et ajoutez-y votre touche personnelle ou des exemples locaux.</p>
-    `
+    `,
   },
   "comment-personnaliser-un-ebook-plr": {
     id: "comment-personnaliser-un-ebook-plr",
@@ -57,7 +67,7 @@ const FALLBACK_ARTICLES_DETAILS: { [key: string]: any } = {
 
       <h2>3. Augmenter la Valeur Perçue avec des Bonus</h2>
       <p>Ajoutez des fiches mémo, des check-lists, des feuilles de calcul ou un court tutoriel vidéo. Packager l'e-book avec ces ressources gratuites augmente drastiquement la conversion et justifie un tarif plus élevé.</p>
-    `
+    `,
   },
   "tunnel-de-vente-produits-digitaux": {
     id: "tunnel-de-vente-produits-digitaux",
@@ -81,7 +91,7 @@ const FALLBACK_ARTICLES_DETAILS: { [key: string]: any } = {
       
       <h2>L'automatisation des e-mails</h2>
       <p>Mettez en place une séquence d'e-mails de suivi (email nurture sequence) pour apporter de la valeur à ceux qui n'ont pas acheté le Tripwire au début, et présentez vos autres produits digitaux.</p>
-    `
+    `,
   },
   "niches-rentables-produits-digitaux": {
     id: "niches-rentables-produits-digitaux",
@@ -102,7 +112,7 @@ const FALLBACK_ARTICLES_DETAILS: { [key: string]: any } = {
 
       <h2>3. La Santé & Le Fitness</h2>
       <p>Les programmes de perte de poids, les recettes saines (keto, vegan), la musculation à la maison, la méditation ou le yoga. C'est une niche passionnelle et à forte récurrence d'achat.</p>
-    `
+    `,
   },
   "systeme-io-vs-shopify-produits-digitaux": {
     id: "systeme-io-vs-shopify-produits-digitaux",
@@ -122,11 +132,12 @@ const FALLBACK_ARTICLES_DETAILS: { [key: string]: any } = {
       <h2>Shopify : La Référence E-commerce</h2>
       <p>Shopify est idéal si vous souhaitez créer un catalogue multi-produits avec une esthétique de marque forte. Bien qu'orienté produit physique au départ, il excelle pour vendre des fichiers numériques grâce à ses applications dédiées.</p>
       <p><strong>Avantages :</strong> Personnalisation visuelle totale, catalogue complet de thèmes, gestion des paniers d'achat avancée et écosystème d'applications colossal.</p>
-    `
+    `,
   },
   "strategie-email-marketing-infoproduits": {
     id: "strategie-email-marketing-infoproduits",
-    title: "L'E-mail Marketing pour Info-Preneurs : 3 Séquences Automatiques pour Exploser vos Ventes",
+    title:
+      "L'E-mail Marketing pour Info-Preneurs : 3 Séquences Automatiques pour Exploser vos Ventes",
     category: "Marketing",
     image: "https://images.unsplash.com/photo-1557200134-90327ee9fafa?w=800&q=80",
     author: "Captivateur",
@@ -143,7 +154,7 @@ const FALLBACK_ARTICLES_DETAILS: { [key: string]: any } = {
 
       <h2>3. La Séquence Promotionnelle Flash</h2>
       <p>Créez des promotions limitées dans le temps (48h à 72h). Utilisez l'urgence et la rareté (fermeture des portes ou hausse de tarif imminente) pour pousser vos prospects tièdes à l'action.</p>
-    `
+    `,
   },
   "comment-creer-une-offre-irresistible": {
     id: "comment-creer-une-offre-irresistible",
@@ -161,7 +172,7 @@ const FALLBACK_ARTICLES_DETAILS: { [key: string]: any } = {
       
       <h2>Utilisez l'Urgence et la Rareté</h2>
       <p>Limitez votre offre dans le temps ou en quantité. Proposez un tarif spécial de lancement pour les 100 premiers acheteurs ou pour les prochaines 24 heures.</p>
-    `
+    `,
   },
   "affiliation-produits-numeriques": {
     id: "affiliation-produits-numeriques",
@@ -179,7 +190,7 @@ const FALLBACK_ARTICLES_DETAILS: { [key: string]: any } = {
       
       <h2>Fournissez un Kit Promotionnel Clé en Main</h2>
       <p>Facilitez le travail de vos affiliés en leur fournissant des bannières publicitaires, des visuels de couverture 3D, des exemples d'e-mails prêts à envoyer et des publications pour les réseaux sociaux.</p>
-    `
+    `,
   },
   "creer-formation-video-depuis-plr": {
     id: "creer-formation-video-depuis-plr",
@@ -200,11 +211,12 @@ const FALLBACK_ARTICLES_DETAILS: { [key: string]: any } = {
       
       <h2>Étape 3 : Enregistrer l'écran et le micro</h2>
       <p>Utilisez des logiciels gratuits comme OBS Studio ou Loom pour filmer votre écran et votre webcam. Veillez à avoir un son clair : l'audio est plus important que la vidéo dans les produits d'information.</p>
-    `
+    `,
   },
   "gagner-ses-premiers-euros-en-ligne": {
     id: "gagner-ses-premiers-euros-en-ligne",
-    title: "Plan d'Action 30 Jours : Gagner ses Premiers 1000€ avec la Vente de Fichiers Numériques",
+    title:
+      "Plan d'Action 30 Jours : Gagner ses Premiers 1000€ avec la Vente de Fichiers Numériques",
     category: "Niches Riches",
     image: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=800&q=80",
     author: "Captivateur",
@@ -221,8 +233,8 @@ const FALLBACK_ARTICLES_DETAILS: { [key: string]: any } = {
       
       <h2>Jours 21 à 30 : Trafic & Lancement</h2>
       <p>Créez du contenu court sur TikTok, Instagram ou YouTube Shorts en donnant des conseils gratuits liés à votre e-book, et redirigez les spectateurs vers votre lien en bio. Lancez de petites campagnes promotionnelles pour attirer vos premiers clients.</p>
-    `
-  }
+    `,
+  },
 };
 
 // Fallback articles list matching Blog.tsx
@@ -233,7 +245,7 @@ const MOCK_LIST = [
     category: "Digital PLR",
     image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&q=80",
     date: "1 juillet 2026",
-    readingTime: "8 min"
+    readingTime: "8 min",
   },
   {
     id: "comment-personnaliser-un-ebook-plr",
@@ -241,7 +253,7 @@ const MOCK_LIST = [
     category: "Marketing",
     image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80",
     date: "29 juin 2026",
-    readingTime: "6 min"
+    readingTime: "6 min",
   },
   {
     id: "tunnel-de-vente-produits-digitaux",
@@ -249,7 +261,7 @@ const MOCK_LIST = [
     category: "Tunnels de Vente",
     image: "https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?w=800&q=80",
     date: "26 juin 2026",
-    readingTime: "7 min"
+    readingTime: "7 min",
   },
   {
     id: "niches-rentables-produits-digitaux",
@@ -257,7 +269,7 @@ const MOCK_LIST = [
     category: "Niches Riches",
     image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80",
     date: "24 juin 2026",
-    readingTime: "5 min"
+    readingTime: "5 min",
   },
   {
     id: "systeme-io-vs-shopify-produits-digitaux",
@@ -265,15 +277,16 @@ const MOCK_LIST = [
     category: "Tunnels de Vente",
     image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
     date: "22 juin 2026",
-    readingTime: "8 min"
+    readingTime: "8 min",
   },
   {
     id: "strategie-email-marketing-infoproduits",
-    title: "L'E-mail Marketing pour Info-Preneurs : 3 Séquences Automatiques pour Exploser vos Ventes",
+    title:
+      "L'E-mail Marketing pour Info-Preneurs : 3 Séquences Automatiques pour Exploser vos Ventes",
     category: "Marketing",
     image: "https://images.unsplash.com/photo-1557200134-90327ee9fafa?w=800&q=80",
     date: "20 juin 2026",
-    readingTime: "6 min"
+    readingTime: "6 min",
   },
   {
     id: "comment-creer-une-offre-irresistible",
@@ -281,7 +294,7 @@ const MOCK_LIST = [
     category: "Digital PLR",
     image: "https://images.unsplash.com/photo-1513151233558-d860c5398176?w=800&q=80",
     date: "18 juin 2026",
-    readingTime: "7 min"
+    readingTime: "7 min",
   },
   {
     id: "affiliation-produits-numeriques",
@@ -289,7 +302,7 @@ const MOCK_LIST = [
     category: "Marketing",
     image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&q=80",
     date: "15 juin 2026",
-    readingTime: "6 min"
+    readingTime: "6 min",
   },
   {
     id: "creer-formation-video-depuis-plr",
@@ -297,22 +310,25 @@ const MOCK_LIST = [
     category: "Digital PLR",
     image: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=800&q=80",
     date: "12 juin 2026",
-    readingTime: "9 min"
+    readingTime: "9 min",
   },
   {
     id: "gagner-ses-premiers-euros-en-ligne",
-    title: "Plan d'Action 30 Jours : Gagner ses Premiers 1000€ avec la Vente de Fichiers Numériques",
+    title:
+      "Plan d'Action 30 Jours : Gagner ses Premiers 1000€ avec la Vente de Fichiers Numériques",
     category: "Niches Riches",
     image: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=800&q=80",
     date: "10 juin 2026",
-    readingTime: "10 min"
-  }
+    readingTime: "10 min",
+  },
 ];
 
 export default function BlogPostDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+  const [lang, setLang] = useState(() =>
+    typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
+  );
   const [article, setArticle] = useState<any>(null);
   const [relatedArticles, setRelatedArticles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -338,7 +354,7 @@ export default function BlogPostDetail() {
 
   useEffect(() => {
     if (!id) return;
-    
+
     const fetchArticleDetail = async () => {
       setLoading(true);
       window.scrollTo(0, 0);
@@ -378,7 +394,7 @@ export default function BlogPostDetail() {
         } catch {
           setRelatedArticles(MOCK_LIST.filter((a: any) => a.id !== id).slice(0, 3));
         }
-        
+
         setTimeout(() => {
           setLoading(false);
         }, 500);
@@ -394,12 +410,12 @@ export default function BlogPostDetail() {
       setArticle(FALLBACK_ARTICLES_DETAILS[articleId]);
     } else {
       // Generate a nice-looking dynamic article content
-      const matchedMeta = MOCK_LIST.find(a => a.id === articleId) || {
+      const matchedMeta = MOCK_LIST.find((a) => a.id === articleId) || {
         title: "Article Digital & Innovation",
         category: "Technologie",
         image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80",
         date: "25 juin 2026",
-        readingTime: "5 min"
+        readingTime: "5 min",
       };
 
       setArticle({
@@ -431,45 +447,52 @@ export default function BlogPostDetail() {
           <h2>Perspectives et recommandations</h2>
           <p>Pour rester compétitif dans cet écosystème en constante évolution, il est essentiel de maintenir une <strong>veille technologique active</strong> et d'investir dans la formation continue des équipes. Les entreprises qui sauront allier innovation technologique et expertise humaine seront celles qui tireront le mieux leur épingle du jeu.</p>
           <p>Retrouvez toutes nos analyses et décryptages sur <strong>TECHNOVA</strong>, votre plateforme de référence pour comprendre les enjeux du numérique.</p>
-        `
+        `,
       });
     }
   };
 
   const handleShare = () => {
     if (navigator.share) {
-      navigator.share({
-        title: article?.title,
-        url: window.location.href
-      }).catch(console.error);
+      navigator
+        .share({
+          title: article?.title,
+          url: window.location.href,
+        })
+        .catch(console.error);
     } else {
       navigator.clipboard.writeText(window.location.href);
-      toast.success(lang === "fr" ? "Lien copié dans le presse-papiers !" : "Link copied to clipboard!");
+      toast.success(
+        lang === "fr" ? "Lien copié dans le presse-papiers !" : "Link copied to clipboard!",
+      );
     }
   };
 
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-300 font-sans relative">
-      <SEOHead 
+      <SEOHead
         title={article ? `${article.title}` : "Chargement de l'article"}
-        description={article ? `${article.title} - Décryptage par TECHNOVA` : "Lecture d'un article de blog tech."}
+        description={
+          article
+            ? `${article.title} - Décryptage par TECHNOVA`
+            : "Lecture d'un article de blog tech."
+        }
         ogImage={article?.image}
         ogType="article"
       />
       <Header />
 
       {/* Reading Progress Scroll Bar */}
-      <div 
-        className="fixed top-16 left-0 h-1 bg-gradient-to-r from-primary to-cyan-500 z-50 transition-all duration-100" 
+      <div
+        className="fixed top-16 left-0 h-1 bg-gradient-to-r from-primary to-cyan-500 z-50 transition-all duration-100"
         style={{ width: `${scrollProgress}%` }}
       />
 
       <main className="flex-1 bg-background pt-24 pb-20">
         <div className="container mx-auto px-4 max-w-4xl">
-          
           {/* Back button */}
-          <Link 
-            to="/blog" 
+          <Link
+            to="/blog"
             className="inline-flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-primary mb-8 group transition-colors"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
@@ -525,20 +548,28 @@ export default function BlogPostDetail() {
                       <span>{article.author || "Rédaction"}</span>
                       <CheckCircle2 className="w-4 h-4 text-primary fill-primary/10" />
                     </div>
-                    <div className="text-[11px] text-muted-foreground font-medium">Redacteur Tech</div>
+                    <div className="text-[11px] text-muted-foreground font-medium">
+                      Redacteur Tech
+                    </div>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <button 
+                  <button
                     onClick={handleShare}
                     className="p-2.5 rounded-xl border border-border bg-card/50 hover:bg-muted text-muted-foreground hover:text-foreground transition-all shadow-sm"
                     title="Partager"
                   >
                     <Share2 className="w-4 h-4" />
                   </button>
-                  <button 
-                    onClick={() => toast.success(lang === "fr" ? "Article sauvegardé dans vos favoris !" : "Article saved to bookmarks!")}
+                  <button
+                    onClick={() =>
+                      toast.success(
+                        lang === "fr"
+                          ? "Article sauvegardé dans vos favoris !"
+                          : "Article saved to bookmarks!",
+                      )
+                    }
                     className="p-2.5 rounded-xl border border-border bg-card/50 hover:bg-muted text-muted-foreground hover:text-foreground transition-all shadow-sm"
                     title="Sauvegarder"
                   >
@@ -549,19 +580,20 @@ export default function BlogPostDetail() {
 
               {/* Featured Image */}
               <div className="aspect-[21/10] md:aspect-[21/9] rounded-3xl overflow-hidden shadow-elegant border border-border mb-12 relative">
-                <img 
-                  src={article.image} 
-                  alt={article.title} 
+                <img
+                  src={article.image}
+                  alt={article.title}
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
-                    target.src = "https://images.unsplash.com/photo-1504711434969-e33886168d5c?w=800&q=80";
+                    target.src =
+                      "https://images.unsplash.com/photo-1504711434969-e33886168d5c?w=800&q=80";
                   }}
                 />
               </div>
 
               {/* Article Content - Styled with Tailwind Typography */}
-              <div 
+              <div
                 className="prose dark:prose-invert prose-blue max-w-none prose-headings:font-display prose-headings:font-bold prose-p:leading-relaxed prose-a:text-primary prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:bg-muted/30 prose-blockquote:p-4 prose-blockquote:rounded-r-2xl"
                 dangerouslySetInnerHTML={{ __html: article.content }}
               />
@@ -575,19 +607,20 @@ export default function BlogPostDetail() {
                   </h3>
                   <div className="grid sm:grid-cols-3 gap-6">
                     {relatedArticles.map((rel) => (
-                      <Link 
-                        key={rel.id} 
+                      <Link
+                        key={rel.id}
                         to={`/blog/${rel.id}`}
                         className="group flex flex-col bg-card border border-border/80 rounded-2xl overflow-hidden shadow-soft hover:shadow-elegant transition-all duration-300"
                       >
                         <div className="aspect-[16/10] overflow-hidden relative">
-                          <img 
-                            src={rel.image} 
-                            alt={rel.title} 
+                          <img
+                            src={rel.image}
+                            alt={rel.title}
                             className="w-full h-full object-cover group-hover:scale-104 transition-transform duration-300"
                             onError={(e) => {
                               const target = e.target as HTMLImageElement;
-                              target.src = "https://images.unsplash.com/photo-1504711434969-e33886168d5c?w=800&q=80";
+                              target.src =
+                                "https://images.unsplash.com/photo-1504711434969-e33886168d5c?w=800&q=80";
                             }}
                           />
                         </div>
@@ -605,16 +638,16 @@ export default function BlogPostDetail() {
                   </div>
                 </div>
               )}
-
             </article>
           ) : (
             /* Error state */
             <div className="text-center py-20">
               <p className="text-destructive mb-4">Erreur lors du chargement de l'article.</p>
-              <Link to="/blog" className="px-4 py-2 rounded-xl bg-primary text-white font-bold">Retour au blog</Link>
+              <Link to="/blog" className="px-4 py-2 rounded-xl bg-primary text-white font-bold">
+                Retour au blog
+              </Link>
             </div>
           )}
-
         </div>
       </main>
 

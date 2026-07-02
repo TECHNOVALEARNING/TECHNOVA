@@ -3,7 +3,13 @@ import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, ShieldCheck, Crown, Gem, X, Search } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -26,7 +32,12 @@ const AdminBadges = () => {
   const [busyId, setBusyId] = useState<string | null>(null);
   const [emailSearch, setEmailSearch] = useState("");
   const [emailLoading, setEmailLoading] = useState(false);
-  const [foundUser, setFoundUser] = useState<{ id: string; email: string; profile: any; badge: any } | null>(null);
+  const [foundUser, setFoundUser] = useState<{
+    id: string;
+    email: string;
+    profile: any;
+    badge: any;
+  } | null>(null);
 
   if (user && user.email !== ADMIN_EMAIL) return <Navigate to="/dashboard" />;
 
@@ -50,7 +61,9 @@ const AdminBadges = () => {
     setLoading(false);
   };
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+  }, []);
 
   const grant = async (userId: string, grade: any, months = 1) => {
     setBusyId(userId);
@@ -96,7 +109,12 @@ const AdminBadges = () => {
       if (error) throw error;
       if ((data as any)?.error) throw new Error((data as any).error);
       const res = data as any;
-      setFoundUser({ id: res.user.id, email: res.user.email, profile: res.profile, badge: res.badge });
+      setFoundUser({
+        id: res.user.id,
+        email: res.user.email,
+        profile: res.profile,
+        badge: res.badge,
+      });
       setGrantUserId(res.user.id);
       toast.success("Utilisateur trouvé");
     } catch (e: any) {
@@ -109,7 +127,9 @@ const AdminBadges = () => {
   const filtered = badges.filter((b) => {
     if (!search) return true;
     const p = profiles.get(b.user_id);
-    return p?.display_name?.toLowerCase().includes(search.toLowerCase()) || b.user_id.includes(search);
+    return (
+      p?.display_name?.toLowerCase().includes(search.toLowerCase()) || b.user_id.includes(search)
+    );
   });
 
   return (
@@ -118,7 +138,9 @@ const AdminBadges = () => {
         <h1 className="text-2xl font-bold">🏅 Gestion des badges Verify</h1>
 
         <Card>
-          <CardHeader><CardTitle>🔎 Rechercher une boutique par email</CardTitle></CardHeader>
+          <CardHeader>
+            <CardTitle>🔎 Rechercher une boutique par email</CardTitle>
+          </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex flex-col md:flex-row gap-2">
               <Input
@@ -130,7 +152,13 @@ const AdminBadges = () => {
                 className="flex-1"
               />
               <Button onClick={findByEmail} disabled={emailLoading || !emailSearch.trim()}>
-                {emailLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Search className="h-4 w-4 mr-1" /> Rechercher</>}
+                {emailLoading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <>
+                    <Search className="h-4 w-4 mr-1" /> Rechercher
+                  </>
+                )}
               </Button>
             </div>
 
@@ -138,18 +166,26 @@ const AdminBadges = () => {
               <div className="border rounded-lg p-4 space-y-3 bg-muted/30">
                 <div className="flex items-center gap-3 flex-wrap">
                   {foundUser.profile?.avatar_url && (
-                    <img src={foundUser.profile.avatar_url} alt="" className="h-10 w-10 rounded-full object-cover" />
+                    <img
+                      src={foundUser.profile.avatar_url}
+                      alt=""
+                      className="h-10 w-10 rounded-full object-cover"
+                    />
                   )}
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold truncate">
                       {foundUser.profile?.display_name || "Sans nom"}
                       {foundUser.badge?.status === "active" && (
-                        <span className="ml-2 inline-flex"><VerifiedBadge grade={foundUser.badge.grade} size="sm" /></span>
+                        <span className="ml-2 inline-flex">
+                          <VerifiedBadge grade={foundUser.badge.grade} size="sm" />
+                        </span>
                       )}
                     </p>
                     <p className="text-xs text-muted-foreground truncate">{foundUser.email}</p>
                     {foundUser.profile?.store_slug && (
-                      <p className="text-xs text-muted-foreground truncate">/{foundUser.profile.store_slug}</p>
+                      <p className="text-xs text-muted-foreground truncate">
+                        /{foundUser.profile.store_slug}
+                      </p>
                     )}
                   </div>
                   {foundUser.badge && (
@@ -161,7 +197,9 @@ const AdminBadges = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
                   <Select value={grantGrade} onValueChange={(v: any) => setGrantGrade(v)}>
-                    <SelectTrigger><SelectValue placeholder="Grade" /></SelectTrigger>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Grade" />
+                    </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="standard">Standard</SelectItem>
                       <SelectItem value="pro">Pro</SelectItem>
@@ -180,7 +218,11 @@ const AdminBadges = () => {
                     onClick={() => grant(foundUser.id, grantGrade, grantMonths)}
                     disabled={busyId === foundUser.id}
                   >
-                    {busyId === foundUser.id ? <Loader2 className="h-4 w-4 animate-spin" /> : "Attribuer le badge"}
+                    {busyId === foundUser.id ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      "Attribuer le badge"
+                    )}
                   </Button>
                 </div>
 
@@ -200,19 +242,37 @@ const AdminBadges = () => {
         </Card>
 
         <Card>
-          <CardHeader><CardTitle>Accorder un badge par User ID</CardTitle></CardHeader>
+          <CardHeader>
+            <CardTitle>Accorder un badge par User ID</CardTitle>
+          </CardHeader>
           <CardContent className="grid grid-cols-1 md:grid-cols-4 gap-3">
-            <Input placeholder="User ID" value={grantUserId} onChange={(e) => setGrantUserId(e.target.value)} />
+            <Input
+              placeholder="User ID"
+              value={grantUserId}
+              onChange={(e) => setGrantUserId(e.target.value)}
+            />
             <Select value={grantGrade} onValueChange={(v: any) => setGrantGrade(v)}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
                 <SelectItem value="standard">Standard</SelectItem>
                 <SelectItem value="pro">Pro</SelectItem>
                 <SelectItem value="premium">Premium</SelectItem>
               </SelectContent>
             </Select>
-            <Input type="number" min={1} max={36} value={grantMonths} onChange={(e) => setGrantMonths(Number(e.target.value))} placeholder="Mois" />
-            <Button onClick={() => grantUserId && grant(grantUserId, grantGrade, grantMonths)} disabled={!grantUserId || !!busyId}>
+            <Input
+              type="number"
+              min={1}
+              max={36}
+              value={grantMonths}
+              onChange={(e) => setGrantMonths(Number(e.target.value))}
+              placeholder="Mois"
+            />
+            <Button
+              onClick={() => grantUserId && grant(grantUserId, grantGrade, grantMonths)}
+              disabled={!grantUserId || !!busyId}
+            >
               {busyId === grantUserId ? <Loader2 className="h-4 w-4 animate-spin" /> : "Accorder"}
             </Button>
           </CardContent>
@@ -221,12 +281,19 @@ const AdminBadges = () => {
         <div className="flex gap-2">
           <div className="relative flex-1">
             <Search className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-            <Input placeholder="Rechercher..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
+            <Input
+              placeholder="Rechercher..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-9"
+            />
           </div>
         </div>
 
         {loading ? (
-          <div className="flex justify-center py-12"><Loader2 className="h-6 w-6 animate-spin" /></div>
+          <div className="flex justify-center py-12">
+            <Loader2 className="h-6 w-6 animate-spin" />
+          </div>
         ) : (
           <div className="space-y-2">
             {filtered.map((b) => {
@@ -239,17 +306,29 @@ const AdminBadges = () => {
                       <p className="font-semibold truncate">{p?.display_name || b.user_id}</p>
                       <p className="text-xs text-muted-foreground truncate">
                         {b.status} • {b.granted_by_admin ? "Admin" : "IA"}
-                        {b.expires_at && ` • Expire ${new Date(b.expires_at).toLocaleDateString("fr-FR")}`}
+                        {b.expires_at &&
+                          ` • Expire ${new Date(b.expires_at).toLocaleDateString("fr-FR")}`}
                       </p>
                     </div>
-                    <Badge variant={b.status === "active" ? "default" : "secondary"}>{b.status}</Badge>
+                    <Badge variant={b.status === "active" ? "default" : "secondary"}>
+                      {b.status}
+                    </Badge>
                     {b.status !== "revoked" && (
-                      <Button size="sm" variant="outline" onClick={() => revoke(b.user_id)} disabled={busyId === b.user_id}>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => revoke(b.user_id)}
+                        disabled={busyId === b.user_id}
+                      >
                         <X className="h-3 w-3" /> Révoquer
                       </Button>
                     )}
                     {b.status !== "active" && (
-                      <Button size="sm" onClick={() => grant(b.user_id, b.grade, 1)} disabled={busyId === b.user_id}>
+                      <Button
+                        size="sm"
+                        onClick={() => grant(b.user_id, b.grade, 1)}
+                        disabled={busyId === b.user_id}
+                      >
                         Activer
                       </Button>
                     )}
@@ -257,7 +336,9 @@ const AdminBadges = () => {
                 </Card>
               );
             })}
-            {filtered.length === 0 && <p className="text-center text-muted-foreground py-12">Aucun badge.</p>}
+            {filtered.length === 0 && (
+              <p className="text-center text-muted-foreground py-12">Aucun badge.</p>
+            )}
           </div>
         )}
       </div>

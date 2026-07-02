@@ -17,7 +17,8 @@ const sectionsData = [
 const translations = {
   fr: {
     seoTitle: "Documentation - TechNova",
-    seoDesc: "Documentation complète TECHNOVA : démarrage rapide, guides produits, paiements, API, webhooks et personnalisation de boutique.",
+    seoDesc:
+      "Documentation complète TECHNOVA : démarrage rapide, guides produits, paiements, API, webhooks et personnalisation de boutique.",
     heading: "Documentation",
     subtitle: "Tout ce dont vous avez besoin pour maîtriser TECHNOVA et développer votre business.",
     quickstartTitle: "Démarrage rapide",
@@ -35,7 +36,8 @@ const translations = {
   },
   en: {
     seoTitle: "Documentation - TechNova",
-    seoDesc: "Complete TECHNOVA documentation: quickstart, product guides, payments, API, webhooks, and store customization.",
+    seoDesc:
+      "Complete TECHNOVA documentation: quickstart, product guides, payments, API, webhooks, and store customization.",
     heading: "Documentation",
     subtitle: "Everything you need to master TECHNOVA and grow your business.",
     quickstartTitle: "Quickstart",
@@ -50,11 +52,13 @@ const translations = {
     apiDesc: "Integrate TECHNOVA with your tools using our REST API.",
     securityTitle: "Security",
     securityDesc: "Security best practices and data protection guidelines.",
-  }
+  },
 };
 
 const Documentation = () => {
-  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+  const [lang, setLang] = useState(() =>
+    typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
+  );
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -62,7 +66,7 @@ const Documentation = () => {
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
 
-  const t = translations[lang === 'en' ? 'en' : 'fr'];
+  const t = translations[lang === "en" ? "en" : "fr"];
 
   return (
     <div className="min-h-screen bg-background">
@@ -74,9 +78,7 @@ const Documentation = () => {
             <h1 className="text-4xl md:text-6xl font-extrabold text-foreground mb-6">
               <span className="text-gradient">{t.heading}</span>
             </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              {t.subtitle}
-            </p>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">{t.subtitle}</p>
           </motion.div>
         </div>
       </section>
@@ -87,8 +89,14 @@ const Documentation = () => {
             {sectionsData.map((s, i) => {
               const Icon = s.icon;
               return (
-                <motion.div key={s.key} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}
-                  className="group rounded-2xl border border-border bg-card p-6 hover:shadow-lg hover:border-primary/20 transition-all cursor-pointer">
+                <motion.div
+                  key={s.key}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.08 }}
+                  className="group rounded-2xl border border-border bg-card p-6 hover:shadow-lg hover:border-primary/20 transition-all cursor-pointer"
+                >
                   <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 group-hover:bg-primary/15 transition-colors">
                     <Icon className="h-5 w-5 text-primary" />
                   </div>

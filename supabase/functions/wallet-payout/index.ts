@@ -4,8 +4,7 @@ import { verify } from "https://deno.land/x/djwt@v3.0.2/mod.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
 const PAWAPAY_BASE = "https://api.pawapay.io";
@@ -34,7 +33,9 @@ Deno.serve(async (req) => {
     const userClient = createClient(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY")!, {
       global: { headers: { Authorization: authHeader } },
     });
-    const { data: { user } } = await userClient.auth.getUser(authHeader.replace("Bearer ", ""));
+    const {
+      data: { user },
+    } = await userClient.auth.getUser(authHeader.replace("Bearer ", ""));
     if (!user) return j({ error: "Non authentifié" }, 401);
 
     const { wallet_id, amount, unlock_token, currency = "XOF" } = await req.json();
@@ -55,29 +56,46 @@ Deno.serve(async (req) => {
 
     const admin = createClient(supabaseUrl, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
 
-    const { data: wallet } = await admin.from("wallets").select("*").eq("id", wallet_id).eq("user_id", user.id).maybeSingle();
+    const { data: wallet } = await admin
+      .from("wallets")
+      .select("*")
+      .eq("id", wallet_id)
+      .eq("user_id", user.id)
+      .maybeSingle();
     if (!wallet) return j({ error: "Wallet introuvable" }, 404);
 
     // Compute available NET balance (after Technova commission)
-    const { data: feeRow } = await admin.from("platform_fees").select("value_pct").eq("key", "technova_commission_pct").maybeSingle();
+    const { data: feeRow } = await admin
+      .from("platform_fees")
+      .select("value_pct")
+      .eq("key", "technova_commission_pct")
+      .maybeSingle();
     const commissionPct = Number(feeRow?.value_pct ?? 5) / 100;
 
     const cutoff = new Date(Date.now() - 72 * 60 * 60 * 1000).toISOString();
     const { data: orders } = await admin
-      .from("orders").select("amount, created_at")
-      .eq("store_owner_id", user.id).eq("status", "completed");
-    const matured = (orders || []).filter((o: any) => o.created_at <= cutoff)
+      .from("orders")
+      .select("amount, created_at")
+      .eq("store_owner_id", user.id)
+      .eq("status", "completed");
+    const matured = (orders || [])
+      .filter((o: any) => o.created_at <= cutoff)
       .reduce((s: number, o: any) => s + Number(o.amount), 0);
     const netAvailable = matured * (1 - commissionPct);
 
     const { data: ws } = await admin
-      .from("withdrawals").select("amount").eq("user_id", user.id)
+      .from("withdrawals")
+      .select("amount")
+      .eq("user_id", user.id)
       .in("status", ["pending", "processing", "completed"]);
     const totalWithdrawn = (ws || []).reduce((s: number, w: any) => s + Number(w.amount), 0);
     const available = netAvailable - totalWithdrawn;
 
     if (amount > available) {
-      return j({ error: `Solde insuffisant. Disponible: ${Math.floor(available)} ${currency}` }, 400);
+      return j(
+        { error: `Solde insuffisant. Disponible: ${Math.floor(available)} ${currency}` },
+        400,
+      );
     }
 
     const cleanPhone = String(wallet.phone).replace(/\D/g, "");
@@ -94,7 +112,8 @@ Deno.serve(async (req) => {
         provider_code: wallet.provider_code,
         status: "processing",
       })
-      .select().single();
+      .select()
+      .single();
     if (insErr) return j({ error: insErr.message }, 400);
 
     const payoutId = crypto.randomUUID();
@@ -107,11 +126,7 @@ Deno.serve(async (req) => {
         accountDetails: { phoneNumber: cleanPhone, provider: wallet.provider_code },
       },
       customerMessage: `Technova retrait`.slice(0, 22),
-      metadata: [
-        { withdrawal_id: withdrawal.id },
-        { user_id: user.id },
-        { wallet_id: wallet.id },
-      ],
+      metadata: [{ withdrawal_id: withdrawal.id }, { user_id: user.id }, { wallet_id: wallet.id }],
     };
 
     const resp = await fetch(`${PAWAPAY_BASE}/v2/payouts`, {
@@ -127,7 +142,11 @@ Deno.serve(async (req) => {
     console.log("[wallet-payout]", resp.status, JSON.stringify(data));
 
     if (!resp.ok || data.status === "REJECTED" || data.status === "FAILED") {
-      const reason = data?.failureReason?.failureMessage || data?.rejectionReason?.rejectionMessage || data?.message || "Erreur PawaPay";
+      const reason =
+        data?.failureReason?.failureMessage ||
+        data?.rejectionReason?.rejectionMessage ||
+        data?.message ||
+        "Erreur PawaPay";
       const notConfigured = /not been configured to make payouts/i.test(String(reason));
       if (notConfigured) {
         await admin.from("withdrawals").update({ status: "pending" }).eq("id", withdrawal.id);
@@ -157,6 +176,9 @@ Deno.serve(async (req) => {
     return j({ error: e.message }, 500);
   }
   function j(b: unknown, s = 200) {
-    return new Response(JSON.stringify(b), { status: s, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    return new Response(JSON.stringify(b), {
+      status: s,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 });

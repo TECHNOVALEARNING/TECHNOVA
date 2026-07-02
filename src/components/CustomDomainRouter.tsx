@@ -19,7 +19,7 @@ export const useCustomDomain = () => {
   useEffect(() => {
     const checkDomain = async () => {
       const hostname = window.location.hostname;
-      
+
       if (hostname.startsWith("portal.")) {
         // Stop loading and let the app render
         // But we will intercept this in App.tsx
@@ -29,9 +29,9 @@ export const useCustomDomain = () => {
 
       // Skip for main domains and local dev
       if (
-        hostname === "localhost" || 
-        hostname === "127.0.0.1" || 
-        hostname.includes("technova") || 
+        hostname === "localhost" ||
+        hostname === "127.0.0.1" ||
+        hostname.includes("technova") ||
         hostname.endsWith(".vercel.app") ||
         hostname.endsWith(".lovableproject.com")
       ) {
@@ -44,10 +44,10 @@ export const useCustomDomain = () => {
         const { data, error } = await supabase
           .from("custom_domains")
           .select("stores(slug)")
-          .eq("domain", hostname.replace(/^www\./, ''))
+          .eq("domain", hostname.replace(/^www\./, ""))
           .maybeSingle();
 
-        if (data?.stores && 'slug' in data.stores) {
+        if (data?.stores && "slug" in data.stores) {
           setStoreSlug(data.stores.slug as string);
         }
       } catch (err) {

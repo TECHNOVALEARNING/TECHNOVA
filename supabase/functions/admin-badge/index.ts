@@ -15,13 +15,14 @@ const getAdminUser = async (req: Request) => {
   const authClient = createClient(
     Deno.env.get("SUPABASE_URL")!,
     Deno.env.get("SUPABASE_ANON_KEY")!,
-    { global: { headers: { Authorization: authHeader } } }
+    { global: { headers: { Authorization: authHeader } } },
   );
   const token = authHeader.replace("Bearer ", "");
   const { data, error } = await authClient.auth.getUser(token);
   const email = String(data?.user?.email || "").toLowerCase();
 
-  if (error || !data?.user?.id || !ADMIN_EMAILS.includes(email)) throw new Error("Accès admin requis");
+  if (error || !data?.user?.id || !ADMIN_EMAILS.includes(email))
+    throw new Error("Accès admin requis");
   return { id: String(data.user.id), email };
 };
 
@@ -34,11 +35,17 @@ Deno.serve(async (req) => {
     // Client service_role pour les opérations privilégiées
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
     );
 
     const body = await req.json();
-    const { action, user_id, grade, months = 1, email } = body as {
+    const {
+      action,
+      user_id,
+      grade,
+      months = 1,
+      email,
+    } = body as {
       action: "grant" | "revoke" | "find_by_email";
       user_id?: string;
       email?: string;
@@ -72,18 +79,20 @@ Deno.serve(async (req) => {
         .maybeSingle();
 
       return new Response(
-        JSON.stringify({ ok: true, user: { id: foundUser.id, email: foundUser.email }, profile, badge }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        JSON.stringify({
+          ok: true,
+          user: { id: foundUser.id, email: foundUser.email },
+          profile,
+          badge,
+        }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
 
     if (!user_id) throw new Error("user_id requis");
 
     if (action === "revoke") {
-      await supabase
-        .from("verified_badges")
-        .update({ status: "revoked" })
-        .eq("user_id", user_id);
+      await supabase.from("verified_badges").update({ status: "revoked" }).eq("user_id", user_id);
 
       await supabase.from("notifications").insert({
         user_id,

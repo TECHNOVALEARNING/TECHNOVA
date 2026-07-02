@@ -56,7 +56,7 @@ const SupportTicketDialog = ({ open, onOpenChange, orderId, productId, customerI
       .eq("order_id", orderId)
       .eq("customer_id", customerId)
       .order("created_at", { ascending: false });
-      
+
     if (t && t.length > 0) {
       setTickets(t as Ticket[]);
       // Si le dernier ticket est toujours ouvert, on l'affiche par défaut
@@ -72,14 +72,18 @@ const SupportTicketDialog = ({ open, onOpenChange, orderId, productId, customerI
       setActiveTicket(null);
       setMessages([]);
     }
-    
+
     // Load customer details for prepopulation
-    const { data: cust } = await supabase.from("customers").select("email, phone").eq("id", customerId).maybeSingle();
+    const { data: cust } = await supabase
+      .from("customers")
+      .select("email, phone")
+      .eq("id", customerId)
+      .maybeSingle();
     if (cust) {
       if (!customerEmail) setCustomerEmail(cust.email || "");
       if (!phoneNumber) setPhoneNumber(cust.phone || "");
     }
-    
+
     setLoading(false);
   };
 
@@ -100,20 +104,26 @@ const SupportTicketDialog = ({ open, onOpenChange, orderId, productId, customerI
     if (!activeTicket) return;
     const channel = supabase
       .channel(`buyer-ticket-msgs-${activeTicket.id}`)
-      .on("postgres_changes", {
-        event: "INSERT",
-        schema: "public",
-        table: "support_ticket_messages",
-        filter: `ticket_id=eq.${activeTicket.id}`,
-      }, (payload) => {
-        setMessages((prev) => {
-          if (prev.some((m) => m.id === payload.new.id)) return prev;
-          return [...prev, payload.new as Message];
-        });
-      })
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "support_ticket_messages",
+          filter: `ticket_id=eq.${activeTicket.id}`,
+        },
+        (payload) => {
+          setMessages((prev) => {
+            if (prev.some((m) => m.id === payload.new.id)) return prev;
+            return [...prev, payload.new as Message];
+          });
+        },
+      )
       .subscribe();
 
-    return () => { supabase.removeChannel(channel); };
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [activeTicket]);
 
   const createTicket = async () => {
@@ -125,7 +135,10 @@ const SupportTicketDialog = ({ open, onOpenChange, orderId, productId, customerI
     try {
       // store_owner_id pulled via product
       const { data: prod } = await supabase
-        .from("products").select("creator_id").eq("id", productId).single();
+        .from("products")
+        .select("creator_id")
+        .eq("id", productId)
+        .single();
       const { data: t, error } = await supabase
         .from("support_tickets")
         .insert({
@@ -150,8 +163,8 @@ const SupportTicketDialog = ({ open, onOpenChange, orderId, productId, customerI
       await supabase.from("notifications").insert({
         user_id: (prod as any).creator_id,
         title: "Nouveau ticket de support acheteur",
-        message: `L'acheteur ${customerEmail} a ouvert un ticket pour la commande #${orderId.slice(0,8).toUpperCase()}`,
-        type: "support"
+        message: `L'acheteur ${customerEmail} a ouvert un ticket pour la commande #${orderId.slice(0, 8).toUpperCase()}`,
+        type: "support",
       } as any);
 
       // Send email via notify-support-ticket to alert seller
@@ -162,8 +175,8 @@ const SupportTicketDialog = ({ open, onOpenChange, orderId, productId, customerI
           userName: "Acheteur - Commande #" + orderId.slice(0, 8).toUpperCase(),
           userEmail: customerEmail,
           subject: subject.trim(),
-          transcript: content.trim()
-        }
+          transcript: content.trim(),
+        },
       });
 
       setActiveTicket(ticketRow);
@@ -212,14 +225,21 @@ const SupportTicketDialog = ({ open, onOpenChange, orderId, productId, customerI
         ) : activeTicket ? (
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <Button variant="ghost" size="sm" onClick={() => setActiveTicket(null)} className="text-xs">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setActiveTicket(null)}
+                className="text-xs"
+              >
                 &larr; Retour
               </Button>
             </div>
             <div className="rounded-lg border border-border bg-secondary/40 p-3">
               <p className="text-xs text-muted-foreground">Sujet</p>
               <p className="text-sm font-semibold text-foreground">{activeTicket.subject}</p>
-              <p className="mt-1 text-[11px] uppercase text-muted-foreground">Statut: {activeTicket.status}</p>
+              <p className="mt-1 text-[11px] uppercase text-muted-foreground">
+                Statut: {activeTicket.status}
+              </p>
             </div>
             <div className="max-h-60 sm:max-h-72 space-y-2 overflow-y-auto pr-1">
               {messages.map((m) => (
@@ -264,25 +284,29 @@ const SupportTicketDialog = ({ open, onOpenChange, orderId, productId, customerI
           <div className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="space-y-1">
-                <label className="text-xs font-medium text-muted-foreground">Numéro de commande</label>
-                <Input 
-                  value={displayOrderId} 
-                  onChange={(e) => setDisplayOrderId(e.target.value)} 
+                <label className="text-xs font-medium text-muted-foreground">
+                  Numéro de commande
+                </label>
+                <Input
+                  value={displayOrderId}
+                  onChange={(e) => setDisplayOrderId(e.target.value)}
                   className="h-9 text-sm"
                 />
               </div>
               <div className="space-y-1">
                 <label className="text-xs font-medium text-muted-foreground">Email d'achat</label>
-                <Input 
+                <Input
                   placeholder="Votre email..."
-                  value={customerEmail} 
-                  onChange={(e) => setCustomerEmail(e.target.value)} 
+                  value={customerEmail}
+                  onChange={(e) => setCustomerEmail(e.target.value)}
                   className="h-9 text-sm"
                 />
               </div>
             </div>
             <div className="space-y-1">
-              <label className="text-xs font-medium text-muted-foreground">Numéro utilisé pour l'achat (Optionnel)</label>
+              <label className="text-xs font-medium text-muted-foreground">
+                Numéro utilisé pour l'achat (Optionnel)
+              </label>
               <Input
                 placeholder="Votre numéro de téléphone..."
                 value={phoneNumber}
@@ -300,7 +324,9 @@ const SupportTicketDialog = ({ open, onOpenChange, orderId, productId, customerI
               />
             </div>
             <div className="space-y-1">
-              <label className="text-xs font-medium text-muted-foreground">Détails du problème</label>
+              <label className="text-xs font-medium text-muted-foreground">
+                Détails du problème
+              </label>
               <Textarea
                 placeholder="Décrivez votre problème en détail..."
                 value={content}
@@ -309,17 +335,23 @@ const SupportTicketDialog = ({ open, onOpenChange, orderId, productId, customerI
               />
             </div>
             <Button onClick={createTicket} disabled={sending} className="w-full gap-2 mt-2 h-10">
-              {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+              {sending ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Send className="h-4 w-4" />
+              )}
               Ouvrir un ticket
             </Button>
 
             {tickets.length > 0 && (
               <div className="mt-6 border-t pt-4">
-                <h4 className="text-sm font-semibold text-foreground mb-3">Historique de vos tickets</h4>
+                <h4 className="text-sm font-semibold text-foreground mb-3">
+                  Historique de vos tickets
+                </h4>
                 <div className="space-y-2">
-                  {tickets.map(t => (
-                    <div 
-                      key={t.id} 
+                  {tickets.map((t) => (
+                    <div
+                      key={t.id}
                       onClick={() => {
                         setActiveTicket(t);
                         loadMessages(t.id);
@@ -328,7 +360,9 @@ const SupportTicketDialog = ({ open, onOpenChange, orderId, productId, customerI
                     >
                       <div className="truncate pr-3">
                         <p className="text-sm font-medium truncate">{t.subject}</p>
-                        <p className="text-xs text-muted-foreground mt-0.5">{t.status === 'closed' ? 'Fermé' : 'Ouvert'}</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">
+                          {t.status === "closed" ? "Fermé" : "Ouvert"}
+                        </p>
                       </div>
                       <Button variant="ghost" size="sm" className="shrink-0 text-xs h-7 px-2">
                         Voir

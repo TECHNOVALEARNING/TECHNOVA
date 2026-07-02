@@ -4,8 +4,7 @@ import bcrypt from "https://esm.sh/bcryptjs@2.4.3";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
 Deno.serve(async (req) => {
@@ -18,7 +17,9 @@ Deno.serve(async (req) => {
     const userClient = createClient(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY")!, {
       global: { headers: { Authorization: authHeader } },
     });
-    const { data: { user } } = await userClient.auth.getUser(authHeader.replace("Bearer ", ""));
+    const {
+      data: { user },
+    } = await userClient.auth.getUser(authHeader.replace("Bearer ", ""));
     if (!user) return j({ error: "Non authentifié" }, 401);
 
     const { pin, currentPin } = await req.json();
@@ -27,7 +28,11 @@ Deno.serve(async (req) => {
     const admin = createClient(supabaseUrl, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
 
     // Check if user already has a PIN
-    const { data: existing } = await admin.from("wallet_pins").select("pin_hash").eq("user_id", user.id).maybeSingle();
+    const { data: existing } = await admin
+      .from("wallet_pins")
+      .select("pin_hash")
+      .eq("user_id", user.id)
+      .maybeSingle();
     if (existing) {
       if (!currentPin) return j({ error: "PIN actuel requis pour modifier" }, 400);
       const ok = bcrypt.compareSync(String(currentPin), existing.pin_hash);
@@ -48,6 +53,9 @@ Deno.serve(async (req) => {
     return j({ error: e.message }, 500);
   }
   function j(b: unknown, s = 200) {
-    return new Response(JSON.stringify(b), { status: s, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    return new Response(JSON.stringify(b), {
+      status: s,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 });

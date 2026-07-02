@@ -67,7 +67,7 @@ const translations = {
     totalSpentLabel: "Total spent",
     purchaseHistory: "Purchase History",
     defaultProduct: "Product",
-  }
+  },
 };
 
 const DashboardClients = () => {
@@ -77,7 +77,9 @@ const DashboardClients = () => {
   const [search, setSearch] = useState("");
   const [selectedClient, setSelectedClient] = useState<ClientWithOrders | null>(null);
 
-  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+  const [lang, setLang] = useState(() =>
+    typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
+  );
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -85,8 +87,8 @@ const DashboardClients = () => {
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
 
-  const t = translations[lang === 'en' ? 'en' : 'fr'];
-  const dateLocale = lang === 'en' ? enUS : fr;
+  const t = translations[lang === "en" ? "en" : "fr"];
+  const dateLocale = lang === "en" ? enUS : fr;
 
   useEffect(() => {
     if (!user) return;
@@ -94,7 +96,9 @@ const DashboardClients = () => {
       // Get all orders for this store owner with customer + product info
       const { data: orders } = await supabase
         .from("orders")
-        .select("id, amount, created_at, customer_id, products(title), customers(id, name, email, phone, created_at)")
+        .select(
+          "id, amount, created_at, customer_id, products(title), customers(id, name, email, phone, created_at)",
+        )
         .eq("store_owner_id", user.id)
         .order("created_at", { ascending: false });
 
@@ -142,7 +146,9 @@ const DashboardClients = () => {
 
   const filtered = clients.filter((c) => {
     const q = search.toLowerCase();
-    return c.name.toLowerCase().includes(q) || c.email.toLowerCase().includes(q) || c.phone.includes(q);
+    return (
+      c.name.toLowerCase().includes(q) || c.email.toLowerCase().includes(q) || c.phone.includes(q)
+    );
   });
 
   return (
@@ -175,9 +181,7 @@ const DashboardClients = () => {
           <div className="rounded-xl border border-border bg-card p-10 text-center">
             <Users className="h-12 w-12 mx-auto text-muted-foreground/30 mb-3" />
             <p className="text-muted-foreground">{t.noCustomers}</p>
-            <p className="text-sm text-muted-foreground/60 mt-1">
-              {t.noCustomersSub}
-            </p>
+            <p className="text-sm text-muted-foreground/60 mt-1">{t.noCustomersSub}</p>
           </div>
         ) : (
           <>
@@ -187,11 +191,21 @@ const DashboardClients = () => {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-border bg-muted/30">
-                      <th className="text-left p-4 font-medium text-muted-foreground">{t.colCustomer}</th>
-                      <th className="text-left p-4 font-medium text-muted-foreground">{t.colPhone}</th>
-                      <th className="text-left p-4 font-medium text-muted-foreground">{t.colPurchases}</th>
-                      <th className="text-left p-4 font-medium text-muted-foreground">{t.colTotalSpent}</th>
-                      <th className="text-left p-4 font-medium text-muted-foreground">{t.colSince}</th>
+                      <th className="text-left p-4 font-medium text-muted-foreground">
+                        {t.colCustomer}
+                      </th>
+                      <th className="text-left p-4 font-medium text-muted-foreground">
+                        {t.colPhone}
+                      </th>
+                      <th className="text-left p-4 font-medium text-muted-foreground">
+                        {t.colPurchases}
+                      </th>
+                      <th className="text-left p-4 font-medium text-muted-foreground">
+                        {t.colTotalSpent}
+                      </th>
+                      <th className="text-left p-4 font-medium text-muted-foreground">
+                        {t.colSince}
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -216,7 +230,9 @@ const DashboardClients = () => {
                         </td>
                         <td className="p-4 text-muted-foreground">{c.phone}</td>
                         <td className="p-4 text-foreground font-medium">{c.orderCount}</td>
-                        <td className="p-4 font-semibold text-foreground">{c.totalSpent.toLocaleString()} FCFA</td>
+                        <td className="p-4 font-semibold text-foreground">
+                          {c.totalSpent.toLocaleString()} FCFA
+                        </td>
                         <td className="p-4 text-muted-foreground">
                           {format(new Date(c.created_at), "dd MMM yyyy", { locale: dateLocale })}
                         </td>
@@ -256,11 +272,17 @@ const DashboardClients = () => {
                       <Phone className="h-3.5 w-3.5 shrink-0" />
                       <span className="truncate max-w-[140px]">{c.phone}</span>
                     </div>
-                    <span className="font-semibold text-foreground">{c.totalSpent.toLocaleString()} FCFA</span>
+                    <span className="font-semibold text-foreground">
+                      {c.totalSpent.toLocaleString()} FCFA
+                    </span>
                   </div>
                   <div className="flex items-center justify-between text-xs text-muted-foreground mt-2">
-                    <span>{c.orderCount} {c.orderCount !== 1 ? t.purchases : t.purchase}</span>
-                    <span>{format(new Date(c.created_at), "dd MMM yyyy", { locale: dateLocale })}</span>
+                    <span>
+                      {c.orderCount} {c.orderCount !== 1 ? t.purchases : t.purchase}
+                    </span>
+                    <span>
+                      {format(new Date(c.created_at), "dd MMM yyyy", { locale: dateLocale })}
+                    </span>
                   </div>
                 </div>
               ))}
@@ -294,7 +316,10 @@ const DashboardClients = () => {
                   <div>
                     <p className="text-lg font-bold text-foreground">{selectedClient.name}</p>
                     <p className="text-sm text-muted-foreground">
-                      {t.sinceLabel} {format(new Date(selectedClient.created_at), "MMMM yyyy", { locale: dateLocale })}
+                      {t.sinceLabel}{" "}
+                      {format(new Date(selectedClient.created_at), "MMMM yyyy", {
+                        locale: dateLocale,
+                      })}
                     </p>
                   </div>
                 </div>
@@ -319,7 +344,9 @@ const DashboardClients = () => {
                     <div>
                       <p className="text-xs text-muted-foreground">{t.totalSpentLabel}</p>
                       <p className="text-sm font-bold text-foreground">
-                        {selectedClient.totalSpent.toLocaleString()} FCFA ({selectedClient.orderCount} {selectedClient.orderCount !== 1 ? t.purchases : t.purchase})
+                        {selectedClient.totalSpent.toLocaleString()} FCFA (
+                        {selectedClient.orderCount}{" "}
+                        {selectedClient.orderCount !== 1 ? t.purchases : t.purchase})
                       </p>
                     </div>
                   </div>
@@ -330,13 +357,20 @@ const DashboardClients = () => {
                   <p className="text-sm font-semibold text-foreground mb-2">{t.purchaseHistory}</p>
                   <div className="space-y-2 max-h-48 overflow-y-auto">
                     {selectedClient.orders.map((o) => (
-                      <div key={o.id} className="flex items-center justify-between rounded-lg border border-border p-3">
+                      <div
+                        key={o.id}
+                        className="flex items-center justify-between rounded-lg border border-border p-3"
+                      >
                         <div className="flex items-center gap-2">
                           <Package className="h-4 w-4 text-muted-foreground shrink-0" />
-                          <span className="text-sm text-foreground truncate max-w-[200px]">{o.productTitle}</span>
+                          <span className="text-sm text-foreground truncate max-w-[200px]">
+                            {o.productTitle}
+                          </span>
                         </div>
                         <div className="text-right shrink-0">
-                          <p className="text-sm font-semibold text-foreground">{Number(o.amount).toLocaleString()} FCFA</p>
+                          <p className="text-sm font-semibold text-foreground">
+                            {Number(o.amount).toLocaleString()} FCFA
+                          </p>
                           <p className="text-xs text-muted-foreground">
                             {format(new Date(o.created_at), "dd/MM/yyyy", { locale: dateLocale })}
                           </p>

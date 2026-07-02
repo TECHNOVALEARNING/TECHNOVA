@@ -1,6 +1,16 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
-import { FileText, Music, Video, KeyRound, GraduationCap, Image as ImageIcon, Store, ShieldCheck, CheckCircle2 } from "lucide-react";
+import {
+  FileText,
+  Music,
+  Video,
+  KeyRound,
+  GraduationCap,
+  Image as ImageIcon,
+  Store,
+  ShieldCheck,
+  CheckCircle2,
+} from "lucide-react";
 import orangeLogo from "@/assets/payment-logos/providers/orange.png";
 import mtnLogo from "@/assets/payment-logos/providers/mtn.png";
 import moovLogo from "@/assets/payment-logos/providers/moov.png";
@@ -47,7 +57,10 @@ const HeroVisual = () => {
   }, []);
 
   return (
-    <div className="relative w-full max-w-[520px] mx-auto aspect-[4/5]" style={{ perspective: "1400px" }}>
+    <div
+      className="relative w-full max-w-[520px] mx-auto aspect-[4/5]"
+      style={{ perspective: "1400px" }}
+    >
       {/* Ambient glow */}
       <div className="absolute -top-16 -left-16 h-72 w-72 rounded-full bg-primary/30 blur-[110px]" />
       <div className="absolute -bottom-16 -right-12 h-80 w-80 rounded-full bg-accent/30 blur-[120px]" />
@@ -94,7 +107,9 @@ const HeroVisual = () => {
               className="absolute inset-0"
             >
               <div className="absolute top-12 left-0 right-0 text-center">
-                <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground">Étape 1</p>
+                <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground">
+                  Étape 1
+                </p>
                 <p className="text-sm font-bold text-foreground mt-1">Vos produits arrivent</p>
               </div>
 
@@ -121,7 +136,9 @@ const HeroVisual = () => {
                     style={{ left: `${xPos}%`, top: "20%" }}
                   >
                     <div className={`flex flex-col items-center gap-1`}>
-                      <div className={`h-12 w-12 rounded-2xl bg-gradient-to-br ${color} shadow-xl flex items-center justify-center`}>
+                      <div
+                        className={`h-12 w-12 rounded-2xl bg-gradient-to-br ${color} shadow-xl flex items-center justify-center`}
+                      >
                         <Icon className="h-6 w-6 text-white" strokeWidth={2.5} />
                       </div>
                       <span className="text-[9px] font-bold text-foreground/70">{label}</span>
@@ -145,8 +162,12 @@ const HeroVisual = () => {
                         <Store className="h-6 w-6 text-white" />
                       </div>
                       <div className="flex-1">
-                        <p className="text-[10px] uppercase tracking-wider text-white/80 font-bold">Votre boutique</p>
-                        <p className="text-sm font-extrabold text-white">technova.com/ma-boutique</p>
+                        <p className="text-[10px] uppercase tracking-wider text-white/80 font-bold">
+                          Votre boutique
+                        </p>
+                        <p className="text-sm font-extrabold text-white">
+                          technova.com/ma-boutique
+                        </p>
                       </div>
                       <motion.div
                         animate={{ scale: [1, 1.15, 1] }}
@@ -173,7 +194,9 @@ const HeroVisual = () => {
               className="absolute inset-0 flex flex-col items-center justify-center px-6"
             >
               <div className="text-center mb-6">
-                <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground">Étape 2</p>
+                <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground">
+                  Étape 2
+                </p>
                 <p className="text-sm font-bold text-foreground mt-1">Paiements Mobile Money</p>
               </div>
 
@@ -185,7 +208,9 @@ const HeroVisual = () => {
                 className="w-full max-w-[280px] rounded-2xl bg-background border-2 border-primary/30 shadow-2xl shadow-primary/20 p-4 mb-4"
               >
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">Total</span>
+                  <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">
+                    Total
+                  </span>
                   <motion.span
                     key={scene}
                     initial={{ opacity: 0, y: -5 }}
@@ -205,7 +230,11 @@ const HeroVisual = () => {
                       transition={{ delay: 0.3 + i * 0.08, type: "spring", stiffness: 200 }}
                       className="aspect-square rounded-xl bg-secondary/60 border border-border flex items-center justify-center p-2 hover:border-primary/40 transition-colors"
                     >
-                      <img src={logo.src} alt={logo.name} className="max-h-full max-w-full object-contain" />
+                      <img
+                        src={logo.src}
+                        alt={logo.name}
+                        className="max-h-full max-w-full object-contain"
+                      />
                     </motion.div>
                   ))}
                 </div>
@@ -224,7 +253,9 @@ const HeroVisual = () => {
                 >
                   <CheckCircle2 className="h-4 w-4 text-emerald-500" />
                 </motion.div>
-                <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">Paiement sécurisé</span>
+                <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                  Paiement sécurisé
+                </span>
               </motion.div>
             </motion.div>
           )}
@@ -240,14 +271,20 @@ const HeroVisual = () => {
               className="absolute inset-0"
             >
               <div className="absolute top-12 left-0 right-0 text-center">
-                <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground">Étape 3</p>
+                <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground">
+                  Étape 3
+                </p>
                 <p className="text-sm font-bold text-foreground mt-1">Distribution panafricaine</p>
               </div>
 
               {/* Africa SVG */}
               <div className="absolute inset-0 flex items-center justify-center pt-16 pb-8 px-6">
                 <div className="relative w-full h-full">
-                  <svg viewBox="0 0 100 110" className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid meet">
+                  <svg
+                    viewBox="0 0 100 110"
+                    className="absolute inset-0 w-full h-full"
+                    preserveAspectRatio="xMidYMid meet"
+                  >
                     <defs>
                       <linearGradient id="africaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                         <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.35" />
@@ -275,7 +312,9 @@ const HeroVisual = () => {
 
                     {/* Hub point (center / origin) */}
                     <motion.circle
-                      cx="50" cy="55" r="2"
+                      cx="50"
+                      cy="55"
+                      r="2"
                       fill="hsl(var(--primary))"
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
@@ -287,8 +326,10 @@ const HeroVisual = () => {
                     {africaTargets.map((t, i) => (
                       <motion.line
                         key={`line-${t.name}`}
-                        x1="50" y1="55"
-                        x2={t.x} y2={t.y}
+                        x1="50"
+                        y1="55"
+                        x2={t.x}
+                        y2={t.y}
                         stroke="url(#africaGrad)"
                         strokeWidth="0.5"
                         strokeDasharray="2 1.5"
@@ -302,7 +343,9 @@ const HeroVisual = () => {
                     {africaTargets.map((t, i) => (
                       <g key={t.name}>
                         <motion.circle
-                          cx={t.x} cy={t.y} r="3"
+                          cx={t.x}
+                          cy={t.y}
+                          r="3"
                           fill="hsl(var(--accent))"
                           initial={{ scale: 0 }}
                           animate={{ scale: [0, 1.4, 1] }}
@@ -310,13 +353,20 @@ const HeroVisual = () => {
                           filter="url(#glow)"
                         />
                         <motion.circle
-                          cx={t.x} cy={t.y} r="3"
+                          cx={t.x}
+                          cy={t.y}
+                          r="3"
                           fill="none"
                           stroke="hsl(var(--accent))"
                           strokeWidth="0.5"
                           initial={{ scale: 1, opacity: 0 }}
                           animate={{ scale: [1, 3], opacity: [0.8, 0] }}
-                          transition={{ delay: 1 + i * 0.15, duration: 1.6, repeat: Infinity, repeatDelay: 0.5 }}
+                          transition={{
+                            delay: 1 + i * 0.15,
+                            duration: 1.6,
+                            repeat: Infinity,
+                            repeatDelay: 0.5,
+                          }}
                         />
                       </g>
                     ))}

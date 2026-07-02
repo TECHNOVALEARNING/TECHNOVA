@@ -14,7 +14,8 @@ const translations = {
     seoTitle: "Mot de passe oublié",
     seoDesc: "Réinitialisez votre mot de passe TECHNOVA.",
     heading: "Mot de passe oublié",
-    subtitle: "Entrez votre adresse e-mail et nous vous enverrons un lien pour réinitialiser votre mot de passe.",
+    subtitle:
+      "Entrez votre adresse e-mail et nous vous enverrons un lien pour réinitialiser votre mot de passe.",
     emailLabel: "Email",
     sendBtn: "Envoyer le lien de réinitialisation",
     sending: "Envoi en cours...",
@@ -23,7 +24,7 @@ const translations = {
     spamNote: "Si vous ne le voyez pas, vérifiez vos spams.",
     backToLogin: "Retour à la connexion",
     errorMsg: "Erreur lors de l'envoi. Vérifiez votre adresse e-mail.",
-    successMsg: "E-mail de réinitialisation envoyé !"
+    successMsg: "E-mail de réinitialisation envoyé !",
   },
   en: {
     seoTitle: "Forgot Password",
@@ -38,8 +39,8 @@ const translations = {
     spamNote: "If you don't see it, check your spam folder.",
     backToLogin: "Back to login",
     errorMsg: "Error sending email. Check your email address.",
-    successMsg: "Reset email sent!"
-  }
+    successMsg: "Reset email sent!",
+  },
 };
 
 const ForgotPassword = () => {
@@ -47,7 +48,9 @@ const ForgotPassword = () => {
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
 
-  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+  const [lang, setLang] = useState(() =>
+    typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
+  );
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -55,7 +58,7 @@ const ForgotPassword = () => {
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
 
-  const t = translations[lang === 'en' ? 'en' : 'fr'];
+  const t = translations[lang === "en" ? "en" : "fr"];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -94,13 +97,13 @@ const ForgotPassword = () => {
         {!sent ? (
           <>
             <h1 className="text-2xl font-extrabold text-foreground mb-2">{t.heading}</h1>
-            <p className="text-sm text-muted-foreground mb-8">
-              {t.subtitle}
-            </p>
+            <p className="text-sm text-muted-foreground mb-8">{t.subtitle}</p>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="text-sm font-medium text-foreground mb-1.5 block">{t.emailLabel}</label>
+                <label className="text-sm font-medium text-foreground mb-1.5 block">
+                  {t.emailLabel}
+                </label>
                 <Input
                   type="email"
                   placeholder="vous@exemple.com"
@@ -123,16 +126,18 @@ const ForgotPassword = () => {
             </div>
             <h1 className="text-2xl font-extrabold text-foreground">{t.checkMail}</h1>
             <p className="text-sm text-muted-foreground">
-              {t.sentDesc}<strong className="text-foreground">{email}</strong>.
+              {t.sentDesc}
+              <strong className="text-foreground">{email}</strong>.
             </p>
-            <p className="text-xs text-muted-foreground">
-              {t.spamNote}
-            </p>
+            <p className="text-xs text-muted-foreground">{t.spamNote}</p>
           </div>
         )}
 
         <p className="mt-8 text-center">
-          <Link to="/login" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1.5">
+          <Link
+            to="/login"
+            className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1.5"
+          >
             <ArrowLeft className="h-3.5 w-3.5" />
             {t.backToLogin}
           </Link>

@@ -22,9 +22,9 @@ const CheckoutPage = ({ customSlug }: { customSlug?: string }) => {
   const { productId } = useParams();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const storeSlugFromQuery = searchParams.get('store');
+  const storeSlugFromQuery = searchParams.get("store");
   const storeSlug = customSlug || storeSlugFromQuery;
-  
+
   const navigate = useNavigate();
   const [product, setProduct] = useState<Product | null>(null);
   const [brandColor, setBrandColor] = useState<string | undefined>();
@@ -42,7 +42,9 @@ const CheckoutPage = ({ customSlug }: { customSlug?: string }) => {
       }
       const { data: p, error: pErr } = await supabase
         .from("products")
-        .select("id, title, price, creator_id, download_url, type, thumbnail_url, file_password, watermark_enabled, collect_shipping_address")
+        .select(
+          "id, title, price, creator_id, download_url, type, thumbnail_url, file_password, watermark_enabled, collect_shipping_address",
+        )
         .eq("id", productId)
         .maybeSingle();
       if (pErr || !p) {
@@ -89,7 +91,15 @@ const CheckoutPage = ({ customSlug }: { customSlug?: string }) => {
           <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-md border-b border-border shadow-sm">
             <div className="max-w-6xl mx-auto flex items-center justify-between px-4 sm:px-6 h-16">
               <Link
-                to={storeSlug ? (productId ? `/store/${storeSlug}/${productId}` : `/store/${storeSlug}`) : (productId ? `/product/${productId}` : "/")}
+                to={
+                  storeSlug
+                    ? productId
+                      ? `/store/${storeSlug}/${productId}`
+                      : `/store/${storeSlug}`
+                    : productId
+                      ? `/product/${productId}`
+                      : "/"
+                }
                 className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 <ArrowLeft className="h-4 w-4" />
@@ -110,8 +120,12 @@ const CheckoutPage = ({ customSlug }: { customSlug?: string }) => {
                 <span className="text-sm font-bold text-foreground">{storeName}</span>
               </div>
               <div className="hidden sm:flex items-center gap-3 text-[11px] text-muted-foreground">
-                <span className="flex items-center gap-1"><Lock className="h-3 w-3" /> SSL</span>
-                <span className="flex items-center gap-1"><ShieldCheck className="h-3 w-3" /> Sécurisé</span>
+                <span className="flex items-center gap-1">
+                  <Lock className="h-3 w-3" /> SSL
+                </span>
+                <span className="flex items-center gap-1">
+                  <ShieldCheck className="h-3 w-3" /> Sécurisé
+                </span>
               </div>
             </div>
           </header>
@@ -123,14 +137,23 @@ const CheckoutPage = ({ customSlug }: { customSlug?: string }) => {
               </div>
             ) : error || !product ? (
               <div className="max-w-md mx-auto text-center py-24">
-                <p className="text-lg font-semibold text-foreground mb-2">{error || "Produit introuvable"}</p>
-                <Link to="/" className="text-sm text-violet-600 hover:underline">Retour à l'accueil</Link>
+                <p className="text-lg font-semibold text-foreground mb-2">
+                  {error || "Produit introuvable"}
+                </p>
+                <Link to="/" className="text-sm text-violet-600 hover:underline">
+                  Retour à l'accueil
+                </Link>
               </div>
             ) : (
               <CheckoutDialog
                 fullPage
                 open
-                onOpenChange={(o) => { if (!o) { if (window.history.length > 1) navigate(-1); else window.close(); } }}
+                onOpenChange={(o) => {
+                  if (!o) {
+                    if (window.history.length > 1) navigate(-1);
+                    else window.close();
+                  }
+                }}
                 product={product}
                 storeSlug={storeSlug}
                 brandColor={brandColor}
@@ -138,7 +161,11 @@ const CheckoutPage = ({ customSlug }: { customSlug?: string }) => {
             )}
 
             <p className="text-center text-[11px] text-muted-foreground mt-8">
-              Propulsé par <Link to="/" className="font-semibold text-foreground hover:underline">TECHNOVA</Link> · Paiement chiffré bout-en-bout
+              Propulsé par{" "}
+              <Link to="/" className="font-semibold text-foreground hover:underline">
+                TECHNOVA
+              </Link>{" "}
+              · Paiement chiffré bout-en-bout
             </p>
           </main>
         </div>

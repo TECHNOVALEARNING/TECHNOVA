@@ -9,7 +9,13 @@ import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { toast } from "sonner";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface Withdrawal {
   id: string;
@@ -22,7 +28,12 @@ interface Withdrawal {
   created_at: string;
   processed_at: string | null;
   user_id: string;
-  profile: { display_name: string | null; first_name: string | null; last_name: string | null; phone: string | null } | null;
+  profile: {
+    display_name: string | null;
+    first_name: string | null;
+    last_name: string | null;
+    phone: string | null;
+  } | null;
 }
 
 const AdminWithdrawals = () => {
@@ -69,7 +80,10 @@ const AdminWithdrawals = () => {
   };
 
   const statusBadge = (status: string) => {
-    const map: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
+    const map: Record<
+      string,
+      { label: string; variant: "default" | "secondary" | "destructive" | "outline" }
+    > = {
       pending: { label: "En attente", variant: "outline" },
       processing: { label: "En cours", variant: "secondary" },
       completed: { label: "Complété", variant: "default" },
@@ -77,11 +91,19 @@ const AdminWithdrawals = () => {
       failed: { label: "Échoué", variant: "destructive" },
     };
     const s = map[status] || { label: status, variant: "outline" as const };
-    return <Badge variant={s.variant} className="text-xs">{s.label}</Badge>;
+    return (
+      <Badge variant={s.variant} className="text-xs">
+        {s.label}
+      </Badge>
+    );
   };
 
   if (user?.email !== "ancres707@gmail.com") {
-    return <DashboardLayout><div className="text-center py-20 text-muted-foreground">Accès non autorisé</div></DashboardLayout>;
+    return (
+      <DashboardLayout>
+        <div className="text-center py-20 text-muted-foreground">Accès non autorisé</div>
+      </DashboardLayout>
+    );
   }
 
   return (
@@ -92,7 +114,9 @@ const AdminWithdrawals = () => {
             <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
               <Wallet className="h-6 w-6" /> Gestion des retraits
             </h1>
-            <p className="text-sm text-muted-foreground mt-1">{withdrawals.length} retrait(s) total</p>
+            <p className="text-sm text-muted-foreground mt-1">
+              {withdrawals.length} retrait(s) total
+            </p>
           </div>
           <Select value={filter} onValueChange={setFilter}>
             <SelectTrigger className="w-40">
@@ -109,7 +133,9 @@ const AdminWithdrawals = () => {
 
         {loading ? (
           <div className="space-y-3">
-            {[...Array(5)].map((_, i) => <div key={i} className="h-20 rounded-2xl bg-muted animate-pulse" />)}
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="h-20 rounded-2xl bg-muted animate-pulse" />
+            ))}
           </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-20 text-muted-foreground text-sm border border-dashed border-border rounded-2xl">
@@ -132,11 +158,14 @@ const AdminWithdrawals = () => {
                       {statusBadge(w.status)}
                     </div>
                     <p className="text-xs text-muted-foreground mt-1">
-                      {w.operator.toUpperCase()} · {w.phone_number} · {format(new Date(w.created_at), "dd MMM yyyy HH:mm", { locale: fr })}
+                      {w.operator.toUpperCase()} · {w.phone_number} ·{" "}
+                      {format(new Date(w.created_at), "dd MMM yyyy HH:mm", { locale: fr })}
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="text-lg font-bold text-foreground">{w.net_amount.toLocaleString()} FCFA</p>
+                    <p className="text-lg font-bold text-foreground">
+                      {w.net_amount.toLocaleString()} FCFA
+                    </p>
                     <p className="text-[11px] text-muted-foreground">Frais: {w.fee} FCFA</p>
                   </div>
                   {w.status === "pending" && (

@@ -8,7 +8,13 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Plus, Store, Archive, RotateCcw, ExternalLink, Settings, Pencil } from "lucide-react";
@@ -71,10 +77,7 @@ const DashboardStores = () => {
 
   const toggleArchive = useMutation({
     mutationFn: async ({ id, archive }: { id: string; archive: boolean }) => {
-      const { error } = await supabase
-        .from("stores")
-        .update({ is_archived: archive })
-        .eq("id", id);
+      const { error } = await supabase.from("stores").update({ is_archived: archive }).eq("id", id);
       if (error) throw error;
     },
     onSuccess: (_, { archive }) => {
@@ -126,9 +129,7 @@ const DashboardStores = () => {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-foreground">Mes Boutiques</h1>
-            <p className="text-sm text-muted-foreground mt-1">
-              {activeCount}/3 boutiques actives
-            </p>
+            <p className="text-sm text-muted-foreground mt-1">{activeCount}/3 boutiques actives</p>
           </div>
           <Dialog open={createOpen} onOpenChange={setCreateOpen}>
             <DialogTrigger asChild>
@@ -144,16 +145,29 @@ const DashboardStores = () => {
               <div className="space-y-4 mt-2">
                 <div className="space-y-2">
                   <Label>Nom de la boutique</Label>
-                  <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Ma Super Boutique" />
+                  <Input
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Ma Super Boutique"
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label>Slug (URL)</Label>
-                  <Input value={slug} onChange={(e) => handleSlugChange(e.target.value)} placeholder="ma-boutique" />
+                  <Input
+                    value={slug}
+                    onChange={(e) => handleSlugChange(e.target.value)}
+                    placeholder="ma-boutique"
+                  />
                   <p className="text-xs text-muted-foreground">/store/{slug || "ma-boutique"}</p>
                 </div>
                 <div className="space-y-2">
                   <Label>Description (optionnel)</Label>
-                  <Textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Décrivez votre boutique..." rows={3} />
+                  <Textarea
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    placeholder="Décrivez votre boutique..."
+                    rows={3}
+                  />
                 </div>
                 <Button
                   onClick={() => createStore.mutate()}
@@ -171,8 +185,12 @@ const DashboardStores = () => {
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {[1, 2, 3].map((i) => (
               <Card key={i} className="animate-pulse">
-                <CardHeader><div className="h-5 w-32 bg-muted rounded" /></CardHeader>
-                <CardContent><div className="h-4 w-48 bg-muted rounded" /></CardContent>
+                <CardHeader>
+                  <div className="h-5 w-32 bg-muted rounded" />
+                </CardHeader>
+                <CardContent>
+                  <div className="h-4 w-48 bg-muted rounded" />
+                </CardContent>
               </Card>
             ))}
           </div>
@@ -210,7 +228,9 @@ const DashboardStores = () => {
                 </CardHeader>
                 <CardContent>
                   {store.description && (
-                    <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{store.description}</p>
+                    <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                      {store.description}
+                    </p>
                   )}
                   <div className="flex flex-wrap gap-2">
                     {!store.is_archived && (
@@ -230,13 +250,19 @@ const DashboardStores = () => {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => toggleArchive.mutate({ id: store.id, archive: !store.is_archived })}
+                      onClick={() =>
+                        toggleArchive.mutate({ id: store.id, archive: !store.is_archived })
+                      }
                       disabled={toggleArchive.isPending}
                     >
                       {store.is_archived ? (
-                        <><RotateCcw className="h-3.5 w-3.5 mr-1" /> Restaurer</>
+                        <>
+                          <RotateCcw className="h-3.5 w-3.5 mr-1" /> Restaurer
+                        </>
                       ) : (
-                        <><Archive className="h-3.5 w-3.5 mr-1" /> Archiver</>
+                        <>
+                          <Archive className="h-3.5 w-3.5 mr-1" /> Archiver
+                        </>
                       )}
                     </Button>
                   </div>
@@ -255,7 +281,11 @@ const DashboardStores = () => {
             <div className="space-y-4 mt-2">
               <div className="space-y-2">
                 <Label>Nom de la boutique</Label>
-                <Input value={editName} onChange={(e) => setEditName(e.target.value)} placeholder="Ma Super Boutique" />
+                <Input
+                  value={editName}
+                  onChange={(e) => setEditName(e.target.value)}
+                  placeholder="Ma Super Boutique"
+                />
               </div>
               <div className="space-y-2">
                 <Label>Description</Label>

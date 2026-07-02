@@ -1,7 +1,16 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
-import { Wallet, ArrowDownToLine, Loader2, CheckCircle2, Clock, XCircle, Shield, AlertTriangle } from "lucide-react";
+import {
+  Wallet,
+  ArrowDownToLine,
+  Loader2,
+  CheckCircle2,
+  Clock,
+  XCircle,
+  Shield,
+  AlertTriangle,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { supabase } from "@/integrations/supabase/client";
@@ -81,17 +90,26 @@ const translations = {
     etaEstimatedOn: "Estimated on ",
     etaEstimatedBetween: "Estimated between ",
     etaAnd: " and ",
-  }
+  },
 };
 
 // Délais PawaPay en jours ouvrés selon le pays (T+min / T+max)
 const payoutDelaysByCountry: Record<string, { min: number; max: number }> = {
-  CMR: { min: 2, max: 3 }, KEN: { min: 2, max: 3 }, UGA: { min: 2, max: 3 },
-  SLE: { min: 2, max: 3 }, TZA: { min: 2, max: 3 }, ZMB: { min: 2, max: 3 },
-  GHA: { min: 4, max: 5 }, BEN: { min: 4, max: 5 }, COG: { min: 4, max: 5 },
+  CMR: { min: 2, max: 3 },
+  KEN: { min: 2, max: 3 },
+  UGA: { min: 2, max: 3 },
+  SLE: { min: 2, max: 3 },
+  TZA: { min: 2, max: 3 },
+  ZMB: { min: 2, max: 3 },
+  GHA: { min: 4, max: 5 },
+  BEN: { min: 4, max: 5 },
+  COG: { min: 4, max: 5 },
   CIV: { min: 4, max: 5 },
-  RWA: { min: 6, max: 11 }, SEN: { min: 6, max: 11 }, GAB: { min: 6, max: 11 },
-  COD: { min: 6, max: 11 }, MWI: { min: 6, max: 11 },
+  RWA: { min: 6, max: 11 },
+  SEN: { min: 6, max: 11 },
+  GAB: { min: 6, max: 11 },
+  COD: { min: 6, max: 11 },
+  MWI: { min: 6, max: 11 },
 };
 
 // Ajoute X jours ouvrés (skip samedi/dimanche) à une date
@@ -112,8 +130,13 @@ const getCountryFromProvider = (providerCode?: string | null): string | null => 
   return parts[parts.length - 1] || null;
 };
 
-const formatEta = (createdAt: string, status: string, providerCode: string | null | undefined, lang: string): string => {
-  const t = translations[lang === 'en' ? 'en' : 'fr'];
+const formatEta = (
+  createdAt: string,
+  status: string,
+  providerCode: string | null | undefined,
+  lang: string,
+): string => {
+  const t = translations[lang === "en" ? "en" : "fr"];
   if (status === "completed") return t.etaCompleted;
   if (status === "failed") return t.etaFailed;
   const country = getCountryFromProvider(providerCode);
@@ -141,7 +164,9 @@ const DashboardWithdrawals = () => {
   const [kycStatus, setKycStatus] = useState<string | null>(null);
   const [commissionPct, setCommissionPct] = useState(0.05);
 
-  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+  const [lang, setLang] = useState(() =>
+    typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
+  );
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -149,27 +174,66 @@ const DashboardWithdrawals = () => {
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
 
-  const t = translations[lang === 'en' ? 'en' : 'fr'];
+  const t = translations[lang === "en" ? "en" : "fr"];
 
-  const statusConfig: Record<string, { label: string; icon: any; color: string; badgeBg: string }> = {
-    pending: { label: t.statusPending, icon: Clock, color: "text-amber-600", badgeBg: "bg-amber-50 border-amber-200" },
-    processing: { label: t.statusProcessing, icon: Loader2, color: "text-blue-600", badgeBg: "bg-blue-50 border-blue-200" },
-    completed: { label: t.statusCompleted, icon: CheckCircle2, color: "text-green-600", badgeBg: "bg-green-50 border-green-200" },
-    failed: { label: t.statusFailed, icon: XCircle, color: "text-destructive", badgeBg: "bg-destructive/10 border-destructive/30" },
-  };
+  const statusConfig: Record<string, { label: string; icon: any; color: string; badgeBg: string }> =
+    {
+      pending: {
+        label: t.statusPending,
+        icon: Clock,
+        color: "text-amber-600",
+        badgeBg: "bg-amber-50 border-amber-200",
+      },
+      processing: {
+        label: t.statusProcessing,
+        icon: Loader2,
+        color: "text-blue-600",
+        badgeBg: "bg-blue-50 border-blue-200",
+      },
+      completed: {
+        label: t.statusCompleted,
+        icon: CheckCircle2,
+        color: "text-green-600",
+        badgeBg: "bg-green-50 border-green-200",
+      },
+      failed: {
+        label: t.statusFailed,
+        icon: XCircle,
+        color: "text-destructive",
+        badgeBg: "bg-destructive/10 border-destructive/30",
+      },
+    };
 
-  useEffect(() => { if (user) loadData(); }, [user]);
+  useEffect(() => {
+    if (user) loadData();
+  }, [user]);
 
   const loadData = async () => {
     setLoading(true);
     const [ordersRes, withdrawalsRes, kycRes, feeRes] = await Promise.all([
-      supabase.from("orders").select("amount, created_at").eq("store_owner_id", user!.id).eq("status", "completed"),
-      supabase.from("withdrawals").select("*").eq("user_id", user!.id).order("created_at", { ascending: false }),
-      supabase.from("identity_verifications").select("status").eq("user_id", user!.id).maybeSingle(),
-      supabase.from("platform_fees").select("value_pct").eq("key", "technova_commission_pct").maybeSingle(),
+      supabase
+        .from("orders")
+        .select("amount, created_at")
+        .eq("store_owner_id", user!.id)
+        .eq("status", "completed"),
+      supabase
+        .from("withdrawals")
+        .select("*")
+        .eq("user_id", user!.id)
+        .order("created_at", { ascending: false }),
+      supabase
+        .from("identity_verifications")
+        .select("status")
+        .eq("user_id", user!.id)
+        .maybeSingle(),
+      supabase
+        .from("platform_fees")
+        .select("value_pct")
+        .eq("key", "technova_commission_pct")
+        .maybeSingle(),
     ]);
 
-    setKycStatus(isAdmin ? "approved" : (kycRes.data?.status || null));
+    setKycStatus(isAdmin ? "approved" : kycRes.data?.status || null);
     const commPct = Number(feeRes.data?.value_pct ?? 5) / 100;
     setCommissionPct(commPct);
 
@@ -177,12 +241,15 @@ const DashboardWithdrawals = () => {
     const cutoff72h = new Date(now.getTime() - 72 * 60 * 60 * 1000);
     const allOrders = ordersRes.data || [];
     const sales = allOrders.reduce((s, o) => s + Number(o.amount), 0);
-    const maturedSales = allOrders.filter(o => new Date(o.created_at) <= cutoff72h).reduce((s, o) => s + Number(o.amount), 0);
+    const maturedSales = allOrders
+      .filter((o) => new Date(o.created_at) <= cutoff72h)
+      .reduce((s, o) => s + Number(o.amount), 0);
     const pendingSales = sales - maturedSales;
     const commission = maturedSales * commPct;
     const gross = maturedSales - commission;
     const wds = (withdrawalsRes.data || []) as Withdrawal[];
-    const withdrawn = wds.filter(w => ["pending", "processing", "completed"].includes(w.status))
+    const withdrawn = wds
+      .filter((w) => ["pending", "processing", "completed"].includes(w.status))
       .reduce((s, w) => s + Number(w.amount) + Number(w.fee || 0), 0);
 
     setTotalSales(sales);
@@ -213,7 +280,11 @@ const DashboardWithdrawals = () => {
               </span>
               <Link to="/dashboard/settings">
                 <Button size="sm" variant="outline" className="text-xs">
-                  {!kycStatus ? t.btnVerify : kycStatus === "rejected" ? t.btnResubmit : t.btnViewStatus}
+                  {!kycStatus
+                    ? t.btnVerify
+                    : kycStatus === "rejected"
+                      ? t.btnResubmit
+                      : t.btnViewStatus}
                 </Button>
               </Link>
             </AlertDescription>
@@ -223,29 +294,46 @@ const DashboardWithdrawals = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="rounded-xl border border-border bg-card p-5">
             <p className="text-xs text-muted-foreground mb-1">{t.totalSales}</p>
-            <p className="text-2xl font-bold text-foreground">{Math.floor(totalSales).toLocaleString("fr")} <span className="text-sm font-normal text-muted-foreground">FCFA</span></p>
+            <p className="text-2xl font-bold text-foreground">
+              {Math.floor(totalSales).toLocaleString("fr")}{" "}
+              <span className="text-sm font-normal text-muted-foreground">FCFA</span>
+            </p>
           </div>
           <div className="rounded-xl border border-border bg-card p-5">
-            <p className="text-xs text-muted-foreground mb-1">{t.platformCommission} ({commissionPct * 100}%)</p>
-            <p className="text-2xl font-bold text-muted-foreground">{Math.floor(totalSales * commissionPct).toLocaleString("fr")} <span className="text-sm font-normal">FCFA</span></p>
+            <p className="text-xs text-muted-foreground mb-1">
+              {t.platformCommission} ({commissionPct * 100}%)
+            </p>
+            <p className="text-2xl font-bold text-muted-foreground">
+              {Math.floor(totalSales * commissionPct).toLocaleString("fr")}{" "}
+              <span className="text-sm font-normal">FCFA</span>
+            </p>
           </div>
           {pendingFunds > 0 && (
             <div className="rounded-xl border border-amber-200 bg-amber-50/50 p-5">
               <p className="text-xs text-muted-foreground mb-1 flex items-center gap-1">
                 <Clock className="h-3 w-3" /> {t.fundsInTransit}
               </p>
-              <p className="text-2xl font-bold text-amber-600">{Math.floor(pendingFunds).toLocaleString("fr")} <span className="text-sm font-normal">FCFA</span></p>
+              <p className="text-2xl font-bold text-amber-600">
+                {Math.floor(pendingFunds).toLocaleString("fr")}{" "}
+                <span className="text-sm font-normal">FCFA</span>
+              </p>
               <p className="text-xs text-muted-foreground mt-1">{t.availableSoon}</p>
             </div>
           )}
           <div className="rounded-xl border border-primary/30 bg-primary/5 p-5">
             <p className="text-xs text-muted-foreground mb-1">{t.availableBalance}</p>
-            <p className="text-2xl font-bold text-foreground">{Math.floor(availableBalance).toLocaleString("fr")} <span className="text-sm font-normal text-muted-foreground">FCFA</span></p>
+            <p className="text-2xl font-bold text-foreground">
+              {Math.floor(availableBalance).toLocaleString("fr")}{" "}
+              <span className="text-sm font-normal text-muted-foreground">FCFA</span>
+            </p>
             {availableBalance < 100 && availableBalance > 0 && (
               <p className="text-xs text-orange-500 mt-1">{t.minWithdrawal}</p>
             )}
             {availableBalance >= 100 && (
-              <p className="text-xs text-muted-foreground mt-1">{t.alreadyWithdrawn}{Math.floor(totalWithdrawn).toLocaleString("fr")} FCFA</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                {t.alreadyWithdrawn}
+                {Math.floor(totalWithdrawn).toLocaleString("fr")} FCFA
+              </p>
             )}
           </div>
         </div>
@@ -263,7 +351,9 @@ const DashboardWithdrawals = () => {
         <div>
           <h2 className="text-lg font-semibold text-foreground mb-3">{t.wdHistory}</h2>
           {loading ? (
-            <div className="flex justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
+            <div className="flex justify-center py-12">
+              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            </div>
           ) : withdrawals.length === 0 ? (
             <div className="text-center py-12 rounded-xl border border-border bg-card">
               <Wallet className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
@@ -277,23 +367,37 @@ const DashboardWithdrawals = () => {
                 const eta = formatEta(w.created_at, w.status, w.provider_code, lang);
                 const localeStr = lang === "en" ? "en-US" : "fr-FR";
                 return (
-                  <div key={w.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 rounded-xl border border-border bg-card">
+                  <div
+                    key={w.id}
+                    className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 rounded-xl border border-border bg-card"
+                  >
                     <div className="flex items-center gap-3 min-w-0">
                       <div className="h-10 w-10 rounded-lg bg-muted flex items-center justify-center shrink-0">
                         <Wallet className="h-5 w-5 text-muted-foreground" />
                       </div>
                       <div className="min-w-0">
-                        <p className="text-sm font-semibold text-foreground">{Number(w.amount).toLocaleString("fr")} FCFA</p>
+                        <p className="text-sm font-semibold text-foreground">
+                          {Number(w.amount).toLocaleString("fr")} FCFA
+                        </p>
                         <p className="text-xs text-muted-foreground truncate">
-                          {w.phone_number} · {new Date(w.created_at).toLocaleDateString(localeStr, { day: "2-digit", month: "short", year: "numeric" })}
+                          {w.phone_number} ·{" "}
+                          {new Date(w.created_at).toLocaleDateString(localeStr, {
+                            day: "2-digit",
+                            month: "short",
+                            year: "numeric",
+                          })}
                         </p>
                         <p className="text-[11px] text-muted-foreground/90 mt-0.5 flex items-center gap-1">
                           <Clock className="h-3 w-3" /> {eta}
                         </p>
                       </div>
                     </div>
-                    <div className={`inline-flex items-center gap-1.5 self-start sm:self-auto px-2.5 py-1 rounded-full border text-xs font-medium ${cfg.color} ${cfg.badgeBg}`}>
-                      <Icon className={`h-3.5 w-3.5 ${w.status === 'processing' ? 'animate-spin' : ''}`} />
+                    <div
+                      className={`inline-flex items-center gap-1.5 self-start sm:self-auto px-2.5 py-1 rounded-full border text-xs font-medium ${cfg.color} ${cfg.badgeBg}`}
+                    >
+                      <Icon
+                        className={`h-3.5 w-3.5 ${w.status === "processing" ? "animate-spin" : ""}`}
+                      />
                       {cfg.label}
                     </div>
                   </div>

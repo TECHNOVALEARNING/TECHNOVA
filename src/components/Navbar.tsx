@@ -48,20 +48,40 @@ const Navbar = () => {
             </button>
             <div className="absolute top-full left-0 mt-2 w-44 rounded-xl border border-border bg-white dark:bg-[#1c1c1e] p-2 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
               {productLinks.map((l) => (
-                <Link key={l.label} to={l.href} className="block rounded-lg px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
+                <Link
+                  key={l.label}
+                  to={l.href}
+                  className="block rounded-lg px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+                >
                   {l.label}
                 </Link>
               ))}
             </div>
           </div>
-          <Link to="/marketplace" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Marketplace</Link>
-          <Link to="/outils-digitaux" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Productivité</Link>
-          <Link to="/pricing" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Tarifs</Link>
+          <Link
+            to="/marketplace"
+            className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Marketplace
+          </Link>
+          <Link
+            to="/outils-digitaux"
+            className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Productivité
+          </Link>
+          <Link
+            to="/pricing"
+            className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Tarifs
+          </Link>
 
           {/* Dropdown "Plus" */}
           <div className="relative group">
             <button className="flex items-center gap-1 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
-              Plus <ChevronDown className="h-3.5 w-3.5 transition-transform group-hover:rotate-180" />
+              Plus{" "}
+              <ChevronDown className="h-3.5 w-3.5 transition-transform group-hover:rotate-180" />
             </button>
             <div className="absolute top-full right-0 mt-2 w-48 rounded-xl border border-border bg-white dark:bg-[#1c1c1e] p-2 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
               {moreLinks.map((l) => (
@@ -97,12 +117,22 @@ const Navbar = () => {
           ) : (
             <>
               <Link to="/buyer-login">
-                <Button variant="ghost" size="sm" className="text-sm font-medium gap-2 text-muted-foreground">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-sm font-medium gap-2 text-muted-foreground"
+                >
                   <ShoppingBag className="h-4 w-4" /> Mes achats
                 </Button>
               </Link>
               <Link to="/login">
-                <Button variant="ghost" size="sm" className="text-sm font-medium text-muted-foreground">Connexion vendeur</Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-sm font-medium text-muted-foreground"
+                >
+                  Connexion vendeur
+                </Button>
               </Link>
               <Link to="/register">
                 <Button size="sm" className="text-sm font-semibold gap-2">
@@ -119,30 +149,83 @@ const Navbar = () => {
       </div>
 
       {mobileOpen && (
-        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="lg:hidden border-t border-border bg-background px-6 py-4 space-y-2 max-h-[calc(100vh-72px)] overflow-y-auto">
-          <button onClick={() => setProductsOpen(!productsOpen)} className="flex items-center justify-between w-full py-2 text-sm font-medium text-foreground">
-            Produits <ChevronDown className={`h-4 w-4 transition-transform ${productsOpen ? "rotate-180" : ""}`} />
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="lg:hidden border-t border-border bg-background px-6 py-4 space-y-2 max-h-[calc(100vh-72px)] overflow-y-auto"
+        >
+          <button
+            onClick={() => setProductsOpen(!productsOpen)}
+            className="flex items-center justify-between w-full py-2 text-sm font-medium text-foreground"
+          >
+            Produits{" "}
+            <ChevronDown
+              className={`h-4 w-4 transition-transform ${productsOpen ? "rotate-180" : ""}`}
+            />
           </button>
           {productsOpen && (
             <div className="pl-4 space-y-1">
               {productLinks.map((l) => (
-                <Link key={l.label} to={l.href} onClick={() => setMobileOpen(false)} className="block py-1.5 text-sm text-muted-foreground hover:text-foreground">{l.label}</Link>
+                <Link
+                  key={l.label}
+                  to={l.href}
+                  onClick={() => setMobileOpen(false)}
+                  className="block py-1.5 text-sm text-muted-foreground hover:text-foreground"
+                >
+                  {l.label}
+                </Link>
               ))}
             </div>
           )}
-          <Link to="/marketplace" onClick={() => setMobileOpen(false)} className="block py-2 text-sm font-medium text-foreground">Marketplace</Link>
-          <Link to="/outils-digitaux" onClick={() => setMobileOpen(false)} className="block py-2 text-sm font-medium text-foreground">Productivité</Link>
-          <Link to="/pricing" onClick={() => setMobileOpen(false)} className="block py-2 text-sm font-medium text-foreground">Tarifs</Link>
+          <Link
+            to="/marketplace"
+            onClick={() => setMobileOpen(false)}
+            className="block py-2 text-sm font-medium text-foreground"
+          >
+            Marketplace
+          </Link>
+          <Link
+            to="/outils-digitaux"
+            onClick={() => setMobileOpen(false)}
+            className="block py-2 text-sm font-medium text-foreground"
+          >
+            Productivité
+          </Link>
+          <Link
+            to="/pricing"
+            onClick={() => setMobileOpen(false)}
+            className="block py-2 text-sm font-medium text-foreground"
+          >
+            Tarifs
+          </Link>
           {moreLinks.map((l) => (
-            <Link key={l.label} to={l.href} onClick={() => setMobileOpen(false)} className="block py-2 text-sm text-muted-foreground hover:text-foreground">{l.label}</Link>
+            <Link
+              key={l.label}
+              to={l.href}
+              onClick={() => setMobileOpen(false)}
+              className="block py-2 text-sm text-muted-foreground hover:text-foreground"
+            >
+              {l.label}
+            </Link>
           ))}
           <div className="flex gap-3 pt-4 border-t border-border">
             {user ? (
               <>
                 <Link to="/dashboard" onClick={() => setMobileOpen(false)} className="flex-1">
-                  <Button className="w-full" size="sm">Dashboard</Button>
+                  <Button className="w-full" size="sm">
+                    Dashboard
+                  </Button>
                 </Link>
-                <Button variant="outline" size="sm" onClick={() => { signOut(); setMobileOpen(false); }}>Déconnexion</Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    signOut();
+                    setMobileOpen(false);
+                  }}
+                >
+                  Déconnexion
+                </Button>
               </>
             ) : (
               <>

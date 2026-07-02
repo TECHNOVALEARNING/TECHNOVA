@@ -3,8 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
 const GRADE_RANK: Record<string, number> = { premium: 3, pro: 2, standard: 1 };
@@ -32,7 +31,7 @@ Deno.serve(async (req) => {
     const supabase = createClient(supabaseUrl, serviceKey);
 
     // Fetch active badges first if a verified filter is requested or if we'll need to sort by it
-    let badgesByUser: Record<string, { grade: string; expires_at: string | null }> = {};
+    const badgesByUser: Record<string, { grade: string; expires_at: string | null }> = {};
     if (verified || sort === "verified") {
       const { data: badges } = await supabase
         .from("verified_badges")
@@ -66,10 +65,9 @@ Deno.serve(async (req) => {
     if (verified === "any") {
       const ids = Object.keys(badgesByUser);
       if (ids.length === 0) {
-        return new Response(
-          JSON.stringify({ products: [], total: 0, page, limit }),
-          { headers: { ...corsHeaders, "Content-Type": "application/json" } },
-        );
+        return new Response(JSON.stringify({ products: [], total: 0, page, limit }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
       }
       query = query.in("creator_id", ids);
     } else if (["standard", "pro", "premium"].includes(verified)) {
@@ -77,10 +75,9 @@ Deno.serve(async (req) => {
         .filter(([, b]) => b.grade === verified)
         .map(([uid]) => uid);
       if (ids.length === 0) {
-        return new Response(
-          JSON.stringify({ products: [], total: 0, page, limit }),
-          { headers: { ...corsHeaders, "Content-Type": "application/json" } },
-        );
+        return new Response(JSON.stringify({ products: [], total: 0, page, limit }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
       }
       query = query.in("creator_id", ids);
     }
@@ -169,20 +166,14 @@ Deno.serve(async (req) => {
       enriched = enriched.slice(offset, offset + limit);
     }
 
-    return new Response(
-      JSON.stringify({ products: enriched, total: count || 0, page, limit }),
-      {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      },
-    );
+    return new Response(JSON.stringify({ products: enriched, total: count || 0, page, limit }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   } catch (err) {
     console.error("marketplace-search error:", err);
-    return new Response(
-      JSON.stringify({ error: err instanceof Error ? err.message : "Unknown" }),
-      {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      },
-    );
+    return new Response(JSON.stringify({ error: err instanceof Error ? err.message : "Unknown" }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 });

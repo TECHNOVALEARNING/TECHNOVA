@@ -4,7 +4,17 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Shield, CheckCircle2, Clock, XCircle, Loader2, AlertTriangle, ExternalLink, ScanFace, RefreshCw } from "lucide-react";
+import {
+  Shield,
+  CheckCircle2,
+  Clock,
+  XCircle,
+  Loader2,
+  AlertTriangle,
+  ExternalLink,
+  ScanFace,
+  RefreshCw,
+} from "lucide-react";
 
 interface Verification {
   id: string;
@@ -27,8 +37,10 @@ const translations = {
     email: "Email : ",
     signOut: "Se déconnecter",
     kycTitle: "Vérification d'identité (KYC)",
-    kycDesc: "La vérification est requise pour effectuer des retraits. Elle est traitée automatiquement par notre partenaire sécurisé Didit (pièce d'identité + selfie + détection de vie).",
-    pendingDesc: "Vos documents sont en cours d'examen ou vous n'avez pas finalisé la vérification. Vous pouvez en redémarrer une nouvelle ci-dessous si nécessaire.",
+    kycDesc:
+      "La vérification est requise pour effectuer des retraits. Elle est traitée automatiquement par notre partenaire sécurisé Didit (pièce d'identité + selfie + détection de vie).",
+    pendingDesc:
+      "Vos documents sont en cours d'examen ou vous n'avez pas finalisé la vérification. Vous pouvez en redémarrer une nouvelle ci-dessous si nécessaire.",
     refreshStatus: "Rafraîchir le statut",
     identityConfirmed: "Identité confirmée : ",
     rejectionReason: "Motif : ",
@@ -38,7 +50,8 @@ const translations = {
     step3: "La vérification prend moins de 2 minutes",
     btnRestart: "Recommencer la vérification",
     btnStart: "Démarrer la vérification",
-    redirectNote: "Vous serez redirigé vers la plateforme sécurisée Didit, puis ramené sur votre tableau de bord.",
+    redirectNote:
+      "Vous serez redirigé vers la plateforme sécurisée Didit, puis ramené sur votre tableau de bord.",
     toastChecking: "Vérification du statut auprès de Didit...",
     toastSuccessUpdate: "Mise à jour : Vérification approuvée !",
     toastErrorUpdate: "Mise à jour : Vérification refusée.",
@@ -58,8 +71,10 @@ const translations = {
     email: "Email: ",
     signOut: "Sign out",
     kycTitle: "Identity Verification (KYC)",
-    kycDesc: "Verification is required to make withdrawals. It is processed automatically by our secure partner Didit (ID document + selfie + liveness detection).",
-    pendingDesc: "Your documents are under review or you have not finalized the verification. You can restart a new one below if necessary.",
+    kycDesc:
+      "Verification is required to make withdrawals. It is processed automatically by our secure partner Didit (ID document + selfie + liveness detection).",
+    pendingDesc:
+      "Your documents are under review or you have not finalized the verification. You can restart a new one below if necessary.",
     refreshStatus: "Refresh status",
     identityConfirmed: "Confirmed identity: ",
     rejectionReason: "Reason: ",
@@ -69,7 +84,8 @@ const translations = {
     step3: "Verification takes less than 2 minutes",
     btnRestart: "Restart verification",
     btnStart: "Start verification",
-    redirectNote: "You will be redirected to the secure Didit platform, then returned to your dashboard.",
+    redirectNote:
+      "You will be redirected to the secure Didit platform, then returned to your dashboard.",
     toastChecking: "Checking status with Didit...",
     toastSuccessUpdate: "Update: Verification approved!",
     toastErrorUpdate: "Update: Verification rejected.",
@@ -80,7 +96,7 @@ const translations = {
     toastCallbackApproved: "Verification approved! Updating...",
     toastCallbackRejected: "Verification rejected by Didit.",
     toastCallbackPending: "Verification received, processing...",
-  }
+  },
 };
 
 const ADMIN_EMAIL = "ancres707@gmail.com";
@@ -94,7 +110,9 @@ const DashboardAccountTab = () => {
   const [loadingKyc, setLoadingKyc] = useState(true);
   const [starting, setStarting] = useState(false);
 
-  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+  const [lang, setLang] = useState(() =>
+    typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
+  );
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -102,38 +120,55 @@ const DashboardAccountTab = () => {
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
 
-  const t = translations[lang === 'en' ? 'en' : 'fr'];
+  const t = translations[lang === "en" ? "en" : "fr"];
 
   const statusConfig: Record<string, { label: string; icon: any; color: string; bg: string }> = {
-    pending: { label: t.statusPending, icon: Clock, color: "text-amber-600", bg: "bg-amber-50 border-amber-200" },
-    approved: { label: t.statusApproved, icon: CheckCircle2, color: "text-green-600", bg: "bg-green-50 border-green-200" },
-    rejected: { label: t.statusRejected, icon: XCircle, color: "text-destructive", bg: "bg-destructive/5 border-destructive/20" },
+    pending: {
+      label: t.statusPending,
+      icon: Clock,
+      color: "text-amber-600",
+      bg: "bg-amber-50 border-amber-200",
+    },
+    approved: {
+      label: t.statusApproved,
+      icon: CheckCircle2,
+      color: "text-green-600",
+      bg: "bg-green-50 border-green-200",
+    },
+    rejected: {
+      label: t.statusRejected,
+      icon: XCircle,
+      color: "text-destructive",
+      bg: "bg-destructive/5 border-destructive/20",
+    },
   };
 
-  useEffect(() => { if (user) loadVerification(); }, [user]);
+  useEffect(() => {
+    if (user) loadVerification();
+  }, [user]);
 
   // Fetch and check status manually
   const handleCheckStatus = async () => {
     try {
       const sessionIdFromUrl = searchParams.get("verificationSessionId");
       toast.info(t.toastChecking);
-      
+
       const { data, error } = await supabase.functions.invoke("didit-check-status", {
-        body: sessionIdFromUrl ? { sessionId: sessionIdFromUrl } : {}
+        body: sessionIdFromUrl ? { sessionId: sessionIdFromUrl } : {},
       });
-      
+
       if (error) {
         toast.error("Error: " + error.message);
         console.error(error);
         return;
       }
-      
+
       if (data?.error) {
         toast.error("Error: " + data.error);
         console.error(data.error);
         return;
       }
-      
+
       if (data?.newStatus === "approved") {
         toast.success(t.toastSuccessUpdate);
       } else if (data?.newStatus === "rejected") {
@@ -143,7 +178,7 @@ const DashboardAccountTab = () => {
       } else {
         toast.success(t.toastStatusChecked);
       }
-      
+
       await loadVerification();
     } catch (err: any) {
       toast.error("Error: " + (err.message || "Impossible de joindre le serveur"));
@@ -158,7 +193,12 @@ const DashboardAccountTab = () => {
       .channel(`identity_verifications:${user.id}`)
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table: "identity_verifications", filter: `user_id=eq.${user.id}` },
+        {
+          event: "*",
+          schema: "public",
+          table: "identity_verifications",
+          filter: `user_id=eq.${user.id}`,
+        },
         (payload) => {
           const row = (payload.new ?? payload.old) as Verification | null;
           if (row) {
@@ -169,10 +209,12 @@ const DashboardAccountTab = () => {
               toast.error(t.toastRejectedRealtime);
             }
           }
-        }
+        },
       )
       .subscribe();
-    return () => { supabase.removeChannel(channel); };
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [user, t]);
 
   // After Didit redirect callback, refresh verification (webhook may take a few seconds)
@@ -187,19 +229,26 @@ const DashboardAccountTab = () => {
       } else {
         toast.info(t.toastCallbackPending);
       }
-      
+
       // Force checking the status immediately
       handleCheckStatus();
-      
+
       const interval = setInterval(handleCheckStatus, 5000);
       const timeout = setTimeout(() => clearInterval(interval), 60000);
-      return () => { clearInterval(interval); clearTimeout(timeout); };
+      return () => {
+        clearInterval(interval);
+        clearTimeout(timeout);
+      };
     }
   }, [searchParams, user, t]);
 
   const loadVerification = async () => {
     if (!user) return;
-    const { data } = await supabase.from("identity_verifications").select("*").eq("user_id", user.id).maybeSingle();
+    const { data } = await supabase
+      .from("identity_verifications")
+      .select("*")
+      .eq("user_id", user.id)
+      .maybeSingle();
     setVerification(data as Verification | null);
     setLoadingKyc(false);
   };
@@ -218,19 +267,28 @@ const DashboardAccountTab = () => {
     }
   };
 
-  const handleSignOut = async () => { await signOut(); navigate("/"); };
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/");
+  };
 
   const st = verification ? statusConfig[verification.status] : null;
   const StatusIcon = st?.icon;
-  const canRestart = !verification || verification.status === "rejected" || verification.status === "pending";
+  const canRestart =
+    !verification || verification.status === "rejected" || verification.status === "pending";
 
   return (
     <div className="max-w-2xl space-y-8">
       {/* Account */}
       <div className="rounded-xl border border-border bg-card p-6 space-y-4">
         <h3 className="text-sm font-semibold text-foreground">{t.account}</h3>
-        <p className="text-sm text-muted-foreground">{t.email}{user?.email}</p>
-        <Button variant="destructive" onClick={handleSignOut}>{t.signOut}</Button>
+        <p className="text-sm text-muted-foreground">
+          {t.email}
+          {user?.email}
+        </p>
+        <Button variant="destructive" onClick={handleSignOut}>
+          {t.signOut}
+        </Button>
       </div>
 
       {!isAdmin && (
@@ -239,12 +297,12 @@ const DashboardAccountTab = () => {
             <Shield className="h-5 w-5 text-primary" />
             <h3 className="text-sm font-semibold text-foreground">{t.kycTitle}</h3>
           </div>
-          <p className="text-sm text-muted-foreground text-left">
-            {t.kycDesc}
-          </p>
+          <p className="text-sm text-muted-foreground text-left">{t.kycDesc}</p>
 
           {loadingKyc ? (
-            <div className="flex justify-center py-6"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
+            <div className="flex justify-center py-6">
+              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            </div>
           ) : (
             <>
               {verification && st && (
@@ -258,7 +316,12 @@ const DashboardAccountTab = () => {
                       <p className="text-xs text-muted-foreground mb-2 text-left">
                         {t.pendingDesc}
                       </p>
-                      <Button variant="outline" size="sm" onClick={handleCheckStatus} className="h-8 text-xs">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleCheckStatus}
+                        className="h-8 text-xs"
+                      >
                         <RefreshCw className="h-3 w-3 mr-2" />
                         {t.refreshStatus}
                       </Button>
@@ -266,18 +329,26 @@ const DashboardAccountTab = () => {
                   )}
                   {verification.status === "approved" && verification.full_name && (
                     <p className="text-xs text-muted-foreground mt-2">
-                      {t.identityConfirmed}{verification.full_name}
+                      {t.identityConfirmed}
+                      {verification.full_name}
                       {verification.country ? ` — ${verification.country}` : ""}
                     </p>
                   )}
                   {verification.status === "rejected" && verification.rejection_reason && (
                     <div className="mt-2 flex items-start gap-1.5">
                       <AlertTriangle className="h-3.5 w-3.5 text-destructive mt-0.5 shrink-0" />
-                      <p className="text-xs text-muted-foreground">{t.rejectionReason}{verification.rejection_reason}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {t.rejectionReason}
+                        {verification.rejection_reason}
+                      </p>
                     </div>
                   )}
                   <p className="text-xs text-muted-foreground mt-1 text-left">
-                    {t.submittedOn}{new Date(verification.submitted_at).toLocaleDateString(lang === "en" ? "en-US" : "fr-FR", { day: "numeric", month: "long", year: "numeric" })}
+                    {t.submittedOn}
+                    {new Date(verification.submitted_at).toLocaleDateString(
+                      lang === "en" ? "en-US" : "fr-FR",
+                      { day: "numeric", month: "long", year: "numeric" },
+                    )}
                   </p>
                 </div>
               )}
@@ -290,12 +361,14 @@ const DashboardAccountTab = () => {
                     <li>{t.step3}</li>
                   </ul>
                   <Button onClick={handleStartDidit} disabled={starting} className="w-full gap-2">
-                    {starting ? <Loader2 className="h-4 w-4 animate-spin" /> : <ScanFace className="h-4 w-4" />}
+                    {starting ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <ScanFace className="h-4 w-4" />
+                    )}
                     {verification?.status === "rejected" ? t.btnRestart : t.btnStart}
                   </Button>
-                  <p className="text-[11px] text-muted-foreground text-center">
-                    {t.redirectNote}
-                  </p>
+                  <p className="text-[11px] text-muted-foreground text-center">{t.redirectNote}</p>
                 </div>
               )}
             </>

@@ -17,7 +17,8 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 const translations = {
   fr: {
     seoTitle: "Devenir Vendeur — Vendez vos Produits Digitaux — TECHNOVA",
-    seoDesc: "Rejoignez TECHNOVA comme partenaire vendeur. Vendez vos produits digitaux, fixez vos prix, et touchez des clients en Europe, en Amérique et en Afrique.",
+    seoDesc:
+      "Rejoignez TECHNOVA comme partenaire vendeur. Vendez vos produits digitaux, fixez vos prix, et touchez des clients en Europe, en Amérique et en Afrique.",
     visualHeading: "Lancez votre boutique en 5 minutes",
     visualDesc: "Fichiers, formations et licences — vendez vos produits digitaux avec TECHNOVA.",
     heading: "Créer un compte",
@@ -39,11 +40,12 @@ const translations = {
     validationPass: "Le mot de passe doit contenir au moins 8 caractères",
     validationName: "Veuillez renseigner votre nom et prénom",
     successCreated: "Compte créé avec succès !",
-    verifyEmail: "Vérifiez votre email pour confirmer votre inscription !"
+    verifyEmail: "Vérifiez votre email pour confirmer votre inscription !",
   },
   en: {
     seoTitle: "Become a Seller — Sell your Digital Products — TECHNOVA",
-    seoDesc: "Join TECHNOVA as a partner seller. Sell your digital products, set your prices, and reach customers in Europe, America, and Africa.",
+    seoDesc:
+      "Join TECHNOVA as a partner seller. Sell your digital products, set your prices, and reach customers in Europe, America, and Africa.",
     visualHeading: "Launch your store in 5 minutes",
     visualDesc: "Files, courses, and licenses — sell your digital products with TECHNOVA.",
     heading: "Create an account",
@@ -65,8 +67,8 @@ const translations = {
     validationPass: "Password must contain at least 8 characters",
     validationName: "Please fill in your first and last name",
     successCreated: "Account created successfully!",
-    verifyEmail: "Check your email to confirm your registration!"
-  }
+    verifyEmail: "Check your email to confirm your registration!",
+  },
 };
 
 const Register = () => {
@@ -84,7 +86,9 @@ const Register = () => {
   const { user, loading: authLoading } = useAuth();
   const { countryCode } = useGeoPricing();
 
-  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+  const [lang, setLang] = useState(() =>
+    typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
+  );
 
   useEffect(() => {
     if (countryCode) {
@@ -101,7 +105,7 @@ const Register = () => {
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
 
-  const t = translations[lang === 'en' ? 'en' : 'fr'];
+  const t = translations[lang === "en" ? "en" : "fr"];
 
   useEffect(() => {
     if (!authLoading && user) {
@@ -113,7 +117,8 @@ const Register = () => {
     if (!countrySearch) return countries;
     const q = countrySearch.toLowerCase();
     return countries.filter(
-      (c) => c.name.toLowerCase().includes(q) || c.code.toLowerCase().includes(q) || c.dial.includes(q)
+      (c) =>
+        c.name.toLowerCase().includes(q) || c.code.toLowerCase().includes(q) || c.dial.includes(q),
     );
   }, [countrySearch]);
 
@@ -175,7 +180,7 @@ const Register = () => {
       provider: "google",
       options: {
         redirectTo: `${window.location.origin}/register`,
-      }
+      },
     });
 
     if (error) {
@@ -197,12 +202,8 @@ const Register = () => {
         <div className="absolute top-20 left-10 h-64 w-64 rounded-full bg-primary/20 blur-[100px]" />
         <div className="absolute -bottom-32 -right-32 h-48 w-48 rounded-full bg-primary/15 blur-[80px]" />
         <div className="relative text-center px-12">
-          <h2 className="text-3xl font-extrabold text-background mb-4">
-            {t.visualHeading}
-          </h2>
-          <p className="text-background/50 text-lg max-w-md">
-            {t.visualDesc}
-          </p>
+          <h2 className="text-3xl font-extrabold text-background mb-4">{t.visualHeading}</h2>
+          <p className="text-background/50 text-lg max-w-md">{t.visualDesc}</p>
         </div>
       </div>
 
@@ -219,9 +220,7 @@ const Register = () => {
           </Link>
 
           <h1 className="text-2xl font-extrabold text-foreground mb-2">{t.heading}</h1>
-          <p className="text-sm text-muted-foreground mb-8">
-            {t.subtitle}
-          </p>
+          <p className="text-sm text-muted-foreground mb-8">{t.subtitle}</p>
 
           {/* Google Button */}
           <Button
@@ -232,10 +231,22 @@ const Register = () => {
             disabled={isBusy}
           >
             <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
-              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
-              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+              <path
+                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
+                fill="#4285F4"
+              />
+              <path
+                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                fill="#34A853"
+              />
+              <path
+                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                fill="#FBBC05"
+              />
+              <path
+                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                fill="#EA4335"
+              />
             </svg>
             {t.continueGoogle}
           </Button>
@@ -252,7 +263,9 @@ const Register = () => {
           <form onSubmit={handleRegister} className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-sm font-medium text-foreground mb-1.5 block">{t.lastNameLabel}</label>
+                <label className="text-sm font-medium text-foreground mb-1.5 block">
+                  {t.lastNameLabel}
+                </label>
                 <Input
                   type="text"
                   placeholder="Dupont"
@@ -263,7 +276,9 @@ const Register = () => {
                 />
               </div>
               <div>
-                <label className="text-sm font-medium text-foreground mb-1.5 block">{t.firstNameLabel}</label>
+                <label className="text-sm font-medium text-foreground mb-1.5 block">
+                  {t.firstNameLabel}
+                </label>
                 <Input
                   type="text"
                   placeholder="Jean"
@@ -275,7 +290,9 @@ const Register = () => {
               </div>
             </div>
             <div>
-              <label className="text-sm font-medium text-foreground mb-1.5 block">{t.emailLabel}</label>
+              <label className="text-sm font-medium text-foreground mb-1.5 block">
+                {t.emailLabel}
+              </label>
               <Input
                 type="email"
                 placeholder="vous@exemple.com"
@@ -286,7 +303,9 @@ const Register = () => {
               />
             </div>
             <div>
-              <label className="text-sm font-medium text-foreground mb-1.5 block">{t.phoneLabel}</label>
+              <label className="text-sm font-medium text-foreground mb-1.5 block">
+                {t.phoneLabel}
+              </label>
               <div className="flex gap-2">
                 <Popover open={countryOpen} onOpenChange={setCountryOpen}>
                   <PopoverTrigger asChild>
@@ -295,8 +314,14 @@ const Register = () => {
                       className="w-[140px] shrink-0 justify-between px-2 font-normal"
                       type="button"
                     >
-                      <img src={`https://flagcdn.com/w40/${selectedCountry.code.toLowerCase()}.png`} alt={selectedCountry.code} className="h-4 w-6 object-cover rounded-sm mr-1" />
-                      <span className="text-xs font-medium text-foreground">{selectedCountry.code}</span>
+                      <img
+                        src={`https://flagcdn.com/w40/${selectedCountry.code.toLowerCase()}.png`}
+                        alt={selectedCountry.code}
+                        className="h-4 w-6 object-cover rounded-sm mr-1"
+                      />
+                      <span className="text-xs font-medium text-foreground">
+                        {selectedCountry.code}
+                      </span>
                       <span className="text-xs text-muted-foreground">{selectedCountry.dial}</span>
                       <ChevronDown className="h-3 w-3 ml-1 text-muted-foreground" />
                     </Button>
@@ -323,9 +348,15 @@ const Register = () => {
                             setCountrySearch("");
                           }}
                         >
-                          <img src={`https://flagcdn.com/w40/${c.code.toLowerCase()}.png`} alt={c.code} className="h-4 w-6 object-cover rounded-sm shrink-0" />
+                          <img
+                            src={`https://flagcdn.com/w40/${c.code.toLowerCase()}.png`}
+                            alt={c.code}
+                            className="h-4 w-6 object-cover rounded-sm shrink-0"
+                          />
                           <span className="text-xs font-medium text-foreground">{c.code}</span>
-                          <span className="flex-1 truncate">{c.dial === '+229' && lang === 'en' ? 'Benin' : c.name}</span>
+                          <span className="flex-1 truncate">
+                            {c.dial === "+229" && lang === "en" ? "Benin" : c.name}
+                          </span>
                           <span className="text-xs text-muted-foreground">{c.dial}</span>
                         </button>
                       ))}
@@ -344,7 +375,9 @@ const Register = () => {
               </div>
             </div>
             <div>
-              <label className="text-sm font-medium text-foreground mb-1.5 block">{t.passwordLabel}</label>
+              <label className="text-sm font-medium text-foreground mb-1.5 block">
+                {t.passwordLabel}
+              </label>
               <div className="relative">
                 <Input
                   type={showPassword ? "text" : "password"}

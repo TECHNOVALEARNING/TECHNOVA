@@ -5,16 +5,45 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { ShieldCheck, Crown, Gem, Loader2, CheckCircle2, AlertCircle, Sparkles } from "lucide-react";
+import {
+  ShieldCheck,
+  Crown,
+  Gem,
+  Loader2,
+  CheckCircle2,
+  AlertCircle,
+  Sparkles,
+} from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import VerifiedBadge from "@/components/VerifiedBadge";
 
 const GRADES = [
-  { grade: "standard" as const, name: "Standard", price: 1000, threshold: 100_000, icon: ShieldCheck, color: "from-sky-400 to-blue-600" },
-  { grade: "pro" as const, name: "Pro", price: 1500, threshold: 500_000, icon: Crown, color: "from-amber-300 to-amber-600" },
-  { grade: "premium" as const, name: "Premium", price: 3000, threshold: 1_000_000, icon: Gem, color: "from-violet-400 to-purple-700" },
+  {
+    grade: "standard" as const,
+    name: "Standard",
+    price: 1000,
+    threshold: 100_000,
+    icon: ShieldCheck,
+    color: "from-sky-400 to-blue-600",
+  },
+  {
+    grade: "pro" as const,
+    name: "Pro",
+    price: 1500,
+    threshold: 500_000,
+    icon: Crown,
+    color: "from-amber-300 to-amber-600",
+  },
+  {
+    grade: "premium" as const,
+    name: "Premium",
+    price: 3000,
+    threshold: 1_000_000,
+    icon: Gem,
+    color: "from-violet-400 to-purple-700",
+  },
 ];
 
 const DashboardBadge = () => {
@@ -30,14 +59,22 @@ const DashboardBadge = () => {
     setLoading(true);
     const [badgeRes, scanRes] = await Promise.all([
       supabase.from("verified_badges").select("*").eq("user_id", user.id).maybeSingle(),
-      supabase.from("badge_eligibility_scans").select("*").eq("user_id", user.id).order("scanned_at", { ascending: false }).limit(1).maybeSingle(),
+      supabase
+        .from("badge_eligibility_scans")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("scanned_at", { ascending: false })
+        .limit(1)
+        .maybeSingle(),
     ]);
     setBadge(badgeRes.data);
     setScan(scanRes.data);
     setLoading(false);
   };
 
-  useEffect(() => { load(); }, [user]);
+  useEffect(() => {
+    load();
+  }, [user]);
 
   const requestScan = async () => {
     setScanning(true);
@@ -92,7 +129,9 @@ const DashboardBadge = () => {
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <Sparkles className="h-6 w-6 text-primary" /> Mon Badge Verify
           </h1>
-          <p className="text-sm text-muted-foreground mt-1">Crédibilisez votre boutique avec un badge officiel de vendeur vérifié.</p>
+          <p className="text-sm text-muted-foreground mt-1">
+            Crédibilisez votre boutique avec un badge officiel de vendeur vérifié.
+          </p>
         </div>
 
         {/* Current badge status */}
@@ -103,7 +142,9 @@ const DashboardBadge = () => {
                 <div className="flex items-center gap-4">
                   <VerifiedBadge grade={badge.grade} size="lg" />
                   <div className="flex-1">
-                    <h3 className="text-xl font-bold">Badge {badge.grade.toUpperCase()} actif ✨</h3>
+                    <h3 className="text-xl font-bold">
+                      Badge {badge.grade.toUpperCase()} actif ✨
+                    </h3>
                     <p className="text-sm text-muted-foreground">
                       Expire le {new Date(badge.expires_at).toLocaleDateString("fr-FR")}
                       {badge.granted_by_admin && " (accordé par l'administration)"}
@@ -126,11 +167,24 @@ const DashboardBadge = () => {
               <CardContent className="p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4">
                 <CheckCircle2 className="h-10 w-10 text-amber-500 shrink-0" />
                 <div className="flex-1">
-                  <h3 className="text-lg font-bold">Vous êtes éligible au badge {badge.grade.toUpperCase()} 🎉</h3>
-                  <p className="text-sm text-muted-foreground">Activez votre badge en payant l'abonnement mensuel.</p>
+                  <h3 className="text-lg font-bold">
+                    Vous êtes éligible au badge {badge.grade.toUpperCase()} 🎉
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    Activez votre badge en payant l'abonnement mensuel.
+                  </p>
                 </div>
-                <Button size="lg" onClick={subscribe} disabled={paying} className="w-full sm:w-auto">
-                  {paying ? <Loader2 className="h-4 w-4 animate-spin" /> : `Activer pour ${GRADES.find(g => g.grade === badge.grade)?.price} FCFA/mois`}
+                <Button
+                  size="lg"
+                  onClick={subscribe}
+                  disabled={paying}
+                  className="w-full sm:w-auto"
+                >
+                  {paying ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    `Activer pour ${GRADES.find((g) => g.grade === badge.grade)?.price} FCFA/mois`
+                  )}
                 </Button>
               </CardContent>
             </Card>
@@ -160,7 +214,11 @@ const DashboardBadge = () => {
                       <span className="font-medium flex items-center gap-1">
                         <g.icon className="h-3 w-3" /> {g.name} • {g.price} FCFA/mois
                       </span>
-                      <span className={reached ? "text-green-600 font-semibold" : "text-muted-foreground"}>
+                      <span
+                        className={
+                          reached ? "text-green-600 font-semibold" : "text-muted-foreground"
+                        }
+                      >
                         {revenue.toLocaleString()} / {g.threshold.toLocaleString()} FCFA
                       </span>
                     </div>
@@ -181,13 +239,19 @@ const DashboardBadge = () => {
               <div className="text-xs bg-muted p-3 rounded-lg">
                 <strong>Analyse IA :</strong> {scan.ai_reasoning}
                 {scan.ai_score != null && (
-                  <Badge variant="outline" className="ml-2">Score: {scan.ai_score}/100</Badge>
+                  <Badge variant="outline" className="ml-2">
+                    Score: {scan.ai_score}/100
+                  </Badge>
                 )}
               </div>
             )}
 
             <Button variant="outline" onClick={requestScan} disabled={scanning} className="w-full">
-              {scanning ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Sparkles className="h-4 w-4 mr-2" />}
+              {scanning ? (
+                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+              ) : (
+                <Sparkles className="h-4 w-4 mr-2" />
+              )}
               Lancer une analyse IA maintenant
             </Button>
           </CardContent>
@@ -203,8 +267,13 @@ const DashboardBadge = () => {
                   <VerifiedBadge grade={g.grade} size="md" />
                   <h3 className="font-bold">{g.name}</h3>
                 </div>
-                <p className="text-2xl font-bold">{g.price} <span className="text-sm font-normal text-muted-foreground">FCFA/mois</span></p>
-                <p className="text-xs text-muted-foreground">À partir de {g.threshold.toLocaleString()} FCFA de ventes</p>
+                <p className="text-2xl font-bold">
+                  {g.price}{" "}
+                  <span className="text-sm font-normal text-muted-foreground">FCFA/mois</span>
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  À partir de {g.threshold.toLocaleString()} FCFA de ventes
+                </p>
               </CardContent>
             </Card>
           ))}
@@ -216,7 +285,9 @@ const DashboardBadge = () => {
 
 const Stat = ({ label, value }: { label: string; value: any }) => (
   <div className="bg-muted/30 rounded-lg p-3">
-    <p className="text-[10px] uppercase text-muted-foreground font-semibold tracking-wide">{label}</p>
+    <p className="text-[10px] uppercase text-muted-foreground font-semibold tracking-wide">
+      {label}
+    </p>
     <p className="text-lg font-bold mt-1">{value}</p>
   </div>
 );

@@ -1,23 +1,55 @@
 import {
-  LayoutDashboard, Package, Key,
-  Settings, LogOut, Store, ShoppingCart, Users, DollarSign,
-  BarChart3, Megaphone, Link2, Zap, HelpCircle, Wallet, Shield, Webhook, MessageCircle,
-  ChevronsUpDown, Plus, Check, BadgeCheck, LayoutGrid
+  LayoutDashboard,
+  Package,
+  Key,
+  Settings,
+  LogOut,
+  Store,
+  ShoppingCart,
+  Users,
+  DollarSign,
+  BarChart3,
+  Megaphone,
+  Link2,
+  Zap,
+  HelpCircle,
+  Wallet,
+  Shield,
+  Webhook,
+  MessageCircle,
+  ChevronsUpDown,
+  Plus,
+  Check,
+  BadgeCheck,
+  LayoutGrid,
 } from "lucide-react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import logo from "@/assets/logo.png";
 import { useAuth } from "@/contexts/AuthContext";
 import { useActiveStore } from "@/hooks/useActiveStore";
 import {
-  Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent,
-  SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem,
-  SidebarHeader, SidebarFooter, useSidebar, SidebarTrigger
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarHeader,
+  SidebarFooter,
+  useSidebar,
+  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import {
-  DropdownMenu, DropdownMenuContent, DropdownMenuItem,
-  DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useEffect, useState } from "react";
 
@@ -57,7 +89,7 @@ const translations = {
     moderation: "Moderation",
     kyc: "KYC",
     badges: "Verify Badges",
-  }
+  },
 };
 
 export function DashboardSidebar() {
@@ -69,7 +101,9 @@ export function DashboardSidebar() {
   const { stores, activeStore, activeStores, setActiveStoreId } = useActiveStore();
   const isAdmin = user?.email === "ancres707@gmail.com";
 
-  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+  const [lang, setLang] = useState(() =>
+    typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
+  );
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -77,7 +111,7 @@ export function DashboardSidebar() {
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
 
-  const t = translations[lang === 'en' ? 'en' : 'fr'];
+  const t = translations[lang === "en" ? "en" : "fr"];
 
   const mainItems = [
     { title: t.home, url: "/dashboard", icon: LayoutDashboard },
@@ -105,10 +139,16 @@ export function DashboardSidebar() {
   return (
     <Sidebar collapsible="icon" className="dashboard-shell-scope border-r-0 z-20">
       {/* Logo Header */}
-      <SidebarHeader className={`p-4 border-b border-sidebar-border/20 flex flex-row items-center min-h-[64px] ${collapsed ? 'justify-center' : 'justify-between'}`}>
+      <SidebarHeader
+        className={`p-4 border-b border-sidebar-border/20 flex flex-row items-center min-h-[64px] ${collapsed ? "justify-center" : "justify-between"}`}
+      >
         {!collapsed && (
           <div className="flex items-center gap-2">
-            <img src={logo} alt="TECHNOVA" className="h-6 w-auto object-contain brightness-0 invert" />
+            <img
+              src={logo}
+              alt="TECHNOVA"
+              className="h-6 w-auto object-contain brightness-0 invert"
+            />
             <span className="text-white font-bold text-xl tracking-tight">TECHNOVA</span>
           </div>
         )}
@@ -118,7 +158,11 @@ export function DashboardSidebar() {
       <SidebarContent className="py-1 px-1 overflow-y-auto">
         {/* Main nav */}
         <SidebarGroup className="py-0.5">
-          {!collapsed && <SidebarGroupLabel className="text-[10px] uppercase tracking-wider text-sidebar-foreground/30 px-2 mb-0 h-6">{t.principal}</SidebarGroupLabel>}
+          {!collapsed && (
+            <SidebarGroupLabel className="text-[10px] uppercase tracking-wider text-sidebar-foreground/30 px-2 mb-0 h-6">
+              {t.principal}
+            </SidebarGroupLabel>
+          )}
           <SidebarGroupContent>
             <SidebarMenu className="gap-0">
               {mainItems.map((item) => (
@@ -128,7 +172,11 @@ export function DashboardSidebar() {
                     isActive={isActive(item.url)}
                     className="dash-menu-item"
                   >
-                    <NavLink to={item.url} end={item.url === "/dashboard"} className="flex items-center justify-between w-full">
+                    <NavLink
+                      to={item.url}
+                      end={item.url === "/dashboard"}
+                      className="flex items-center justify-between w-full"
+                    >
                       <div className="flex items-center gap-2">
                         <item.icon className="h-4 w-4 shrink-0" />
                         {!collapsed && <span>{item.title}</span>}
@@ -151,7 +199,11 @@ export function DashboardSidebar() {
           <SidebarGroupContent>
             <SidebarMenu className="gap-0">
               <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={isActive("/dashboard/settings")} className="dash-menu-item">
+                <SidebarMenuButton
+                  asChild
+                  isActive={isActive("/dashboard/settings")}
+                  className="dash-menu-item"
+                >
                   <NavLink to="/dashboard/settings">
                     <Settings className="h-3.5 w-3.5" />
                     {!collapsed && <span>{t.settings}</span>}
@@ -169,10 +221,18 @@ export function DashboardSidebar() {
               {isAdmin && (
                 <>
                   {!collapsed && <Separator className="my-1 bg-sidebar-border/50" />}
-                  {!collapsed && <SidebarGroupLabel className="text-[10px] uppercase tracking-wider text-sidebar-foreground/30 px-2 mb-0 h-6">{t.administration}</SidebarGroupLabel>}
+                  {!collapsed && (
+                    <SidebarGroupLabel className="text-[10px] uppercase tracking-wider text-sidebar-foreground/30 px-2 mb-0 h-6">
+                      {t.administration}
+                    </SidebarGroupLabel>
+                  )}
                   {adminItems.map((item) => (
                     <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton asChild isActive={isActive(item.url)} className="dash-menu-item">
+                      <SidebarMenuButton
+                        asChild
+                        isActive={isActive(item.url)}
+                        className="dash-menu-item"
+                      >
                         <NavLink to={item.url}>
                           <item.icon className="h-3.5 w-3.5" />
                           {!collapsed && <span>{item.title}</span>}

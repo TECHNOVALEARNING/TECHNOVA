@@ -3,7 +3,17 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
-import { Plus, Send, Loader2, Trash2, Sparkles, Wrench, ChevronDown, MessageSquarePlus, Menu } from "lucide-react";
+import {
+  Plus,
+  Send,
+  Loader2,
+  Trash2,
+  Sparkles,
+  Wrench,
+  ChevronDown,
+  MessageSquarePlus,
+  Menu,
+} from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import ReactMarkdown from "react-markdown";
 import { motion, AnimatePresence } from "framer-motion";
@@ -156,11 +166,17 @@ export default function Nova() {
         toast.error(data.error);
         return;
       }
-      setMessages((prev) => [...prev, { role: "assistant", content: data.message, tools: data.tools }]);
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: data.message, tools: data.tools },
+      ]);
       qc.invalidateQueries({ queryKey: ["nova-threads"] });
     } catch (err: any) {
       toast.error(err.message || "Erreur Nova");
-      setMessages((prev) => [...prev, { role: "assistant", content: "Désolé, une erreur est survenue. Réessayez." }]);
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: "Désolé, une erreur est survenue. Réessayez." },
+      ]);
     } finally {
       setLoading(false);
     }
@@ -189,12 +205,19 @@ export default function Nova() {
               <div
                 key={t.id}
                 className={`group flex items-center gap-2 rounded-lg px-3 py-2 cursor-pointer transition ${
-                  activeThreadId === t.id ? "bg-primary/10 text-foreground" : "hover:bg-muted text-muted-foreground"
+                  activeThreadId === t.id
+                    ? "bg-primary/10 text-foreground"
+                    : "hover:bg-muted text-muted-foreground"
                 }`}
               >
-                <button onClick={() => setActiveThreadId(t.id)} className="flex-1 text-left min-w-0">
+                <button
+                  onClick={() => setActiveThreadId(t.id)}
+                  className="flex-1 text-left min-w-0"
+                >
                   <p className="text-sm font-medium truncate">{t.title}</p>
-                  <p className="text-[10px] opacity-60">{format(new Date(t.updated_at), "d MMM HH:mm", { locale: fr })}</p>
+                  <p className="text-[10px] opacity-60">
+                    {format(new Date(t.updated_at), "d MMM HH:mm", { locale: fr })}
+                  </p>
                 </button>
                 <button
                   onClick={() => deleteThread(t.id)}
@@ -235,18 +258,27 @@ export default function Nova() {
                   </div>
                   <div className="flex-1 overflow-y-auto p-2 space-y-1">
                     {threads.length === 0 && (
-                      <p className="text-xs text-muted-foreground text-center py-8">Aucune conversation</p>
+                      <p className="text-xs text-muted-foreground text-center py-8">
+                        Aucune conversation
+                      </p>
                     )}
                     {threads.map((t) => (
                       <div
                         key={t.id}
                         className={`group flex items-center gap-2 rounded-lg px-3 py-2.5 transition ${
-                          activeThreadId === t.id ? "bg-primary/10 text-foreground" : "hover:bg-muted text-muted-foreground"
+                          activeThreadId === t.id
+                            ? "bg-primary/10 text-foreground"
+                            : "hover:bg-muted text-muted-foreground"
                         }`}
                       >
-                        <button onClick={() => setActiveThreadId(t.id)} className="flex-1 text-left min-w-0">
+                        <button
+                          onClick={() => setActiveThreadId(t.id)}
+                          className="flex-1 text-left min-w-0"
+                        >
                           <p className="text-sm font-medium truncate">{t.title}</p>
-                          <p className="text-[10px] opacity-60">{format(new Date(t.updated_at), "d MMM HH:mm", { locale: fr })}</p>
+                          <p className="text-[10px] opacity-60">
+                            {format(new Date(t.updated_at), "d MMM HH:mm", { locale: fr })}
+                          </p>
                         </button>
                         <button
                           onClick={() => deleteThread(t.id)}
@@ -260,10 +292,18 @@ export default function Nova() {
                   </div>
                 </SheetContent>
               </Sheet>
-              <img src={novaLogo} alt="Nova" width={32} height={32} className="h-8 w-8 md:h-9 md:w-9 shrink-0" />
+              <img
+                src={novaLogo}
+                alt="Nova"
+                width={32}
+                height={32}
+                className="h-8 w-8 md:h-9 md:w-9 shrink-0"
+              />
               <div className="min-w-0">
                 <p className="text-sm font-bold text-foreground leading-tight">Nova</p>
-                <p className="text-[10px] text-muted-foreground truncate leading-tight">Votre assistant TECHNOVA</p>
+                <p className="text-[10px] text-muted-foreground truncate leading-tight">
+                  Votre assistant TECHNOVA
+                </p>
               </div>
             </div>
             <button
@@ -278,11 +318,22 @@ export default function Nova() {
           <div className="flex-1 overflow-y-auto px-3 md:px-4 py-4 md:py-6">
             {messages.length === 0 ? (
               <div className="max-w-2xl mx-auto text-center pt-8">
-                <img src={novaLogo} alt="Nova" width={80} height={80} className="h-20 w-20 mx-auto mb-4" />
-                <h1 className="text-2xl md:text-3xl font-bold text-foreground">Hey {firstName}, je suis Nova</h1>
-                <p className="mt-2 text-base font-semibold text-primary">Comment puis-je vous aider ?</p>
+                <img
+                  src={novaLogo}
+                  alt="Nova"
+                  width={80}
+                  height={80}
+                  className="h-20 w-20 mx-auto mb-4"
+                />
+                <h1 className="text-2xl md:text-3xl font-bold text-foreground">
+                  Hey {firstName}, je suis Nova
+                </h1>
+                <p className="mt-2 text-base font-semibold text-primary">
+                  Comment puis-je vous aider ?
+                </p>
                 <p className="mt-3 text-sm text-muted-foreground max-w-md mx-auto">
-                  Je peux analyser vos ventes, auditer votre boutique, créer des codes promo, rédiger des descriptions et vous donner des angles marketing.
+                  Je peux analyser vos ventes, auditer votre boutique, créer des codes promo,
+                  rédiger des descriptions et vous donner des angles marketing.
                 </p>
                 <div className="mt-8 flex flex-col gap-2 max-w-md mx-auto">
                   {SUGGESTIONS.map((s) => (
@@ -311,7 +362,13 @@ export default function Nova() {
                       </div>
                     ) : (
                       <div className="flex items-start gap-3">
-                        <img src={novaLogo} alt="" width={28} height={28} className="h-7 w-7 shrink-0 mt-1" />
+                        <img
+                          src={novaLogo}
+                          alt=""
+                          width={28}
+                          height={28}
+                          className="h-7 w-7 shrink-0 mt-1"
+                        />
                         <div className="flex-1 min-w-0 space-y-2">
                           {m.tools && m.tools.length > 0 && (
                             <div className="space-y-1.5">
@@ -319,28 +376,47 @@ export default function Nova() {
                                 const key = `${i}-${k}`;
                                 const open = openTools[key];
                                 return (
-                                  <div key={k} className="rounded-lg border border-border bg-muted/40 text-xs">
+                                  <div
+                                    key={k}
+                                    className="rounded-lg border border-border bg-muted/40 text-xs"
+                                  >
                                     <button
-                                      onClick={() => setOpenTools((p) => ({ ...p, [key]: !p[key] }))}
+                                      onClick={() =>
+                                        setOpenTools((p) => ({ ...p, [key]: !p[key] }))
+                                      }
                                       className="w-full flex items-center justify-between gap-2 px-3 py-1.5 text-left"
                                     >
                                       <span className="flex items-center gap-2 text-foreground">
                                         <Wrench className="h-3.5 w-3.5 text-primary" />
                                         <span className="font-mono">{t.name}</span>
-                                        {t.result?.success === false && <span className="text-destructive">erreur</span>}
-                                        {t.result?.success === true && <span className="text-emerald-600">✓</span>}
+                                        {t.result?.success === false && (
+                                          <span className="text-destructive">erreur</span>
+                                        )}
+                                        {t.result?.success === true && (
+                                          <span className="text-emerald-600">✓</span>
+                                        )}
                                       </span>
-                                      <ChevronDown className={`h-3.5 w-3.5 transition ${open ? "rotate-180" : ""}`} />
+                                      <ChevronDown
+                                        className={`h-3.5 w-3.5 transition ${open ? "rotate-180" : ""}`}
+                                      />
                                     </button>
                                     {open && (
                                       <div className="border-t border-border px-3 py-2 space-y-2 max-h-64 overflow-auto">
                                         <div>
-                                          <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Args</p>
-                                          <pre className="text-[10px] whitespace-pre-wrap break-all">{JSON.stringify(t.args, null, 2)}</pre>
+                                          <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">
+                                            Args
+                                          </p>
+                                          <pre className="text-[10px] whitespace-pre-wrap break-all">
+                                            {JSON.stringify(t.args, null, 2)}
+                                          </pre>
                                         </div>
                                         <div>
-                                          <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Résultat</p>
-                                          <pre className="text-[10px] whitespace-pre-wrap break-all">{JSON.stringify(t.result, null, 2)}</pre>
+                                          <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">
+                                            Résultat
+                                          </p>
+                                          <pre className="text-[10px] whitespace-pre-wrap break-all">
+                                            {JSON.stringify(t.result, null, 2)}
+                                          </pre>
                                         </div>
                                       </div>
                                     )}
@@ -359,7 +435,12 @@ export default function Nova() {
                 ))}
                 <AnimatePresence>
                   {loading && (
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex items-start gap-3">
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="flex items-start gap-3"
+                    >
                       <img src={novaLogo} alt="" width={28} height={28} className="h-7 w-7" />
                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
                         <Sparkles className="h-3.5 w-3.5 animate-pulse text-primary" />
@@ -378,7 +459,10 @@ export default function Nova() {
           {/* Composer */}
           <div className="border-t border-border bg-card/40 px-3 md:px-4 py-2.5 md:py-3 shrink-0">
             <form
-              onSubmit={(e) => { e.preventDefault(); send(); }}
+              onSubmit={(e) => {
+                e.preventDefault();
+                send();
+              }}
               className="max-w-3xl mx-auto flex items-end gap-2 rounded-2xl border border-border bg-background px-3 py-2 focus-within:border-primary/50 transition"
             >
               <textarea
@@ -401,7 +485,11 @@ export default function Nova() {
                 disabled={!input.trim() || loading}
                 className="h-9 w-9 rounded-xl bg-primary text-primary-foreground flex items-center justify-center disabled:opacity-50 transition"
               >
-                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                {loading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Send className="h-4 w-4" />
+                )}
               </button>
             </form>
             <p className="text-[10px] text-muted-foreground text-center mt-2">

@@ -12,10 +12,11 @@ const translations = {
     saveError: "Erreur lors de la sauvegarde",
     saveSuccess: "Pixels sauvegardés !",
     howItWorksTitle: "Comment ça marche ?",
-    howItWorksDesc: "Ajoutez vos identifiants de pixels publicitaires ci-dessous. Les événements suivants seront automatiquement suivis sur votre boutique :",
+    howItWorksDesc:
+      "Ajoutez vos identifiants de pixels publicitaires ci-dessous. Les événements suivants seront automatiquement suivis sur votre boutique :",
     pageViewDesc: "Quand un visiteur arrive sur votre boutique",
     viewContentDesc: "Quand un visiteur voit un produit",
-    addToCartDesc: "Quand un visiteur clique sur \"Acheter\"",
+    addToCartDesc: 'Quand un visiteur clique sur "Acheter"',
     purchaseDesc: "Après un achat réussi",
     fbPixelTitle: "Facebook / Meta Pixel",
     fbPixelDesc: "Suivez les conversions de vos publicités Facebook & Instagram",
@@ -37,10 +38,11 @@ const translations = {
     saveError: "Error saving changes",
     saveSuccess: "Pixels saved!",
     howItWorksTitle: "How does it work?",
-    howItWorksDesc: "Add your ad pixel identifiers below. The following events will be automatically tracked on your shop:",
+    howItWorksDesc:
+      "Add your ad pixel identifiers below. The following events will be automatically tracked on your shop:",
     pageViewDesc: "When a visitor lands on your shop",
     viewContentDesc: "When a visitor views a product",
-    addToCartDesc: "When a visitor clicks \"Buy\"",
+    addToCartDesc: 'When a visitor clicks "Buy"',
     purchaseDesc: "After a successful purchase",
     fbPixelTitle: "Facebook / Meta Pixel",
     fbPixelDesc: "Track conversions from your Facebook & Instagram ads",
@@ -56,7 +58,7 @@ const translations = {
     googleAdsToolsPath: " → Tools → Conversions",
     saving: "Saving...",
     saveBtn: "Save pixels",
-  }
+  },
 };
 
 const DashboardPixelsTab = () => {
@@ -66,7 +68,9 @@ const DashboardPixelsTab = () => {
   const [googleAdsId, setGoogleAdsId] = useState("");
   const [saving, setSaving] = useState(false);
 
-  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+  const [lang, setLang] = useState(() =>
+    typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
+  );
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -74,7 +78,7 @@ const DashboardPixelsTab = () => {
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
 
-  const t = translations[lang === 'en' ? 'en' : 'fr'];
+  const t = translations[lang === "en" ? "en" : "fr"];
 
   useEffect(() => {
     if (!user) return;
@@ -105,12 +109,15 @@ const DashboardPixelsTab = () => {
       return;
     }
 
-    const { error } = await supabase.from("profiles").update({
-      facebook_pixel_id: fbClean || null,
-      tiktok_pixel_id: ttClean || null,
-      google_ads_id: gaClean || null,
-      updated_at: new Date().toISOString(),
-    } as any).eq("id", user.id);
+    const { error } = await supabase
+      .from("profiles")
+      .update({
+        facebook_pixel_id: fbClean || null,
+        tiktok_pixel_id: ttClean || null,
+        google_ads_id: gaClean || null,
+        updated_at: new Date().toISOString(),
+      } as any)
+      .eq("id", user.id);
 
     setSaving(false);
     if (error) {
@@ -130,10 +137,18 @@ const DashboardPixelsTab = () => {
             <p className="font-medium text-foreground mb-1">{t.howItWorksTitle}</p>
             <p>{t.howItWorksDesc}</p>
             <ul className="mt-2 space-y-1 text-xs">
-              <li>• <strong>PageView</strong> — {t.pageViewDesc}</li>
-              <li>• <strong>ViewContent</strong> — {t.viewContentDesc}</li>
-              <li>• <strong>AddToCart</strong> — {t.addToCartDesc}</li>
-              <li>• <strong>Purchase</strong> — {t.purchaseDesc}</li>
+              <li>
+                • <strong>PageView</strong> — {t.pageViewDesc}
+              </li>
+              <li>
+                • <strong>ViewContent</strong> — {t.viewContentDesc}
+              </li>
+              <li>
+                • <strong>AddToCart</strong> — {t.addToCartDesc}
+              </li>
+              <li>
+                • <strong>Purchase</strong> — {t.purchaseDesc}
+              </li>
             </ul>
           </div>
         </div>
@@ -158,7 +173,15 @@ const DashboardPixelsTab = () => {
             placeholder="Ex: 1234567890123456"
           />
           <p className="text-xs text-muted-foreground mt-1">
-            {t.fbPixelHelp}<a href="https://business.facebook.com/events_manager" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">{t.metaEventsManager}</a>
+            {t.fbPixelHelp}
+            <a
+              href="https://business.facebook.com/events_manager"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              {t.metaEventsManager}
+            </a>
           </p>
         </div>
       </div>
@@ -182,7 +205,16 @@ const DashboardPixelsTab = () => {
             placeholder="Ex: CXXXXXXXXXXXXXXXXX"
           />
           <p className="text-xs text-muted-foreground mt-1">
-            {t.tiktokPixelHelp}<a href="https://ads.tiktok.com/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">TikTok Ads Manager</a> → Assets → Events
+            {t.tiktokPixelHelp}
+            <a
+              href="https://ads.tiktok.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              TikTok Ads Manager
+            </a>{" "}
+            → Assets → Events
           </p>
         </div>
       </div>
@@ -199,14 +231,25 @@ const DashboardPixelsTab = () => {
           </div>
         </div>
         <div>
-          <label className="text-sm font-medium text-foreground mb-1.5 block">{t.googleAdsConversionId}</label>
+          <label className="text-sm font-medium text-foreground mb-1.5 block">
+            {t.googleAdsConversionId}
+          </label>
           <Input
             value={googleAdsId}
             onChange={(e) => setGoogleAdsId(e.target.value)}
             placeholder="Ex: AW-XXXXXXXXXX"
           />
           <p className="text-xs text-muted-foreground mt-1">
-            {t.googleAdsHelp}<a href="https://ads.google.com/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Google Ads</a>{t.googleAdsToolsPath}
+            {t.googleAdsHelp}
+            <a
+              href="https://ads.google.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              Google Ads
+            </a>
+            {t.googleAdsToolsPath}
           </p>
         </div>
       </div>

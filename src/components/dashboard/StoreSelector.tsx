@@ -1,5 +1,11 @@
 import { useState, useEffect } from "react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Store } from "lucide-react";
 import type { StoreData } from "@/hooks/useActiveStore";
 
@@ -17,11 +23,13 @@ const translations = {
   en: {
     placeholder: "Select a shop",
     archived: "(archived)",
-  }
+  },
 };
 
 const StoreSelector = ({ stores, activeStoreId, onSelect }: StoreSelectorProps) => {
-  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+  const [lang, setLang] = useState(() =>
+    typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
+  );
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -29,7 +37,7 @@ const StoreSelector = ({ stores, activeStoreId, onSelect }: StoreSelectorProps) 
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
 
-  const t = translations[lang === 'en' ? 'en' : 'fr'];
+  const t = translations[lang === "en" ? "en" : "fr"];
 
   if (stores.length <= 1) return null;
 

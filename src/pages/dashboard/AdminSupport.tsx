@@ -46,20 +46,26 @@ const AdminSupport = () => {
     if (!selected) return;
     const channel = supabase
       .channel(`admin-support-msgs-${selected}`)
-      .on("postgres_changes", {
-        event: "INSERT",
-        schema: "public",
-        table: "support_messages",
-        filter: `conversation_id=eq.${selected}`,
-      }, (payload) => {
-        setMessages((prev) => {
-          if (prev.some((m) => m.id === payload.new.id)) return prev;
-          return [...prev, payload.new as Message];
-        });
-      })
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "support_messages",
+          filter: `conversation_id=eq.${selected}`,
+        },
+        (payload) => {
+          setMessages((prev) => {
+            if (prev.some((m) => m.id === payload.new.id)) return prev;
+            return [...prev, payload.new as Message];
+          });
+        },
+      )
       .subscribe();
 
-    return () => { supabase.removeChannel(channel); };
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [selected]);
 
   useEffect(() => {
@@ -110,7 +116,11 @@ const AdminSupport = () => {
   const selectedConv = conversations.find((c) => c.id === selected);
 
   if (user?.email !== "ancres707@gmail.com") {
-    return <DashboardLayout><div className="text-center py-20 text-muted-foreground">Accès non autorisé</div></DashboardLayout>;
+    return (
+      <DashboardLayout>
+        <div className="text-center py-20 text-muted-foreground">Accès non autorisé</div>
+      </DashboardLayout>
+    );
   }
 
   return (
@@ -120,7 +130,9 @@ const AdminSupport = () => {
           <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
             <MessageCircle className="h-6 w-6" /> Support
           </h1>
-          <p className="text-sm text-muted-foreground mt-1">{conversations.filter(c => c.status === "open").length} conversation(s) ouverte(s)</p>
+          <p className="text-sm text-muted-foreground mt-1">
+            {conversations.filter((c) => c.status === "open").length} conversation(s) ouverte(s)
+          </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 min-h-[60vh]">
@@ -129,14 +141,18 @@ const AdminSupport = () => {
             {loading ? (
               <div className="text-center py-10 text-muted-foreground text-sm">Chargement...</div>
             ) : conversations.length === 0 ? (
-              <div className="text-center py-10 text-muted-foreground text-sm">Aucune conversation</div>
+              <div className="text-center py-10 text-muted-foreground text-sm">
+                Aucune conversation
+              </div>
             ) : (
               conversations.map((c) => (
                 <button
                   key={c.id}
                   onClick={() => selectConversation(c.id)}
                   className={`w-full text-left p-3 rounded-xl border transition-colors ${
-                    selected === c.id ? "border-primary bg-primary/5" : "border-border hover:border-primary/30 bg-card"
+                    selected === c.id
+                      ? "border-primary bg-primary/5"
+                      : "border-border hover:border-primary/30 bg-card"
                   }`}
                 >
                   <div className="flex items-start justify-between gap-2">
@@ -146,7 +162,10 @@ const AdminSupport = () => {
                       <p className="text-[10px] text-muted-foreground mt-1">{c.user_email}</p>
                     </div>
                     <div className="flex flex-col items-end gap-1 shrink-0">
-                      <Badge variant={c.status === "open" ? "default" : "secondary"} className="text-[10px]">
+                      <Badge
+                        variant={c.status === "open" ? "default" : "secondary"}
+                        className="text-[10px]"
+                      >
                         {c.status === "open" ? "Ouvert" : "Fermé"}
                       </Badge>
                       <span className="text-[10px] text-muted-foreground">
@@ -170,11 +189,18 @@ const AdminSupport = () => {
                 {/* Header */}
                 <div className="p-4 border-b border-border flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-semibold text-foreground">{selectedConv?.user_name}</p>
+                    <p className="text-sm font-semibold text-foreground">
+                      {selectedConv?.user_name}
+                    </p>
                     <p className="text-xs text-muted-foreground">{selectedConv?.subject}</p>
                   </div>
                   {selectedConv?.status === "open" && (
-                    <Button size="sm" variant="outline" onClick={() => closeConversation(selected)} className="gap-1">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => closeConversation(selected)}
+                      className="gap-1"
+                    >
                       <CheckCircle className="h-3.5 w-3.5" /> Fermer
                     </Button>
                   )}
@@ -189,13 +215,20 @@ const AdminSupport = () => {
                         m.sender_type === "admin"
                           ? "ml-auto bg-primary text-primary-foreground"
                           : m.sender_type === "ai"
-                          ? "bg-muted text-muted-foreground"
-                          : "bg-secondary text-secondary-foreground"
+                            ? "bg-muted text-muted-foreground"
+                            : "bg-secondary text-secondary-foreground"
                       }`}
                     >
                       <p>{m.content}</p>
-                      <p className={`text-[10px] mt-1 ${m.sender_type === "admin" ? "text-primary-foreground/60" : "text-muted-foreground"}`}>
-                        {m.sender_type === "admin" ? "Admin" : m.sender_type === "ai" ? "IA" : "Utilisateur"} · {format(new Date(m.created_at), "HH:mm", { locale: fr })}
+                      <p
+                        className={`text-[10px] mt-1 ${m.sender_type === "admin" ? "text-primary-foreground/60" : "text-muted-foreground"}`}
+                      >
+                        {m.sender_type === "admin"
+                          ? "Admin"
+                          : m.sender_type === "ai"
+                            ? "IA"
+                            : "Utilisateur"}{" "}
+                        · {format(new Date(m.created_at), "HH:mm", { locale: fr })}
                       </p>
                     </div>
                   ))}
@@ -210,9 +243,19 @@ const AdminSupport = () => {
                       onChange={(e) => setReply(e.target.value)}
                       placeholder="Répondre..."
                       className="min-h-[44px] max-h-24 resize-none"
-                      onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendReply(); } }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && !e.shiftKey) {
+                          e.preventDefault();
+                          sendReply();
+                        }
+                      }}
                     />
-                    <Button onClick={sendReply} disabled={sending || !reply.trim()} size="icon" className="shrink-0 self-end">
+                    <Button
+                      onClick={sendReply}
+                      disabled={sending || !reply.trim()}
+                      size="icon"
+                      className="shrink-0 self-end"
+                    >
                       <Send className="h-4 w-4" />
                     </Button>
                   </div>

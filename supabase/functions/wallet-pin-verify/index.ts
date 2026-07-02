@@ -5,8 +5,7 @@ import { create, getNumericDate } from "https://deno.land/x/djwt@v3.0.2/mod.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
 async function getKey(): Promise<CryptoKey> {
@@ -30,14 +29,20 @@ Deno.serve(async (req) => {
     const userClient = createClient(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY")!, {
       global: { headers: { Authorization: authHeader } },
     });
-    const { data: { user } } = await userClient.auth.getUser(authHeader.replace("Bearer ", ""));
+    const {
+      data: { user },
+    } = await userClient.auth.getUser(authHeader.replace("Bearer ", ""));
     if (!user) return j({ error: "Non authentifié" }, 401);
 
     const { pin } = await req.json();
     if (!/^\d{4}$/.test(String(pin || ""))) return j({ error: "PIN invalide" }, 400);
 
     const admin = createClient(supabaseUrl, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
-    const { data: row } = await admin.from("wallet_pins").select("*").eq("user_id", user.id).maybeSingle();
+    const { data: row } = await admin
+      .from("wallet_pins")
+      .select("*")
+      .eq("user_id", user.id)
+      .maybeSingle();
     if (!row) return j({ error: "Aucun PIN défini", needs_setup: true }, 404);
 
     if (row.locked_until && new Date(row.locked_until) > new Date()) {
@@ -48,15 +53,28 @@ Deno.serve(async (req) => {
     if (!ok) {
       const attempts = (row.failed_attempts || 0) + 1;
       const lock = attempts >= 5 ? new Date(Date.now() + 15 * 60 * 1000).toISOString() : null;
-      await admin.from("wallet_pins").update({
-        failed_attempts: attempts,
-        locked_until: lock,
-      }).eq("user_id", user.id);
-      return j({ error: lock ? "5 essais échoués. Bloqué 15 min." : `PIN incorrect (${5 - attempts} essai(s) restant)` }, 403);
+      await admin
+        .from("wallet_pins")
+        .update({
+          failed_attempts: attempts,
+          locked_until: lock,
+        })
+        .eq("user_id", user.id);
+      return j(
+        {
+          error: lock
+            ? "5 essais échoués. Bloqué 15 min."
+            : `PIN incorrect (${5 - attempts} essai(s) restant)`,
+        },
+        403,
+      );
     }
 
     // Reset attempts
-    await admin.from("wallet_pins").update({ failed_attempts: 0, locked_until: null }).eq("user_id", user.id);
+    await admin
+      .from("wallet_pins")
+      .update({ failed_attempts: 0, locked_until: null })
+      .eq("user_id", user.id);
 
     const key = await getKey();
     const token = await create(
@@ -69,6 +87,9 @@ Deno.serve(async (req) => {
     return j({ error: e.message }, 500);
   }
   function j(b: unknown, s = 200) {
-    return new Response(JSON.stringify(b), { status: s, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    return new Response(JSON.stringify(b), {
+      status: s,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 });

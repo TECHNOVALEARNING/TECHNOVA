@@ -16,7 +16,7 @@ export const generateInvoicePDF = (data: InvoiceData) => {
   const doc = new jsPDF({
     orientation: "portrait",
     unit: "mm",
-    format: [105, 148]
+    format: [105, 148],
   });
 
   // Page background (Light gray/blue)
@@ -29,7 +29,7 @@ export const generateInvoicePDF = (data: InvoiceData) => {
 
   // Cutouts at Y = 78
   doc.setFillColor(243, 244, 246);
-  doc.circle(5, 78, 4, "F");   // left
+  doc.circle(5, 78, 4, "F"); // left
   doc.circle(100, 78, 4, "F"); // right
 
   // Success Circle (Green)
@@ -68,9 +68,12 @@ export const generateInvoicePDF = (data: InvoiceData) => {
   doc.setTextColor(107, 114, 128);
   doc.text("Date et heure :", leftX, 66);
   doc.setTextColor(17, 24, 39);
-  const dateStr = new Date(data.date).toLocaleString("fr-FR", { 
-    day: "2-digit", month: "2-digit", year: "numeric", 
-    hour: "2-digit", minute: "2-digit" 
+  const dateStr = new Date(data.date).toLocaleString("fr-FR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
   });
   doc.text(dateStr, rightX, 66, { align: "right" });
 

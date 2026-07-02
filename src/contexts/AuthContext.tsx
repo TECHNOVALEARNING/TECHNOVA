@@ -1,4 +1,12 @@
-import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { buyerSupabase } from "@/integrations/supabase/buyer-client";
@@ -95,20 +103,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  const syncSession = useCallback(async (nextSession: Session | null) => {
-    const nextUser = nextSession?.user ?? null;
+  const syncSession = useCallback(
+    async (nextSession: Session | null) => {
+      const nextUser = nextSession?.user ?? null;
 
-    setSession(nextSession);
-    setUser(nextUser);
+      setSession(nextSession);
+      setUser(nextUser);
 
-    if (!nextUser) {
-      latestProfileUserIdRef.current = null;
-      setProfile(null);
-      return;
-    }
+      if (!nextUser) {
+        latestProfileUserIdRef.current = null;
+        setProfile(null);
+        return;
+      }
 
-    await fetchProfile(nextUser.id);
-  }, [fetchProfile]);
+      await fetchProfile(nextUser.id);
+    },
+    [fetchProfile],
+  );
 
   const refreshProfile = useCallback(async () => {
     if (user) {
@@ -146,7 +157,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       window.setTimeout(() => {
         if (!mounted) return;
 
-        void supabase.auth.getSession()
+        void supabase.auth
+          .getSession()
           .then(async ({ data: { session: recoveredSession } }) => {
             if (!mounted) return;
             await syncSession(recoveredSession);
@@ -157,7 +169,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }, 250);
     };
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, nextSession) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, nextSession) => {
       if (event === "INITIAL_SESSION") return;
 
       authEventReceivedRef.current = true;
@@ -181,7 +195,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const bootstrapAuth = async () => {
       try {
-        const { data: { session: currentSession } } = await supabase.auth.getSession();
+        const {
+          data: { session: currentSession },
+        } = await supabase.auth.getSession();
 
         if (!mounted) return;
 

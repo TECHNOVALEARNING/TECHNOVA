@@ -48,7 +48,7 @@ export const useActiveStore = () => {
   });
 
   const activeStores = stores.filter((s) => !s.is_archived);
-  
+
   // Auto-select first active store
   useEffect(() => {
     if (!activeStoreId && activeStores.length > 0) {

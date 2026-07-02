@@ -7,7 +7,8 @@ const corsHeaders = {
 };
 
 const ADMIN_EMAIL = "ancres707@gmail.com";
-const LOGO_URL = "https://nexozjpjbhqfjplrogvz.supabase.co/storage/v1/object/public/store-assets/brand/technova-logo.png";
+const LOGO_URL =
+  "https://nexozjpjbhqfjplrogvz.supabase.co/storage/v1/object/public/store-assets/brand/technova-logo.png";
 
 const escapeHtml = (value: string) =>
   value
@@ -66,14 +67,15 @@ serve(async (req) => {
 
     if (!hasOrder) throw new Error("Seuls les clients de ce vendeur peuvent signaler ce produit");
 
-    const { error } = await supabase
-      .from("product_reports")
-      .upsert({
+    const { error } = await supabase.from("product_reports").upsert(
+      {
         product_id: productId,
         customer_id: customerId,
         reason,
         details: details?.trim() || null,
-      }, { onConflict: "product_id,customer_id" });
+      },
+      { onConflict: "product_id,customer_id" },
+    );
 
     if (error) throw error;
 

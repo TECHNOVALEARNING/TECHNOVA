@@ -7,7 +7,9 @@ import { toolsData, toolsCategories, ToolCategory } from "@/data/toolsData";
 export function ToolsDirectory() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<ToolCategory | "All">("All");
-  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+  const [lang, setLang] = useState(() =>
+    typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
+  );
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -43,8 +45,8 @@ export function ToolsDirectory() {
             {lang === "fr" ? "L'Annuaire des Outils Digitaux" : "Digital Tools Directory"}
           </h2>
           <p className="text-muted-foreground">
-            {lang === "fr" 
-              ? "Découvrez notre sélection des outils et logiciels indispensables pour développer votre activité." 
+            {lang === "fr"
+              ? "Découvrez notre sélection des outils et logiciels indispensables pour développer votre activité."
               : "Discover our selection of essential tools and software to grow your business."}
           </p>
         </div>
@@ -54,7 +56,11 @@ export function ToolsDirectory() {
           </div>
           <Input
             type="search"
-            placeholder={lang === "fr" ? "Rechercher un outil (ex: Shopify, Canva, ChatGPT...)" : "Search a tool (e.g. Shopify, Canva, ChatGPT...)"}
+            placeholder={
+              lang === "fr"
+                ? "Rechercher un outil (ex: Shopify, Canva, ChatGPT...)"
+                : "Search a tool (e.g. Shopify, Canva, ChatGPT...)"
+            }
             className="pl-10 h-12 rounded-full border-border/50 bg-background/50 focus-visible:bg-background"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -87,18 +93,19 @@ export function ToolsDirectory() {
             translatedLabel = translations[category.label] || category.label;
           }
           return (
-          <button
-            key={category.id}
-            onClick={() => setActiveCategory(category.id)}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-              activeCategory === category.id
-                ? "bg-primary text-primary-foreground shadow-sm"
-                : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-            }`}
-          >
-            {translatedLabel}
-          </button>
-        )})}
+            <button
+              key={category.id}
+              onClick={() => setActiveCategory(category.id)}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                activeCategory === category.id
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+              }`}
+            >
+              {translatedLabel}
+            </button>
+          );
+        })}
       </div>
 
       {/* Grid */}
@@ -113,8 +120,11 @@ export function ToolsDirectory() {
           <p className="text-muted-foreground text-lg mb-2">
             {lang === "fr" ? "Aucun outil trouvé" : "No tools found"}
           </p>
-          <button 
-            onClick={() => { setSearchQuery(""); setActiveCategory("All"); }}
+          <button
+            onClick={() => {
+              setSearchQuery("");
+              setActiveCategory("All");
+            }}
             className="text-primary font-medium hover:underline"
           >
             {lang === "fr" ? "Réinitialiser les filtres" : "Reset filters"}

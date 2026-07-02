@@ -3,7 +3,17 @@ import { Header, Footer } from "@/components/site/shared";
 import SEOHead from "@/components/SEOHead";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Calendar, Clock, User, Share2, Bookmark, CheckCircle2, ChevronRight, BookOpen } from "lucide-react";
+import {
+  ArrowLeft,
+  Calendar,
+  Clock,
+  User,
+  Share2,
+  Bookmark,
+  CheckCircle2,
+  ChevronRight,
+  BookOpen,
+} from "lucide-react";
 import { toast } from "sonner";
 
 // Fallback article details for when NewsData.io API is unavailable
@@ -40,7 +50,7 @@ const FALLBACK_ARTICLES_DETAILS: { [key: string]: any } = {
 
       <h2>Vers un équilibre humain-machine</h2>
       <p>La solution optimale réside dans une approche hybride. Les entreprises les plus performantes utilisent l'IA pour <strong>augmenter les capacités</strong> de leurs employés plutôt que pour les remplacer. Cette stratégie permet de maximiser le retour sur investissement tout en préservant l'expertise humaine indispensable.</p>
-    `
+    `,
   },
   "levees-fonds-tech-europe-record-2026": {
     id: "levees-fonds-tech-europe-record-2026",
@@ -70,8 +80,8 @@ const FALLBACK_ARTICLES_DETAILS: { [key: string]: any } = {
 
       <h2>La France en tête</h2>
       <p>La France confirme sa position de leader avec <strong>12 milliards d'euros levés</strong>, devant l'Allemagne et le Royaume-Uni. Paris s'impose comme le hub incontournable de la tech européenne.</p>
-    `
-  }
+    `,
+  },
 };
 
 // Fallback articles list matching Blog.tsx FALLBACK_ARTICLES
@@ -82,7 +92,7 @@ const MOCK_LIST = [
     category: "Technology",
     image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80",
     date: "24 juin 2026",
-    readingTime: "6 min"
+    readingTime: "6 min",
   },
   {
     id: "levees-fonds-tech-europe-record-2026",
@@ -90,7 +100,7 @@ const MOCK_LIST = [
     category: "Business",
     image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
     date: "23 juin 2026",
-    readingTime: "7 min"
+    readingTime: "7 min",
   },
   {
     id: "chatgpt-depasse-2-milliards-utilisateurs",
@@ -98,7 +108,7 @@ const MOCK_LIST = [
     category: "Technology",
     image: "https://images.unsplash.com/photo-1655720828018-edd2daec9349?w=800&q=80",
     date: "22 juin 2026",
-    readingTime: "5 min"
+    readingTime: "5 min",
   },
   {
     id: "ordinateur-quantique-google-avancee-majeure",
@@ -106,7 +116,7 @@ const MOCK_LIST = [
     category: "Science",
     image: "https://images.unsplash.com/photo-1507413245164-6160d8298b31?w=800&q=80",
     date: "21 juin 2026",
-    readingTime: "8 min"
+    readingTime: "8 min",
   },
   {
     id: "apple-vision-pro-2-annonce-wwdc",
@@ -114,7 +124,7 @@ const MOCK_LIST = [
     category: "Technology",
     image: "https://images.unsplash.com/photo-1621768216002-5ac171876625?w=800&q=80",
     date: "20 juin 2026",
-    readingTime: "6 min"
+    readingTime: "6 min",
   },
   {
     id: "regulation-ia-mondiale-g7-accord-historique",
@@ -122,7 +132,7 @@ const MOCK_LIST = [
     category: "World",
     image: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=800&q=80",
     date: "19 juin 2026",
-    readingTime: "9 min"
+    readingTime: "9 min",
   },
   {
     id: "cybersecurite-attaques-ransomware-hausse-2026",
@@ -130,7 +140,7 @@ const MOCK_LIST = [
     category: "Technology",
     image: "https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?w=800&q=80",
     date: "18 juin 2026",
-    readingTime: "7 min"
+    readingTime: "7 min",
   },
   {
     id: "tesla-robot-optimus-production-masse",
@@ -138,7 +148,7 @@ const MOCK_LIST = [
     category: "Business",
     image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&q=80",
     date: "17 juin 2026",
-    readingTime: "5 min"
+    readingTime: "5 min",
   },
   {
     id: "sante-numerique-ia-diagnostic-medical",
@@ -146,14 +156,16 @@ const MOCK_LIST = [
     category: "Health",
     image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80",
     date: "16 juin 2026",
-    readingTime: "6 min"
-  }
+    readingTime: "6 min",
+  },
 ];
 
 export default function ActualitesDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+  const [lang, setLang] = useState(() =>
+    typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
+  );
   const [article, setArticle] = useState<any>(null);
   const [relatedArticles, setRelatedArticles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -178,7 +190,7 @@ export default function ActualitesDetail() {
 
   useEffect(() => {
     if (!id) return;
-    
+
     const fetchArticleDetail = async () => {
       setLoading(true);
       window.scrollTo(0, 0);
@@ -217,7 +229,7 @@ export default function ActualitesDetail() {
         } catch {
           setRelatedArticles(MOCK_LIST.filter((a: any) => a.id !== id).slice(0, 3));
         }
-        
+
         setTimeout(() => {
           setLoading(false);
         }, 500);
@@ -231,12 +243,12 @@ export default function ActualitesDetail() {
     if (FALLBACK_ARTICLES_DETAILS[articleId]) {
       setArticle(FALLBACK_ARTICLES_DETAILS[articleId]);
     } else {
-      const matchedMeta = MOCK_LIST.find(a => a.id === articleId) || {
+      const matchedMeta = MOCK_LIST.find((a) => a.id === articleId) || {
         title: "Article Digital & Innovation",
         category: "Technologie",
         image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80",
         date: "25 juin 2026",
-        readingTime: "5 min"
+        readingTime: "5 min",
       };
 
       setArticle({
@@ -268,43 +280,50 @@ export default function ActualitesDetail() {
           <h2>Perspectives et recommandations</h2>
           <p>Pour rester compétitif dans cet écosystème en constante évolution, il est essentiel de maintenir une <strong>veille technologique active</strong> et d'investir dans la formation continue des équipes. Les entreprises qui sauront allier innovation technologique et expertise humaine seront celles qui tireront le mieux leur épingle du jeu.</p>
           <p>Retrouvez toutes nos analyses et décryptages sur <strong>TECHNOVA</strong>, votre plateforme de référence pour comprendre les enjeux du numérique.</p>
-        `
+        `,
       });
     }
   };
 
   const handleShare = () => {
     if (navigator.share) {
-      navigator.share({
-        title: article?.title,
-        url: window.location.href
-      }).catch(console.error);
+      navigator
+        .share({
+          title: article?.title,
+          url: window.location.href,
+        })
+        .catch(console.error);
     } else {
       navigator.clipboard.writeText(window.location.href);
-      toast.success(lang === "fr" ? "Lien copié dans le presse-papiers !" : "Link copied to clipboard!");
+      toast.success(
+        lang === "fr" ? "Lien copié dans le presse-papiers !" : "Link copied to clipboard!",
+      );
     }
   };
 
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-300 font-sans relative">
-      <SEOHead 
+      <SEOHead
         title={article ? `${article.title}` : "Chargement de l'article"}
-        description={article ? `${article.title} - Décryptage par TECHNOVA` : "Lecture d'une actualité technologique."}
+        description={
+          article
+            ? `${article.title} - Décryptage par TECHNOVA`
+            : "Lecture d'une actualité technologique."
+        }
         ogImage={article?.image}
         ogType="article"
       />
       <Header />
 
-      <div 
-        className="fixed top-16 left-0 h-1 bg-gradient-to-r from-primary to-cyan-500 z-50 transition-all duration-100" 
+      <div
+        className="fixed top-16 left-0 h-1 bg-gradient-to-r from-primary to-cyan-500 z-50 transition-all duration-100"
         style={{ width: `${scrollProgress}%` }}
       />
 
       <main className="flex-1 bg-background pt-24 pb-20">
         <div className="container mx-auto px-4 max-w-4xl">
-          
-          <Link 
-            to="/actualites" 
+          <Link
+            to="/actualites"
             className="inline-flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-primary mb-8 group transition-colors"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
@@ -355,20 +374,24 @@ export default function ActualitesDetail() {
                       <span>{article.author || "Rédaction"}</span>
                       <CheckCircle2 className="w-4 h-4 text-primary fill-primary/10" />
                     </div>
-                    <div className="text-[11px] text-muted-foreground font-medium">Rédaction Actualités</div>
+                    <div className="text-[11px] text-muted-foreground font-medium">
+                      Rédaction Actualités
+                    </div>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <button 
+                  <button
                     onClick={handleShare}
                     className="p-2.5 rounded-xl border border-border bg-card/50 hover:bg-muted text-muted-foreground hover:text-foreground transition-all shadow-sm"
                     title="Partager"
                   >
                     <Share2 className="w-4 h-4" />
                   </button>
-                  <button 
-                    onClick={() => toast.success(lang === "fr" ? "Article sauvegardé !" : "Article saved!")}
+                  <button
+                    onClick={() =>
+                      toast.success(lang === "fr" ? "Article sauvegardé !" : "Article saved!")
+                    }
                     className="p-2.5 rounded-xl border border-border bg-card/50 hover:bg-muted text-muted-foreground hover:text-foreground transition-all shadow-sm"
                     title="Sauvegarder"
                   >
@@ -378,18 +401,19 @@ export default function ActualitesDetail() {
               </div>
 
               <div className="aspect-[21/10] md:aspect-[21/9] rounded-3xl overflow-hidden shadow-elegant border border-border mb-12 relative">
-                <img 
-                  src={article.image} 
-                  alt={article.title} 
+                <img
+                  src={article.image}
+                  alt={article.title}
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
-                    target.src = "https://images.unsplash.com/photo-1504711434969-e33886168d5c?w=800&q=80";
+                    target.src =
+                      "https://images.unsplash.com/photo-1504711434969-e33886168d5c?w=800&q=80";
                   }}
                 />
               </div>
 
-              <div 
+              <div
                 className="prose dark:prose-invert prose-blue max-w-none prose-headings:font-display prose-headings:font-bold prose-p:leading-relaxed prose-a:text-primary prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:bg-muted/30 prose-blockquote:p-4 prose-blockquote:rounded-r-2xl"
                 dangerouslySetInnerHTML={{ __html: article.content }}
               />
@@ -402,19 +426,20 @@ export default function ActualitesDetail() {
                   </h3>
                   <div className="grid sm:grid-cols-3 gap-6">
                     {relatedArticles.map((rel) => (
-                      <Link 
-                        key={rel.id} 
+                      <Link
+                        key={rel.id}
                         to={`/actualites/${rel.id}`}
                         className="group flex flex-col bg-card border border-border/80 rounded-2xl overflow-hidden shadow-soft hover:shadow-elegant transition-all duration-300"
                       >
                         <div className="aspect-[16/10] overflow-hidden relative">
-                          <img 
-                            src={rel.image} 
-                            alt={rel.title} 
+                          <img
+                            src={rel.image}
+                            alt={rel.title}
                             className="w-full h-full object-cover group-hover:scale-104 transition-transform duration-300"
                             onError={(e) => {
                               const target = e.target as HTMLImageElement;
-                              target.src = "https://images.unsplash.com/photo-1504711434969-e33886168d5c?w=800&q=80";
+                              target.src =
+                                "https://images.unsplash.com/photo-1504711434969-e33886168d5c?w=800&q=80";
                             }}
                           />
                         </div>
@@ -432,15 +457,18 @@ export default function ActualitesDetail() {
                   </div>
                 </div>
               )}
-
             </article>
           ) : (
             <div className="text-center py-20">
               <p className="text-destructive mb-4">Erreur lors du chargement de l'actualité.</p>
-              <Link to="/actualites" className="px-4 py-2 rounded-xl bg-primary text-white font-bold">Retour aux actualités</Link>
+              <Link
+                to="/actualites"
+                className="px-4 py-2 rounded-xl bg-primary text-white font-bold"
+              >
+                Retour aux actualités
+              </Link>
             </div>
           )}
-
         </div>
       </main>
 

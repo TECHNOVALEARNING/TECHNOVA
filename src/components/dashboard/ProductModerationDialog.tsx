@@ -31,7 +31,7 @@ const translations = {
     title: "Product Analysis",
     description: "Verification before publication",
     reasons: "Reasons",
-  }
+  },
 };
 
 interface ProductModerationDialogProps {
@@ -41,7 +41,9 @@ interface ProductModerationDialogProps {
 }
 
 const ProductModerationDialog = ({ open, onOpenChange, review }: ProductModerationDialogProps) => {
-  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+  const [lang, setLang] = useState(() =>
+    typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
+  );
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -49,7 +51,7 @@ const ProductModerationDialog = ({ open, onOpenChange, review }: ProductModerati
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
 
-  const t = translations[lang === 'en' ? 'en' : 'fr'];
+  const t = translations[lang === "en" ? "en" : "fr"];
 
   // Don't show dialog for needs_review (silently handled) or missing review
   if (!review || review.status === "needs_review") return null;
@@ -78,14 +80,14 @@ const ProductModerationDialog = ({ open, onOpenChange, review }: ProductModerati
       <DialogContent className="max-w-sm border-border bg-background">
         <DialogHeader>
           <div className="flex items-center gap-3">
-            <div className={`flex h-9 w-9 items-center justify-center rounded-xl border ${config.panelClass}`}>
+            <div
+              className={`flex h-9 w-9 items-center justify-center rounded-xl border ${config.panelClass}`}
+            >
               <ShieldAlert className="h-4 w-4 text-foreground" />
             </div>
             <div>
               <DialogTitle className="text-base">{t.title}</DialogTitle>
-              <DialogDescription className="text-xs">
-                {t.description}
-              </DialogDescription>
+              <DialogDescription className="text-xs">{t.description}</DialogDescription>
             </div>
           </div>
         </DialogHeader>
@@ -106,7 +108,10 @@ const ProductModerationDialog = ({ open, onOpenChange, review }: ProductModerati
               <h3 className="text-xs font-semibold text-foreground">{t.reasons}</h3>
               <ul className="space-y-1">
                 {review.issues.map((issue, index) => (
-                  <li key={`${issue}-${index}`} className="rounded-lg border border-border bg-card px-3 py-2 text-xs text-foreground">
+                  <li
+                    key={`${issue}-${index}`}
+                    className="rounded-lg border border-border bg-card px-3 py-2 text-xs text-foreground"
+                  >
                     {issue}
                   </li>
                 ))}

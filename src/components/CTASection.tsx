@@ -15,19 +15,17 @@ const CTASection = () => {
         >
           {/* Gradient orb */}
           <div className="absolute -top-24 left-1/2 -translate-x-1/2 h-48 w-96 rounded-full bg-primary/30 blur-[100px]" />
-          
+
           <div className="relative">
             <h2 className="text-3xl font-extrabold text-background md:text-5xl mb-5">
               Prêt à lancer votre business digital ?
             </h2>
             <p className="text-background/60 text-lg max-w-xl mx-auto mb-10">
-              Rejoignez des milliers de créateurs qui vendent déjà leurs produits digitaux avec TECHNOVA.
+              Rejoignez des milliers de créateurs qui vendent déjà leurs produits digitaux avec
+              TECHNOVA.
             </p>
             <Link to="/register">
-              <Button 
-                size="lg" 
-                className="px-10 py-6 text-base font-semibold"
-              >
+              <Button size="lg" className="px-10 py-6 text-base font-semibold">
                 Commencer gratuitement
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>

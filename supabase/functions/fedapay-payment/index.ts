@@ -18,15 +18,15 @@ Deno.serve(async (req) => {
     const FEDAPAY_SECRET_KEY = Deno.env.get("FEDAPAY_SECRET_KEY");
 
     if (!FEDAPAY_SECRET_KEY) {
-      return new Response(
-        JSON.stringify({ error: "FedaPay secret key not configured" }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: "FedaPay secret key not configured" }), {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     const admin = createClient(
       Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
     );
 
     if (action === "initialize") {
@@ -36,11 +36,19 @@ Deno.serve(async (req) => {
       const name = customer?.name?.trim();
       const phone = customer?.phone?.trim();
 
-      if (!amount || !email || !name || !phone || !metadata?.product_id || !metadata?.store_owner_id || !return_url) {
-        return new Response(
-          JSON.stringify({ error: "Paramètres de paiement incomplets" }),
-          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
+      if (
+        !amount ||
+        !email ||
+        !name ||
+        !phone ||
+        !metadata?.product_id ||
+        !metadata?.store_owner_id ||
+        !return_url
+      ) {
+        return new Response(JSON.stringify({ error: "Paramètres de paiement incomplets" }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
       }
 
       // Create or update customer server-side
@@ -52,10 +60,10 @@ Deno.serve(async (req) => {
         .maybeSingle();
 
       if (existingError) {
-        return new Response(
-          JSON.stringify({ error: `Erreur client: ${existingError.message}` }),
-          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
+        return new Response(JSON.stringify({ error: `Erreur client: ${existingError.message}` }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
       }
 
       if (existingCustomer?.id) {
@@ -71,7 +79,7 @@ Deno.serve(async (req) => {
         if (createError) {
           return new Response(
             JSON.stringify({ error: `Erreur création client: ${createError.message}` }),
-            { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+            { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
           );
         }
         customerId = newCustomer.id;
@@ -81,8 +89,14 @@ Deno.serve(async (req) => {
       const cleanPhone = phone.replace(/\s+/g, "").replace(/^\+/, "");
       let phoneCountry = "bj";
       const dialToCountry: Record<string, string> = {
-        "229": "bj", "225": "ci", "228": "tg", "223": "ml",
-        "221": "sn", "226": "bf", "227": "ne", "224": "gn",
+        "229": "bj",
+        "225": "ci",
+        "228": "tg",
+        "223": "ml",
+        "221": "sn",
+        "226": "bf",
+        "227": "ne",
+        "224": "gn",
       };
       for (const [dial, country] of Object.entries(dialToCountry)) {
         if (cleanPhone.startsWith(dial)) {
@@ -102,7 +116,7 @@ Deno.serve(async (req) => {
       const createRes = await fetch(`${FEDAPAY_API_URL}/transactions`, {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${FEDAPAY_SECRET_KEY}`,
+          Authorization: `Bearer ${FEDAPAY_SECRET_KEY}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -134,12 +148,13 @@ Deno.serve(async (req) => {
         console.error("FedaPay create error:", JSON.stringify(createData));
         return new Response(
           JSON.stringify({ error: createData?.message || "Erreur FedaPay lors de la création" }),
-          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
         );
       }
 
       // FedaPay returns data under "v1/transaction" key (with slash)
-      const txn = createData?.["v1/transaction"] || createData?.v1?.transaction || createData?.transaction;
+      const txn =
+        createData?.["v1/transaction"] || createData?.v1?.transaction || createData?.transaction;
       const transactionId = txn?.id;
       const paymentUrl = txn?.payment_url;
 
@@ -147,7 +162,7 @@ Deno.serve(async (req) => {
         console.error("FedaPay response structure:", JSON.stringify(createData));
         return new Response(
           JSON.stringify({ error: "Impossible de récupérer l'ID de transaction FedaPay" }),
-          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
         );
       }
 
@@ -158,7 +173,7 @@ Deno.serve(async (req) => {
         const tokenRes = await fetch(`${FEDAPAY_API_URL}/transactions/${transactionId}/token`, {
           method: "POST",
           headers: {
-            "Authorization": `Bearer ${FEDAPAY_SECRET_KEY}`,
+            Authorization: `Bearer ${FEDAPAY_SECRET_KEY}`,
             "Content-Type": "application/json",
           },
         });
@@ -168,8 +183,10 @@ Deno.serve(async (req) => {
         if (!tokenRes.ok) {
           console.error("FedaPay token error:", JSON.stringify(tokenData));
           return new Response(
-            JSON.stringify({ error: tokenData?.message || "Erreur FedaPay lors de la génération du lien" }),
-            { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+            JSON.stringify({
+              error: tokenData?.message || "Erreur FedaPay lors de la génération du lien",
+            }),
+            { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
           );
         }
 
@@ -194,7 +211,7 @@ Deno.serve(async (req) => {
             merchant_reference: merchantRef,
           },
         }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
 
@@ -202,16 +219,16 @@ Deno.serve(async (req) => {
       const { transaction_id } = body;
 
       if (!transaction_id) {
-        return new Response(
-          JSON.stringify({ error: "transaction_id requis" }),
-          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
+        return new Response(JSON.stringify({ error: "transaction_id requis" }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
       }
 
       const response = await fetch(`${FEDAPAY_API_URL}/transactions/${transaction_id}`, {
         method: "GET",
         headers: {
-          "Authorization": `Bearer ${FEDAPAY_SECRET_KEY}`,
+          Authorization: `Bearer ${FEDAPAY_SECRET_KEY}`,
           "Content-Type": "application/json",
         },
       });
@@ -219,10 +236,10 @@ Deno.serve(async (req) => {
       const data = await response.json();
 
       if (!response.ok) {
-        return new Response(
-          JSON.stringify({ error: data?.message || "Erreur de vérification" }),
-          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
+        return new Response(JSON.stringify({ error: data?.message || "Erreur de vérification" }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
       }
 
       // Map FedaPay status to our internal status
@@ -231,7 +248,11 @@ Deno.serve(async (req) => {
       let mappedStatus = "pending";
       if (fedaStatus === "approved" || fedaStatus === "transferred") {
         mappedStatus = "success";
-      } else if (fedaStatus === "declined" || fedaStatus === "canceled" || fedaStatus === "expired") {
+      } else if (
+        fedaStatus === "declined" ||
+        fedaStatus === "canceled" ||
+        fedaStatus === "expired"
+      ) {
         mappedStatus = "failed";
       }
 
@@ -251,7 +272,7 @@ Deno.serve(async (req) => {
             transaction_id,
           },
         }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
 

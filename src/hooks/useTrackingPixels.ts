@@ -26,9 +26,14 @@ export function useTrackingPixels(config: PixelConfig) {
       const f = window;
       const n = "fbq";
       if (!f[n]) {
-        const q: any = function () { q.callMethod ? q.callMethod.apply(q, arguments) : q.queue.push(arguments); };
+        const q: any = function () {
+          q.callMethod ? q.callMethod.apply(q, arguments) : q.queue.push(arguments);
+        };
         if (!f._fbq) f._fbq = q;
-        q.push = q; q.loaded = true; q.version = "2.0"; q.queue = [];
+        q.push = q;
+        q.loaded = true;
+        q.version = "2.0";
+        q.queue = [];
         f[n] = q;
         const s = document.createElement("script");
         s.async = true;
@@ -57,7 +62,9 @@ export function useTrackingPixels(config: PixelConfig) {
       s.src = `https://www.googletagmanager.com/gtag/js?id=${config.googleAdsId}`;
       document.head.appendChild(s);
       window.dataLayer = window.dataLayer || [];
-      window.gtag = function () { window.dataLayer!.push(arguments); };
+      window.gtag = function () {
+        window.dataLayer!.push(arguments);
+      };
       window.gtag("js", new Date());
       window.gtag("config", config.googleAdsId);
     }

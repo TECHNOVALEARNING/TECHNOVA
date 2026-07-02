@@ -27,9 +27,10 @@ Deno.serve(async (req) => {
     const userClient = createClient(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY")!, {
       global: { headers: { Authorization: authHeader } },
     });
-    const { data: { user }, error: authErr } = await userClient.auth.getUser(
-      authHeader.replace("Bearer ", "")
-    );
+    const {
+      data: { user },
+      error: authErr,
+    } = await userClient.auth.getUser(authHeader.replace("Bearer ", ""));
     if (authErr || !user) return j({ error: "Non authentifié" }, 401);
 
     const { amount, phone, provider, currency = "XOF" } = await req.json();
@@ -39,18 +40,30 @@ Deno.serve(async (req) => {
 
     // Compute available balance
     const { data: orders } = await supabase
-      .from("orders").select("amount").eq("store_owner_id", user.id).eq("status", "completed");
+      .from("orders")
+      .select("amount")
+      .eq("store_owner_id", user.id)
+      .eq("status", "completed");
     const totalSales = (orders || []).reduce((s: number, o: any) => s + Number(o.amount), 0);
-    const { data: feeRow } = await supabase.from("platform_fees").select("value_pct").eq("key", "technova_commission_pct").maybeSingle();
+    const { data: feeRow } = await supabase
+      .from("platform_fees")
+      .select("value_pct")
+      .eq("key", "technova_commission_pct")
+      .maybeSingle();
     const commissionPct = Number(feeRow?.value_pct ?? 5) / 100;
     const grossAvailable = totalSales * (1 - commissionPct); // 5% commission
     const { data: ws } = await supabase
-      .from("withdrawals").select("amount").eq("user_id", user.id)
+      .from("withdrawals")
+      .select("amount")
+      .eq("user_id", user.id)
       .in("status", ["pending", "processing", "completed"]);
     const totalWithdrawn = (ws || []).reduce((s: number, w: any) => s + Number(w.amount), 0);
     const available = grossAvailable - totalWithdrawn;
     if (amount > available) {
-      return j({ error: `Solde insuffisant. Disponible: ${Math.floor(available)} ${currency}` }, 400);
+      return j(
+        { error: `Solde insuffisant. Disponible: ${Math.floor(available)} ${currency}` },
+        400,
+      );
     }
 
     const cleanPhone = String(phone).replace(/\D/g, "");
@@ -82,10 +95,7 @@ Deno.serve(async (req) => {
         accountDetails: { phoneNumber: cleanPhone, provider },
       },
       customerMessage: `Technova retrait`.slice(0, 22),
-      metadata: [
-        { withdrawal_id: withdrawal.id },
-        { user_id: user.id },
-      ],
+      metadata: [{ withdrawal_id: withdrawal.id }, { user_id: user.id }],
     };
 
     console.log("[pawapay-payout] init", payoutId, provider, amount);
@@ -124,7 +134,8 @@ Deno.serve(async (req) => {
           success: true,
           withdrawal_id: withdrawal.id,
           status: "pending_manual",
-          message: "Cet opérateur n'est pas encore activé pour les retraits automatiques. Votre demande sera traitée manuellement par notre équipe sous 24-48h.",
+          message:
+            "Cet opérateur n'est pas encore activé pour les retraits automatiques. Votre demande sera traitée manuellement par notre équipe sous 24-48h.",
         });
       }
 
@@ -132,7 +143,10 @@ Deno.serve(async (req) => {
       return j({ error: reason }, 400);
     }
 
-    await supabase.from("withdrawals").update({ pawapay_payout_id: payoutId }).eq("id", withdrawal.id);
+    await supabase
+      .from("withdrawals")
+      .update({ pawapay_payout_id: payoutId })
+      .eq("id", withdrawal.id);
 
     await supabase.from("notifications").insert({
       user_id: user.id,

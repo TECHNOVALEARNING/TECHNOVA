@@ -3,42 +3,92 @@ import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import {
-  Users, Key, DollarSign, Wallet, BadgeCheck, Megaphone,
-  Link2, Zap, Webhook, MessageCircle, Settings, HelpCircle
+  Users,
+  Key,
+  DollarSign,
+  Wallet,
+  BadgeCheck,
+  Megaphone,
+  Link2,
+  Zap,
+  Webhook,
+  MessageCircle,
+  Settings,
+  HelpCircle,
 } from "lucide-react";
 
 const otherMenus = [
   { title: "Clients", description: "Gérez vos clients", icon: Users, path: "/dashboard/clients" },
   { title: "Licences", description: "Clés de licence", icon: Key, path: "/dashboard/licenses" },
-  { title: "Revenus", description: "Historique des paiements", icon: DollarSign, path: "/dashboard/revenue" },
+  {
+    title: "Revenus",
+    description: "Historique des paiements",
+    icon: DollarSign,
+    path: "/dashboard/revenue",
+  },
   { title: "Wallet", description: "Votre portefeuille", icon: Wallet, path: "/dashboard/wallet" },
-  { title: "Badge Verify", description: "Obtenir votre badge", icon: BadgeCheck, path: "/dashboard/badge" },
-  { title: "Marketing", description: "Codes promo & campagnes", icon: Megaphone, path: "/dashboard/marketing" },
-  { title: "Affiliation", description: "Programme partenaire", icon: Link2, path: "/dashboard/affiliation" },
-  { title: "Automatisations", description: "Workflows & API", icon: Zap, path: "/dashboard/automations" },
-  { title: "Webhooks", description: "Écouteurs d'événements", icon: Webhook, path: "/dashboard/webhooks" },
-  { title: "Messages", description: "Support client & litiges", icon: MessageCircle, path: "/dashboard/support" },
-  { title: "Paramètres", description: "Configuration boutique", icon: Settings, path: "/dashboard/settings" },
+  {
+    title: "Badge Verify",
+    description: "Obtenir votre badge",
+    icon: BadgeCheck,
+    path: "/dashboard/badge",
+  },
+  {
+    title: "Marketing",
+    description: "Codes promo & campagnes",
+    icon: Megaphone,
+    path: "/dashboard/marketing",
+  },
+  {
+    title: "Affiliation",
+    description: "Programme partenaire",
+    icon: Link2,
+    path: "/dashboard/affiliation",
+  },
+  {
+    title: "Automatisations",
+    description: "Workflows & API",
+    icon: Zap,
+    path: "/dashboard/automations",
+  },
+  {
+    title: "Webhooks",
+    description: "Écouteurs d'événements",
+    icon: Webhook,
+    path: "/dashboard/webhooks",
+  },
+  {
+    title: "Messages",
+    description: "Support client & litiges",
+    icon: MessageCircle,
+    path: "/dashboard/support",
+  },
+  {
+    title: "Paramètres",
+    description: "Configuration boutique",
+    icon: Settings,
+    path: "/dashboard/settings",
+  },
 ];
 
 const container = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
-    transition: { staggerChildren: 0.05 }
-  }
+    transition: { staggerChildren: 0.05 },
+  },
 };
 
 const item = {
   hidden: { opacity: 0, y: 10 },
-  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } },
 };
 
 export default function DashboardOthers() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const isAdmin = user?.email === "ancres707@gmail.com";
-  
+
   const allowedMenus = otherMenus.filter((menu) => isAdmin || menu.title !== "Licences");
 
   return (
@@ -55,7 +105,7 @@ export default function DashboardOthers() {
           </p>
         </motion.div>
 
-        <motion.div 
+        <motion.div
           variants={container}
           initial="hidden"
           animate="show"
@@ -76,9 +126,7 @@ export default function DashboardOthers() {
                   <h3 className="font-semibold text-foreground text-sm group-hover:text-primary transition-colors">
                     {menu.title}
                   </h3>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {menu.description}
-                  </p>
+                  <p className="text-xs text-muted-foreground mt-1">{menu.description}</p>
                 </div>
               </div>
             </motion.div>

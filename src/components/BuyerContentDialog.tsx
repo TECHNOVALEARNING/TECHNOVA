@@ -2,10 +2,25 @@ import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { buyerSupabase as supabase } from "@/integrations/supabase/buyer-client";
-import { Download, Play, FileText, Key, Copy, Check, ExternalLink, BookOpen, Layers } from "lucide-react";
+import {
+  Download,
+  Play,
+  FileText,
+  Key,
+  Copy,
+  Check,
+  ExternalLink,
+  BookOpen,
+  Layers,
+} from "lucide-react";
 import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 interface BuyerContentDialogProps {
   open: boolean;
@@ -54,7 +69,12 @@ interface BundleProduct {
   download_url: string | null;
 }
 
-const BuyerContentDialog = ({ open, onOpenChange, product, customerId }: BuyerContentDialogProps) => {
+const BuyerContentDialog = ({
+  open,
+  onOpenChange,
+  product,
+  customerId,
+}: BuyerContentDialogProps) => {
   const [modules, setModules] = useState<CourseModule[]>([]);
   const [licenses, setLicenses] = useState<LicenseInfo[]>([]);
   const [bundleProducts, setBundleProducts] = useState<BundleProduct[]>([]);
@@ -76,13 +96,15 @@ const BuyerContentDialog = ({ open, onOpenChange, product, customerId }: BuyerCo
           .select("*, course_lessons(*)")
           .eq("product_id", product.id)
           .order("position");
-          
+
         if (modulesData) {
           const formattedModules = modulesData.map((m: any) => ({
             id: m.id,
             title: m.title,
             position: m.position,
-            lessons: m.course_lessons ? m.course_lessons.sort((a: any, b: any) => a.position - b.position) : []
+            lessons: m.course_lessons
+              ? m.course_lessons.sort((a: any, b: any) => a.position - b.position)
+              : [],
           }));
           setModules(formattedModules);
           if (formattedModules.length > 0 && formattedModules[0].lessons.length > 0) {
@@ -128,7 +150,9 @@ const BuyerContentDialog = ({ open, onOpenChange, product, customerId }: BuyerCo
     if (!lesson.video_url) return null;
     const url = lesson.video_url;
     // YouTube
-    const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]+)/);
+    const ytMatch = url.match(
+      /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]+)/,
+    );
     if (ytMatch) return `https://www.youtube.com/embed/${ytMatch[1]}`;
     // Vimeo
     const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
@@ -143,7 +167,9 @@ const BuyerContentDialog = ({ open, onOpenChange, product, customerId }: BuyerCo
       </div>
       <div>
         <h3 className="font-semibold text-foreground">{product.title}</h3>
-        <p className="text-sm text-muted-foreground mt-1">Votre fichier est prêt à être téléchargé</p>
+        <p className="text-sm text-muted-foreground mt-1">
+          Votre fichier est prêt à être téléchargé
+        </p>
       </div>
       {product.download_url ? (
         <a href={product.download_url} target="_blank" rel="noopener noreferrer">
@@ -174,10 +200,12 @@ const BuyerContentDialog = ({ open, onOpenChange, product, customerId }: BuyerCo
           ) : (
             <div className="aspect-[16/9] rounded-xl bg-secondary flex flex-col items-center justify-center border border-border">
               <BookOpen className="h-10 w-10 text-muted-foreground/30 mb-2" />
-              <p className="text-muted-foreground text-sm font-medium">Contenu textuel uniquement</p>
+              <p className="text-muted-foreground text-sm font-medium">
+                Contenu textuel uniquement
+              </p>
             </div>
           )}
-          
+
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-background p-1">
             <div>
               <h3 className="text-xl font-bold text-foreground">{activeLesson.title}</h3>
@@ -186,7 +214,12 @@ const BuyerContentDialog = ({ open, onOpenChange, product, customerId }: BuyerCo
               )}
             </div>
             {activeLesson.resource_url && (
-              <a href={activeLesson.resource_url} target="_blank" rel="noopener noreferrer" className="shrink-0">
+              <a
+                href={activeLesson.resource_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="shrink-0"
+              >
                 <Button size="sm" variant="outline" className="gap-2 w-full sm:w-auto">
                   <Download className="h-4 w-4" /> Fichier joint
                 </Button>
@@ -195,24 +228,28 @@ const BuyerContentDialog = ({ open, onOpenChange, product, customerId }: BuyerCo
           </div>
 
           {activeLesson.content && activeLesson.content !== "<p></p>" && (
-            <div 
+            <div
               className="prose prose-sm sm:prose-base dark:prose-invert max-w-none bg-secondary/20 p-5 rounded-xl border border-border/50"
               dangerouslySetInnerHTML={{ __html: activeLesson.content }}
             />
           )}
         </div>
       )}
-      
+
       <Separator />
-      
+
       <div>
         <h4 className="text-sm font-bold text-foreground mb-3 flex items-center gap-2">
           <Layers className="h-4 w-4 text-primary" /> Programme de la formation
         </h4>
         <div className="space-y-1 max-h-[350px] overflow-y-auto pr-2 custom-scrollbar">
-          <Accordion type="multiple" defaultValue={modules.map(m => m.id)} className="w-full">
+          <Accordion type="multiple" defaultValue={modules.map((m) => m.id)} className="w-full">
             {modules.map((module) => (
-              <AccordionItem key={module.id} value={module.id} className="border-b-0 mb-3 bg-card rounded-xl border border-border shadow-sm overflow-hidden">
+              <AccordionItem
+                key={module.id}
+                value={module.id}
+                className="border-b-0 mb-3 bg-card rounded-xl border border-border shadow-sm overflow-hidden"
+              >
                 <AccordionTrigger className="hover:no-underline py-3 px-4 bg-secondary/40">
                   <span className="font-semibold text-sm">{module.title}</span>
                 </AccordionTrigger>
@@ -228,21 +265,33 @@ const BuyerContentDialog = ({ open, onOpenChange, product, customerId }: BuyerCo
                             : "hover:bg-secondary/80 text-foreground"
                         }`}
                       >
-                        <span className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold border ${
-                          activeLesson?.id === lesson.id ? 'bg-primary text-primary-foreground border-primary' : 'bg-background border-border text-muted-foreground'
-                        }`}>
+                        <span
+                          className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold border ${
+                            activeLesson?.id === lesson.id
+                              ? "bg-primary text-primary-foreground border-primary"
+                              : "bg-background border-border text-muted-foreground"
+                          }`}
+                        >
                           {i + 1}
                         </span>
                         <span className="flex-1 line-clamp-1">{lesson.title}</span>
-                        {lesson.video_url && <Play className="h-3.5 w-3.5 text-primary/70 flex-shrink-0" />}
-                        {lesson.resource_url && <FileText className="h-3.5 w-3.5 text-primary/70 flex-shrink-0" />}
+                        {lesson.video_url && (
+                          <Play className="h-3.5 w-3.5 text-primary/70 flex-shrink-0" />
+                        )}
+                        {lesson.resource_url && (
+                          <FileText className="h-3.5 w-3.5 text-primary/70 flex-shrink-0" />
+                        )}
                         {lesson.duration_minutes && (
-                          <span className="text-xs text-muted-foreground flex-shrink-0">{lesson.duration_minutes} min</span>
+                          <span className="text-xs text-muted-foreground flex-shrink-0">
+                            {lesson.duration_minutes} min
+                          </span>
                         )}
                       </button>
                     ))}
                     {module.lessons.length === 0 && (
-                      <p className="text-xs text-muted-foreground text-center py-2">Aucune leçon dans ce module</p>
+                      <p className="text-xs text-muted-foreground text-center py-2">
+                        Aucune leçon dans ce module
+                      </p>
                     )}
                   </div>
                 </AccordionContent>
@@ -257,7 +306,9 @@ const BuyerContentDialog = ({ open, onOpenChange, product, customerId }: BuyerCo
   const renderLicenseContent = () => (
     <div className="space-y-4">
       {licenses.length === 0 ? (
-        <p className="text-center text-muted-foreground py-8">Aucune licence trouvée pour ce produit.</p>
+        <p className="text-center text-muted-foreground py-8">
+          Aucune licence trouvée pour ce produit.
+        </p>
       ) : (
         licenses.map((lic, i) => (
           <div key={i} className="rounded-xl border border-border bg-secondary/30 p-4 space-y-3">
@@ -266,9 +317,13 @@ const BuyerContentDialog = ({ open, onOpenChange, product, customerId }: BuyerCo
                 <Key className="h-4 w-4 text-primary" />
                 <span className="text-sm font-medium">Clé de licence</span>
               </div>
-              <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                lic.status === "active" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"
-              }`}>
+              <span
+                className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                  lic.status === "active"
+                    ? "bg-green-100 text-green-700"
+                    : "bg-yellow-100 text-yellow-700"
+                }`}
+              >
                 {lic.status === "active" ? "Active" : lic.status}
               </span>
             </div>
@@ -282,12 +337,18 @@ const BuyerContentDialog = ({ open, onOpenChange, product, customerId }: BuyerCo
                 onClick={() => copyLicenseKey(lic.license_key)}
                 className="gap-1.5"
               >
-                {copiedKey === lic.license_key ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+                {copiedKey === lic.license_key ? (
+                  <Check className="h-3.5 w-3.5" />
+                ) : (
+                  <Copy className="h-3.5 w-3.5" />
+                )}
               </Button>
             </div>
             <div className="flex gap-4 text-xs text-muted-foreground">
               <span>Max activations: {lic.max_activations}</span>
-              {lic.expires_at && <span>Expire: {new Date(lic.expires_at).toLocaleDateString("fr-FR")}</span>}
+              {lic.expires_at && (
+                <span>Expire: {new Date(lic.expires_at).toLocaleDateString("fr-FR")}</span>
+              )}
             </div>
           </div>
         ))
@@ -303,7 +364,11 @@ const BuyerContentDialog = ({ open, onOpenChange, product, customerId }: BuyerCo
         bundleProducts.map((bp) => (
           <div key={bp.id} className="flex items-center gap-3 rounded-lg border border-border p-3">
             {bp.thumbnail_url ? (
-              <img src={bp.thumbnail_url} alt={bp.title} className="w-12 h-12 rounded-lg object-cover" />
+              <img
+                src={bp.thumbnail_url}
+                alt={bp.title}
+                className="w-12 h-12 rounded-lg object-cover"
+              />
             ) : (
               <div className="w-12 h-12 rounded-lg bg-secondary flex items-center justify-center">
                 <FileText className="h-5 w-5 text-muted-foreground" />
@@ -328,19 +393,27 @@ const BuyerContentDialog = ({ open, onOpenChange, product, customerId }: BuyerCo
 
   const getDialogTitle = () => {
     switch (product.type) {
-      case "course": return "Formation";
-      case "license": return "Licence";
-      case "bundle": return "Bundle";
-      default: return "Fichier";
+      case "course":
+        return "Formation";
+      case "license":
+        return "Licence";
+      case "bundle":
+        return "Bundle";
+      default:
+        return "Fichier";
     }
   };
 
   const getDialogIcon = () => {
     switch (product.type) {
-      case "course": return <BookOpen className="h-4 w-4" />;
-      case "license": return <Key className="h-4 w-4" />;
-      case "bundle": return <Layers className="h-4 w-4" />;
-      default: return <FileText className="h-4 w-4" />;
+      case "course":
+        return <BookOpen className="h-4 w-4" />;
+      case "license":
+        return <Key className="h-4 w-4" />;
+      case "bundle":
+        return <Layers className="h-4 w-4" />;
+      default:
+        return <FileText className="h-4 w-4" />;
     }
   };
 

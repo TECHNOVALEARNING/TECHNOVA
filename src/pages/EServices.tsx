@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Header, Footer } from "@/components/site/shared";
-import { 
-  Laptop, 
-  Palette, 
-  Cpu, 
-  LineChart, 
-  Sparkles, 
-  ArrowRight, 
-  CheckCircle2, 
-  MessageSquare, 
+import {
+  Laptop,
+  Palette,
+  Cpu,
+  LineChart,
+  Sparkles,
+  ArrowRight,
+  CheckCircle2,
+  MessageSquare,
   Send,
   Mail,
   Phone,
@@ -17,7 +17,7 @@ import {
   Zap,
   ShieldCheck,
   Check,
-  ExternalLink
+  ExternalLink,
 } from "lucide-react";
 import { toast } from "sonner";
 import SEOHead from "@/components/SEOHead";
@@ -49,12 +49,14 @@ interface Project {
 }
 
 const EServices = () => {
-  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+  const [lang, setLang] = useState(() =>
+    typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
+  );
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     service: "development",
-    message: ""
+    message: "",
   });
   const [submitting, setSubmitting] = useState(false);
 
@@ -64,20 +66,30 @@ const EServices = () => {
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.message) {
-      toast.error(lang === "fr" ? "Veuillez remplir tous les champs obligatoires." : "Please fill in all required fields.");
+      toast.error(
+        lang === "fr"
+          ? "Veuillez remplir tous les champs obligatoires."
+          : "Please fill in all required fields.",
+      );
       return;
     }
     setSubmitting(true);
     setTimeout(() => {
-      toast.success(lang === "fr" ? "Message envoyé avec succès ! Nous vous recontacterons sous 24h." : "Message sent successfully! We will contact you within 24 hours.");
+      toast.success(
+        lang === "fr"
+          ? "Message envoyé avec succès ! Nous vous recontacterons sous 24h."
+          : "Message sent successfully! We will contact you within 24 hours.",
+      );
       setFormData({ name: "", email: "", service: "development", message: "" });
       setSubmitting(false);
     }, 1500);
@@ -87,128 +99,176 @@ const EServices = () => {
     {
       icon: Laptop,
       title: lang === "fr" ? "Développement Full-Stack" : "Full-Stack Development",
-      desc: lang === "fr" 
-        ? "Création d'applications web et mobiles robustes et scalables en utilisant les meilleures technologies modernes." 
-        : "Building robust, scalable web and mobile applications using the best modern technologies.",
-      technologies: ["React / Next.js", "TypeScript", "Node.js / Express", "Supabase / Postgres", "Python"]
+      desc:
+        lang === "fr"
+          ? "Création d'applications web et mobiles robustes et scalables en utilisant les meilleures technologies modernes."
+          : "Building robust, scalable web and mobile applications using the best modern technologies.",
+      technologies: [
+        "React / Next.js",
+        "TypeScript",
+        "Node.js / Express",
+        "Supabase / Postgres",
+        "Python",
+      ],
     },
     {
       icon: Palette,
       title: lang === "fr" ? "Design UI/UX & Branding" : "UI/UX Design & Branding",
-      desc: lang === "fr"
-        ? "Conception d'interfaces utilisateurs intuitives et esthétiques axées sur l'expérience client et la conversion."
-        : "Crafting intuitive and gorgeous user interfaces focused on customer experience and conversion metrics.",
-      technologies: ["Figma", "Design Systems", "Prototypage", "Motion Design", "Responsive Web"]
+      desc:
+        lang === "fr"
+          ? "Conception d'interfaces utilisateurs intuitives et esthétiques axées sur l'expérience client et la conversion."
+          : "Crafting intuitive and gorgeous user interfaces focused on customer experience and conversion metrics.",
+      technologies: ["Figma", "Design Systems", "Prototypage", "Motion Design", "Responsive Web"],
     },
     {
       icon: Cpu,
       title: lang === "fr" ? "Intégration d'IA & Automatisation" : "AI Integration & Automation",
-      desc: lang === "fr"
-        ? "Optimisation de vos flux de travail en connectant des agents d'intelligence artificielle et des webhooks."
-        : "Optimizing your workflows by connecting custom artificial intelligence agents and real-time webhooks.",
-      technologies: ["GPT-4/Gemini APIs", "LangChain", "Chatbots intelligents", "Make / Zapier", "Webhooks"]
+      desc:
+        lang === "fr"
+          ? "Optimisation de vos flux de travail en connectant des agents d'intelligence artificielle et des webhooks."
+          : "Optimizing your workflows by connecting custom artificial intelligence agents and real-time webhooks.",
+      technologies: [
+        "GPT-4/Gemini APIs",
+        "LangChain",
+        "Chatbots intelligents",
+        "Make / Zapier",
+        "Webhooks",
+      ],
     },
     {
       icon: LineChart,
       title: lang === "fr" ? "Marketing Digital & Tracking" : "Digital Marketing & Tracking",
-      desc: lang === "fr"
-        ? "Mise en place de pixels de tracking publicitaire et d'entonnoirs de vente hautement optimisés."
-        : "Implementation of advanced advertising tracking pixels and highly optimized conversion funnels.",
-      technologies: ["Pixels (Meta, TikTok)", "Google Analytics 4", "SEO Technique", "Emailing (Resend)", "A/B Testing"]
-    }
+      desc:
+        lang === "fr"
+          ? "Mise en place de pixels de tracking publicitaire et d'entonnoirs de vente hautement optimisés."
+          : "Implementation of advanced advertising tracking pixels and highly optimized conversion funnels.",
+      technologies: [
+        "Pixels (Meta, TikTok)",
+        "Google Analytics 4",
+        "SEO Technique",
+        "Emailing (Resend)",
+        "A/B Testing",
+      ],
+    },
   ];
 
   const services: Service[] = [
     {
       icon: Zap,
       title: lang === "fr" ? "Boutiques E-commerce Premium" : "Premium E-commerce Stores",
-      desc: lang === "fr"
-        ? "Une boutique en ligne rapide avec intégration complète des moyens de paiement locaux (Mobile Money) et internationaux."
-        : "A lightning-fast online shop fully integrated with local Mobile Money and international payment gateways.",
+      desc:
+        lang === "fr"
+          ? "Une boutique en ligne rapide avec intégration complète des moyens de paiement locaux (Mobile Money) et internationaux."
+          : "A lightning-fast online shop fully integrated with local Mobile Money and international payment gateways.",
       features: [
         lang === "fr" ? "Design unique et moderne" : "Unique and modern design",
         lang === "fr" ? "Paiement MTN, Moov, Wave, Visa" : "MTN, Moov, Wave, Visa payments",
         lang === "fr" ? "Panier et checkout optimisés" : "Optimized cart & checkout flow",
-        lang === "fr" ? "Dashboard vendeur simplifié" : "Simplified seller dashboard"
+        lang === "fr" ? "Dashboard vendeur simplifié" : "Simplified seller dashboard",
       ],
-      price: lang === "fr" ? "À partir de 4 000 000 FCFA" : "From $7 000"
+      price: lang === "fr" ? "À partir de 4 000 000 FCFA" : "From $7 000",
     },
     {
       icon: Layers,
       title: lang === "fr" ? "Développement SaaS sur Mesure" : "Custom SaaS Development",
-      desc: lang === "fr"
-        ? "Transformez votre idée de produit en une application logicielle cloud complète et sécurisée avec authentification et abonnements."
-        : "Turn your product idea into a complete, secure cloud application with built-in authentication and subscriptions.",
+      desc:
+        lang === "fr"
+          ? "Transformez votre idée de produit en une application logicielle cloud complète et sécurisée avec authentification et abonnements."
+          : "Turn your product idea into a complete, secure cloud application with built-in authentication and subscriptions.",
       features: [
         lang === "fr" ? "Base de données relationnelle sécurisée" : "Secure relational database",
         lang === "fr" ? "Gestion des comptes utilisateurs" : "User account management",
         lang === "fr" ? "Facturation Stripe ou Fedapay" : "Stripe or Fedapay billing integration",
-        lang === "fr" ? "Panel d'administration complet" : "Complete administrator panel"
+        lang === "fr" ? "Panel d'administration complet" : "Complete administrator panel",
       ],
-      price: lang === "fr" ? "Sur devis uniquement" : "Custom quote"
+      price: lang === "fr" ? "Sur devis uniquement" : "Custom quote",
     },
     {
       icon: ShieldCheck,
       title: lang === "fr" ? "Tunnels de Vente & Landing Pages" : "Sales Funnels & Landing Pages",
-      desc: lang === "fr"
-        ? "Des pages de capture et de vente à fort impact visuel conçues spécifiquement pour maximiser vos taux de conversion publicitaire."
-        : "High-impact landing pages designed specifically to maximize your advertising campaign conversion rates.",
+      desc:
+        lang === "fr"
+          ? "Des pages de capture et de vente à fort impact visuel conçues spécifiquement pour maximiser vos taux de conversion publicitaire."
+          : "High-impact landing pages designed specifically to maximize your advertising campaign conversion rates.",
       features: [
         lang === "fr" ? "Vitesse de chargement ultra-rapide" : "Ultra-fast loading speed",
         lang === "fr" ? "Optimisé à 100% pour mobile" : "100% optimized for mobile",
         lang === "fr" ? "Pixels de conversion configurés" : "Configured conversion pixels",
-        lang === "fr" ? "Formulaires de capture intelligents" : "Intelligent capture forms"
+        lang === "fr" ? "Formulaires de capture intelligents" : "Intelligent capture forms",
       ],
-      price: lang === "fr" ? "À partir de 60 000 FCFA" : "From $100"
-    }
+      price: lang === "fr" ? "À partir de 60 000 FCFA" : "From $100",
+    },
   ];
 
   const projects: Project[] = [
     {
       title: "TECHNOVA Learning",
       category: lang === "fr" ? "Plateforme Web" : "Web Platform",
-      desc: lang === "fr"
-        ? "Plateforme de cours en ligne avec paiements sécurisés et accès instantané aux formations."
-        : "Online course platform with secure payments and instant access to training modules.",
-      image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80",
-      tags: ["React 18", "TypeScript", "Supabase", "Tailwind CSS 3", "Vite 5", "PawaPay", "Edge Functions"],
+      desc:
+        lang === "fr"
+          ? "Plateforme de cours en ligne avec paiements sécurisés et accès instantané aux formations."
+          : "Online course platform with secure payments and instant access to training modules.",
+      image:
+        "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80",
+      tags: [
+        "React 18",
+        "TypeScript",
+        "Supabase",
+        "Tailwind CSS 3",
+        "Vite 5",
+        "PawaPay",
+        "Edge Functions",
+      ],
       stats: "+2,000 users",
-      url: "https://technovalearning.com"
+      url: "https://technovalearning.com",
     },
     {
       title: "Technova Humanizer",
       category: lang === "fr" ? "Outil IA" : "AI Tool",
-      desc: lang === "fr"
-        ? "Outil IA de transformation de texte IA en texte humain"
-        : "AI tool for transforming AI text into human text",
+      desc:
+        lang === "fr"
+          ? "Outil IA de transformation de texte IA en texte humain"
+          : "AI tool for transforming AI text into human text",
       image: "src/assets/humaniser.jpg",
       tags: ["React 19", "Express (Node.js)", "Tailwind CSS 4", "Gemini API", "Motion"],
       stats: "0.8s load time",
       url: "#",
-      upcoming: true
+      upcoming: true,
     },
     {
       title: "Viral IA Agent",
       category: lang === "fr" ? "Automatisation & IA" : "Automation & AI",
-      desc: lang === "fr"
-        ? "Agent IA de viralisation de contenu" 
-        : "AI agent for content viralization",
+      desc:
+        lang === "fr" ? "Agent IA de viralisation de contenu" : "AI agent for content viralization",
       image: "https://i.pinimg.com/736x/b1/bb/ac/b1bbac1e29f08c1c7b5fa1cdb8d5aebb.jpg",
       tags: ["HTML5 / CSS3", "Vanilla JS", "Gemini API", "Local Storage"],
       stats: "92% resolution rate",
       url: "#",
-      upcoming: true
-    }
+      upcoming: true,
+    },
   ];
 
   return (
-    <div className="min-h-screen overflow-x-hidden transition-colors duration-300" style={{ background: "var(--bg, #f2f2f7)", color: "var(--text, #1d1d1f)", fontFamily: "'Manrope', -apple-system, sans-serif" }}>
+    <div
+      className="min-h-screen overflow-x-hidden transition-colors duration-300"
+      style={{
+        background: "var(--bg, #f2f2f7)",
+        color: "var(--text, #1d1d1f)",
+        fontFamily: "'Manrope', -apple-system, sans-serif",
+      }}
+    >
       <SEOHead
         canonicalPath="/e-services"
-        title={lang === "fr" ? "Nos E-services & Solutions Digitales · TECHNOVA" : "Our E-services & Digital Solutions · TECHNOVA"}
-        description={lang === "fr" 
-          ? "Explorez nos services d'accompagnement technique : développement e-commerce Mobile Money, création d'applications SaaS, intégration d'IA et création de tunnels de vente." 
-          : "Explore our technical services: Mobile Money e-commerce development, SaaS apps creation, AI integrations, and sales funnels."}
+        title={
+          lang === "fr"
+            ? "Nos E-services & Solutions Digitales · TECHNOVA"
+            : "Our E-services & Digital Solutions · TECHNOVA"
+        }
+        description={
+          lang === "fr"
+            ? "Explorez nos services d'accompagnement technique : développement e-commerce Mobile Money, création d'applications SaaS, intégration d'IA et création de tunnels de vente."
+            : "Explore our technical services: Mobile Money e-commerce development, SaaS apps creation, AI integrations, and sales funnels."
+        }
       />
       <Header />
 
@@ -220,11 +280,24 @@ const EServices = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-[color:var(--text)] font-display leading-[1.15] mb-6" style={{ fontFamily: "'Outfit', sans-serif" }}>
+            <h1
+              className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-[color:var(--text)] font-display leading-[1.15] mb-6"
+              style={{ fontFamily: "'Outfit', sans-serif" }}
+            >
               {lang === "fr" ? (
-                <>Des Services Digitaux de <span className="bg-gradient-to-r from-blue-500 to-indigo-500 bg-clip-text text-transparent">Haute Qualité</span></>
+                <>
+                  Des Services Digitaux de{" "}
+                  <span className="bg-gradient-to-r from-blue-500 to-indigo-500 bg-clip-text text-transparent">
+                    Haute Qualité
+                  </span>
+                </>
               ) : (
-                <>High-Quality <span className="bg-gradient-to-r from-blue-500 to-indigo-500 bg-clip-text text-transparent">Digital Services</span></>
+                <>
+                  High-Quality{" "}
+                  <span className="bg-gradient-to-r from-blue-500 to-indigo-500 bg-clip-text text-transparent">
+                    Digital Services
+                  </span>
+                </>
               )}
             </h1>
             <p className="text-base sm:text-lg text-[color:var(--text-secondary)] leading-relaxed max-w-xl mx-auto mb-10">
@@ -234,13 +307,17 @@ const EServices = () => {
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <button
-                onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
+                onClick={() =>
+                  document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })
+                }
                 className="px-6 py-3 rounded-full text-sm font-bold bg-[color:var(--blue)] text-white shadow-lg hover:shadow-blue-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
               >
                 {lang === "fr" ? "Lancer un projet" : "Start a project"}
               </button>
               <button
-                onClick={() => document.getElementById("skills")?.scrollIntoView({ behavior: "smooth" })}
+                onClick={() =>
+                  document.getElementById("skills")?.scrollIntoView({ behavior: "smooth" })
+                }
                 className="px-6 py-3 rounded-full text-sm font-semibold border border-[color:var(--border)] bg-[color:var(--surface)] text-[color:var(--text)] hover:bg-[color:var(--surface-strong)] transition-all duration-200"
               >
                 {lang === "fr" ? "Découvrir nos compétences" : "Explore our skills"}
@@ -257,8 +334,13 @@ const EServices = () => {
             <span className="text-xs uppercase tracking-widest text-[color:var(--blue)] font-bold mb-3 block">
               {lang === "fr" ? "Nos Compétences" : "Our Competencies"}
             </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-[color:var(--text)]" style={{ fontFamily: "'Outfit', sans-serif" }}>
-              {lang === "fr" ? "Une expertise technique complète" : "A complete technical expertise"}
+            <h2
+              className="text-3xl sm:text-4xl font-extrabold text-[color:var(--text)]"
+              style={{ fontFamily: "'Outfit', sans-serif" }}
+            >
+              {lang === "fr"
+                ? "Une expertise technique complète"
+                : "A complete technical expertise"}
             </h2>
             <p className="mt-4 text-sm text-[color:var(--text-secondary)] leading-relaxed">
               {lang === "fr"
@@ -282,11 +364,18 @@ const EServices = () => {
                   <div className="feature-icon">
                     <IconComponent className="h-6 w-6" />
                   </div>
-                  <h3 className="font-bold text-base mb-3 text-[color:var(--text)]">{skill.title}</h3>
-                  <p className="text-xs text-[color:var(--text-secondary)] leading-relaxed mb-6">{skill.desc}</p>
+                  <h3 className="font-bold text-base mb-3 text-[color:var(--text)]">
+                    {skill.title}
+                  </h3>
+                  <p className="text-xs text-[color:var(--text-secondary)] leading-relaxed mb-6">
+                    {skill.desc}
+                  </p>
                   <div className="flex flex-wrap gap-1.5 pt-2 border-t border-[color:var(--divider)]">
-                    {skill.technologies.map(tech => (
-                      <span key={tech} className="px-2 py-0.5 rounded bg-[color:var(--blue-soft)] text-[color:var(--blue)] font-mono text-[10px] font-semibold">
+                    {skill.technologies.map((tech) => (
+                      <span
+                        key={tech}
+                        className="px-2 py-0.5 rounded bg-[color:var(--blue-soft)] text-[color:var(--blue)] font-mono text-[10px] font-semibold"
+                      >
                         {tech}
                       </span>
                     ))}
@@ -305,8 +394,13 @@ const EServices = () => {
             <span className="text-xs uppercase tracking-widest text-[color:var(--blue)] font-bold mb-3 block">
               {lang === "fr" ? "Nos Services" : "Our Services"}
             </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-[color:var(--text)]" style={{ fontFamily: "'Outfit', sans-serif" }}>
-              {lang === "fr" ? "Des offres conçues pour votre croissance" : "Offers designed for your growth"}
+            <h2
+              className="text-3xl sm:text-4xl font-extrabold text-[color:var(--text)]"
+              style={{ fontFamily: "'Outfit', sans-serif" }}
+            >
+              {lang === "fr"
+                ? "Des offres conçues pour votre croissance"
+                : "Offers designed for your growth"}
             </h2>
             <p className="mt-4 text-sm text-[color:var(--text-secondary)] leading-relaxed">
               {lang === "fr"
@@ -331,11 +425,18 @@ const EServices = () => {
                     <div className="h-12 w-12 rounded-2xl bg-[color:var(--blue-soft)] border border-blue-500/10 flex items-center justify-center text-[color:var(--blue)] mb-6">
                       <IconComponent className="h-6 w-6" />
                     </div>
-                    <h3 className="text-lg font-bold text-[color:var(--text)] mb-3">{service.title}</h3>
-                    <p className="text-xs text-[color:var(--text-secondary)] leading-relaxed mb-6">{service.desc}</p>
+                    <h3 className="text-lg font-bold text-[color:var(--text)] mb-3">
+                      {service.title}
+                    </h3>
+                    <p className="text-xs text-[color:var(--text-secondary)] leading-relaxed mb-6">
+                      {service.desc}
+                    </p>
                     <ul className="space-y-3 mb-8">
                       {service.features.map((feature, i) => (
-                        <li key={i} className="flex items-center gap-2.5 text-xs text-[color:var(--text)]">
+                        <li
+                          key={i}
+                          className="flex items-center gap-2.5 text-xs text-[color:var(--text)]"
+                        >
                           <Check className="h-4 w-4 text-green-500 flex-shrink-0" />
                           <span>{feature}</span>
                         </li>
@@ -343,8 +444,12 @@ const EServices = () => {
                     </ul>
                   </div>
                   <div className="pt-6 border-t border-[color:var(--divider)] flex items-center justify-between">
-                    <span className="text-xs text-[color:var(--text-secondary)] font-medium">{lang === "fr" ? "Investissement" : "Investment"}</span>
-                    <span className="text-sm font-extrabold text-[color:var(--blue)]">{service.price}</span>
+                    <span className="text-xs text-[color:var(--text-secondary)] font-medium">
+                      {lang === "fr" ? "Investissement" : "Investment"}
+                    </span>
+                    <span className="text-sm font-extrabold text-[color:var(--blue)]">
+                      {service.price}
+                    </span>
                   </div>
                 </motion.div>
               );
@@ -360,7 +465,10 @@ const EServices = () => {
             <span className="text-xs uppercase tracking-widest text-[color:var(--blue)] font-bold mb-3 block">
               {lang === "fr" ? "Nos Réalisations" : "Our Completed Projects"}
             </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-[color:var(--text)]" style={{ fontFamily: "'Outfit', sans-serif" }}>
+            <h2
+              className="text-3xl sm:text-4xl font-extrabold text-[color:var(--text)]"
+              style={{ fontFamily: "'Outfit', sans-serif" }}
+            >
               {lang === "fr" ? "Découvrez nos derniers projets" : "Discover our latest projects"}
             </h2>
             <p className="mt-4 text-sm text-[color:var(--text-secondary)] leading-relaxed">
@@ -381,18 +489,29 @@ const EServices = () => {
                 className="course-card"
               >
                 <div className="course-img-wrap h-52">
-                  <img src={project.image} alt={project.title} className="w-full h-full object-cover" />
+                  <img
+                    src={project.image}
+                    alt={project.title}
+                    className="w-full h-full object-cover"
+                  />
                   <span className="course-badge">{project.category}</span>
                 </div>
                 <div className="course-body flex-1 flex flex-col justify-between">
                   <div>
-                    <h3 className="font-bold text-base mb-2 text-[color:var(--text)]">{project.title}</h3>
-                    <p className="text-xs text-[color:var(--text-secondary)] leading-relaxed mb-6">{project.desc}</p>
+                    <h3 className="font-bold text-base mb-2 text-[color:var(--text)]">
+                      {project.title}
+                    </h3>
+                    <p className="text-xs text-[color:var(--text-secondary)] leading-relaxed mb-6">
+                      {project.desc}
+                    </p>
                   </div>
                   <div>
                     <div className="flex flex-wrap gap-1.5 mb-4">
-                      {project.tags.map(tag => (
-                        <span key={tag} className="px-2 py-0.5 rounded bg-muted text-[10px] text-muted-foreground font-mono">
+                      {project.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="px-2 py-0.5 rounded bg-muted text-[10px] text-muted-foreground font-mono"
+                        >
                           {tag}
                         </span>
                       ))}
@@ -411,12 +530,12 @@ const EServices = () => {
                           </>
                         )}
                       </span>
-                      <span className="px-2 py-0.5 rounded bg-green-500/10 text-green-600 font-semibold">{project.stats}</span>
+                      <span className="px-2 py-0.5 rounded bg-green-500/10 text-green-600 font-semibold">
+                        {project.stats}
+                      </span>
                     </div>
                     {project.upcoming ? (
-                      <div
-                        className="mt-4 flex items-center justify-center gap-1.5 w-full px-4 py-2.5 text-xs font-bold rounded-xl bg-muted text-muted-foreground opacity-60 cursor-not-allowed"
-                      >
+                      <div className="mt-4 flex items-center justify-center gap-1.5 w-full px-4 py-2.5 text-xs font-bold rounded-xl bg-muted text-muted-foreground opacity-60 cursor-not-allowed">
                         {lang === "fr" ? "Bientôt disponible" : "Coming soon"}
                       </div>
                     ) : (
@@ -442,14 +561,16 @@ const EServices = () => {
       <section id="contact" className="py-24">
         <div className="container mx-auto px-4 max-w-5xl">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-            
             {/* Contact Info (Left) */}
             <div className="lg:col-span-5 space-y-8">
               <div>
                 <span className="text-xs uppercase tracking-widest text-[color:var(--blue)] font-bold mb-3 block">
                   {lang === "fr" ? "Coordonnées" : "Contact Details"}
                 </span>
-                <h2 className="text-3xl font-extrabold text-[color:var(--text)] leading-tight" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                <h2
+                  className="text-3xl font-extrabold text-[color:var(--text)] leading-tight"
+                  style={{ fontFamily: "'Outfit', sans-serif" }}
+                >
                   {lang === "fr" ? "Discutons de votre projet" : "Let's discuss your project"}
                 </h2>
                 <p className="mt-4 text-xs sm:text-sm text-[color:var(--text-secondary)] leading-relaxed">
@@ -460,21 +581,25 @@ const EServices = () => {
               </div>
 
               <div className="space-y-4">
-                <a 
-                  href="mailto:support@technovalearning.com" 
+                <a
+                  href="mailto:support@technovalearning.com"
                   className="flex items-center gap-4 p-4 rounded-2xl bg-[color:var(--surface)] hover:bg-[color:var(--surface-strong)] border border-[color:var(--border)] transition-all"
                 >
                   <div className="h-10 w-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-500">
                     <Mail className="h-5 w-5" />
                   </div>
                   <div>
-                    <div className="text-[10px] text-[color:var(--text-secondary)] uppercase tracking-wider font-bold">{lang === "fr" ? "Écrivez-nous" : "Email us"}</div>
-                    <div className="text-xs sm:text-sm font-semibold text-[color:var(--text)]">support@technovalearning.com</div>
+                    <div className="text-[10px] text-[color:var(--text-secondary)] uppercase tracking-wider font-bold">
+                      {lang === "fr" ? "Écrivez-nous" : "Email us"}
+                    </div>
+                    <div className="text-xs sm:text-sm font-semibold text-[color:var(--text)]">
+                      support@technovalearning.com
+                    </div>
                   </div>
                 </a>
 
-                <a 
-                  href="https://wa.me/22947883735" 
+                <a
+                  href="https://wa.me/22947883735"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-4 p-4 rounded-2xl bg-[color:var(--surface)] hover:bg-[color:var(--surface-strong)] border border-[color:var(--border)] transition-all"
@@ -483,7 +608,9 @@ const EServices = () => {
                     <Phone className="h-5 w-5" />
                   </div>
                   <div>
-                    <div className="text-[10px] text-[color:var(--text-secondary)] uppercase tracking-wider font-bold">{lang === "fr" ? "WhatsApp direct" : "WhatsApp Chat"}</div>
+                    <div className="text-[10px] text-[color:var(--text-secondary)] uppercase tracking-wider font-bold">
+                      {lang === "fr" ? "WhatsApp direct" : "WhatsApp Chat"}
+                    </div>
                   </div>
                 </a>
               </div>
@@ -491,7 +618,7 @@ const EServices = () => {
 
             {/* Contact Form (Right) */}
             <div className="lg:col-span-7">
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, y: 15 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -500,7 +627,9 @@ const EServices = () => {
                 <form onSubmit={handleSubmit} className="space-y-5">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <label className="text-xs font-semibold text-[color:var(--text)] pl-1">{lang === "fr" ? "Nom complet *" : "Full name *"}</label>
+                      <label className="text-xs font-semibold text-[color:var(--text)] pl-1">
+                        {lang === "fr" ? "Nom complet *" : "Full name *"}
+                      </label>
                       <input
                         type="text"
                         name="name"
@@ -512,7 +641,9 @@ const EServices = () => {
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-xs font-semibold text-[color:var(--text)] pl-1">{lang === "fr" ? "Email *" : "Email *"}</label>
+                      <label className="text-xs font-semibold text-[color:var(--text)] pl-1">
+                        {lang === "fr" ? "Email *" : "Email *"}
+                      </label>
                       <input
                         type="email"
                         name="email"
@@ -526,30 +657,54 @@ const EServices = () => {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-xs font-semibold text-[color:var(--text)] pl-1">{lang === "fr" ? "Service concerné" : "Project Service"}</label>
+                    <label className="text-xs font-semibold text-[color:var(--text)] pl-1">
+                      {lang === "fr" ? "Service concerné" : "Project Service"}
+                    </label>
                     <select
                       name="service"
                       value={formData.service}
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 rounded-xl border border-[color:var(--border)] bg-[color:var(--bg)] text-xs text-[color:var(--text)] focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                     >
-                      <option value="ecommerce">{lang === "fr" ? "E-commerce (Mobile Money)" : "E-commerce (Mobile Money)"}</option>
-                      <option value="saas">{lang === "fr" ? "Développement SaaS sur mesure" : "Custom SaaS Development"}</option>
-                      <option value="landing">{lang === "fr" ? "Landing Page / Tunnel de vente" : "Landing Page / Sales Funnel"}</option>
-                      <option value="ai-automation">{lang === "fr" ? "Intégration d'IA & Automatisation" : "AI Integration & Automation"}</option>
-                      <option value="other">{lang === "fr" ? "Autre demande" : "Other request"}</option>
+                      <option value="ecommerce">
+                        {lang === "fr" ? "E-commerce (Mobile Money)" : "E-commerce (Mobile Money)"}
+                      </option>
+                      <option value="saas">
+                        {lang === "fr"
+                          ? "Développement SaaS sur mesure"
+                          : "Custom SaaS Development"}
+                      </option>
+                      <option value="landing">
+                        {lang === "fr"
+                          ? "Landing Page / Tunnel de vente"
+                          : "Landing Page / Sales Funnel"}
+                      </option>
+                      <option value="ai-automation">
+                        {lang === "fr"
+                          ? "Intégration d'IA & Automatisation"
+                          : "AI Integration & Automation"}
+                      </option>
+                      <option value="other">
+                        {lang === "fr" ? "Autre demande" : "Other request"}
+                      </option>
                     </select>
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-xs font-semibold text-[color:var(--text)] pl-1">{lang === "fr" ? "Message *" : "Message *"}</label>
+                    <label className="text-xs font-semibold text-[color:var(--text)] pl-1">
+                      {lang === "fr" ? "Message *" : "Message *"}
+                    </label>
                     <textarea
                       name="message"
                       value={formData.message}
                       onChange={handleInputChange}
                       required
                       rows={5}
-                      placeholder={lang === "fr" ? "Décrivez brièvement votre projet ou vos besoins..." : "Briefly describe your project or needs..."}
+                      placeholder={
+                        lang === "fr"
+                          ? "Décrivez brièvement votre projet ou vos besoins..."
+                          : "Briefly describe your project or needs..."
+                      }
                       className="w-full px-4 py-3 rounded-xl border border-[color:var(--border)] bg-[color:var(--bg)] text-xs text-[color:var(--text)] focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                     />
                   </div>
@@ -574,7 +729,6 @@ const EServices = () => {
                 </form>
               </motion.div>
             </div>
-            
           </div>
         </div>
       </section>

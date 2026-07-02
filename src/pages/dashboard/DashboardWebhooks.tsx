@@ -1,10 +1,27 @@
 import { useState, useEffect } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
-import { Webhook, Plus, Trash2, Loader2, Eye, CheckCircle2, XCircle, RefreshCw, Copy } from "lucide-react";
+import {
+  Webhook,
+  Plus,
+  Trash2,
+  Loader2,
+  Eye,
+  CheckCircle2,
+  XCircle,
+  RefreshCw,
+  Copy,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
@@ -36,11 +53,27 @@ interface WebhookLog {
 }
 
 const EVENT_OPTIONS = [
-  { value: "successful.sale", label: "Vente réussie", description: "Quand un paiement est complété" },
+  {
+    value: "successful.sale",
+    label: "Vente réussie",
+    description: "Quand un paiement est complété",
+  },
   { value: "failed.sale", label: "Vente échouée", description: "Quand un paiement échoue" },
-  { value: "license.issued", label: "Licence émise", description: "Quand une licence est générée après achat" },
-  { value: "license.activated", label: "Licence activée", description: "Quand une licence est activée sur un device" },
-  { value: "payout.success", label: "Retrait réussi", description: "Quand un retrait est complété" },
+  {
+    value: "license.issued",
+    label: "Licence émise",
+    description: "Quand une licence est générée après achat",
+  },
+  {
+    value: "license.activated",
+    label: "Licence activée",
+    description: "Quand une licence est activée sur un device",
+  },
+  {
+    value: "payout.success",
+    label: "Retrait réussi",
+    description: "Quand un retrait est complété",
+  },
   { value: "payout.failed", label: "Retrait échoué", description: "Quand un retrait échoue" },
 ];
 
@@ -143,7 +176,10 @@ const DashboardWebhooks = () => {
   };
 
   const toggleWebhook = async (id: string, active: boolean) => {
-    await supabase.from("webhooks").update({ is_active: active } as any).eq("id", id);
+    await supabase
+      .from("webhooks")
+      .update({ is_active: active } as any)
+      .eq("id", id);
     setWebhooks((prev) => prev.map((w) => (w.id === id ? { ...w, is_active: active } : w)));
     toast.success(active ? "Webhook activé" : "Webhook désactivé");
   };
@@ -160,7 +196,7 @@ const DashboardWebhooks = () => {
 
   const toggleEvent = (event: string) => {
     setSelectedEvents((prev) =>
-      prev.includes(event) ? prev.filter((e) => e !== event) : [...prev, event]
+      prev.includes(event) ? prev.filter((e) => e !== event) : [...prev, event],
     );
   };
 
@@ -175,7 +211,8 @@ const DashboardWebhooks = () => {
         <div>
           <h1 className="text-2xl font-bold text-foreground">Webhooks</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Recevez des notifications en temps réel quand des événements se produisent dans votre boutique
+            Recevez des notifications en temps réel quand des événements se produisent dans votre
+            boutique
           </p>
         </div>
 
@@ -192,7 +229,13 @@ const DashboardWebhooks = () => {
           {/* Webhooks tab */}
           <TabsContent value="webhooks" className="space-y-4">
             <div className="flex justify-end">
-              <Dialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) resetForm(); }}>
+              <Dialog
+                open={open}
+                onOpenChange={(v) => {
+                  setOpen(v);
+                  if (!v) resetForm();
+                }}
+              >
                 <DialogTrigger asChild>
                   <Button size="sm" className="gap-2 rounded-full">
                     <Plus className="h-4 w-4" /> Nouveau webhook
@@ -226,7 +269,9 @@ const DashboardWebhooks = () => {
                       </p>
                     </div>
                     <div>
-                      <label className="text-sm font-medium mb-1 block">Secret de signature (optionnel)</label>
+                      <label className="text-sm font-medium mb-1 block">
+                        Secret de signature (optionnel)
+                      </label>
                       <div className="flex gap-2">
                         <Input
                           value={secret}
@@ -273,7 +318,9 @@ const DashboardWebhooks = () => {
                   <DialogFooter>
                     <Button
                       onClick={createWebhook}
-                      disabled={saving || !name.trim() || !url.trim() || selectedEvents.length === 0}
+                      disabled={
+                        saving || !name.trim() || !url.trim() || selectedEvents.length === 0
+                      }
                       className="w-full"
                     >
                       {saving && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
@@ -292,15 +339,14 @@ const DashboardWebhooks = () => {
               <div className="text-center py-12 text-muted-foreground">
                 <Webhook className="h-10 w-10 mx-auto mb-3 opacity-30" />
                 <p className="text-sm">Aucun webhook configuré</p>
-                <p className="text-xs mt-1">Créez un webhook pour recevoir des notifications en temps réel</p>
+                <p className="text-xs mt-1">
+                  Créez un webhook pour recevoir des notifications en temps réel
+                </p>
               </div>
             ) : (
               <div className="space-y-3">
                 {webhooks.map((wh) => (
-                  <div
-                    key={wh.id}
-                    className="p-4 rounded-xl border border-border bg-card"
-                  >
+                  <div key={wh.id} className="p-4 rounded-xl border border-border bg-card">
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex items-start gap-3 min-w-0">
                         <div
@@ -328,9 +374,7 @@ const DashboardWebhooks = () => {
                               className="flex items-center gap-1 mt-2 text-[10px] text-muted-foreground hover:text-foreground transition-colors"
                             >
                               <Copy className="h-3 w-3" />
-                              <span className="font-mono">
-                                {wh.secret.substring(0, 10)}...
-                              </span>
+                              <span className="font-mono">{wh.secret.substring(0, 10)}...</span>
                             </button>
                           )}
                         </div>
@@ -369,9 +413,7 @@ const DashboardWebhooks = () => {
             {!selectedWebhookId ? (
               <div className="text-center py-12 text-muted-foreground">
                 <Eye className="h-10 w-10 mx-auto mb-3 opacity-30" />
-                <p className="text-sm">
-                  Sélectionnez un webhook pour voir ses logs
-                </p>
+                <p className="text-sm">Sélectionnez un webhook pour voir ses logs</p>
                 {webhooks.length > 0 && (
                   <div className="flex flex-wrap gap-2 justify-center mt-4">
                     {webhooks.map((wh) => (
@@ -433,7 +475,10 @@ const DashboardWebhooks = () => {
                               {EVENT_OPTIONS.find((o) => o.value === log.event)?.label || log.event}
                             </p>
                             <p className="text-xs text-muted-foreground">
-                              {log.response_status ? `HTTP ${log.response_status}` : "Pas de réponse"} •{" "}
+                              {log.response_status
+                                ? `HTTP ${log.response_status}`
+                                : "Pas de réponse"}{" "}
+                              •{" "}
                               {new Date(log.created_at).toLocaleDateString("fr", {
                                 day: "numeric",
                                 month: "short",
@@ -443,7 +488,10 @@ const DashboardWebhooks = () => {
                             </p>
                           </div>
                         </div>
-                        <Badge variant={log.success ? "default" : "destructive"} className="text-[10px]">
+                        <Badge
+                          variant={log.success ? "default" : "destructive"}
+                          className="text-[10px]"
+                        >
                           {log.success ? "OK" : "Erreur"}
                         </Badge>
                       </div>
@@ -472,7 +520,8 @@ const DashboardWebhooks = () => {
                       <div>
                         <p className="text-muted-foreground text-xs">Événement</p>
                         <p className="font-medium">
-                          {EVENT_OPTIONS.find((o) => o.value === logDetail.event)?.label || logDetail.event}
+                          {EVENT_OPTIONS.find((o) => o.value === logDetail.event)?.label ||
+                            logDetail.event}
                         </p>
                       </div>
                       <div>

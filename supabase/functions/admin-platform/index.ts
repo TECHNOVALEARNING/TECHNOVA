@@ -45,8 +45,14 @@ serve(async (req) => {
 
     // ── DASHBOARD STATS ──
     if (action === "stats") {
-      const { data: totalUsers } = await supabaseAdmin.from("profiles").select("id", { count: "exact", head: true }).gte("created_at", "2026-06-05T00:00:00Z");
-      const { count: usersCount } = await supabaseAdmin.from("profiles").select("id", { count: "exact", head: true }).gte("created_at", "2026-06-05T00:00:00Z");
+      const { data: totalUsers } = await supabaseAdmin
+        .from("profiles")
+        .select("id", { count: "exact", head: true })
+        .gte("created_at", "2026-06-05T00:00:00Z");
+      const { count: usersCount } = await supabaseAdmin
+        .from("profiles")
+        .select("id", { count: "exact", head: true })
+        .gte("created_at", "2026-06-05T00:00:00Z");
 
       const { data: orders } = await supabaseAdmin
         .from("orders")
@@ -54,12 +60,20 @@ serve(async (req) => {
         .eq("status", "completed");
 
       const totalRevenue = orders?.reduce((s, o) => s + Number(o.amount), 0) || 0;
-      const { data: feeRow } = await supabaseAdmin.from("platform_fees").select("value_pct").eq("key", "technova_commission_pct").maybeSingle();
+      const { data: feeRow } = await supabaseAdmin
+        .from("platform_fees")
+        .select("value_pct")
+        .eq("key", "technova_commission_pct")
+        .maybeSingle();
       const commissionPct = Number(feeRow?.value_pct ?? 5) / 100;
       const totalCommissions = totalRevenue * commissionPct;
 
-      const { count: productsCount } = await supabaseAdmin.from("products").select("id", { count: "exact", head: true });
-      const { count: storesCount } = await supabaseAdmin.from("stores").select("id", { count: "exact", head: true });
+      const { count: productsCount } = await supabaseAdmin
+        .from("products")
+        .select("id", { count: "exact", head: true });
+      const { count: storesCount } = await supabaseAdmin
+        .from("stores")
+        .select("id", { count: "exact", head: true });
 
       // Sales by day (last 30 days)
       const thirtyDaysAgo = new Date(Date.now() - 30 * 86400000).toISOString();
@@ -90,21 +104,32 @@ serve(async (req) => {
         .select("id", { count: "exact", head: true })
         .eq("status", "open");
 
-      return new Response(JSON.stringify({
-        usersCount, totalRevenue, totalCommissions,
-        productsCount, storesCount, dailySales,
-        pendingWithdrawals, pendingKyc, openTickets,
-        totalOrders: orders?.length || 0,
-      }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return new Response(
+        JSON.stringify({
+          usersCount,
+          totalRevenue,
+          totalCommissions,
+          productsCount,
+          storesCount,
+          dailySales,
+          pendingWithdrawals,
+          pendingKyc,
+          openTickets,
+          totalOrders: orders?.length || 0,
+        }),
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
+      );
     }
 
     // ── ALL WITHDRAWALS ──
     if (action === "list_users") {
       const { data: profiles } = await supabaseAdmin
         .from("profiles")
-        .select("id, first_name, last_name, display_name, avatar_url, phone, country_code, store_slug, created_at")
+        .select(
+          "id, first_name, last_name, display_name, avatar_url, phone, country_code, store_slug, created_at",
+        )
         .gte("created_at", "2026-06-05T00:00:00Z")
         .order("created_at", { ascending: false });
       return new Response(JSON.stringify({ users: profiles || [] }), {
@@ -121,17 +146,20 @@ serve(async (req) => {
         .eq("status", "completed")
         .order("created_at", { ascending: false })
         .limit(50);
-        
+
       const { data: withdrawals } = await supabaseAdmin
         .from("withdrawals")
         .select("amount, fee, net_amount, created_at, status, operator")
         .eq("user_id", userId)
         .order("created_at", { ascending: false })
         .limit(50);
-        
-      return new Response(JSON.stringify({ orders: orders || [], withdrawals: withdrawals || [] }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+
+      return new Response(
+        JSON.stringify({ orders: orders || [], withdrawals: withdrawals || [] }),
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
+      );
     }
 
     if (action === "list_withdrawals") {
@@ -142,23 +170,28 @@ serve(async (req) => {
         .limit(200);
 
       // Get profile info for each user
-      const userIds = [...new Set(withdrawals?.map(w => w.user_id) || [])];
+      const userIds = [...new Set(withdrawals?.map((w) => w.user_id) || [])];
       const { data: profiles } = await supabaseAdmin
         .from("profiles")
         .select("id, display_name, first_name, last_name, phone")
         .in("id", userIds);
 
       const profileMap: Record<string, any> = {};
-      profiles?.forEach(p => { profileMap[p.id] = p; });
-
-      return new Response(JSON.stringify({
-        withdrawals: withdrawals?.map(w => ({
-          ...w,
-          profile: profileMap[w.user_id] || null,
-        })),
-      }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      profiles?.forEach((p) => {
+        profileMap[p.id] = p;
       });
+
+      return new Response(
+        JSON.stringify({
+          withdrawals: withdrawals?.map((w) => ({
+            ...w,
+            profile: profileMap[w.user_id] || null,
+          })),
+        }),
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
+      );
     }
 
     // ── UPDATE WITHDRAWAL STATUS ──
@@ -167,43 +200,60 @@ serve(async (req) => {
       const { withdrawalId, status } = params;
       const { error } = await supabaseAdmin
         .from("withdrawals")
-        .update({ status, processed_at: status === "completed" || status === "rejected" ? new Date().toISOString() : null })
+        .update({
+          status,
+          processed_at:
+            status === "completed" || status === "rejected" ? new Date().toISOString() : null,
+        })
         .eq("id", withdrawalId);
       if (error) throw error;
 
       // Get withdrawal + user info
-      const { data: w } = await supabaseAdmin.from("withdrawals").select("user_id, amount, net_amount, operator, phone_number, fee, status").eq("id", withdrawalId).single();
+      const { data: w } = await supabaseAdmin
+        .from("withdrawals")
+        .select("user_id, amount, net_amount, operator, phone_number, fee, status")
+        .eq("id", withdrawalId)
+        .single();
       if (w) {
         // In-app notification
         await supabaseAdmin.from("notifications").insert({
           user_id: w.user_id,
           title: status === "completed" ? "Retrait approuvé ✅" : "Retrait rejeté ❌",
-          message: status === "completed"
-            ? `Votre retrait de ${w.net_amount} FCFA a été approuvé et sera traité sous peu.`
-            : `Votre retrait de ${w.net_amount} FCFA a été rejeté. Veuillez contacter le support.`,
+          message:
+            status === "completed"
+              ? `Votre retrait de ${w.net_amount} FCFA a été approuvé et sera traité sous peu.`
+              : `Votre retrait de ${w.net_amount} FCFA a été rejeté. Veuillez contacter le support.`,
           type: status === "completed" ? "success" : "error",
         });
 
         // Email notification
         if (RESEND_API_KEY) {
-          const { data: { user: sellerUser } } = await supabaseAdmin.auth.admin.getUserById(w.user_id);
-          const { data: profile } = await supabaseAdmin.from("profiles").select("display_name").eq("id", w.user_id).single();
+          const {
+            data: { user: sellerUser },
+          } = await supabaseAdmin.auth.admin.getUserById(w.user_id);
+          const { data: profile } = await supabaseAdmin
+            .from("profiles")
+            .select("display_name")
+            .eq("id", w.user_id)
+            .single();
           const sellerName = profile?.display_name || "Créateur";
-          const logoUrl = "https://nexozjpjbhqfjplrogvz.supabase.co/storage/v1/object/public/store-assets/brand/technova-logo.png";
+          const logoUrl =
+            "https://nexozjpjbhqfjplrogvz.supabase.co/storage/v1/object/public/store-assets/brand/technova-logo.png";
 
           if (sellerUser?.email) {
             const isApproved = status === "completed";
             const emailHtml = `
               <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-                <div style="background: linear-gradient(135deg, ${isApproved ? '#10b981, #059669' : '#ef4444, #dc2626'}); padding: 30px; border-radius: 12px 12px 0 0; text-align: center;">
+                <div style="background: linear-gradient(135deg, ${isApproved ? "#10b981, #059669" : "#ef4444, #dc2626"}); padding: 30px; border-radius: 12px 12px 0 0; text-align: center;">
                   <img src="${logoUrl}" alt="Technova" width="48" height="48" style="display:block;margin:0 auto 12px;border-radius:10px;" />
-                  <h1 style="color: #ffffff; margin: 0; font-size: 24px;">${isApproved ? '✅ Retrait approuvé' : '❌ Retrait rejeté'}</h1>
+                  <h1 style="color: #ffffff; margin: 0; font-size: 24px;">${isApproved ? "✅ Retrait approuvé" : "❌ Retrait rejeté"}</h1>
                 </div>
                 <div style="background: #ffffff; padding: 30px; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 12px 12px;">
                   <p style="color: #374151; font-size: 16px;">Bonjour <strong>${sellerName}</strong>,</p>
-                  <p style="color: #374151; font-size: 16px;">${isApproved
-                    ? 'Votre demande de retrait a été approuvée et sera traitée sous peu.'
-                    : 'Votre demande de retrait a été rejetée. Veuillez contacter le support pour plus d\'informations.'
+                  <p style="color: #374151; font-size: 16px;">${
+                    isApproved
+                      ? "Votre demande de retrait a été approuvée et sera traitée sous peu."
+                      : "Votre demande de retrait a été rejetée. Veuillez contacter le support pour plus d'informations."
                   }</p>
                   <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; margin: 20px 0;">
                     <p style="margin: 5px 0; color: #374151;"><strong>Montant :</strong> ${w.net_amount} FCFA</p>
@@ -218,11 +268,16 @@ serve(async (req) => {
 
             const res = await fetch("https://api.resend.com/emails", {
               method: "POST",
-              headers: { "Content-Type": "application/json", Authorization: `Bearer ${RESEND_API_KEY}` },
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${RESEND_API_KEY}`,
+              },
               body: JSON.stringify({
                 from: "Technova <noreply@mail.technova.com>",
                 to: [sellerUser.email],
-                subject: isApproved ? `✅ Retrait de ${w.net_amount} FCFA approuvé` : `❌ Retrait de ${w.net_amount} FCFA rejeté`,
+                subject: isApproved
+                  ? `✅ Retrait de ${w.net_amount} FCFA approuvé`
+                  : `❌ Retrait de ${w.net_amount} FCFA rejeté`,
                 html: emailHtml,
               }),
             });
@@ -275,7 +330,8 @@ serve(async (req) => {
       });
       if (error) throw error;
 
-      await supabaseAdmin.from("support_conversations")
+      await supabaseAdmin
+        .from("support_conversations")
         .update({ updated_at: new Date().toISOString() })
         .eq("id", conversationId);
 
@@ -287,7 +343,8 @@ serve(async (req) => {
     // ── CLOSE CONVERSATION ──
     if (action === "close_conversation") {
       const { conversationId } = params;
-      await supabaseAdmin.from("support_conversations")
+      await supabaseAdmin
+        .from("support_conversations")
         .update({ status: "closed", updated_at: new Date().toISOString() })
         .eq("id", conversationId);
 
@@ -304,23 +361,28 @@ serve(async (req) => {
         .order("created_at", { ascending: false })
         .limit(200);
 
-      const creatorIds = [...new Set(products?.map(p => p.creator_id) || [])];
+      const creatorIds = [...new Set(products?.map((p) => p.creator_id) || [])];
       const { data: profiles } = await supabaseAdmin
         .from("profiles")
         .select("id, display_name, first_name, last_name")
         .in("id", creatorIds);
 
       const profileMap: Record<string, any> = {};
-      profiles?.forEach(p => { profileMap[p.id] = p; });
-
-      return new Response(JSON.stringify({
-        products: products?.map(p => ({
-          ...p,
-          creator: profileMap[p.creator_id] || null,
-        })),
-      }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      profiles?.forEach((p) => {
+        profileMap[p.id] = p;
       });
+
+      return new Response(
+        JSON.stringify({
+          products: products?.map((p) => ({
+            ...p,
+            creator: profileMap[p.creator_id] || null,
+          })),
+        }),
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
+      );
     }
 
     // ── TOGGLE PRODUCT PUBLISH ──
@@ -340,10 +402,7 @@ serve(async (req) => {
     // ── DELETE PRODUCT ──
     if (action === "delete_product") {
       const { productId } = params;
-      const { error } = await supabaseAdmin
-        .from("products")
-        .delete()
-        .eq("id", productId);
+      const { error } = await supabaseAdmin.from("products").delete().eq("id", productId);
       if (error) throw error;
 
       return new Response(JSON.stringify({ success: true }), {
@@ -358,23 +417,28 @@ serve(async (req) => {
         .select("*")
         .order("created_at", { ascending: false });
 
-      const ownerIds = [...new Set(stores?.map(s => s.owner_id) || [])];
+      const ownerIds = [...new Set(stores?.map((s) => s.owner_id) || [])];
       const { data: profiles } = await supabaseAdmin
         .from("profiles")
         .select("id, display_name, first_name, last_name")
         .in("id", ownerIds);
 
       const profileMap: Record<string, any> = {};
-      profiles?.forEach(p => { profileMap[p.id] = p; });
-
-      return new Response(JSON.stringify({
-        stores: stores?.map(s => ({
-          ...s,
-          owner: profileMap[s.owner_id] || null,
-        })),
-      }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      profiles?.forEach((p) => {
+        profileMap[p.id] = p;
       });
+
+      return new Response(
+        JSON.stringify({
+          stores: stores?.map((s) => ({
+            ...s,
+            owner: profileMap[s.owner_id] || null,
+          })),
+        }),
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
+      );
     }
 
     // ── ARCHIVE STORE ──

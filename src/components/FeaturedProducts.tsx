@@ -6,9 +6,8 @@ import ProductCard from "@/components/ProductCard";
 const FeaturedProducts = () => {
   const [activeCategory, setActiveCategory] = useState("all");
 
-  const filtered = activeCategory === "all"
-    ? products
-    : products.filter((p) => p.category === activeCategory);
+  const filtered =
+    activeCategory === "all" ? products : products.filter((p) => p.category === activeCategory);
 
   return (
     <section className="py-20">

@@ -24,7 +24,11 @@ interface Props {
   brandColor?: string;
 }
 
-const StoreProductReviewsAggregated = ({ storeOwnerId, storeSlug, brandColor = "#2563EB" }: Props) => {
+const StoreProductReviewsAggregated = ({
+  storeOwnerId,
+  storeSlug,
+  brandColor = "#2563EB",
+}: Props) => {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [productMap, setProductMap] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
@@ -45,15 +49,16 @@ const StoreProductReviewsAggregated = ({ storeOwnerId, storeSlug, brandColor = "
       setReviews(rs);
       const ids = Array.from(new Set(rs.map((r) => r.product_id)));
       if (ids.length) {
-        const { data: prods } = await supabase
-          .from("products").select("id, title").in("id", ids);
+        const { data: prods } = await supabase.from("products").select("id, title").in("id", ids);
         const map: Record<string, string> = {};
         (prods || []).forEach((p: any) => (map[p.id] = p.title));
         if (!cancelled) setProductMap(map);
       }
       if (!cancelled) setLoading(false);
     })();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [storeOwnerId]);
 
   const verifiedKyc = useCustomersKyc(reviews.map((r) => r.customer_id));
@@ -61,7 +66,12 @@ const StoreProductReviewsAggregated = ({ storeOwnerId, storeSlug, brandColor = "
   const stats = useMemo(() => {
     const total = reviews.length;
     const positive = reviews.filter((r) => r.sentiment === "positive").length;
-    return { total, positive, negative: total - positive, rate: total ? Math.round((positive / total) * 100) : 0 };
+    return {
+      total,
+      positive,
+      negative: total - positive,
+      rate: total ? Math.round((positive / total) * 100) : 0,
+    };
   }, [reviews]);
 
   if (loading) {
@@ -106,15 +116,21 @@ const StoreProductReviewsAggregated = ({ storeOwnerId, storeSlug, brandColor = "
                     {isVerified && <KycBadge size="sm" />}
                     <Badge
                       variant="outline"
-                      className={r.sentiment === "positive"
-                        ? "border-emerald-200 bg-emerald-50 text-emerald-700"
-                        : "border-rose-200 bg-rose-50 text-rose-700"}
+                      className={
+                        r.sentiment === "positive"
+                          ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+                          : "border-rose-200 bg-rose-50 text-rose-700"
+                      }
                     >
                       <Star className="mr-1 h-3 w-3" />
                       {r.sentiment === "positive" ? "Recommande" : "Déçu"}
                     </Badge>
                     <span className="text-[11px] text-muted-foreground">
-                      {new Date(r.created_at).toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric" })}
+                      {new Date(r.created_at).toLocaleDateString("fr-FR", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      })}
                     </span>
                   </div>
                   {productMap[r.product_id] && (
@@ -126,8 +142,12 @@ const StoreProductReviewsAggregated = ({ storeOwnerId, storeSlug, brandColor = "
                       {productMap[r.product_id]}
                     </Link>
                   )}
-                  {r.title && <p className="mt-1 text-sm font-semibold text-foreground">{r.title}</p>}
-                  <p className="mt-1 text-sm leading-6 text-muted-foreground whitespace-pre-wrap">{r.comment}</p>
+                  {r.title && (
+                    <p className="mt-1 text-sm font-semibold text-foreground">{r.title}</p>
+                  )}
+                  <p className="mt-1 text-sm leading-6 text-muted-foreground whitespace-pre-wrap">
+                    {r.comment}
+                  </p>
                 </div>
               </div>
             </article>

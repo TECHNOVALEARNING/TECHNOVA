@@ -1,7 +1,20 @@
 import { Header } from "@/components/site/shared";
 import { Footer } from "@/components/site/shared";
 import { motion } from "framer-motion";
-import { Target, Heart, Globe, Users, Rocket, Lightbulb, ArrowRight, Code, Megaphone, Briefcase, PenTool, CheckCircle } from "lucide-react";
+import {
+  Target,
+  Heart,
+  Globe,
+  Users,
+  Rocket,
+  Lightbulb,
+  ArrowRight,
+  Code,
+  Megaphone,
+  Briefcase,
+  PenTool,
+  CheckCircle,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import SEOHead from "@/components/SEOHead";
@@ -17,17 +30,36 @@ const topicsData = [
 const translations = {
   fr: {
     seoTitle: "À propos de TechNova Learning",
-    seoDesc: "TechNova Learning est une plateforme de formation en ligne dédiée à l'acquisition de compétences numériques. Notre mission : rendre l'éducation de qualité accessible à tous dans le monde entier.",
+    seoDesc:
+      "TechNova Learning est une plateforme de formation en ligne dédiée à l'acquisition de compétences numériques. Notre mission : rendre l'éducation de qualité accessible à tous dans le monde entier.",
     eyebrow: "Pour les apprenants du monde entier",
-    heroTitle: <>À propos de <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400">TechNova Learning</span></>,
-    heroDesc: "Une plateforme de formation en ligne dédiée à l'acquisition de compétences numériques et professionnelles, accessible à tous.",
+    heroTitle: (
+      <>
+        À propos de{" "}
+        <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400">
+          TechNova Learning
+        </span>
+      </>
+    ),
+    heroDesc:
+      "Une plateforme de formation en ligne dédiée à l'acquisition de compétences numériques et professionnelles, accessible à tous.",
     missionTitle: "Notre Mission",
-    missionDesc1: "We believe that everyone deserves access to quality training, regardless of income level, geographical location, or educational background.",
-    missionDesc1Real: "Nous croyons que chaque personne mérite d'accéder à une formation de qualité, quel que soit son niveau de revenus, sa localisation géographique ou son parcours scolaire.",
-    missionDesc2: "TechNova Learning a été conçu pour éliminer les barrières à l'apprentissage numérique, pour tous ceux qui souhaitent acquérir des compétences clés depuis n'importe où.",
+    missionDesc1:
+      "We believe that everyone deserves access to quality training, regardless of income level, geographical location, or educational background.",
+    missionDesc1Real:
+      "Nous croyons que chaque personne mérite d'accéder à une formation de qualité, quel que soit son niveau de revenus, sa localisation géographique ou son parcours scolaire.",
+    missionDesc2:
+      "TechNova Learning a été conçu pour éliminer les barrières à l'apprentissage numérique, pour tous ceux qui souhaitent acquérir des compétences clés depuis n'importe où.",
     visionTitle: "Notre Vision",
-    visionDesc1: <>D'ici 2030, notre objectif est de <strong>former 1 million d'apprenants francophones</strong> aux compétences numériques du futur.</>,
-    visionDesc2: "Nous voulons être la référence absolue en matière de formation en ligne au niveau mondial, en créant le pont entre le talent et les opportunités professionnelles.",
+    visionDesc1: (
+      <>
+        D'ici 2030, notre objectif est de{" "}
+        <strong>former 1 million d'apprenants francophones</strong> aux compétences numériques du
+        futur.
+      </>
+    ),
+    visionDesc2:
+      "Nous voulons être la référence absolue en matière de formation en ligne au niveau mondial, en créant le pont entre le talent et les opportunités professionnelles.",
     teachTitle: "Ce que nous enseignons",
     teachDesc: "Des parcours structurés sur les métiers les plus demandés du marché.",
     webTitle: "Développement Web",
@@ -39,7 +71,8 @@ const translations = {
     designTitle: "Design Graphique",
     designDesc: "Figma, Adobe, identité visuelle, UI/UX",
     approachTitle: "Notre Approche Pédagogique",
-    approachDesc: "Nous ne nous contentons pas de vous donner des vidéos à regarder. Nous vous accompagnons pour que vous deveniez opérationnel.",
+    approachDesc:
+      "Nous ne nous contentons pas de vous donner des vidéos à regarder. Nous vous accompagnons pour que vous deveniez opérationnel.",
     approach1Title: "Apprentissage par la pratique",
     approach1Desc: "Des projets réels à la fin de chaque module pour construire un portfolio.",
     approach2Title: "Formateurs experts",
@@ -51,30 +84,50 @@ const translations = {
     communityTitle: "Communauté Active",
     communityDesc: "Accédez à un forum, du mentorat, et des groupes d'échanges dynamiques.",
     freemiumTitle: "Notre Modèle Freemium",
-    freemiumDesc: "TechNova Learning fonctionne sur un modèle freemium : de nombreux cours sont entièrement gratuits, et les apprenants peuvent accéder aux formations certifiantes premium à des tarifs très accessibles.",
-    freemiumQuote: "\"Nous pensons que la première barrière à franchir est celle de l'accès, pas du prix.\"",
+    freemiumDesc:
+      "TechNova Learning fonctionne sur un modèle freemium : de nombreux cours sont entièrement gratuits, et les apprenants peuvent accéder aux formations certifiantes premium à des tarifs très accessibles.",
+    freemiumQuote:
+      '"Nous pensons que la première barrière à franchir est celle de l\'accès, pas du prix."',
     ctaTitle: "Prêt à transformer votre carrière ?",
-    ctaDesc: "Rejoignez des milliers d'apprenants et commencez à acquérir les compétences numériques de demain, dès aujourd'hui.",
+    ctaDesc:
+      "Rejoignez des milliers d'apprenants et commencez à acquérir les compétences numériques de demain, dès aujourd'hui.",
     ctaBtn: "Commencer gratuitement",
     statFreemium: "Freemium",
     statFreemiumLabel: "Accès gratuit ou à petit prix",
     statPractice: "100%",
     statPracticeLabel: "Orienté Pratique & Projets",
     statFlex: "24/7",
-    statFlexLabel: "Apprentissage à votre rythme"
+    statFlexLabel: "Apprentissage à votre rythme",
   },
   en: {
     seoTitle: "About TechNova Learning",
-    seoDesc: "TechNova Learning is an online training platform dedicated to the acquisition of digital skills. Our mission: make quality education accessible to everyone worldwide.",
+    seoDesc:
+      "TechNova Learning is an online training platform dedicated to the acquisition of digital skills. Our mission: make quality education accessible to everyone worldwide.",
     eyebrow: "For learners worldwide",
-    heroTitle: <>About <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400">TechNova Learning</span></>,
-    heroDesc: "An online training platform dedicated to the acquisition of digital and professional skills, accessible to everyone.",
+    heroTitle: (
+      <>
+        About{" "}
+        <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400">
+          TechNova Learning
+        </span>
+      </>
+    ),
+    heroDesc:
+      "An online training platform dedicated to the acquisition of digital and professional skills, accessible to everyone.",
     missionTitle: "Our Mission",
-    missionDesc1Real: "We believe that everyone deserves access to quality training, regardless of income level, geographical location, or educational background.",
-    missionDesc2: "TechNova Learning was designed to eliminate barriers to digital learning, for anyone wishing to acquire key skills from anywhere.",
+    missionDesc1Real:
+      "We believe that everyone deserves access to quality training, regardless of income level, geographical location, or educational background.",
+    missionDesc2:
+      "TechNova Learning was designed to eliminate barriers to digital learning, for anyone wishing to acquire key skills from anywhere.",
     visionTitle: "Our Vision",
-    visionDesc1: <>By 2030, our goal is to <strong>train 1 million French-speaking learners</strong> in the digital skills of the future.</>,
-    visionDesc2: "We want to be the absolute benchmark for online training globally, bridging the gap between talent and professional opportunities.",
+    visionDesc1: (
+      <>
+        By 2030, our goal is to <strong>train 1 million French-speaking learners</strong> in the
+        digital skills of the future.
+      </>
+    ),
+    visionDesc2:
+      "We want to be the absolute benchmark for online training globally, bridging the gap between talent and professional opportunities.",
     teachTitle: "What we teach",
     teachDesc: "Structured pathways in the most in-demand fields of the market.",
     webTitle: "Web Development",
@@ -86,7 +139,8 @@ const translations = {
     designTitle: "Graphic Design",
     designDesc: "Figma, Adobe, visual identity, UI/UX",
     approachTitle: "Our Pedagogical Approach",
-    approachDesc: "We don't just give you videos to watch. We support you so that you become operational.",
+    approachDesc:
+      "We don't just give you videos to watch. We support you so that you become operational.",
     approach1Title: "Learning by doing",
     approach1Desc: "Real projects at the end of each module to build a portfolio.",
     approach2Title: "Expert trainers",
@@ -98,22 +152,26 @@ const translations = {
     communityTitle: "Active Community",
     communityDesc: "Access a forum, mentoring, and dynamic exchange groups.",
     freemiumTitle: "Our Freemium Model",
-    freemiumDesc: "TechNova Learning works on a freemium model: many courses are entirely free, and learners can access premium certifying training at very accessible rates.",
-    freemiumQuote: "\"We believe the first barrier to cross is access, not price.\"",
+    freemiumDesc:
+      "TechNova Learning works on a freemium model: many courses are entirely free, and learners can access premium certifying training at very accessible rates.",
+    freemiumQuote: '"We believe the first barrier to cross is access, not price."',
     ctaTitle: "Ready to transform your career?",
-    ctaDesc: "Join thousands of learners and start acquiring the digital skills of tomorrow, today.",
+    ctaDesc:
+      "Join thousands of learners and start acquiring the digital skills of tomorrow, today.",
     ctaBtn: "Start for free",
     statFreemium: "Freemium",
     statFreemiumLabel: "Free or low-cost access",
     statPractice: "100%",
     statPracticeLabel: "Practice & Project Oriented",
     statFlex: "24/7",
-    statFlexLabel: "Learn at your own pace"
-  }
+    statFlexLabel: "Learn at your own pace",
+  },
 };
 
 const About = () => {
-  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+  const [lang, setLang] = useState(() =>
+    typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
+  );
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -121,15 +179,11 @@ const About = () => {
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
 
-  const t = translations[lang === 'en' ? 'en' : 'fr'];
+  const t = translations[lang === "en" ? "en" : "fr"];
 
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-300 font-sans">
-      <SEOHead 
-        title={t.seoTitle} 
-        description={t.seoDesc} 
-        canonicalPath="/about" 
-      />
+      <SEOHead title={t.seoTitle} description={t.seoDesc} canonicalPath="/about" />
       <Header />
 
       {/* Hero */}
@@ -144,9 +198,7 @@ const About = () => {
             <h1 className="text-4xl md:text-6xl font-extrabold text-foreground mb-6">
               {t.heroTitle}
             </h1>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              {t.heroDesc}
-            </p>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">{t.heroDesc}</p>
           </motion.div>
         </div>
       </section>
@@ -167,9 +219,7 @@ const About = () => {
                 </div>
                 <h2 className="text-3xl font-extrabold text-foreground">{t.missionTitle}</h2>
               </div>
-              <p className="text-muted-foreground leading-relaxed text-lg">
-                {t.missionDesc1Real}
-              </p>
+              <p className="text-muted-foreground leading-relaxed text-lg">{t.missionDesc1Real}</p>
               <p className="text-muted-foreground leading-relaxed text-lg">
                 <strong className="text-foreground">TechNova Learning</strong> {t.missionDesc2}
               </p>
@@ -187,12 +237,8 @@ const About = () => {
                 </div>
                 <h2 className="text-3xl font-extrabold text-foreground">{t.visionTitle}</h2>
               </div>
-              <p className="text-muted-foreground leading-relaxed text-lg">
-                {t.visionDesc1}
-              </p>
-              <p className="text-muted-foreground leading-relaxed text-lg">
-                {t.visionDesc2}
-              </p>
+              <p className="text-muted-foreground leading-relaxed text-lg">{t.visionDesc1}</p>
+              <p className="text-muted-foreground leading-relaxed text-lg">{t.visionDesc2}</p>
             </motion.div>
           </div>
         </div>
@@ -201,16 +247,29 @@ const About = () => {
       {/* Ce que nous enseignons */}
       <section className="py-24 bg-secondary/30">
         <div className="container mx-auto px-6">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-extrabold text-foreground mb-4">{t.teachTitle}</h2>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-3xl md:text-4xl font-extrabold text-foreground mb-4">
+              {t.teachTitle}
+            </h2>
             <p className="text-muted-foreground max-w-xl mx-auto">{t.teachDesc}</p>
           </motion.div>
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4 max-w-6xl mx-auto">
             {topicsData.map((topic, i) => {
               const Icon = topic.icon;
               return (
-                <motion.div key={topic.key} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-                  className="rounded-2xl border border-border bg-card p-8 hover:border-primary/50 hover:shadow-lg transition-all duration-300">
+                <motion.div
+                  key={topic.key}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  className="rounded-2xl border border-border bg-card p-8 hover:border-primary/50 hover:shadow-lg transition-all duration-300"
+                >
                   <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-primary text-white shadow-md">
                     <Icon className="h-7 w-7" />
                   </div>
@@ -231,11 +290,15 @@ const About = () => {
       <section className="py-24 bg-background">
         <div className="container mx-auto px-6">
           <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
-            <motion.div initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
-              <h2 className="text-3xl md:text-4xl font-extrabold text-foreground mb-6">{t.approachTitle}</h2>
-              <p className="text-lg text-muted-foreground mb-8">
-                {t.approachDesc}
-              </p>
+            <motion.div
+              initial={{ opacity: 0, x: -40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+            >
+              <h2 className="text-3xl md:text-4xl font-extrabold text-foreground mb-6">
+                {t.approachTitle}
+              </h2>
+              <p className="text-lg text-muted-foreground mb-8">{t.approachDesc}</p>
               <div className="space-y-6">
                 {[
                   { title: t.approach1Title, desc: t.approach1Desc },
@@ -265,18 +328,20 @@ const About = () => {
               </div>
             </motion.div>
 
-            <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
-              className="bg-card rounded-3xl p-8 border border-border shadow-xl relative overflow-hidden">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="bg-card rounded-3xl p-8 border border-border shadow-xl relative overflow-hidden"
+            >
               <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-bl-[100px] -z-10" />
               <div className="absolute bottom-0 left-0 w-32 h-32 bg-blue-500/10 rounded-tr-[100px] -z-10" />
-              
+
               <div className="mb-6 inline-flex items-center justify-center h-16 w-16 rounded-2xl bg-gradient-to-br from-primary to-blue-600 text-white shadow-lg">
                 <Heart className="h-8 w-8" />
               </div>
               <h3 className="text-2xl font-extrabold text-foreground mb-4">{t.freemiumTitle}</h3>
-              <p className="text-muted-foreground text-lg leading-relaxed mb-6">
-                {t.freemiumDesc}
-              </p>
+              <p className="text-muted-foreground text-lg leading-relaxed mb-6">{t.freemiumDesc}</p>
               <p className="text-foreground font-semibold text-lg italic border-l-4 border-primary pl-4">
                 {t.freemiumQuote}
               </p>
@@ -295,7 +360,13 @@ const About = () => {
               { num: t.statPractice, label: t.statPracticeLabel },
               { num: t.statFlex, label: t.statFlexLabel },
             ].map((stat) => (
-              <motion.div key={stat.label} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="pt-8 md:pt-0">
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="pt-8 md:pt-0"
+              >
                 <p className="text-4xl md:text-5xl font-extrabold mb-3">{stat.num}</p>
                 <p className="text-primary-foreground/80 font-medium text-lg">{stat.label}</p>
               </motion.div>
@@ -307,15 +378,20 @@ const About = () => {
       {/* CTA */}
       <section className="py-24 bg-background">
         <div className="container mx-auto px-6 text-center">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
             <h2 className="text-3xl md:text-4xl font-extrabold text-foreground mb-6">
               {t.ctaTitle}
             </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-10">
-              {t.ctaDesc}
-            </p>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-10">{t.ctaDesc}</p>
             <Link to="/register">
-              <Button size="lg" className="px-10 py-6 text-lg font-semibold shadow-lg hover:shadow-xl transition-all">
+              <Button
+                size="lg"
+                className="px-10 py-6 text-lg font-semibold shadow-lg hover:shadow-xl transition-all"
+              >
                 {t.ctaBtn}
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>

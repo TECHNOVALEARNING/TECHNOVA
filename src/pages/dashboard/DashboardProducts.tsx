@@ -2,14 +2,29 @@ import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
-  Plus, Package, Search, MoreVertical, Pencil, Eye, Copy,
-  Share2, Link2, Pin, EyeOff, Trash2, ChevronLeft, ChevronRight
+  Plus,
+  Package,
+  Search,
+  MoreVertical,
+  Pencil,
+  Eye,
+  Copy,
+  Share2,
+  Link2,
+  Pin,
+  EyeOff,
+  Trash2,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
-  DropdownMenu, DropdownMenuContent, DropdownMenuItem,
-  DropdownMenuSeparator, DropdownMenuTrigger
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -98,7 +113,7 @@ const translations = {
     duplicateSuccess: "Product duplicated",
     duplicateError: "Error during duplication",
     copySuccess: "Link copied to clipboard",
-  }
+  },
 };
 
 const DashboardProducts = () => {
@@ -112,7 +127,9 @@ const DashboardProducts = () => {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [page, setPage] = useState(1);
 
-  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+  const [lang, setLang] = useState(() =>
+    typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
+  );
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -120,7 +137,7 @@ const DashboardProducts = () => {
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
 
-  const t = translations[lang === 'en' ? 'en' : 'fr'];
+  const t = translations[lang === "en" ? "en" : "fr"];
 
   const fetchProducts = async () => {
     if (!user) return;
@@ -148,7 +165,7 @@ const DashboardProducts = () => {
       // Delete licenses and their activations
       const { data: licenses } = await supabase.from("licenses").select("id").eq("product_id", id);
       if (licenses && licenses.length > 0) {
-        const licenseIds = licenses.map(l => l.id);
+        const licenseIds = licenses.map((l) => l.id);
         await supabase.from("license_activations").delete().in("license_id", licenseIds);
       }
       await supabase.from("licenses").delete().eq("product_id", id);
@@ -320,19 +337,29 @@ const DashboardProducts = () => {
                     <div className="flex items-center gap-3 min-w-0">
                       <div className="h-10 w-10 rounded-lg bg-secondary flex items-center justify-center overflow-hidden shrink-0">
                         {p.thumbnail_url ? (
-                          <img src={p.thumbnail_url} alt={p.title} className="h-full w-full object-cover" />
+                          <img
+                            src={p.thumbnail_url}
+                            alt={p.title}
+                            className="h-full w-full object-cover"
+                          />
                         ) : (
                           <Package className="h-4 w-4 text-muted-foreground/40" />
                         )}
                       </div>
-                      <span className="text-sm font-medium text-foreground truncate">{p.title}</span>
+                      <span className="text-sm font-medium text-foreground truncate">
+                        {p.title}
+                      </span>
                     </div>
                     <span className="w-28 text-right text-sm font-semibold text-foreground whitespace-nowrap">
                       {p.price.toLocaleString("fr-FR")} FCFA
                     </span>
                     <div className="w-24 flex justify-center">
-                      <span className={`inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full ${p.is_published ? "bg-green-500/10 text-green-600" : "bg-amber-500/10 text-amber-600"}`}>
-                        <span className={`h-1.5 w-1.5 rounded-full ${p.is_published ? "bg-green-500" : "bg-amber-500"}`} />
+                      <span
+                        className={`inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full ${p.is_published ? "bg-green-500/10 text-green-600" : "bg-amber-500/10 text-amber-600"}`}
+                      >
+                        <span
+                          className={`h-1.5 w-1.5 rounded-full ${p.is_published ? "bg-green-500" : "bg-amber-500"}`}
+                        />
                         {p.is_published ? t.filterPublished : t.filterDraft}
                       </span>
                     </div>
@@ -344,17 +371,21 @@ const DashboardProducts = () => {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-44">
-                          <DropdownMenuItem onClick={() => navigate(`/dashboard/products/${p.id}/edit`)}>
+                          <DropdownMenuItem
+                            onClick={() => navigate(`/dashboard/products/${p.id}/edit`)}
+                          >
                             <Pencil className="h-4 w-4 mr-2" /> {t.edit}
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => {
-                            const slug = profile?.store_slug;
-                            if (slug) {
-                              window.open(`/store/${slug}/${p.id}`, "_blank");
-                            } else {
-                              navigate(`/product/${p.id}`);
-                            }
-                          }}>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              const slug = profile?.store_slug;
+                              if (slug) {
+                                window.open(`/store/${slug}/${p.id}`, "_blank");
+                              } else {
+                                navigate(`/product/${p.id}`);
+                              }
+                            }}
+                          >
                             <Eye className="h-4 w-4 mr-2" /> {t.viewOnSite}
                           </DropdownMenuItem>
                           <DropdownMenuItem onClick={() => handleDuplicate(p)}>
@@ -368,10 +399,21 @@ const DashboardProducts = () => {
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem onClick={() => togglePublish(p)}>
-                            {p.is_published ? <><EyeOff className="h-4 w-4 mr-2" /> {t.unpublish}</> : <><Eye className="h-4 w-4 mr-2" /> {t.publish}</>}
+                            {p.is_published ? (
+                              <>
+                                <EyeOff className="h-4 w-4 mr-2" /> {t.unpublish}
+                              </>
+                            ) : (
+                              <>
+                                <Eye className="h-4 w-4 mr-2" /> {t.publish}
+                              </>
+                            )}
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
-                          <DropdownMenuItem onClick={() => handleDelete(p.id)} className="text-destructive focus:text-destructive">
+                          <DropdownMenuItem
+                            onClick={() => handleDelete(p.id)}
+                            className="text-destructive focus:text-destructive"
+                          >
                             <Trash2 className="h-4 w-4 mr-2" /> {t.delete}
                           </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -383,7 +425,11 @@ const DashboardProducts = () => {
                   <div className="sm:hidden flex items-center gap-3 px-3 py-3">
                     <div className="h-12 w-12 rounded-lg bg-secondary flex items-center justify-center overflow-hidden shrink-0">
                       {p.thumbnail_url ? (
-                        <img src={p.thumbnail_url} alt={p.title} className="h-full w-full object-cover" />
+                        <img
+                          src={p.thumbnail_url}
+                          alt={p.title}
+                          className="h-full w-full object-cover"
+                        />
                       ) : (
                         <Package className="h-5 w-5 text-muted-foreground/40" />
                       )}
@@ -391,9 +437,15 @@ const DashboardProducts = () => {
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-foreground line-clamp-1">{p.title}</p>
                       <div className="flex items-center gap-2 mt-0.5">
-                        <span className="text-xs font-semibold text-foreground">{p.price.toLocaleString("fr-FR")} FCFA</span>
-                        <span className={`inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded-full ${p.is_published ? "bg-green-500/10 text-green-600" : "bg-amber-500/10 text-amber-600"}`}>
-                          <span className={`h-1 w-1 rounded-full ${p.is_published ? "bg-green-500" : "bg-amber-500"}`} />
+                        <span className="text-xs font-semibold text-foreground">
+                          {p.price.toLocaleString("fr-FR")} FCFA
+                        </span>
+                        <span
+                          className={`inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded-full ${p.is_published ? "bg-green-500/10 text-green-600" : "bg-amber-500/10 text-amber-600"}`}
+                        >
+                          <span
+                            className={`h-1 w-1 rounded-full ${p.is_published ? "bg-green-500" : "bg-amber-500"}`}
+                          />
                           {p.is_published ? t.filterPublished : t.filterDraft}
                         </span>
                       </div>
@@ -405,17 +457,21 @@ const DashboardProducts = () => {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="w-44">
-                        <DropdownMenuItem onClick={() => navigate(`/dashboard/products/${p.id}/edit`)}>
+                        <DropdownMenuItem
+                          onClick={() => navigate(`/dashboard/products/${p.id}/edit`)}
+                        >
                           <Pencil className="h-4 w-4 mr-2" /> {t.edit}
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => {
-                          const slug = profile?.store_slug;
-                          if (slug) {
-                            navigate(`/store/${slug}/${p.id}`);
-                          } else {
-                            navigate(`/product/${p.id}`);
-                          }
-                        }}>
+                        <DropdownMenuItem
+                          onClick={() => {
+                            const slug = profile?.store_slug;
+                            if (slug) {
+                              navigate(`/store/${slug}/${p.id}`);
+                            } else {
+                              navigate(`/product/${p.id}`);
+                            }
+                          }}
+                        >
                           <Eye className="h-4 w-4 mr-2" /> {t.viewMobile}
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => handleDuplicate(p)}>
@@ -429,10 +485,21 @@ const DashboardProducts = () => {
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={() => togglePublish(p)}>
-                          {p.is_published ? <><EyeOff className="h-4 w-4 mr-2" /> {t.unpublish}</> : <><Eye className="h-4 w-4 mr-2" /> {t.publish}</>}
+                          {p.is_published ? (
+                            <>
+                              <EyeOff className="h-4 w-4 mr-2" /> {t.unpublish}
+                            </>
+                          ) : (
+                            <>
+                              <Eye className="h-4 w-4 mr-2" /> {t.publish}
+                            </>
+                          )}
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={() => handleDelete(p.id)} className="text-destructive focus:text-destructive">
+                        <DropdownMenuItem
+                          onClick={() => handleDelete(p.id)}
+                          className="text-destructive focus:text-destructive"
+                        >
                           <Trash2 className="h-4 w-4 mr-2" /> {t.delete}
                         </DropdownMenuItem>
                       </DropdownMenuContent>

@@ -13,7 +13,7 @@ const SUBCAT_LABELS: Record<string, string> = {
   excel: "Excel & Finance",
   dev: "Dev & Web",
   marketing: "Marketing & Social",
-  other: "Autre"
+  other: "Autre",
 };
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -27,7 +27,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   divertissement: "Divertissement",
   sante_bien_etre: "Santé et bien être",
   developpement_personnel: "Développement personnel",
-  other: "Autre"
+  other: "Autre",
 };
 
 const getDisplayCategory = (cat: string) => {
@@ -39,11 +39,13 @@ const getDisplayCategory = (cat: string) => {
   }
   if (cat === "ebook") return "E-book";
   if (cat === "formation") return "Formation";
-  return CATEGORY_LABELS[cat] || (cat.charAt(0).toUpperCase() + cat.slice(1));
+  return CATEGORY_LABELS[cat] || cat.charAt(0).toUpperCase() + cat.slice(1);
 };
 
 const AdminProducts = () => {
-  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+  const [lang, setLang] = useState(() =>
+    typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
+  );
   const [searchParams] = useSearchParams();
   const catParam = searchParams.get("category");
   const searchParam = searchParams.get("q");
@@ -94,7 +96,7 @@ const AdminProducts = () => {
           return false;
         }
         try {
-          const f = typeof p.features === "string" ? JSON.parse(p.features) : (p.features || {});
+          const f = typeof p.features === "string" ? JSON.parse(p.features) : p.features || {};
           return f.status !== "draft";
         } catch {
           return true;
@@ -104,7 +106,9 @@ const AdminProducts = () => {
       return active.map((p: any) => ({
         slug: p.id,
         title: p.title,
-        cover: p.thumbnail_url || "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=800&q=80",
+        cover:
+          p.thumbnail_url ||
+          "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=800&q=80",
         category: getDisplayCategory(p.category || "Formation"),
         level: lang === "fr" ? "Tous niveaux" : "All levels",
         price: `${p.price} FCFA`,
@@ -118,18 +122,30 @@ const AdminProducts = () => {
   const categories = ["all", ...new Set(dbProducts.map((p) => p.category).filter(Boolean))];
 
   const filteredProducts = dbProducts.filter((p) => {
-    const matchesSearch = p.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          p.category.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch =
+      p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.category.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory === "all" || p.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
   return (
-    <div className="min-h-screen overflow-x-hidden transition-colors duration-300" style={{ background: "var(--bg, #f2f2f7)", color: "var(--text, #1d1d1f)", fontFamily: "'Manrope', -apple-system, sans-serif" }}>
+    <div
+      className="min-h-screen overflow-x-hidden transition-colors duration-300"
+      style={{
+        background: "var(--bg, #f2f2f7)",
+        color: "var(--text, #1d1d1f)",
+        fontFamily: "'Manrope', -apple-system, sans-serif",
+      }}
+    >
       <SEOHead
         canonicalPath="/admin-products"
         title={lang === "fr" ? "Produits Officiels TECHNOVA" : "Official TECHNOVA Products"}
-        description={lang === "fr" ? "Retrouvez l'ensemble des formations, ebooks et ressources technologiques officiels édités directement par l'administration de TECHNOVA." : "Find all the official tech courses, ebooks, and resources published directly by the TECHNOVA admin."}
+        description={
+          lang === "fr"
+            ? "Retrouvez l'ensemble des formations, ebooks et ressources technologiques officiels édités directement par l'administration de TECHNOVA."
+            : "Find all the official tech courses, ebooks, and resources published directly by the TECHNOVA admin."
+        }
       />
       <Header />
 
@@ -141,11 +157,30 @@ const AdminProducts = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-[color:var(--text)] font-display leading-[1.15] mb-6" style={{ fontFamily: "'Outfit', sans-serif" }}>
-              {lang === "fr" ? <>Nos Produits <span className="bg-gradient-to-r from-blue-500 to-indigo-500 bg-clip-text text-transparent">Digitaux</span></> : <>Our Digital <span className="bg-gradient-to-r from-blue-500 to-indigo-500 bg-clip-text text-transparent">Products</span></>}
+            <h1
+              className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-[color:var(--text)] font-display leading-[1.15] mb-6"
+              style={{ fontFamily: "'Outfit', sans-serif" }}
+            >
+              {lang === "fr" ? (
+                <>
+                  Nos Produits{" "}
+                  <span className="bg-gradient-to-r from-blue-500 to-indigo-500 bg-clip-text text-transparent">
+                    Digitaux
+                  </span>
+                </>
+              ) : (
+                <>
+                  Our Digital{" "}
+                  <span className="bg-gradient-to-r from-blue-500 to-indigo-500 bg-clip-text text-transparent">
+                    Products
+                  </span>
+                </>
+              )}
             </h1>
             <p className="text-base sm:text-lg text-[color:var(--text-secondary)] leading-relaxed max-w-xl mx-auto mb-10">
-              {lang === "fr" ? "Ressources exclusives et formations certifiantes éditées et vérifiées par TECHNOVA." : "Exclusive resources and certified trainings created and verified by TECHNOVA."}
+              {lang === "fr"
+                ? "Ressources exclusives et formations certifiantes éditées et vérifiées par TECHNOVA."
+                : "Exclusive resources and certified trainings created and verified by TECHNOVA."}
             </p>
 
             {/* Toggle tabs to switch pages */}
@@ -170,14 +205,15 @@ const AdminProducts = () => {
       {/* Products Content Section */}
       <section className="pb-24">
         <div className="container mx-auto px-4 max-w-7xl">
-          
           {/* Search + Category Filter Bar */}
           <div className="flex flex-col md:flex-row gap-4 justify-between items-center mb-10 p-5 rounded-2xl bg-[color:var(--surface)] border border-[color:var(--border)] shadow-sm">
             <div className="relative w-full md:w-80">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[color:var(--text-secondary)]" />
               <input
                 type="text"
-                placeholder={lang === "fr" ? "Rechercher un ebook, formation..." : "Search course, ebook..."}
+                placeholder={
+                  lang === "fr" ? "Rechercher un ebook, formation..." : "Search course, ebook..."
+                }
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-[color:var(--border)] bg-[color:var(--bg)] text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 text-[color:var(--text)]"
@@ -206,7 +242,10 @@ const AdminProducts = () => {
           {isLoading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {[...Array(8)].map((_, i) => (
-                <div key={i} className="rounded-3xl border border-[color:var(--border)] bg-[color:var(--surface)] p-4 h-[380px] animate-pulse flex flex-col justify-between">
+                <div
+                  key={i}
+                  className="rounded-3xl border border-[color:var(--border)] bg-[color:var(--surface)] p-4 h-[380px] animate-pulse flex flex-col justify-between"
+                >
                   <div className="w-full h-44 rounded-2xl bg-[color:var(--bg)]" />
                   <div className="h-6 w-3/4 rounded bg-[color:var(--bg)] mt-4" />
                   <div className="h-4 w-1/2 rounded bg-[color:var(--bg)] mt-2" />
@@ -215,7 +254,7 @@ const AdminProducts = () => {
               ))}
             </div>
           ) : filteredProducts.length > 0 ? (
-            <motion.div 
+            <motion.div
               layout
               className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
             >
@@ -232,11 +271,12 @@ const AdminProducts = () => {
                 {lang === "fr" ? "Aucun produit trouvé" : "No products found"}
               </h3>
               <p className="text-sm text-[color:var(--text-secondary)] leading-relaxed">
-                {lang === "fr" ? "Modifiez votre recherche ou filtrez par une autre catégorie pour explorer nos ressources." : "Try changing your search query or choosing another category."}
+                {lang === "fr"
+                  ? "Modifiez votre recherche ou filtrez par une autre catégorie pour explorer nos ressources."
+                  : "Try changing your search query or choosing another category."}
               </p>
             </div>
           )}
-
         </div>
       </section>
 

@@ -3,17 +3,23 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-moneroo-signature",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type, x-moneroo-signature",
 };
 
 async function verifySignature(secret: string, body: string, signature: string): Promise<boolean> {
   if (!signature) return false;
   const key = await crypto.subtle.importKey(
-    "raw", new TextEncoder().encode(secret),
-    { name: "HMAC", hash: "SHA-256" }, false, ["sign"],
+    "raw",
+    new TextEncoder().encode(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"],
   );
   const sig = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(body));
-  const hex = Array.from(new Uint8Array(sig)).map(b => b.toString(16).padStart(2, "0")).join("");
+  const hex = Array.from(new Uint8Array(sig))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
   if (hex.length !== signature.length) return false;
   let diff = 0;
   for (let i = 0; i < hex.length; i++) diff |= hex.charCodeAt(i) ^ signature.charCodeAt(i);
@@ -45,23 +51,45 @@ Deno.serve(async (req) => {
 
     let withdrawal: any = null;
     if (withdrawalId) {
-      const { data: w } = await supabase.from("withdrawals").select("*").eq("id", withdrawalId).maybeSingle();
+      const { data: w } = await supabase
+        .from("withdrawals")
+        .select("*")
+        .eq("id", withdrawalId)
+        .maybeSingle();
       withdrawal = w;
     }
     if (!withdrawal && monerooId) {
-      const { data: w } = await supabase.from("withdrawals").select("*").eq("moneroo_payout_id", monerooId).maybeSingle();
+      const { data: w } = await supabase
+        .from("withdrawals")
+        .select("*")
+        .eq("moneroo_payout_id", monerooId)
+        .maybeSingle();
       withdrawal = w;
     }
     if (!withdrawal) {
       console.warn("[moneroo-payout-webhook] withdrawal introuvable", { monerooId, withdrawalId });
-      return new Response(JSON.stringify({ ok: true }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ ok: true }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
-    const isSuccess = ["success", "successful", "completed", "paid", "payout.success", "payout.completed"].includes(status);
-    const isFailed = ["failed", "cancelled", "canceled", "rejected", "payout.failed"].includes(status);
+    const isSuccess = [
+      "success",
+      "successful",
+      "completed",
+      "paid",
+      "payout.success",
+      "payout.completed",
+    ].includes(status);
+    const isFailed = ["failed", "cancelled", "canceled", "rejected", "payout.failed"].includes(
+      status,
+    );
 
     if (isSuccess && withdrawal.status !== "completed") {
-      await supabase.from("withdrawals").update({ status: "completed", processed_at: new Date().toISOString() }).eq("id", withdrawal.id);
+      await supabase
+        .from("withdrawals")
+        .update({ status: "completed", processed_at: new Date().toISOString() })
+        .eq("id", withdrawal.id);
       await supabase.from("notifications").insert({
         user_id: withdrawal.user_id,
         title: "Retrait effectué ✅",
@@ -78,11 +106,14 @@ Deno.serve(async (req) => {
       });
     }
 
-    return new Response(JSON.stringify({ ok: true }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    return new Response(JSON.stringify({ ok: true }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   } catch (err: any) {
     console.error("[moneroo-payout-webhook] error", err);
     return new Response(JSON.stringify({ error: err.message }), {
-      status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 });

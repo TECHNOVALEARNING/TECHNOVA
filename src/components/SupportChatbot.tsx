@@ -15,7 +15,10 @@ const SupportChatbot = () => {
   const { user, profile } = useAuth();
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([
-    { role: "assistant", content: "Bonjour ! 👋 Je suis l'assistant TECHNOVA. Comment puis-je vous aider ?" },
+    {
+      role: "assistant",
+      content: "Bonjour ! 👋 Je suis l'assistant TECHNOVA. Comment puis-je vous aider ?",
+    },
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -77,7 +80,9 @@ const SupportChatbot = () => {
               userName: profile?.display_name || "Utilisateur",
               userEmail: user.email || "",
               subject: ticketSubject,
-              transcript: [...newMessages, aiMsg].map((m) => `${m.role === "user" ? "Client" : "Assistant"}: ${m.content}`).join("\n\n"),
+              transcript: [...newMessages, aiMsg]
+                .map((m) => `${m.role === "user" ? "Client" : "Assistant"}: ${m.content}`)
+                .join("\n\n"),
             } as any,
           });
           toast.success("Ticket de support créé ! L'équipe vous contactera bientôt.");
@@ -133,7 +138,10 @@ const SupportChatbot = () => {
                   <p className="text-[10px] text-muted-foreground">IA • En ligne</p>
                 </div>
               </div>
-              <button onClick={() => setOpen(false)} className="text-muted-foreground hover:text-foreground transition-colors">
+              <button
+                onClick={() => setOpen(false)}
+                className="text-muted-foreground hover:text-foreground transition-colors"
+              >
                 <X className="h-5 w-5" />
               </button>
             </div>
@@ -141,18 +149,31 @@ const SupportChatbot = () => {
             {/* Messages */}
             <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
               {messages.map((msg, i) => (
-                <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-                  <div className={`flex items-start gap-2 max-w-[85%] ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
-                    <div className={`h-6 w-6 rounded-full flex items-center justify-center shrink-0 ${
-                      msg.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted"
-                    }`}>
-                      {msg.role === "user" ? <User className="h-3 w-3" /> : <Bot className="h-3 w-3" />}
+                <div
+                  key={i}
+                  className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+                >
+                  <div
+                    className={`flex items-start gap-2 max-w-[85%] ${msg.role === "user" ? "flex-row-reverse" : ""}`}
+                  >
+                    <div
+                      className={`h-6 w-6 rounded-full flex items-center justify-center shrink-0 ${
+                        msg.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted"
+                      }`}
+                    >
+                      {msg.role === "user" ? (
+                        <User className="h-3 w-3" />
+                      ) : (
+                        <Bot className="h-3 w-3" />
+                      )}
                     </div>
-                    <div className={`rounded-2xl px-3 py-2 text-sm ${
-                      msg.role === "user"
-                        ? "bg-primary text-primary-foreground rounded-tr-sm"
-                        : "bg-muted text-foreground rounded-tl-sm"
-                    }`}>
+                    <div
+                      className={`rounded-2xl px-3 py-2 text-sm ${
+                        msg.role === "user"
+                          ? "bg-primary text-primary-foreground rounded-tr-sm"
+                          : "bg-muted text-foreground rounded-tl-sm"
+                      }`}
+                    >
                       {msg.role === "assistant" ? (
                         <div className="prose prose-sm max-w-none [&_p]:mb-1 [&_p]:last:mb-0 [&_ul]:mb-1 [&_li]:mb-0.5">
                           <ReactMarkdown>{msg.content}</ReactMarkdown>
@@ -180,7 +201,10 @@ const SupportChatbot = () => {
             {/* Input */}
             <div className="border-t border-border px-3 py-3">
               <form
-                onSubmit={(e) => { e.preventDefault(); sendMessage(); }}
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  sendMessage();
+                }}
                 className="flex items-center gap-2"
               >
                 <input

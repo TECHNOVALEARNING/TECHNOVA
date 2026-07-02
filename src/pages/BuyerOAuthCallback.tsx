@@ -5,11 +5,12 @@ import { buyerSupabase as supabase } from "@/integrations/supabase/buyer-client"
 import { toast } from "sonner";
 import SEOHead from "@/components/SEOHead";
 
-
 const BuyerOAuthCallback = () => {
   const navigate = useNavigate();
   const ranRef = useRef(false);
-  const isPortal = window.location.hostname.startsWith("portal.") || window.location.hostname.startsWith("client.");
+  const isPortal =
+    window.location.hostname.startsWith("portal.") ||
+    window.location.hostname.startsWith("client.");
   const dashboardPath = isPortal ? "/dashboard" : "/mes-achats";
   const loginPath = isPortal ? "/" : "/buyer-login";
 
@@ -21,13 +22,18 @@ const BuyerOAuthCallback = () => {
       try {
         let timeoutId: NodeJS.Timeout;
 
-        // In PKCE flow, getSession might not have exchanged the code yet. 
+        // In PKCE flow, getSession might not have exchanged the code yet.
         // We listen to onAuthStateChange to wait for the session.
-        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+        const {
+          data: { subscription },
+        } = supabase.auth.onAuthStateChange(async (event, session) => {
           if (event === "SIGNED_IN" && session) {
             clearTimeout(timeoutId);
             subscription.unsubscribe();
-            let customerName = session.user?.user_metadata?.full_name || session.user?.email?.split("@")[0] || "Client";
+            let customerName =
+              session.user?.user_metadata?.full_name ||
+              session.user?.email?.split("@")[0] ||
+              "Client";
             let customerEmail = session.user?.email || "";
             let customerId = session.user?.id || "";
             let orders = [];
@@ -44,13 +50,16 @@ const BuyerOAuthCallback = () => {
               console.error("buyer-oauth-check error:", err);
             }
 
-            sessionStorage.setItem("buyer_session", JSON.stringify({
-              email: customerEmail,
-              customerName: customerName,
-              customerId: customerId,
-              orders: orders,
-              authenticatedAt: Date.now(),
-            }));
+            sessionStorage.setItem(
+              "buyer_session",
+              JSON.stringify({
+                email: customerEmail,
+                customerName: customerName,
+                customerId: customerId,
+                orders: orders,
+                authenticatedAt: Date.now(),
+              }),
+            );
 
             toast.success("Connexion réussie");
             navigate(dashboardPath, { replace: true });
@@ -59,14 +68,19 @@ const BuyerOAuthCallback = () => {
 
         // Give it a short timeout to let the event listener fire if it's currently exchanging
         timeoutId = setTimeout(async () => {
-          const { data: { session: currentSession } } = await supabase.auth.getSession();
-          if (!currentSession && !window.location.hash.includes("access_token=") && !window.location.search.includes("code=")) {
+          const {
+            data: { session: currentSession },
+          } = await supabase.auth.getSession();
+          if (
+            !currentSession &&
+            !window.location.hash.includes("access_token=") &&
+            !window.location.search.includes("code=")
+          ) {
             subscription.unsubscribe();
             toast.error("Session non établie. Réessayez.");
             navigate(loginPath, { replace: true });
           }
         }, 3000);
-
       } catch (e: any) {
         console.error(e);
         toast.error("Erreur de connexion");
@@ -77,7 +91,11 @@ const BuyerOAuthCallback = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center">
-      <SEOHead title="Connexion client — TECHNOVA" description="Authentification de votre espace client." noindex />
+      <SEOHead
+        title="Connexion client — TECHNOVA"
+        description="Authentification de votre espace client."
+        noindex
+      />
       <div className="text-center">
         <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary mb-4" />
         <p className="text-sm text-muted-foreground">Connexion en cours…</p>

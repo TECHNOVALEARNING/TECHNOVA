@@ -101,7 +101,8 @@ const ProductReviewsSection = ({ productId, brandColor = "#2563EB" }: Props) => 
           className="group relative overflow-hidden"
           style={{
             maskImage: "linear-gradient(to right, transparent, black 6%, black 94%, transparent)",
-            WebkitMaskImage: "linear-gradient(to right, transparent, black 6%, black 94%, transparent)",
+            WebkitMaskImage:
+              "linear-gradient(to right, transparent, black 6%, black 94%, transparent)",
           }}
         >
           <div className="flex gap-4 w-max animate-marquee group-hover:[animation-play-state:paused]">
@@ -152,7 +153,9 @@ const ProductReviewsSection = ({ productId, brandColor = "#2563EB" }: Props) => 
                         </span>
                       </div>
                       {r.title && (
-                        <p className="mt-2 text-sm font-semibold text-gray-900 line-clamp-1">{r.title}</p>
+                        <p className="mt-2 text-sm font-semibold text-gray-900 line-clamp-1">
+                          {r.title}
+                        </p>
                       )}
                       <p className="mt-1 text-sm leading-6 text-gray-600 line-clamp-4">
                         {r.comment}
@@ -178,9 +181,7 @@ const ProductReviewsSection = ({ productId, brandColor = "#2563EB" }: Props) => 
                   </Avatar>
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="text-sm font-semibold text-gray-900">
-                        {r.reviewer_name}
-                      </span>
+                      <span className="text-sm font-semibold text-gray-900">{r.reviewer_name}</span>
                       {isVerified && <KycBadge size="sm" />}
                       <Badge
                         variant="outline"

@@ -17,14 +17,15 @@ serve(async (req) => {
 
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
     );
 
     const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 
     // ===== REPLY to a contact message =====
     if (action === "reply") {
-      const { store_owner_id, recipient_email, recipient_name, reply_message, original_message } = body;
+      const { store_owner_id, recipient_email, recipient_name, reply_message, original_message } =
+        body;
 
       if (!store_owner_id || !recipient_email || !reply_message) {
         return new Response(JSON.stringify({ error: "Champs requis manquants" }), {

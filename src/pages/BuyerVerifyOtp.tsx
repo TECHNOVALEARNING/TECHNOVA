@@ -7,11 +7,7 @@ import { ShieldCheck, Loader2, LogOut } from "lucide-react";
 import { buyerSupabase as supabase } from "@/integrations/supabase/buyer-client";
 import { toast } from "sonner";
 import logo from "@/assets/logo.png";
-import {
-  getBuyerSession,
-  clearBuyerSession,
-  setBuyerOtpVerified,
-} from "@/lib/buyerSession";
+import { getBuyerSession, clearBuyerSession, setBuyerOtpVerified } from "@/lib/buyerSession";
 
 const BuyerVerifyOtp = () => {
   const [email, setEmail] = useState<string | null>(null);
@@ -42,7 +38,10 @@ const BuyerVerifyOtp = () => {
         body: { email: addr },
       });
       if (error) throw error;
-      if (data?.error) { toast.error(data.error); return; }
+      if (data?.error) {
+        toast.error(data.error);
+        return;
+      }
       toast.success("Code envoyé à votre email");
       setSent(true);
     } catch (e: any) {
@@ -61,7 +60,10 @@ const BuyerVerifyOtp = () => {
         body: { email, code: otp.trim() },
       });
       if (error) throw error;
-      if (data?.error) { toast.error(data.error); return; }
+      if (data?.error) {
+        toast.error(data.error);
+        return;
+      }
       setBuyerOtpVerified();
       toast.success("Vérification réussie !");
       navigate("/dashboard", { replace: true });
@@ -122,8 +124,17 @@ const BuyerVerifyOtp = () => {
             />
           </div>
 
-          <Button className="w-full py-5 text-sm font-semibold" disabled={loading || otp.length !== 6}>
-            {loading ? <><Loader2 className="h-4 w-4 animate-spin mr-2" /> Vérification…</> : "Confirmer"}
+          <Button
+            className="w-full py-5 text-sm font-semibold"
+            disabled={loading || otp.length !== 6}
+          >
+            {loading ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin mr-2" /> Vérification…
+              </>
+            ) : (
+              "Confirmer"
+            )}
           </Button>
 
           <div className="flex items-center justify-between pt-2">

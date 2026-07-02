@@ -1,7 +1,16 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Search, Package, ShoppingBag, FileText, GraduationCap, Key, Layers, LogOut } from "lucide-react";
+import {
+  Search,
+  Package,
+  ShoppingBag,
+  FileText,
+  GraduationCap,
+  Key,
+  Layers,
+  LogOut,
+} from "lucide-react";
 import logo from "@/assets/logo.png";
 import SEOHead from "@/components/SEOHead";
 import { Input } from "@/components/ui/input";
@@ -55,7 +64,9 @@ const BuyerDashboard = () => {
   const [customerId, setCustomerId] = useState("");
   const [selectedProduct, setSelectedProduct] = useState<OrderWithProduct["product"] | null>(null);
   const navigate = useNavigate();
-  const isPortal = window.location.hostname.startsWith("portal.") || window.location.hostname.startsWith("client.");
+  const isPortal =
+    window.location.hostname.startsWith("portal.") ||
+    window.location.hostname.startsWith("client.");
   const loginPath = isPortal ? "/" : "/buyer-login";
 
   useEffect(() => {
@@ -83,9 +94,9 @@ const BuyerDashboard = () => {
         if (!session.customerId) return;
         try {
           const { data, error } = await supabase.rpc("get_buyer_orders", {
-            p_customer_id: session.customerId
+            p_customer_id: session.customerId,
           });
-            
+
           if (data && !error) {
             setOrders(data as any[]);
             session.orders = data as any[];
@@ -95,9 +106,8 @@ const BuyerDashboard = () => {
           console.error("Failed to refresh orders", err);
         }
       };
-      
-      fetchLatestOrders();
 
+      fetchLatestOrders();
     } catch {
       sessionStorage.removeItem("buyer_session");
       supabase.auth.signOut();
@@ -126,15 +136,18 @@ const BuyerDashboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <SEOHead 
-        title="Tableau de bord : Mes Produits & Formations Achetés — TECHNOVA" 
-        description="Consultez l'historique de vos commandes, téléchargez vos fichiers numériques et suivez vos formations en ligne achetées." 
-        noindex 
+      <SEOHead
+        title="Tableau de bord : Mes Produits & Formations Achetés — TECHNOVA"
+        description="Consultez l'historique de vos commandes, téléchargez vos fichiers numériques et suivez vos formations en ligne achetées."
+        noindex
       />
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
         <div className="container mx-auto flex items-center justify-between px-6 py-3">
-          <a href={isPortal ? "https://technovalearning.com" : "/"} className="flex items-center gap-2.5">
+          <a
+            href={isPortal ? "https://technovalearning.com" : "/"}
+            className="flex items-center gap-2.5"
+          >
             <img src={logo} alt="TECHNOVA" className="h-8 w-8 rounded-lg object-contain" />
             <span className="text-lg font-bold text-foreground">TECHNOVA</span>
           </a>
@@ -253,7 +266,13 @@ const BuyerDashboard = () => {
 
       <footer className="border-t border-border py-6 mt-8">
         <p className="text-center text-xs text-muted-foreground">
-          Propulsé par <a href={isPortal ? "https://technovalearning.com" : "/"} className="text-primary hover:underline font-medium">TECHNOVA</a>
+          Propulsé par{" "}
+          <a
+            href={isPortal ? "https://technovalearning.com" : "/"}
+            className="text-primary hover:underline font-medium"
+          >
+            TECHNOVA
+          </a>
         </p>
       </footer>
 

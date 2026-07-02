@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from "@supabase/supabase-js";
 
 export default async function handler(req, res) {
   try {
@@ -6,17 +6,15 @@ export default async function handler(req, res) {
     const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    const { data: products, error } = await supabase
-      .from('products')
-      .select('id');
+    const { data: products, error } = await supabase.from("products").select("id");
 
     if (error) {
-      console.error('Erreur Supabase:', error);
+      console.error("Erreur Supabase:", error);
       throw error;
     }
 
-    const domain = 'https://technovalearning.com';
-    
+    const domain = "https://technovalearning.com";
+
     // Générer le XML du sitemap
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -38,21 +36,25 @@ export default async function handler(req, res) {
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
-  ${products.map(product => `
+  ${products
+    .map(
+      (product) => `
   <url>
     <loc>${domain}/product/${product.id}</loc>
     <lastmod>${new Date().toISOString()}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
-  `).join('')}
+  `,
+    )
+    .join("")}
 </urlset>`;
 
-    res.setHeader('Content-Type', 'text/xml');
-    res.setHeader('Cache-Control', 's-maxage=86400, stale-while-revalidate'); // Cache d'un jour sur le CDN Vercel
+    res.setHeader("Content-Type", "text/xml");
+    res.setHeader("Cache-Control", "s-maxage=86400, stale-while-revalidate"); // Cache d'un jour sur le CDN Vercel
     res.status(200).send(sitemap);
   } catch (error) {
-    console.error('Erreur génération sitemap:', error);
-    res.status(500).json({ error: 'Erreur lors de la génération du sitemap' });
+    console.error("Erreur génération sitemap:", error);
+    res.status(500).json({ error: "Erreur lors de la génération du sitemap" });
   }
 }

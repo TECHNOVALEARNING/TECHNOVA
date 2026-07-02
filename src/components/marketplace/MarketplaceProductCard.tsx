@@ -38,13 +38,13 @@ interface Props {
 export const MarketplaceProductCard = ({ product, index = 0, fixedWidth, sellerBadge }: Props) => {
   const { formatPrice } = useGeoPricing();
   const navigate = useNavigate();
-  const { grade: fetchedGrade } = useUserBadge(sellerBadge === undefined ? product.creator_id : null);
+  const { grade: fetchedGrade } = useUserBadge(
+    sellerBadge === undefined ? product.creator_id : null,
+  );
   const grade = sellerBadge !== undefined ? sellerBadge : fetchedGrade;
   const cat = getCategoryByKey(product.category);
   const storeSlug = product.store?.store_slug;
-  const href = storeSlug
-    ? `/store/${storeSlug}/${product.id}`
-    : `/product/${product.id}`;
+  const href = storeSlug ? `/store/${storeSlug}/${product.id}` : `/product/${product.id}`;
 
   const hasDiscount =
     product.original_price && Number(product.original_price) > Number(product.price);
@@ -62,17 +62,17 @@ export const MarketplaceProductCard = ({ product, index = 0, fixedWidth, sellerB
   const hash = product.title.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
   const ratings = ["4.5", "4.8", "5.0", "4.6", "4.7"];
   const rating = ratings[hash % ratings.length];
-  
+
   const labels = ["bestseller", "nouveau", "populaire", "tendance", "top", "promo"];
   const label = hasDiscount ? "promo" : labels[hash % labels.length];
 
   const LABEL_MAP: Record<string, { cls: string; label: string }> = {
-    bestseller: { cls: 'label-bestseller', label: 'Bestseller' },
-    nouveau: { cls: 'label-nouveau', label: 'Nouveau' },
-    populaire: { cls: 'label-populaire', label: 'Populaire' },
-    promo: { cls: 'label-promo', label: 'Promo' },
-    tendance: { cls: 'label-tendance', label: 'Tendance' },
-    top: { cls: 'label-top', label: 'Top' },
+    bestseller: { cls: "label-bestseller", label: "Bestseller" },
+    nouveau: { cls: "label-nouveau", label: "Nouveau" },
+    populaire: { cls: "label-populaire", label: "Populaire" },
+    promo: { cls: "label-promo", label: "Promo" },
+    tendance: { cls: "label-tendance", label: "Tendance" },
+    top: { cls: "label-top", label: "Top" },
   };
   const lb = LABEL_MAP[label] || {};
 
@@ -105,20 +105,14 @@ export const MarketplaceProductCard = ({ product, index = 0, fixedWidth, sellerB
     >
       <div className="course-img-wrap relative">
         {product.thumbnail_url ? (
-          <img
-            src={product.thumbnail_url}
-            alt={product.title}
-            loading="lazy"
-          />
+          <img src={product.thumbnail_url} alt={product.title} loading="lazy" />
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/5 to-accent/10 text-muted-foreground">
             <Package className="h-10 w-10 text-gray-200" />
           </div>
         )}
 
-        <span className="course-badge">
-          {cat ? `${cat.emoji} ${cat.label}` : product.type}
-        </span>
+        <span className="course-badge">{cat ? `${cat.emoji} ${cat.label}` : product.type}</span>
 
         {lb.cls && (
           <span className={`label-badge ${lb.cls}`}>
@@ -152,7 +146,7 @@ export const MarketplaceProductCard = ({ product, index = 0, fixedWidth, sellerB
               {product.title}
             </div>
           </Link>
-          
+
           {product.store?.display_name && (
             <p className="flex items-center gap-1 truncate text-[11px] text-muted-foreground mb-3">
               <span className="truncate">par {product.store.display_name}</span>
@@ -163,7 +157,10 @@ export const MarketplaceProductCard = ({ product, index = 0, fixedWidth, sellerB
           <div className="course-meta mb-3">
             {(product.sales_count || 0) > 0 && (
               <span className="students">
-                <i className="fas fa-shopping-cart" style={{ fontSize: "0.65rem", marginRight: 4 }}></i>
+                <i
+                  className="fas fa-shopping-cart"
+                  style={{ fontSize: "0.65rem", marginRight: 4 }}
+                ></i>
                 {product.sales_count} vendus
               </span>
             )}

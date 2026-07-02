@@ -32,17 +32,15 @@ import {
   MarketplaceProductCard,
   MarketplaceProduct,
 } from "@/components/marketplace/MarketplaceProductCard";
-import {
-  MARKETPLACE_CATEGORIES,
-  PRODUCT_TYPES,
-} from "@/data/marketplaceCategories";
+import { MARKETPLACE_CATEGORIES, PRODUCT_TYPES } from "@/data/marketplaceCategories";
 import { Button } from "@/components/ui/button";
 import heroImage from "@/assets/marketplace-hero.jpg";
 
 const translations = {
   fr: {
     seoTitle: "Marketplace Formations — Achetez & Vendez des Cours en Ligne",
-    seoDesc: "Une marketplace de formations en ligne où experts et apprenants se rencontrent. Vendez vos cours ou trouvez la formation qui vous correspond.",
+    seoDesc:
+      "Une marketplace de formations en ligne où experts et apprenants se rencontrent. Vendez vos cours ou trouvez la formation qui vous correspond.",
     badge: "Marketplace #1 de produits numériques au niveau mondial",
     title: "Achetez en confiance.",
     titleHighlight: "Vendez sans limite.",
@@ -62,10 +60,18 @@ const translations = {
     recommended: "Recommandés pour vous",
     recommendedSub: "Une sélection de la marketplace",
     marketingTitle: "Outils marketing intégrés",
-    marketingHeading: <>Tout pour <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">vendre plus</span></>,
+    marketingHeading: (
+      <>
+        Tout pour{" "}
+        <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+          vendre plus
+        </span>
+      </>
+    ),
     marketingDesc: "Une suite marketing puissante incluse dans chaque boutique TECHNOVA.",
     ctaTitle: "Vendez vos produits numériques sur TECHNOVA",
-    ctaDesc: "Lancez votre boutique en quelques minutes. Commission unique de 5%, paiements mobile money intégrés, suite marketing complète.",
+    ctaDesc:
+      "Lancez votre boutique en quelques minutes. Commission unique de 5%, paiements mobile money intégrés, suite marketing complète.",
     ctaBtn: "Ouvrir ma boutique",
     ctaPricing: "Voir les tarifs",
     noSubscription: "Sans abonnement",
@@ -80,23 +86,39 @@ const translations = {
       { label: "Anti-fraude IA", desc: "Modération 24/7" },
     ],
     features: [
-      { title: "Email campagnes", desc: "Envoyez des newsletters ciblées à vos clients via Resend." },
-      { title: "Codes promo & remises", desc: "Créez des coupons illimités pour booster vos ventes." },
-      { title: "Analytics avancées", desc: "Suivez chiffre d'affaires, conversions et top produits." },
+      {
+        title: "Email campagnes",
+        desc: "Envoyez des newsletters ciblées à vos clients via Resend.",
+      },
+      {
+        title: "Codes promo & remises",
+        desc: "Créez des coupons illimités pour booster vos ventes.",
+      },
+      {
+        title: "Analytics avancées",
+        desc: "Suivez chiffre d'affaires, conversions et top produits.",
+      },
       { title: "Programme d'affiliation", desc: "Recrutez des affiliés et payez à la commission." },
-      { title: "Domaine personnalisé", desc: "Connectez votre propre domaine en 1 clic (Cloudflare)." },
-      { title: "Pixels & automations", desc: "Meta, TikTok, Google Ads · webhooks Telegram & Zapier." },
+      {
+        title: "Domaine personnalisé",
+        desc: "Connectez votre propre domaine en 1 clic (Cloudflare).",
+      },
+      {
+        title: "Pixels & automations",
+        desc: "Meta, TikTok, Google Ads · webhooks Telegram & Zapier.",
+      },
     ],
     kpis: [
       { value: "5%", label: "Commission unique" },
       { value: "72h", label: "Délai de maturité" },
       { value: "100%", label: "Vendeurs KYC" },
       { value: "24/7", label: "Modération IA" },
-    ]
+    ],
   },
   en: {
     seoTitle: "Course Marketplace — Buy & Sell Classes Online",
-    seoDesc: "An online course marketplace where experts and learners meet. Sell your courses or find the training that suits you.",
+    seoDesc:
+      "An online course marketplace where experts and learners meet. Sell your courses or find the training that suits you.",
     badge: "#1 digital products marketplace globally",
     title: "Buy with confidence.",
     titleHighlight: "Sell without limits.",
@@ -116,10 +138,18 @@ const translations = {
     recommended: "Recommended for you",
     recommendedSub: "A selection from the marketplace",
     marketingTitle: "Integrated Marketing Tools",
-    marketingHeading: <>Everything to <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">sell more</span></>,
+    marketingHeading: (
+      <>
+        Everything to{" "}
+        <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+          sell more
+        </span>
+      </>
+    ),
     marketingDesc: "A powerful marketing suite included in every TECHNOVA storefront.",
     ctaTitle: "Sell your digital products on TECHNOVA",
-    ctaDesc: "Launch your storefront in minutes. Flat 5% commission, integrated mobile money payments, complete marketing suite.",
+    ctaDesc:
+      "Launch your storefront in minutes. Flat 5% commission, integrated mobile money payments, complete marketing suite.",
     ctaBtn: "Open my storefront",
     ctaPricing: "View pricing",
     noSubscription: "No subscription",
@@ -139,15 +169,18 @@ const translations = {
       { title: "Advanced Analytics", desc: "Track revenue, conversions, and top products." },
       { title: "Affiliate Program", desc: "Recruit affiliates and pay commission-based." },
       { title: "Custom Domain", desc: "Connect your own domain in 1 click (Cloudflare)." },
-      { title: "Pixels & Automations", desc: "Meta, TikTok, Google Ads · Telegram & Zapier webhooks." },
+      {
+        title: "Pixels & Automations",
+        desc: "Meta, TikTok, Google Ads · Telegram & Zapier webhooks.",
+      },
     ],
     kpis: [
       { value: "5%", label: "Flat commission" },
       { value: "72h", label: "Maturity period" },
       { value: "100%", label: "KYC Sellers" },
       { value: "24/7", label: "AI Moderation" },
-    ]
-  }
+    ],
+  },
 };
 
 const categoryLabels: Record<string, Record<string, string>> = {
@@ -178,7 +211,9 @@ const Marketplace = () => {
   const [recommended, setRecommended] = useState<MarketplaceProduct[]>([]);
   const [loadingProducts, setLoadingProducts] = useState(true);
 
-  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+  const [lang, setLang] = useState(() =>
+    typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
+  );
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -186,7 +221,7 @@ const Marketplace = () => {
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
 
-  const t = translations[lang === 'en' ? 'en' : 'fr'];
+  const t = translations[lang === "en" ? "en" : "fr"];
 
   useEffect(() => {
     const fetchAll = async () => {
@@ -222,11 +257,7 @@ const Marketplace = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <SEOHead
-        canonicalPath="/marketplace"
-        title={t.seoTitle}
-        description={t.seoDesc}
-      />
+      <SEOHead canonicalPath="/marketplace" title={t.seoTitle} description={t.seoDesc} />
       <Header />
 
       {/* HERO MARKETPLACE — IMAGE BANNER */}
@@ -419,11 +450,17 @@ const Marketplace = () => {
               </div>
               <div>
                 <h3 className="text-base font-bold text-foreground sm:text-lg">
-                  {lang === "en" ? <>Buy from <span className="text-accent">Verified</span> sellers</> : <>Achetez auprès de vendeurs <span className="text-accent">Verified</span></>}
+                  {lang === "en" ? (
+                    <>
+                      Buy from <span className="text-accent">Verified</span> sellers
+                    </>
+                  ) : (
+                    <>
+                      Achetez auprès de vendeurs <span className="text-accent">Verified</span>
+                    </>
+                  )}
                 </h3>
-                <p className="text-xs text-muted-foreground sm:text-sm">
-                  {t.verifiedDesc}
-                </p>
+                <p className="text-xs text-muted-foreground sm:text-sm">{t.verifiedDesc}</p>
               </div>
             </div>
             <Link to="/search?verified=any">
@@ -592,13 +629,9 @@ const ProductSection = ({
           <div className="min-w-0">
             <div className="mb-0.5 flex items-center gap-2 sm:mb-1">
               {icon}
-              <h2 className="text-lg font-bold text-foreground sm:text-xl md:text-2xl">
-                {title}
-              </h2>
+              <h2 className="text-lg font-bold text-foreground sm:text-xl md:text-2xl">{title}</h2>
             </div>
-            <p className="line-clamp-1 text-xs text-muted-foreground sm:text-sm">
-              {subtitle}
-            </p>
+            <p className="line-clamp-1 text-xs text-muted-foreground sm:text-sm">{subtitle}</p>
           </div>
           <Link
             to={ctaLink}
@@ -611,10 +644,7 @@ const ProductSection = ({
         {loading ? (
           <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
             {Array.from({ length: 4 }).map((_, i) => (
-              <div
-                key={i}
-                className="aspect-square animate-pulse rounded-2xl bg-secondary"
-              />
+              <div key={i} className="aspect-square animate-pulse rounded-2xl bg-secondary" />
             ))}
           </div>
         ) : (

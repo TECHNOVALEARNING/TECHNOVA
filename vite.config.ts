@@ -8,7 +8,7 @@ const apiPlugin = () => ({
   configureServer(server) {
     server.middlewares.use(async (req, res, next) => {
       if (req.url && req.url.startsWith("/api/")) {
-        const urlObj = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
+        const urlObj = new URL(req.url, `http://${req.headers.host || "localhost"}`);
         const apiPath = urlObj.pathname;
         const modulePath = path.resolve(__dirname, `.${apiPath}.ts`);
 
@@ -44,7 +44,7 @@ const apiPlugin = () => ({
               end(data?: string) {
                 originalEnd(data);
                 return this;
-              }
+              },
             });
 
             await module.default(mockReq, mockRes);
@@ -54,13 +54,18 @@ const apiPlugin = () => ({
           console.error(`Error executing api handler at ${modulePath}:`, err);
           res.statusCode = 500;
           res.setHeader("Content-Type", "application/json");
-          res.end(JSON.stringify({ error: "Internal server error in Vite API proxy", message: String(err) }));
+          res.end(
+            JSON.stringify({
+              error: "Internal server error in Vite API proxy",
+              message: String(err),
+            }),
+          );
           return;
         }
       }
       next();
     });
-  }
+  },
 });
 
 // https://vitejs.dev/config/

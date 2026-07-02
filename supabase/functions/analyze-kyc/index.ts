@@ -3,7 +3,8 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 serve(async (req) => {
@@ -15,7 +16,7 @@ serve(async (req) => {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const lovableApiKey = Deno.env.get("GEMINI_API_KEY");
-    
+
     if (!lovableApiKey) {
       throw new Error("GEMINI_API_KEY is not configured");
     }
@@ -26,9 +27,10 @@ serve(async (req) => {
     const authHeader = req.headers.get("Authorization")!;
     const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
     const supabaseAuth = createClient(supabaseUrl, anonKey);
-    const { data: { user }, error: authError } = await supabaseAuth.auth.getUser(
-      authHeader.replace("Bearer ", "")
-    );
+    const {
+      data: { user },
+      error: authError,
+    } = await supabaseAuth.auth.getUser(authHeader.replace("Bearer ", ""));
 
     if (authError || !user) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
@@ -87,50 +89,55 @@ Tu dois utiliser la fonction analyze_kyc_document pour retourner ton analyse str
 Analyse ces informations et donne ta recommandation.`;
 
     // Call Lovable AI with tool calling for structured output
-    const aiResponse = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${lovableApiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "gemini-2.5-flash",
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: userPrompt },
-        ],
-        tools: [
-          {
-            type: "function",
-            function: {
-              name: "analyze_kyc_document",
-              description: "Retourne l'analyse structurée du dossier KYC",
-              parameters: {
-                type: "object",
-                properties: {
-                  recommendation: {
-                    type: "string",
-                    enum: ["approve", "review", "reject"],
-                    description: "approve = tout semble correct, review = des points nécessitent une vérification manuelle, reject = problèmes majeurs détectés",
+    const aiResponse = await fetch(
+      "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${lovableApiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "gemini-2.5-flash",
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: userPrompt },
+          ],
+          tools: [
+            {
+              type: "function",
+              function: {
+                name: "analyze_kyc_document",
+                description: "Retourne l'analyse structurée du dossier KYC",
+                parameters: {
+                  type: "object",
+                  properties: {
+                    recommendation: {
+                      type: "string",
+                      enum: ["approve", "review", "reject"],
+                      description:
+                        "approve = tout semble correct, review = des points nécessitent une vérification manuelle, reject = problèmes majeurs détectés",
+                    },
+                    confidence: {
+                      type: "number",
+                      description: "Score de confiance entre 0 et 100",
+                    },
+                    details: {
+                      type: "string",
+                      description:
+                        "Analyse détaillée en français expliquant les points vérifiés, les problèmes détectés et les recommandations pour l'administrateur. Inclure des commentaires sur la cohérence du nom, la complétude des documents, et tout point d'attention.",
+                    },
                   },
-                  confidence: {
-                    type: "number",
-                    description: "Score de confiance entre 0 et 100",
-                  },
-                  details: {
-                    type: "string",
-                    description: "Analyse détaillée en français expliquant les points vérifiés, les problèmes détectés et les recommandations pour l'administrateur. Inclure des commentaires sur la cohérence du nom, la complétude des documents, et tout point d'attention.",
-                  },
+                  required: ["recommendation", "confidence", "details"],
+                  additionalProperties: false,
                 },
-                required: ["recommendation", "confidence", "details"],
-                additionalProperties: false,
               },
             },
-          },
-        ],
-        tool_choice: { type: "function", function: { name: "analyze_kyc_document" } },
-      }),
-    });
+          ],
+          tool_choice: { type: "function", function: { name: "analyze_kyc_document" } },
+        }),
+      },
+    );
 
     if (!aiResponse.ok) {
       if (aiResponse.status === 429) {
@@ -151,7 +158,7 @@ Analyse ces informations et donne ta recommandation.`;
     }
 
     const aiData = await aiResponse.json();
-    
+
     // Extract tool call result
     const toolCall = aiData.choices?.[0]?.message?.tool_calls?.[0];
     if (!toolCall) {
@@ -173,16 +180,19 @@ Analyse ces informations et donne ta recommandation.`;
 
     if (updateError) throw updateError;
 
-    return new Response(JSON.stringify({ 
-      success: true, 
-      analysis: {
-        recommendation: analysis.recommendation,
-        confidence: analysis.confidence,
-        details: analysis.details,
-      }
-    }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({
+        success: true,
+        analysis: {
+          recommendation: analysis.recommendation,
+          confidence: analysis.confidence,
+          details: analysis.details,
+        },
+      }),
+      {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      },
+    );
   } catch (error) {
     console.error("analyze-kyc error:", error);
     return new Response(JSON.stringify({ error: error.message }), {

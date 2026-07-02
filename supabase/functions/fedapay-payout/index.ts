@@ -2,7 +2,8 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 const FEDAPAY_API_URL = "https://api.fedapay.com/v1";
@@ -14,8 +15,13 @@ function getPayoutMode(operator: string, phone: string): string {
 
   let country = "bj";
   const dialToCountry: Record<string, string> = {
-    "229": "bj", "225": "ci", "228": "tg", "223": "ml",
-    "221": "sn", "226": "bf", "224": "gn",
+    "229": "bj",
+    "225": "ci",
+    "228": "tg",
+    "223": "ml",
+    "221": "sn",
+    "226": "bf",
+    "224": "gn",
   };
   for (const [dial, c] of Object.entries(dialToCountry)) {
     if (cleanPhone.startsWith(dial)) {
@@ -36,8 +42,13 @@ function extractPhoneInfo(phoneNumber: string): { localPhone: string; country: s
   const cleanPhone = phoneNumber.replace(/\s+/g, "").replace(/^\+/, "");
 
   const dialToCountry: Record<string, string> = {
-    "229": "BJ", "225": "CI", "228": "TG", "223": "ML",
-    "221": "SN", "226": "BF", "224": "GN",
+    "229": "BJ",
+    "225": "CI",
+    "228": "TG",
+    "223": "ML",
+    "221": "SN",
+    "226": "BF",
+    "224": "GN",
   };
 
   let country = "BJ";
@@ -77,7 +88,10 @@ Deno.serve(async (req) => {
     const userClient = createClient(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY")!, {
       global: { headers: { Authorization: authHeader } },
     });
-    const { data: { user }, error: authError } = await userClient.auth.getUser(token);
+    const {
+      data: { user },
+      error: authError,
+    } = await userClient.auth.getUser(token);
     if (authError || !user) throw new Error("Non authentifié");
 
     const { amount, phoneNumber, operator } = await req.json();
@@ -94,7 +108,11 @@ Deno.serve(async (req) => {
       .eq("status", "completed");
 
     const totalSales = (orders || []).reduce((sum: number, o: any) => sum + Number(o.amount), 0);
-    const { data: feeRow } = await supabase.from("platform_fees").select("value_pct").eq("key", "technova_commission_pct").maybeSingle();
+    const { data: feeRow } = await supabase
+      .from("platform_fees")
+      .select("value_pct")
+      .eq("key", "technova_commission_pct")
+      .maybeSingle();
     const commissionPct = Number(feeRow?.value_pct ?? 5) / 100;
     const commission = totalSales * commissionPct;
     const grossAvailable = totalSales - commission;
@@ -105,7 +123,10 @@ Deno.serve(async (req) => {
       .eq("user_id", user.id)
       .in("status", ["pending", "processing", "completed"]);
 
-    const totalWithdrawn = (withdrawals || []).reduce((sum: number, w: any) => sum + Number(w.amount), 0);
+    const totalWithdrawn = (withdrawals || []).reduce(
+      (sum: number, w: any) => sum + Number(w.amount),
+      0,
+    );
     const availableBalance = grossAvailable - totalWithdrawn;
 
     if (amount > availableBalance) {
@@ -151,7 +172,7 @@ Deno.serve(async (req) => {
       const createRes = await fetch(`${FEDAPAY_API_URL}/payouts`, {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${fedapayKey}`,
+          Authorization: `Bearer ${fedapayKey}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -194,7 +215,7 @@ Deno.serve(async (req) => {
       const startRes = await fetch(`${FEDAPAY_API_URL}/payouts/start`, {
         method: "PUT",
         headers: {
-          "Authorization": `Bearer ${fedapayKey}`,
+          Authorization: `Bearer ${fedapayKey}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -212,18 +233,28 @@ Deno.serve(async (req) => {
       }
 
       // Save FedaPay payout ID as reference
-      await supabase.from("withdrawals").update({
-        moneroo_reference: String(payoutId),
-        status: "processing",
-      }).eq("id", withdrawal.id);
-
+      await supabase
+        .from("withdrawals")
+        .update({
+          moneroo_reference: String(payoutId),
+          status: "processing",
+        })
+        .eq("id", withdrawal.id);
     } catch (payoutErr: any) {
-      if (payoutErr.message?.includes("FedaPay") || payoutErr.message?.includes("Erreur") || payoutErr.message?.includes("minimum") || payoutErr.message?.includes("Solde") || payoutErr.message?.includes("Impossible")) {
+      if (
+        payoutErr.message?.includes("FedaPay") ||
+        payoutErr.message?.includes("Erreur") ||
+        payoutErr.message?.includes("minimum") ||
+        payoutErr.message?.includes("Solde") ||
+        payoutErr.message?.includes("Impossible")
+      ) {
         throw payoutErr;
       }
       console.error("Payout request failed:", payoutErr);
       await supabase.from("withdrawals").update({ status: "failed" }).eq("id", withdrawal.id);
-      throw new Error("Erreur de connexion au service de paiement: " + (payoutErr.message || "erreur inconnue"));
+      throw new Error(
+        "Erreur de connexion au service de paiement: " + (payoutErr.message || "erreur inconnue"),
+      );
     }
 
     // Notify user
@@ -234,15 +265,14 @@ Deno.serve(async (req) => {
       type: "info",
     });
 
-    return new Response(
-      JSON.stringify({ success: true, withdrawal_id: withdrawal.id }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return new Response(JSON.stringify({ success: true, withdrawal_id: withdrawal.id }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   } catch (error: any) {
     console.error("Error:", error);
-    return new Response(
-      JSON.stringify({ error: error.message }),
-      { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 400,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 });

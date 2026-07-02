@@ -27,7 +27,12 @@ interface ProductReportDialogProps {
   productTitle: string;
 }
 
-const ProductReportDialog = ({ open, onOpenChange, productId, productTitle }: ProductReportDialogProps) => {
+const ProductReportDialog = ({
+  open,
+  onOpenChange,
+  productId,
+  productTitle,
+}: ProductReportDialogProps) => {
   const [reason, setReason] = useState("contenu_trompeur");
   const [details, setDetails] = useState("");
   const [submitting, setSubmitting] = useState(false);

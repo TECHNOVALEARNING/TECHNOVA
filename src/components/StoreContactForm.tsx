@@ -62,7 +62,17 @@ const StoreContactForm = ({ storeOwnerId, storeName }: StoreContactFormProps) =>
         <p className="text-sm text-muted-foreground">
           {storeName} recevra votre message et vous répondra bientôt.
         </p>
-        <Button variant="outline" className="mt-4" onClick={() => { setSent(false); setName(""); setEmail(""); setPhone(""); setMessage(""); }}>
+        <Button
+          variant="outline"
+          className="mt-4"
+          onClick={() => {
+            setSent(false);
+            setName("");
+            setEmail("");
+            setPhone("");
+            setMessage("");
+          }}
+        >
           Envoyer un autre message
         </Button>
       </div>
@@ -74,16 +84,31 @@ const StoreContactForm = ({ storeOwnerId, storeName }: StoreContactFormProps) =>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="text-sm font-medium text-foreground mb-1 block">Nom complet *</label>
-          <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Votre nom" required />
+          <Input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Votre nom"
+            required
+          />
         </div>
         <div>
           <label className="text-sm font-medium text-foreground mb-1 block">Email *</label>
-          <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="votre@email.com" required />
+          <Input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="votre@email.com"
+            required
+          />
         </div>
       </div>
       <div>
         <label className="text-sm font-medium text-foreground mb-1 block">Téléphone</label>
-        <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+229 XX XX XX XX" />
+        <Input
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          placeholder="+229 XX XX XX XX"
+        />
       </div>
       <div>
         <label className="text-sm font-medium text-foreground mb-1 block">Message *</label>

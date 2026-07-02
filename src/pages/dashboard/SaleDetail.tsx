@@ -2,9 +2,26 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
-  ArrowLeft, Copy, Check, ShieldOff, Sparkles, Package, User as UserIcon,
-  CreditCard, Globe, Clock, Mail, Phone, Tag, ExternalLink, Receipt,
-  CheckCircle2, KeyRound, Hash, MapPin, Smartphone,
+  ArrowLeft,
+  Copy,
+  Check,
+  ShieldOff,
+  Sparkles,
+  Package,
+  User as UserIcon,
+  CreditCard,
+  Globe,
+  Clock,
+  Mail,
+  Phone,
+  Tag,
+  ExternalLink,
+  Receipt,
+  CheckCircle2,
+  KeyRound,
+  Hash,
+  MapPin,
+  Smartphone,
 } from "lucide-react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { Button } from "@/components/ui/button";
@@ -67,14 +84,29 @@ const SaleDetail = () => {
       setOrder(o as any);
 
       const [{ data: p }, { data: c }, { data: lic }] = await Promise.all([
-        supabase.from("products").select("id, title, type, thumbnail_url, price").eq("id", o.product_id).maybeSingle(),
-        supabase.from("customers").select("id, name, email, phone, auth_id, created_at").eq("id", o.customer_id).maybeSingle(),
-        supabase.from("licenses").select("license_key, status, max_activations, expires_at, activated_at").eq("order_id", o.id),
+        supabase
+          .from("products")
+          .select("id, title, type, thumbnail_url, price")
+          .eq("id", o.product_id)
+          .maybeSingle(),
+        supabase
+          .from("customers")
+          .select("id, name, email, phone, auth_id, created_at")
+          .eq("id", o.customer_id)
+          .maybeSingle(),
+        supabase
+          .from("licenses")
+          .select("license_key, status, max_activations, expires_at, activated_at")
+          .eq("order_id", o.id),
       ]);
-      
-      let custWithAvatar = { ...c };
+
+      const custWithAvatar = { ...c };
       if (c?.auth_id) {
-        const { data: prof } = await supabase.from("profiles").select("avatar_url").eq("id", c.auth_id).maybeSingle();
+        const { data: prof } = await supabase
+          .from("profiles")
+          .select("avatar_url")
+          .eq("id", c.auth_id)
+          .maybeSingle();
         custWithAvatar.avatar_url = prof?.avatar_url;
       }
 
@@ -107,25 +139,39 @@ const SaleDetail = () => {
   const txId = order.moneroo_transaction_id || order.pawapay_deposit_id || null;
   const country = order.shipping_address?.country || order.shipping_address?.country_name || null;
   const customerPhone = customer?.phone || order.shipping_address?.phone || null;
-  const discount = order.original_amount && order.original_amount > order.amount
-    ? order.original_amount - order.amount : 0;
+  const discount =
+    order.original_amount && order.original_amount > order.amount
+      ? order.original_amount - order.amount
+      : 0;
   const paymentLabel = PAYMENT_LABEL[order.payment_method || ""] || order.payment_method || "—";
 
   const initials = (customer?.name || "?")
-    .split(" ").filter(Boolean).slice(0, 2).map((n: string) => n[0]).join("").toUpperCase();
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((n: string) => n[0])
+    .join("")
+    .toUpperCase();
 
   const whatsappLink = customerPhone
-    ? `https://wa.me/${customerPhone.replace(/[^0-9]/g, "")}` : null;
+    ? `https://wa.me/${customerPhone.replace(/[^0-9]/g, "")}`
+    : null;
 
   return (
     <DashboardLayout>
       <div className="max-w-4xl space-y-5">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
           className="flex items-center justify-between gap-3"
         >
-          <Button variant="ghost" size="sm" onClick={() => navigate("/dashboard/sales")} className="gap-1.5 -ml-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate("/dashboard/sales")}
+            className="gap-1.5 -ml-2"
+          >
             <ArrowLeft className="h-4 w-4" /> Retour
           </Button>
           <button
@@ -133,13 +179,18 @@ const SaleDetail = () => {
             className="inline-flex items-center gap-1.5 rounded-lg bg-secondary px-2.5 py-1 font-mono text-[11px] text-foreground hover:bg-secondary/70"
           >
             #SALE{shortId}
-            {copiedField === "id" ? <Check className="h-3 w-3 text-emerald-600" /> : <Copy className="h-3 w-3" />}
+            {copiedField === "id" ? (
+              <Check className="h-3 w-3 text-emerald-600" />
+            ) : (
+              <Copy className="h-3 w-3" />
+            )}
           </button>
         </motion.div>
 
         {/* Hero */}
         <motion.div
-          initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
           className="relative overflow-hidden rounded-3xl p-5 sm:p-6 text-white bg-gradient-to-br from-[hsl(265_60%_22%)] via-[hsl(265_70%_32%)] to-[hsl(265_75%_42%)] shadow-[0_20px_50px_-20px_hsl(265_70%_30%/0.7)]"
         >
           <div className="pointer-events-none absolute -top-20 -right-16 h-56 w-56 rounded-full bg-accent/30 blur-3xl" />
@@ -147,37 +198,50 @@ const SaleDetail = () => {
           <div className="relative">
             <div className="flex items-center gap-2 mb-2">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-400/20 border border-emerald-300/40 px-2.5 py-0.5 text-[11px] font-bold text-emerald-50">
-                <CheckCircle2 className="h-3 w-3" /> {order.status === "completed" ? "Payée" : order.status}
+                <CheckCircle2 className="h-3 w-3" />{" "}
+                {order.status === "completed" ? "Payée" : order.status}
               </span>
               <span className="inline-flex items-center gap-1 text-[11px] text-white/70">
                 <Clock className="h-3 w-3" />
                 {format(new Date(order.created_at), "EEE d MMM yyyy 'à' HH:mm", { locale: fr })}
               </span>
             </div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/60 mb-1">Montant net</p>
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/60 mb-1">
+              Montant net
+            </p>
             <p className="text-4xl sm:text-5xl font-extrabold tracking-tight">
               {order.amount.toLocaleString("fr-FR")}
               <span className="text-xl font-bold text-accent ml-1.5">FCFA</span>
             </p>
             {discount > 0 && (
               <p className="mt-1 text-xs text-white/70">
-                <span className="line-through">{order.original_amount?.toLocaleString("fr-FR")} F</span>
+                <span className="line-through">
+                  {order.original_amount?.toLocaleString("fr-FR")} F
+                </span>
                 <span className="ml-2 inline-flex items-center gap-1 text-accent">
-                  <Tag className="h-3 w-3" /> -{discount.toLocaleString("fr-FR")} F ({order.promo_code})
+                  <Tag className="h-3 w-3" /> -{discount.toLocaleString("fr-FR")} F (
+                  {order.promo_code})
                 </span>
               </p>
             )}
             <div className="mt-4 flex flex-wrap gap-2">
               {whatsappLink && (
                 <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
-                  <Button size="sm" className="gap-1.5 bg-white/15 hover:bg-white/25 text-white border border-white/20 backdrop-blur-sm">
+                  <Button
+                    size="sm"
+                    className="gap-1.5 bg-white/15 hover:bg-white/25 text-white border border-white/20 backdrop-blur-sm"
+                  >
                     <Smartphone className="h-3.5 w-3.5" /> Contacter WhatsApp
                   </Button>
                 </a>
               )}
               {customer?.email && (
                 <a href={`mailto:${customer.email}`}>
-                  <Button size="sm" variant="ghost" className="gap-1.5 text-white hover:bg-white/15">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="gap-1.5 text-white hover:bg-white/15"
+                  >
                     <Mail className="h-3.5 w-3.5" /> Email
                   </Button>
                 </a>
@@ -200,11 +264,17 @@ const SaleDetail = () => {
               )}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-semibold text-foreground truncate">{product?.title || "Produit"}</p>
+              <p className="font-semibold text-foreground truncate">
+                {product?.title || "Produit"}
+              </p>
               <p className="text-[11px] text-muted-foreground capitalize">
-                {product?.type === "file" ? "Fichier numérique"
-                  : product?.type === "course" ? "Formation"
-                  : product?.type === "license" ? "Licence" : product?.type || "—"}
+                {product?.type === "file"
+                  ? "Fichier numérique"
+                  : product?.type === "course"
+                    ? "Formation"
+                    : product?.type === "license"
+                      ? "Licence"
+                      : product?.type || "—"}
               </p>
             </div>
             <ExternalLink className="h-4 w-4 text-muted-foreground" />
@@ -217,7 +287,11 @@ const SaleDetail = () => {
             <div className="flex items-center gap-3 p-4 border-b border-border/60">
               <div className="h-12 w-12 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-bold shrink-0 overflow-hidden">
                 {customer?.avatar_url ? (
-                  <img src={customer.avatar_url} alt={customer.name} className="h-full w-full object-cover" />
+                  <img
+                    src={customer.avatar_url}
+                    alt={customer.name}
+                    className="h-full w-full object-cover"
+                  />
                 ) : (
                   initials
                 )}
@@ -227,35 +301,72 @@ const SaleDetail = () => {
                   {customer?.name || "Client"}
                 </p>
                 <p className="text-[11px] text-muted-foreground">
-                  Client depuis {customer?.created_at && format(new Date(customer.created_at), "MMM yyyy", { locale: fr })}
+                  Client depuis{" "}
+                  {customer?.created_at &&
+                    format(new Date(customer.created_at), "MMM yyyy", { locale: fr })}
                 </p>
               </div>
               {whatsappLink && (
-                <a href={whatsappLink} target="_blank" rel="noopener noreferrer"
-                  className="h-9 w-9 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0 hover:bg-emerald-600">
+                <a
+                  href={whatsappLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="h-9 w-9 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0 hover:bg-emerald-600"
+                >
                   <Smartphone className="h-4 w-4" />
                 </a>
               )}
             </div>
-            <KvRow label="Email" value={customer?.email} icon={Mail} onCopy={() => copy("email", customer?.email)} copied={copiedField === "email"} />
-            <KvRow label="Téléphone" value={customerPhone} icon={Phone} onCopy={() => copy("phone", customerPhone)} copied={copiedField === "phone"} />
+            <KvRow
+              label="Email"
+              value={customer?.email}
+              icon={Mail}
+              onCopy={() => copy("email", customer?.email)}
+              copied={copiedField === "email"}
+            />
+            <KvRow
+              label="Téléphone"
+              value={customerPhone}
+              icon={Phone}
+              onCopy={() => copy("phone", customerPhone)}
+              copied={copiedField === "phone"}
+            />
           </div>
         </Section>
 
         {/* Payment */}
         <Section icon={CreditCard} title="Informations de paiement">
           <div className="rounded-xl border border-border/60 bg-card overflow-hidden">
-            <KvRow label="Prix initial" value={`${(order.original_amount || order.amount).toLocaleString("fr-FR")} FCFA`} />
-            <KvRow label="Réduction" value={discount > 0 ? `-${discount.toLocaleString("fr-FR")} FCFA` : "—"} highlight={discount > 0 ? "accent" : undefined} />
-            <KvRow label="Montant net" value={`${order.amount.toLocaleString("fr-FR")} FCFA`} bold />
+            <KvRow
+              label="Prix initial"
+              value={`${(order.original_amount || order.amount).toLocaleString("fr-FR")} FCFA`}
+            />
+            <KvRow
+              label="Réduction"
+              value={discount > 0 ? `-${discount.toLocaleString("fr-FR")} FCFA` : "—"}
+              highlight={discount > 0 ? "accent" : undefined}
+            />
+            <KvRow
+              label="Montant net"
+              value={`${order.amount.toLocaleString("fr-FR")} FCFA`}
+              bold
+            />
             <KvRow label="Moyen de paiement" value={paymentLabel} icon={CreditCard} />
             {txId && (
               <KvRow
-                label="ID transaction" value={txId} icon={Hash} mono
-                onCopy={() => copy("tx", txId)} copied={copiedField === "tx"}
+                label="ID transaction"
+                value={txId}
+                icon={Hash}
+                mono
+                onCopy={() => copy("tx", txId)}
+                copied={copiedField === "tx"}
               />
             )}
-            <KvRow label="Date de paiement" value={format(new Date(order.created_at), "d MMM yyyy 'à' HH:mm:ss", { locale: fr })} icon={Clock} />
+            <KvRow
+              label="Date de paiement"
+              value={format(new Date(order.created_at), "d MMM yyyy 'à' HH:mm:ss", { locale: fr })}
+              icon={Clock}
+            />
           </div>
         </Section>
 
@@ -275,11 +386,25 @@ const SaleDetail = () => {
                     <KeyRound className="h-3.5 w-3.5" /> Clés de licence ({licenses.length})
                   </div>
                   {licenses.map((l, i) => (
-                    <div key={i} className="flex items-center gap-2 rounded-lg bg-secondary/50 px-3 py-2">
-                      <code className="flex-1 text-[12px] font-mono text-foreground truncate">{l.license_key}</code>
-                      <Badge variant="outline" className="text-[10px] capitalize">{l.status}</Badge>
-                      <button onClick={() => copy(`lic-${i}`, l.license_key)} className="text-muted-foreground hover:text-foreground">
-                        {copiedField === `lic-${i}` ? <Check className="h-3.5 w-3.5 text-emerald-600" /> : <Copy className="h-3.5 w-3.5" />}
+                    <div
+                      key={i}
+                      className="flex items-center gap-2 rounded-lg bg-secondary/50 px-3 py-2"
+                    >
+                      <code className="flex-1 text-[12px] font-mono text-foreground truncate">
+                        {l.license_key}
+                      </code>
+                      <Badge variant="outline" className="text-[10px] capitalize">
+                        {l.status}
+                      </Badge>
+                      <button
+                        onClick={() => copy(`lic-${i}`, l.license_key)}
+                        className="text-muted-foreground hover:text-foreground"
+                      >
+                        {copiedField === `lic-${i}` ? (
+                          <Check className="h-3.5 w-3.5 text-emerald-600" />
+                        ) : (
+                          <Copy className="h-3.5 w-3.5" />
+                        )}
                       </button>
                     </div>
                   ))}
@@ -304,10 +429,7 @@ const SaleDetail = () => {
 };
 
 const Section = ({ icon: Icon, title, children }: any) => (
-  <motion.div
-    initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-    className="space-y-2"
-  >
+  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
     <div className="flex items-center gap-2 px-1">
       <div className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center">
         <Icon className="h-3.5 w-3.5 text-primary" />
@@ -321,8 +443,11 @@ const Section = ({ icon: Icon, title, children }: any) => (
 const KvRow = ({ label, value, icon: Icon, onCopy, copied, mono, bold, highlight }: any) => {
   if (value === undefined || value === null || value === "") value = "—";
   const colorClass =
-    highlight === "emerald" ? "text-emerald-600" :
-    highlight === "accent" ? "text-accent-foreground bg-accent/15 px-2 py-0.5 rounded-md" : "";
+    highlight === "emerald"
+      ? "text-emerald-600"
+      : highlight === "accent"
+        ? "text-accent-foreground bg-accent/15 px-2 py-0.5 rounded-md"
+        : "";
   return (
     <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-border/40 last:border-0">
       <div className="flex items-center gap-2 text-xs text-muted-foreground shrink-0">
@@ -330,12 +455,18 @@ const KvRow = ({ label, value, icon: Icon, onCopy, copied, mono, bold, highlight
         {label}
       </div>
       <div className="flex items-center gap-2 min-w-0">
-        <span className={`text-sm text-right truncate ${bold ? "font-bold text-foreground" : "text-foreground"} ${mono ? "font-mono text-[12px]" : ""} ${colorClass}`}>
+        <span
+          className={`text-sm text-right truncate ${bold ? "font-bold text-foreground" : "text-foreground"} ${mono ? "font-mono text-[12px]" : ""} ${colorClass}`}
+        >
           {value}
         </span>
         {onCopy && value !== "—" && (
           <button onClick={onCopy} className="text-muted-foreground hover:text-foreground shrink-0">
-            {copied ? <Check className="h-3.5 w-3.5 text-emerald-600" /> : <Copy className="h-3.5 w-3.5" />}
+            {copied ? (
+              <Check className="h-3.5 w-3.5 text-emerald-600" />
+            ) : (
+              <Copy className="h-3.5 w-3.5" />
+            )}
           </button>
         )}
       </div>

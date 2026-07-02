@@ -22,6 +22,7 @@ import { supabase as sellerSupabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import logo from "@/assets/logo.png";
 import SEOHead from "@/components/SEOHead";
+import { getEmbedUrl } from "@/lib/videoUtils";
 
 import BuyerContentDialog from "@/components/BuyerContentDialog";
 import ProductReviewForm from "@/components/buyer/ProductReviewForm";
@@ -53,37 +54,12 @@ interface StoreRow {
 
 const SESSION_DURATION = 30 * 60 * 1000;
 
-const getEmbedUrl = (url: string) => {
-  if (!url) return "";
-  try {
-    if (url.includes("drive.google.com/file/d/")) {
-      const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
-      if (match && match[1]) {
-        return `https://drive.google.com/file/d/${match[1]}/preview`;
-      }
-    }
-    if (url.includes("youtube.com/watch")) {
-      const urlObj = new URL(url);
-      return `https://www.youtube.com/embed/${urlObj.searchParams.get("v")}`;
-    }
-    if (url.includes("youtu.be")) {
-      const id = url.split("youtu.be/")[1]?.split("?")[0];
-      return `https://www.youtube.com/embed/${id}`;
-    }
-    if (url.includes("vimeo.com")) {
-      const id = url.split("vimeo.com/")[1]?.split("/")[0]?.split("?")[0];
-      return `https://player.vimeo.com/video/${id}`;
-    }
-    return url;
-  } catch {
-    return url;
-  }
-};
-
 const BuyerOrderDetail = () => {
   const { orderId } = useParams();
   const navigate = useNavigate();
-  const isPortal = window.location.hostname.startsWith("portal.") || window.location.hostname.startsWith("client.");
+  const isPortal =
+    window.location.hostname.startsWith("portal.") ||
+    window.location.hostname.startsWith("client.");
   const loginPath = isPortal ? "/" : "/buyer-login";
   const dashboardPath = isPortal ? "/dashboard" : "/mes-achats";
   const [order, setOrder] = useState<OrderRow | null>(null);
@@ -93,7 +69,9 @@ const BuyerOrderDetail = () => {
   const [contentOpen, setContentOpen] = useState(false);
   const [supportOpen, setSupportOpen] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [customer, setCustomer] = useState<{ id: string; name: string; email: string } | null>(null);
+  const [customer, setCustomer] = useState<{ id: string; name: string; email: string } | null>(
+    null,
+  );
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -130,8 +108,16 @@ const BuyerOrderDetail = () => {
       setOrder(o as OrderRow);
 
       const [{ data: p }, { data: s }] = await Promise.all([
-        supabase.from("products").select("id, title, type, thumbnail_url, download_url, description, file_format").eq("id", (o as any).product_id).maybeSingle(),
-        supabase.from("profiles").select("display_name, store_slug, contact").eq("id", (o as any).store_owner_id).maybeSingle(),
+        supabase
+          .from("products")
+          .select("id, title, type, thumbnail_url, download_url, description, file_format")
+          .eq("id", (o as any).product_id)
+          .maybeSingle(),
+        supabase
+          .from("profiles")
+          .select("display_name, store_slug, contact")
+          .eq("id", (o as any).store_owner_id)
+          .maybeSingle(),
       ]);
       if (p) setProduct(p as ProductRow);
       if (s) setStore(s as StoreRow);
@@ -182,10 +168,17 @@ const BuyerOrderDetail = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <SEOHead title="Détail de Commande — TECHNOVA" description="Affichage du détail et accès au téléchargement de votre commande." noindex />
+      <SEOHead
+        title="Détail de Commande — TECHNOVA"
+        description="Affichage du détail et accès au téléchargement de votre commande."
+        noindex
+      />
       <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur-xl">
         <div className="container mx-auto flex items-center justify-between px-6 py-3">
-          <a href={isPortal ? "https://technovalearning.com" : "/"} className="flex items-center gap-2.5">
+          <a
+            href={isPortal ? "https://technovalearning.com" : "/"}
+            className="flex items-center gap-2.5"
+          >
             <img src={logo} alt="TECHNOVA" className="h-8 w-8 rounded-lg object-contain" />
             <span className="text-lg font-bold text-foreground">TECHNOVA</span>
           </a>
@@ -201,19 +194,37 @@ const BuyerOrderDetail = () => {
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
           <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground mb-2">
             <span>Commande</span>
-            <button onClick={copyOrderId} className="inline-flex items-center gap-1 rounded-md bg-secondary px-2 py-0.5 font-mono text-foreground hover:bg-secondary/70">
+            <button
+              onClick={copyOrderId}
+              className="inline-flex items-center gap-1 rounded-md bg-secondary px-2 py-0.5 font-mono text-foreground hover:bg-secondary/70"
+            >
               #{order.id.slice(0, 8).toUpperCase()}
-              {copied ? <Check className="h-3 w-3 text-emerald-600" /> : <Copy className="h-3 w-3" />}
+              {copied ? (
+                <Check className="h-3 w-3 text-emerald-600" />
+              ) : (
+                <Copy className="h-3 w-3" />
+              )}
             </button>
-            <Badge variant="outline" className="capitalize">{order.status}</Badge>
+            <Badge variant="outline" className="capitalize">
+              {order.status}
+            </Badge>
             <span>·</span>
-            <span>{new Date(order.created_at).toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" })}</span>
+            <span>
+              {new Date(order.created_at).toLocaleDateString("fr-FR", {
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+              })}
+            </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-foreground">{product.title}</h1>
           {store?.store_slug && (
             <p className="mt-1 text-sm text-muted-foreground">
               Vendu par{" "}
-              <a href={`https://technovalearning.com/store/${store.store_slug}`} className="text-primary hover:underline">
+              <a
+                href={`https://technovalearning.com/store/${store.store_slug}`}
+                className="text-primary hover:underline"
+              >
                 {store.display_name || store.store_slug}
               </a>
             </p>
@@ -225,15 +236,21 @@ const BuyerOrderDetail = () => {
           <div className="lg:col-span-2 space-y-6">
             <div className="rounded-2xl border border-border bg-card overflow-hidden">
               <div className="aspect-[16/9] bg-secondary">
-                {product.type === "file" && product.file_format === "video" && product.download_url ? (
-                  <iframe 
-                    src={getEmbedUrl(product.download_url)} 
-                    className="w-full h-full border-0" 
+                {product.type === "file" &&
+                product.file_format === "video" &&
+                product.download_url ? (
+                  <iframe
+                    src={getEmbedUrl(product.download_url)}
+                    className="w-full h-full border-0"
                     allow="autoplay; fullscreen; picture-in-picture"
-                    allowFullScreen 
+                    allowFullScreen
                   />
                 ) : product.thumbnail_url ? (
-                  <img src={product.thumbnail_url} alt={product.title} className="h-full w-full object-cover" />
+                  <img
+                    src={product.thumbnail_url}
+                    alt={product.title}
+                    className="h-full w-full object-cover"
+                  />
                 ) : (
                   <div className="h-full w-full flex items-center justify-center">
                     <Package className="h-14 w-14 text-muted-foreground/30" />
@@ -244,15 +261,25 @@ const BuyerOrderDetail = () => {
                 <div className="flex flex-wrap gap-2">
                   {product.type === "file" && product.download_url ? (
                     <div className="flex flex-wrap flex-1 gap-2">
-                      <a href={product.download_url} target="_blank" rel="noopener noreferrer" className="flex-1 min-w-[180px]">
+                      <a
+                        href={product.download_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 min-w-[180px]"
+                      >
                         <Button className="w-full gap-2">
-                          <Download className="h-4 w-4" /> 
-                          {product.file_format === "video" ? "Télécharger / Ouvrir le lien" : "Télécharger le fichier"}
+                          <Download className="h-4 w-4" />
+                          {product.file_format === "video"
+                            ? "Télécharger / Ouvrir le lien"
+                            : "Télécharger le fichier"}
                         </Button>
                       </a>
                     </div>
                   ) : product.type !== "file" ? (
-                    <Button onClick={() => setContentOpen(true)} className="flex-1 min-w-[180px] gap-2">
+                    <Button
+                      onClick={() => setContentOpen(true)}
+                      className="flex-1 min-w-[180px] gap-2"
+                    >
                       <FileText className="h-4 w-4" /> Accéder au contenu
                     </Button>
                   ) : null}
@@ -282,12 +309,16 @@ const BuyerOrderDetail = () => {
               <Separator className="mb-3" />
               <div className="flex justify-between text-sm py-1">
                 <span className="text-muted-foreground">Produit</span>
-                <span className="text-foreground font-medium text-right max-w-[180px] line-clamp-2">{product.title}</span>
+                <span className="text-foreground font-medium text-right max-w-[180px] line-clamp-2">
+                  {product.title}
+                </span>
               </div>
               <div className="flex justify-between text-sm py-1">
                 <span className="text-muted-foreground">Total</span>
                 <span className="text-foreground font-bold">
-                  {Number(order.amount) > 0 ? `${Number(order.amount).toLocaleString("fr-FR")} FCFA` : "Gratuit"}
+                  {Number(order.amount) > 0
+                    ? `${Number(order.amount).toLocaleString("fr-FR")} FCFA`
+                    : "Gratuit"}
                 </span>
               </div>
               <div className="flex justify-between text-sm py-1">
@@ -310,14 +341,20 @@ const BuyerOrderDetail = () => {
                         className="flex items-center gap-3 rounded-lg border border-border bg-secondary/30 p-2 hover:bg-secondary transition-colors"
                       >
                         {r.thumbnail_url ? (
-                          <img src={r.thumbnail_url} alt={r.title} className="h-12 w-12 rounded-md object-cover" />
+                          <img
+                            src={r.thumbnail_url}
+                            alt={r.title}
+                            className="h-12 w-12 rounded-md object-cover"
+                          />
                         ) : (
                           <div className="h-12 w-12 rounded-md bg-secondary flex items-center justify-center">
                             <Package className="h-5 w-5 text-muted-foreground" />
                           </div>
                         )}
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-foreground line-clamp-1">{r.title}</p>
+                          <p className="text-sm font-medium text-foreground line-clamp-1">
+                            {r.title}
+                          </p>
                           <p className="text-[11px] text-muted-foreground capitalize">{r.type}</p>
                         </div>
                         <span className="text-xs font-medium text-primary flex items-center gap-1">

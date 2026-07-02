@@ -1,11 +1,26 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import {
-  FileText, GraduationCap, Key, Upload, Play, Shield, Layers,
-  Video, Lock, CheckCircle, Eye, DollarSign,
-  TrendingUp, Copy, RefreshCw, GripVertical,
-  Zap, Clock, Monitor,
-  ChevronRight
+  FileText,
+  GraduationCap,
+  Key,
+  Upload,
+  Play,
+  Shield,
+  Layers,
+  Video,
+  Lock,
+  CheckCircle,
+  Eye,
+  DollarSign,
+  TrendingUp,
+  Copy,
+  RefreshCw,
+  GripVertical,
+  Zap,
+  Clock,
+  Monitor,
+  ChevronRight,
 } from "lucide-react";
 
 const tabs = [
@@ -47,12 +62,20 @@ const FilesMockup = () => {
           <div className="flex items-center gap-2">
             {["Upload", "Détails", "Publier"].map((s, i) => (
               <div key={s} className="flex items-center gap-1.5">
-                <div className={`h-5 w-5 rounded-full flex items-center justify-center text-[8px] font-bold ${
-                  i <= step ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
-                }`}>
+                <div
+                  className={`h-5 w-5 rounded-full flex items-center justify-center text-[8px] font-bold ${
+                    i <= step
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted text-muted-foreground"
+                  }`}
+                >
                   {i < step ? "✓" : i + 1}
                 </div>
-                <span className={`text-[9px] font-medium ${i <= step ? "text-foreground" : "text-muted-foreground"}`}>{s}</span>
+                <span
+                  className={`text-[9px] font-medium ${i <= step ? "text-foreground" : "text-muted-foreground"}`}
+                >
+                  {s}
+                </span>
                 {i < 2 && <div className={`w-6 h-px ${i < step ? "bg-primary" : "bg-border"}`} />}
               </div>
             ))}
@@ -60,11 +83,20 @@ const FilesMockup = () => {
 
           <AnimatePresence mode="wait">
             {step === 0 && (
-              <motion.div key="upload" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
+              <motion.div
+                key="upload"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+              >
                 <div className="rounded-lg border-2 border-dashed border-primary/30 bg-primary/5 p-4 text-center">
                   <Upload className="h-6 w-6 text-primary mx-auto mb-1.5" />
-                  <p className="text-[10px] font-semibold text-foreground">Glissez vos fichiers ici</p>
-                  <p className="text-[8px] text-muted-foreground mt-0.5">PDF, ZIP, MP4, MP3… jusqu'à 500 MB</p>
+                  <p className="text-[10px] font-semibold text-foreground">
+                    Glissez vos fichiers ici
+                  </p>
+                  <p className="text-[8px] text-muted-foreground mt-0.5">
+                    PDF, ZIP, MP4, MP3… jusqu'à 500 MB
+                  </p>
                 </div>
                 <div className="mt-2 space-y-1.5">
                   {[
@@ -80,7 +112,9 @@ const FilesMockup = () => {
                     >
                       <FileText className="h-3.5 w-3.5 text-primary shrink-0" />
                       <div className="flex-1 min-w-0">
-                        <p className="text-[9px] font-semibold text-foreground truncate">{f.name}</p>
+                        <p className="text-[9px] font-semibold text-foreground truncate">
+                          {f.name}
+                        </p>
                         <div className="flex items-center gap-2 mt-0.5">
                           <div className="flex-1 h-1 rounded-full bg-muted overflow-hidden">
                             <motion.div
@@ -93,7 +127,9 @@ const FilesMockup = () => {
                           <span className="text-[8px] text-muted-foreground">{f.size}</span>
                         </div>
                       </div>
-                      {f.progress === 100 && <CheckCircle className="h-3 w-3 text-primary shrink-0" />}
+                      {f.progress === 100 && (
+                        <CheckCircle className="h-3 w-3 text-primary shrink-0" />
+                      )}
                     </motion.div>
                   ))}
                 </div>
@@ -101,9 +137,17 @@ const FilesMockup = () => {
             )}
 
             {step === 1 && (
-              <motion.div key="details" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-2">
+              <motion.div
+                key="details"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="space-y-2"
+              >
                 <div className="space-y-1.5">
-                  <label className="text-[9px] font-semibold text-foreground">Titre du produit</label>
+                  <label className="text-[9px] font-semibold text-foreground">
+                    Titre du produit
+                  </label>
                   <div className="rounded-md border border-border bg-background px-2.5 py-1.5 text-[10px] text-foreground">
                     Formation Marketing Digital Complète
                   </div>
@@ -125,14 +169,21 @@ const FilesMockup = () => {
                 <div className="space-y-1">
                   <label className="text-[9px] font-semibold text-foreground">Description</label>
                   <div className="rounded-md border border-border bg-background px-2.5 py-2 text-[9px] text-muted-foreground leading-relaxed h-12">
-                    Apprenez les stratégies marketing les plus efficaces pour développer votre audience...
+                    Apprenez les stratégies marketing les plus efficaces pour développer votre
+                    audience...
                   </div>
                 </div>
               </motion.div>
             )}
 
             {step === 2 && (
-              <motion.div key="publish" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-3">
+              <motion.div
+                key="publish"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="space-y-3"
+              >
                 <div className="rounded-lg bg-primary/5 border border-primary/20 p-3 text-center">
                   <motion.div
                     initial={{ scale: 0 }}
@@ -142,7 +193,9 @@ const FilesMockup = () => {
                     <CheckCircle className="h-8 w-8 text-primary mx-auto mb-1.5" />
                   </motion.div>
                   <p className="text-xs font-bold text-foreground">Produit publié ! 🎉</p>
-                  <p className="text-[9px] text-muted-foreground mt-0.5">Votre fichier est maintenant en vente</p>
+                  <p className="text-[9px] text-muted-foreground mt-0.5">
+                    Votre fichier est maintenant en vente
+                  </p>
                 </div>
                 <div className="grid grid-cols-3 gap-1.5">
                   {[
@@ -150,7 +203,10 @@ const FilesMockup = () => {
                     { label: "Ventes", value: "0", icon: DollarSign },
                     { label: "Revenus", value: "0 F", icon: TrendingUp },
                   ].map((s) => (
-                    <div key={s.label} className="rounded-md border border-border bg-card p-2 text-center">
+                    <div
+                      key={s.label}
+                      className="rounded-md border border-border bg-card p-2 text-center"
+                    >
                       <s.icon className="h-3 w-3 text-primary mx-auto mb-0.5" />
                       <p className="text-[10px] font-bold text-foreground">{s.value}</p>
                       <p className="text-[7px] text-muted-foreground">{s.label}</p>
@@ -193,7 +249,9 @@ const CoursesMockup = () => {
       <div className="rounded-lg bg-foreground/90 aspect-video relative overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-center">
           <motion.div
-            animate={isPlaying ? { scale: [1, 1.2, 0], opacity: [1, 0.8, 0] } : { scale: 1, opacity: 1 }}
+            animate={
+              isPlaying ? { scale: [1, 1.2, 0], opacity: [1, 0.8, 0] } : { scale: 1, opacity: 1 }
+            }
             transition={{ duration: 0.5 }}
             className="h-10 w-10 rounded-full bg-primary/90 flex items-center justify-center cursor-pointer"
           >
@@ -210,9 +268,7 @@ const CoursesMockup = () => {
           />
         </div>
         <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between">
-          <span className="text-[8px] text-white/70">
-            {lessons[activeLesson]?.title}
-          </span>
+          <span className="text-[8px] text-white/70">{lessons[activeLesson]?.title}</span>
           <span className="text-[8px] text-white/70">{lessons[activeLesson]?.duration}</span>
         </div>
       </div>
@@ -237,13 +293,15 @@ const CoursesMockup = () => {
             onClick={() => setActiveLesson(i)}
           >
             <GripVertical className="h-3 w-3 text-muted-foreground/40 shrink-0" />
-            <div className={`h-5 w-5 rounded-full flex items-center justify-center shrink-0 ${
-              lesson.completed
-                ? "bg-primary text-primary-foreground"
-                : i === activeLesson
-                  ? "bg-primary/20 text-primary"
-                  : "bg-muted text-muted-foreground"
-            }`}>
+            <div
+              className={`h-5 w-5 rounded-full flex items-center justify-center shrink-0 ${
+                lesson.completed
+                  ? "bg-primary text-primary-foreground"
+                  : i === activeLesson
+                    ? "bg-primary/20 text-primary"
+                    : "bg-muted text-muted-foreground"
+              }`}
+            >
               {lesson.completed ? (
                 <CheckCircle className="h-3 w-3" />
               ) : (
@@ -330,17 +388,23 @@ const LicensesMockup = () => {
               transition={{ delay: i * 0.1 }}
               className="flex items-center gap-2 px-2.5 py-2 bg-card hover:bg-secondary/30 transition-colors"
             >
-              <Lock className={`h-3 w-3 shrink-0 ${
-                license.status === "active" ? "text-primary" : "text-muted-foreground"
-              }`} />
+              <Lock
+                className={`h-3 w-3 shrink-0 ${
+                  license.status === "active" ? "text-primary" : "text-muted-foreground"
+                }`}
+              />
               <div className="flex-1 min-w-0">
-                <p className="text-[9px] font-mono font-bold text-foreground truncate">{license.key}</p>
+                <p className="text-[9px] font-mono font-bold text-foreground truncate">
+                  {license.key}
+                </p>
                 <div className="flex items-center gap-2 mt-0.5">
-                  <span className={`text-[7px] font-bold px-1 py-0.5 rounded ${
-                    license.status === "active"
-                      ? "bg-primary/10 text-primary"
-                      : "bg-destructive/10 text-destructive"
-                  }`}>
+                  <span
+                    className={`text-[7px] font-bold px-1 py-0.5 rounded ${
+                      license.status === "active"
+                        ? "bg-primary/10 text-primary"
+                        : "bg-destructive/10 text-destructive"
+                    }`}
+                  >
                     {license.status === "active" ? "Active" : "Expirée"}
                   </span>
                   <span className="text-[7px] text-muted-foreground flex items-center gap-0.5">
@@ -381,7 +445,6 @@ const LicensesMockup = () => {
   );
 };
 
-
 const mockupComponents: Record<string, React.FC> = {
   files: FilesMockup,
   courses: CoursesMockup,
@@ -391,15 +454,18 @@ const mockupComponents: Record<string, React.FC> = {
 const tabDescriptions = {
   files: {
     title: "Vendez vos fichiers digitaux instantanément",
-    description: "Uploadez vos e-books, PDFs, templates et fichiers audio/vidéo. Suivez les ventes depuis votre dashboard et gérez la livraison automatique.",
+    description:
+      "Uploadez vos e-books, PDFs, templates et fichiers audio/vidéo. Suivez les ventes depuis votre dashboard et gérez la livraison automatique.",
   },
   courses: {
     title: "Créez des formations professionnelles",
-    description: "Organisez vos leçons par glisser-déposer, intégrez des vidéos YouTube/Vimeo, et suivez la progression de vos élèves en temps réel.",
+    description:
+      "Organisez vos leçons par glisser-déposer, intégrez des vidéos YouTube/Vimeo, et suivez la progression de vos élèves en temps réel.",
   },
   licenses: {
     title: "Vendez des licences logicielles",
-    description: "Génération automatique de clés uniques, gestion des activations par appareil, suivi en temps réel et révocation instantanée.",
+    description:
+      "Génération automatique de clés uniques, gestion des activations par appareil, suivi en temps réel et révocation instantanée.",
   },
 };
 
@@ -418,12 +484,15 @@ const ProductShowcase = () => {
           viewport={{ once: true }}
           className="text-center mb-12"
         >
-          <p className="text-sm font-semibold text-primary mb-3 uppercase tracking-wider">Produits</p>
+          <p className="text-sm font-semibold text-primary mb-3 uppercase tracking-wider">
+            Produits
+          </p>
           <h2 className="text-3xl md:text-5xl font-extrabold text-foreground mb-4">
             Vendez vos produits digitaux instantanément
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Uploadez vos contenus, fixez vos prix. TECHNOVA gère les paiements, la livraison et vos clients.
+            Uploadez vos contenus, fixez vos prix. TECHNOVA gère les paiements, la livraison et vos
+            clients.
           </p>
         </motion.div>
 
@@ -465,7 +534,14 @@ const ProductShowcase = () => {
                 </div>
                 <div className="flex-1 mx-4">
                   <div className="rounded-md bg-background border border-border px-4 py-1.5 text-xs text-muted-foreground text-center">
-                    dashboard.technova.com/{currentTab.id === "files" ? "products/create" : currentTab.id === "courses" ? "products/lessons" : currentTab.id === "licenses" ? "licenses" : "products/bundle"}
+                    dashboard.technova.com/
+                    {currentTab.id === "files"
+                      ? "products/create"
+                      : currentTab.id === "courses"
+                        ? "products/lessons"
+                        : currentTab.id === "licenses"
+                          ? "licenses"
+                          : "products/bundle"}
                   </div>
                 </div>
               </div>
@@ -482,7 +558,10 @@ const ProductShowcase = () => {
                   <p className="text-sm text-muted-foreground leading-relaxed mb-6">
                     {desc.description}
                   </p>
-                  <a href="/register" className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline">
+                  <a
+                    href="/register"
+                    className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
+                  >
                     Commencer maintenant →
                   </a>
                 </div>

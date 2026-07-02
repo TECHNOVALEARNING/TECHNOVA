@@ -16,10 +16,7 @@ export const KycBadge = ({
   return (
     <span
       title="Identité vérifiée par KYC"
-      className={cn(
-        "inline-flex items-center justify-center text-sky-500",
-        className,
-      )}
+      className={cn("inline-flex items-center justify-center text-sky-500", className)}
     >
       <BadgeCheck className={cn(dim, "fill-sky-500/15")} />
     </span>

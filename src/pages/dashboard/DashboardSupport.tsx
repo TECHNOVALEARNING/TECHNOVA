@@ -2,7 +2,18 @@ import { useState, useEffect, useRef } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { MessageCircle, Send, Loader2, User, Bot, CheckCircle, Mail, Phone, Clock, Reply } from "lucide-react";
+import {
+  MessageCircle,
+  Send,
+  Loader2,
+  User,
+  Bot,
+  CheckCircle,
+  Mail,
+  Phone,
+  Clock,
+  Reply,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -74,20 +85,26 @@ const DashboardSupport = () => {
     if (!selectedConv) return;
     const channel = supabase
       .channel(`support-msgs-${selectedConv.id}`)
-      .on("postgres_changes", {
-        event: "INSERT",
-        schema: "public",
-        table: "support_messages",
-        filter: `conversation_id=eq.${selectedConv.id}`,
-      }, (payload) => {
-        setMessages((prev) => {
-          if (prev.some((m) => m.id === payload.new.id)) return prev;
-          return [...prev, payload.new as Message];
-        });
-      })
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "support_messages",
+          filter: `conversation_id=eq.${selectedConv.id}`,
+        },
+        (payload) => {
+          setMessages((prev) => {
+            if (prev.some((m) => m.id === payload.new.id)) return prev;
+            return [...prev, payload.new as Message];
+          });
+        },
+      )
       .subscribe();
 
-    return () => { supabase.removeChannel(channel); };
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [selectedConv]);
 
   const loadConversations = async () => {
@@ -162,9 +179,7 @@ const DashboardSupport = () => {
       .from("support_conversations")
       .update({ status: "closed" } as any)
       .eq("id", convId);
-    setConversations((prev) =>
-      prev.map((c) => (c.id === convId ? { ...c, status: "closed" } : c))
-    );
+    setConversations((prev) => prev.map((c) => (c.id === convId ? { ...c, status: "closed" } : c)));
     if (selectedConv?.id === convId) {
       setSelectedConv({ ...selectedConv, status: "closed" });
     }
@@ -180,7 +195,7 @@ const DashboardSupport = () => {
         .update({ is_read: true } as any)
         .eq("id", msg.id);
       setContactMessages((prev) =>
-        prev.map((m) => (m.id === msg.id ? { ...m, is_read: true } : m))
+        prev.map((m) => (m.id === msg.id ? { ...m, is_read: true } : m)),
       );
     }
   };
@@ -275,7 +290,9 @@ const DashboardSupport = () => {
                         } ${!msg.is_read ? "bg-primary/[0.03]" : ""}`}
                       >
                         <div className="flex items-center justify-between mb-1">
-                          <p className={`text-sm truncate ${!msg.is_read ? "font-bold text-foreground" : "font-medium text-foreground"}`}>
+                          <p
+                            className={`text-sm truncate ${!msg.is_read ? "font-bold text-foreground" : "font-medium text-foreground"}`}
+                          >
                             {msg.sender_name}
                           </p>
                           {!msg.is_read && (
@@ -284,7 +301,12 @@ const DashboardSupport = () => {
                         </div>
                         <p className="text-xs text-muted-foreground truncate">{msg.message}</p>
                         <p className="text-[10px] text-muted-foreground/60 mt-1">
-                          {new Date(msg.created_at).toLocaleDateString("fr", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
+                          {new Date(msg.created_at).toLocaleDateString("fr", {
+                            day: "numeric",
+                            month: "short",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
                         </p>
                       </button>
                     ))
@@ -303,22 +325,33 @@ const DashboardSupport = () => {
                   <div className="flex-1 overflow-y-auto flex flex-col">
                     <div className="px-6 py-5 border-b border-border">
                       <div className="flex items-center justify-between mb-3">
-                        <h3 className="text-lg font-semibold text-foreground">{selectedContact.sender_name}</h3>
-                        <Badge variant={selectedContact.is_read ? "secondary" : "default"} className="text-[10px]">
+                        <h3 className="text-lg font-semibold text-foreground">
+                          {selectedContact.sender_name}
+                        </h3>
+                        <Badge
+                          variant={selectedContact.is_read ? "secondary" : "default"}
+                          className="text-[10px]"
+                        >
                           {selectedContact.is_read ? "Lu" : "Non lu"}
                         </Badge>
                       </div>
                       <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                         <span className="flex items-center gap-1.5">
                           <Mail className="h-3.5 w-3.5" />
-                          <a href={`mailto:${selectedContact.sender_email}`} className="hover:text-primary transition-colors">
+                          <a
+                            href={`mailto:${selectedContact.sender_email}`}
+                            className="hover:text-primary transition-colors"
+                          >
                             {selectedContact.sender_email}
                           </a>
                         </span>
                         {selectedContact.sender_phone && (
                           <span className="flex items-center gap-1.5">
                             <Phone className="h-3.5 w-3.5" />
-                            <a href={`tel:${selectedContact.sender_phone}`} className="hover:text-primary transition-colors">
+                            <a
+                              href={`tel:${selectedContact.sender_phone}`}
+                              className="hover:text-primary transition-colors"
+                            >
                               {selectedContact.sender_phone}
                             </a>
                           </span>
@@ -326,22 +359,30 @@ const DashboardSupport = () => {
                         <span className="flex items-center gap-1.5">
                           <Clock className="h-3.5 w-3.5" />
                           {new Date(selectedContact.created_at).toLocaleDateString("fr", {
-                            day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit"
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
                           })}
                         </span>
                       </div>
                     </div>
-                    
+
                     {/* Original message */}
                     <div className="px-6 py-5 flex-1">
-                      <p className="text-sm text-foreground whitespace-pre-wrap leading-relaxed">{selectedContact.message}</p>
+                      <p className="text-sm text-foreground whitespace-pre-wrap leading-relaxed">
+                        {selectedContact.message}
+                      </p>
                     </div>
 
                     {/* Reply section */}
                     <div className="px-6 py-4 border-t border-border bg-muted/30">
                       <div className="flex items-center gap-2 mb-3">
                         <Reply className="h-4 w-4 text-muted-foreground" />
-                        <p className="text-sm font-medium text-foreground">Répondre à {selectedContact.sender_name}</p>
+                        <p className="text-sm font-medium text-foreground">
+                          Répondre à {selectedContact.sender_name}
+                        </p>
                       </div>
                       <Textarea
                         value={replyText}
@@ -355,7 +396,11 @@ const DashboardSupport = () => {
                         size="sm"
                         className="gap-2"
                       >
-                        {sendingReply ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Send className="h-3.5 w-3.5" />}
+                        {sendingReply ? (
+                          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                        ) : (
+                          <Send className="h-3.5 w-3.5" />
+                        )}
                         Envoyer la réponse par email
                       </Button>
                     </div>
@@ -392,14 +437,24 @@ const DashboardSupport = () => {
                         }`}
                       >
                         <div className="flex items-center justify-between mb-1">
-                          <p className="text-sm font-medium text-foreground truncate">{conv.user_name}</p>
-                          <Badge variant={conv.status === "open" ? "default" : "secondary"} className="text-[10px]">
+                          <p className="text-sm font-medium text-foreground truncate">
+                            {conv.user_name}
+                          </p>
+                          <Badge
+                            variant={conv.status === "open" ? "default" : "secondary"}
+                            className="text-[10px]"
+                          >
                             {conv.status === "open" ? "Ouvert" : "Fermé"}
                           </Badge>
                         </div>
                         <p className="text-xs text-muted-foreground truncate">{conv.subject}</p>
                         <p className="text-[10px] text-muted-foreground/60 mt-1">
-                          {new Date(conv.created_at).toLocaleDateString("fr", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
+                          {new Date(conv.created_at).toLocaleDateString("fr", {
+                            day: "numeric",
+                            month: "short",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
                         </p>
                       </button>
                     ))
@@ -417,12 +472,21 @@ const DashboardSupport = () => {
                   <>
                     <div className="px-4 py-3 border-b border-border flex items-center justify-between">
                       <div>
-                        <p className="text-sm font-semibold text-foreground">{selectedConv.user_name}</p>
-                        <p className="text-[11px] text-muted-foreground">{selectedConv.user_email}</p>
+                        <p className="text-sm font-semibold text-foreground">
+                          {selectedConv.user_name}
+                        </p>
+                        <p className="text-[11px] text-muted-foreground">
+                          {selectedConv.user_email}
+                        </p>
                       </div>
                       <div className="flex items-center gap-2">
                         {selectedConv.status === "open" && isAdmin && (
-                          <Button variant="outline" size="sm" className="text-xs gap-1" onClick={() => closeTicket(selectedConv.id)}>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="text-xs gap-1"
+                            onClick={() => closeTicket(selectedConv.id)}
+                          >
                             <CheckCircle className="h-3 w-3" />
                             Fermer
                           </Button>
@@ -432,24 +496,39 @@ const DashboardSupport = () => {
 
                     <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
                       {messages.map((msg) => (
-                        <div key={msg.id} className={`flex ${msg.sender_type === "admin" ? "justify-end" : "justify-start"}`}>
-                          <div className={`flex items-start gap-2 max-w-[80%] ${msg.sender_type === "admin" ? "flex-row-reverse" : ""}`}>
-                            <div className={`h-6 w-6 rounded-full flex items-center justify-center shrink-0 ${
-                              msg.sender_type === "user" ? "bg-primary/10 text-primary" :
-                              msg.sender_type === "ai" ? "bg-muted text-muted-foreground" :
-                              "bg-emerald-500/10 text-emerald-600"
-                            }`}>
-                              {msg.sender_type === "user" ? <User className="h-3 w-3" /> :
-                               msg.sender_type === "ai" ? <Bot className="h-3 w-3" /> :
-                               <User className="h-3 w-3" />}
+                        <div
+                          key={msg.id}
+                          className={`flex ${msg.sender_type === "admin" ? "justify-end" : "justify-start"}`}
+                        >
+                          <div
+                            className={`flex items-start gap-2 max-w-[80%] ${msg.sender_type === "admin" ? "flex-row-reverse" : ""}`}
+                          >
+                            <div
+                              className={`h-6 w-6 rounded-full flex items-center justify-center shrink-0 ${
+                                msg.sender_type === "user"
+                                  ? "bg-primary/10 text-primary"
+                                  : msg.sender_type === "ai"
+                                    ? "bg-muted text-muted-foreground"
+                                    : "bg-emerald-500/10 text-emerald-600"
+                              }`}
+                            >
+                              {msg.sender_type === "user" ? (
+                                <User className="h-3 w-3" />
+                              ) : msg.sender_type === "ai" ? (
+                                <Bot className="h-3 w-3" />
+                              ) : (
+                                <User className="h-3 w-3" />
+                              )}
                             </div>
-                            <div className={`rounded-2xl px-3 py-2 text-sm ${
-                              msg.sender_type === "admin"
-                                ? "bg-primary text-primary-foreground rounded-tr-sm"
-                                : msg.sender_type === "ai"
-                                ? "bg-muted/50 text-muted-foreground rounded-tl-sm italic"
-                                : "bg-muted text-foreground rounded-tl-sm"
-                            }`}>
+                            <div
+                              className={`rounded-2xl px-3 py-2 text-sm ${
+                                msg.sender_type === "admin"
+                                  ? "bg-primary text-primary-foreground rounded-tr-sm"
+                                  : msg.sender_type === "ai"
+                                    ? "bg-muted/50 text-muted-foreground rounded-tl-sm italic"
+                                    : "bg-muted text-foreground rounded-tl-sm"
+                              }`}
+                            >
                               {msg.content}
                             </div>
                           </div>
@@ -460,7 +539,13 @@ const DashboardSupport = () => {
 
                     {selectedConv.status === "open" && (
                       <div className="border-t border-border px-3 py-3">
-                        <form onSubmit={(e) => { e.preventDefault(); sendReply(); }} className="flex items-center gap-2">
+                        <form
+                          onSubmit={(e) => {
+                            e.preventDefault();
+                            sendReply();
+                          }}
+                          className="flex items-center gap-2"
+                        >
                           <input
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
@@ -473,7 +558,11 @@ const DashboardSupport = () => {
                             disabled={!input.trim() || sending}
                             className="h-9 w-9 rounded-xl bg-primary text-primary-foreground flex items-center justify-center disabled:opacity-50"
                           >
-                            {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                            {sending ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <Send className="h-4 w-4" />
+                            )}
                           </button>
                         </form>
                       </div>

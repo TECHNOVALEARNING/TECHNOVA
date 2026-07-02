@@ -1,18 +1,19 @@
 ﻿import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
+  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const authHeader = req.headers.get('Authorization');
+    const authHeader = req.headers.get("Authorization");
     if (!authHeader) {
-      return new Response(JSON.stringify({ error: 'Non authentifié' }), {
-        status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      return new Response(JSON.stringify({ error: "Non authentifié" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
@@ -23,10 +24,14 @@ Deno.serve(async (req) => {
     const userClient = createClient(SUPABASE_URL, ANON_KEY, {
       global: { headers: { Authorization: authHeader } },
     });
-    const { data: { user }, error: userErr } = await userClient.auth.getUser();
+    const {
+      data: { user },
+      error: userErr,
+    } = await userClient.auth.getUser();
     if (userErr || !user || !user.email) {
-      return new Response(JSON.stringify({ error: 'Session invalide' }), {
-        status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      return new Response(JSON.stringify({ error: "Session invalide" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
@@ -34,39 +39,43 @@ Deno.serve(async (req) => {
 
     // Rate-limit: 1 successful send per 60s (only counts codes that were actually sent = used=false rows)
     const { data: recent } = await admin
-      .from('login_otps')
-      .select('created_at')
-      .eq('user_id', user.id)
-      .eq('used', false)
-      .order('created_at', { ascending: false })
+      .from("login_otps")
+      .select("created_at")
+      .eq("user_id", user.id)
+      .eq("used", false)
+      .order("created_at", { ascending: false })
       .limit(1)
       .maybeSingle();
 
     if (recent && Date.now() - new Date(recent.created_at).getTime() < 60_000) {
-      return new Response(JSON.stringify({ error: 'Patientez avant de demander un nouveau code' }), {
-        status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      return new Response(
+        JSON.stringify({ error: "Patientez avant de demander un nouveau code" }),
+        {
+          status: 429,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
+      );
     }
 
-    const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
+    const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
     if (!RESEND_API_KEY) {
-      return new Response(JSON.stringify({ error: 'Service email indisponible' }), {
-        status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      return new Response(JSON.stringify({ error: "Service email indisponible" }), {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
     const code = Math.floor(100000 + Math.random() * 900000).toString();
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
 
-
-    const emailRes = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
+    const emailRes = await fetch("https://api.resend.com/emails", {
+      method: "POST",
       headers: {
         Authorization: `Bearer ${RESEND_API_KEY}`,
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: 'Technova <noreply@mail.ecom-revolt.com>',
+        from: "Technova <noreply@mail.ecom-revolt.com>",
         to: [user.email],
         subject: `Votre code de connexion : ${code}`,
         html: `
@@ -93,24 +102,24 @@ Deno.serve(async (req) => {
 
     if (!emailRes.ok) {
       const errText = await emailRes.text();
-      console.error('Resend error:', errText);
+      console.error("Resend error:", errText);
       let detail = "Erreur d'envoi de l'email";
       try {
         const parsed = JSON.parse(errText);
         if (parsed?.message) detail = parsed.message;
-      } catch (_) { /* ignore */ }
+      } catch (_) {
+        /* ignore */
+      }
       return new Response(JSON.stringify({ error: detail }), {
-        status: 502, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 502,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
     // Email sent successfully → invalidate old codes and persist the new one
-    await admin.from('login_otps')
-      .update({ used: true })
-      .eq('user_id', user.id)
-      .eq('used', false);
+    await admin.from("login_otps").update({ used: true }).eq("user_id", user.id).eq("used", false);
 
-    const { error: insertErr } = await admin.from('login_otps').insert({
+    const { error: insertErr } = await admin.from("login_otps").insert({
       user_id: user.id,
       email: user.email,
       code,
@@ -119,12 +128,13 @@ Deno.serve(async (req) => {
     if (insertErr) throw insertErr;
 
     return new Response(JSON.stringify({ success: true }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e) {
-    console.error('send-login-otp error:', e);
-    return new Response(JSON.stringify({ error: 'Erreur serveur' }), {
-      status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    console.error("send-login-otp error:", e);
+    return new Response(JSON.stringify({ error: "Erreur serveur" }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 });

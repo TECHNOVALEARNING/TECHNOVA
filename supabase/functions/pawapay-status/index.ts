@@ -25,7 +25,13 @@ Deno.serve(async (req) => {
       headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
     });
     const data = await resp.json();
-    console.log("[pawapay-status]", kind, depositId, resp.status, JSON.stringify(data).slice(0, 300));
+    console.log(
+      "[pawapay-status]",
+      kind,
+      depositId,
+      resp.status,
+      JSON.stringify(data).slice(0, 300),
+    );
 
     if (!resp.ok) return j({ error: data?.message || "Erreur" }, resp.status);
 
@@ -36,9 +42,11 @@ Deno.serve(async (req) => {
     // Sync local payment_events status if changed
     if (kind === "deposit" && status) {
       const localStatus =
-        status === "COMPLETED" ? "success" :
-        status === "FAILED" || status === "REJECTED" ? "failed" :
-        "initiated";
+        status === "COMPLETED"
+          ? "success"
+          : status === "FAILED" || status === "REJECTED"
+            ? "failed"
+            : "initiated";
       const admin = createClient(
         Deno.env.get("SUPABASE_URL")!,
         Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,

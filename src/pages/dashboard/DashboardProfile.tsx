@@ -53,9 +53,7 @@ const DashboardProfile = () => {
       return;
     }
 
-    const { data: urlData } = supabase.storage
-      .from("product-assets")
-      .getPublicUrl(path);
+    const { data: urlData } = supabase.storage.from("product-assets").getPublicUrl(path);
 
     setLogoUrl(urlData.publicUrl);
     setUploading(false);
@@ -70,16 +68,23 @@ const DashboardProfile = () => {
     }
     setSaving(true);
 
-    const slug = storeSlug.trim().toLowerCase().replace(/[^a-z0-9-]/g, "-").replace(/-+/g, "-");
+    const slug = storeSlug
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9-]/g, "-")
+      .replace(/-+/g, "-");
 
-    const { error } = await supabase.from("profiles").upsert({
-      id: user.id,
-      display_name: storeName.trim(),
-      store_slug: slug || null,
-      contact: contact.trim() || null,
-      store_logo_url: logoUrl,
-      updated_at: new Date().toISOString(),
-    } as any, { onConflict: "id" });
+    const { error } = await supabase.from("profiles").upsert(
+      {
+        id: user.id,
+        display_name: storeName.trim(),
+        store_slug: slug || null,
+        contact: contact.trim() || null,
+        store_logo_url: logoUrl,
+        updated_at: new Date().toISOString(),
+      } as any,
+      { onConflict: "id" },
+    );
 
     setSaving(false);
     if (error) {
@@ -95,7 +100,9 @@ const DashboardProfile = () => {
       <div className="max-w-xl space-y-8">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Ma Boutique</h1>
-          <p className="text-sm text-muted-foreground mt-1">Configurez les informations de votre boutique</p>
+          <p className="text-sm text-muted-foreground mt-1">
+            Configurez les informations de votre boutique
+          </p>
         </div>
 
         <div className="space-y-5 rounded-xl border border-border bg-card p-6">
@@ -171,12 +178,19 @@ const DashboardProfile = () => {
               <div className="mt-1.5 flex items-center gap-2">
                 <p className="text-xs text-muted-foreground">Lien de votre boutique :</p>
                 <a
-                  href={`/store/${storeSlug.trim().toLowerCase().replace(/[^a-z0-9-]/g, "-")}`}
+                  href={`/store/${storeSlug
+                    .trim()
+                    .toLowerCase()
+                    .replace(/[^a-z0-9-]/g, "-")}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-xs font-medium text-primary hover:underline"
                 >
-                  {window.location.origin}/store/{storeSlug.trim().toLowerCase().replace(/[^a-z0-9-]/g, "-")}
+                  {window.location.origin}/store/
+                  {storeSlug
+                    .trim()
+                    .toLowerCase()
+                    .replace(/[^a-z0-9-]/g, "-")}
                 </a>
               </div>
             )}

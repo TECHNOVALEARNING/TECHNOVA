@@ -101,14 +101,23 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
   const [product, setProduct] = useState<Product | null>(null);
   const [storeInfo, setStoreInfo] = useState<StoreInfo | null>(null);
   const [faqs, setFaqs] = useState<{ question: string; answer: string }[]>([]);
-  const [lessons, setLessons] = useState<{ title: string; description: string | null; duration_minutes: number | null; position: number }[]>([]);
+  const [lessons, setLessons] = useState<
+    {
+      title: string;
+      description: string | null;
+      duration_minutes: number | null;
+      position: number;
+    }[]
+  >([]);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
   const { grade: ownerBadge, expiresAt: ownerBadgeExpires } = useUserBadge(profile?.id);
-  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+  const [lang, setLang] = useState(() =>
+    typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
+  );
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -143,10 +152,12 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
 
           const { data: sData } = await supabase
             .from("stores")
-            .select(`
+            .select(
+              `
               owner_id, brand_color, logo_url, name, footer_disclaimer,
               custom_domains ( domain )
-            `)
+            `,
+            )
             .eq("owner_id", ownerId)
             .eq("is_archived", false)
             .maybeSingle();
@@ -155,7 +166,9 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
 
           const { data: pData } = await supabase
             .from("profiles")
-            .select("id, display_name, avatar_url, store_slug, store_description, store_logo_url, contact")
+            .select(
+              "id, display_name, avatar_url, store_slug, store_description, store_logo_url, contact",
+            )
             .eq("id", ownerId)
             .maybeSingle();
 
@@ -164,10 +177,12 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
           // Standard /store/:slug/:productId path
           const { data: sData } = await supabase
             .from("stores")
-            .select(`
+            .select(
+              `
               owner_id, brand_color, logo_url, name, footer_disclaimer,
               custom_domains ( domain )
-            `)
+            `,
+            )
             .eq("slug", slug)
             .eq("is_archived", false)
             .maybeSingle();
@@ -176,7 +191,12 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
 
           if (storeData) {
             // Redirect if accessed via default technova URL but has a custom domain
-            if (!customSlug && storeData.custom_domains && Array.isArray(storeData.custom_domains) && storeData.custom_domains.length > 0) {
+            if (
+              !customSlug &&
+              storeData.custom_domains &&
+              Array.isArray(storeData.custom_domains) &&
+              storeData.custom_domains.length > 0
+            ) {
               const domain = storeData.custom_domains[0].domain;
               if (domain) {
                 window.location.replace(`https://${domain}/${productId}`);
@@ -188,7 +208,9 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
 
           const { data: pData } = await supabase
             .from("profiles")
-            .select("id, display_name, avatar_url, store_slug, store_description, store_logo_url, contact")
+            .select(
+              "id, display_name, avatar_url, store_slug, store_description, store_logo_url, contact",
+            )
             .eq(storeData ? "id" : "store_slug", storeData ? storeData.owner_id : slug)
             .maybeSingle();
 
@@ -278,13 +300,13 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
     fetchData();
   }, [slug, productId]);
 
-  const hasFiles = product && (
-    product.type === "file" ||
-    product.type === "bundle" ||
-    product.category === "template" ||
-    product.category?.startsWith("template:") ||
-    !!product.download_url
-  );
+  const hasFiles =
+    product &&
+    (product.type === "file" ||
+      product.type === "bundle" ||
+      product.category === "template" ||
+      product.category?.startsWith("template:") ||
+      !!product.download_url);
 
   const getFileName = (url: string | null) => {
     if (!url) return "templates_et_produits.zip";
@@ -311,7 +333,9 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
         <Package className="h-16 w-16 text-gray-200 mb-4" />
         <h1 className="text-2xl font-bold text-gray-900 mb-2">Produit introuvable</h1>
         <p className="text-gray-500 mb-6">Ce produit n'existe pas ou n'est plus disponible.</p>
-        <Link to={customSlug ? `/` : `/store/${profile?.store_slug || slug || ""}`}><Button>Retour à la boutique</Button></Link>
+        <Link to={customSlug ? `/` : `/store/${profile?.store_slug || slug || ""}`}>
+          <Button>Retour à la boutique</Button>
+        </Link>
       </div>
     );
   }
@@ -319,9 +343,10 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
   const brandColor = storeInfo?.brand_color || "#2563EB";
   const storeName = storeInfo?.name || profile.display_name || "Boutique";
   const logoUrl = storeInfo?.logo_url || profile.store_logo_url || profile.avatar_url || "";
-  const discount = product.original_price && product.original_price > product.price
-    ? Math.round(((product.original_price - product.price) / product.original_price) * 100)
-    : null;
+  const discount =
+    product.original_price && product.original_price > product.price
+      ? Math.round(((product.original_price - product.price) / product.original_price) * 100)
+      : null;
   const salesCount = product.sales_count || 0;
   const hideSales = !!product.hide_sales_count;
   const isBestseller = !hideSales && salesCount >= 10;
@@ -343,8 +368,11 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
       return;
     }
     trackEvent("AddToCart", {
-      content_name: product.title, content_ids: [product.id],
-      content_type: "product", value: product.price, currency: "XOF",
+      content_name: product.title,
+      content_ids: [product.id],
+      content_type: "product",
+      value: product.price,
+      currency: "XOF",
     });
     const storeRef = profile?.store_slug || slug;
     const url = `/checkout/${product.id}${storeRef ? `?store=${encodeURIComponent(storeRef)}` : ""}`;
@@ -359,62 +387,85 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
   };
 
   const seoTitle = `${product.title} — ${storeName}`;
-  const seoDesc = truncateText(product.description) || `Achetez ${product.title} en ligne. Fichier, formation ou licence numérique de qualité.`;
+  const seoDesc =
+    truncateText(product.description) ||
+    `Achetez ${product.title} en ligne. Fichier, formation ou licence numérique de qualité.`;
 
-  const courseJsonLd = product.type === "course" ? {
-    "@type": "Course",
-    "name": product.title,
-    "description": truncateText(product.description, 300),
-    "provider": {
-      "@type": "Organization",
-      "name": "Technova Learning",
-      "sameAs": "https://www.technovalearning.com"
-    },
-    "hasCourseInstance": {
-      "@type": "CourseInstance",
-      "courseMode": "online",
-      "inLanguage": "fr"
-    },
-    "offers": {
-      "@type": "Offer",
-      "category": "Paid",
-      "price": String(product.price),
-      "priceCurrency": "XOF"
-    }
-  } : undefined;
+  const courseJsonLd =
+    product.type === "course"
+      ? {
+          "@type": "Course",
+          name: product.title,
+          description: truncateText(product.description, 300),
+          provider: {
+            "@type": "Organization",
+            name: "Technova Learning",
+            sameAs: "https://www.technovalearning.com",
+          },
+          hasCourseInstance: {
+            "@type": "CourseInstance",
+            courseMode: "online",
+            inLanguage: "fr",
+          },
+          offers: {
+            "@type": "Offer",
+            category: "Paid",
+            price: String(product.price),
+            priceCurrency: "XOF",
+          },
+        }
+      : undefined;
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <SEOHead 
-        title={seoTitle} 
-        description={seoDesc} 
-        jsonLd={courseJsonLd} 
-        ogImage={product.thumbnail_url || undefined} 
-        ogType="product" 
-        canonicalPath={customSlug ? `/${product.id}` : `/store/${profile.store_slug || slug}/${product.id}`} 
+      <SEOHead
+        title={seoTitle}
+        description={seoDesc}
+        jsonLd={courseJsonLd}
+        ogImage={product.thumbnail_url || undefined}
+        ogType="product"
+        canonicalPath={
+          customSlug ? `/${product.id}` : `/store/${profile.store_slug || slug}/${product.id}`
+        }
       />
       {/* ─── HEADER ─── */}
       <header className="sticky top-0 z-40 border-b border-gray-100 bg-white/90 backdrop-blur-md">
         <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 h-14">
-          <Link to={customSlug ? `/` : `/store/${profile?.store_slug || slug || ""}`} className="flex items-center gap-3 min-w-0">
+          <Link
+            to={customSlug ? `/` : `/store/${profile?.store_slug || slug || ""}`}
+            className="flex items-center gap-3 min-w-0"
+          >
             {logoUrl ? (
               <img src={logoUrl} alt={storeName} className="h-8 w-8 rounded-lg object-cover" />
             ) : (
-              <div className="h-8 w-8 rounded-lg flex items-center justify-center text-white text-xs font-bold" style={{ backgroundColor: brandColor }}>
+              <div
+                className="h-8 w-8 rounded-lg flex items-center justify-center text-white text-xs font-bold"
+                style={{ backgroundColor: brandColor }}
+              >
                 {storeName.charAt(0)?.toUpperCase()}
               </div>
             )}
             <span className="text-sm font-bold text-gray-900 truncate">{storeName}</span>
-            {ownerBadge && <VerifiedBadge grade={ownerBadge} size="sm" expiresAt={ownerBadgeExpires} />}
+            {ownerBadge && (
+              <VerifiedBadge grade={ownerBadge} size="sm" expiresAt={ownerBadgeExpires} />
+            )}
           </Link>
           <div className="flex items-center gap-2 sm:gap-3">
-            <Link to="/" className="text-xs text-gray-500 hover:text-gray-900 font-medium transition-colors">
+            <Link
+              to="/"
+              className="text-xs text-gray-500 hover:text-gray-900 font-medium transition-colors"
+            >
               <span className="hidden sm:inline">Accueil TECHNOVA</span>
               <span className="sm:hidden">Accueil</span>
             </Link>
             <span className="text-gray-200">|</span>
-            <Link to={customSlug ? `/` : `/store/${profile?.store_slug || slug || ""}`} className="hidden sm:block">
-              <Button variant="ghost" size="sm" className="text-xs text-gray-600">Boutique</Button>
+            <Link
+              to={customSlug ? `/` : `/store/${profile?.store_slug || slug || ""}`}
+              className="hidden sm:block"
+            >
+              <Button variant="ghost" size="sm" className="text-xs text-gray-600">
+                Boutique
+              </Button>
             </Link>
             <a href="https://technovalearning.com/buyer-login">
               <Button variant="outline" size="sm" className="text-xs gap-1.5 border-gray-200">
@@ -434,11 +485,16 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
               Accueil TECHNOVA
             </Link>
             <span className="text-gray-300">/</span>
-            <Link to={customSlug ? `/` : `/store/${profile?.store_slug || slug || ""}`} className="hover:text-gray-900 transition-colors">
+            <Link
+              to={customSlug ? `/` : `/store/${profile?.store_slug || slug || ""}`}
+              className="hover:text-gray-900 transition-colors"
+            >
               Boutique
             </Link>
             <span className="text-gray-300">/</span>
-            <span className="text-gray-800 font-semibold truncate max-w-[200px]">{product.title}</span>
+            <span className="text-gray-800 font-semibold truncate max-w-[200px]">
+              {product.title}
+            </span>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-10 mt-2">
@@ -470,7 +526,10 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                     </span>
                   )}
                   {discount && (
-                    <span className="inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-bold text-white shadow-md" style={{ backgroundColor: brandColor }}>
+                    <span
+                      className="inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-bold text-white shadow-md"
+                      style={{ backgroundColor: brandColor }}
+                    >
                       -{discount}%
                     </span>
                   )}
@@ -516,10 +575,20 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                   { icon: ShieldCheck, label: "Paiement sécurisé", sub: "100% protégé" },
                   { icon: HeadphonesIcon, label: "Support inclus", sub: "Réponse rapide" },
                 ].map((t) => (
-                  <div key={t.label} className="rounded-xl border border-gray-100 bg-white p-2.5 sm:p-3 text-center">
-                    <t.icon className="mx-auto h-4 w-4 sm:h-5 sm:w-5 mb-1" style={{ color: brandColor }} />
-                    <div className="text-[10px] sm:text-xs font-semibold text-gray-900 leading-tight">{t.label}</div>
-                    <div className="text-[9px] sm:text-[10px] text-gray-400 mt-0.5 hidden sm:block">{t.sub}</div>
+                  <div
+                    key={t.label}
+                    className="rounded-xl border border-gray-100 bg-white p-2.5 sm:p-3 text-center"
+                  >
+                    <t.icon
+                      className="mx-auto h-4 w-4 sm:h-5 sm:w-5 mb-1"
+                      style={{ color: brandColor }}
+                    />
+                    <div className="text-[10px] sm:text-xs font-semibold text-gray-900 leading-tight">
+                      {t.label}
+                    </div>
+                    <div className="text-[9px] sm:text-[10px] text-gray-400 mt-0.5 hidden sm:block">
+                      {t.sub}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -538,10 +607,13 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
 
                   {/* Warning/Alert box */}
                   <div className="flex items-start gap-3 rounded-xl bg-amber-50/60 border border-amber-100/80 p-4 text-amber-800">
-                    <Lock className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" style={{ color: brandColor }} />
+                    <Lock
+                      className="h-5 w-5 text-amber-600 shrink-0 mt-0.5"
+                      style={{ color: brandColor }}
+                    />
                     <div className="text-sm font-medium leading-relaxed">
-                      {lang === "fr" 
-                        ? "Acheter le produit pour l'accès aux fichiers" 
+                      {lang === "fr"
+                        ? "Acheter le produit pour l'accès aux fichiers"
                         : "Buy the product to access files"}
                     </div>
                   </div>
@@ -579,9 +651,11 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                 >
                   <h2 className="mb-4 text-lg font-bold text-gray-900">À propos de ce produit</h2>
                   <div
-                    dangerouslySetInnerHTML={{ __html: processDescriptionWithVideos(product.description) }}
+                    dangerouslySetInnerHTML={{
+                      __html: processDescriptionWithVideos(product.description),
+                    }}
                     className="prose prose-sm max-w-none leading-relaxed text-gray-700 [&_h1]:text-2xl [&_h1]:font-bold [&_h1]:mb-4 [&_h1]:text-gray-900 [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:mb-3 [&_h2]:text-gray-900 [&_p]:mb-4 [&_p]:text-gray-600 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:mb-4 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:mb-4 [&_li]:mb-1 [&_li]:text-gray-600 [&_a]:underline [&_img]:rounded-lg [&_img]:my-4 [&_blockquote]:border-l-4 [&_blockquote]:border-gray-200 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-gray-500 [&_.video-embed]:my-6 [&_iframe]:rounded-xl [&_iframe]:border [&_iframe]:border-gray-100"
-                    style={{ '--tw-prose-links': brandColor } as any}
+                    style={{ "--tw-prose-links": brandColor } as any}
                   />
                 </motion.div>
               )}
@@ -596,15 +670,20 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                 <h2 className="mb-4 text-lg font-bold text-gray-900">Ce qui est inclus</h2>
                 <ul className="space-y-3">
                   {[
-                    product.type === "course" ? "Accès à vie aux modules de la formation" :
-                    product.type === "license" ? "Clé de licence unique livrée par email" :
-                    "Téléchargement immédiat après paiement",
+                    product.type === "course"
+                      ? "Accès à vie aux modules de la formation"
+                      : product.type === "license"
+                        ? "Clé de licence unique livrée par email"
+                        : "Téléchargement immédiat après paiement",
                     "Mises à jour gratuites à vie",
                     "Support direct du créateur",
                     "Accès depuis votre espace « Mes achats »",
                   ].map((item) => (
                     <li key={item} className="flex items-start gap-3 text-sm text-gray-700">
-                      <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0" style={{ color: brandColor }} />
+                      <CheckCircle2
+                        className="mt-0.5 h-5 w-5 flex-shrink-0"
+                        style={{ color: brandColor }}
+                      />
                       <span>{item}</span>
                     </li>
                   ))}
@@ -627,15 +706,23 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                   </div>
                   <Accordion type="single" collapsible className="space-y-2">
                     {lessons.map((l, i) => (
-                      <AccordionItem key={i} value={`lesson-${i}`} className="rounded-xl border border-gray-100 bg-gray-50/60 px-4">
+                      <AccordionItem
+                        key={i}
+                        value={`lesson-${i}`}
+                        className="rounded-xl border border-gray-100 bg-gray-50/60 px-4"
+                      >
                         <AccordionTrigger className="hover:no-underline py-4 text-left">
                           <div className="flex items-center gap-3 flex-1 min-w-0">
-                            <div className="h-7 w-7 rounded-md flex items-center justify-center text-[11px] font-bold text-white shrink-0"
-                              style={{ backgroundColor: brandColor }}>
+                            <div
+                              className="h-7 w-7 rounded-md flex items-center justify-center text-[11px] font-bold text-white shrink-0"
+                              style={{ backgroundColor: brandColor }}
+                            >
                               {String(i + 1).padStart(2, "0")}
                             </div>
                             <div className="flex-1 min-w-0">
-                              <div className="text-sm font-semibold text-gray-900 truncate">{l.title}</div>
+                              <div className="text-sm font-semibold text-gray-900 truncate">
+                                {l.title}
+                              </div>
                               {l.duration_minutes && (
                                 <div className="text-[11px] text-gray-500 mt-0.5 flex items-center gap-1">
                                   <Clock className="h-3 w-3" /> {l.duration_minutes} min
@@ -667,7 +754,11 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                   <h2 className="mb-4 text-lg font-bold text-gray-900">Questions fréquentes</h2>
                   <Accordion type="single" collapsible className="space-y-2">
                     {faqs.map((faq, index) => (
-                      <AccordionItem key={index} value={`faq-${index}`} className="rounded-xl border border-gray-100 bg-gray-50/60 px-4">
+                      <AccordionItem
+                        key={index}
+                        value={`faq-${index}`}
+                        className="rounded-xl border border-gray-100 bg-gray-50/60 px-4"
+                      >
                         <AccordionTrigger className="text-sm font-medium text-gray-900 hover:no-underline py-4 text-left">
                           {faq.question}
                         </AccordionTrigger>
@@ -696,28 +787,49 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                 transition={{ delay: 0.18 }}
                 className="rounded-2xl border border-gray-100 bg-white p-5 sm:p-6"
               >
-                <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-400">Vendu par</h2>
+                <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-400">
+                  Vendu par
+                </h2>
                 <div className="flex items-center gap-4">
                   {logoUrl ? (
-                    <img src={logoUrl} alt={storeName} className="h-14 w-14 rounded-xl object-cover" />
+                    <img
+                      src={logoUrl}
+                      alt={storeName}
+                      className="h-14 w-14 rounded-xl object-cover"
+                    />
                   ) : (
-                    <div className="h-14 w-14 rounded-xl flex items-center justify-center text-white text-lg font-bold" style={{ backgroundColor: brandColor }}>
+                    <div
+                      className="h-14 w-14 rounded-xl flex items-center justify-center text-white text-lg font-bold"
+                      style={{ backgroundColor: brandColor }}
+                    >
                       {storeName.charAt(0)?.toUpperCase()}
                     </div>
                   )}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 min-w-0">
                       <div className="text-base font-bold text-gray-900 truncate">{storeName}</div>
-                      {ownerBadge && <VerifiedBadge grade={ownerBadge} size="sm" showLabel expiresAt={ownerBadgeExpires} />}
+                      {ownerBadge && (
+                        <VerifiedBadge
+                          grade={ownerBadge}
+                          size="sm"
+                          showLabel
+                          expiresAt={ownerBadgeExpires}
+                        />
+                      )}
                     </div>
                     {profile.store_description && (
                       <p className="text-xs text-gray-500 line-clamp-2 mt-0.5">
-                        {profile.store_description.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim()}
+                        {profile.store_description
+                          .replace(/<[^>]*>/g, " ")
+                          .replace(/\s+/g, " ")
+                          .trim()}
                       </p>
                     )}
                   </div>
                   <Link to={customSlug ? `/` : `/store/${profile?.store_slug || slug || ""}`}>
-                    <Button variant="outline" size="sm" className="text-xs">Voir</Button>
+                    <Button variant="outline" size="sm" className="text-xs">
+                      Voir
+                    </Button>
                   </Link>
                 </div>
               </motion.div>
@@ -751,7 +863,10 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                 {/* Price */}
                 <div>
                   <div className="flex items-baseline gap-2 flex-wrap">
-                    <span className="text-3xl sm:text-4xl font-extrabold" style={{ color: brandColor }}>
+                    <span
+                      className="text-3xl sm:text-4xl font-extrabold"
+                      style={{ color: brandColor }}
+                    >
                       {formatPrice(product.price)}
                     </span>
                     {product.original_price && product.original_price > product.price && (
@@ -773,7 +888,10 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                 {/* CTA */}
                 <button
                   className="w-full text-base font-bold py-4 rounded-xl text-white transition-all hover:opacity-95 hover:scale-[1.01] active:scale-[0.99] shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-                  style={{ backgroundColor: isSoldOut ? "#9CA3AF" : brandColor, boxShadow: isSoldOut ? "none" : `0 8px 24px -8px ${brandColor}80` }}
+                  style={{
+                    backgroundColor: isSoldOut ? "#9CA3AF" : brandColor,
+                    boxShadow: isSoldOut ? "none" : `0 8px 24px -8px ${brandColor}80`,
+                  }}
                   onClick={handleBuy}
                   disabled={isSoldOut}
                 >
@@ -800,7 +918,9 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
 
                 {/* Payment methods */}
                 <div className="space-y-2">
-                  <p className="text-[11px] uppercase tracking-wide text-gray-400 font-semibold">Moyens de paiement</p>
+                  <p className="text-[11px] uppercase tracking-wide text-gray-400 font-semibold">
+                    Moyens de paiement
+                  </p>
                   <div className="flex items-center gap-1.5 flex-wrap">
                     <div className="h-7 w-10 rounded-md bg-[#1A1F71] flex items-center justify-center shadow-sm">
                       <span className="text-[8px] font-bold text-white">VISA</span>
@@ -809,16 +929,32 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                       <span className="text-[8px] font-bold text-white">MC</span>
                     </div>
                     <div className="h-7 w-10 rounded-md bg-[#FFCC00] overflow-hidden flex items-center justify-center shadow-sm">
-                      <img src="/providers/mtn.svg" alt="MTN" className="h-full w-full object-contain p-0.5" />
+                      <img
+                        src="/providers/mtn.svg"
+                        alt="MTN"
+                        className="h-full w-full object-contain p-0.5"
+                      />
                     </div>
                     <div className="h-7 w-10 rounded-md bg-[#FF7900] overflow-hidden flex items-center justify-center shadow-sm">
-                      <img src="/providers/orange.svg" alt="Orange" className="h-full w-full object-contain p-0.5" />
+                      <img
+                        src="/providers/orange.svg"
+                        alt="Orange"
+                        className="h-full w-full object-contain p-0.5"
+                      />
                     </div>
                     <div className="h-7 w-10 rounded-md bg-[#0066B3] overflow-hidden flex items-center justify-center shadow-sm">
-                      <img src="/providers/moov.svg" alt="Moov" className="h-full w-full object-contain p-0.5" />
+                      <img
+                        src="/providers/moov.svg"
+                        alt="Moov"
+                        className="h-full w-full object-contain p-0.5"
+                      />
                     </div>
                     <div className="h-7 w-10 rounded-md bg-[#1DC8F1] overflow-hidden flex items-center justify-center shadow-sm">
-                      <img src="/providers/wave.svg" alt="Wave" className="h-full w-full object-contain p-0.5" />
+                      <img
+                        src="/providers/wave.svg"
+                        alt="Wave"
+                        className="h-full w-full object-contain p-0.5"
+                      />
                     </div>
                   </div>
                 </div>
@@ -826,17 +962,26 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                 <Separator className="bg-gray-100" />
 
                 <div className="flex items-center justify-between gap-3 text-xs text-gray-500">
-                  <button onClick={handleShare} className="flex items-center gap-1.5 hover:text-gray-900 transition-colors">
+                  <button
+                    onClick={handleShare}
+                    className="flex items-center gap-1.5 hover:text-gray-900 transition-colors"
+                  >
                     <Share2 className="h-3.5 w-3.5" />
                     Partager
                   </button>
                   {profile.contact && (
-                    <a href={`mailto:${profile.contact}`} className="flex items-center gap-1.5 hover:text-gray-900 transition-colors">
+                    <a
+                      href={`mailto:${profile.contact}`}
+                      className="flex items-center gap-1.5 hover:text-gray-900 transition-colors"
+                    >
                       <MessageCircle className="h-3.5 w-3.5" />
                       Contact
                     </a>
                   )}
-                  <button className="flex items-center gap-1.5 hover:text-gray-900 transition-colors" onClick={() => setReportOpen(true)}>
+                  <button
+                    className="flex items-center gap-1.5 hover:text-gray-900 transition-colors"
+                    onClick={() => setReportOpen(true)}
+                  >
                     <Flag className="h-3.5 w-3.5" />
                     Signaler
                   </button>
@@ -858,31 +1003,53 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
               </h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
                 {relatedProducts.map((rp) => {
-                  const rDisc = rp.original_price && rp.original_price > rp.price
-                    ? Math.round(((rp.original_price - rp.price) / rp.original_price) * 100) : null;
+                  const rDisc =
+                    rp.original_price && rp.original_price > rp.price
+                      ? Math.round(((rp.original_price - rp.price) / rp.original_price) * 100)
+                      : null;
                   return (
-                    <Link key={rp.id} to={customSlug ? `/${rp.id}` : `/store/${profile?.store_slug || slug || ""}/${rp.id}`}
-                      className="group border border-gray-100 rounded-2xl overflow-hidden bg-white hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+                    <Link
+                      key={rp.id}
+                      to={
+                        customSlug
+                          ? `/${rp.id}`
+                          : `/store/${profile?.store_slug || slug || ""}/${rp.id}`
+                      }
+                      className="group border border-gray-100 rounded-2xl overflow-hidden bg-white hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
+                    >
                       <div className="relative aspect-square overflow-hidden bg-gray-50">
                         {rp.thumbnail_url ? (
-                          <img src={rp.thumbnail_url} alt={rp.title} className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                          <img
+                            src={rp.thumbnail_url}
+                            alt={rp.title}
+                            className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          />
                         ) : (
                           <div className="h-full w-full flex items-center justify-center">
                             <Package className="h-8 w-8 text-gray-200" />
                           </div>
                         )}
                         {rDisc && (
-                          <span className="absolute top-2 right-2 text-[10px] font-bold px-2 py-0.5 rounded-full text-white" style={{ backgroundColor: brandColor }}>
+                          <span
+                            className="absolute top-2 right-2 text-[10px] font-bold px-2 py-0.5 rounded-full text-white"
+                            style={{ backgroundColor: brandColor }}
+                          >
                             -{rDisc}%
                           </span>
                         )}
                       </div>
                       <div className="p-3 space-y-1">
-                        <h3 className="text-sm font-semibold text-gray-900 line-clamp-2 leading-tight">{rp.title}</h3>
+                        <h3 className="text-sm font-semibold text-gray-900 line-clamp-2 leading-tight">
+                          {rp.title}
+                        </h3>
                         <div className="flex items-baseline gap-1.5">
-                          <span className="text-sm font-bold" style={{ color: brandColor }}>{formatPrice(rp.price)}</span>
+                          <span className="text-sm font-bold" style={{ color: brandColor }}>
+                            {formatPrice(rp.price)}
+                          </span>
                           {rp.original_price && rp.original_price > rp.price && (
-                            <span className="text-[10px] line-through text-gray-300">{formatPrice(rp.original_price)}</span>
+                            <span className="text-[10px] line-through text-gray-300">
+                              {formatPrice(rp.original_price)}
+                            </span>
                           )}
                         </div>
                       </div>
@@ -927,7 +1094,10 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
               {logoUrl ? (
                 <img src={logoUrl} alt={storeName} className="h-7 w-7 rounded-md object-cover" />
               ) : (
-                <div className="h-7 w-7 rounded-md flex items-center justify-center text-white text-[11px] font-bold" style={{ backgroundColor: brandColor }}>
+                <div
+                  className="h-7 w-7 rounded-md flex items-center justify-center text-white text-[11px] font-bold"
+                  style={{ backgroundColor: brandColor }}
+                >
                   {storeName.charAt(0)?.toUpperCase()}
                 </div>
               )}
@@ -935,16 +1105,24 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
             </div>
 
             <div className="space-y-3">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-400">Liens</h3>
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+                Liens
+              </h3>
               <ul className="space-y-2.5">
                 <li>
-                  <a href="https://portal.technovalearning.com/dashboard" className="inline-flex items-center gap-2 text-sm font-medium text-gray-900 hover:opacity-70">
+                  <a
+                    href="https://portal.technovalearning.com/dashboard"
+                    className="inline-flex items-center gap-2 text-sm font-medium text-gray-900 hover:opacity-70"
+                  >
                     <ShoppingBag className="h-4 w-4" />
                     Voir mes commandes
                   </a>
                 </li>
                 <li>
-                  <Link to={customSlug ? `/` : `/store/${profile?.store_slug || slug || ""}`} className="text-sm text-gray-600 hover:text-gray-900">
+                  <Link
+                    to={customSlug ? `/` : `/store/${profile?.store_slug || slug || ""}`}
+                    className="text-sm text-gray-600 hover:text-gray-900"
+                  >
                     Boutique
                   </Link>
                 </li>
@@ -952,11 +1130,38 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
             </div>
 
             <div className="space-y-3">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-400">Légal</h3>
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+                Légal
+              </h3>
               <ul className="space-y-2.5">
-                <li><Link to={customSlug ? `/legal` : `/store/${profile?.store_slug || slug || ""}/legal`} className="text-sm text-gray-600 hover:text-gray-900">Mentions légales</Link></li>
-                <li><Link to={customSlug ? `/terms` : `/store/${profile?.store_slug || slug || ""}/terms`} className="text-sm text-gray-600 hover:text-gray-900">Conditions générales</Link></li>
-                <li><Link to={customSlug ? `/privacy` : `/store/${profile?.store_slug || slug || ""}/privacy`} className="text-sm text-gray-600 hover:text-gray-900">Politique de confidentialité</Link></li>
+                <li>
+                  <Link
+                    to={customSlug ? `/legal` : `/store/${profile?.store_slug || slug || ""}/legal`}
+                    className="text-sm text-gray-600 hover:text-gray-900"
+                  >
+                    Mentions légales
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to={customSlug ? `/terms` : `/store/${profile?.store_slug || slug || ""}/terms`}
+                    className="text-sm text-gray-600 hover:text-gray-900"
+                  >
+                    Conditions générales
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to={
+                      customSlug
+                        ? `/privacy`
+                        : `/store/${profile?.store_slug || slug || ""}/privacy`
+                    }
+                    className="text-sm text-gray-600 hover:text-gray-900"
+                  >
+                    Politique de confidentialité
+                  </Link>
+                </li>
               </ul>
             </div>
           </div>
@@ -968,15 +1173,18 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
           )}
 
           <div className="mt-8 pt-6 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <p className="text-xs text-gray-400">{storeName} © {new Date().getFullYear()}  Tous droits réservés.</p>
+            <p className="text-xs text-gray-400">
+              {storeName} © {new Date().getFullYear()} Tous droits réservés.
+            </p>
             <p className="text-xs text-gray-300">
               Propulsé par{" "}
-              <Link to="/" className="hover:underline font-medium" style={{ color: brandColor }}>TECHNOVA</Link>
+              <Link to="/" className="hover:underline font-medium" style={{ color: brandColor }}>
+                TECHNOVA
+              </Link>
             </p>
           </div>
         </div>
       </footer>
-
 
       <ProductReportDialog
         open={reportOpen}

@@ -2,7 +2,8 @@
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 Deno.serve(async (req) => {
@@ -16,21 +17,36 @@ Deno.serve(async (req) => {
 
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
     );
 
     const {
-      store_owner_id, product_title, amount, customer_name, customer_email,
-      license_key, license_max_activations, license_validity_days,
-      promo_code, original_price, discount_percent, discount_amount,
-      product_id, download_url, product_type, store_slug
+      store_owner_id,
+      product_title,
+      amount,
+      customer_name,
+      customer_email,
+      license_key,
+      license_max_activations,
+      license_validity_days,
+      promo_code,
+      original_price,
+      discount_percent,
+      discount_amount,
+      product_id,
+      download_url,
+      product_type,
+      store_slug,
     } = await req.json();
 
     if (!store_owner_id || !product_title) {
       throw new Error("Paramètres manquants");
     }
 
-    const { data: { user }, error: userError } = await supabase.auth.admin.getUserById(store_owner_id);
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.admin.getUserById(store_owner_id);
     if (userError || !user?.email) throw new Error("Vendeur introuvable");
 
     const { data: profile } = await supabase
@@ -42,20 +58,23 @@ Deno.serve(async (req) => {
     const sellerName = profile?.display_name || "Vendeur";
     const storeName = profile?.display_name || "Technova";
     const isFree = amount === 0;
-    const logoUrl = "https://nexozjpjbhqfjplrogvz.supabase.co/storage/v1/object/public/store-assets/brand/technova-logo.png";
+    const logoUrl =
+      "https://nexozjpjbhqfjplrogvz.supabase.co/storage/v1/object/public/store-assets/brand/technova-logo.png";
     const logoHtml = `<img src="${logoUrl}" alt="Technova" width="48" height="48" style="display:block;margin:0 auto 12px;border-radius:10px;" />`;
 
     const hasPromo = !!promo_code;
-    const promoInfoHtml = hasPromo ? `
+    const promoInfoHtml = hasPromo
+      ? `
       <div style="background: #fef3c7; border: 1px solid #f59e0b; border-radius: 8px; padding: 12px; margin: 12px 0;">
         <p style="margin: 0; color: #92400e; font-size: 13px;">
           🏷️ Code promo appliqué : <strong>${promo_code}</strong>
-          ${discount_percent ? ` (-${discount_percent}%)` : ''}
-          ${discount_amount ? ` (-${discount_amount} FCFA)` : ''}
+          ${discount_percent ? ` (-${discount_percent}%)` : ""}
+          ${discount_amount ? ` (-${discount_amount} FCFA)` : ""}
         </p>
-        ${original_price ? `<p style="margin: 4px 0 0 0; color: #92400e; font-size: 12px;">Prix original : ${original_price} FCFA → ${amount} FCFA</p>` : ''}
+        ${original_price ? `<p style="margin: 4px 0 0 0; color: #92400e; font-size: 12px;">Prix original : ${original_price} FCFA → ${amount} FCFA</p>` : ""}
       </div>
-    ` : '';
+    `
+      : "";
 
     // --- Email 1: Notification au vendeur ---
     const sellerEmailHtml = `
@@ -116,28 +135,40 @@ Deno.serve(async (req) => {
             <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; margin: 20px 0;">
               <h3 style="margin: 0 0 12px 0; color: #111827; font-size: 15px;">📋 Récapitulatif de commande</h3>
               <p style="margin: 5px 0; color: #374151;"><strong>Produit :</strong> ${product_title}</p>
-              ${hasPromo && original_price ? `
+              ${
+                hasPromo && original_price
+                  ? `
                 <p style="margin: 5px 0; color: #374151;"><strong>Prix original :</strong> <span style="text-decoration: line-through; color: #9ca3af;">${original_price} FCFA</span></p>
                 <p style="margin: 5px 0; color: #374151;"><strong>Réduction :</strong> <span style="color: #059669;">${discount_percent ? `-${discount_percent}%` : `-${discount_amount} FCFA`}</span></p>
-              ` : ''}
+              `
+                  : ""
+              }
               <p style="margin: 5px 0; color: #374151; font-size: 18px;"><strong>Total payé :</strong> ${isFree ? "Gratuit" : `${amount} FCFA`}</p>
             </div>
 
-            ${hasPromo ? `
+            ${
+              hasPromo
+                ? `
             <div style="background: #ecfdf5; border: 1px solid #6ee7b7; border-radius: 8px; padding: 12px; margin: 12px 0; text-align: center;">
               <p style="margin: 0; color: #065f46; font-size: 14px;">🎉 Vous avez économisé <strong>${original_price ? original_price - amount : 0} FCFA</strong> avec le code <strong>${promo_code}</strong> !</p>
             </div>
-            ` : ''}
+            `
+                : ""
+            }
             
-            ${license_key ? `
+            ${
+              license_key
+                ? `
             <div style="background: #eff6ff; border: 2px solid #3b82f6; border-radius: 8px; padding: 20px; margin: 20px 0; text-align: center;">
               <p style="margin: 0 0 8px 0; color: #1e40af; font-size: 14px; font-weight: 600;">🔑 Votre clé de licence</p>
               <p style="margin: 0; color: #1e3a8a; font-size: 28px; font-weight: 700; letter-spacing: 3px; font-family: 'Courier New', monospace;">${license_key}</p>
-              ${license_max_activations ? `<p style="margin: 8px 0 0 0; color: #3b82f6; font-size: 13px;">Activations max : ${license_max_activations}</p>` : ''}
-              ${license_validity_days ? `<p style="margin: 4px 0 0 0; color: #3b82f6; font-size: 13px;">Validité : ${license_validity_days} jours après activation</p>` : ''}
+              ${license_max_activations ? `<p style="margin: 8px 0 0 0; color: #3b82f6; font-size: 13px;">Activations max : ${license_max_activations}</p>` : ""}
+              ${license_validity_days ? `<p style="margin: 4px 0 0 0; color: #3b82f6; font-size: 13px;">Validité : ${license_validity_days} jours après activation</p>` : ""}
             </div>
             <p style="color: #374151; font-size: 16px;">Conservez précieusement cette clé. Elle vous sera demandée pour activer votre produit.</p>
-            ` : ''}
+            `
+                : ""
+            }
 
             ${(() => {
               const siteUrl = "https://technova.com";
@@ -190,7 +221,7 @@ Deno.serve(async (req) => {
     await supabase.from("notifications").insert({
       user_id: store_owner_id,
       title: "Nouvelle vente",
-      message: `${customer_name} a acheté "${product_title}" pour ${isFree ? "gratuit" : `${amount} FCFA`}.${hasPromo ? ` (Code promo: ${promo_code})` : ''}`,
+      message: `${customer_name} a acheté "${product_title}" pour ${isFree ? "gratuit" : `${amount} FCFA`}.${hasPromo ? ` (Code promo: ${promo_code})` : ""}`,
       type: "success",
     });
 
@@ -226,7 +257,6 @@ Deno.serve(async (req) => {
     } catch (tgErr) {
       console.error("Telegram notify-sale error", tgErr);
     }
-
 
     return new Response(JSON.stringify({ success: true }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },

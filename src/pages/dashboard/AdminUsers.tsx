@@ -4,7 +4,17 @@ import { supabase } from "@/integrations/supabase/client";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Search, Users, DollarSign, ArrowDownRight, ArrowUpRight, Mail, Phone, Globe, Calendar } from "lucide-react";
+import {
+  Search,
+  Users,
+  DollarSign,
+  ArrowDownRight,
+  ArrowUpRight,
+  Mail,
+  Phone,
+  Globe,
+  Calendar,
+} from "lucide-react";
 import { countries } from "@/data/countries";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -48,7 +58,7 @@ const AdminUsers = () => {
     const { data, error } = await supabase.functions.invoke("admin-platform", {
       body: { action: "list_users" },
     });
-    
+
     if (error) {
       console.error("Error fetching users:", error);
       setProfiles([]);
@@ -65,7 +75,7 @@ const AdminUsers = () => {
     const { data, error } = await supabase.functions.invoke("admin-platform", {
       body: { action: "get_user_events", userId },
     });
-    
+
     if (error || !data) {
       console.error("Error fetching user events:", error);
       setUserEvents([]);
@@ -105,7 +115,14 @@ const AdminUsers = () => {
 
   const getFlagImg = (code: string | null, size = 20) => {
     if (!code) return <span>🌍</span>;
-    return <img src={`https://flagcdn.com/w${size * 2}/${code.toLowerCase()}.png`} alt={code} className="rounded-sm object-cover" style={{ height: size, width: size * 1.5 }} />;
+    return (
+      <img
+        src={`https://flagcdn.com/w${size * 2}/${code.toLowerCase()}.png`}
+        alt={code}
+        className="rounded-sm object-cover"
+        style={{ height: size, width: size * 1.5 }}
+      />
+    );
   };
 
   const filtered = profiles.filter((p) => {
@@ -138,7 +155,8 @@ const AdminUsers = () => {
             <Users className="h-6 w-6" /> Gestion des utilisateurs
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            {profiles.length} utilisateur{profiles.length > 1 ? "s" : ""} inscrit{profiles.length > 1 ? "s" : ""}
+            {profiles.length} utilisateur{profiles.length > 1 ? "s" : ""} inscrit
+            {profiles.length > 1 ? "s" : ""}
           </p>
         </div>
 
@@ -158,7 +176,9 @@ const AdminUsers = () => {
             {loading ? (
               <div className="text-center py-10 text-muted-foreground text-sm">Chargement...</div>
             ) : filtered.length === 0 ? (
-              <div className="text-center py-10 text-muted-foreground text-sm">Aucun utilisateur trouvé</div>
+              <div className="text-center py-10 text-muted-foreground text-sm">
+                Aucun utilisateur trouvé
+              </div>
             ) : (
               filtered.map((p) => (
                 <button
@@ -173,7 +193,11 @@ const AdminUsers = () => {
                   <div className="flex items-center gap-3">
                     <div className="h-10 w-10 rounded-full bg-secondary flex items-center justify-center shrink-0 text-lg">
                       {p.avatar_url ? (
-                        <img src={p.avatar_url} alt="" className="h-full w-full rounded-full object-cover" />
+                        <img
+                          src={p.avatar_url}
+                          alt=""
+                          className="h-full w-full rounded-full object-cover"
+                        />
                       ) : (
                         getFlagImg(p.country_code)
                       )}
@@ -211,7 +235,11 @@ const AdminUsers = () => {
                     <div className="flex items-center gap-3">
                       <div className="h-14 w-14 rounded-full bg-secondary flex items-center justify-center text-2xl">
                         {selectedProfile.avatar_url ? (
-                          <img src={selectedProfile.avatar_url} alt="" className="h-full w-full rounded-full object-cover" />
+                          <img
+                            src={selectedProfile.avatar_url}
+                            alt=""
+                            className="h-full w-full rounded-full object-cover"
+                          />
                         ) : (
                           getFlagImg(selectedProfile.country_code, 28)
                         )}
@@ -238,11 +266,19 @@ const AdminUsers = () => {
                       )}
                       <div className="flex items-center gap-2 text-muted-foreground">
                         <Globe className="h-4 w-4" />
-                        <span className="flex items-center gap-1">{getFlagImg(selectedProfile.country_code, 14)} {selectedProfile.country_code || "N/A"}</span>
+                        <span className="flex items-center gap-1">
+                          {getFlagImg(selectedProfile.country_code, 14)}{" "}
+                          {selectedProfile.country_code || "N/A"}
+                        </span>
                       </div>
                       <div className="flex items-center gap-2 text-muted-foreground">
                         <Calendar className="h-4 w-4" />
-                        <span>Inscrit le {format(new Date(selectedProfile.created_at), "dd/MM/yyyy", { locale: fr })}</span>
+                        <span>
+                          Inscrit le{" "}
+                          {format(new Date(selectedProfile.created_at), "dd/MM/yyyy", {
+                            locale: fr,
+                          })}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -266,8 +302,8 @@ const AdminUsers = () => {
                               ev.type === "sale"
                                 ? "bg-green-500/10 text-green-600"
                                 : ev.type === "commission"
-                                ? "bg-blue-500/10 text-blue-600"
-                                : "bg-orange-500/10 text-orange-600"
+                                  ? "bg-blue-500/10 text-blue-600"
+                                  : "bg-orange-500/10 text-orange-600"
                             }`}
                           >
                             {ev.type === "sale" ? (
@@ -280,7 +316,11 @@ const AdminUsers = () => {
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium text-foreground">
-                              {ev.type === "sale" ? "Vente" : ev.type === "commission" ? "Commission" : "Retrait"}
+                              {ev.type === "sale"
+                                ? "Vente"
+                                : ev.type === "commission"
+                                  ? "Commission"
+                                  : "Retrait"}
                             </p>
                             <p className="text-xs text-muted-foreground">
                               {format(new Date(ev.date), "dd MMM yyyy HH:mm", { locale: fr })}
@@ -290,7 +330,11 @@ const AdminUsers = () => {
                           <div className="text-right shrink-0">
                             <p
                               className={`text-sm font-bold ${
-                                ev.type === "withdrawal" ? "text-orange-600" : ev.type === "commission" ? "text-blue-600" : "text-green-600"
+                                ev.type === "withdrawal"
+                                  ? "text-orange-600"
+                                  : ev.type === "commission"
+                                    ? "text-blue-600"
+                                    : "text-green-600"
                               }`}
                             >
                               {ev.type === "withdrawal" ? "-" : "+"}

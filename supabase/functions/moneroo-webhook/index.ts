@@ -3,7 +3,8 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 serve(async (req) => {
@@ -21,7 +22,8 @@ serve(async (req) => {
 
     // Verify signature if webhook secret is configured
     if (webhookSecret) {
-      const signature = req.headers.get("X-Moneroo-Signature") || req.headers.get("x-moneroo-signature");
+      const signature =
+        req.headers.get("X-Moneroo-Signature") || req.headers.get("x-moneroo-signature");
       if (!signature) {
         console.error("Missing X-Moneroo-Signature header");
         return new Response("Forbidden", { status: 403 });
@@ -32,7 +34,7 @@ serve(async (req) => {
         new TextEncoder().encode(webhookSecret),
         { name: "HMAC", hash: "SHA-256" },
         false,
-        ["sign"]
+        ["sign"],
       );
       const sig = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(payload));
       const computedSignature = Array.from(new Uint8Array(sig))
@@ -85,9 +87,10 @@ serve(async (req) => {
       }
 
       const notifTitle = event === "payout.success" ? "Retrait effectué ✅" : "Retrait échoué ❌";
-      const notifMessage = event === "payout.success"
-        ? `Votre retrait de ${withdrawal.amount} FCFA vers ${withdrawal.phone_number} a été effectué avec succès.`
-        : `Votre retrait de ${withdrawal.amount} FCFA vers ${withdrawal.phone_number} a échoué. Veuillez réessayer.`;
+      const notifMessage =
+        event === "payout.success"
+          ? `Votre retrait de ${withdrawal.amount} FCFA vers ${withdrawal.phone_number} a été effectué avec succès.`
+          : `Votre retrait de ${withdrawal.amount} FCFA vers ${withdrawal.phone_number} a échoué. Veuillez réessayer.`;
 
       await supabase.from("notifications").insert({
         user_id: withdrawal.user_id,
@@ -125,7 +128,14 @@ serve(async (req) => {
       const meta = data?.metadata || {};
       const paymentStatus = event === "payment.success" ? "success" : "failed";
 
-      console.log("Payment event:", event, "transaction:", transactionId, "metadata:", JSON.stringify(meta));
+      console.log(
+        "Payment event:",
+        event,
+        "transaction:",
+        transactionId,
+        "metadata:",
+        JSON.stringify(meta),
+      );
 
       // Update payment_events status in realtime
       if (transactionId) {
@@ -142,7 +152,12 @@ serve(async (req) => {
       }
 
       // Create order on success
-      if (event === "payment.success" && meta.customer_id && meta.product_id && meta.store_owner_id) {
+      if (
+        event === "payment.success" &&
+        meta.customer_id &&
+        meta.product_id &&
+        meta.store_owner_id
+      ) {
         // Check if order already exists by transaction ID (avoid duplicates)
         const { data: existingOrder } = await supabase
           .from("orders")
@@ -195,7 +210,7 @@ serve(async (req) => {
             });
 
             // License key will be sent after generation if applicable
-            let pendingLicenseKey: string | null = null;
+            const pendingLicenseKey: string | null = null;
 
             // Dispatch webhooks for successful sale
             const dispatchUrl = `${supabaseUrl}/functions/v1/dispatch-webhook`;
@@ -231,7 +246,7 @@ serve(async (req) => {
               let licenseKey = "";
               let isUnique = false;
               const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-              
+
               while (!isUnique) {
                 licenseKey = "";
                 for (let seg = 0; seg < 4; seg++) {
@@ -264,7 +279,7 @@ serve(async (req) => {
               } else {
                 console.log("License created:", licenseKey, "for product:", meta.product_id);
                 pendingLicenseKey = licenseKey;
-                
+
                 // Dispatch webhook for license issued
                 const dispatchUrl2 = `${supabaseUrl}/functions/v1/dispatch-webhook`;
                 fetch(dispatchUrl2, {

@@ -7,7 +7,8 @@ const corsHeaders = {
 };
 
 const ADMIN_EMAIL = "ancres707@gmail.com";
-const LOGO_URL = "https://nexozjpjbhqfjplrogvz.supabase.co/storage/v1/object/public/store-assets/brand/technova-logo.png";
+const LOGO_URL =
+  "https://nexozjpjbhqfjplrogvz.supabase.co/storage/v1/object/public/store-assets/brand/technova-logo.png";
 
 const escapeHtml = (value: string) =>
   value

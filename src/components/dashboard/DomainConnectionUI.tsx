@@ -1,6 +1,16 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Globe, ArrowRightLeft, Loader2, CheckCircle2, Lock, Trash2, Copy, AlertCircle, RefreshCw } from "lucide-react";
+import {
+  Globe,
+  ArrowRightLeft,
+  Loader2,
+  CheckCircle2,
+  Lock,
+  Trash2,
+  Copy,
+  AlertCircle,
+  RefreshCw,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -23,7 +33,8 @@ const translations = {
     dnsConfigDesc: "Connectez-vous à votre fournisseur et ajoutez ces enregistrements.",
     loginBtn: "Se connecter à ",
     verificationRequired: "Vérification requise :",
-    verificationDesc: "Ce domaine est lié à un autre compte. Ajoutez cet enregistrement TXT pour prouver que vous en êtes le propriétaire.",
+    verificationDesc:
+      "Ce domaine est lié à un autre compte. Ajoutez cet enregistrement TXT pour prouver que vous en êtes le propriétaire.",
     errorDetected: "Erreur détectée :",
     errorDnsInvalid: "La configuration DNS est invalide ou n'est pas encore propagée.",
     lookingUpDns: "Recherche des enregistrements DNS...",
@@ -47,7 +58,8 @@ const translations = {
     dnsConfigDesc: "Log in to your provider and add these records.",
     loginBtn: "Log in to ",
     verificationRequired: "Verification required:",
-    verificationDesc: "This domain is linked to another account. Add this TXT record to prove ownership.",
+    verificationDesc:
+      "This domain is linked to another account. Add this TXT record to prove ownership.",
     errorDetected: "Error detected:",
     errorDnsInvalid: "The DNS configuration is invalid or hasn't propagated yet.",
     lookingUpDns: "Looking up DNS records...",
@@ -62,17 +74,23 @@ const translations = {
     typeLabel: "Type",
     nameLabel: "Name",
     valueLabel: "Value",
-  }
+  },
 };
 
-export default function DomainConnectionUI({ domainRecord, onDelete, brandColor }: DomainConnectionUIProps) {
+export default function DomainConnectionUI({
+  domainRecord,
+  onDelete,
+  brandColor,
+}: DomainConnectionUIProps) {
   const [provider, setProvider] = useState<DnsProvider | null>(null);
   const [detecting, setDetecting] = useState(true);
   const [vercelData, setVercelData] = useState<any>(null);
   const [deleting, setDeleting] = useState(false);
   const [copiedField, setCopiedField] = useState<string | null>(null);
 
-  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+  const [lang, setLang] = useState(() =>
+    typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
+  );
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -80,13 +98,13 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
 
-  const t = translations[lang === 'en' ? 'en' : 'fr'];
+  const t = translations[lang === "en" ? "en" : "fr"];
 
-  const isApex = domainRecord.domain.split('.').length === 2;
+  const isApex = domainRecord.domain.split(".").length === 2;
 
   useEffect(() => {
     // 1. Détecter le fournisseur DNS
-    detectDnsProvider(domainRecord.domain).then(res => {
+    detectDnsProvider(domainRecord.domain).then((res) => {
       setProvider(res);
       setDetecting(false);
     });
@@ -103,10 +121,13 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
       if (res.ok) {
         const data = await res.json();
         setVercelData(data);
-        
+
         // Mettre à jour Supabase si le domaine devient actif
-        if (data.verified && domainRecord.status !== 'active') {
-          await supabase.from("custom_domains").update({ status: 'active', dns_verified: true }).eq('id', domainRecord.id);
+        if (data.verified && domainRecord.status !== "active") {
+          await supabase
+            .from("custom_domains")
+            .update({ status: "active", dns_verified: true })
+            .eq("id", domainRecord.id);
         }
       }
     } catch (err) {
@@ -147,7 +168,15 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
             {detecting ? (
               <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
             ) : provider ? (
-              <img src={provider.logoUrl} alt={provider.name} className="h-10 w-10 sm:h-12 sm:w-12 object-contain" onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextElementSibling?.classList.remove('hidden'); }} />
+              <img
+                src={provider.logoUrl}
+                alt={provider.name}
+                className="h-10 w-10 sm:h-12 sm:w-12 object-contain"
+                onError={(e) => {
+                  e.currentTarget.style.display = "none";
+                  e.currentTarget.nextElementSibling?.classList.remove("hidden");
+                }}
+              />
             ) : (
               <Globe className="h-8 w-8 text-muted-foreground" />
             )}
@@ -158,7 +187,11 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
         <div className="mt-6 text-center z-10">
           <h3 className="text-lg font-semibold">{domainRecord.domain}</h3>
           <p className="text-sm text-muted-foreground mt-1">
-            {detecting ? t.analyzing : provider ? `${t.managedBy}${provider.name}` : t.hostUnidentified}
+            {detecting
+              ? t.analyzing
+              : provider
+                ? `${t.managedBy}${provider.name}`
+                : t.hostUnidentified}
           </p>
         </div>
       </div>
@@ -166,23 +199,30 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
       {/* STEPPER */}
       <div className="space-y-4">
         {/* Step 1: Configuration DNS */}
-        <Card className={`p-5 transition-colors ${isFullyConfigured ? 'bg-muted/20 opacity-70' : 'border-primary shadow-sm'}`}>
+        <Card
+          className={`p-5 transition-colors ${isFullyConfigured ? "bg-muted/20 opacity-70" : "border-primary shadow-sm"}`}
+        >
           <div className="flex items-start gap-4">
-            <div className={`mt-0.5 h-6 w-6 rounded-full flex items-center justify-center shrink-0 ${isFullyConfigured ? 'bg-green-100 text-green-600' : 'bg-primary/10 text-primary'}`}>
-               {isFullyConfigured ? <CheckCircle2 className="h-4 w-4" /> : <Loader2 className="h-4 w-4 animate-spin" />}
+            <div
+              className={`mt-0.5 h-6 w-6 rounded-full flex items-center justify-center shrink-0 ${isFullyConfigured ? "bg-green-100 text-green-600" : "bg-primary/10 text-primary"}`}
+            >
+              {isFullyConfigured ? (
+                <CheckCircle2 className="h-4 w-4" />
+              ) : (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              )}
             </div>
             <div className="flex-1 space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
                   <h4 className="font-medium">{t.dnsConfigTitle}</h4>
-                  <p className="text-sm text-muted-foreground">
-                    {t.dnsConfigDesc}
-                  </p>
+                  <p className="text-sm text-muted-foreground">{t.dnsConfigDesc}</p>
                 </div>
                 {provider && !isFullyConfigured && (
                   <Button variant="outline" size="sm" className="w-full sm:w-auto" asChild>
                     <a href={provider.loginUrl} target="_blank" rel="noopener noreferrer">
-                      {t.loginBtn}{provider.name}
+                      {t.loginBtn}
+                      {provider.name}
                     </a>
                   </Button>
                 )}
@@ -195,33 +235,60 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
                     <span>{t.nameLabel}</span>
                     <span>{t.valueLabel}</span>
                   </div>
-                  
+
                   {isApex ? (
                     <div className="flex flex-col sm:grid sm:grid-cols-[100px_1fr_1.5fr] gap-2 sm:gap-4 bg-muted/10 sm:bg-transparent rounded-lg border sm:border-0 p-3 sm:p-0">
                       <div className="flex flex-col sm:block">
-                        <span className="text-[10px] uppercase font-bold text-muted-foreground sm:hidden mb-1">{t.typeLabel}</span>
+                        <span className="text-[10px] uppercase font-bold text-muted-foreground sm:hidden mb-1">
+                          {t.typeLabel}
+                        </span>
                         <div className="flex items-center justify-between px-3 py-2.5 bg-background sm:bg-muted/30 rounded-md sm:rounded-lg border">
                           <span className="text-sm font-mono">A</span>
-                          <button onClick={() => copyToClipboard('A', 'type1')} className="text-muted-foreground hover:text-foreground shrink-0 ml-2">
-                            {copiedField === 'type1' ? <CheckCircle2 className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
+                          <button
+                            onClick={() => copyToClipboard("A", "type1")}
+                            className="text-muted-foreground hover:text-foreground shrink-0 ml-2"
+                          >
+                            {copiedField === "type1" ? (
+                              <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
+                            ) : (
+                              <Copy className="h-3.5 w-3.5" />
+                            )}
                           </button>
                         </div>
                       </div>
                       <div className="flex flex-col sm:block">
-                        <span className="text-[10px] uppercase font-bold text-muted-foreground sm:hidden mb-1 mt-2 sm:mt-0">{t.nameLabel}</span>
+                        <span className="text-[10px] uppercase font-bold text-muted-foreground sm:hidden mb-1 mt-2 sm:mt-0">
+                          {t.nameLabel}
+                        </span>
                         <div className="flex items-center justify-between px-3 py-2.5 bg-background sm:bg-muted/30 rounded-md sm:rounded-lg border overflow-hidden">
                           <span className="text-sm font-mono truncate">@</span>
-                          <button onClick={() => copyToClipboard('@', 'name1')} className="text-muted-foreground hover:text-foreground shrink-0 ml-2">
-                            {copiedField === 'name1' ? <CheckCircle2 className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
+                          <button
+                            onClick={() => copyToClipboard("@", "name1")}
+                            className="text-muted-foreground hover:text-foreground shrink-0 ml-2"
+                          >
+                            {copiedField === "name1" ? (
+                              <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
+                            ) : (
+                              <Copy className="h-3.5 w-3.5" />
+                            )}
                           </button>
                         </div>
                       </div>
                       <div className="flex flex-col sm:block">
-                        <span className="text-[10px] uppercase font-bold text-muted-foreground sm:hidden mb-1 mt-2 sm:mt-0">{t.valueLabel}</span>
+                        <span className="text-[10px] uppercase font-bold text-muted-foreground sm:hidden mb-1 mt-2 sm:mt-0">
+                          {t.valueLabel}
+                        </span>
                         <div className="flex items-center justify-between px-3 py-2.5 bg-background sm:bg-muted/30 rounded-md sm:rounded-lg border overflow-hidden">
                           <span className="text-sm font-mono truncate">76.76.21.21</span>
-                          <button onClick={() => copyToClipboard('76.76.21.21', 'val1')} className="text-muted-foreground hover:text-foreground shrink-0 ml-2">
-                            {copiedField === 'val1' ? <CheckCircle2 className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
+                          <button
+                            onClick={() => copyToClipboard("76.76.21.21", "val1")}
+                            className="text-muted-foreground hover:text-foreground shrink-0 ml-2"
+                          >
+                            {copiedField === "val1" ? (
+                              <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
+                            ) : (
+                              <Copy className="h-3.5 w-3.5" />
+                            )}
                           </button>
                         </div>
                       </div>
@@ -237,31 +304,67 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
                         </div>
                       </div>
                       {vercelData.verification.map((record: any, idx: number) => (
-                        <div key={`verification-${idx}`} className="flex flex-col sm:grid sm:grid-cols-[100px_1fr_1.5fr] gap-2 sm:gap-4 bg-yellow-500/5 sm:bg-transparent rounded-lg border border-yellow-500/20 sm:border-0 p-3 sm:p-0">
+                        <div
+                          key={`verification-${idx}`}
+                          className="flex flex-col sm:grid sm:grid-cols-[100px_1fr_1.5fr] gap-2 sm:gap-4 bg-yellow-500/5 sm:bg-transparent rounded-lg border border-yellow-500/20 sm:border-0 p-3 sm:p-0"
+                        >
                           <div className="flex flex-col sm:block">
-                            <span className="text-[10px] uppercase font-bold text-yellow-700/70 sm:hidden mb-1">{t.typeLabel}</span>
+                            <span className="text-[10px] uppercase font-bold text-yellow-700/70 sm:hidden mb-1">
+                              {t.typeLabel}
+                            </span>
                             <div className="flex items-center justify-between px-3 py-2.5 bg-background/50 sm:bg-yellow-500/5 rounded-md sm:rounded-lg border sm:border-yellow-500/20">
-                              <span className="text-sm font-mono text-yellow-700 dark:text-yellow-400">{record.type}</span>
-                              <button onClick={() => copyToClipboard(record.type, `vtype-${idx}`)} className="text-yellow-600/70 hover:text-yellow-600 shrink-0 ml-2">
-                                {copiedField === `vtype-${idx}` ? <CheckCircle2 className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+                              <span className="text-sm font-mono text-yellow-700 dark:text-yellow-400">
+                                {record.type}
+                              </span>
+                              <button
+                                onClick={() => copyToClipboard(record.type, `vtype-${idx}`)}
+                                className="text-yellow-600/70 hover:text-yellow-600 shrink-0 ml-2"
+                              >
+                                {copiedField === `vtype-${idx}` ? (
+                                  <CheckCircle2 className="h-3.5 w-3.5" />
+                                ) : (
+                                  <Copy className="h-3.5 w-3.5" />
+                                )}
                               </button>
                             </div>
                           </div>
                           <div className="flex flex-col sm:block">
-                            <span className="text-[10px] uppercase font-bold text-yellow-700/70 sm:hidden mb-1 mt-2 sm:mt-0">{t.nameLabel}</span>
+                            <span className="text-[10px] uppercase font-bold text-yellow-700/70 sm:hidden mb-1 mt-2 sm:mt-0">
+                              {t.nameLabel}
+                            </span>
                             <div className="flex items-center justify-between px-3 py-2.5 bg-background/50 sm:bg-yellow-500/5 rounded-md sm:rounded-lg border sm:border-yellow-500/20 overflow-hidden">
-                              <span className="text-sm font-mono text-yellow-700 dark:text-yellow-400 truncate">{record.domain}</span>
-                              <button onClick={() => copyToClipboard(record.domain, `vname-${idx}`)} className="text-yellow-600/70 hover:text-yellow-600 shrink-0 ml-2">
-                                {copiedField === `vname-${idx}` ? <CheckCircle2 className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+                              <span className="text-sm font-mono text-yellow-700 dark:text-yellow-400 truncate">
+                                {record.domain}
+                              </span>
+                              <button
+                                onClick={() => copyToClipboard(record.domain, `vname-${idx}`)}
+                                className="text-yellow-600/70 hover:text-yellow-600 shrink-0 ml-2"
+                              >
+                                {copiedField === `vname-${idx}` ? (
+                                  <CheckCircle2 className="h-3.5 w-3.5" />
+                                ) : (
+                                  <Copy className="h-3.5 w-3.5" />
+                                )}
                               </button>
                             </div>
                           </div>
                           <div className="flex flex-col sm:block">
-                            <span className="text-[10px] uppercase font-bold text-yellow-700/70 sm:hidden mb-1 mt-2 sm:mt-0">{t.valueLabel}</span>
+                            <span className="text-[10px] uppercase font-bold text-yellow-700/70 sm:hidden mb-1 mt-2 sm:mt-0">
+                              {t.valueLabel}
+                            </span>
                             <div className="flex items-center justify-between px-3 py-2.5 bg-background/50 sm:bg-yellow-500/5 rounded-md sm:rounded-lg border sm:border-yellow-500/20 overflow-hidden">
-                              <span className="text-sm font-mono text-yellow-700 dark:text-yellow-400 truncate">{record.value}</span>
-                              <button onClick={() => copyToClipboard(record.value, `vval-${idx}`)} className="text-yellow-600/70 hover:text-yellow-600 shrink-0 ml-2">
-                                {copiedField === `vval-${idx}` ? <CheckCircle2 className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+                              <span className="text-sm font-mono text-yellow-700 dark:text-yellow-400 truncate">
+                                {record.value}
+                              </span>
+                              <button
+                                onClick={() => copyToClipboard(record.value, `vval-${idx}`)}
+                                className="text-yellow-600/70 hover:text-yellow-600 shrink-0 ml-2"
+                              >
+                                {copiedField === `vval-${idx}` ? (
+                                  <CheckCircle2 className="h-3.5 w-3.5" />
+                                ) : (
+                                  <Copy className="h-3.5 w-3.5" />
+                                )}
                               </button>
                             </div>
                           </div>
@@ -272,29 +375,63 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
 
                   <div className="flex flex-col sm:grid sm:grid-cols-[100px_1fr_1.5fr] gap-2 sm:gap-4 bg-muted/10 sm:bg-transparent rounded-lg border sm:border-0 p-3 sm:p-0">
                     <div className="flex flex-col sm:block">
-                      <span className="text-[10px] uppercase font-bold text-muted-foreground sm:hidden mb-1">{t.typeLabel}</span>
+                      <span className="text-[10px] uppercase font-bold text-muted-foreground sm:hidden mb-1">
+                        {t.typeLabel}
+                      </span>
                       <div className="flex items-center justify-between px-3 py-2.5 bg-background sm:bg-muted/30 rounded-md sm:rounded-lg border">
                         <span className="text-sm font-mono">CNAME</span>
-                        <button onClick={() => copyToClipboard('CNAME', 'type2')} className="text-muted-foreground hover:text-foreground shrink-0 ml-2">
-                          {copiedField === 'type2' ? <CheckCircle2 className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
+                        <button
+                          onClick={() => copyToClipboard("CNAME", "type2")}
+                          className="text-muted-foreground hover:text-foreground shrink-0 ml-2"
+                        >
+                          {copiedField === "type2" ? (
+                            <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
+                          ) : (
+                            <Copy className="h-3.5 w-3.5" />
+                          )}
                         </button>
                       </div>
                     </div>
                     <div className="flex flex-col sm:block">
-                      <span className="text-[10px] uppercase font-bold text-muted-foreground sm:hidden mb-1 mt-2 sm:mt-0">{t.nameLabel}</span>
+                      <span className="text-[10px] uppercase font-bold text-muted-foreground sm:hidden mb-1 mt-2 sm:mt-0">
+                        {t.nameLabel}
+                      </span>
                       <div className="flex items-center justify-between px-3 py-2.5 bg-background sm:bg-muted/30 rounded-md sm:rounded-lg border overflow-hidden">
-                        <span className="text-sm font-mono truncate">{isApex ? 'www' : domainRecord.domain.split('.')[0]}</span>
-                        <button onClick={() => copyToClipboard(isApex ? 'www' : domainRecord.domain.split('.')[0], 'name2')} className="text-muted-foreground hover:text-foreground shrink-0 ml-2">
-                          {copiedField === 'name2' ? <CheckCircle2 className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
+                        <span className="text-sm font-mono truncate">
+                          {isApex ? "www" : domainRecord.domain.split(".")[0]}
+                        </span>
+                        <button
+                          onClick={() =>
+                            copyToClipboard(
+                              isApex ? "www" : domainRecord.domain.split(".")[0],
+                              "name2",
+                            )
+                          }
+                          className="text-muted-foreground hover:text-foreground shrink-0 ml-2"
+                        >
+                          {copiedField === "name2" ? (
+                            <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
+                          ) : (
+                            <Copy className="h-3.5 w-3.5" />
+                          )}
                         </button>
                       </div>
                     </div>
                     <div className="flex flex-col sm:block">
-                      <span className="text-[10px] uppercase font-bold text-muted-foreground sm:hidden mb-1 mt-2 sm:mt-0">{t.valueLabel}</span>
+                      <span className="text-[10px] uppercase font-bold text-muted-foreground sm:hidden mb-1 mt-2 sm:mt-0">
+                        {t.valueLabel}
+                      </span>
                       <div className="flex items-center justify-between px-3 py-2.5 bg-background sm:bg-muted/30 rounded-md sm:rounded-lg border overflow-hidden">
                         <span className="text-sm font-mono truncate">cname.vercel-dns.com</span>
-                        <button onClick={() => copyToClipboard('cname.vercel-dns.com', 'val2')} className="text-muted-foreground hover:text-foreground shrink-0 ml-2">
-                          {copiedField === 'val2' ? <CheckCircle2 className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
+                        <button
+                          onClick={() => copyToClipboard("cname.vercel-dns.com", "val2")}
+                          className="text-muted-foreground hover:text-foreground shrink-0 ml-2"
+                        >
+                          {copiedField === "val2" ? (
+                            <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
+                          ) : (
+                            <Copy className="h-3.5 w-3.5" />
+                          )}
                         </button>
                       </div>
                     </div>
@@ -318,10 +455,18 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
         </Card>
 
         {/* Step 2: Propagation */}
-        <Card className={`p-5 transition-colors ${!isFullyConfigured ? 'opacity-50 grayscale' : 'border-primary shadow-sm'}`}>
+        <Card
+          className={`p-5 transition-colors ${!isFullyConfigured ? "opacity-50 grayscale" : "border-primary shadow-sm"}`}
+        >
           <div className="flex items-center gap-4">
-            <div className={`h-6 w-6 rounded-full flex items-center justify-center shrink-0 ${isFullyConfigured ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'}`}>
-               {!isFullyConfigured ? <Loader2 className="h-4 w-4" /> : <CheckCircle2 className="h-4 w-4 text-green-600" />}
+            <div
+              className={`h-6 w-6 rounded-full flex items-center justify-center shrink-0 ${isFullyConfigured ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"}`}
+            >
+              {!isFullyConfigured ? (
+                <Loader2 className="h-4 w-4" />
+              ) : (
+                <CheckCircle2 className="h-4 w-4 text-green-600" />
+              )}
             </div>
             <div>
               <h4 className="font-medium">{t.dnsPropagationTitle}</h4>
@@ -333,10 +478,14 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
         </Card>
 
         {/* Step 3: SSL */}
-        <Card className={`p-5 transition-colors ${!isFullyConfigured ? 'opacity-50 grayscale' : 'bg-green-50/50 border-green-200'}`}>
+        <Card
+          className={`p-5 transition-colors ${!isFullyConfigured ? "opacity-50 grayscale" : "bg-green-50/50 border-green-200"}`}
+        >
           <div className="flex items-center gap-4">
-            <div className={`h-6 w-6 rounded-full flex items-center justify-center shrink-0 ${isFullyConfigured ? 'bg-green-100 text-green-600' : 'bg-muted text-muted-foreground'}`}>
-               <Lock className="h-3.5 w-3.5" />
+            <div
+              className={`h-6 w-6 rounded-full flex items-center justify-center shrink-0 ${isFullyConfigured ? "bg-green-100 text-green-600" : "bg-muted text-muted-foreground"}`}
+            >
+              <Lock className="h-3.5 w-3.5" />
             </div>
             <div className="flex-1 flex items-center justify-between">
               <div>
@@ -346,7 +495,9 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
                 </p>
               </div>
               {isFullyConfigured && (
-                <Badge variant="default" className="bg-green-500 hover:bg-green-600">{t.activeBadge}</Badge>
+                <Badge variant="default" className="bg-green-500 hover:bg-green-600">
+                  {t.activeBadge}
+                </Badge>
               )}
             </div>
           </div>
@@ -355,7 +506,11 @@ export default function DomainConnectionUI({ domainRecord, onDelete, brandColor 
 
       <div className="pt-4 flex justify-end border-t border-muted">
         <Button variant="destructive" onClick={handleDelete} disabled={deleting}>
-          {deleting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Trash2 className="h-4 w-4 mr-2" />}
+          {deleting ? (
+            <Loader2 className="h-4 w-4 animate-spin mr-2" />
+          ) : (
+            <Trash2 className="h-4 w-4 mr-2" />
+          )}
           {t.removeBtn}
         </Button>
       </div>

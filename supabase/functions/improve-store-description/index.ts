@@ -16,10 +16,13 @@ Deno.serve(async (req) => {
     }
 
     if (description.length > 20000) {
-      return new Response(JSON.stringify({ error: "Description trop longue (max 20 000 caractères)" }), {
-        status: 200,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return new Response(
+        JSON.stringify({ error: "Description trop longue (max 20 000 caractères)" }),
+        {
+          status: 200,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
+      );
     }
 
     const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
@@ -45,47 +48,60 @@ RÈGLES STRICTES :
 
 RÉPONDS UNIQUEMENT AVEC LE CODE HTML GÉNÉRÉ DE LA DESCRIPTION, sans markdown de code (pas de \`\`\`html), sans aucun commentaire avant ou après.`;
 
-    const aiResponse = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${GEMINI_API_KEY}`,
-        "Content-Type": "application/json",
+    const aiResponse = await fetch(
+      "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${GEMINI_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "gemini-2.0-flash",
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: description },
+          ],
+        }),
       },
-      body: JSON.stringify({
-        model: "gemini-2.0-flash",
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: description },
-        ],
-      }),
-    });
+    );
 
     if (aiResponse.status === 429) {
-      return new Response(JSON.stringify({ error: "Trop de requêtes, réessayez dans un instant." }), {
-        status: 200,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return new Response(
+        JSON.stringify({ error: "Trop de requêtes, réessayez dans un instant." }),
+        {
+          status: 200,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
+      );
     }
     if (aiResponse.status === 402) {
-      return new Response(JSON.stringify({ error: "Crédits IA épuisés. Contactez l'administrateur." }), {
-        status: 200,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return new Response(
+        JSON.stringify({ error: "Crédits IA épuisés. Contactez l'administrateur." }),
+        {
+          status: 200,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
+      );
     }
     if (!aiResponse.ok) {
       const t = await aiResponse.text();
       console.error("AI gateway error:", aiResponse.status, t);
-      return new Response(JSON.stringify({ error: `Erreur API IA (${aiResponse.status}): ${t.substring(0, 100)}` }), {
-        status: 200,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return new Response(
+        JSON.stringify({ error: `Erreur API IA (${aiResponse.status}): ${t.substring(0, 100)}` }),
+        {
+          status: 200,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
+      );
     }
 
     const data = await aiResponse.json();
     let improved: string = data.choices?.[0]?.message?.content || "";
 
     // Strip accidental markdown code fences
-    improved = improved.trim()
+    improved = improved
+      .trim()
       .replace(/^```html\s*/i, "")
       .replace(/^```\s*/i, "")
       .replace(/```$/i, "")
@@ -104,9 +120,12 @@ RÉPONDS UNIQUEMENT AVEC LE CODE HTML GÉNÉRÉ DE LA DESCRIPTION, sans markdown
     });
   } catch (e) {
     console.error("improve-store-description error:", e);
-    return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Erreur inconnue du serveur" }), {
-      status: 200,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({ error: e instanceof Error ? e.message : "Erreur inconnue du serveur" }),
+      {
+        status: 200,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      },
+    );
   }
 });

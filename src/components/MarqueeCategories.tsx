@@ -1,9 +1,21 @@
 import { motion } from "framer-motion";
 
 const categories = [
-  "E-books", "Templates", "Formations", "Tutoriels", "Illustrations",
-  "Photos", "Plugins", "Scripts", "Automations", "Guides PDF",
-  "Logiciels", "Musique", "Vidéos", "Graphismes", "Presets",
+  "E-books",
+  "Templates",
+  "Formations",
+  "Tutoriels",
+  "Illustrations",
+  "Photos",
+  "Plugins",
+  "Scripts",
+  "Automations",
+  "Guides PDF",
+  "Logiciels",
+  "Musique",
+  "Vidéos",
+  "Graphismes",
+  "Presets",
 ];
 
 const MarqueeCategories = () => {

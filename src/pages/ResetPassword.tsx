@@ -25,7 +25,7 @@ const translations = {
     validationLength: "Le mot de passe doit contenir au moins 6 caractères.",
     validationMatch: "Les mots de passe ne correspondent pas.",
     errorUpdate: "Erreur lors de la mise à jour du mot de passe.",
-    successMsg: "Mot de passe mis à jour avec succès !"
+    successMsg: "Mot de passe mis à jour avec succès !",
   },
   en: {
     seoTitle: "New Password",
@@ -42,8 +42,8 @@ const translations = {
     validationLength: "Password must contain at least 6 characters.",
     validationMatch: "Passwords do not match.",
     errorUpdate: "Error updating password.",
-    successMsg: "Password updated successfully!"
-  }
+    successMsg: "Password updated successfully!",
+  },
 };
 
 const ResetPassword = () => {
@@ -55,7 +55,9 @@ const ResetPassword = () => {
   const [isRecovery, setIsRecovery] = useState(false);
   const navigate = useNavigate();
 
-  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+  const [lang, setLang] = useState(() =>
+    typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
+  );
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -63,11 +65,13 @@ const ResetPassword = () => {
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
 
-  const t = translations[lang === 'en' ? 'en' : 'fr'];
+  const t = translations[lang === "en" ? "en" : "fr"];
 
   useEffect(() => {
     // Listen for the PASSWORD_RECOVERY event from Supabase
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event) => {
       if (event === "PASSWORD_RECOVERY") {
         setIsRecovery(true);
       }
@@ -138,13 +142,13 @@ const ResetPassword = () => {
         {!success ? (
           <>
             <h1 className="text-2xl font-extrabold text-foreground mb-2">{t.heading}</h1>
-            <p className="text-sm text-muted-foreground mb-8">
-              {t.subtitle}
-            </p>
+            <p className="text-sm text-muted-foreground mb-8">{t.subtitle}</p>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="text-sm font-medium text-foreground mb-1.5 block">{t.passLabel}</label>
+                <label className="text-sm font-medium text-foreground mb-1.5 block">
+                  {t.passLabel}
+                </label>
                 <div className="relative">
                   <Input
                     type={showPassword ? "text" : "password"}
@@ -165,7 +169,9 @@ const ResetPassword = () => {
               </div>
 
               <div>
-                <label className="text-sm font-medium text-foreground mb-1.5 block">{t.confirmLabel}</label>
+                <label className="text-sm font-medium text-foreground mb-1.5 block">
+                  {t.confirmLabel}
+                </label>
                 <Input
                   type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
@@ -187,9 +193,7 @@ const ResetPassword = () => {
               <CheckCircle className="h-8 w-8 text-green-600 dark:text-green-400" />
             </div>
             <h1 className="text-2xl font-extrabold text-foreground">{t.successTitle}</h1>
-            <p className="text-sm text-muted-foreground">
-              {t.successDesc}
-            </p>
+            <p className="text-sm text-muted-foreground">{t.successDesc}</p>
           </div>
         )}
       </motion.div>

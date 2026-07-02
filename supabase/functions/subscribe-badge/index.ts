@@ -11,8 +11,9 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
   return new Response(
     JSON.stringify({
-      error: "L'abonnement au badge est temporairement indisponible pendant la migration vers notre nouveau processeur de paiement. Disponible sous 24-48h.",
+      error:
+        "L'abonnement au badge est temporairement indisponible pendant la migration vers notre nouveau processeur de paiement. Disponible sous 24-48h.",
     }),
-    { status: 503, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    { status: 503, headers: { ...corsHeaders, "Content-Type": "application/json" } },
   );
 });

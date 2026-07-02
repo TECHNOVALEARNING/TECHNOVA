@@ -26,7 +26,7 @@ const SUBCAT_LABELS: Record<string, string> = {
   excel: "Excel",
   dev: "Dev",
   marketing: "Marketing",
-  other: "Autre"
+  other: "Autre",
 };
 
 const getBadgeClass = (b: string) => {
@@ -76,19 +76,18 @@ const ProductCard = ({ product, index = 0 }: { product: Product; index?: number 
               {product.category === "course" && "📚"}
               {product.category === "formation" && "🎓"}
               {product.category === "ebook" && "📄"}
-              {(product.category === "template" || product.category?.startsWith("template:")) && "📋"}
+              {(product.category === "template" || product.category?.startsWith("template:")) &&
+                "📋"}
             </span>
           </div>
         )}
         <span className="course-badge">
           {product.category?.startsWith("template:")
             ? `Template ${SUBCAT_LABELS[product.category.split(":")[1]] || product.category.split(":")[1]}`
-            : (categoryLabels[product.category] || product.category)}
+            : categoryLabels[product.category] || product.category}
         </span>
         {product.badge && (
-          <span className={`label-badge ${getBadgeClass(product.badge)}`}>
-            {product.badge}
-          </span>
+          <span className={`label-badge ${getBadgeClass(product.badge)}`}>{product.badge}</span>
         )}
       </div>
 
@@ -98,7 +97,7 @@ const ProductCard = ({ product, index = 0 }: { product: Product; index?: number 
             {product.title}
           </div>
         </Link>
-        
+
         <p className="mb-4 line-clamp-2 text-xs text-muted-foreground leading-relaxed">
           {product.description}
         </p>
@@ -107,7 +106,9 @@ const ProductCard = ({ product, index = 0 }: { product: Product; index?: number 
           {product.students && (
             <span className="students">
               <i className="fas fa-users" style={{ fontSize: "0.65rem", marginRight: 4 }}></i>
-              {product.students >= 1000 ? `${(product.students / 1000).toFixed(1)}k` : product.students}
+              {product.students >= 1000
+                ? `${(product.students / 1000).toFixed(1)}k`
+                : product.students}
             </span>
           )}
           {renderStars(product.rating || 5)}
@@ -123,7 +124,11 @@ const ProductCard = ({ product, index = 0 }: { product: Product; index?: number 
           onClick={() => addToCart(product)}
           disabled={inCart}
           className={inCart ? "btn-buy opacity-60 cursor-not-allowed" : "btn-buy"}
-          style={inCart ? { background: "var(--divider)", color: "var(--text-secondary)", boxShadow: "none" } : {}}
+          style={
+            inCart
+              ? { background: "var(--divider)", color: "var(--text-secondary)", boxShadow: "none" }
+              : {}
+          }
         >
           <i className="fas fa-shopping-cart" style={{ marginRight: 8 }}></i>
           {inCart ? "Ajouté au panier" : "Ajouter au panier"}

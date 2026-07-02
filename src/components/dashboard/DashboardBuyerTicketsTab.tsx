@@ -53,7 +53,7 @@ const translations = {
     btnClose: "Close",
     replyPlaceholder: "Your reply (will be emailed to the customer)...",
     clientDefault: "Customer",
-  }
+  },
 };
 
 const DashboardBuyerTicketsTab = () => {
@@ -66,7 +66,9 @@ const DashboardBuyerTicketsTab = () => {
   const [sending, setSending] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
 
-  const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
+  const [lang, setLang] = useState(() =>
+    typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
+  );
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -74,7 +76,7 @@ const DashboardBuyerTicketsTab = () => {
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
 
-  const t = translations[lang === 'en' ? 'en' : 'fr'];
+  const t = translations[lang === "en" ? "en" : "fr"];
 
   useEffect(() => {
     if (user) loadTickets();
@@ -88,20 +90,26 @@ const DashboardBuyerTicketsTab = () => {
     if (!selectedTicket) return;
     const channel = supabase
       .channel(`support-ticket-msgs-${selectedTicket.id}`)
-      .on("postgres_changes", {
-        event: "INSERT",
-        schema: "public",
-        table: "support_ticket_messages",
-        filter: `ticket_id=eq.${selectedTicket.id}`,
-      }, (payload) => {
-        setMessages((prev) => {
-          if (prev.some((m) => m.id === payload.new.id)) return prev;
-          return [...prev, payload.new as TicketMessage];
-        });
-      })
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "support_ticket_messages",
+          filter: `ticket_id=eq.${selectedTicket.id}`,
+        },
+        (payload) => {
+          setMessages((prev) => {
+            if (prev.some((m) => m.id === payload.new.id)) return prev;
+            return [...prev, payload.new as TicketMessage];
+          });
+        },
+      )
       .subscribe();
 
-    return () => { supabase.removeChannel(channel); };
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [selectedTicket]);
 
   const loadTickets = async () => {
@@ -111,7 +119,7 @@ const DashboardBuyerTicketsTab = () => {
       .select("id, subject, status, created_at, customer_id")
       .eq("store_owner_id", user?.id)
       .order("created_at", { ascending: false });
-    
+
     if (error) {
       console.error("Error fetching tickets:", error);
       toast.error("Erreur: " + error.message);
@@ -121,32 +129,35 @@ const DashboardBuyerTicketsTab = () => {
     }
 
     if (tickets && tickets.length > 0) {
-      const customerIds = [...new Set(tickets.map(t => t.customer_id))].filter(Boolean);
+      const customerIds = [...new Set(tickets.map((t) => t.customer_id))].filter(Boolean);
       let customersMap: Record<string, any> = {};
-      
+
       if (customerIds.length > 0) {
         const { data: customers } = await supabase
           .from("customers")
           .select("id, name, email")
           .in("id", customerIds);
-          
+
         if (customers) {
-          customersMap = customers.reduce((acc, curr) => {
-            acc[curr.id] = curr;
-            return acc;
-          }, {} as Record<string, any>);
+          customersMap = customers.reduce(
+            (acc, curr) => {
+              acc[curr.id] = curr;
+              return acc;
+            },
+            {} as Record<string, any>,
+          );
         }
       }
 
-      const ticketsWithCustomers = tickets.map(ticket => ({
+      const ticketsWithCustomers = tickets.map((ticket) => ({
         ...ticket,
-        customers: customersMap[ticket.customer_id] || { name: t.unknownClient, email: "N/A" }
+        customers: customersMap[ticket.customer_id] || { name: t.unknownClient, email: "N/A" },
       }));
       setTickets(ticketsWithCustomers as any);
     } else {
       setTickets([]);
     }
-    
+
     setLoading(false);
   };
 
@@ -197,10 +208,8 @@ const DashboardBuyerTicketsTab = () => {
       .from("support_tickets")
       .update({ status: "closed" } as any)
       .eq("id", ticketId);
-      
-    setTickets((prev) =>
-      prev.map((t) => (t.id === ticketId ? { ...t, status: "closed" } : t))
-    );
+
+    setTickets((prev) => prev.map((t) => (t.id === ticketId ? { ...t, status: "closed" } : t)));
     if (selectedTicket?.id === ticketId) {
       setSelectedTicket({ ...selectedTicket, status: "closed" });
     }
@@ -233,14 +242,22 @@ const DashboardBuyerTicketsTab = () => {
                 }`}
               >
                 <div className="flex items-center justify-between mb-1">
-                  <p className="text-sm font-medium text-foreground truncate">{ticket.customers?.name || t.clientDefault}</p>
-                  <Badge variant={ticket.status === "open" ? "default" : "secondary"} className="text-[10px]">
+                  <p className="text-sm font-medium text-foreground truncate">
+                    {ticket.customers?.name || t.clientDefault}
+                  </p>
+                  <Badge
+                    variant={ticket.status === "open" ? "default" : "secondary"}
+                    className="text-[10px]"
+                  >
                     {ticket.status === "open" ? t.openBadge : t.closedBadge}
                   </Badge>
                 </div>
                 <p className="text-xs text-muted-foreground truncate">{ticket.subject}</p>
                 <p className="text-[10px] text-muted-foreground/60 mt-1">
-                  {new Date(ticket.created_at).toLocaleDateString(lang === "en" ? "en-US" : "fr-FR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
+                  {new Date(ticket.created_at).toLocaleDateString(
+                    lang === "en" ? "en-US" : "fr-FR",
+                    { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" },
+                  )}
                 </p>
               </button>
             ))
@@ -258,12 +275,21 @@ const DashboardBuyerTicketsTab = () => {
           <>
             <div className="px-4 py-3 border-b border-border flex items-center justify-between">
               <div>
-                <p className="text-sm font-semibold text-foreground">{selectedTicket.customers?.name || t.clientDefault}</p>
-                <p className="text-[11px] text-muted-foreground">{selectedTicket.customers?.email}</p>
+                <p className="text-sm font-semibold text-foreground">
+                  {selectedTicket.customers?.name || t.clientDefault}
+                </p>
+                <p className="text-[11px] text-muted-foreground">
+                  {selectedTicket.customers?.email}
+                </p>
               </div>
               <div className="flex items-center gap-2">
                 {selectedTicket.status === "open" && (
-                  <Button variant="outline" size="sm" className="text-xs gap-1" onClick={() => closeTicket(selectedTicket.id)}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="text-xs gap-1"
+                    onClick={() => closeTicket(selectedTicket.id)}
+                  >
                     <CheckCircle className="h-3 w-3" />
                     {t.btnClose}
                   </Button>
@@ -273,18 +299,33 @@ const DashboardBuyerTicketsTab = () => {
 
             <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
               {messages.map((msg) => (
-                <div key={msg.id} className={`flex ${msg.sender_type === "seller" ? "justify-end" : "justify-start"}`}>
-                  <div className={`flex items-start gap-2 max-w-[80%] ${msg.sender_type === "seller" ? "flex-row-reverse" : ""}`}>
-                    <div className={`h-6 w-6 rounded-full flex items-center justify-center shrink-0 ${
-                      msg.sender_type === "customer" ? "bg-primary/10 text-primary" : "bg-emerald-500/10 text-emerald-600"
-                    }`}>
-                      {msg.sender_type === "customer" ? <User className="h-3 w-3" /> : <Store className="h-3 w-3" />}
+                <div
+                  key={msg.id}
+                  className={`flex ${msg.sender_type === "seller" ? "justify-end" : "justify-start"}`}
+                >
+                  <div
+                    className={`flex items-start gap-2 max-w-[80%] ${msg.sender_type === "seller" ? "flex-row-reverse" : ""}`}
+                  >
+                    <div
+                      className={`h-6 w-6 rounded-full flex items-center justify-center shrink-0 ${
+                        msg.sender_type === "customer"
+                          ? "bg-primary/10 text-primary"
+                          : "bg-emerald-500/10 text-emerald-600"
+                      }`}
+                    >
+                      {msg.sender_type === "customer" ? (
+                        <User className="h-3 w-3" />
+                      ) : (
+                        <Store className="h-3 w-3" />
+                      )}
                     </div>
-                    <div className={`rounded-2xl px-3 py-2 text-sm ${
-                      msg.sender_type === "seller"
-                        ? "bg-primary text-primary-foreground rounded-tr-sm"
-                        : "bg-muted text-foreground rounded-tl-sm"
-                    }`}>
+                    <div
+                      className={`rounded-2xl px-3 py-2 text-sm ${
+                        msg.sender_type === "seller"
+                          ? "bg-primary text-primary-foreground rounded-tr-sm"
+                          : "bg-muted text-foreground rounded-tl-sm"
+                      }`}
+                    >
                       {msg.content}
                     </div>
                   </div>
@@ -295,7 +336,13 @@ const DashboardBuyerTicketsTab = () => {
 
             {selectedTicket.status === "open" && (
               <div className="border-t border-border px-3 py-3 bg-muted/30">
-                <form onSubmit={(e) => { e.preventDefault(); sendReply(); }} className="flex items-center gap-2">
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    sendReply();
+                  }}
+                  className="flex items-center gap-2"
+                >
                   <input
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
@@ -308,7 +355,11 @@ const DashboardBuyerTicketsTab = () => {
                     disabled={!input.trim() || sending}
                     className="h-9 w-9 rounded-xl bg-primary text-primary-foreground flex items-center justify-center disabled:opacity-50"
                   >
-                    {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                    {sending ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Send className="h-4 w-4" />
+                    )}
                   </button>
                 </form>
               </div>

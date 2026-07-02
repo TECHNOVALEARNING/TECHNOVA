@@ -2,21 +2,50 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  FileText, GraduationCap, Key, Layers, Check, ArrowLeft,
-  Upload, Image as ImageIcon, Package, Link as LinkIcon, FileAudio, FileVideo, Video as YoutubeIcon,
-  Shield, Clock, Hash, Percent, Video, BookOpen, Download, Loader2, Sparkles, File as PdfIcon
+  FileText,
+  GraduationCap,
+  Key,
+  Layers,
+  Check,
+  ArrowLeft,
+  Upload,
+  Image as ImageIcon,
+  Package,
+  Link as LinkIcon,
+  FileAudio,
+  FileVideo,
+  Video as YoutubeIcon,
+  Shield,
+  Clock,
+  Hash,
+  Percent,
+  Video,
+  BookOpen,
+  Download,
+  Loader2,
+  Sparkles,
+  File as PdfIcon,
 } from "lucide-react";
 import CourseLessonsManager, { type Module } from "@/components/dashboard/CourseLessonsManager";
 import RichTextEditor from "@/components/RichTextEditor";
-import ProductModerationDialog, { type ProductModerationReview } from "@/components/dashboard/ProductModerationDialog";
+import ProductModerationDialog, {
+  type ProductModerationReview,
+} from "@/components/dashboard/ProductModerationDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { toast } from "sonner";
+import { getEmbedUrl } from "@/lib/videoUtils";
 
 type ProductType = "file" | "course" | "license";
 
@@ -24,10 +53,15 @@ const productTypes = [
   {
     type: "file" as ProductType,
     label: "Fichiers",
-    description: "E-books, templates, fichiers audio : vos clients téléchargent instantanément après achat.",
+    description:
+      "E-books, templates, fichiers audio : vos clients téléchargent instantanément après achat.",
     icon: FileText,
     color: "bg-amber-500",
-    features: ["Tous formats acceptés (PDF, ZIP, MP3…)", "Livraison automatique", "Téléchargement sécurisé"],
+    features: [
+      "Tous formats acceptés (PDF, ZIP, MP3…)",
+      "Livraison automatique",
+      "Téléchargement sécurisé",
+    ],
   },
   {
     type: "course" as ProductType,
@@ -35,7 +69,11 @@ const productTypes = [
     description: "Créez des formations structurées avec vidéo, texte et contenu téléchargeable.",
     icon: GraduationCap,
     color: "bg-blue-500",
-    features: ["Contenu vidéo, texte & téléchargeable", "Suivi de progression des étudiants", "Modules & leçons structurés"],
+    features: [
+      "Contenu vidéo, texte & téléchargeable",
+      "Suivi de progression des étudiants",
+      "Modules & leçons structurés",
+    ],
   },
   {
     type: "license" as ProductType,
@@ -43,38 +81,16 @@ const productTypes = [
     description: "Vendez des clés de licence avec contrôle total sur les activations et la durée.",
     icon: Key,
     color: "bg-purple-500",
-    features: ["Génération automatique de licences", "Limite d'activations par licence", "Durée de validité configurable", "Suivi en temps réel"],
+    features: [
+      "Génération automatique de licences",
+      "Limite d'activations par licence",
+      "Durée de validité configurable",
+      "Suivi en temps réel",
+    ],
   },
 ];
 
 const TOTAL_STEPS = 5;
-
-const getEmbedUrl = (url: string) => {
-  if (!url) return "";
-  try {
-    if (url.includes("drive.google.com/file/d/")) {
-      const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
-      if (match && match[1]) {
-        return `https://drive.google.com/file/d/${match[1]}/preview`;
-      }
-    }
-    if (url.includes("youtube.com/watch")) {
-      const urlObj = new URL(url);
-      return `https://www.youtube.com/embed/${urlObj.searchParams.get("v")}`;
-    }
-    if (url.includes("youtu.be")) {
-      const id = url.split("youtu.be/")[1]?.split("?")[0];
-      return `https://www.youtube.com/embed/${id}`;
-    }
-    if (url.includes("vimeo.com")) {
-      const id = url.split("vimeo.com/")[1]?.split("/")[0]?.split("?")[0];
-      return `https://player.vimeo.com/video/${id}`;
-    }
-    return url;
-  } catch {
-    return url;
-  }
-};
 
 const CreateProduct = () => {
   const { user } = useAuth();
@@ -119,13 +135,12 @@ const CreateProduct = () => {
   // Course modules
   const [courseModules, setCourseModules] = useState<Module[]>([]);
 
-
   // Moderation
   const [moderationDialogOpen, setModerationDialogOpen] = useState(false);
   const [moderationReview, setModerationReview] = useState<ProductModerationReview | null>(null);
   const [moderationRedirectPath, setModerationRedirectPath] = useState<string | null>(null);
 
-  const selectedTypeData = productTypes.find(t => t.type === selectedType);
+  const selectedTypeData = productTypes.find((t) => t.type === selectedType);
 
   const handleFilePreview = (file: File, setter: (url: string) => void) => {
     const reader = new FileReader();
@@ -141,21 +156,29 @@ const CreateProduct = () => {
     }
   }, [category]);
 
-
   const priceNum = parseFloat(price) || 0;
   const originalPriceNum = parseFloat(originalPrice) || 0;
-  const priceError = price && priceNum > 0 && priceNum < 100 ? "Le prix minimum est de 100 FCFA" : "";
-  const originalPriceError = originalPrice && originalPriceNum > 0 && originalPriceNum <= priceNum
-    ? "Le prix barré doit être supérieur au prix de vente" : "";
-
+  const priceError =
+    price && priceNum > 0 && priceNum < 100 ? "Le prix minimum est de 100 FCFA" : "";
+  const originalPriceError =
+    originalPrice && originalPriceNum > 0 && originalPriceNum <= priceNum
+      ? "Le prix barré doit être supérieur au prix de vente"
+      : "";
 
   const canNext = () => {
     switch (step) {
-      case 1: return !!selectedType;
+      case 1:
+        return !!selectedType;
       case 2:
-        return !!title.trim() && (pricingModel === "free" || (!!price && priceNum >= 100 && !priceError && !originalPriceError));
-      case 3: return !!description.replace(/<[^>]*>/g, "").trim();
-      case 4: return true;
+        return (
+          !!title.trim() &&
+          (pricingModel === "free" ||
+            (!!price && priceNum >= 100 && !priceError && !originalPriceError))
+        );
+      case 3:
+        return !!description.replace(/<[^>]*>/g, "").trim();
+      case 4:
+        return true;
       case 5:
         if (selectedType === "file") {
           if (fileFormat === "video") return !!videoUrl.trim();
@@ -163,7 +186,8 @@ const CreateProduct = () => {
         }
         if (selectedType === "course") return courseModules.length > 0;
         return true;
-      default: return false;
+      default:
+        return false;
     }
   };
 
@@ -199,7 +223,10 @@ const CreateProduct = () => {
     const ext = file.name.split(".").pop();
     const path = `${folder}/${user!.id}/${Date.now()}.${ext}`;
     const { error } = await supabase.storage.from("product-assets").upload(path, file);
-    if (error) { toast.error("Erreur upload: " + error.message); return null; }
+    if (error) {
+      toast.error("Erreur upload: " + error.message);
+      return null;
+    }
     const { data } = supabase.storage.from("product-assets").getPublicUrl(path);
     return data.publicUrl;
   };
@@ -254,14 +281,16 @@ const CreateProduct = () => {
 
       const effectivePrice = pricingModel === "free" ? 0 : parseFloat(price);
 
-      const finalCategory = category === "template" ? `template:${templateSubcat}` : (category || null);
+      const finalCategory =
+        category === "template" ? `template:${templateSubcat}` : category || null;
 
       const productData: Record<string, unknown> = {
         title: title.trim(),
         description: description.trim() || null,
         category: finalCategory,
         price: effectivePrice,
-        original_price: pricingModel === "free" ? null : (originalPrice ? parseFloat(originalPrice) : null),
+        original_price:
+          pricingModel === "free" ? null : originalPrice ? parseFloat(originalPrice) : null,
         type: selectedType,
         thumbnail_url: thumbnailUrl,
         download_url: downloadUrl,
@@ -271,8 +300,12 @@ const CreateProduct = () => {
       };
 
       if (selectedType === "license") {
-        productData.license_max_activations = licenseMaxActivations ? parseInt(licenseMaxActivations) : null;
-        productData.license_validity_days = licenseValidityDays ? parseInt(licenseValidityDays) : null;
+        productData.license_max_activations = licenseMaxActivations
+          ? parseInt(licenseMaxActivations)
+          : null;
+        productData.license_validity_days = licenseValidityDays
+          ? parseInt(licenseValidityDays)
+          : null;
       }
 
       // Course content type removed
@@ -296,7 +329,7 @@ const CreateProduct = () => {
             .insert({
               product_id: productResult.id,
               title: module.title || `Module ${module.position + 1}`,
-              position: module.position
+              position: module.position,
             })
             .select("id")
             .single();
@@ -315,7 +348,7 @@ const CreateProduct = () => {
                 const uploaded = await uploadFile(lesson.resourceFile, "course-resources");
                 if (uploaded) resourceUrl = uploaded;
               }
-              
+
               lessonsToInsert.push({
                 product_id: productResult.id,
                 module_id: modData.id,
@@ -329,7 +362,9 @@ const CreateProduct = () => {
               });
             }
 
-            const { error: lessonsError } = await supabase.from("course_lessons").insert(lessonsToInsert);
+            const { error: lessonsError } = await supabase
+              .from("course_lessons")
+              .insert(lessonsToInsert);
             if (lessonsError) {
               toast.error("Erreur sur les leçons d'un module: " + lessonsError.message);
             }
@@ -337,9 +372,12 @@ const CreateProduct = () => {
         }
       }
 
-
       // Bypassing AI moderation since the Edge Function is not deployed yet
-      const review = { status: "approved", reason: "Auto-approved", severity: "low" } as ProductModerationReview;
+      const review = {
+        status: "approved",
+        reason: "Auto-approved",
+        severity: "low",
+      } as ProductModerationReview;
       setModerationReview(review);
 
       if (review?.status === "rejected") {
@@ -368,7 +406,9 @@ const CreateProduct = () => {
       }
     } catch (error: any) {
       if (createdProductId) {
-        toast.error(error.message || "Analyse impossible. Le produit a été enregistré en brouillon.");
+        toast.error(
+          error.message || "Analyse impossible. Le produit a été enregistré en brouillon.",
+        );
         navigate(`/dashboard/products/${createdProductId}/edit`);
       } else {
         toast.error(error.message || "Impossible de créer le produit.");
@@ -415,17 +455,48 @@ const CreateProduct = () => {
       case "file":
         return (
           <div>
-            <h2 className="text-2xl font-bold text-foreground mb-2">Configurez votre produit numérique</h2>
+            <h2 className="text-2xl font-bold text-foreground mb-2">
+              Configurez votre produit numérique
+            </h2>
             <p className="text-sm text-muted-foreground mb-6">
-              Choisissez d'abord le format de votre produit. Les vidéos sont hébergées via lien (Drive, YouTube).
+              Choisissez d'abord le format de votre produit. Les vidéos sont hébergées via lien
+              (Drive, YouTube).
             </p>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
               {[
-                { id: "pdf", label: "Document (PDF)", icon: PdfIcon, color: "text-red-500", border: "border-red-200 dark:border-red-900/50", bg: "bg-red-50 dark:bg-red-950/30" },
-                { id: "audio", label: "Audio (MP3)", icon: FileAudio, color: "text-purple-500", border: "border-purple-200 dark:border-purple-900/50", bg: "bg-purple-50 dark:bg-purple-950/30" },
-                { id: "image", label: "Image (PNG/JPG)", icon: ImageIcon, color: "text-green-500", border: "border-green-200 dark:border-green-900/50", bg: "bg-green-50 dark:bg-green-950/30" },
-                { id: "video", label: "Vidéo (Lien)", icon: FileVideo, color: "text-blue-500", border: "border-blue-200 dark:border-blue-900/50", bg: "bg-blue-50 dark:bg-blue-950/30" }
+                {
+                  id: "pdf",
+                  label: "Document (PDF)",
+                  icon: PdfIcon,
+                  color: "text-red-500",
+                  border: "border-red-200 dark:border-red-900/50",
+                  bg: "bg-red-50 dark:bg-red-950/30",
+                },
+                {
+                  id: "audio",
+                  label: "Audio (MP3)",
+                  icon: FileAudio,
+                  color: "text-purple-500",
+                  border: "border-purple-200 dark:border-purple-900/50",
+                  bg: "bg-purple-50 dark:bg-purple-950/30",
+                },
+                {
+                  id: "image",
+                  label: "Image (PNG/JPG)",
+                  icon: ImageIcon,
+                  color: "text-green-500",
+                  border: "border-green-200 dark:border-green-900/50",
+                  bg: "bg-green-50 dark:bg-green-950/30",
+                },
+                {
+                  id: "video",
+                  label: "Vidéo (Lien)",
+                  icon: FileVideo,
+                  color: "text-blue-500",
+                  border: "border-blue-200 dark:border-blue-900/50",
+                  bg: "bg-blue-50 dark:bg-blue-950/30",
+                },
               ].map((fmt) => (
                 <button
                   key={fmt.id}
@@ -459,15 +530,21 @@ const CreateProduct = () => {
                   </p>
                 </div>
                 {downloadFile && (
-                  <p className="text-sm font-medium text-foreground mt-4">
-                    📎 {downloadFile.name}
-                  </p>
+                  <p className="text-sm font-medium text-foreground mt-4">📎 {downloadFile.name}</p>
                 )}
                 <input
                   id="download-input"
                   type="file"
                   className="hidden"
-                  accept={fileFormat === "image" ? "image/*" : fileFormat === "audio" ? "audio/*" : fileFormat === "software" ? ".exe,.dmg,.pkg,.zip,.rar" : ".pdf,.doc,.docx,.xls,.xlsx,.txt,.zip,.rar"}
+                  accept={
+                    fileFormat === "image"
+                      ? "image/*"
+                      : fileFormat === "audio"
+                        ? "audio/*"
+                        : fileFormat === "software"
+                          ? ".exe,.dmg,.pkg,.zip,.rar"
+                          : ".pdf,.doc,.docx,.xls,.xlsx,.txt,.zip,.rar"
+                  }
                   onChange={(e) => {
                     const f = e.target.files?.[0];
                     if (f) {
@@ -507,14 +584,14 @@ const CreateProduct = () => {
                     Le lecteur vidéo sera directement intégré sur la page pour vos acheteurs.
                   </p>
                 </div>
-                
+
                 {videoUrl && videoUrl.trim().startsWith("http") && (
                   <div className="aspect-[16/9] w-full rounded-lg overflow-hidden border border-border bg-black/5 mt-4">
-                    <iframe 
-                      src={getEmbedUrl(videoUrl)} 
-                      className="w-full h-full border-0" 
+                    <iframe
+                      src={getEmbedUrl(videoUrl)}
+                      className="w-full h-full border-0"
                       allow="autoplay; fullscreen; picture-in-picture"
-                      allowFullScreen 
+                      allowFullScreen
                     />
                   </div>
                 )}
@@ -537,7 +614,8 @@ const CreateProduct = () => {
           <div>
             <h2 className="text-2xl font-bold text-foreground mb-2">Structure de la formation</h2>
             <p className="text-sm text-muted-foreground mb-6">
-              Construisez votre programme. Ajoutez des modules, et pour chaque leçon intégrez des vidéos, du texte riche et des fichiers téléchargeables.
+              Construisez votre programme. Ajoutez des modules, et pour chaque leçon intégrez des
+              vidéos, du texte riche et des fichiers téléchargeables.
             </p>
 
             <div className="mb-6 p-4 rounded-xl bg-blue-50 dark:bg-blue-900/10 border border-blue-200 dark:border-blue-800 flex items-start gap-3">
@@ -545,17 +623,18 @@ const CreateProduct = () => {
                 <Layers className="h-5 w-5 text-blue-600 dark:text-blue-300" />
               </div>
               <div>
-                <h4 className="font-semibold text-blue-900 dark:text-blue-100 text-sm">Écosystème d'apprentissage complet</h4>
+                <h4 className="font-semibold text-blue-900 dark:text-blue-100 text-sm">
+                  Écosystème d'apprentissage complet
+                </h4>
                 <p className="text-xs text-blue-700 dark:text-blue-300 mt-1">
-                  Chaque leçon est un écosystème en soi : ajoutez-y une vidéo (lien Drive/Youtube), rédigez le cours complet, et joignez un fichier ressource si besoin. L'interface d'apprentissage s'adaptera automatiquement !
+                  Chaque leçon est un écosystème en soi : ajoutez-y une vidéo (lien Drive/Youtube),
+                  rédigez le cours complet, et joignez un fichier ressource si besoin. L'interface
+                  d'apprentissage s'adaptera automatiquement !
                 </p>
               </div>
             </div>
 
-            <CourseLessonsManager 
-              modules={courseModules} 
-              onModulesChange={setCourseModules} 
-            />
+            <CourseLessonsManager modules={courseModules} onModulesChange={setCourseModules} />
 
             <div className="mt-4 p-3 rounded-lg bg-blue-50 dark:bg-blue-900/10 border border-blue-200 dark:border-blue-800">
               <div className="flex items-center gap-2 text-sm text-blue-700 dark:text-blue-400">
@@ -619,7 +698,11 @@ const CreateProduct = () => {
                   className="rounded-xl border-2 border-dashed border-border bg-secondary/30 p-8 text-center cursor-pointer hover:border-primary/50 transition-colors"
                   onClick={() => document.getElementById("download-input")?.click()}
                 >
-                  <Button variant="outline" size="sm" className="gap-2 rounded-full pointer-events-none">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="gap-2 rounded-full pointer-events-none"
+                  >
                     <Upload className="h-4 w-4" /> Ajouter un fichier
                   </Button>
                   <p className="text-xs text-muted-foreground mt-2">
@@ -634,7 +717,15 @@ const CreateProduct = () => {
                     id="download-input"
                     type="file"
                     className="hidden"
-                    accept={fileFormat === "image" ? "image/*" : fileFormat === "audio" ? "audio/*" : fileFormat === "software" ? ".exe,.dmg,.pkg,.zip,.rar" : ".pdf,.doc,.docx,.xls,.xlsx,.txt,.zip,.rar"}
+                    accept={
+                      fileFormat === "image"
+                        ? "image/*"
+                        : fileFormat === "audio"
+                          ? "audio/*"
+                          : fileFormat === "software"
+                            ? ".exe,.dmg,.pkg,.zip,.rar"
+                            : ".pdf,.doc,.docx,.xls,.xlsx,.txt,.zip,.rar"
+                    }
                     onChange={(e) => {
                       const f = e.target.files?.[0];
                       if (f) {
@@ -673,7 +764,11 @@ const CreateProduct = () => {
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="flex items-center gap-3 mb-8">
-          <Button variant="ghost" size="icon" onClick={() => step > 1 ? setStep(step - 1) : navigate("/dashboard/products")}>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => (step > 1 ? setStep(step - 1) : navigate("/dashboard/products"))}
+          >
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <span className="text-sm font-medium text-foreground">Créer un produit</span>
@@ -682,7 +777,9 @@ const CreateProduct = () => {
         {/* Type banner */}
         {selectedTypeData && step > 1 && (
           <div className="flex items-center gap-3 mb-6 p-4 rounded-xl bg-secondary">
-            <div className={`h-10 w-10 rounded-xl ${selectedTypeData.color} flex items-center justify-center`}>
+            <div
+              className={`h-10 w-10 rounded-xl ${selectedTypeData.color} flex items-center justify-center`}
+            >
               <selectedTypeData.icon className="h-5 w-5 text-white" />
             </div>
             <div>
@@ -720,27 +817,31 @@ const CreateProduct = () => {
                   Quel type de produit désirez-vous créer ?
                 </h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {productTypes.filter(pt => isAdmin || pt.type === "file").map((pt) => (
-                    <button
-                      key={pt.type}
-                      onClick={() => setSelectedType(pt.type)}
-                      className={`relative p-6 rounded-xl border-2 text-left transition-all hover:shadow-md ${
-                        selectedType === pt.type
-                          ? "border-amber-400 bg-amber-50/50 dark:bg-amber-900/10"
-                          : "border-border hover:border-muted-foreground/30"
-                      }`}
-                    >
-                      {selectedType === pt.type && (
-                        <div className="absolute top-3 right-3 h-5 w-5 rounded-full bg-amber-400 flex items-center justify-center">
-                          <Check className="h-3 w-3 text-white" />
+                  {productTypes
+                    .filter((pt) => isAdmin || pt.type === "file")
+                    .map((pt) => (
+                      <button
+                        key={pt.type}
+                        onClick={() => setSelectedType(pt.type)}
+                        className={`relative p-6 rounded-xl border-2 text-left transition-all hover:shadow-md ${
+                          selectedType === pt.type
+                            ? "border-amber-400 bg-amber-50/50 dark:bg-amber-900/10"
+                            : "border-border hover:border-muted-foreground/30"
+                        }`}
+                      >
+                        {selectedType === pt.type && (
+                          <div className="absolute top-3 right-3 h-5 w-5 rounded-full bg-amber-400 flex items-center justify-center">
+                            <Check className="h-3 w-3 text-white" />
+                          </div>
+                        )}
+                        <div
+                          className={`h-12 w-12 rounded-xl ${pt.color} flex items-center justify-center mb-3`}
+                        >
+                          <pt.icon className="h-6 w-6 text-white" />
                         </div>
-                      )}
-                      <div className={`h-12 w-12 rounded-xl ${pt.color} flex items-center justify-center mb-3`}>
-                        <pt.icon className="h-6 w-6 text-white" />
-                      </div>
-                      <p className="text-sm font-semibold text-foreground">{pt.label}</p>
-                    </button>
-                  ))}
+                        <p className="text-sm font-semibold text-foreground">{pt.label}</p>
+                      </button>
+                    ))}
                 </div>
 
                 {selectedTypeData && (
@@ -749,11 +850,18 @@ const CreateProduct = () => {
                     animate={{ opacity: 1, y: 0 }}
                     className="mt-8 p-6 rounded-xl border border-border bg-card"
                   >
-                    <h3 className="text-lg font-bold text-foreground mb-2">{selectedTypeData.label}</h3>
-                    <p className="text-sm text-muted-foreground mb-4">{selectedTypeData.description}</p>
+                    <h3 className="text-lg font-bold text-foreground mb-2">
+                      {selectedTypeData.label}
+                    </h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      {selectedTypeData.description}
+                    </p>
                     <div className="space-y-2">
                       {selectedTypeData.features.map((f) => (
-                        <div key={f} className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <div
+                          key={f}
+                          className="flex items-center gap-2 text-sm text-muted-foreground"
+                        >
                           <Check className="h-4 w-4 text-primary" />
                           <span>{f}</span>
                         </div>
@@ -796,7 +904,9 @@ const CreateProduct = () => {
                         )}
                       </Button>
                     </div>
-                    <p className="text-[11px] text-muted-foreground mt-1">💡 Cliquez sur l'icône ✨ pour améliorer votre titre avec l'IA</p>
+                    <p className="text-[11px] text-muted-foreground mt-1">
+                      💡 Cliquez sur l'icône ✨ pour améliorer votre titre avec l'IA
+                    </p>
                   </div>
                   <div>
                     <label className="text-sm font-medium text-foreground mb-1.5 block">
@@ -816,7 +926,9 @@ const CreateProduct = () => {
                         <SelectItem value="creative">🎬 Créatif</SelectItem>
                         <SelectItem value="divertissement">🎮 Divertissement</SelectItem>
                         <SelectItem value="sante_bien_etre">❤️ Santé et bien être</SelectItem>
-                        <SelectItem value="developpement_personnel">✨ Développement personnel</SelectItem>
+                        <SelectItem value="developpement_personnel">
+                          ✨ Développement personnel
+                        </SelectItem>
                         {user?.email === "ancres707@gmail.com" && (
                           <>
                             <SelectItem value="template">📋 Templates</SelectItem>
@@ -867,9 +979,13 @@ const CreateProduct = () => {
                       {pricingModel !== "free" && (
                         <div className="grid grid-cols-2 gap-4">
                           <div>
-                            <label className="text-sm font-medium text-foreground mb-1.5 block">Prix <span className="text-destructive">*</span></label>
+                            <label className="text-sm font-medium text-foreground mb-1.5 block">
+                              Prix <span className="text-destructive">*</span>
+                            </label>
                             <div className="relative">
-                              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">FCFA</span>
+                              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
+                                FCFA
+                              </span>
                               <Input
                                 type="number"
                                 value={price}
@@ -879,13 +995,23 @@ const CreateProduct = () => {
                                 min={100}
                               />
                             </div>
-                            {priceError && <p className="text-[11px] text-destructive mt-1">{priceError}</p>}
-                            {!priceError && <p className="text-[11px] text-muted-foreground mt-1">Min : 100 FCFA</p>}
+                            {priceError && (
+                              <p className="text-[11px] text-destructive mt-1">{priceError}</p>
+                            )}
+                            {!priceError && (
+                              <p className="text-[11px] text-muted-foreground mt-1">
+                                Min : 100 FCFA
+                              </p>
+                            )}
                           </div>
                           <div>
-                            <label className="text-sm font-medium text-foreground mb-1.5 block">Prix barré</label>
+                            <label className="text-sm font-medium text-foreground mb-1.5 block">
+                              Prix barré
+                            </label>
                             <div className="relative">
-                              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">FCFA</span>
+                              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
+                                FCFA
+                              </span>
                               <Input
                                 type="number"
                                 value={originalPrice}
@@ -894,12 +1020,22 @@ const CreateProduct = () => {
                                 placeholder="0"
                               />
                             </div>
-                            {originalPriceError && <p className="text-[11px] text-destructive mt-1">{originalPriceError}</p>}
-                            {!originalPriceError && originalPrice && originalPriceNum > priceNum && (
-                              <p className="text-[11px] text-emerald-600 mt-1">
-                                Réduction de {Math.round(((originalPriceNum - priceNum) / originalPriceNum) * 100)}%
+                            {originalPriceError && (
+                              <p className="text-[11px] text-destructive mt-1">
+                                {originalPriceError}
                               </p>
                             )}
+                            {!originalPriceError &&
+                              originalPrice &&
+                              originalPriceNum > priceNum && (
+                                <p className="text-[11px] text-emerald-600 mt-1">
+                                  Réduction de{" "}
+                                  {Math.round(
+                                    ((originalPriceNum - priceNum) / originalPriceNum) * 100,
+                                  )}
+                                  %
+                                </p>
+                              )}
                           </div>
                         </div>
                       )}
@@ -915,7 +1051,9 @@ const CreateProduct = () => {
                       </p>
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <label className="text-xs font-medium text-foreground mb-1 block">Max activations</label>
+                          <label className="text-xs font-medium text-foreground mb-1 block">
+                            Max activations
+                          </label>
                           <Input
                             type="number"
                             value={licenseMaxActivations}
@@ -925,7 +1063,9 @@ const CreateProduct = () => {
                           />
                         </div>
                         <div>
-                          <label className="text-xs font-medium text-foreground mb-1 block">Validité (jours)</label>
+                          <label className="text-xs font-medium text-foreground mb-1 block">
+                            Validité (jours)
+                          </label>
                           <Input
                             type="number"
                             value={licenseValidityDays}
@@ -944,8 +1084,12 @@ const CreateProduct = () => {
             {/* Step 3: Description */}
             {step === 3 && (
               <div>
-                <h2 className="text-2xl font-bold text-foreground mb-1">Ajouter la description du produit</h2>
-                <p className="text-sm text-muted-foreground mb-6">La description est obligatoire pour pouvoir publier votre produit.</p>
+                <h2 className="text-2xl font-bold text-foreground mb-1">
+                  Ajouter la description du produit
+                </h2>
+                <p className="text-sm text-muted-foreground mb-6">
+                  La description est obligatoire pour pouvoir publier votre produit.
+                </p>
                 <div>
                   <div className="flex items-center justify-between mb-3">
                     <p className="text-sm font-semibold text-foreground">Décrivez votre produit</p>
@@ -957,9 +1101,12 @@ const CreateProduct = () => {
                       onClick={async () => {
                         setAiRewriting(true);
                         try {
-                          const { data, error } = await supabase.functions.invoke('rewrite-description', {
-                            body: { title, description, productType: selectedType },
-                          });
+                          const { data, error } = await supabase.functions.invoke(
+                            "rewrite-description",
+                            {
+                              body: { title, description, productType: selectedType },
+                            },
+                          );
                           if (error) throw error;
                           if (data?.description) {
                             setDescription(data.description);
@@ -973,7 +1120,9 @@ const CreateProduct = () => {
                       }}
                     >
                       {aiRewriting ? (
-                        <><Loader2 className="h-3 w-3 animate-spin" /> Réécriture...</>
+                        <>
+                          <Loader2 className="h-3 w-3 animate-spin" /> Réécriture...
+                        </>
                       ) : (
                         <>✨ Assistant IA</>
                       )}
@@ -991,7 +1140,9 @@ const CreateProduct = () => {
             {/* Step 4: Images */}
             {step === 4 && (
               <div>
-                <h2 className="text-2xl font-bold text-foreground mb-8">Personnaliser la page produit</h2>
+                <h2 className="text-2xl font-bold text-foreground mb-8">
+                  Personnaliser la page produit
+                </h2>
                 <div className="space-y-8">
                   {/* Thumbnail */}
                   <div>
@@ -1003,7 +1154,11 @@ const CreateProduct = () => {
                       onClick={() => document.getElementById("thumbnail-input")?.click()}
                     >
                       {thumbnailPreview ? (
-                        <img src={thumbnailPreview} alt="Vignette" className="h-full w-full object-cover" />
+                        <img
+                          src={thumbnailPreview}
+                          alt="Vignette"
+                          className="h-full w-full object-cover"
+                        />
                       ) : (
                         <Package className="h-12 w-12 text-muted-foreground/30" />
                       )}
@@ -1027,7 +1182,8 @@ const CreateProduct = () => {
                       />
                     </div>
                     <p className="text-xs text-muted-foreground mt-2">
-                      Créez une vignette mémorable. Utilisez une image carrée (minimum 600x600px) au format JPG ou PNG.
+                      Créez une vignette mémorable. Utilisez une image carrée (minimum 600x600px) au
+                      format JPG ou PNG.
                     </p>
                   </div>
 
@@ -1041,11 +1197,17 @@ const CreateProduct = () => {
                       onClick={() => document.getElementById("banner-input")?.click()}
                     >
                       {bannerPreview ? (
-                        <img src={bannerPreview} alt="Bannière" className="h-full w-full object-cover" />
+                        <img
+                          src={bannerPreview}
+                          alt="Bannière"
+                          className="h-full w-full object-cover"
+                        />
                       ) : (
                         <div className="flex flex-col items-center gap-2">
                           <ImageIcon className="h-10 w-10 text-muted-foreground/30" />
-                          <span className="text-sm text-muted-foreground">Cliquez pour ajouter</span>
+                          <span className="text-sm text-muted-foreground">
+                            Cliquez pour ajouter
+                          </span>
                         </div>
                       )}
                       <input
@@ -1068,7 +1230,8 @@ const CreateProduct = () => {
                       />
                     </div>
                     <p className="text-xs text-muted-foreground mt-2">
-                      Créez une bannière attrayante. Utilisez une image rectangulaire (1200x400px recommandé).
+                      Créez une bannière attrayante. Utilisez une image rectangulaire (1200x400px
+                      recommandé).
                     </p>
                   </div>
                 </div>
@@ -1083,7 +1246,11 @@ const CreateProduct = () => {
         {/* Navigation buttons */}
         <div className="flex items-center justify-center gap-3 mt-10">
           {step > 1 && (
-            <Button variant="outline" className="rounded-full px-8" onClick={() => setStep(step - 1)}>
+            <Button
+              variant="outline"
+              className="rounded-full px-8"
+              onClick={() => setStep(step - 1)}
+            >
               Retour
             </Button>
           )}

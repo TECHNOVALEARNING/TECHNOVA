@@ -1,21 +1,38 @@
-import { useEditor, EditorContent } from '@tiptap/react';
+import { useEditor, EditorContent } from "@tiptap/react";
 
-import StarterKit from '@tiptap/starter-kit';
-import Link from '@tiptap/extension-link';
-import Image from '@tiptap/extension-image';
-import Underline from '@tiptap/extension-underline';
-import TextAlign from '@tiptap/extension-text-align';
-import Placeholder from '@tiptap/extension-placeholder';
-import Youtube from '@tiptap/extension-youtube';
+import StarterKit from "@tiptap/starter-kit";
+import Link from "@tiptap/extension-link";
+import Image from "@tiptap/extension-image";
+import Underline from "@tiptap/extension-underline";
+import TextAlign from "@tiptap/extension-text-align";
+import Placeholder from "@tiptap/extension-placeholder";
+import Youtube from "@tiptap/extension-youtube";
 import {
-  Bold, Italic, Underline as UnderlineIcon, Strikethrough,
-  List, ListOrdered, AlignLeft, AlignCenter, AlignRight,
-  Link as LinkIcon, Image as ImageIcon, Quote, Heading1, Heading2, Heading3,
-  Undo, Redo, Type, Video, Upload, Loader2
-} from 'lucide-react';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
+  Bold,
+  Italic,
+  Underline as UnderlineIcon,
+  Strikethrough,
+  List,
+  ListOrdered,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  Link as LinkIcon,
+  Image as ImageIcon,
+  Quote,
+  Heading1,
+  Heading2,
+  Heading3,
+  Undo,
+  Redo,
+  Type,
+  Video,
+  Upload,
+  Loader2,
+} from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface RichTextEditorProps {
   content: string;
@@ -42,10 +59,11 @@ const MenuButton = ({
     title={title}
     disabled={disabled}
     className={`h-7 w-7 rounded flex items-center justify-center transition-colors ${
-      disabled ? 'opacity-50 cursor-not-allowed' :
-      isActive
-        ? 'bg-primary/10 text-primary'
-        : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
+      disabled
+        ? "opacity-50 cursor-not-allowed"
+        : isActive
+          ? "bg-primary/10 text-primary"
+          : "text-muted-foreground hover:bg-secondary hover:text-foreground"
     }`}
   >
     {children}
@@ -66,20 +84,20 @@ const RichTextEditor = ({ content, onChange, placeholder }: RichTextEditorProps)
       Underline,
       Link.configure({
         openOnClick: false,
-        HTMLAttributes: { class: 'text-primary underline cursor-pointer' },
+        HTMLAttributes: { class: "text-primary underline cursor-pointer" },
       }),
       Image.configure({
-        HTMLAttributes: { class: 'max-w-full rounded-lg my-2' },
+        HTMLAttributes: { class: "max-w-full rounded-lg my-2" },
       }),
       TextAlign.configure({
-        types: ['heading', 'paragraph'],
+        types: ["heading", "paragraph"],
       }),
       Placeholder.configure({
-        placeholder: placeholder || 'Commencez à écrire...',
+        placeholder: placeholder || "Commencez à écrire...",
       }),
       Youtube.configure({
         HTMLAttributes: {
-          class: 'rounded-lg my-4 w-full',
+          class: "rounded-lg my-4 w-full",
         },
         width: 640,
         height: 360,
@@ -92,11 +110,11 @@ const RichTextEditor = ({ content, onChange, placeholder }: RichTextEditorProps)
     },
     editorProps: {
       attributes: {
-        class: 'tiptap min-h-[200px] p-3 focus:outline-none',
+        class: "tiptap min-h-[200px] p-3 focus:outline-none",
       },
       handlePaste: (view, event) => {
-        const text = event.clipboardData?.getData('text/plain');
-        const htmlClip = event.clipboardData?.getData('text/html');
+        const text = event.clipboardData?.getData("text/plain");
+        const htmlClip = event.clipboardData?.getData("text/html");
 
         // 1) If user pasted RAW HTML as plain text (e.g. from ChatGPT code block),
         // detect tags and inject as real HTML instead of escaped text.
@@ -104,7 +122,7 @@ const RichTextEditor = ({ content, onChange, placeholder }: RichTextEditorProps)
           event.preventDefault();
           const decoded = decodeHtmlIfEscaped(text);
           // Use ProseMirror's native DOMParser via the schema's contentMatch
-          const tmp = document.createElement('div');
+          const tmp = document.createElement("div");
           tmp.innerHTML = decoded;
           // Fallback: insert as HTML through tiptap chain
           queueMicrotask(() => {
@@ -117,9 +135,11 @@ const RichTextEditor = ({ content, onChange, placeholder }: RichTextEditorProps)
           event.preventDefault();
           const ytMatch = extractYoutubeId(text);
           if (ytMatch) {
-            view.dispatch(view.state.tr.replaceSelectionWith(
-              view.state.schema.nodes.youtube.create({ src: text, width: 640, height: 360 })
-            ));
+            view.dispatch(
+              view.state.tr.replaceSelectionWith(
+                view.state.schema.nodes.youtube.create({ src: text, width: 640, height: 360 }),
+              ),
+            );
             return true;
           }
           const embedUrl = getVideoEmbedUrl(text);
@@ -127,7 +147,7 @@ const RichTextEditor = ({ content, onChange, placeholder }: RichTextEditorProps)
             const { tr } = view.state;
             const node = view.state.schema.nodes.paragraph.create(
               {},
-              view.state.schema.text(text, [view.state.schema.marks.link.create({ href: text })])
+              view.state.schema.text(text, [view.state.schema.marks.link.create({ href: text })]),
             );
             view.dispatch(tr.replaceSelectionWith(node));
             return true;
@@ -140,7 +160,7 @@ const RichTextEditor = ({ content, onChange, placeholder }: RichTextEditorProps)
 
   useEffect(() => {
     if (editor) {
-      const normalized = decodeHtmlIfEscaped(content || '');
+      const normalized = decodeHtmlIfEscaped(content || "");
       if (normalized !== editor.getHTML()) {
         editor.commands.setContent(normalized, false as any);
         // If we auto-decoded escaped HTML, propagate the cleaned version up
@@ -153,9 +173,9 @@ const RichTextEditor = ({ content, onChange, placeholder }: RichTextEditorProps)
 
   const addLink = useCallback(() => {
     if (!editor) return;
-    const url = window.prompt('URL du lien:');
+    const url = window.prompt("URL du lien:");
     if (url) {
-      editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
+      editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
     }
   }, [editor]);
 
@@ -167,59 +187,65 @@ const RichTextEditor = ({ content, onChange, placeholder }: RichTextEditorProps)
     }
   }, [editor]);
 
-  const handleImageUpload = useCallback(async (file: File) => {
-    if (!editor) return;
-    if (!file.type.startsWith('image/')) {
-      toast.error("Veuillez sélectionner une image");
-      return;
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error("L'image ne doit pas dépasser 5 Mo");
-      return;
-    }
+  const handleImageUpload = useCallback(
+    async (file: File) => {
+      if (!editor) return;
+      if (!file.type.startsWith("image/")) {
+        toast.error("Veuillez sélectionner une image");
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error("L'image ne doit pas dépasser 5 Mo");
+        return;
+      }
 
-    setUploading(true);
-    try {
-      const ext = file.name.split('.').pop() || 'png';
-      const fileName = `description-images/${Date.now()}-${Math.random().toString(36).substring(7)}.${ext}`;
+      setUploading(true);
+      try {
+        const ext = file.name.split(".").pop() || "png";
+        const fileName = `description-images/${Date.now()}-${Math.random().toString(36).substring(7)}.${ext}`;
 
-      const { error: uploadError } = await supabase.storage
-        .from('product-assets')
-        .upload(fileName, file, { contentType: file.type });
+        const { error: uploadError } = await supabase.storage
+          .from("product-assets")
+          .upload(fileName, file, { contentType: file.type });
 
-      if (uploadError) throw uploadError;
+        if (uploadError) throw uploadError;
 
-      const { data: urlData } = supabase.storage
-        .from('product-assets')
-        .getPublicUrl(fileName);
+        const { data: urlData } = supabase.storage.from("product-assets").getPublicUrl(fileName);
 
-      editor.chain().focus().setImage({ src: urlData.publicUrl }).run();
-      toast.success("Image ajoutée !");
-    } catch (err: any) {
-      console.error("Upload error:", err);
-      toast.error("Erreur lors de l'upload: " + (err.message || "Réessayez"));
-    } finally {
-      setUploading(false);
-    }
-  }, [editor]);
+        editor.chain().focus().setImage({ src: urlData.publicUrl }).run();
+        toast.success("Image ajoutée !");
+      } catch (err: any) {
+        console.error("Upload error:", err);
+        toast.error("Erreur lors de l'upload: " + (err.message || "Réessayez"));
+      } finally {
+        setUploading(false);
+      }
+    },
+    [editor],
+  );
 
-  const onFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) handleImageUpload(file);
-    e.target.value = '';
-  }, [handleImageUpload]);
+  const onFileSelect = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) handleImageUpload(file);
+      e.target.value = "";
+    },
+    [handleImageUpload],
+  );
 
   const addVideo = useCallback(() => {
     if (!editor) return;
     const url = window.prompt("URL de la vidéo (YouTube, Vimeo, etc.):");
     if (!url) return;
-    
+
     if (isYoutubeUrl(url)) {
       editor.commands.setYoutubeVideo({ src: url, width: 640, height: 360 });
     } else {
-      editor.chain().focus().insertContent(
-        `<p><a href="${url}" target="_blank">${url}</a></p>`
-      ).run();
+      editor
+        .chain()
+        .focus()
+        .insertContent(`<p><a href="${url}" target="_blank">${url}</a></p>`)
+        .run();
     }
   }, [editor]);
 
@@ -247,28 +273,28 @@ const RichTextEditor = ({ content, onChange, placeholder }: RichTextEditorProps)
 
         <MenuButton
           onClick={() => editor.chain().focus().setParagraph().run()}
-          isActive={editor.isActive('paragraph') && !editor.isActive('heading')}
+          isActive={editor.isActive("paragraph") && !editor.isActive("heading")}
           title="Paragraphe"
         >
           <Type className="h-3.5 w-3.5" />
         </MenuButton>
         <MenuButton
           onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-          isActive={editor.isActive('heading', { level: 1 })}
+          isActive={editor.isActive("heading", { level: 1 })}
           title="Titre 1"
         >
           <Heading1 className="h-3.5 w-3.5" />
         </MenuButton>
         <MenuButton
           onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-          isActive={editor.isActive('heading', { level: 2 })}
+          isActive={editor.isActive("heading", { level: 2 })}
           title="Titre 2"
         >
           <Heading2 className="h-3.5 w-3.5" />
         </MenuButton>
         <MenuButton
           onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-          isActive={editor.isActive('heading', { level: 3 })}
+          isActive={editor.isActive("heading", { level: 3 })}
           title="Titre 3"
         >
           <Heading3 className="h-3.5 w-3.5" />
@@ -276,50 +302,98 @@ const RichTextEditor = ({ content, onChange, placeholder }: RichTextEditorProps)
 
         <Divider />
 
-        <MenuButton onClick={() => editor.chain().focus().toggleBold().run()} isActive={editor.isActive('bold')} title="Gras">
+        <MenuButton
+          onClick={() => editor.chain().focus().toggleBold().run()}
+          isActive={editor.isActive("bold")}
+          title="Gras"
+        >
           <Bold className="h-3.5 w-3.5" />
         </MenuButton>
-        <MenuButton onClick={() => editor.chain().focus().toggleItalic().run()} isActive={editor.isActive('italic')} title="Italique">
+        <MenuButton
+          onClick={() => editor.chain().focus().toggleItalic().run()}
+          isActive={editor.isActive("italic")}
+          title="Italique"
+        >
           <Italic className="h-3.5 w-3.5" />
         </MenuButton>
-        <MenuButton onClick={() => editor.chain().focus().toggleUnderline().run()} isActive={editor.isActive('underline')} title="Souligné">
+        <MenuButton
+          onClick={() => editor.chain().focus().toggleUnderline().run()}
+          isActive={editor.isActive("underline")}
+          title="Souligné"
+        >
           <UnderlineIcon className="h-3.5 w-3.5" />
         </MenuButton>
-        <MenuButton onClick={() => editor.chain().focus().toggleStrike().run()} isActive={editor.isActive('strike')} title="Barré">
+        <MenuButton
+          onClick={() => editor.chain().focus().toggleStrike().run()}
+          isActive={editor.isActive("strike")}
+          title="Barré"
+        >
           <Strikethrough className="h-3.5 w-3.5" />
         </MenuButton>
 
         <Divider />
 
-        <MenuButton onClick={() => editor.chain().focus().setTextAlign('left').run()} isActive={editor.isActive({ textAlign: 'left' })} title="Aligner à gauche">
+        <MenuButton
+          onClick={() => editor.chain().focus().setTextAlign("left").run()}
+          isActive={editor.isActive({ textAlign: "left" })}
+          title="Aligner à gauche"
+        >
           <AlignLeft className="h-3.5 w-3.5" />
         </MenuButton>
-        <MenuButton onClick={() => editor.chain().focus().setTextAlign('center').run()} isActive={editor.isActive({ textAlign: 'center' })} title="Centrer">
+        <MenuButton
+          onClick={() => editor.chain().focus().setTextAlign("center").run()}
+          isActive={editor.isActive({ textAlign: "center" })}
+          title="Centrer"
+        >
           <AlignCenter className="h-3.5 w-3.5" />
         </MenuButton>
-        <MenuButton onClick={() => editor.chain().focus().setTextAlign('right').run()} isActive={editor.isActive({ textAlign: 'right' })} title="Aligner à droite">
+        <MenuButton
+          onClick={() => editor.chain().focus().setTextAlign("right").run()}
+          isActive={editor.isActive({ textAlign: "right" })}
+          title="Aligner à droite"
+        >
           <AlignRight className="h-3.5 w-3.5" />
         </MenuButton>
 
         <Divider />
 
-        <MenuButton onClick={() => editor.chain().focus().toggleBulletList().run()} isActive={editor.isActive('bulletList')} title="Liste à puces">
+        <MenuButton
+          onClick={() => editor.chain().focus().toggleBulletList().run()}
+          isActive={editor.isActive("bulletList")}
+          title="Liste à puces"
+        >
           <List className="h-3.5 w-3.5" />
         </MenuButton>
-        <MenuButton onClick={() => editor.chain().focus().toggleOrderedList().run()} isActive={editor.isActive('orderedList')} title="Liste numérotée">
+        <MenuButton
+          onClick={() => editor.chain().focus().toggleOrderedList().run()}
+          isActive={editor.isActive("orderedList")}
+          title="Liste numérotée"
+        >
           <ListOrdered className="h-3.5 w-3.5" />
         </MenuButton>
-        <MenuButton onClick={() => editor.chain().focus().toggleBlockquote().run()} isActive={editor.isActive('blockquote')} title="Citation">
+        <MenuButton
+          onClick={() => editor.chain().focus().toggleBlockquote().run()}
+          isActive={editor.isActive("blockquote")}
+          title="Citation"
+        >
           <Quote className="h-3.5 w-3.5" />
         </MenuButton>
 
         <Divider />
 
-        <MenuButton onClick={addLink} isActive={editor.isActive('link')} title="Ajouter un lien">
+        <MenuButton onClick={addLink} isActive={editor.isActive("link")} title="Ajouter un lien">
           <LinkIcon className="h-3.5 w-3.5" />
         </MenuButton>
-        <MenuButton onClick={() => fileInputRef.current?.click()} title="Uploader une image" disabled={uploading}>
-          {uploading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Upload className="h-3.5 w-3.5" />}
+        <MenuButton
+          onClick={() => fileInputRef.current?.click()}
+          title="Uploader une image"
+          disabled={uploading}
+        >
+          {uploading ? (
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+          ) : (
+            <Upload className="h-3.5 w-3.5" />
+          )}
         </MenuButton>
         <MenuButton onClick={addImageByUrl} title="Image par URL">
           <ImageIcon className="h-3.5 w-3.5" />
@@ -369,18 +443,21 @@ export function decodeHtmlIfEscaped(input: string): string {
   // Case 1: HTML entities encoding tags — &lt;h1&gt; ... &lt;/h1&gt;
   if (/&lt;\/?[a-z][a-z0-9]*[^&]*&gt;/i.test(html)) {
     html = html
-      .replace(/&lt;/g, '<')
-      .replace(/&gt;/g, '>')
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
       .replace(/&quot;/g, '"')
       .replace(/&#39;/g, "'")
-      .replace(/&amp;/g, '&');
+      .replace(/&amp;/g, "&");
   }
 
   // Case 2: raw HTML stored inside <p> wrappers as text (TipTap behavior on plain paste)
   // e.g. "<p>&lt;h1&gt;Title&lt;/h1&gt;</p>" -> already handled above
   // e.g. "<p><h1>Title</h1></p>" — strip nested block tags trapped inside <p>
   if (/<p>\s*<(h[1-6]|div|section|article|ul|ol|table|hr|img)/i.test(html)) {
-    html = html.replace(/<p>(\s*<(h[1-6]|div|section|article|ul|ol|table|hr|img)[\s\S]*?)<\/p>/gi, '$1');
+    html = html.replace(
+      /<p>(\s*<(h[1-6]|div|section|article|ul|ol|table|hr|img)[\s\S]*?)<\/p>/gi,
+      "$1",
+    );
   }
 
   return html;
@@ -394,21 +471,21 @@ export function processDescriptionWithVideos(html: string): string {
     /<a[^>]*href="(https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/)([\w-]+)[^"]*)"[^>]*>[^<]*<\/a>/gi,
     (_match, _url, videoId) => {
       return `<div class="video-embed my-4"><iframe src="https://www.youtube-nocookie.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-full rounded-lg" style="aspect-ratio:16/9;"></iframe></div>`;
-    }
+    },
   );
 
   processed = processed.replace(
     /<a[^>]*href="(https?:\/\/(?:www\.)?vimeo\.com\/(\d+)[^"]*)"[^>]*>[^<]*<\/a>/gi,
     (_match, _url, videoId) => {
       return `<div class="video-embed my-4"><iframe src="https://player.vimeo.com/video/${videoId}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen class="w-full rounded-lg" style="aspect-ratio:16/9;"></iframe></div>`;
-    }
+    },
   );
 
   processed = processed.replace(
     /(?<![">])(https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/)([\w-]+)[^\s<]*)/gi,
     (_match, _url, videoId) => {
       return `<div class="video-embed my-4"><iframe src="https://www.youtube-nocookie.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-full rounded-lg" style="aspect-ratio:16/9;"></iframe></div>`;
-    }
+    },
   );
 
   return processed;

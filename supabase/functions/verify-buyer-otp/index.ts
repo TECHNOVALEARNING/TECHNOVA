@@ -1,12 +1,13 @@
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') {
+  if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
@@ -14,7 +15,7 @@ Deno.serve(async (req) => {
     const { email, code } = await req.json();
     if (!email || !code) {
       return new Response(JSON.stringify({ error: "Email et code requis" }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
@@ -39,7 +40,7 @@ Deno.serve(async (req) => {
 
     if (!otp) {
       return new Response(JSON.stringify({ error: "Code invalide ou expiré" }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
@@ -54,7 +55,7 @@ Deno.serve(async (req) => {
 
     if (!customer) {
       return new Response(JSON.stringify({ error: "Client non trouvé" }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
@@ -67,7 +68,9 @@ Deno.serve(async (req) => {
         page: 1,
         perPage: 200,
       });
-      const found = existing?.users?.find((u: any) => (u.email || "").toLowerCase() === normalizedEmail);
+      const found = existing?.users?.find(
+        (u: any) => (u.email || "").toLowerCase() === normalizedEmail,
+      );
       if (found) {
         authUserId = found.id;
       } else {
@@ -80,7 +83,7 @@ Deno.serve(async (req) => {
           console.error("createUser error:", createErr);
           return new Response(JSON.stringify({ error: "Impossible de créer la session" }), {
             status: 500,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
           });
         }
         authUserId = created.user.id;
@@ -100,7 +103,7 @@ Deno.serve(async (req) => {
       console.error("generateLink error:", linkErr);
       return new Response(JSON.stringify({ error: "Impossible de générer la session" }), {
         status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
@@ -115,7 +118,7 @@ Deno.serve(async (req) => {
       console.error("verifyOtp error:", verifyErr);
       return new Response(JSON.stringify({ error: "Impossible d'établir la session" }), {
         status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
@@ -132,7 +135,10 @@ Deno.serve(async (req) => {
       const storeOwnerIds = [...new Set(orders.map((o: any) => o.store_owner_id))];
 
       const [productsRes, profilesRes] = await Promise.all([
-        admin.from("products").select("id, title, type, thumbnail_url, download_url").in("id", productIds),
+        admin
+          .from("products")
+          .select("id, title, type, thumbnail_url, download_url")
+          .in("id", productIds),
         admin.from("profiles").select("id, display_name, store_slug").in("id", storeOwnerIds),
       ]);
 
@@ -146,21 +152,24 @@ Deno.serve(async (req) => {
       }));
     }
 
-    return new Response(JSON.stringify({
-      success: true,
-      customer: { ...customer, auth_id: authUserId },
-      orders: enrichedOrders,
-      session: {
-        access_token: verifyData.session.access_token,
-        refresh_token: verifyData.session.refresh_token,
+    return new Response(
+      JSON.stringify({
+        success: true,
+        customer: { ...customer, auth_id: authUserId },
+        orders: enrichedOrders,
+        session: {
+          access_token: verifyData.session.access_token,
+          refresh_token: verifyData.session.refresh_token,
+        },
+      }),
+      {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       },
-    }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    );
   } catch (error) {
     console.error("Error:", error);
     return new Response(JSON.stringify({ error: "Erreur serveur" }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 });
