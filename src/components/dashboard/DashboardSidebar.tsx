@@ -97,9 +97,8 @@ export function DashboardSidebar() {
   const collapsed = state === "collapsed";
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, profile } = useAuth();
+  const { user, profile, isAdmin } = useAuth();
   const { stores, activeStore, activeStores, setActiveStoreId } = useActiveStore();
-  const isAdmin = user?.email === "ancres707@gmail.com";
 
   const [lang, setLang] = useState(() =>
     typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",

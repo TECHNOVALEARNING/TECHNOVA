@@ -18,10 +18,9 @@ import VerifiedBadge from "@/components/VerifiedBadge";
 import { useAuth } from "@/contexts/AuthContext";
 import { Navigate } from "react-router-dom";
 
-const ADMIN_EMAIL = "ancres707@gmail.com";
 
 const AdminBadges = () => {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const [loading, setLoading] = useState(true);
   const [badges, setBadges] = useState<any[]>([]);
   const [profiles, setProfiles] = useState<Map<string, any>>(new Map());
@@ -39,7 +38,7 @@ const AdminBadges = () => {
     badge: any;
   } | null>(null);
 
-  if (user && user.email !== ADMIN_EMAIL) return <Navigate to="/dashboard" />;
+  if (user && !isAdmin) return <Navigate to="/dashboard" />;
 
   const load = async () => {
     setLoading(true);

@@ -86,8 +86,7 @@ const item = {
 
 export default function DashboardOthers() {
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const isAdmin = user?.email === "ancres707@gmail.com";
+  const { user, isAdmin } = useAuth();
 
   const allowedMenus = otherMenus.filter((menu) => isAdmin || menu.title !== "Licences");
 

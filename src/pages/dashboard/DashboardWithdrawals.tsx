@@ -28,7 +28,6 @@ interface Withdrawal {
   created_at: string;
 }
 
-const ADMIN_EMAIL = "ancres707@gmail.com";
 
 const translations = {
   fr: {
@@ -152,9 +151,8 @@ const formatEta = (
 };
 
 const DashboardWithdrawals = () => {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const navigate = useNavigate();
-  const isAdmin = user?.email === ADMIN_EMAIL;
   const [withdrawals, setWithdrawals] = useState<Withdrawal[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalSales, setTotalSales] = useState(0);

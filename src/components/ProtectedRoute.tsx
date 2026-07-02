@@ -8,7 +8,7 @@ const ProtectedRoute = ({
   children: React.ReactNode;
   requireAdmin?: boolean;
 }) => {
-  const { user, profile, loading } = useAuth();
+  const { user, profile, loading, isAdmin } = useAuth();
   const location = useLocation();
 
   if (loading) {
@@ -21,7 +21,7 @@ const ProtectedRoute = ({
 
   if (!user) return <Navigate to="/login" replace />;
 
-  if (requireAdmin && user.email !== "ancres707@gmail.com") {
+  if (requireAdmin && !isAdmin) {
     return <Navigate to="/dashboard" replace />;
   }
 

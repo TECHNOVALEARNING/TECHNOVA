@@ -19,7 +19,6 @@ import { toast } from "sonner";
 import { pawapayCountries, providerLogos } from "@/data/pawapayProviders";
 import SEOHead from "@/components/SEOHead";
 
-const ADMIN_EMAIL = "ancres707@gmail.com";
 const UNLOCK_KEY = "technova_wallet_unlock";
 
 interface WalletRow {
@@ -116,7 +115,7 @@ const translations = {
 
 const WithdrawNew = () => {
   const navigate = useNavigate();
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, isAdmin } = useAuth();
   const [availableNet, setAvailableNet] = useState(0);
   const [kycStatus, setKycStatus] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -132,7 +131,6 @@ const WithdrawNew = () => {
   const [submitting, setSubmitting] = useState(false);
 
   const numAmount = parseFloat(amount) || 0;
-  const isAdmin = user?.email === ADMIN_EMAIL;
   const COMMISSION = 0.05;
 
   const [lang, setLang] = useState(() =>

@@ -53,16 +53,16 @@ interface StoreItem {
 }
 
 const AdminModeration = () => {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const [products, setProducts] = useState<Product[]>([]);
   const [stores, setStores] = useState<StoreItem[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (user?.email !== "ancres707@gmail.com") return;
+    if (!isAdmin) return;
     fetchData();
-  }, [user]);
+  }, [isAdmin]);
 
   const fetchData = async () => {
     const [prodRes, storeRes] = await Promise.all([
@@ -127,7 +127,7 @@ const AdminModeration = () => {
     );
   });
 
-  if (user?.email !== "ancres707@gmail.com") {
+  if (!isAdmin) {
     return (
       <DashboardLayout>
         <div className="text-center py-20 text-muted-foreground">Accès non autorisé</div>

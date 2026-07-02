@@ -76,7 +76,7 @@ const translations = {
 };
 
 const AdminDashboard = () => {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const navigate = useNavigate();
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
@@ -94,9 +94,9 @@ const AdminDashboard = () => {
   const t = translations[lang === "en" ? "en" : "fr"];
 
   useEffect(() => {
-    if (user?.email !== "ancres707@gmail.com") return;
+    if (!isAdmin) return;
     fetchStats();
-  }, [user]);
+  }, [isAdmin]);
 
   const fetchStats = async () => {
     try {
@@ -109,7 +109,7 @@ const AdminDashboard = () => {
     }
   };
 
-  if (user?.email !== "ancres707@gmail.com") {
+  if (!isAdmin) {
     return (
       <DashboardLayout>
         <div className="text-center py-20 text-muted-foreground">{t.unauthorized}</div>

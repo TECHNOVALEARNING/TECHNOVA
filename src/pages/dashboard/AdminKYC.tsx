@@ -25,7 +25,6 @@ import {
 } from "@/components/ui/dialog";
 import { Shield, CheckCircle2, XCircle, Clock, Eye, Loader2, Search } from "lucide-react";
 
-const ADMIN_EMAIL = "ancres707@gmail.com";
 
 interface KYCRequest {
   id: string;
@@ -63,7 +62,7 @@ const statusBadge: Record<
 };
 
 const AdminKYC = () => {
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, isAdmin } = useAuth();
   const [requests, setRequests] = useState<KYCRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>("all");
@@ -71,8 +70,6 @@ const AdminKYC = () => {
   const [selected, setSelected] = useState<KYCRequest | null>(null);
   const [rejectionReason, setRejectionReason] = useState("");
   const [processing, setProcessing] = useState(false);
-
-  const isAdmin = user?.email === "ancres707@gmail.com";
 
   useEffect(() => {
     if (isAdmin) loadRequests();

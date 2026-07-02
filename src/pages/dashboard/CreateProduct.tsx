@@ -93,8 +93,7 @@ const productTypes = [
 const TOTAL_STEPS = 5;
 
 const CreateProduct = () => {
-  const { user } = useAuth();
-  const isAdmin = user?.email === "ancres707@gmail.com";
+  const { user, isAdmin } = useAuth();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [saving, setSaving] = useState(false);
@@ -929,7 +928,7 @@ const CreateProduct = () => {
                         <SelectItem value="developpement_personnel">
                           ✨ Développement personnel
                         </SelectItem>
-                        {user?.email === "ancres707@gmail.com" && (
+                        {isAdmin && (
                           <>
                             <SelectItem value="template">📋 Templates</SelectItem>
                             <SelectItem value="discovery">🔍 Découvertes (Lien externe)</SelectItem>

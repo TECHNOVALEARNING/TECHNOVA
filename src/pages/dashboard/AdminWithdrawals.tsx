@@ -37,16 +37,16 @@ interface Withdrawal {
 }
 
 const AdminWithdrawals = () => {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const [withdrawals, setWithdrawals] = useState<Withdrawal[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
   const [processing, setProcessing] = useState<string | null>(null);
 
   useEffect(() => {
-    if (user?.email !== "ancres707@gmail.com") return;
+    if (!isAdmin) return;
     fetchWithdrawals();
-  }, [user]);
+  }, [isAdmin]);
 
   const fetchWithdrawals = async () => {
     const { data } = await supabase.functions.invoke("admin-platform", {
@@ -98,7 +98,7 @@ const AdminWithdrawals = () => {
     );
   };
 
-  if (user?.email !== "ancres707@gmail.com") {
+  if (!isAdmin) {
     return (
       <DashboardLayout>
         <div className="text-center py-20 text-muted-foreground">Accès non autorisé</div>

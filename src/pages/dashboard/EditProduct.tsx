@@ -80,8 +80,7 @@ const tabs: { key: TabKey; label: string; icon: React.ElementType }[] = [
 
 const EditProduct = () => {
   const { id } = useParams<{ id: string }>();
-  const { user } = useAuth();
-  const isAdmin = user?.email === "ancres707@gmail.com";
+  const { user, isAdmin } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<TabKey>("info");
   const [loading, setLoading] = useState(true);
@@ -693,7 +692,7 @@ const EditProduct = () => {
                         <SelectItem value="developpement_personnel">
                           Développement personnel
                         </SelectItem>
-                        {(user?.email === "ancres707@gmail.com" ||
+                        {(isAdmin ||
                           category === "template" ||
                           category === "discovery") && (
                           <>

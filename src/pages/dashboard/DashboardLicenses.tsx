@@ -68,8 +68,7 @@ const statusConfig: Record<
 };
 
 const DashboardLicenses = () => {
-  const { user } = useAuth();
-  const isAdmin = user?.email === "ancres707@gmail.com";
+  const { user, isAdmin } = useAuth();
 
   if (!isAdmin) {
     return <Navigate to="/dashboard" replace />;

@@ -28,6 +28,7 @@ interface AuthContextType {
   user: User | null;
   profile: Profile | null;
   loading: boolean;
+  isAdmin: boolean;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
 }
@@ -39,6 +40,7 @@ const fallbackAuthContext: AuthContextType = {
   user: null,
   profile: null,
   loading: false,
+  isAdmin: false,
   signOut: async () => {},
   refreshProfile: async () => {},
 };
@@ -246,8 +248,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [syncSession]);
 
+  const isAdmin = user?.email === "ancres707@gmail.com";
+
   return (
-    <AuthContext.Provider value={{ session, user, profile, loading, signOut, refreshProfile }}>
+    <AuthContext.Provider value={{ session, user, profile, loading, isAdmin, signOut, refreshProfile }}>
       {children}
     </AuthContext.Provider>
   );

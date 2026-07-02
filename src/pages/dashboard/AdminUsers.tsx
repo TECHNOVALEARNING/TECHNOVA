@@ -40,7 +40,7 @@ interface UserEvent {
 }
 
 const AdminUsers = () => {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const [profiles, setProfiles] = useState<UserProfile[]>([]);
   const [search, setSearch] = useState("");
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
@@ -49,9 +49,9 @@ const AdminUsers = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (user?.email !== "ancres707@gmail.com") return;
+    if (!isAdmin) return;
     fetchProfiles();
-  }, [user]);
+  }, [isAdmin]);
 
   const fetchProfiles = async () => {
     setLoading(true);
@@ -139,7 +139,7 @@ const AdminUsers = () => {
 
   const selectedProfile = profiles.find((p) => p.id === selectedUser);
 
-  if (user?.email !== "ancres707@gmail.com") {
+  if (!isAdmin) {
     return (
       <DashboardLayout>
         <div className="text-center py-20 text-muted-foreground">Accès non autorisé</div>

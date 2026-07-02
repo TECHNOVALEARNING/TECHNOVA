@@ -99,11 +99,9 @@ const translations = {
   },
 };
 
-const ADMIN_EMAIL = "ancres707@gmail.com";
 
 const DashboardAccountTab = () => {
-  const { user, signOut } = useAuth();
-  const isAdmin = user?.email === ADMIN_EMAIL;
+  const { user, isAdmin, signOut } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [verification, setVerification] = useState<Verification | null>(null);

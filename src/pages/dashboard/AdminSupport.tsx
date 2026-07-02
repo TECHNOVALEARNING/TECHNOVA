@@ -29,7 +29,7 @@ interface Message {
 }
 
 const AdminSupport = () => {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -69,9 +69,9 @@ const AdminSupport = () => {
   }, [selected]);
 
   useEffect(() => {
-    if (user?.email !== "ancres707@gmail.com") return;
+    if (!isAdmin) return;
     fetchConversations();
-  }, [user]);
+  }, [isAdmin]);
 
   const fetchConversations = async () => {
     const { data } = await supabase.functions.invoke("admin-platform", {
@@ -115,7 +115,7 @@ const AdminSupport = () => {
 
   const selectedConv = conversations.find((c) => c.id === selected);
 
-  if (user?.email !== "ancres707@gmail.com") {
+  if (!isAdmin) {
     return (
       <DashboardLayout>
         <div className="text-center py-20 text-muted-foreground">Accès non autorisé</div>

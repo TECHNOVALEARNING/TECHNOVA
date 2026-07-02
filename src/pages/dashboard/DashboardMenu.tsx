@@ -91,9 +91,8 @@ const translations = {
 
 export default function DashboardMenu() {
   const navigate = useNavigate();
-  const { user, profile, signOut } = useAuth();
+  const { user, profile, isAdmin, signOut } = useAuth();
   const { activeStore, activeStores, setActiveStoreId } = useActiveStore();
-  const isAdmin = user?.email === "ancres707@gmail.com";
 
   const [lang, setLang] = useState(() =>
     typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
