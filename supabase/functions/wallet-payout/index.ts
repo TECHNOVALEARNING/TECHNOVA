@@ -1,4 +1,4 @@
-﻿// Initiate a payout from a saved wallet, requires unlock_token from wallet-pin-verify
+// Initiate a payout from a saved wallet, requires unlock_token from wallet-pin-verify
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { verify } from "https://deno.land/x/djwt@v3.0.2/mod.ts";
 
@@ -60,7 +60,7 @@ Deno.serve(async (req) => {
 
     // Compute available NET balance (after Technova commission)
     const { data: feeRow } = await admin.from("platform_fees").select("value_pct").eq("key", "technova_commission_pct").maybeSingle();
-    const commissionPct = Number(feeRow?.value_pct ?? 10) / 100;
+    const commissionPct = Number(feeRow?.value_pct ?? 5) / 100;
 
     const cutoff = new Date(Date.now() - 72 * 60 * 60 * 1000).toISOString();
     const { data: orders } = await admin

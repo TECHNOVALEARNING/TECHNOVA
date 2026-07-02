@@ -330,7 +330,7 @@ const CheckoutDialog = ({ open, onOpenChange, product, storeSlug, brandColor, fu
         sandbox: isSandbox,
         name: fullName,
         email: email,
-        phone: phone || "",
+        phone: fullPhone || "",
         theme: accent,
         data: JSON.stringify({
           product_id: product.id,
@@ -375,9 +375,12 @@ const CheckoutDialog = ({ open, onOpenChange, product, storeSlug, brandColor, fu
 
   const innerContent = (
     <div
-      className={fullPage
-        ? "grid md:grid-cols-[1fr_380px] md:rounded-3xl overflow-hidden shadow-2xl max-w-6xl mx-auto text-foreground"
-        : "grid md:grid-cols-[1fr_360px] rounded-2xl overflow-hidden max-h-[95vh] sm:max-h-[92vh] text-foreground"
+      className={
+        step === 3
+          ? "flex flex-col rounded-2xl overflow-hidden max-w-md w-full mx-auto text-foreground transition-all duration-300"
+          : fullPage
+            ? "grid md:grid-cols-[1fr_380px] md:rounded-3xl overflow-hidden shadow-2xl max-w-6xl mx-auto text-foreground transition-all duration-300"
+            : "grid md:grid-cols-[1fr_360px] rounded-2xl overflow-hidden max-h-[95vh] sm:max-h-[92vh] text-foreground transition-all duration-300"
       }
       style={{
         background: "var(--tn-card)",
@@ -387,7 +390,13 @@ const CheckoutDialog = ({ open, onOpenChange, product, storeSlug, brandColor, fu
       }}
     >
           {/* ─── LEFT: Form ─── */}
-          <div className={fullPage ? "p-5 sm:p-8 md:p-10" : "p-5 sm:p-7 overflow-y-auto"}>
+          <div className={
+            step === 3
+              ? "p-6 sm:p-8 w-full"
+              : fullPage
+                ? "p-5 sm:p-8 md:p-10"
+                : "p-5 sm:p-7 overflow-y-auto"
+          }>
             {freeSuccess ? (
               <SuccessFreeView product={product} fullName={fullName} email={email} accent={accent} />
             ) : (
@@ -662,99 +671,101 @@ const CheckoutDialog = ({ open, onOpenChange, product, storeSlug, brandColor, fu
           </div>
 
           {/* ─── RIGHT: Order summary - Royal violet+gold ─── */}
-          <div className="hidden md:flex flex-col text-white p-7 relative overflow-hidden"
-            style={{ background: `linear-gradient(160deg, ${accent} 0%, #4B1A8A 50%, #1F0B3F 130%)` }}>
-            {/* Animated 3D blobs */}
-            <motion.div animate={{ scale: [1, 1.15, 1], opacity: [0.4, 0.6, 0.4] }}
-              transition={{ duration: 8, repeat: Infinity }}
-              className="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-amber-400/20 blur-3xl" />
-            <motion.div animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-              transition={{ duration: 10, repeat: Infinity, delay: 1 }}
-              className="absolute -bottom-32 -left-20 h-72 w-72 rounded-full bg-violet-500/30 blur-3xl" />
+          {step !== 3 && (
+            <div className="hidden md:flex flex-col text-white p-7 relative overflow-hidden"
+              style={{ background: `linear-gradient(160deg, ${accent} 0%, #4B1A8A 50%, #1F0B3F 130%)` }}>
+              {/* Animated 3D blobs */}
+              <motion.div animate={{ scale: [1, 1.15, 1], opacity: [0.4, 0.6, 0.4] }}
+                transition={{ duration: 8, repeat: Infinity }}
+                className="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-amber-400/20 blur-3xl" />
+              <motion.div animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
+                transition={{ duration: 10, repeat: Infinity, delay: 1 }}
+                className="absolute -bottom-32 -left-20 h-72 w-72 rounded-full bg-violet-500/30 blur-3xl" />
 
-            <button onClick={() => handleClose(false)} aria-label="Fermer"
-              className="absolute top-4 right-4 h-8 w-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors z-10 backdrop-blur">
-              <X className="h-4 w-4" />
-            </button>
+              <button onClick={() => handleClose(false)} aria-label="Fermer"
+                className="absolute top-4 right-4 h-8 w-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors z-10 backdrop-blur">
+                <X className="h-4 w-4" />
+              </button>
 
-            <div className="relative z-10 flex-1 flex flex-col">
-              <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-amber-300 mb-2">
-                <Crown className="h-3 w-3" /> Récapitulatif
-              </div>
-
-              <h3 className="text-2xl font-bold leading-tight mb-5">{product.title}</h3>
-
-              {product.thumbnail_url && (
-                <motion.img initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
-                  src={product.thumbnail_url} alt={product.title}
-                  className="w-full aspect-video rounded-xl object-cover mb-5 ring-1 ring-amber-300/30 shadow-2xl" />
-              )}
-
-              <div className="space-y-3 mb-auto">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-white/70">Sous-total</span>
-                  <span className="font-semibold">{effectivePrice.toLocaleString()} {currency}</span>
+              <div className="relative z-10 flex-1 flex flex-col">
+                <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-amber-300 mb-2">
+                  <Crown className="h-3 w-3" /> Récapitulatif
                 </div>
-                {appliedPromo && savings > 0 && (
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                    className="flex items-center justify-between text-sm">
-                    <span className="text-white/70 flex items-center gap-1.5">
-                      <Tag className="h-3.5 w-3.5" /> {appliedPromo.code}
-                    </span>
-                    <span className="font-semibold text-emerald-300">-{savings.toLocaleString()} {currency}</span>
-                  </motion.div>
+
+                <h3 className="text-2xl font-bold leading-tight mb-5">{product.title}</h3>
+
+                {product.thumbnail_url && (
+                  <motion.img initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
+                    src={product.thumbnail_url} alt={product.title}
+                    className="w-full aspect-video rounded-xl object-cover mb-5 ring-1 ring-amber-300/30 shadow-2xl" />
                 )}
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-white/70">Frais</span>
-                  <span className="font-semibold text-amber-300">Inclus</span>
-                </div>
-              </div>
 
-              <div className="my-5 h-px bg-gradient-to-r from-transparent via-amber-300/40 to-transparent" />
-
-              <div className="flex items-end justify-between mb-5">
-                <div>
-                  <div className="text-[10px] uppercase tracking-widest text-amber-300/80 mb-1">Total</div>
-                  <div className="text-3xl font-extrabold leading-none bg-gradient-to-r from-white to-amber-200 bg-clip-text text-transparent">
-                    {isFree ? "Gratuit" : discountedPrice.toLocaleString()}
+                <div className="space-y-3 mb-auto">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-white/70">Sous-total</span>
+                    <span className="font-semibold">{effectivePrice.toLocaleString()} {currency}</span>
+                  </div>
+                  {appliedPromo && savings > 0 && (
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                      className="flex items-center justify-between text-sm">
+                      <span className="text-white/70 flex items-center gap-1.5">
+                        <Tag className="h-3.5 w-3.5" /> {appliedPromo.code}
+                      </span>
+                      <span className="font-semibold text-emerald-300">-{savings.toLocaleString()} {currency}</span>
+                    </motion.div>
+                  )}
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-white/70">Frais</span>
+                    <span className="font-semibold text-amber-300">Inclus</span>
                   </div>
                 </div>
-                {!isFree && <div className="text-sm font-semibold text-white/80 mb-1">{currency}</div>}
-              </div>
 
-              <ul className="space-y-2 text-xs text-white/85">
-                {[
-                  { icon: Zap, text: "Livraison instantanée" },
-                  { icon: ShieldCheck, text: "Paiement 100% sécurisé" },
-                  { icon: Lock, text: "Vendeur vérifié KYC" },
-                ].map((b) => (
-                  <li key={b.text} className="flex items-center gap-2.5">
-                    <div className="h-5 w-5 rounded-full flex items-center justify-center"
-                      style={{ background: `linear-gradient(135deg, ${accent}, #C9962E)` }}>
-                      <b.icon className="h-3 w-3" />
-                    </div>
-                    {b.text}
-                  </li>
-                ))}
-              </ul>
+                <div className="my-5 h-px bg-gradient-to-r from-transparent via-amber-300/40 to-transparent" />
 
-              {/* Provider logos strip */}
-              <div className="mt-5 pt-4 border-t border-white/10">
-                <div className="text-[9px] uppercase tracking-widest text-white/50 mb-2">Opérateurs supportés</div>
-                <div className="flex flex-wrap gap-1.5">
-                  {providerLogosForStrip.map(([k, src]) => (
-                    <div key={k} className="h-6 w-9 rounded bg-white/95 p-0.5 flex items-center justify-center">
-                      <img src={src} alt={k} className="h-full w-full object-contain" />
+                <div className="flex items-end justify-between mb-5">
+                  <div>
+                    <div className="text-[10px] uppercase tracking-widest text-amber-300/80 mb-1">Total</div>
+                    <div className="text-3xl font-extrabold leading-none bg-gradient-to-r from-white to-amber-200 bg-clip-text text-transparent">
+                      {isFree ? "Gratuit" : discountedPrice.toLocaleString()}
                     </div>
+                  </div>
+                  {!isFree && <div className="text-sm font-semibold text-white/80 mb-1">{currency}</div>}
+                </div>
+
+                <ul className="space-y-2 text-xs text-white/85">
+                  {[
+                    { icon: Zap, text: "Livraison instantanée" },
+                    { icon: ShieldCheck, text: "Paiement 100% sécurisé" },
+                    { icon: Lock, text: "Vendeur vérifié KYC" },
+                  ].map((b) => (
+                    <li key={b.text} className="flex items-center gap-2.5">
+                      <div className="h-5 w-5 rounded-full flex items-center justify-center"
+                        style={{ background: `linear-gradient(135deg, ${accent}, #C9962E)` }}>
+                        <b.icon className="h-3 w-3" />
+                      </div>
+                      {b.text}
+                    </li>
                   ))}
+                </ul>
+
+                {/* Provider logos strip */}
+                <div className="mt-5 pt-4 border-t border-white/10">
+                  <div className="text-[9px] uppercase tracking-widest text-white/50 mb-2">Opérateurs supportés</div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {providerLogosForStrip.map(([k, src]) => (
+                      <div key={k} className="h-6 w-9 rounded bg-white/95 p-0.5 flex items-center justify-center">
+                        <img src={src} alt={k} className="h-full w-full object-contain" />
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
 
           {!fullPage && (
             <button onClick={() => handleClose(false)} aria-label="Fermer"
-              className="md:hidden absolute top-3 right-3 h-9 w-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center z-20">
+              className={`absolute top-3 right-3 h-9 w-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center z-20 transition-colors ${step === 3 ? "" : "md:hidden"}`}>
               <X className="h-4 w-4 text-gray-700" />
             </button>
           )}
@@ -765,7 +776,7 @@ const CheckoutDialog = ({ open, onOpenChange, product, storeSlug, brandColor, fu
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[940px] p-0 overflow-hidden border-0 bg-transparent shadow-2xl max-h-[95vh] sm:max-h-[92vh]">
+      <DialogContent className={`${step === 3 ? "sm:max-w-[460px]" : "sm:max-w-[940px]"} p-0 overflow-hidden border-0 bg-transparent shadow-2xl max-h-[95vh] sm:max-h-[92vh] transition-all duration-300`}>
         {innerContent}
       </DialogContent>
     </Dialog>

@@ -48,16 +48,16 @@ const includedEn = [
 const translations = {
   fr: {
     seoTitle: "Tarifs - TechNova",
-    seoDesc: "Tarifs TECHNOVA : 0% de frais d'inscription, commission de seulement 10%. Vendez vos produits digitaux sans abonnement. Paiements en ligne sécurisés.",
+    seoDesc: "Tarifs TECHNOVA : 0% de frais d'inscription, commission de seulement 5%. Vendez vos produits digitaux sans abonnement. Paiements en ligne sécurisés.",
     eyebrow: "Modèle simple à la commission",
-    heroTitle: <>0 FCFA pour commencer. <br />10% par vente.</>,
-    heroDesc: "Pas d'abonnement, pas de frais cachés. Créez votre boutique gratuitement et ne payez qu'une commission de 10% uniquement quand vous réalisez une vente.",
+    heroTitle: <>0 FCFA pour commencer. <br />5% par vente.</>,
+    heroDesc: "Pas d'abonnement, pas de frais cachés. Créez votre boutique gratuitement et ne payez qu'une commission de 5% uniquement quand vous réalisez une vente.",
     ctaHero: "Créer ma boutique gratuite",
     howItWorks: "Comment ça marche ?",
     transparency: "Un modèle transparent aligné sur votre succès",
     exampleLabel: "Exemple : Vous vendez un produit à",
-    receivesLabel: "Vous recevez (90%)",
-    commissionLabel: "Commission TECHNOVA (10%)",
+    receivesLabel: "Vous recevez (95%)",
+    commissionLabel: "Commission TECHNOVA (5%)",
     includedTitle: "Tout est inclus, sans frais supplémentaires",
     readyToSell: "Prêt à vendre ?",
     ctaBottomDesc: "Rejoignez des milliers de créateurs qui vendent déjà leurs produits digitaux sur TECHNOVA.",
@@ -65,16 +65,16 @@ const translations = {
   },
   en: {
     seoTitle: "Pricing - TechNova",
-    seoDesc: "TECHNOVA Pricing: 0% registration fees, only 10% commission. Sell your digital products without subscription. Secure online payments.",
+    seoDesc: "TECHNOVA Pricing: 0% registration fees, only 5% commission. Sell your digital products without subscription. Secure online payments.",
     eyebrow: "Simple commission-based model",
-    heroTitle: <>0 FCFA to start. <br />10% per sale.</>,
-    heroDesc: "No subscription, no hidden fees. Create your store for free and pay only a 10% commission when you make a sale.",
+    heroTitle: <>0 FCFA to start. <br />5% per sale.</>,
+    heroDesc: "No subscription, no hidden fees. Create your store for free and pay only a 5% commission when you make a sale.",
     ctaHero: "Create my free storefront",
     howItWorks: "How it works?",
     transparency: "A transparent model aligned with your success",
     exampleLabel: "Example: You sell a product for",
-    receivesLabel: "You receive (90%)",
-    commissionLabel: "TECHNOVA Commission (10%)",
+    receivesLabel: "You receive (95%)",
+    commissionLabel: "TECHNOVA Commission (5%)",
     includedTitle: "Everything is included, at no extra cost",
     readyToSell: "Ready to sell?",
     ctaBottomDesc: "Join thousands of creators who already sell their digital products on TECHNOVA.",
@@ -146,12 +146,12 @@ const Pricing = () => {
               </div>
               <div className="flex items-center justify-center gap-4 flex-wrap">
                 <div className="rounded-xl bg-primary/10 border border-primary/20 px-6 py-4 text-center">
-                  <p className="text-2xl font-bold text-primary">9 000 FCFA</p>
+                  <p className="text-2xl font-bold text-primary">9 500 FCFA</p>
                   <p className="text-xs text-muted-foreground mt-1">{t.receivesLabel}</p>
                 </div>
                 <div className="text-2xl font-bold text-muted-foreground">+</div>
                 <div className="rounded-xl bg-secondary border border-border px-6 py-4 text-center">
-                  <p className="text-2xl font-bold text-foreground">1 000 FCFA</p>
+                  <p className="text-2xl font-bold text-foreground">500 FCFA</p>
                   <p className="text-xs text-muted-foreground mt-1">{t.commissionLabel}</p>
                 </div>
               </div>

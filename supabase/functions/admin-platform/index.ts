@@ -54,7 +54,9 @@ serve(async (req) => {
         .eq("status", "completed");
 
       const totalRevenue = orders?.reduce((s, o) => s + Number(o.amount), 0) || 0;
-      const totalCommissions = totalRevenue * 0.1;
+      const { data: feeRow } = await supabaseAdmin.from("platform_fees").select("value_pct").eq("key", "technova_commission_pct").maybeSingle();
+      const commissionPct = Number(feeRow?.value_pct ?? 5) / 100;
+      const totalCommissions = totalRevenue * commissionPct;
 
       const { count: productsCount } = await supabaseAdmin.from("products").select("id", { count: "exact", head: true });
       const { count: storesCount } = await supabaseAdmin.from("stores").select("id", { count: "exact", head: true });

@@ -18,7 +18,7 @@ const SYSTEM_PROMPT = `Tu es l'assistant IA d'Technova, une plateforme qui perme
 - **Licences** : génération automatique de clés, activation par appareil, validation API
 - **Webhooks (Pulses)** : notifications HTTP en temps réel pour intégrer avec d'autres services
 - **Personnalisation** : thèmes, couleurs, polices, mise en page de la boutique
-- **Retraits** : vers des comptes bancaires ou portefeuilles de retrait avec commission de 10%
+- **Retraits** : vers des comptes bancaires ou portefeuilles de retrait avec commission de 5%
 
 ### Comment ça marche :
 1. Créer un compte sur Technova
@@ -30,7 +30,7 @@ const SYSTEM_PROMPT = `Tu es l'assistant IA d'Technova, une plateforme qui perme
 
 ### Tarification :
 - Inscription gratuite
-- Commission de 10% sur chaque vente
+- Commission de 5% sur chaque vente
 - Pas de frais fixes mensuels
 
 ### Support :

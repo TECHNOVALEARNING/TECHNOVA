@@ -1,4 +1,4 @@
-﻿import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -90,7 +90,9 @@ Deno.serve(async (req) => {
       .eq("status", "completed");
 
     const totalSales = (orders || []).reduce((sum: number, o: any) => sum + Number(o.amount), 0);
-    const commission = totalSales * 0.10;
+    const { data: feeRow } = await supabase.from("platform_fees").select("value_pct").eq("key", "technova_commission_pct").maybeSingle();
+    const commissionPct = Number(feeRow?.value_pct ?? 5) / 100;
+    const commission = totalSales * commissionPct;
     const grossAvailable = totalSales - commission;
 
     const { data: withdrawals } = await supabase

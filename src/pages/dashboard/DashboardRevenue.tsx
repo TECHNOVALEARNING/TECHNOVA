@@ -46,7 +46,7 @@ type Transaction = {
   paymentMethod?: string | null;
 };
 
-const COMMISSION_RATE = 0.10;
+const DEFAULT_COMMISSION_RATE = 0.05;
 
 const translations = {
   fr: {
@@ -54,7 +54,7 @@ const translations = {
     subtitle: "Suivez vos gains, commissions et retraits en détail",
     btnWithdraw: "Demander un retrait",
     netRevenue: "Revenu net",
-    netRevenueSub: "Après commission TECHNOVA 10%",
+    netRevenueSub: "Après commission TECHNOVA",
     inTransit: "En transit",
     transitDelay: "délai 3 jours",
     transitSoon: "Disponibles bientôt",
@@ -84,7 +84,7 @@ const translations = {
     subtitle: "Track your earnings, commissions, and withdrawals in detail",
     btnWithdraw: "Request a withdrawal",
     netRevenue: "Net Revenue",
-    netRevenueSub: "After 10% TECHNOVA commission",
+    netRevenueSub: "After TECHNOVA commission",
     inTransit: "In transit",
     transitDelay: "3-day delay",
     transitSoon: "Available soon",
@@ -115,6 +115,7 @@ const DashboardRevenue = () => {
   const { user } = useAuth();
   const [orders, setOrders] = useState<Order[]>([]);
   const [withdrawals, setWithdrawals] = useState<Withdrawal[]>([]);
+  const [commissionPct, setCommissionPct] = useState(DEFAULT_COMMISSION_RATE);
   const [loading, setLoading] = useState(true);
   const [filterType, setFilterType] = useState<"all" | "sale" | "withdrawal">("all");
   const [filterPeriod, setFilterPeriod] = useState<"all" | "7d" | "30d" | "90d">("all");
@@ -134,7 +135,7 @@ const DashboardRevenue = () => {
     if (!user) return;
     const fetchData = async () => {
       setLoading(true);
-      const [ordersRes, withdrawalsRes] = await Promise.all([
+      const [ordersRes, withdrawalsRes, feeRes] = await Promise.all([
         supabase
           .from("orders")
           .select("id, amount, status, created_at, product_id, payment_method, products(title), customers(name, email)")
@@ -145,9 +146,17 @@ const DashboardRevenue = () => {
           .select("*")
           .eq("user_id", user.id)
           .order("created_at", { ascending: false }),
+        supabase
+          .from("platform_fees")
+          .select("value_pct")
+          .eq("key", "technova_commission_pct")
+          .maybeSingle()
       ]);
       setOrders((ordersRes.data as any) || []);
       setWithdrawals(withdrawalsRes.data || []);
+      
+      const commPct = Number(feeRes.data?.value_pct ?? 5) / 100;
+      setCommissionPct(commPct);
       setLoading(false);
     };
     fetchData();
@@ -168,8 +177,8 @@ const DashboardRevenue = () => {
     const pendingRevenue = completedOrders
       .filter(o => new Date(o.created_at) > cutoff3d)
       .reduce((s, o) => s + Number(o.amount), 0);
-    const commission = maturedRevenue * COMMISSION_RATE;
-    const pendingCommission = pendingRevenue * COMMISSION_RATE;
+    const commission = maturedRevenue * commissionPct;
+    const pendingCommission = pendingRevenue * commissionPct;
     const netRevenue = maturedRevenue - commission;
     const totalWithdrawn = withdrawals
       .filter((w) => w.status === "completed")
@@ -180,7 +189,7 @@ const DashboardRevenue = () => {
     const available = netRevenue - totalWithdrawn - pendingWithdrawals;
     const pendingFunds = pendingRevenue - pendingCommission;
     return { totalRevenue, netRevenue, commission, totalWithdrawn, pendingWithdrawals, available: Math.max(0, available), pendingFunds, pendingRevenue };
-  }, [orders, withdrawals]);
+  }, [orders, withdrawals, commissionPct]);
 
   const transactions = useMemo(() => {
     const items: Transaction[] = [];
@@ -259,7 +268,7 @@ const DashboardRevenue = () => {
     : t.transitSoon;
 
   const statCards = [
-    { label: t.netRevenue, value: formatAmount(stats.netRevenue), icon: TrendingUp, sub: t.netRevenueSub },
+    { label: t.netRevenue, value: formatAmount(stats.netRevenue), icon: TrendingUp, sub: `${t.netRevenueSub} ${commissionPct * 100}%` },
     ...(stats.pendingFunds > 0 ? [{ label: t.inTransit, value: formatAmount(stats.pendingFunds), icon: Clock, sub: transitSub }] : []),
     { label: t.availableWithdrawal, value: formatAmount(stats.available), icon: ArrowUpRight, sub: stats.pendingWithdrawals > 0 ? `${formatAmount(stats.pendingWithdrawals)} ${t.pendingLabel}` : t.readyToWithdraw },
     { label: t.totalWithdrawn, value: formatAmount(stats.totalWithdrawn), icon: Download, sub: `${withdrawals.filter(w => w.status === "completed").length} ${t.withdrawalsCount}` },

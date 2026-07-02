@@ -45,10 +45,10 @@ const translations = {
     amountLabel: "Montant à retirer (FCFA)",
     withdrawAll: "Retirer tout",
     withdrawBtn: "Retirer",
-    disclaimer: "Délai : 2 à 11 jours ouvrés selon votre opérateur. Frais inclus dans la commission TECHNOVA (10%).",
+    disclaimer: "Délai : 2 à 11 jours ouvrés selon votre opérateur. Frais inclus dans la commission TECHNOVA (5%).",
     sidebarNetBalance: "Solde net disponible",
     sidebarCommission: "Commission TECHNOVA",
-    sidebarCommissionSub: "10% (déjà déduit)",
+    sidebarCommissionSub: "5% (déjà déduit)",
     sidebarFees: "Frais Mobile Money",
     sidebarFeesSub: "Inclus",
     sidebarMaturity: "Maturité",
@@ -83,10 +83,10 @@ const translations = {
     amountLabel: "Amount to withdraw (FCFA)",
     withdrawAll: "Withdraw all",
     withdrawBtn: "Withdraw",
-    disclaimer: "Timeframe: 2 to 11 business days depending on your operator. Fees included in the TECHNOVA commission (10%).",
+    disclaimer: "Timeframe: 2 to 11 business days depending on your operator. Fees included in the TECHNOVA commission (5%).",
     sidebarNetBalance: "Available net balance",
     sidebarCommission: "TECHNOVA Commission",
-    sidebarCommissionSub: "10% (already deducted)",
+    sidebarCommissionSub: "5% (already deducted)",
     sidebarFees: "Mobile Money Fees",
     sidebarFeesSub: "Included",
     sidebarMaturity: "Maturity",
@@ -109,7 +109,7 @@ const WithdrawNew = () => {
   const [availableNet, setAvailableNet] = useState(0);
   const [kycStatus, setKycStatus] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [commissionPct, setCommissionPct] = useState(0.10);
+  const [commissionPct, setCommissionPct] = useState(0.05);
 
   const [wallets, setWallets] = useState<WalletRow[]>([]);
   const [selectedWallet, setSelectedWallet] = useState<string | null>(null);
@@ -122,7 +122,7 @@ const WithdrawNew = () => {
 
   const numAmount = parseFloat(amount) || 0;
   const isAdmin = user?.email === ADMIN_EMAIL;
-  const COMMISSION = 0.10;
+  const COMMISSION = 0.05;
 
   const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
 
@@ -146,7 +146,7 @@ const WithdrawNew = () => {
         supabase.from("platform_fees").select("value_pct").eq("key", "technova_commission_pct").maybeSingle(),
       ]);
       setKycStatus(isAdmin ? "approved" : (kycRes.data?.status || null));
-      const commPct = Number(feeRes.data?.value_pct ?? 10) / 100;
+      const commPct = Number(feeRes.data?.value_pct ?? 5) / 100;
       setCommissionPct(commPct);
 
       const cutoff = new Date(Date.now() - 72 * 60 * 60 * 1000);

@@ -1,4 +1,4 @@
-﻿// PawaPay payout (vendor withdrawal)
+// PawaPay payout (vendor withdrawal)
 // Docs: https://docs.pawapay.io/v2/api-reference/payouts
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
@@ -41,7 +41,9 @@ Deno.serve(async (req) => {
     const { data: orders } = await supabase
       .from("orders").select("amount").eq("store_owner_id", user.id).eq("status", "completed");
     const totalSales = (orders || []).reduce((s: number, o: any) => s + Number(o.amount), 0);
-    const grossAvailable = totalSales * 0.9; // 10% commission
+    const { data: feeRow } = await supabase.from("platform_fees").select("value_pct").eq("key", "technova_commission_pct").maybeSingle();
+    const commissionPct = Number(feeRow?.value_pct ?? 5) / 100;
+    const grossAvailable = totalSales * (1 - commissionPct); // 5% commission
     const { data: ws } = await supabase
       .from("withdrawals").select("amount").eq("user_id", user.id)
       .in("status", ["pending", "processing", "completed"]);

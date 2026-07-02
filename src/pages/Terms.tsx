@@ -41,8 +41,8 @@ const Terms = () => {
     {
       title: lang === "fr" ? "5. Paiements, commission et délai de maturation" : "5. Payments, Commission, and Escrow Period",
       content: lang === "fr"
-        ? "Les paiements sont traités de manière sécurisée par nos partenaires de paiement agréés (tels que Stripe, Moneroo, Fedapay, etc.). TECHNOVA applique une commission de 10% par transaction. Les fonds issus des ventes sont placés en quarantaine pendant 72 heures (délai de maturation) pour prévenir la fraude au remboursement, puis disponibles pour retrait après validation KYC."
-        : "Payments are processed securely by our certified payment partners (such as Stripe, Moneroo, Fedapay, etc.). TECHNOVA applies a 10% commission per transaction. Funds from sales are held in escrow for 72 hours (maturation period) to prevent refund fraud, and then become available for withdrawal following successful KYC validation."
+        ? "Les paiements sont traités de manière sécurisée par nos partenaires de paiement agréés (tels que Stripe, Moneroo, Fedapay, etc.). TECHNOVA applique une commission de 5% par transaction. Les fonds issus des ventes sont placés en quarantaine pendant 72 heures (délai de maturation) pour prévenir la fraude au remboursement, puis disponibles pour retrait après validation KYC."
+        : "Payments are processed securely by our certified payment partners (such as Stripe, Moneroo, Fedapay, etc.). TECHNOVA applies a 5% commission per transaction. Funds from sales are held in escrow for 72 hours (maturation period) to prevent refund fraud, and then become available for withdrawal following successful KYC validation."
     },
     {
       title: lang === "fr" ? "6. Propriété intellectuelle" : "6. Intellectual Property",

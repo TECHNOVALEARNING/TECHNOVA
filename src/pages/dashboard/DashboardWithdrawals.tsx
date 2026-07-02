@@ -32,7 +32,7 @@ const translations = {
     btnResubmit: "Resoumettre",
     btnViewStatus: "Voir le statut",
     totalSales: "Ventes totales",
-    platformCommission: "Commission plateforme (10%)",
+    platformCommission: "Commission plateforme",
     fundsInTransit: "Fonds en transit (72h)",
     availableSoon: "Disponibles sous 72h après la vente",
     availableBalance: "Solde disponible",
@@ -62,7 +62,7 @@ const translations = {
     btnResubmit: "Resubmit",
     btnViewStatus: "View status",
     totalSales: "Total Sales",
-    platformCommission: "Platform Commission (10%)",
+    platformCommission: "Platform Commission",
     fundsInTransit: "Funds in transit (72h)",
     availableSoon: "Available 72h after sale",
     availableBalance: "Available balance",
@@ -139,7 +139,7 @@ const DashboardWithdrawals = () => {
   const [totalWithdrawn, setTotalWithdrawn] = useState(0);
   const [availableBalance, setAvailableBalance] = useState(0);
   const [kycStatus, setKycStatus] = useState<string | null>(null);
-  const [commissionPct, setCommissionPct] = useState(0.10);
+  const [commissionPct, setCommissionPct] = useState(0.05);
 
   const [lang, setLang] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem("technova_lang") || "fr") : "fr");
 
@@ -170,7 +170,7 @@ const DashboardWithdrawals = () => {
     ]);
 
     setKycStatus(isAdmin ? "approved" : (kycRes.data?.status || null));
-    const commPct = Number(feeRes.data?.value_pct ?? 10) / 100;
+    const commPct = Number(feeRes.data?.value_pct ?? 5) / 100;
     setCommissionPct(commPct);
 
     const now = new Date();

@@ -155,8 +155,8 @@ const Index = () => {
 
       ctx.clearRect(0, 0, width, height);
 
-      const isDark = document.documentElement.classList.contains("dark") || 
-                     document.documentElement.getAttribute("data-theme") === "dark";
+      const isDark = document.documentElement.classList.contains("dark") ||
+        document.documentElement.getAttribute("data-theme") === "dark";
 
       // Subtle ambient glowing radial gradient in the center
       const glowGrad = ctx.createRadialGradient(
@@ -200,32 +200,32 @@ const Index = () => {
 
       const numLines = 22;
       const step = 28;
-      
+
       for (let i = 0; i < numLines; i++) {
         const v = -1 + (2 * i) / (numLines - 1);
-        
+
         ctx.beginPath();
         let first = true;
-        
+
         for (let x = 0; x <= width; x += step) {
           const u = x / width;
-          
+
           // Wave equation forming a 3D ribbon
           const spineY = height * (0.55 - u * 0.1) + Math.sin(u * Math.PI * 2.5 - time * 0.02) * 35;
           const spineZ = Math.cos(u * Math.PI * 2.5 - time * 0.016) * 45;
-          
+
           // Twist effect
           const twist = u * Math.PI * 2.4 + time * 0.03;
-          
+
           // Ribbon width pinch and spread
           const ribbonWidth = (55 + Math.sin(u * Math.PI) * 25) * (1 - Math.abs(v) * 0.08);
-          
+
           const yOffset = v * ribbonWidth * Math.cos(twist);
           const zOffset = v * ribbonWidth * Math.sin(twist);
-          
+
           // Project depth into height coordinate for 3D perspective
           const yFinal = spineY + yOffset + zOffset * 0.22;
-          
+
           if (first) {
             ctx.moveTo(x, yFinal);
             first = false;
@@ -233,7 +233,7 @@ const Index = () => {
             ctx.lineTo(x, yFinal);
           }
         }
-        
+
         // Draw glow pass
         ctx.lineWidth = 3.5;
         ctx.globalAlpha = isDark
@@ -367,8 +367,8 @@ const Index = () => {
 
       const totalReviews = reviews?.length || 0;
       const positiveReviews = reviews?.filter((r: any) => r.sentiment === "positive").length || 0;
-      const satisfactionRate = totalReviews > 0 
-        ? Math.round((positiveReviews / totalReviews) * 100) 
+      const satisfactionRate = totalReviews > 0
+        ? Math.round((positiveReviews / totalReviews) * 100)
         : 95; // Default fallback
 
       return {
@@ -475,7 +475,7 @@ const Index = () => {
       <div className="bg-orb orb-3" />
 
       <Header />
-      <SEOHead 
+      <SEOHead
         title={lang === "en" ? "TECHNOVA Learning — Master AI, Data & Cybersecurity" : undefined}
         description={lang === "en" ? "Certified online courses in AI, Data, Cybersecurity & Design. Learn at your own pace, from anywhere. Pay with Mobile Money or Visa." : undefined}
         canonicalPath="/"
@@ -501,11 +501,11 @@ const Index = () => {
                 {lang === 'fr' ? <>Maîtrisez la Tech de <span className="tn-hero-span">Demain</span>.</> : <>Master the Tech of <span className="tn-hero-span">Tomorrow</span>.</>}
               </h1>
               <p style={{ fontSize: "1.05rem", color: "var(--text-secondary)", lineHeight: 1.7, maxWidth: 520, marginBottom: 40 }}>
-                {lang === 'fr' ? 'TECHNOVA Learning votre passerelle vers le développement, la data science et le design. Formez-vous aux talents qui ouvrent les portes du marché. Etudiants, freelancers, entreprises, c\'est ici que ca se passe.' : 'TECHNOVA Courses is the ultimate platform to learn development, data science, and design. Learn the skills recruiters are looking for. Students, freelancers, companies, this is where it happens.'}
+                {lang === 'fr' ? 'TECHNOVA Learning votre passerelle vers le développement, la data science et le design. Formez-vous aux talents qui ouvrent les portes du marché. Etudiants, freelancers, entreprises, c\'est ici que ça se passe.' : 'TECHNOVA Courses is the ultimate platform to learn development, data science, and design. Learn the skills recruiters are looking for. Students, freelancers, companies, this is where it happens.'}
               </p>
               <div style={{ display: "flex", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 36 }}>
-                <Link 
-                  to="/#courses" 
+                <Link
+                  to="/#courses"
                   className="tn-btn-primary"
                   onClick={(e) => {
                     e.preventDefault();
@@ -533,37 +533,37 @@ const Index = () => {
 
             {/* Right */}
             <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 0.2 }} className="hero-video-container" style={{ position: "relative", width: "100%" }}>
-              <div style={{ 
-                width: "100%", 
-                background: "var(--card)", 
-                backdropFilter: "var(--glass-blur)", 
+              <div style={{
+                width: "100%",
+                background: "var(--card)",
+                backdropFilter: "var(--glass-blur)",
                 WebkitBackdropFilter: "var(--glass-blur)",
-                border: "none", 
-                borderRadius: "var(--radius-lg)", 
+                border: "none",
+                borderRadius: "var(--radius-lg)",
                 padding: 0,
                 boxShadow: "var(--shadow-lg)",
                 animation: "none",
                 overflow: "hidden"
               }}>
-                <div style={{ 
-                  position: "relative", 
-                  width: "100%", 
+                <div style={{
+                  position: "relative",
+                  width: "100%",
                   paddingTop: "56.25%", /* 16:9 Aspect Ratio */
                   borderRadius: "var(--radius)",
                   overflow: "hidden",
                   cursor: !isPlaying ? "pointer" : "default"
                 }}
-                onClick={() => {
-                  if (!isPlaying && welcomeVideoUrl) {
-                    setIsPlaying(true);
-                  }
-                }}
+                  onClick={() => {
+                    if (!isPlaying && welcomeVideoUrl) {
+                      setIsPlaying(true);
+                    }
+                  }}
                 >
                   {welcomeVideoUrl && isPlaying && isLoadedDelayed ? (
                     isDirectVideo(welcomeVideoUrl) ? (
-                      <video 
-                        src={welcomeVideoUrl} 
-                        controls 
+                      <video
+                        src={welcomeVideoUrl}
+                        controls
                         autoPlay
                         muted
                         loop
@@ -572,8 +572,8 @@ const Index = () => {
                         style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: 0, objectFit: "contain" }}
                       />
                     ) : (
-                      <iframe 
-                        src={getWelcomeVideoEmbedUrl(welcomeVideoUrl)} 
+                      <iframe
+                        src={getWelcomeVideoEmbedUrl(welcomeVideoUrl)}
                         style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: 0 }}
                         allow="autoplay; fullscreen; picture-in-picture"
                         allowFullScreen
@@ -616,21 +616,21 @@ const Index = () => {
           </div>
 
           {/* Annonces et Publicités */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
             style={{ marginTop: 64, width: "100%" }}
           >
-            <div style={{ 
-              maxWidth: 840, 
-              margin: "0 auto", 
-              background: "var(--surface)", 
-              backdropFilter: "var(--glass-blur)", 
+            <div style={{
+              maxWidth: 840,
+              margin: "0 auto",
+              background: "var(--surface)",
+              backdropFilter: "var(--glass-blur)",
               WebkitBackdropFilter: "var(--glass-blur)",
-              border: "1px dashed var(--blue)", 
-              borderRadius: "var(--radius-lg)", 
+              border: "1px dashed var(--blue)",
+              borderRadius: "var(--radius-lg)",
               padding: "32px 24px",
               boxShadow: "var(--shadow-sm)",
               textAlign: "center",
@@ -639,16 +639,16 @@ const Index = () => {
             }}>
               <div style={{ position: "absolute", top: -20, right: -20, width: 100, height: 100, background: "var(--blue-soft)", borderRadius: "50%", filter: "blur(20px)" }} />
               <div style={{ position: "absolute", bottom: -20, left: -20, width: 100, height: 100, background: "var(--blue-soft)", borderRadius: "50%", filter: "blur(20px)" }} />
-              
+
               <div style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
-                <div style={{ 
-                  width: 48, 
-                  height: 48, 
-                  borderRadius: "50%", 
-                  background: "var(--blue-soft)", 
+                <div style={{
+                  width: 48,
+                  height: 48,
+                  borderRadius: "50%",
+                  background: "var(--blue-soft)",
                   border: "1px solid rgba(0,113,227,0.15)",
-                  display: "flex", 
-                  alignItems: "center", 
+                  display: "flex",
+                  alignItems: "center",
                   justifyContent: "center",
                   color: "var(--blue)",
                   fontSize: "1.2rem"
@@ -659,8 +659,8 @@ const Index = () => {
                   {lang === 'fr' ? "Espace Annonces & Publicités" : "Announcements & Advertisements Space"}
                 </h3>
                 <p style={{ fontSize: "0.82rem", color: "var(--text-secondary)", maxWidth: 500, margin: 0, lineHeight: 1.5 }}>
-                  {lang === 'fr' 
-                    ? "Découvrez bientôt ici nos offres exclusives, nouveautés technologiques, lancements de formations et événements à venir." 
+                  {lang === 'fr'
+                    ? "Découvrez bientôt ici nos offres exclusives, nouveautés technologiques, lancements de formations et événements à venir."
                     : "Stay tuned for exclusive offers, tech news, course launches, and upcoming events in this space."}
                 </p>
               </div>

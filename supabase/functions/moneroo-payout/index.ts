@@ -98,7 +98,8 @@ Deno.serve(async (req) => {
     }
 
     // Compute available NET balance
-    const COMMISSION = 0.10;
+    const { data: feeRow } = await admin.from("platform_fees").select("value_pct").eq("key", "technova_commission_pct").maybeSingle();
+    const COMMISSION = Number(feeRow?.value_pct ?? 5) / 100;
     const cutoff = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString();
     const { data: orders } = await admin.from("orders").select("amount, created_at").eq("store_owner_id", user.id).eq("status", "completed");
     const matured = (orders || []).filter((o: any) => o.created_at <= cutoff).reduce((s: number, o: any) => s + Number(o.amount), 0);
