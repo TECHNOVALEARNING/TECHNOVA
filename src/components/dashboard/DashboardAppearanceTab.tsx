@@ -592,8 +592,7 @@ const DashboardAppearanceTab = () => {
         </div>
 
         {/* Vidéo de bienvenue */}
-        {(user?.email === "ancres707@gmail.com" || activeStore?.slug === "easy-tech") && (
-          <div className="rounded-xl border border-border bg-card p-6 space-y-4">
+        <div className="rounded-xl border border-border bg-card p-6 space-y-4">
             <div className="flex items-center gap-3">
               <Video className="h-4 w-4 text-muted-foreground" />
               <div>
@@ -667,7 +666,6 @@ const DashboardAppearanceTab = () => {
               )}
             </div>
           </div>
-        )}
 
         {/* Sort Order */}
         <div className="rounded-xl border border-border bg-card p-6 space-y-4">
