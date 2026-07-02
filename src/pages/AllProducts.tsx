@@ -190,7 +190,7 @@ const AllProducts = () => {
             {/* Toggle tabs to switch pages */}
             <div className="inline-flex p-1.5 rounded-full bg-[color:var(--surface)] border border-[color:var(--border)] shadow-sm backdrop-blur mb-10">
               <Link
-                to="/admin-products"
+                to="/store"
                 className="px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 text-[color:var(--text-secondary)] hover:text-[color:var(--text)]"
               >
                 {lang === "fr" ? "Produits Officiels" : "Official Products"}

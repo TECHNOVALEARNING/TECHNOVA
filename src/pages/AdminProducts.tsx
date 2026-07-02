@@ -139,7 +139,7 @@ const AdminProducts = () => {
       }}
     >
       <SEOHead
-        canonicalPath="/admin-products"
+        canonicalPath="/store"
         title={lang === "fr" ? "Produits Officiels TECHNOVA" : "Official TECHNOVA Products"}
         description={
           lang === "fr"
@@ -186,7 +186,7 @@ const AdminProducts = () => {
             {/* Toggle tabs to switch pages */}
             <div className="inline-flex p-1.5 rounded-full bg-[color:var(--surface)] border border-[color:var(--border)] shadow-sm backdrop-blur mb-10">
               <Link
-                to="/admin-products"
+                to="/store"
                 className="px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 bg-[color:var(--blue)] text-white shadow"
               >
                 {lang === "fr" ? "Produits Officiels" : "Official Products"}

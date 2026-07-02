@@ -2,12 +2,32 @@
   "functions": {
     "api/product-preview.ts": {
       "includeFiles": "dist/index.html"
+    },
+    "api/seo-handler.ts": {
+      "includeFiles": "dist/index.html"
     }
   },
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "technovalearning.com"
+        }
+      ],
+      "destination": "https://www.technovalearning.com/:path*",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/sitemap.xml",
       "destination": "/api/sitemap"
+    },
+    {
+      "source": "/(about|formations|cours|blog|actualites|store|boutique|terms|privacy|legal|refund-policy)/?",
+      "destination": "/api/seo-handler"
     },
     {
       "source": "/product/:productId",

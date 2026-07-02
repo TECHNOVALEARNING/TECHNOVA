@@ -1067,7 +1067,7 @@ const Index = () => {
                 ))}
               </div>
               <div className="flex justify-center mt-12">
-                <Link to="/admin-products" className="tn-btn-primary">
+                <Link to="/store" className="tn-btn-primary">
                   {lang === "fr" ? "Voir tous les produits" : "See all products"}{" "}
                   <i className="fas fa-arrow-right" style={{ marginLeft: 6 }} />
                 </Link>

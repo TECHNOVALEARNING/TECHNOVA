@@ -159,7 +159,8 @@ const AppContent = () => {
               <Route path="/outils-digitaux" element={<ToolsDirectoryPage />} />
               <Route path="/decouvertes" element={<Decouvertes />} />
               <Route path="/marketplace" element={<Marketplace />} />
-              <Route path="/admin-products" element={<AdminProducts />} />
+              <Route path="/store" element={<AdminProducts />} />
+              <Route path="/admin-products" element={<Navigate to="/store" replace />} />
               <Route path="/all-products" element={<AllProducts />} />
               <Route path="/cours" element={<Cours />} />
               <Route path="/formations" element={<Cours />} />

@@ -414,7 +414,18 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
             priceCurrency: "XOF",
           },
         }
-      : undefined;
+      : {
+          "@type": "Product",
+          name: product.title,
+          description: truncateText(product.description, 300),
+          image: product.thumbnail_url || undefined,
+          offers: {
+            "@type": "Offer",
+            price: String(product.price),
+            priceCurrency: "XOF",
+            availability: "https://schema.org/InStock",
+          },
+        };
 
   return (
     <div className="min-h-screen bg-background flex flex-col">

@@ -88,7 +88,7 @@ export const Header = () => {
     { to: "/", label: lang === "fr" ? "Accueil" : "Home" },
     { to: "/formations", label: lang === "fr" ? "Nos formations" : "Courses" },
     { to: "/#courses", label: lang === "fr" ? "Nos Produits Digitaux" : "Our Digital Products" },
-    { to: "/admin-products", label: lang === "fr" ? "Store" : "Store" },
+    { to: "/store", label: lang === "fr" ? "Store" : "Store" },
   ];
 
   const moreDropdownLinks = [
@@ -523,23 +523,23 @@ export const Footer = () => {
             {[
               {
                 label: lang === "fr" ? "Cybersécurité" : "Cybersecurity",
-                href: "/admin-products?q=securite",
+                href: "/store?q=securite",
               },
               {
                 label: lang === "fr" ? "IA et Data Science" : "AI and Data Science",
-                href: "/admin-products?q=IA",
+                href: "/store?q=IA",
               },
               {
                 label: lang === "fr" ? "Développement web" : "Web Development",
-                href: "/admin-products?q=dev",
+                href: "/store?q=dev",
               },
               {
                 label: lang === "fr" ? "Bureautique" : "Office Tools",
-                href: "/admin-products?q=bureautique",
+                href: "/store?q=bureautique",
               },
               {
                 label: lang === "fr" ? "Design et montage" : "Design and editing",
-                href: "/admin-products?category=design",
+                href: "/store?category=design",
               },
             ].map((lnk) => (
               <li key={lnk.label} className="flex items-center gap-2">

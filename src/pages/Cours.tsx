@@ -4,7 +4,7 @@ import { GraduationCap, Video, Award, Users, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import SEOHead from "@/components/SEOHead";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -88,9 +88,28 @@ const Cours = () => {
       ? "Discover our tech courses and digital products in AI, Data, Cybersecurity, and Design. Accessible from Europe, the USA, and worldwide."
       : "Découvrez nos formations et produits digitaux en IA, Data, Cybersécurité et Design. Accessibles depuis l'Europe, les USA et le monde.";
 
+  const courseJsonLd = useMemo(() => {
+    return courses.map((c) => ({
+      "@type": "Course",
+      "@id": `https://www.technovalearning.com/formations#course-${c.slug}`,
+      name: c.title,
+      description: `${c.category} - ${c.level}`,
+      provider: {
+        "@type": "Organization",
+        name: "TECHNOVA Learning",
+        sameAs: "https://www.technovalearning.com",
+      },
+    }));
+  }, [courses]);
+
   return (
     <div className="min-h-screen bg-background">
-      <SEOHead title={seoTitle} description={seoDesc} canonicalPath="/formations" />
+      <SEOHead
+        title={seoTitle}
+        description={seoDesc}
+        canonicalPath="/formations"
+        jsonLd={courseJsonLd}
+      />
       <Header />
       <section className="py-24 md:py-32 bg-mesh">
         <div className="container mx-auto px-6 text-center">
