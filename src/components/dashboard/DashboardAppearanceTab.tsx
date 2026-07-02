@@ -30,8 +30,10 @@ import {
   Loader2,
   AlertCircle,
   Video,
+  Upload,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { isDirectVideo } from "@/lib/videoUtils";
 import StoreSelector from "./StoreSelector";
 import { useActiveStore } from "@/hooks/useActiveStore";
 
@@ -201,6 +203,7 @@ const DashboardAppearanceTab = () => {
   const [uploadingBanner, setUploadingBanner] = useState(false);
   const [videoUrl, setVideoUrl] = useState("");
   const [showVideo, setShowVideo] = useState(false);
+  const [uploadingVideo, setUploadingVideo] = useState(false);
 
   const [lang, setLang] = useState(() =>
     typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
@@ -372,6 +375,37 @@ const DashboardAppearanceTab = () => {
     setBannerUrl(urlData.publicUrl + "?t=" + Date.now());
     setUploadingBanner(false);
     toast.success(t.bannerSuccess);
+  };
+
+  const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+
+    // limit to 50MB
+    const MAX_SIZE = 50 * 1024 * 1024;
+    if (file.size > MAX_SIZE) {
+      toast.error(lang === "fr" ? "La vidéo dépasse la limite autorisée de 50 Mo" : "Video size exceeds 50MB limit");
+      return;
+    }
+
+    setUploadingVideo(true);
+    const ext = file.name.split(".").pop();
+    const path = `${user.id}/welcome-video-${activeStoreId}.${ext}`;
+    
+    const { error } = await supabase.storage
+      .from("product-assets")
+      .upload(path, file, { upsert: true });
+
+    if (error) {
+      toast.error(lang === "fr" ? "Erreur lors du téléchargement de la vidéo" : "Error uploading video");
+      setUploadingVideo(false);
+      return;
+    }
+
+    const { data: urlData } = supabase.storage.from("product-assets").getPublicUrl(path);
+    setVideoUrl(urlData.publicUrl);
+    setUploadingVideo(false);
+    toast.success(lang === "fr" ? "Vidéo de bienvenue mise en ligne !" : "Welcome video uploaded successfully!");
   };
 
   if (isLoading) {
@@ -558,7 +592,7 @@ const DashboardAppearanceTab = () => {
         </div>
 
         {/* Vidéo de bienvenue */}
-        {user?.email === "ancres707@gmail.com" && (
+        {(user?.email === "ancres707@gmail.com" || activeStore?.slug === "easy-tech") && (
           <div className="rounded-xl border border-border bg-card p-6 space-y-4">
             <div className="flex items-center gap-3">
               <Video className="h-4 w-4 text-muted-foreground" />
@@ -578,16 +612,57 @@ const DashboardAppearanceTab = () => {
                 </div>
               </div>
               {showVideo && (
-                <div className="space-y-2 pt-2 animate-in fade-in slide-in-from-top-1 duration-200">
-                  <label className="text-xs font-semibold text-foreground">
-                    {t.videoLinkLabel}
-                  </label>
-                  <Input
-                    value={videoUrl}
-                    onChange={(e) => setVideoUrl(e.target.value)}
-                    placeholder="Ex: https://www.youtube.com/watch?v=9xwazD5SyVg"
-                    className="bg-background"
-                  />
+                <div className="space-y-4 pt-2 animate-in fade-in slide-in-from-top-1 duration-200">
+                  <div className="space-y-2">
+                    <label className="text-xs font-semibold text-foreground">
+                      {t.videoLinkLabel}
+                    </label>
+                    <Input
+                      value={videoUrl}
+                      onChange={(e) => setVideoUrl(e.target.value)}
+                      placeholder="Ex: https://www.youtube.com/watch?v=9xwazD5SyVg"
+                      className="bg-background"
+                    />
+                  </div>
+
+                  <div className="relative flex items-center py-1">
+                    <div className="flex-grow border-t border-border"></div>
+                    <span className="flex-shrink mx-4 text-[10px] font-medium text-muted-foreground uppercase">
+                      {lang === "fr" ? "Ou" : "Or"}
+                    </span>
+                    <div className="flex-grow border-t border-border"></div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-xs font-semibold text-foreground block">
+                      {lang === "fr" ? "Télécharger un fichier vidéo" : "Upload a video file"}
+                    </label>
+                    <div className="flex items-center gap-3">
+                      <label className="flex items-center justify-center px-4 py-2 border border-dashed border-border rounded-lg bg-background hover:bg-muted/50 transition-colors cursor-pointer text-xs font-medium gap-2">
+                        <Upload className="h-3.5 w-3.5 text-muted-foreground" />
+                        {uploadingVideo ? (
+                          <span className="animate-pulse">{lang === "fr" ? "Téléversement..." : "Uploading..."}</span>
+                        ) : (
+                          <span>{lang === "fr" ? "Choisir une vidéo (.mp4, .webm)" : "Choose a video (.mp4, .webm)"}</span>
+                        )}
+                        <input
+                          type="file"
+                          accept="video/*"
+                          onChange={handleVideoUpload}
+                          disabled={uploadingVideo}
+                          className="sr-only"
+                        />
+                      </label>
+                      {videoUrl && isDirectVideo(videoUrl) && (
+                        <span className="text-xs text-green-500 font-medium">✓ {lang === "fr" ? "Vidéo prête" : "Video ready"}</span>
+                      )}
+                    </div>
+                    <p className="text-[10px] text-muted-foreground">
+                      {lang === "fr"
+                        ? "Format recommandé : MP4, taille maximale : 50 Mo."
+                        : "Recommended format: MP4, max size: 50MB."}
+                    </p>
+                  </div>
                 </div>
               )}
             </div>
