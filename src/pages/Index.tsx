@@ -700,7 +700,7 @@ const Index = () => {
                         alt="Welcome video preview"
                         style={{ width: "100%", height: "100%", objectFit: "cover" }}
                         loading="eager"
-                        fetchPriority="high"
+                        fetchpriority="high"
                       />
                       {/* Dark overlay */}
                       <div className="absolute inset-0 bg-black/30 flex items-center justify-center transition-all hover:bg-black/40 duration-300">
@@ -1257,7 +1257,7 @@ const Index = () => {
                   {lang === "fr" ? "Nos Applications" : "Our Applications"}
                 </span>
                 <h2 className="section-title" style={{ color: "white", marginBottom: 16 }}>
-                  TECHNOVA APPS
+                  TECHNOVA Apps
                 </h2>
                 <p
                   style={{
