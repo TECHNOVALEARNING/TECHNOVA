@@ -612,18 +612,48 @@ const Jobs = () => {
 
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [isLoadingLive, setIsLoadingLive] = useState(false);
+  
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [totalJobs, setTotalJobs] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const fetchJobs = async (pageNumber = 1) => {
+    setIsLoadingLive(true);
+    try {
+      let url = `/api/jobs?page=${pageNumber}`;
+      if (search) url += `&q=${encodeURIComponent(search)}`;
+      if (location) url += `&location=${encodeURIComponent(location)}`;
+      if (category && category !== "All") url += `&category=${encodeURIComponent(category)}`;
+
+      const res = await fetch(url);
+      if (res.ok) {
+        const data = await res.json();
+        if (data && Array.isArray(data.jobs)) {
+          setJobs(data.jobs);
+          setTotalJobs(data.total);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching jobs from Adzuna API:", error);
+    } finally {
+      setIsLoadingLive(false);
+    }
+  };
 
   useEffect(() => {
-    const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
-    window.addEventListener("technova_lang_changed", handleLangChange);
-    return () => window.removeEventListener("technova_lang_changed", handleLangChange);
+    fetchJobs(1);
   }, []);
+
+  const handleSearchSubmit = () => {
+    setCurrentPage(1);
+    fetchJobs(1);
+  };
 
   const handleViewJobDetails = (job: Job) => {
     setSelectedJob(job);
   };
 
-  const displayedJobsList = JOBS_DATA;
+  const displayedJobsList = jobs.length > 0 ? jobs : JOBS_DATA;
 
   // Filter Jobs
   const filteredJobs = displayedJobsList.filter((job) => {
@@ -702,7 +732,7 @@ const Jobs = () => {
       {/* Search & Filters & Listings */}
       <section className="py-12 bg-background relative z-10 -mt-8">
         <div className="container mx-auto px-6 max-w-5xl">
-          {/* Search Panel styled after cDiscussion */}
+          {/* Search Panel */}
           <div className="bg-card border border-border/80 rounded-2xl p-5 shadow-lg space-y-4 mb-10 backdrop-blur-md">
             <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
               {/* Keyword input */}
@@ -715,6 +745,7 @@ const Jobs = () => {
                   }
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleSearchSubmit()}
                   className="w-full pl-10 pr-4 py-3 bg-secondary/30 rounded-xl border border-border focus:border-primary focus:ring-1 focus:ring-primary outline-none transition text-sm text-foreground"
                 />
               </div>
@@ -727,6 +758,7 @@ const Jobs = () => {
                   placeholder={lang === "fr" ? "Ville ou Pays..." : "City or Country..."}
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleSearchSubmit()}
                   className="w-full pl-10 pr-4 py-3 bg-secondary/30 rounded-xl border border-border focus:border-primary focus:ring-1 focus:ring-primary outline-none transition text-sm text-foreground"
                 />
               </div>
@@ -741,7 +773,7 @@ const Jobs = () => {
                   <Filter className="h-4 w-4" />
                   <span className="hidden sm:inline">{lang === "fr" ? "Filtres" : "Filters"}</span>
                 </Button>
-                <Button className="flex-1 rounded-xl bg-gradient-to-r from-primary to-blue-500 hover:from-primary/95 hover:to-blue-600/95 py-3 h-auto text-sm font-semibold shadow-md text-white">
+                <Button onClick={handleSearchSubmit} className="flex-1 rounded-xl bg-gradient-to-r from-primary to-blue-500 hover:from-primary/95 hover:to-blue-600/95 py-3 h-auto text-sm font-semibold shadow-md text-white">
                   {lang === "fr" ? "Rechercher" : "Search"}
                 </Button>
               </div>
@@ -944,11 +976,57 @@ const Jobs = () => {
                     setCategory("All");
                     setEducation("All");
                     setExperience("All");
+                    setCurrentPage(1);
+                    // Fetch with empty params directly
+                    setIsLoadingLive(true);
+                    fetch(`/api/jobs?page=1`)
+                      .then((res) => res.json())
+                      .then((data) => {
+                        if (data && Array.isArray(data.jobs)) {
+                          setJobs(data.jobs);
+                          setTotalJobs(data.total);
+                        }
+                      })
+                      .catch(console.error)
+                      .finally(() => setIsLoadingLive(false));
                   }}
                   variant="outline"
                   className="mt-4 rounded-xl text-xs"
                 >
                   {lang === "fr" ? "Réinitialiser les filtres" : "Reset Filters"}
+                </Button>
+              </div>
+            )}
+
+            {/* Pagination Controls */}
+            {!isLoadingLive && jobs.length > 0 && totalJobs > 15 && (
+              <div className="flex items-center justify-between border-t border-border/60 pt-6 mt-8">
+                <Button
+                  onClick={() => {
+                    const prev = Math.max(1, currentPage - 1);
+                    setCurrentPage(prev);
+                    fetchJobs(prev);
+                  }}
+                  disabled={currentPage === 1}
+                  variant="outline"
+                  className="rounded-xl px-4 py-2 text-sm border-border"
+                >
+                  {lang === "fr" ? "Précédent" : "Previous"}
+                </Button>
+                <span className="text-sm font-medium text-muted-foreground">
+                  Page {currentPage} / {Math.ceil(totalJobs / 15)}
+                </span>
+                <Button
+                  onClick={() => {
+                    const next = currentPage + 1;
+                    setCurrentPage(next);
+                    fetchJobs(next);
+                  }}
+                  disabled={currentPage >= Math.ceil(totalJobs / 15)}
+                  variant="outline"
+                  className="rounded-xl px-4 py-2 text-sm border-border"
+                >
+                  {lang === "fr" ? "Suivant" : "Next"}
                 </Button>
               </div>
             )}
@@ -1057,19 +1135,41 @@ const Jobs = () => {
                     <span className="block font-semibold text-foreground/80 mb-0.5">
                       {lang === "fr" ? "Postuler en direct" : "Apply directly"}
                     </span>
-                    {selectedJob.contactEmail}
+                    {selectedJob.liveUrl ? (
+                      <span className="block text-muted-foreground truncate max-w-[250px]">
+                        {new URL(selectedJob.liveUrl).hostname}
+                      </span>
+                    ) : (
+                      selectedJob.contactEmail
+                    )}
                   </div>
-                  <Button
-                    asChild
-                    className="w-full sm:w-auto rounded-xl bg-gradient-to-r from-primary to-blue-500 hover:from-primary/95 hover:to-blue-600/95 py-3.5 h-auto text-sm font-semibold shadow-md text-white px-8"
-                  >
-                    <a
-                      href={`mailto:${selectedJob.contactEmail}?subject=Candidature - ${selectedJob.title[lang as "fr" | "en"]}`}
+                  {selectedJob.liveUrl ? (
+                    <Button
+                      asChild
+                      className="w-full sm:w-auto rounded-xl bg-gradient-to-r from-primary to-blue-500 hover:from-primary/95 hover:to-blue-600/95 py-3.5 h-auto text-sm font-semibold shadow-md text-white px-8"
                     >
-                      <Mail className="h-4 w-4 mr-2" />
-                      {lang === "fr" ? "Envoyer ma candidature" : "Send Application"}
-                    </a>
-                  </Button>
+                      <a
+                        href={selectedJob.liveUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <Briefcase className="h-4 w-4 mr-2" />
+                        {lang === "fr" ? "Postuler à cette offre" : "Apply for Job"}
+                      </a>
+                    </Button>
+                  ) : (
+                    <Button
+                      asChild
+                      className="w-full sm:w-auto rounded-xl bg-gradient-to-r from-primary to-blue-500 hover:from-primary/95 hover:to-blue-600/95 py-3.5 h-auto text-sm font-semibold shadow-md text-white px-8"
+                    >
+                      <a
+                        href={`mailto:${selectedJob.contactEmail}?subject=Candidature - ${selectedJob.title[lang as "fr" | "en"]}`}
+                      >
+                        <Mail className="h-4 w-4 mr-2" />
+                        {lang === "fr" ? "Envoyer ma candidature" : "Send Application"}
+                      </a>
+                    </Button>
+                  )}
                 </div>
               </div>
             </motion.div>

@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import {
   Search,
   Calendar,
-  Clock,
+  Clock,                
   ArrowRight,
   BookOpen,
   Sparkles,
