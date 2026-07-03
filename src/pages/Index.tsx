@@ -1225,7 +1225,7 @@ const Index = () => {
                   {lang === "fr" ? "Nos Applications" : "Our Applications"}
                 </span>
                 <h2 className="section-title" style={{ color: "white", marginBottom: 16 }}>
-                  TECHNOVA Apps
+                  TECHNOVA &nbsp; Apps
                 </h2>
                 <p
                   style={{
@@ -1236,8 +1236,8 @@ const Index = () => {
                   }}
                 >
                   {lang === "fr"
-                    ? "Accédez à toutes nos applications et sites web. Que vous soyez sur Android, iOS ou n’importe quel appareil connecté, TECHNOVA vous accompagne partout. Restez connecté, continuez à apprendre et développez vos compétences où que vous soyez."
-                    : "Access all our applications and websites. Whether you're on Android, iOS, or any connected device, TECHNOVA supports you wherever you go. Stay connected, keep learning, and develop your skills wherever you are."}
+                    ? "Accédez à toutes nos applications et sites web. Que vous soyez sur Android, iOS ou n’importe quel appareil connecté, TECHNOVA vous accompagne partout."
+                    : "Access all our applications and websites. Whether you're on Android, iOS, or any connected device, TECHNOVA supports you wherever you go."}
                 </p>
                 <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
                   <a href="/apps" className="btn-app btn-app-light">
