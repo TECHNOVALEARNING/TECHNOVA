@@ -120,6 +120,9 @@
     --tn-shadow-sm: 0 2px 16px rgba(0,0,0,0.3);
     --tn-shadow-md: 0 8px 40px rgba(0,0,0,0.4);
     --tn-shadow-lg: 0 20px 60px rgba(0,0,0,0.5);
+    --gradient-mesh: radial-gradient(at 40% 20%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+                     radial-gradient(at 80% 0%, rgba(139, 92, 246, 0.15) 0px, transparent 50%),
+                     radial-gradient(at 0% 50%, rgba(59, 130, 246, 0.15) 0px, transparent 50%);
   }
 }
 
