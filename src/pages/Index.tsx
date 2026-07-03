@@ -63,39 +63,20 @@ const PARTNERS = [
 const TESTIMONIALS = [
   {
     stars: 5,
-    text: '"La formation Cybersécurité m\'a permis de décrocher un poste de consultant. Le paiement par Mobile Money est très pratique."',
-    name: "Koffi Jean-Marc",
-    loc: "Abidjan, Côte d'Ivoire",
-    img: "https://i.pinimg.com/1200x/a2/09/d6/a209d6e66859493e14c59bc92e5b2e02.jpg",
-  },
-  {
-    stars: 5,
-    text: '"J\'adore le pack Design Graphique. Les vidéos sont claires et le certificat Technova a boosté mon profil LinkedIn."',
-    name: "Aminata Diallo",
-    loc: "Cotonou, Bénin",
-    img: "https://i.pinimg.com/736x/7d/e4/c4/7de4c4c91b6a68c6f4f59065e3efc700.jpg",
-  },
-  {
-    stars: 5,
-    text: "\"Le cours sur l'IA Premium est une mine d'or. Je recommande vivement Technova pour la qualité du contenu.\"",
-    name: "Patrick Nguema",
-    loc: "Libreville, Gabon",
-    img: "https://i.pinimg.com/1200x/1f/c9/6e/1fc96e1619b913eade6eb6533f72cf83.jpg",
-  },
-  {
-    stars: 5,
     text: '"En 3 semaines j\'ai appris Excel de A à Z grâce à Technova. Mon employeur a immédiatement remarqué la différence."',
     name: "Sarah Jenkins",
     loc: "London, UK",
     img: "https://randomuser.me/api/portraits/women/44.jpg",
   },
+
   {
     stars: 5,
-    text: '"Le pack 200 formations est incroyable rapport qualité-prix. J\'ai lancé mon agence digitale 2 mois après ma formation."',
-    name: "Michael Miller",
-    loc: "New York, USA",
-    img: "https://randomuser.me/api/portraits/men/32.jpg",
+    text: '"La formation Cybersécurité m\'a permis de décrocher un poste de consultant. Le paiement par Mobile Money est très pratique."',
+    name: "Koffi Jean-Marc",
+    loc: "Abidjan, Côte d'Ivoire",
+    img: "https://i.pinimg.com/1200x/a2/09/d6/a209d6e66859493e14c59bc92e5b2e02.jpg",
   },
+
   {
     stars: 5,
     text: '"Formation Data Science très complète. Le support WhatsApp répond en moins de 2h. Vraiment professionnel."',
@@ -1380,7 +1361,7 @@ const Index = () => {
       <section id="avis" style={{ position: "relative", zIndex: 1, padding: "100px 0" }}>
         <div className="mx-auto" style={{ maxWidth: 1280, padding: "0 24px" }}>
           <div style={{ textAlign: "center", marginBottom: 48 }}>
-            <span className="tn-eyebrow">{lang === "fr" ? "Témoignages" : "Testimonials"}</span>
+            <span className="tn-eyebrow">{lang === "fr" ? "Ce que les utilisateurs réalisent grâce à l’apprentissage" : "What users achieve through learning"}</span>
             <h2 className="section-title">
               <span className="title-motion-wrap">
                 <span className="title-motion">
