@@ -113,7 +113,7 @@ const AppContent = () => {
   const hostname = window.location.hostname;
   if (hostname.startsWith("portal.")) {
     return (
-      <BrowserRouter>
+      <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <ScrollToTop />
         <Routes>
           <Route path="/" element={<BuyerLogin />} />
@@ -128,7 +128,7 @@ const AppContent = () => {
   }
 
   return (
-    <BrowserRouter>
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <ScrollToTop />
       <AuthProvider>
         <div className="relative min-h-screen overflow-hidden">

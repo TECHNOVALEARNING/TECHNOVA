@@ -65,7 +65,7 @@ export const useCustomDomain = () => {
 
 export const CustomDomainApp = ({ storeSlug }: { storeSlug: string }) => {
   return (
-    <BrowserRouter>
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Routes>
         <Route path="/" element={<StorePage customSlug={storeSlug} />} />
         <Route path="/checkout/:productId" element={<CheckoutPage customSlug={storeSlug} />} />
