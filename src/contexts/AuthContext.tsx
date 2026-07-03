@@ -148,7 +148,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (!mounted) return;
 
         void syncSession(nextSession).finally(() => {
-          if (mounted && bootstrapCompletedRef.current) {
+          if (mounted) {
             setLoading(false);
           }
         });
@@ -174,9 +174,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, nextSession) => {
-      if (event === "INITIAL_SESSION") return;
+      if (!mounted) return;
 
-      authEventReceivedRef.current = true;
       bootstrapCompletedRef.current = true;
 
       if (event === "TOKEN_REFRESHED") {
@@ -194,29 +193,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLoading(true);
       scheduleSessionSync(nextSession);
     });
-
-    const bootstrapAuth = async () => {
-      try {
-        const {
-          data: { session: currentSession },
-        } = await supabase.auth.getSession();
-
-        if (!mounted) return;
-
-        if (!authEventReceivedRef.current) {
-          await syncSession(currentSession);
-        }
-      } catch (err) {
-        console.error("Erreur bootstrap auth:", err);
-      } finally {
-        if (mounted) {
-          bootstrapCompletedRef.current = true;
-          setLoading(false);
-        }
-      }
-    };
-
-    void bootstrapAuth();
 
     return () => {
       mounted = false;
