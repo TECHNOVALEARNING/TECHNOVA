@@ -1633,7 +1633,7 @@ const Index = () => {
                 : "Join the TECHNOVA community today."}
             </p>
             <Link
-              to="/formations"
+              to="/premium"
               style={{
                 background: "white",
                 color: "var(--blue)",
@@ -1647,7 +1647,7 @@ const Index = () => {
                 boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
               }}
             >
-              {lang === "fr" ? "Choisir ma formation" : "Choose my course"}
+              {lang === "fr" ? "Espace Premium" : "Premium Space"}
             </Link>
           </div>
         </div>

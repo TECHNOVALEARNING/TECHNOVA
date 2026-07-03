@@ -100,6 +100,7 @@ export const Header = () => {
     },
     { to: "/decouvertes", label: lang === "fr" ? "Découvertes" : "Discoveries" },
     { to: "/apps", label: lang === "fr" ? "Technova Apps" : "Technova Apps" },
+    { to: "/premium", label: lang === "fr" ? "Technova Premium" : "Technova Premium" },
   ];
 
   const infoDropdownLinks = [
