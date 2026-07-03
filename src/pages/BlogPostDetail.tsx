@@ -23,50 +23,36 @@ const FALLBACK_ARTICLES_DETAILS: { [key: string]: any } = {
     id: "introduction-produits-plr-droits-revente",
     title: "Le Guide Complet des Produits PLR : Créez et Vendez vos Produits Numériques en 1 Clic",
     category: "Digital PLR",
-    image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&q=80",
+    image: "https://i.pinimg.com/1200x/17/eb/c0/17ebc083f4fc54ee0935eafbee1439aa.jpg",
     author: "Captivateur",
     date: "1 juillet 2026",
     readingTime: "8 min",
     content: `
-      <p class="lead">Le Private Label Rights (PLR) ou Droits de Label Privé est l'un des raccourcis les plus puissants pour lancer un business numérique en 2026. Il permet d'acheter un produit existant, d'y apposer sa marque et de le revendre à 100% de profit.</p>
-      
-      <h2>Qu'est-ce que le PLR exactement ?</h2>
-      <p>Contrairement aux droits de revente simples (Master Resell Rights), le PLR vous donne l'autorisation légale de modifier le contenu, d'y ajouter votre nom comme auteur, de le découper en plusieurs articles, de changer le format (par exemple transformer un e-book en formation vidéo) et de fixer votre propre prix.</p>
-      
-      <h2>Pourquoi utiliser le PLR ?</h2>
-      <ul>
-        <li><strong>Gain de temps massif :</strong> Pas besoin de passer 3 mois à rédiger 150 pages d'e-book ou à concevoir des templates complexes.</li>
-        <li><strong>Économie d'argent :</strong> Recruter un rédacteur professionnel ou un designer coûte des milliers d'euros. Une licence PLR ne coûte qu'une fraction de ce prix.</li>
-        <li><strong>Focus sur la vente :</strong> Vous pouvez dédier 95% de votre énergie au marketing, au copywriting et à la création de votre tunnel de vente.</li>
-      </ul>
-      
-      <blockquote>
-        "Le secret des infopreneurs à succès n'est pas d'écrire plus de contenu, c'est de mieux packager et mieux distribuer des solutions existantes." — Captivateur
-      </blockquote>
-
-      <h2>Comment réussir avec le PLR ?</h2>
-      <p>Pour ne pas ressembler à vos concurrents qui revendent le même fichier brut, vous devez absolument personnaliser le produit. Changez le titre pour le rendre accrocheur, concevez une nouvelle couverture moderne en 3D sur Canva, et ajoutez-y votre touche personnelle ou des exemples locaux.</p>
+<p class="lead">Le Private Label Rights (PLR) ou Droits de Label Privé est l'un des raccourcis les plus puissants pour lancer un business numérique en 2026. Il permet d'acheter un produit existant, d'y apposer sa marque et de le revendre à 100% de profit.</p>
+    <h2>Qu'est-ce que le PLR exactement ?</h2>
+    <p>Contrairement aux droits de revente simples (Master Resell Rights), le PLR vous donne l'autorisation légale de modifier le contenu, d'y ajouter votre nom comme auteur, de le découper en plusieurs articles, de changer le format (par exemple transformer un e-book en formation vidéo) et de fixer votre propre prix.</p>
+    <h2>Pourquoi utiliser le PLR ?</h2>
+    <ul>
+      <li><strong>Gain de temps massif :</strong> Pas besoin de passer 3 mois à rédiger 150 pages d'e-book ou à concevoir des templates complexes.</li>
+      <li><strong>Économie d'argent :</strong> Recruter un rédacteur professionnel ou un designer coûte des milliers d'euros. Une licence PLR ne coûte qu'une fraction de ce prix.</li>
+      <li><strong>Focus sur la vente :</strong> Vous pouvez dédier 95% de votre énergie au marketing, au copywriting et à la création de votre tunnel de vente.</li>
+    </ul>
     `,
   },
   "comment-personnaliser-un-ebook-plr": {
     id: "comment-personnaliser-un-ebook-plr",
     title: "5 Étapes pour Transformer un E-book PLR en Best-Seller Unique",
     category: "Marketing",
-    image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80",
+    image: "https://i.pinimg.com/1200x/a0/17/b0/a017b032751a9466d66cfa3cb549eb42.jpg",
     author: "Captivateur",
     date: "29 juin 2026",
     readingTime: "6 min",
     content: `
-      <p class="lead">Acquérir un e-book PLR de qualité est une excellente première étape. Mais pour le vendre à un prix premium et vous démarquer de la concurrence, vous devez le transformer en un produit unique.</p>
-      
-      <h2>1. Redéfinir l'Angle Marketing</h2>
-      <p>Si votre e-book s'appelle "Introduction au Marketing Digital", renommez-le avec un titre axé sur un résultat concret, par exemple : "La Méthode pas-à-pas pour générer vos 1000 premiers euros sur Instagram". Ciblez une sous-niche spécifique pour maximiser l'intérêt.</p>
-      
-      <h2>2. Refondre le Design Visuel</h2>
-      <p>La première impression fait 80% de la vente. Utilisez un outil comme Canva pour concevoir une couverture 3D irrésistible. Changez la mise en page interne, utilisez les polices modernes et harmonisez les couleurs selon la charte graphique de votre marque.</p>
-
-      <h2>3. Augmenter la Valeur Perçue avec des Bonus</h2>
-      <p>Ajoutez des fiches mémo, des check-lists, des feuilles de calcul ou un court tutoriel vidéo. Packager l'e-book avec ces ressources gratuites augmente drastiquement la conversion et justifie un tarif plus élevé.</p>
+<p class="lead">Acquérir un e-book PLR de qualité est une excellente première étape. Mais pour le vendre à un prix premium et vous démarquer de la concurrence, vous devez le transformer en un produit unique.</p>
+    <h2>1. Redéfinir l'Angle Marketing</h2>
+    <p>Si votre e-book s'appelle "Introduction au Marketing Digital", renommez-le avec un titre axé sur un résultat concret, par exemple : "La Méthode pas-à-pas pour générer vos 1000 premiers euros sur Instagram". Ciblez une sous-niche spécifique pour maximiser l'intérêt.</p>
+    <h2>2. Refondre le Design Visuel</h2>
+    <p>La première impression fait 80% de la vente. Utilisez un outil comme Canva pour concevoir une couverture 3D irrésistible. Changez la mise en page interne, utilisez les polices modernes et harmonisez les couleurs selon la charte graphique de votre marque.</p>
     `,
   },
   "tunnel-de-vente-produits-digitaux": {
@@ -78,40 +64,30 @@ const FALLBACK_ARTICLES_DETAILS: { [key: string]: any } = {
     date: "26 juin 2026",
     readingTime: "7 min",
     content: `
-      <p class="lead">Créer un produit ne sert à rien si vous n'avez pas un système automatisé pour le vendre. C'est là qu'interviennent les tunnels de vente.</p>
-      
-      <h2>L'architecture type d'un tunnel de vente rentable</h2>
-      <p>Un bon tunnel de vente guide l'utilisateur pas-à-pas du premier contact jusqu'à l'achat :</p>
-      <ol>
-        <li><strong>Page de Capture (Landing Page) :</strong> Offrez un cadeau gratuit (lead magnet) en échange de l'adresse e-mail de vos visiteurs.</li>
-        <li><strong>Page de Vente (Sales Page) :</strong> Présentez immédiatement après une offre irrésistible à bas prix (Tripwire) entre 7€ et 27€ pour transformer le prospect en client.</li>
-        <li><strong>Order Bump :</strong> Proposez une option complémentaire rapide à cocher sur le formulaire de paiement (par exemple un cahier d'exercices pour 4,99€).</li>
-        <li><strong>Upsell (Vente Additionnelle) :</strong> Offrez un produit haut de gamme (comme une formation vidéo complète) immédiatement après la validation du premier achat.</li>
-      </ol>
-      
-      <h2>L'automatisation des e-mails</h2>
-      <p>Mettez en place une séquence d'e-mails de suivi (email nurture sequence) pour apporter de la valeur à ceux qui n'ont pas acheté le Tripwire au début, et présentez vos autres produits digitaux.</p>
+<p class="lead">Créer un produit ne sert à rien si vous n'avez pas un système automatisé pour le vendre. C'est là qu'interviennent les tunnels de vente.</p>
+    <h2>L'architecture type d'un tunnel de vente rentable</h2>
+    <p>Un bon tunnel de vente guide l'utilisateur pas-à-pas du premier contact jusqu'à l'achat :</p>
+    <ol>
+      <li><strong>Page de Capture (Landing Page) :</strong> Offrez un cadeau gratuit (lead magnet) en échange de l'adresse e-mail de vos visiteurs.</li>
+      <li><strong>Page de Vente (Sales Page) :</strong> Présentez immédiatement après une offre irrésistible à bas prix.</li>
+      <li><strong>Order Bump :</strong> Proposez une option complémentaire rapide à cocher sur le formulaire de paiement.</li>
+    </ol>
     `,
   },
   "niches-rentables-produits-digitaux": {
     id: "niches-rentables-produits-digitaux",
     title: "Top 4 des Niches les plus Rentables pour Vendre des Produits Numériques en 2026",
     category: "Niches Riches",
-    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80",
+    image: "https://i.pinimg.com/1200x/4c/3a/97/4c3a97ab3db0f7e5ec5492aed87d65bf.jpg",
     author: "Captivateur",
     date: "24 juin 2026",
     readingTime: "5 min",
     content: `
-      <p class="lead">Le choix de la thématique est le facteur numéro 1 de réussite dans la vente de produits numériques. Voici les grandes familles de niches qui performent le mieux.</p>
-      
-      <h2>1. Le Business en Ligne & Le Web Marketing</h2>
-      <p>Tout ce qui aide les entreprises ou particuliers à gagner de l'argent ou à se développer : e-commerce, investissement immobilier, affiliation, publicité en ligne, copywriting. Les clients sont prêts à investir car l'offre a un retour sur investissement direct.</p>
-      
-      <h2>2. Le Développement Personnel</h2>
-      <p>La confiance en soi, la productivité, la gestion du stress, la prise de parole en public, ou l'apprentissage de langues. Ce sont des sujets intemporels (evergreen) qui touchent au bien-être de l'individu.</p>
-
-      <h2>3. La Santé & Le Fitness</h2>
-      <p>Les programmes de perte de poids, les recettes saines (keto, vegan), la musculation à la maison, la méditation ou le yoga. C'est une niche passionnelle et à forte récurrence d'achat.</p>
+<p class="lead">Le choix de la thématique est le facteur numéro 1 de réussite dans la vente de produits numériques. Voici les grandes familles de niches qui performent le mieux.</p>
+    <h2>1. Le Business en Ligne & Le Web Marketing</h2>
+    <p>Tout ce qui aide les entreprises ou particuliers à gagner de l'argent ou à se développer : e-commerce, investissement immobilier, affiliation, publicité en ligne, copywriting.</p>
+    <h2>2. Le Développement Personnel</h2>
+    <p>La confiance en soi, la productivité, la gestion du stress, la prise de parole en public, ou l'apprentissage de langues.</p>
     `,
   },
   "systeme-io-vs-shopify-produits-digitaux": {
@@ -123,37 +99,25 @@ const FALLBACK_ARTICLES_DETAILS: { [key: string]: any } = {
     date: "22 juin 2026",
     readingTime: "8 min",
     content: `
-      <p class="lead">Le choix de l'infrastructure de vente est crucial pour commercialiser vos fichiers et produits numériques PLR. Shopify et Système.io sont les deux géants francophones.</p>
-      
-      <h2>Système.io : Le Roi des Tunnels de Vente</h2>
-      <p>Système.io a été spécialement conçu pour les infopreneurs. Il intègre nativement l'hébergement de formations, l'envoi d'e-mails de masse automatisés, la création de tunnels de vente en 1 clic et la gestion de programmes d'affiliation.</p>
-      <p><strong>Avantages :</strong> Tarifs abordables, aucun outil tiers requis, tunnels de vente ultra-rapides et taux de conversion élevés pour les offres uniques.</p>
-      
-      <h2>Shopify : La Référence E-commerce</h2>
-      <p>Shopify est idéal si vous souhaitez créer un catalogue multi-produits avec une esthétique de marque forte. Bien qu'orienté produit physique au départ, il excelle pour vendre des fichiers numériques grâce à ses applications dédiées.</p>
-      <p><strong>Avantages :</strong> Personnalisation visuelle totale, catalogue complet de thèmes, gestion des paniers d'achat avancée et écosystème d'applications colossal.</p>
+<p class="lead">Le choix de l'infrastructure de vente est crucial pour commercialiser vos fichiers et produits numériques PLR. Shopify et Système.io sont les deux géants francophones.</p>
+    <h2>Système.io : Le Roi des Tunnels de Vente</h2>
+    <p>Système.io a été spécialement conçu pour les infopreneurs. Il intègre nativement l'hébergement de formations, l'envoi d'e-mails de masse automatisés, la création de tunnels de vente en 1 clic.</p>
+    <h2>Shopify : La Référence E-commerce</h2>
+    <p>Shopify est idéal si vous souhaitez créer un catalogue multi-produits avec une esthétique de marque forte.</p>
     `,
   },
   "strategie-email-marketing-infoproduits": {
     id: "strategie-email-marketing-infoproduits",
-    title:
-      "L'E-mail Marketing pour Info-Preneurs : 3 Séquences Automatiques pour Exploser vos Ventes",
+    title: "L",
     category: "Marketing",
     image: "https://images.unsplash.com/photo-1557200134-90327ee9fafa?w=800&q=80",
     author: "Captivateur",
     date: "20 juin 2026",
     readingTime: "6 min",
     content: `
-      <p class="lead">L'e-mail marketing génère en moyenne un retour sur investissement de 40 pour 1. Pour les info-preneurs, c'est l'outil numéro 1 pour vendre des e-books et formations en automatique.</p>
-      
-      <h2>1. La Séquence de Bienvenue (Welcome Sequence)</h2>
-      <p>Délivrez immédiatement le cadeau gratuit promis sur votre page de capture. Profitez-en pour vous présenter, raconter votre histoire (storytelling) et établir votre crédibilité. À la fin du 3ème e-mail, proposez votre offre principale.</p>
-      
-      <h2>2. La Séquence d'Abandon de Panier</h2>
-      <p>Près de 70% des visiteurs ajoutent un produit au panier sans finaliser l'achat. Renvoyez-leur un rappel automatique après 4 heures, puis 24 heures en offrant de répondre à leurs questions ou en ajoutant un bonus de dernière minute.</p>
-
-      <h2>3. La Séquence Promotionnelle Flash</h2>
-      <p>Créez des promotions limitées dans le temps (48h à 72h). Utilisez l'urgence et la rareté (fermeture des portes ou hausse de tarif imminente) pour pousser vos prospects tièdes à l'action.</p>
+<p class="lead">L'e-mail marketing génère en moyenne un retour sur investissement de 40 pour 1. Pour les info-preneurs, c'est l'outil numéro 1 pour vendre des e-books et formations en automatique.</p>
+    <h2>1. La Séquence de Bienvenue (Welcome Sequence)</h2>
+    <p>Délivrez immédiatement le cadeau gratuit promis sur votre page de capture. Profitez-en pour vous présenter, raconter votre histoire (storytelling) et établir votre crédibilité.</p>
     `,
   },
   "comment-creer-une-offre-irresistible": {
@@ -165,13 +129,9 @@ const FALLBACK_ARTICLES_DETAILS: { [key: string]: any } = {
     date: "18 juin 2026",
     readingTime: "7 min",
     content: `
-      <p class="lead">Les gens n'achètent pas des fichiers PDF bruts. Ils achètent des résultats et des transformations. Apprenez à transformer un simple produit en une offre que l'on ne peut pas refuser.</p>
-      
-      <h2>Empilez la Valeur avec des Bonus Stratégiques</h2>
-      <p>Au lieu de vendre uniquement votre e-book PLR principal, ajoutez 3 ou 4 bonus qui résolvent le problème suivant de votre client. Par exemple, si l'e-book enseigne la perte de poids, offrez un plan de repas hebdomadaire, un journal de suivi imprimable et un accès à un groupe privé.</p>
-      
-      <h2>Utilisez l'Urgence et la Rareté</h2>
-      <p>Limitez votre offre dans le temps ou en quantité. Proposez un tarif spécial de lancement pour les 100 premiers acheteurs ou pour les prochaines 24 heures.</p>
+<p class="lead">Les gens n'achètent pas des fichiers PDF bruts. Ils achètent des résultats et des transformations. Apprenez à transformer un simple produit en une offre que l'on ne peut pas refuser.</p>
+    <h2>Empilez la Valeur avec des Bonus Stratégiques</h2>
+    <p>Au lieu de vendre uniquement votre e-book PLR principal, ajoutez 3 ou 4 bonus qui résolvent le problème suivant de votre client.</p>
     `,
   },
   "affiliation-produits-numeriques": {
@@ -183,13 +143,9 @@ const FALLBACK_ARTICLES_DETAILS: { [key: string]: any } = {
     date: "15 juin 2026",
     readingTime: "6 min",
     content: `
-      <p class="lead">L'affiliation consiste à faire la promotion de vos produits par d'autres partenaires en échange d'une commission sur les ventes. C'est le meilleur moyen de scaler vos ventes rapidement.</p>
-      
-      <h2>Fixez des Commissions Attractives</h2>
-      <p>Les produits numériques ayant des coûts marginaux proches de zéro, vous pouvez vous permettre d'offrir des commissions généreuses (généralement entre 40% et 60%). Cela motive fortement les affiliés à pousser votre offre.</p>
-      
-      <h2>Fournissez un Kit Promotionnel Clé en Main</h2>
-      <p>Facilitez le travail de vos affiliés en leur fournissant des bannières publicitaires, des visuels de couverture 3D, des exemples d'e-mails prêts à envoyer et des publications pour les réseaux sociaux.</p>
+<p class="lead">L'affiliation consiste à faire la promotion de vos produits par d'autres partenaires en échange d'une commission sur les ventes. C'est le meilleur moyen de scaler vos ventes rapidement.</p>
+    <h2>Fixez des Commissions Attractives</h2>
+    <p>Les produits numériques ayant des coûts marginaux proches de zéro, vous pouvez vous permettre d'offrir des commissions généreuses (généralement entre 40% et 60%).</p>
     `,
   },
   "creer-formation-video-depuis-plr": {
@@ -201,49 +157,353 @@ const FALLBACK_ARTICLES_DETAILS: { [key: string]: any } = {
     date: "12 juin 2026",
     readingTime: "9 min",
     content: `
-      <p class="lead">Les e-books se vendent généralement entre 7€ et 27€, tandis que les formations vidéo se vendent facilement entre 97€ et 297€. Transformer votre PLR écrit en vidéo est le meilleur moyen d'augmenter votre panier moyen.</p>
-      
-      <h2>Étape 1 : Structurer la trame à partir de l'E-book</h2>
-      <p>Utilisez la table des matières de votre e-book PLR pour définir les modules de votre formation. Chaque chapitre devient une leçon vidéo d'une durée de 5 à 15 minutes.</p>
-      
-      <h2>Étape 2 : Préparer des Supports Visuels simples</h2>
-      <p>Diapositives claires reprenant les points clés. Pas besoin de lire le texte ; utilisez les diapositives comme guide visuel pour votre explication.</p>
-      
-      <h2>Étape 3 : Enregistrer l'écran et le micro</h2>
-      <p>Utilisez des logiciels gratuits comme OBS Studio ou Loom pour filmer votre écran et votre webcam. Veillez à avoir un son clair : l'audio est plus important que la vidéo dans les produits d'information.</p>
+<p class="lead">Les e-books se vendent généralement entre 7€ et 27€, tandis que les formations vidéo se vendent facilement entre 97€ et 297€. Transformer votre PLR écrit en vidéo est le meilleur moyen d'augmenter votre panier moyen.</p>
+    <h2>Étape 1 : Structurer la trame à partir de l'E-book</h2>
+    <p>Utilisez la table des matières de votre e-book PLR pour définir les modules de votre formation.</p>
     `,
   },
   "gagner-ses-premiers-euros-en-ligne": {
     id: "gagner-ses-premiers-euros-en-ligne",
-    title:
-      "Plan d'Action 30 Jours : Gagner ses Premiers 1000€ avec la Vente de Fichiers Numériques",
+    title: "Plan d",
     category: "Niches Riches",
     image: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=800&q=80",
     author: "Captivateur",
     date: "10 juin 2026",
     readingTime: "10 min",
     content: `
-      <p class="lead">Vous souhaitez vous lancer mais ne savez pas par où commencer ? Suivez ce programme d'action rigoureux sur 30 jours pour générer vos premiers gains.</p>
-      
-      <h2>Jours 1 à 10 : Recherche & Packaging</h2>
-      <p>Choisissez une niche rentable (comme le marketing ou le développement personnel). Achetez 2 ou 3 bons produits PLR sur cette thématique, personnalisez-les, regroupez-les et concevez des couvertures 3D professionnelles.</p>
-      
-      <h2>Jours 11 à 20 : Configuration du Tunnel</h2>
-      <p>Créez votre compte sur Système.io ou Shopify. Construisez votre page de capture, votre page de commande simplifiée et configurez la livraison automatique du produit par e-mail.</p>
-      
-      <h2>Jours 21 à 30 : Trafic & Lancement</h2>
-      <p>Créez du contenu court sur TikTok, Instagram ou YouTube Shorts en donnant des conseils gratuits liés à votre e-book, et redirigez les spectateurs vers votre lien en bio. Lancez de petites campagnes promotionnelles pour attirer vos premiers clients.</p>
+<p class="lead">Vous souhaitez vous lancer mais ne savez pas par où commencer ? Suivez ce programme d'action rigoureux sur 30 jours pour générer vos premiers gains.</p>
+    <h2>Jours 1 à 10 : Recherche & Packaging</h2>
+    <p>Choisissez une niche rentable (comme le marketing ou le développement personnel). Achetez 2 ou 3 bons produits PLR sur cette thématique.</p>
+    `,
+  },
+  "copywriting-arme-secrete-plr": {
+    id: "copywriting-arme-secrete-plr",
+    title: "Pourquoi le Copywriting est l",
+    category: "Marketing",
+    image: "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=800&q=80",
+    author: "Captivateur",
+    date: "08 juin 2026",
+    readingTime: "6 min",
+    content: `
+<p class="lead">Découvrez comment exploiter au mieux les stratégies liées à : <strong>Pourquoi le Copywriting est l</strong>. Cet article présente des conseils pratiques, des méthodologies et des retours d'expérience pour accélérer votre développement digital.</p>
+    <h2>Les points essentiels à retenir</h2>
+    <p>Pour mettre en place cette stratégie, vous devez vous concentrer sur trois piliers fondamentaux : la pertinence de l'offre, la régularité des actions marketing et la mesure constante des résultats pour optimisation.</p>
+    <h2>Mise en pratique étape par étape</h2>
+    <p>Commencez par définir vos objectifs à court terme, identifiez les outils requis (comme Canva, Shopify ou ChatGPT), puis implémentez la solution pas-à-pas en sollicitant les retours de vos premiers utilisateurs.</p>
+    `,
+  },
+  "chatgpt-reecriture-contenus-plr": {
+    id: "chatgpt-reecriture-contenus-plr",
+    title: "Comment Utiliser ChatGPT pour Réécrire vos Articles et E-books PLR de Façon Unique",
+    category: "Digital PLR",
+    image: "https://i.pinimg.com/1200x/fe/03/42/fe0342f603ac7837875cf11b89e166cb.jpg",
+    author: "Captivateur",
+    date: "06 juin 2026",
+    readingTime: "7 min",
+    content: `
+<p class="lead">Découvrez comment exploiter au mieux les stratégies liées à : <strong>Comment Utiliser ChatGPT pour Réécrire vos Articles et E-books PLR de Façon Unique</strong>. Cet article présente des conseils pratiques, des méthodologies et des retours d'expérience pour accélérer votre développement digital.</p>
+    <h2>Les points essentiels à retenir</h2>
+    <p>Pour mettre en place cette stratégie, vous devez vous concentrer sur trois piliers fondamentaux : la pertinence de l'offre, la régularité des actions marketing et la mesure constante des résultats pour optimisation.</p>
+    <h2>Mise en pratique étape par étape</h2>
+    <p>Commencez par définir vos objectifs à court terme, identifiez les outils requis (comme Canva, Shopify ou ChatGPT), puis implémentez la solution pas-à-pas en sollicitant les retours de vos premiers utilisateurs.</p>
+    `,
+  },
+  "videos-faceless-instagram-tiktok": {
+    id: "videos-faceless-instagram-tiktok",
+    title: "Créer et Vendre des Vidéos Faceless : La Nouvelle Révolution TikTok et Instagram",
+    category: "Marketing",
+    image: "https://images.unsplash.com/photo-1611162616475-46b635cb6868?w=800&q=80",
+    author: "Captivateur",
+    date: "04 juin 2026",
+    readingTime: "5 min",
+    content: `
+<p class="lead">Découvrez comment exploiter au mieux les stratégies liées à : <strong>Créer et Vendre des Vidéos Faceless : La Nouvelle Révolution TikTok et Instagram</strong>. Cet article présente des conseils pratiques, des méthodologies et des retours d'expérience pour accélérer votre développement digital.</p>
+    <h2>Les points essentiels à retenir</h2>
+    <p>Pour mettre en place cette stratégie, vous devez vous concentrer sur trois piliers fondamentaux : la pertinence de l'offre, la régularité des actions marketing et la mesure constante des résultats pour optimisation.</p>
+    <h2>Mise en pratique étape par étape</h2>
+    <p>Commencez par définir vos objectifs à court terme, identifiez les outils requis (comme Canva, Shopify ou ChatGPT), puis implémentez la solution pas-à-pas en sollicitant les retours de vos premiers utilisateurs.</p>
+    `,
+  },
+  "vendre-templates-notion-profit": {
+    id: "vendre-templates-notion-profit",
+    title: "Le Guide pour Vendre des Templates Notion : Un Business Passif Ultra Rentable",
+    category: "Digital PLR",
+    image: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=800&q=80",
+    author: "Captivateur",
+    date: "02 juin 2026",
+    readingTime: "8 min",
+    content: `
+<p class="lead">Découvrez comment exploiter au mieux les stratégies liées à : <strong>Le Guide pour Vendre des Templates Notion : Un Business Passif Ultra Rentable</strong>. Cet article présente des conseils pratiques, des méthodologies et des retours d'expérience pour accélérer votre développement digital.</p>
+    <h2>Les points essentiels à retenir</h2>
+    <p>Pour mettre en place cette stratégie, vous devez vous concentrer sur trois piliers fondamentaux : la pertinence de l'offre, la régularité des actions marketing et la mesure constante des résultats pour optimisation.</p>
+    <h2>Mise en pratique étape par étape</h2>
+    <p>Commencez par définir vos objectifs à court terme, identifiez les outils requis (comme Canva, Shopify ou ChatGPT), puis implémentez la solution pas-à-pas en sollicitant les retours de vos premiers utilisateurs.</p>
+    `,
+  },
+  "eviter-piege-contenu-duplique-seo": {
+    id: "eviter-piege-contenu-duplique-seo",
+    title: "Comment Eviter le Piège du Contenu Dupliqué en Vendant des Produits PLR",
+    category: "Digital PLR",
+    image: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=800&q=80",
+    author: "Captivateur",
+    date: "31 mai 2026",
+    readingTime: "7 min",
+    content: `
+<p class="lead">Découvrez comment exploiter au mieux les stratégies liées à : <strong>Comment Eviter le Piège du Contenu Dupliqué en Vendant des Produits PLR</strong>. Cet article présente des conseils pratiques, des méthodologies et des retours d'expérience pour accélérer votre développement digital.</p>
+    <h2>Les points essentiels à retenir</h2>
+    <p>Pour mettre en place cette stratégie, vous devez vous concentrer sur trois piliers fondamentaux : la pertinence de l'offre, la régularité des actions marketing et la mesure constante des résultats pour optimisation.</p>
+    <h2>Mise en pratique étape par étape</h2>
+    <p>Commencez par définir vos objectifs à court terme, identifiez les outils requis (comme Canva, Shopify ou ChatGPT), puis implémentez la solution pas-à-pas en sollicitant les retours de vos premiers utilisateurs.</p>
+    `,
+  },
+  "erreurs-communes-selection-plr": {
+    id: "erreurs-communes-selection-plr",
+    title: "5 Erreurs Communes à Éviter lors du Choix de votre Premier Produit PLR",
+    category: "Digital PLR",
+    image: "https://i.pinimg.com/1200x/65/96/22/65962258ef0dfb6292cd542258910d93.jpg",
+    author: "Captivateur",
+    date: "29 mai 2026",
+    readingTime: "5 min",
+    content: `
+<p class="lead">Découvrez comment exploiter au mieux les stratégies liées à : <strong>5 Erreurs Communes à Éviter lors du Choix de votre Premier Produit PLR</strong>. Cet article présente des conseils pratiques, des méthodologies et des retours d'expérience pour accélérer votre développement digital.</p>
+    <h2>Les points essentiels à retenir</h2>
+    <p>Pour mettre en place cette stratégie, vous devez vous concentrer sur trois piliers fondamentaux : la pertinence de l'offre, la régularité des actions marketing et la mesure constante des résultats pour optimisation.</p>
+    <h2>Mise en pratique étape par étape</h2>
+    <p>Commencez par définir vos objectifs à court terme, identifiez les outils requis (comme Canva, Shopify ou ChatGPT), puis implémentez la solution pas-à-pas en sollicitant les retours de vos premiers utilisateurs.</p>
+    `,
+  },
+  "lancer-business-plr-petit-budget": {
+    id: "lancer-business-plr-petit-budget",
+    title: "Comment Lancer un Business PLR avec un Budget de moins de 50€",
+    category: "Niches Riches",
+    image: "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=800&q=80",
+    author: "Captivateur",
+    date: "27 mai 2026",
+    readingTime: "6 min",
+    content: `
+<p class="lead">Découvrez comment exploiter au mieux les stratégies liées à : <strong>Comment Lancer un Business PLR avec un Budget de moins de 50€</strong>. Cet article présente des conseils pratiques, des méthodologies et des retours d'expérience pour accélérer votre développement digital.</p>
+    <h2>Les points essentiels à retenir</h2>
+    <p>Pour mettre en place cette stratégie, vous devez vous concentrer sur trois piliers fondamentaux : la pertinence de l'offre, la régularité des actions marketing et la mesure constante des résultats pour optimisation.</p>
+    <h2>Mise en pratique étape par étape</h2>
+    <p>Commencez par définir vos objectifs à court terme, identifiez les outils requis (comme Canva, Shopify ou ChatGPT), puis implémentez la solution pas-à-pas en sollicitant les retours de vos premiers utilisateurs.</p>
+    `,
+  },
+  "rediger-pages-capture-qui-convertissent": {
+    id: "rediger-pages-capture-qui-convertissent",
+    title: "L",
+    category: "Tunnels de Vente",
+    image: "https://i.pinimg.com/736x/d7/8f/15/d78f15a04f3dd5aa39d2dd8114d0795a.jpg",
+    author: "Captivateur",
+    date: "25 mai 2026",
+    readingTime: "7 min",
+    content: `
+<p class="lead">Découvrez comment exploiter au mieux les stratégies liées à : <strong>L</strong>. Cet article présente des conseils pratiques, des méthodologies et des retours d'expérience pour accélérer votre développement digital.</p>
+    <h2>Les points essentiels à retenir</h2>
+    <p>Pour mettre en place cette stratégie, vous devez vous concentrer sur trois piliers fondamentaux : la pertinence de l'offre, la régularité des actions marketing et la mesure constante des résultats pour optimisation.</p>
+    <h2>Mise en pratique étape par étape</h2>
+    <p>Commencez par définir vos objectifs à court terme, identifiez les outils requis (comme Canva, Shopify ou ChatGPT), puis implémentez la solution pas-à-pas en sollicitant les retours de vos premiers utilisateurs.</p>
+    `,
+  },
+  "trafic-pinterest-ebooks-plr": {
+    id: "trafic-pinterest-ebooks-plr",
+    title: "Pinterest Marketing : Comment Attirer des Visiteurs Gratuits vers vos E-books",
+    category: "Marketing",
+    image: "https://i.pinimg.com/736x/a7/ef/c4/a7efc418f54a1bb5455c8c78358fc331.jpg",
+    author: "Captivateur",
+    date: "23 mai 2026",
+    readingTime: "6 min",
+    content: `
+<p class="lead">Découvrez comment exploiter au mieux les stratégies liées à : <strong>Pinterest Marketing : Comment Attirer des Visiteurs Gratuits vers vos E-books</strong>. Cet article présente des conseils pratiques, des méthodologies et des retours d'expérience pour accélérer votre développement digital.</p>
+    <h2>Les points essentiels à retenir</h2>
+    <p>Pour mettre en place cette stratégie, vous devez vous concentrer sur trois piliers fondamentaux : la pertinence de l'offre, la régularité des actions marketing et la mesure constante des résultats pour optimisation.</p>
+    <h2>Mise en pratique étape par étape</h2>
+    <p>Commencez par définir vos objectifs à court terme, identifiez les outils requis (comme Canva, Shopify ou ChatGPT), puis implémentez la solution pas-à-pas en sollicitant les retours de vos premiers utilisateurs.</p>
+    `,
+  },
+  "creer-mockups-sublimes-canva": {
+    id: "creer-mockups-sublimes-canva",
+    title: "Comment Utiliser Canva pour Créer des Mockups 3D Sublimes pour Vos Produits",
+    category: "Marketing",
+    image: "https://i.pinimg.com/736x/42/49/34/424934352e063a46ba2ccade988228f9.jpg",
+    author: "Captivateur",
+    date: "21 mai 2026",
+    readingTime: "5 min",
+    content: `
+<p class="lead">Découvrez comment exploiter au mieux les stratégies liées à : <strong>Comment Utiliser Canva pour Créer des Mockups 3D Sublimes pour Vos Produits</strong>. Cet article présente des conseils pratiques, des méthodologies et des retours d'expérience pour accélérer votre développement digital.</p>
+    <h2>Les points essentiels à retenir</h2>
+    <p>Pour mettre en place cette stratégie, vous devez vous concentrer sur trois piliers fondamentaux : la pertinence de l'offre, la régularité des actions marketing et la mesure constante des résultats pour optimisation.</p>
+    <h2>Mise en pratique étape par étape</h2>
+    <p>Commencez par définir vos objectifs à court terme, identifiez les outils requis (comme Canva, Shopify ou ChatGPT), puis implémentez la solution pas-à-pas en sollicitant les retours de vos premiers utilisateurs.</p>
+    `,
+  },
+  "puissance-sections-shopify-plr": {
+    id: "puissance-sections-shopify-plr",
+    title: "La Puissance des Sections Shopify PLR pour Personnaliser sa Boutique sans Code",
+    category: "Digital PLR",
+    image: "https://i.pinimg.com/1200x/ac/54/60/ac546038809ed3744b574f18019d4777.jpg",
+    author: "Captivateur",
+    date: "19 mai 2026",
+    readingTime: "7 min",
+    content: `
+<p class="lead">Découvrez comment exploiter au mieux les stratégies liées à : <strong>La Puissance des Sections Shopify PLR pour Personnaliser sa Boutique sans Code</strong>. Cet article présente des conseils pratiques, des méthodologies et des retours d'expérience pour accélérer votre développement digital.</p>
+    <h2>Les points essentiels à retenir</h2>
+    <p>Pour mettre en place cette stratégie, vous devez vous concentrer sur trois piliers fondamentaux : la pertinence de l'offre, la régularité des actions marketing et la mesure constante des résultats pour optimisation.</p>
+    <h2>Mise en pratique étape par étape</h2>
+    <p>Commencez par définir vos objectifs à court terme, identifiez les outils requis (comme Canva, Shopify ou ChatGPT), puis implémentez la solution pas-à-pas en sollicitant les retours de vos premiers utilisateurs.</p>
+    `,
+  },
+  "niche-developpement-personnel-plr": {
+    id: "niche-developpement-personnel-plr",
+    title: "Niche Self-Help / Développement Personnel : Pourquoi Elle Ne S",
+    category: "Niches Riches",
+    image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&q=80",
+    author: "Captivateur",
+    date: "17 mai 2026",
+    readingTime: "8 min",
+    content: `
+<p class="lead">Découvrez comment exploiter au mieux les stratégies liées à : <strong>Niche Self-Help / Développement Personnel : Pourquoi Elle Ne S</strong>. Cet article présente des conseils pratiques, des méthodologies et des retours d'expérience pour accélérer votre développement digital.</p>
+    <h2>Les points essentiels à retenir</h2>
+    <p>Pour mettre en place cette stratégie, vous devez vous concentrer sur trois piliers fondamentaux : la pertinence de l'offre, la régularité des actions marketing et la mesure constante des résultats pour optimisation.</p>
+    <h2>Mise en pratique étape par étape</h2>
+    <p>Commencez par définir vos objectifs à court terme, identifiez les outils requis (comme Canva, Shopify ou ChatGPT), puis implémentez la solution pas-à-pas en sollicitant les retours de vos premiers utilisateurs.</p>
+    `,
+  },
+  "order-bump-panier-moyen": {
+    id: "order-bump-panier-moyen",
+    title: "Comment Configurer un Order Bump pour Augmenter la Valeur de Panier de 35%",
+    category: "Tunnels de Vente",
+    image: "https://images.unsplash.com/photo-1556742031-c6961e8560b0?w=800&q=80",
+    author: "Captivateur",
+    date: "15 mai 2026",
+    readingTime: "6 min",
+    content: `
+<p class="lead">Découvrez comment exploiter au mieux les stratégies liées à : <strong>Comment Configurer un Order Bump pour Augmenter la Valeur de Panier de 35%</strong>. Cet article présente des conseils pratiques, des méthodologies et des retours d'expérience pour accélérer votre développement digital.</p>
+    <h2>Les points essentiels à retenir</h2>
+    <p>Pour mettre en place cette stratégie, vous devez vous concentrer sur trois piliers fondamentaux : la pertinence de l'offre, la régularité des actions marketing et la mesure constante des résultats pour optimisation.</p>
+    <h2>Mise en pratique étape par étape</h2>
+    <p>Commencez par définir vos objectifs à court terme, identifiez les outils requis (comme Canva, Shopify ou ChatGPT), puis implémentez la solution pas-à-pas en sollicitant les retours de vos premiers utilisateurs.</p>
+    `,
+  },
+  "guide-licence-mrr-vs-plr": {
+    id: "guide-licence-mrr-vs-plr",
+    title: "Le Guide Ultime de la Licence MRR (Master Resell Rights) vs PLR",
+    category: "Digital PLR",
+    image: "https://i.pinimg.com/736x/75/ca/1c/75ca1ce2ec37705f8b3254daa4547bac.jpg",
+    author: "Captivateur",
+    date: "12 mai 2026",
+    readingTime: "7 min",
+    content: `
+<p class="lead">Découvrez comment exploiter au mieux les stratégies liées à : <strong>Le Guide Ultime de la Licence MRR (Master Resell Rights) vs PLR</strong>. Cet article présente des conseils pratiques, des méthodologies et des retours d'expérience pour accélérer votre développement digital.</p>
+    <h2>Les points essentiels à retenir</h2>
+    <p>Pour mettre en place cette stratégie, vous devez vous concentrer sur trois piliers fondamentaux : la pertinence de l'offre, la régularité des actions marketing et la mesure constante des résultats pour optimisation.</p>
+    <h2>Mise en pratique étape par étape</h2>
+    <p>Commencez par définir vos objectifs à court terme, identifiez les outils requis (comme Canva, Shopify ou ChatGPT), puis implémentez la solution pas-à-pas en sollicitant les retours de vos premiers utilisateurs.</p>
+    `,
+  },
+  "vendre-planners-financiers-digitaux": {
+    id: "vendre-planners-financiers-digitaux",
+    title: "Comment Vendre des Planners Financiers Digitaux : Guide de la Niche Argent",
+    category: "Niches Riches",
+    image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=800&q=80",
+    author: "Captivateur",
+    date: "10 mai 2026",
+    readingTime: "8 min",
+    content: `
+<p class="lead">Découvrez comment exploiter au mieux les stratégies liées à : <strong>Comment Vendre des Planners Financiers Digitaux : Guide de la Niche Argent</strong>. Cet article présente des conseils pratiques, des méthodologies et des retours d'expérience pour accélérer votre développement digital.</p>
+    <h2>Les points essentiels à retenir</h2>
+    <p>Pour mettre en place cette stratégie, vous devez vous concentrer sur trois piliers fondamentaux : la pertinence de l'offre, la régularité des actions marketing et la mesure constante des résultats pour optimisation.</p>
+    <h2>Mise en pratique étape par étape</h2>
+    <p>Commencez par définir vos objectifs à court terme, identifiez les outils requis (comme Canva, Shopify ou ChatGPT), puis implémentez la solution pas-à-pas en sollicitant les retours de vos premiers utilisateurs.</p>
+    `,
+  },
+  "optimiser-seo-formations-en-ligne": {
+    id: "optimiser-seo-formations-en-ligne",
+    title: "Optimiser votre SEO pour Vendre des Formations en Ligne en Automatique",
+    category: "Marketing",
+    image: "https://i.pinimg.com/736x/d7/0b/99/d70b994be61d326e99b196229c07cbe9.jpg",
+    author: "Captivateur",
+    date: "08 mai 2026",
+    readingTime: "7 min",
+    content: `
+<p class="lead">Découvrez comment exploiter au mieux les stratégies liées à : <strong>Optimiser votre SEO pour Vendre des Formations en Ligne en Automatique</strong>. Cet article présente des conseils pratiques, des méthodologies et des retours d'expérience pour accélérer votre développement digital.</p>
+    <h2>Les points essentiels à retenir</h2>
+    <p>Pour mettre en place cette stratégie, vous devez vous concentrer sur trois piliers fondamentaux : la pertinence de l'offre, la régularité des actions marketing et la mesure constante des résultats pour optimisation.</p>
+    <h2>Mise en pratique étape par étape</h2>
+    <p>Commencez par définir vos objectifs à court terme, identifiez les outils requis (comme Canva, Shopify ou ChatGPT), puis implémentez la solution pas-à-pas en sollicitant les retours de vos premiers utilisateurs.</p>
+    `,
+  },
+  "recuperer-abandon-panier-automatique": {
+    id: "recuperer-abandon-panier-automatique",
+    title: "Les Secrets de la Séquence d",
+    category: "Tunnels de Vente",
+    image: "https://images.unsplash.com/photo-1557821552-17105176677c?w=800&q=80",
+    author: "Captivateur",
+    date: "06 mai 2026",
+    readingTime: "6 min",
+    content: `
+<p class="lead">Découvrez comment exploiter au mieux les stratégies liées à : <strong>Les Secrets de la Séquence d</strong>. Cet article présente des conseils pratiques, des méthodologies et des retours d'expérience pour accélérer votre développement digital.</p>
+    <h2>Les points essentiels à retenir</h2>
+    <p>Pour mettre en place cette stratégie, vous devez vous concentrer sur trois piliers fondamentaux : la pertinence de l'offre, la régularité des actions marketing et la mesure constante des résultats pour optimisation.</p>
+    <h2>Mise en pratique étape par étape</h2>
+    <p>Commencez par définir vos objectifs à court terme, identifiez les outils requis (comme Canva, Shopify ou ChatGPT), puis implémentez la solution pas-à-pas en sollicitant les retours de vos premiers utilisateurs.</p>
+    `,
+  },
+  "devenir-libre-financierement-education": {
+    id: "devenir-libre-financierement-education",
+    title: "Comment Devenir Libre Financièrement en Vendant des Contenus Éducatifs",
+    category: "Niches Riches",
+    image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&q=80",
+    author: "Captivateur",
+    date: "04 mai 2026",
+    readingTime: "9 min",
+    content: `
+<p class="lead">Découvrez comment exploiter au mieux les stratégies liées à : <strong>Comment Devenir Libre Financièrement en Vendant des Contenus Éducatifs</strong>. Cet article présente des conseils pratiques, des méthodologies et des retours d'expérience pour accélérer votre développement digital.</p>
+    <h2>Les points essentiels à retenir</h2>
+    <p>Pour mettre en place cette stratégie, vous devez vous concentrer sur trois piliers fondamentaux : la pertinence de l'offre, la régularité des actions marketing et la mesure constante des résultats pour optimisation.</p>
+    <h2>Mise en pratique étape par étape</h2>
+    <p>Commencez par définir vos objectifs à court terme, identifiez les outils requis (comme Canva, Shopify ou ChatGPT), puis implémentez la solution pas-à-pas en sollicitant les retours de vos premiers utilisateurs.</p>
+    `,
+  },
+  "mobile-money-boost-ventes-afrique": {
+    id: "mobile-money-boost-ventes-afrique",
+    title: "Pourquoi Proposer le Paiement par Mobile Money Boost vos Ventes de 50% en Afrique",
+    category: "Marketing",
+    image: "https://i.pinimg.com/736x/0f/fe/19/0ffe1988ad330ed66f1794d659b74e66.jpg",
+    author: "Captivateur",
+    date: "02 mai 2026",
+    readingTime: "6 min",
+    content: `
+<p class="lead">Découvrez comment exploiter au mieux les stratégies liées à : <strong>Pourquoi Proposer le Paiement par Mobile Money Boost vos Ventes de 50% en Afrique</strong>. Cet article présente des conseils pratiques, des méthodologies et des retours d'expérience pour accélérer votre développement digital.</p>
+    <h2>Les points essentiels à retenir</h2>
+    <p>Pour mettre en place cette stratégie, vous devez vous concentrer sur trois piliers fondamentaux : la pertinence de l'offre, la régularité des actions marketing et la mesure constante des résultats pour optimisation.</p>
+    <h2>Mise en pratique étape par étape</h2>
+    <p>Commencez par définir vos objectifs à court terme, identifiez les outils requis (comme Canva, Shopify ou ChatGPT), puis implémentez la solution pas-à-pas en sollicitant les retours de vos premiers utilisateurs.</p>
+    `,
+  },
+  "creer-communaute-privee-fidelisation": {
+    id: "creer-communaute-privee-fidelisation",
+    title: "Créer une Communauté Privée (Telegram, Skool) pour Fidéliser vos Clients",
+    category: "Marketing",
+    image: "https://images.unsplash.com/photo-1531538606174-0f90ff5dce83?w=800&q=80",
+    author: "Captivateur",
+    date: "30 avril 2026",
+    readingTime: "7 min",
+    content: `
+<p class="lead">Découvrez comment exploiter au mieux les stratégies liées à : <strong>Créer une Communauté Privée (Telegram, Skool) pour Fidéliser vos Clients</strong>. Cet article présente des conseils pratiques, des méthodologies et des retours d'expérience pour accélérer votre développement digital.</p>
+    <h2>Les points essentiels à retenir</h2>
+    <p>Pour mettre en place cette stratégie, vous devez vous concentrer sur trois piliers fondamentaux : la pertinence de l'offre, la régularité des actions marketing et la mesure constante des résultats pour optimisation.</p>
+    <h2>Mise en pratique étape par étape</h2>
+    <p>Commencez par définir vos objectifs à court terme, identifiez les outils requis (comme Canva, Shopify ou ChatGPT), puis implémentez la solution pas-à-pas en sollicitant les retours de vos premiers utilisateurs.</p>
     `,
   },
 };
 
-// Fallback articles list matching Blog.tsx
 const MOCK_LIST = [
   {
     id: "introduction-produits-plr-droits-revente",
     title: "Le Guide Complet des Produits PLR : Créez et Vendez vos Produits Numériques en 1 Clic",
     category: "Digital PLR",
-    image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&q=80",
+    image: "https://i.pinimg.com/1200x/17/eb/c0/17ebc083f4fc54ee0935eafbee1439aa.jpg",
     date: "1 juillet 2026",
     readingTime: "8 min",
   },
@@ -251,7 +511,7 @@ const MOCK_LIST = [
     id: "comment-personnaliser-un-ebook-plr",
     title: "5 Étapes pour Transformer un E-book PLR en Best-Seller Unique",
     category: "Marketing",
-    image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80",
+    image: "https://i.pinimg.com/1200x/a0/17/b0/a017b032751a9466d66cfa3cb549eb42.jpg",
     date: "29 juin 2026",
     readingTime: "6 min",
   },
@@ -267,7 +527,7 @@ const MOCK_LIST = [
     id: "niches-rentables-produits-digitaux",
     title: "Top 4 des Niches les plus Rentables pour Vendre des Produits Numériques en 2026",
     category: "Niches Riches",
-    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80",
+    image: "https://i.pinimg.com/1200x/4c/3a/97/4c3a97ab3db0f7e5ec5492aed87d65bf.jpg",
     date: "24 juin 2026",
     readingTime: "5 min",
   },
@@ -281,8 +541,7 @@ const MOCK_LIST = [
   },
   {
     id: "strategie-email-marketing-infoproduits",
-    title:
-      "L'E-mail Marketing pour Info-Preneurs : 3 Séquences Automatiques pour Exploser vos Ventes",
+    title: "L",
     category: "Marketing",
     image: "https://images.unsplash.com/photo-1557200134-90327ee9fafa?w=800&q=80",
     date: "20 juin 2026",
@@ -314,14 +573,174 @@ const MOCK_LIST = [
   },
   {
     id: "gagner-ses-premiers-euros-en-ligne",
-    title:
-      "Plan d'Action 30 Jours : Gagner ses Premiers 1000€ avec la Vente de Fichiers Numériques",
+    title: "Plan d",
     category: "Niches Riches",
     image: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=800&q=80",
     date: "10 juin 2026",
     readingTime: "10 min",
   },
+  {
+    id: "copywriting-arme-secrete-plr",
+    title: "Pourquoi le Copywriting est l",
+    category: "Marketing",
+    image: "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=800&q=80",
+    date: "08 juin 2026",
+    readingTime: "6 min",
+  },
+  {
+    id: "chatgpt-reecriture-contenus-plr",
+    title: "Comment Utiliser ChatGPT pour Réécrire vos Articles et E-books PLR de Façon Unique",
+    category: "Digital PLR",
+    image: "https://i.pinimg.com/1200x/fe/03/42/fe0342f603ac7837875cf11b89e166cb.jpg",
+    date: "06 juin 2026",
+    readingTime: "7 min",
+  },
+  {
+    id: "videos-faceless-instagram-tiktok",
+    title: "Créer et Vendre des Vidéos Faceless : La Nouvelle Révolution TikTok et Instagram",
+    category: "Marketing",
+    image: "https://images.unsplash.com/photo-1611162616475-46b635cb6868?w=800&q=80",
+    date: "04 juin 2026",
+    readingTime: "5 min",
+  },
+  {
+    id: "vendre-templates-notion-profit",
+    title: "Le Guide pour Vendre des Templates Notion : Un Business Passif Ultra Rentable",
+    category: "Digital PLR",
+    image: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=800&q=80",
+    date: "02 juin 2026",
+    readingTime: "8 min",
+  },
+  {
+    id: "eviter-piege-contenu-duplique-seo",
+    title: "Comment Eviter le Piège du Contenu Dupliqué en Vendant des Produits PLR",
+    category: "Digital PLR",
+    image: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=800&q=80",
+    date: "31 mai 2026",
+    readingTime: "7 min",
+  },
+  {
+    id: "erreurs-communes-selection-plr",
+    title: "5 Erreurs Communes à Éviter lors du Choix de votre Premier Produit PLR",
+    category: "Digital PLR",
+    image: "https://i.pinimg.com/1200x/65/96/22/65962258ef0dfb6292cd542258910d93.jpg",
+    date: "29 mai 2026",
+    readingTime: "5 min",
+  },
+  {
+    id: "lancer-business-plr-petit-budget",
+    title: "Comment Lancer un Business PLR avec un Budget de moins de 50€",
+    category: "Niches Riches",
+    image: "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=800&q=80",
+    date: "27 mai 2026",
+    readingTime: "6 min",
+  },
+  {
+    id: "rediger-pages-capture-qui-convertissent",
+    title: "L",
+    category: "Tunnels de Vente",
+    image: "https://i.pinimg.com/736x/d7/8f/15/d78f15a04f3dd5aa39d2dd8114d0795a.jpg",
+    date: "25 mai 2026",
+    readingTime: "7 min",
+  },
+  {
+    id: "trafic-pinterest-ebooks-plr",
+    title: "Pinterest Marketing : Comment Attirer des Visiteurs Gratuits vers vos E-books",
+    category: "Marketing",
+    image: "https://i.pinimg.com/736x/a7/ef/c4/a7efc418f54a1bb5455c8c78358fc331.jpg",
+    date: "23 mai 2026",
+    readingTime: "6 min",
+  },
+  {
+    id: "creer-mockups-sublimes-canva",
+    title: "Comment Utiliser Canva pour Créer des Mockups 3D Sublimes pour Vos Produits",
+    category: "Marketing",
+    image: "https://i.pinimg.com/736x/42/49/34/424934352e063a46ba2ccade988228f9.jpg",
+    date: "21 mai 2026",
+    readingTime: "5 min",
+  },
+  {
+    id: "puissance-sections-shopify-plr",
+    title: "La Puissance des Sections Shopify PLR pour Personnaliser sa Boutique sans Code",
+    category: "Digital PLR",
+    image: "https://i.pinimg.com/1200x/ac/54/60/ac546038809ed3744b574f18019d4777.jpg",
+    date: "19 mai 2026",
+    readingTime: "7 min",
+  },
+  {
+    id: "niche-developpement-personnel-plr",
+    title: "Niche Self-Help / Développement Personnel : Pourquoi Elle Ne S",
+    category: "Niches Riches",
+    image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&q=80",
+    date: "17 mai 2026",
+    readingTime: "8 min",
+  },
+  {
+    id: "order-bump-panier-moyen",
+    title: "Comment Configurer un Order Bump pour Augmenter la Valeur de Panier de 35%",
+    category: "Tunnels de Vente",
+    image: "https://images.unsplash.com/photo-1556742031-c6961e8560b0?w=800&q=80",
+    date: "15 mai 2026",
+    readingTime: "6 min",
+  },
+  {
+    id: "guide-licence-mrr-vs-plr",
+    title: "Le Guide Ultime de la Licence MRR (Master Resell Rights) vs PLR",
+    category: "Digital PLR",
+    image: "https://i.pinimg.com/736x/75/ca/1c/75ca1ce2ec37705f8b3254daa4547bac.jpg",
+    date: "12 mai 2026",
+    readingTime: "7 min",
+  },
+  {
+    id: "vendre-planners-financiers-digitaux",
+    title: "Comment Vendre des Planners Financiers Digitaux : Guide de la Niche Argent",
+    category: "Niches Riches",
+    image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=800&q=80",
+    date: "10 mai 2026",
+    readingTime: "8 min",
+  },
+  {
+    id: "optimiser-seo-formations-en-ligne",
+    title: "Optimiser votre SEO pour Vendre des Formations en Ligne en Automatique",
+    category: "Marketing",
+    image: "https://i.pinimg.com/736x/d7/0b/99/d70b994be61d326e99b196229c07cbe9.jpg",
+    date: "08 mai 2026",
+    readingTime: "7 min",
+  },
+  {
+    id: "recuperer-abandon-panier-automatique",
+    title: "Les Secrets de la Séquence d",
+    category: "Tunnels de Vente",
+    image: "https://images.unsplash.com/photo-1557821552-17105176677c?w=800&q=80",
+    date: "06 mai 2026",
+    readingTime: "6 min",
+  },
+  {
+    id: "devenir-libre-financierement-education",
+    title: "Comment Devenir Libre Financièrement en Vendant des Contenus Éducatifs",
+    category: "Niches Riches",
+    image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&q=80",
+    date: "04 mai 2026",
+    readingTime: "9 min",
+  },
+  {
+    id: "mobile-money-boost-ventes-afrique",
+    title: "Pourquoi Proposer le Paiement par Mobile Money Boost vos Ventes de 50% en Afrique",
+    category: "Marketing",
+    image: "https://i.pinimg.com/736x/0f/fe/19/0ffe1988ad330ed66f1794d659b74e66.jpg",
+    date: "02 mai 2026",
+    readingTime: "6 min",
+  },
+  {
+    id: "creer-communaute-privee-fidelisation",
+    title: "Créer une Communauté Privée (Telegram, Skool) pour Fidéliser vos Clients",
+    category: "Marketing",
+    image: "https://images.unsplash.com/photo-1531538606174-0f90ff5dce83?w=800&q=80",
+    date: "30 avril 2026",
+    readingTime: "7 min",
+  },
 ];
+
 
 export default function BlogPostDetail() {
   const { id } = useParams<{ id: string }>();
@@ -354,6 +773,15 @@ export default function BlogPostDetail() {
 
   useEffect(() => {
     if (!id) return;
+
+    if (FALLBACK_ARTICLES_DETAILS[id]) {
+      setLoading(true);
+      window.scrollTo(0, 0);
+      setArticle(FALLBACK_ARTICLES_DETAILS[id]);
+      setRelatedArticles(MOCK_LIST.filter((a: any) => a.id !== id).slice(0, 3));
+      setLoading(false);
+      return;
+    }
 
     const fetchArticleDetail = async () => {
       setLoading(true);

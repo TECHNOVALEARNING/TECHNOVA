@@ -20,7 +20,7 @@ const BLOG_ARTICLES = [
     id: "introduction-produits-plr-droits-revente",
     title: "Le Guide Complet des Produits PLR : Créez et Vendez vos Produits Numériques en 1 Clic",
     category: "Digital PLR",
-    image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&q=80",
+    image: "https://i.pinimg.com/1200x/17/eb/c0/17ebc083f4fc54ee0935eafbee1439aa.jpg",
     excerpt:
       "Qu'est-ce que le PLR (Private Label Rights) et comment l'utiliser pour générer des revenus en ligne passifs ? Découvrez les secrets pour acquérir, personnaliser et revendre des e-books, formations et templates sous votre propre marque...",
     date: "1 juillet 2026",
@@ -30,7 +30,7 @@ const BLOG_ARTICLES = [
     id: "comment-personnaliser-un-ebook-plr",
     title: "5 Étapes pour Transformer un E-book PLR en Best-Seller Unique",
     category: "Marketing",
-    image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80",
+    image: "https://i.pinimg.com/1200x/a0/17/b0/a017b032751a9466d66cfa3cb549eb42.jpg",
     excerpt:
       "Acheter un produit PLR ne suffit pas, il faut savoir le démarquer de la concurrence. Découvrez nos techniques de personnalisation pour créer une offre irrésistible que vos clients s'arracheront...",
     date: "29 juin 2026",
@@ -50,7 +50,7 @@ const BLOG_ARTICLES = [
     id: "niches-rentables-produits-digitaux",
     title: "Top 4 des Niches les plus Rentables pour Vendre des Produits Numériques en 2026",
     category: "Niches Riches",
-    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80",
+    image: "https://i.pinimg.com/1200x/4c/3a/97/4c3a97ab3db0f7e5ec5492aed87d65bf.jpg",
     excerpt:
       "Toutes les thématiques ne se valent pas. Découvrez les niches à forte demande (finances, productivité, bien-être) où les clients recherchent activement des e-books et formations à acheter...",
     date: "24 juin 2026",
@@ -130,7 +130,7 @@ const BLOG_ARTICLES = [
     id: "chatgpt-reecriture-contenus-plr",
     title: "Comment Utiliser ChatGPT pour Réécrire vos Articles et E-books PLR de Façon Unique",
     category: "Digital PLR",
-    image: "https://images.unsplash.com/photo-1680814903551-b851dfda6f4e?w=800&q=80",
+    image: "https://i.pinimg.com/1200x/fe/03/42/fe0342f603ac7837875cf11b89e166cb.jpg",
     excerpt:
       "L'intelligence artificielle est un allié exceptionnel pour réécrire vos contenus de revente. Découvrez les meilleurs prompts ChatGPT pour reformuler rapidement sans perdre en qualité...",
     date: "06 juin 2026",
@@ -170,7 +170,7 @@ const BLOG_ARTICLES = [
     id: "erreurs-communes-selection-plr",
     title: "5 Erreurs Communes à Éviter lors du Choix de votre Premier Produit PLR",
     category: "Digital PLR",
-    image: "https://images.unsplash.com/photo-1508962914676-134849a727f0?w=800&q=80",
+    image: "https://i.pinimg.com/1200x/65/96/22/65962258ef0dfb6292cd542258910d93.jpg",
     excerpt:
       "Acheter un produit de mauvaise qualité ou dans une thématique morte peut ruiner vos efforts. Voici comment analyser la qualité d'une licence PLR avant de l'acquérir...",
     date: "29 mai 2026",
@@ -190,7 +190,7 @@ const BLOG_ARTICLES = [
     id: "rediger-pages-capture-qui-convertissent",
     title: "L'Art de Rédiger des Pages de Capture Qui Convertissent à plus de 40%",
     category: "Tunnels de Vente",
-    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
+    image: "https://i.pinimg.com/736x/d7/8f/15/d78f15a04f3dd5aa39d2dd8114d0795a.jpg",
     excerpt:
       "Pour vendre vos infoproduits, vous devez d'abord capturer des adresses e-mails. Apprenez la structure psychologique et visuelle d'une page de capture hautement performante...",
     date: "25 mai 2026",
@@ -200,7 +200,7 @@ const BLOG_ARTICLES = [
     id: "trafic-pinterest-ebooks-plr",
     title: "Pinterest Marketing : Comment Attirer des Visiteurs Gratuits vers vos E-books",
     category: "Marketing",
-    image: "https://images.unsplash.com/photo-1611606063065-ee7946f0787a?w=800&q=80",
+    image: "https://i.pinimg.com/736x/a7/ef/c4/a7efc418f54a1bb5455c8c78358fc331.jpg",
     excerpt:
       "Pinterest est un moteur de recherche visuel surpuissant pour les créateurs de produits numériques. Découvrez la stratégie d'épinglage pour générer des ventes automatiques...",
     date: "23 mai 2026",
@@ -210,7 +210,7 @@ const BLOG_ARTICLES = [
     id: "creer-mockups-sublimes-canva",
     title: "Comment Utiliser Canva pour Créer des Mockups 3D Sublimes pour Vos Produits",
     category: "Marketing",
-    image: "https://images.unsplash.com/photo-1542744094-3a31f103e35f?w=800&q=80",
+    image: "https://i.pinimg.com/736x/42/49/34/424934352e063a46ba2ccade988228f9.jpg",
     excerpt:
       "Un visuel professionnel augmente instantanément la valeur perçue de vos produits digitaux. Apprenez à concevoir des mockups d'e-books et de tablettes réalistes sur Canva...",
     date: "21 mai 2026",
@@ -220,7 +220,7 @@ const BLOG_ARTICLES = [
     id: "puissance-sections-shopify-plr",
     title: "La Puissance des Sections Shopify PLR pour Personnaliser sa Boutique sans Code",
     category: "Digital PLR",
-    image: "https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=800&q=80",
+    image: "https://i.pinimg.com/1200x/ac/54/60/ac546038809ed3744b574f18019d4777.jpg",
     excerpt:
       "Ajouter des sections personnalisées et uniques à votre boutique Shopify augmente la conversion. Découvrez comment revendre des sections Shopify prêtes à l'emploi...",
     date: "19 mai 2026",
@@ -250,7 +250,7 @@ const BLOG_ARTICLES = [
     id: "guide-licence-mrr-vs-plr",
     title: "Le Guide Ultime de la Licence MRR (Master Resell Rights) vs PLR",
     category: "Digital PLR",
-    image: "https://images.unsplash.com/photo-1450133064473-71024230f91b?w=800&q=80",
+    image: "https://i.pinimg.com/736x/75/ca/1c/75ca1ce2ec37705f8b3254daa4547bac.jpg",
     excerpt:
       "Quelles sont les différences clés entre les droits de revente simples, les Master Resell Rights (MRR) et les Private Label Rights (PLR) ? Évitez les erreurs juridiques...",
     date: "12 mai 2026",
@@ -270,7 +270,7 @@ const BLOG_ARTICLES = [
     id: "optimiser-seo-formations-en-ligne",
     title: "Optimiser votre SEO pour Vendre des Formations en Ligne en Automatique",
     category: "Marketing",
-    image: "https://images.unsplash.com/photo-1572177812156-58036a04c4d7?w=800&q=80",
+    image: "https://i.pinimg.com/736x/d7/0b/99/d70b994be61d326e99b196229c07cbe9.jpg",
     excerpt:
       "Le trafic gratuit issu de Google est le plus qualifié du web. Découvrez notre méthode d'optimisation SEO pour faire grimper votre catalogue de formations dans les résultats...",
     date: "08 mai 2026",
@@ -300,7 +300,7 @@ const BLOG_ARTICLES = [
     id: "mobile-money-boost-ventes-afrique",
     title: "Pourquoi Proposer le Paiement par Mobile Money Boost vos Ventes de 50% en Afrique",
     category: "Marketing",
-    image: "https://images.unsplash.com/photo-1563013544-824ae1d704d3?w=800&q=80",
+    image: "https://i.pinimg.com/736x/0f/fe/19/0ffe1988ad330ed66f1794d659b74e66.jpg",
     excerpt:
       "En Afrique francophone, le Mobile Money est le moyen de paiement roi. Intégrer KKiapay ou PawaPay permet de lever tous les freins à l'achat pour vos clients locaux...",
     date: "02 mai 2026",
