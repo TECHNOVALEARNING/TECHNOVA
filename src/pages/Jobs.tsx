@@ -616,6 +616,7 @@ const Jobs = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [totalJobs, setTotalJobs] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const [country, setCountry] = useState("fr");
 
   const fetchJobs = async (pageNumber = 1) => {
     setIsLoadingLive(true);
@@ -624,6 +625,7 @@ const Jobs = () => {
       if (search) url += `&q=${encodeURIComponent(search)}`;
       if (location) url += `&location=${encodeURIComponent(location)}`;
       if (category && category !== "All") url += `&category=${encodeURIComponent(category)}`;
+      if (country) url += `&country=${encodeURIComponent(country)}`;
 
       const res = await fetch(url);
       if (res.ok) {
@@ -642,7 +644,7 @@ const Jobs = () => {
 
   useEffect(() => {
     fetchJobs(1);
-  }, []);
+  }, [country]);
 
   const handleSearchSubmit = () => {
     setCurrentPage(1);
@@ -788,7 +790,34 @@ const Jobs = () => {
                   exit={{ height: 0, opacity: 0 }}
                   className="overflow-hidden border-t border-border/60 pt-4 mt-2"
                 >
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                    {/* Country Filter */}
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider pl-1">
+                        {lang === "fr" ? "Pays" : "Country"}
+                      </label>
+                      <select
+                        value={country}
+                        onChange={(e) => setCountry(e.target.value)}
+                        className="w-full py-2 px-3 bg-secondary/30 rounded-lg border border-border outline-none transition text-sm text-foreground"
+                      >
+                        <option value="fr">France 🇫🇷</option>
+                        <option value="us">{lang === "fr" ? "États-Unis 🇺🇸" : "United States 🇺🇸"}</option>
+                        <option value="gb">{lang === "fr" ? "Royaume-Uni 🇬🇧" : "United Kingdom 🇬🇧"}</option>
+                        <option value="ca">Canada 🇨🇦</option>
+                        <option value="de">{lang === "fr" ? "Allemagne 🇩🇪" : "Germany 🇩🇪"}</option>
+                        <option value="za">{lang === "fr" ? "Afrique du Sud 🇿🇦" : "South Africa 🇿🇦"}</option>
+                        <option value="in">{lang === "fr" ? "Inde 🇮🇳" : "India 🇮🇳"}</option>
+                        <option value="au">{lang === "fr" ? "Australie 🇦🇺" : "Australia 🇦🇺"}</option>
+                        <option value="br">{lang === "fr" ? "Brésil 🇧🇷" : "Brazil 🇧🇷"}</option>
+                        <option value="it">{lang === "fr" ? "Italie 🇮🇹" : "Italy 🇮🇹"}</option>
+                        <option value="nl">{lang === "fr" ? "Pays-Bas 🇳🇱" : "Netherlands 🇳🇱"}</option>
+                        <option value="nz">{lang === "fr" ? "Nouvelle-Zélande 🇳🇿" : "New Zealand 🇳🇿"}</option>
+                        <option value="pl">{lang === "fr" ? "Pologne 🇵🇱" : "Poland 🇵🇱"}</option>
+                        <option value="at">{lang === "fr" ? "Autriche 🇦🇹" : "Austria 🇦🇹"}</option>
+                      </select>
+                    </div>
+
                     {/* Category Filter */}
                     <div className="space-y-1.5">
                       <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider pl-1">
@@ -976,6 +1005,7 @@ const Jobs = () => {
                     setCategory("All");
                     setEducation("All");
                     setExperience("All");
+                    setCountry("fr");
                     setCurrentPage(1);
                     // Fetch with empty params directly
                     setIsLoadingLive(true);
