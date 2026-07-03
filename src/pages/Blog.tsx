@@ -68,8 +68,7 @@ const BLOG_ARTICLES = [
   },
   {
     id: "strategie-email-marketing-infoproduits",
-    title:
-      "L'E-mail Marketing pour Info-Preneurs : 3 Séquences Automatiques pour Exploser vos Ventes",
+    title: "L'E-mail Marketing pour Info-Preneurs : 3 Séquences Automatiques pour Exploser vos Ventes",
     category: "Marketing",
     image: "https://images.unsplash.com/photo-1557200134-90327ee9fafa?w=800&q=80",
     excerpt:
@@ -109,14 +108,213 @@ const BLOG_ARTICLES = [
   },
   {
     id: "gagner-ses-premiers-euros-en-ligne",
-    title:
-      "Plan d'Action 30 Jours : Gagner ses Premiers 1000€ avec la Vente de Fichiers Numériques",
+    title: "Plan d'Action 30 Jours : Gagner ses Premiers 1000€ avec la Vente de Fichiers Numériques",
     category: "Niches Riches",
     image: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=800&q=80",
     excerpt:
       "Vous débutez de zéro ? Suivez ce plan d'action quotidien sur 30 jours pour choisir votre niche, packager votre offre PLR et lancer vos premières campagnes de vente...",
     date: "10 juin 2026",
     readingTime: "10 min",
+  },
+  {
+    id: "copywriting-arme-secrete-plr",
+    title: "Pourquoi le Copywriting est l'Arme Secrète pour Vendre Vos E-books PLR",
+    category: "Marketing",
+    image: "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=800&q=80",
+    excerpt:
+      "La différence entre une page de vente qui convertit à 1% et une qui convertit à 5% réside dans le copywriting. Apprenez à rédiger des textes persuasifs qui captivent l'attention...",
+    date: "08 juin 2026",
+    readingTime: "6 min",
+  },
+  {
+    id: "chatgpt-reecriture-contenus-plr",
+    title: "Comment Utiliser ChatGPT pour Réécrire vos Articles et E-books PLR de Façon Unique",
+    category: "Digital PLR",
+    image: "https://images.unsplash.com/photo-1680814903551-b851dfda6f4e?w=800&q=80",
+    excerpt:
+      "L'intelligence artificielle est un allié exceptionnel pour réécrire vos contenus de revente. Découvrez les meilleurs prompts ChatGPT pour reformuler rapidement sans perdre en qualité...",
+    date: "06 juin 2026",
+    readingTime: "7 min",
+  },
+  {
+    id: "videos-faceless-instagram-tiktok",
+    title: "Créer et Vendre des Vidéos Faceless : La Nouvelle Révolution TikTok et Instagram",
+    category: "Marketing",
+    image: "https://images.unsplash.com/photo-1611162616475-46b635cb6868?w=800&q=80",
+    excerpt:
+      "Vendre des vidéos sans jamais montrer son visage est devenu la méthode numéro un pour générer du trafic organique. Découvrez comment exploiter les packs Faceless PLR...",
+    date: "04 juin 2026",
+    readingTime: "5 min",
+  },
+  {
+    id: "vendre-templates-notion-profit",
+    title: "Le Guide pour Vendre des Templates Notion : Un Business Passif Ultra Rentable",
+    category: "Digital PLR",
+    image: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=800&q=80",
+    excerpt:
+      "Notion a conquis des millions d'utilisateurs. Les templates de productivité ou de gestion d'entreprise se vendent comme des petits pains. Voici comment débuter et configurer votre offre...",
+    date: "02 juin 2026",
+    readingTime: "8 min",
+  },
+  {
+    id: "eviter-piege-contenu-duplique-seo",
+    title: "Comment Eviter le Piège du Contenu Dupliqué en Vendant des Produits PLR",
+    category: "Digital PLR",
+    image: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=800&q=80",
+    excerpt:
+      "Si vous utilisez le contenu PLR mot à mot pour votre blog ou votre SEO, Google risque de le pénaliser. Voici 3 stratégies simples pour adapter vos contenus pour le référencement...",
+    date: "31 mai 2026",
+    readingTime: "7 min",
+  },
+  {
+    id: "erreurs-communes-selection-plr",
+    title: "5 Erreurs Communes à Éviter lors du Choix de votre Premier Produit PLR",
+    category: "Digital PLR",
+    image: "https://images.unsplash.com/photo-1508962914676-134849a727f0?w=800&q=80",
+    excerpt:
+      "Acheter un produit de mauvaise qualité ou dans une thématique morte peut ruiner vos efforts. Voici comment analyser la qualité d'une licence PLR avant de l'acquérir...",
+    date: "29 mai 2026",
+    readingTime: "5 min",
+  },
+  {
+    id: "lancer-business-plr-petit-budget",
+    title: "Comment Lancer un Business PLR avec un Budget de moins de 50€",
+    category: "Niches Riches",
+    image: "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=800&q=80",
+    excerpt:
+      "Pas besoin de milliers d'euros pour commencer. Découvrez les outils gratuits ou très abordables pour héberger, packager et vendre votre premier fichier numérique en ligne...",
+    date: "27 mai 2026",
+    readingTime: "6 min",
+  },
+  {
+    id: "rediger-pages-capture-qui-convertissent",
+    title: "L'Art de Rédiger des Pages de Capture Qui Convertissent à plus de 40%",
+    category: "Tunnels de Vente",
+    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
+    excerpt:
+      "Pour vendre vos infoproduits, vous devez d'abord capturer des adresses e-mails. Apprenez la structure psychologique et visuelle d'une page de capture hautement performante...",
+    date: "25 mai 2026",
+    readingTime: "7 min",
+  },
+  {
+    id: "trafic-pinterest-ebooks-plr",
+    title: "Pinterest Marketing : Comment Attirer des Visiteurs Gratuits vers vos E-books",
+    category: "Marketing",
+    image: "https://images.unsplash.com/photo-1611606063065-ee7946f0787a?w=800&q=80",
+    excerpt:
+      "Pinterest est un moteur de recherche visuel surpuissant pour les créateurs de produits numériques. Découvrez la stratégie d'épinglage pour générer des ventes automatiques...",
+    date: "23 mai 2026",
+    readingTime: "6 min",
+  },
+  {
+    id: "creer-mockups-sublimes-canva",
+    title: "Comment Utiliser Canva pour Créer des Mockups 3D Sublimes pour Vos Produits",
+    category: "Marketing",
+    image: "https://images.unsplash.com/photo-1542744094-3a31f103e35f?w=800&q=80",
+    excerpt:
+      "Un visuel professionnel augmente instantanément la valeur perçue de vos produits digitaux. Apprenez à concevoir des mockups d'e-books et de tablettes réalistes sur Canva...",
+    date: "21 mai 2026",
+    readingTime: "5 min",
+  },
+  {
+    id: "puissance-sections-shopify-plr",
+    title: "La Puissance des Sections Shopify PLR pour Personnaliser sa Boutique sans Code",
+    category: "Digital PLR",
+    image: "https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=800&q=80",
+    excerpt:
+      "Ajouter des sections personnalisées et uniques à votre boutique Shopify augmente la conversion. Découvrez comment revendre des sections Shopify prêtes à l'emploi...",
+    date: "19 mai 2026",
+    readingTime: "7 min",
+  },
+  {
+    id: "niche-developpement-personnel-plr",
+    title: "Niche Self-Help / Développement Personnel : Pourquoi Elle Ne S'Éteindra Jamais",
+    category: "Niches Riches",
+    image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&q=80",
+    excerpt:
+      "Le développement personnel est une industrie de plusieurs milliards de dollars. Découvrez comment vous positionner sur cette niche avec des e-books et des guides pratiques PLR...",
+    date: "17 mai 2026",
+    readingTime: "8 min",
+  },
+  {
+    id: "order-bump-panier-moyen",
+    title: "Comment Configurer un Order Bump pour Augmenter la Valeur de Panier de 35%",
+    category: "Tunnels de Vente",
+    image: "https://images.unsplash.com/photo-1556742031-c6961e8560b0?w=800&q=80",
+    excerpt:
+      "L'order bump est une case à cocher sur votre page de paiement qui propose une offre complémentaire. Découvrez comment choisir le produit idéal pour booster vos marges...",
+    date: "15 mai 2026",
+    readingTime: "6 min",
+  },
+  {
+    id: "guide-licence-mrr-vs-plr",
+    title: "Le Guide Ultime de la Licence MRR (Master Resell Rights) vs PLR",
+    category: "Digital PLR",
+    image: "https://images.unsplash.com/photo-1450133064473-71024230f91b?w=800&q=80",
+    excerpt:
+      "Quelles sont les différences clés entre les droits de revente simples, les Master Resell Rights (MRR) et les Private Label Rights (PLR) ? Évitez les erreurs juridiques...",
+    date: "12 mai 2026",
+    readingTime: "7 min",
+  },
+  {
+    id: "vendre-planners-financiers-digitaux",
+    title: "Comment Vendre des Planners Financiers Digitaux : Guide de la Niche Argent",
+    category: "Niches Riches",
+    image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=800&q=80",
+    excerpt:
+      "Les outils de gestion de budget familial connaissent un succès grandissant. Apprenez à adapter et relooker des planners de budget pour les vendre sur Etsy ou votre site...",
+    date: "10 mai 2026",
+    readingTime: "8 min",
+  },
+  {
+    id: "optimiser-seo-formations-en-ligne",
+    title: "Optimiser votre SEO pour Vendre des Formations en Ligne en Automatique",
+    category: "Marketing",
+    image: "https://images.unsplash.com/photo-1572177812156-58036a04c4d7?w=800&q=80",
+    excerpt:
+      "Le trafic gratuit issu de Google est le plus qualifié du web. Découvrez notre méthode d'optimisation SEO pour faire grimper votre catalogue de formations dans les résultats...",
+    date: "08 mai 2026",
+    readingTime: "7 min",
+  },
+  {
+    id: "recuperer-abandon-panier-automatique",
+    title: "Les Secrets de la Séquence d'Abandon de Panier pour Récupérer 15% de Ventes",
+    category: "Tunnels de Vente",
+    image: "https://images.unsplash.com/photo-1557821552-17105176677c?w=800&q=80",
+    excerpt:
+      "La majorité des visiteurs ajoutent au panier mais n'achètent pas immédiatement. Découvrez la structure d'e-mails exacte pour les relancer et lever leurs objections...",
+    date: "06 mai 2026",
+    readingTime: "6 min",
+  },
+  {
+    id: "devenir-libre-financierement-education",
+    title: "Comment Devenir Libre Financièrement en Vendant des Contenus Éducatifs",
+    category: "Niches Riches",
+    image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&q=80",
+    excerpt:
+      "L'éducation en ligne est le moyen le plus rapide d'atteindre l'indépendance financière. Découvrez comment packager vos connaissances et des PLR pour créer des revenus récurrents...",
+    date: "04 mai 2026",
+    readingTime: "9 min",
+  },
+  {
+    id: "mobile-money-boost-ventes-afrique",
+    title: "Pourquoi Proposer le Paiement par Mobile Money Boost vos Ventes de 50% en Afrique",
+    category: "Marketing",
+    image: "https://images.unsplash.com/photo-1563013544-824ae1d704d3?w=800&q=80",
+    excerpt:
+      "En Afrique francophone, le Mobile Money est le moyen de paiement roi. Intégrer KKiapay ou PawaPay permet de lever tous les freins à l'achat pour vos clients locaux...",
+    date: "02 mai 2026",
+    readingTime: "6 min",
+  },
+  {
+    id: "creer-communaute-privee-fidelisation",
+    title: "Créer une Communauté Privée (Telegram, Skool) pour Fidéliser vos Clients",
+    category: "Marketing",
+    image: "https://images.unsplash.com/photo-1531538606174-0f90ff5dce83?w=800&q=80",
+    excerpt:
+      "Vendre un produit c'est bien, fidéliser une communauté c'est mieux. Découvrez comment utiliser des groupes privés pour fidéliser vos clients et leur vendre de nouveaux produits...",
+    date: "30 avril 2026",
+    readingTime: "7 min",
   },
 ];
 
