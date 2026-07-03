@@ -14,6 +14,7 @@ const productLinks = [
 ];
 
 const moreLinks = [
+  { label: "Espace Premium", href: "/premium" },
   { label: "Emplois & Stages", href: "/jobs" },
   { label: "Outils de Productivité", href: "/outils-digitaux" },
   { label: "Découvertes", href: "/decouvertes" },

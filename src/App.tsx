@@ -50,6 +50,7 @@ import BlogPostDetail from "./pages/BlogPostDetail";
 import Actualites from "./pages/Actualites";
 import ActualitesDetail from "./pages/ActualitesDetail";
 import TechnovaApps from "./pages/TechnovaApps";
+import Premium from "./pages/Premium";
 
 import DashboardOverview from "./pages/dashboard/DashboardOverview";
 import DashboardProducts from "./pages/dashboard/DashboardProducts";
@@ -154,6 +155,7 @@ const AppContent = () => {
               <Route path="/actualites" element={<Actualites />} />
               <Route path="/actualites/:id" element={<ActualitesDetail />} />
               <Route path="/apps" element={<TechnovaApps />} />
+              <Route path="/premium" element={<Premium />} />
 
               <Route path="/about" element={<About />} />
               <Route path="/outils-digitaux" element={<ToolsDirectoryPage />} />
