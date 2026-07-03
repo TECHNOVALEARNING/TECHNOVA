@@ -26,7 +26,47 @@
       "destination": "/api/sitemap"
     },
     {
-      "source": "/(about|formations|cours|blog|actualites|store|boutique|terms|privacy|legal|refund-policy)/?",
+      "source": "/about",
+      "destination": "/api/seo-handler"
+    },
+    {
+      "source": "/formations",
+      "destination": "/api/seo-handler"
+    },
+    {
+      "source": "/cours",
+      "destination": "/api/seo-handler"
+    },
+    {
+      "source": "/blog",
+      "destination": "/api/seo-handler"
+    },
+    {
+      "source": "/actualites",
+      "destination": "/api/seo-handler"
+    },
+    {
+      "source": "/store",
+      "destination": "/api/seo-handler"
+    },
+    {
+      "source": "/boutique",
+      "destination": "/api/seo-handler"
+    },
+    {
+      "source": "/terms",
+      "destination": "/api/seo-handler"
+    },
+    {
+      "source": "/privacy",
+      "destination": "/api/seo-handler"
+    },
+    {
+      "source": "/legal",
+      "destination": "/api/seo-handler"
+    },
+    {
+      "source": "/refund-policy",
       "destination": "/api/seo-handler"
     },
     {
