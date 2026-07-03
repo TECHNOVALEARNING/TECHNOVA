@@ -148,7 +148,8 @@ const StorePage = ({ customSlug }: { customSlug?: string }) => {
           .eq("is_published", true)
           .or("hide_from_store.is.null,hide_from_store.eq.false")
           .order("created_at", { ascending: false });
-        setProducts((prods as Product[]) || []);
+        const filteredProds = ((prods as Product[]) || []).filter(p => p.category !== "discovery");
+        setProducts(filteredProds);
         setLoading(false);
         return;
       }
@@ -215,7 +216,8 @@ const StorePage = ({ customSlug }: { customSlug?: string }) => {
         .eq("is_published", true)
         .or("hide_from_store.is.null,hide_from_store.eq.false")
         .order("created_at", { ascending: false });
-      setProducts((prods as Product[]) || []);
+      const filteredProds = ((prods as Product[]) || []).filter(p => p.category !== "discovery");
+      setProducts(filteredProds);
       setLoading(false);
     };
     fetchStore();

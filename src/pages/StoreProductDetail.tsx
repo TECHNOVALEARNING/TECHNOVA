@@ -286,9 +286,13 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
           .select("*")
           .eq("creator_id", ownerId)
           .eq("is_published", true)
-          .neq("id", productId)
-          .limit(4);
-        if (related) setRelatedProducts(related as Product[]);
+          .neq("id", productId);
+        if (related) {
+          const filteredRelated = (related as Product[])
+            .filter(p => p.category !== "discovery")
+            .slice(0, 4);
+          setRelatedProducts(filteredRelated);
+        }
 
         setLoading(false);
       } catch (err) {

@@ -244,6 +244,12 @@ export const Header = () => {
         </div>
         <div className="lg:hidden flex items-center gap-3">
           <button
+            onClick={() => setLang((l) => (l === "fr" ? "en" : "fr"))}
+            className="flex items-center gap-1.5 text-xs font-bold opacity-80 hover:opacity-100 transition-opacity mr-1"
+          >
+            <Globe className="h-4 w-4" /> {lang.toUpperCase()}
+          </button>
+          <button
             onClick={() => setTheme((t) => (t === "light" ? "dark" : "light"))}
             className="p-1 opacity-80 hover:opacity-100 transition-opacity"
           >
