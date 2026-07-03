@@ -274,7 +274,7 @@ const Index = () => {
   });
 
   const welcomeVideoUrl = (() => {
-    const defaultUrl = "https://youtu.be/Ybcr0IKOeL0?si=mvkIYLXNA3wYpJ4C";
+    const defaultUrl = "#";
     if (!storeInfo?.layout_sections) return defaultUrl;
     const sections = Array.isArray(storeInfo.layout_sections) ? storeInfo.layout_sections : [];
     const videoSection = sections.find((s: any) => s.type === "video");
