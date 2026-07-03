@@ -80,8 +80,8 @@ const TESTIMONIALS = [
   {
     stars: 5,
     text: '"Découvrir Technova a été l\'une des meilleures décisions de ma vie. Leurs formations sont de qualité et abordables."',
-    name: "Léandre HOUNGBEDJI",
-    loc: "Abomey-Calavi, Bénin",
+    name: "William ANATO",
+    loc: "Freetown , Sierra Leone",
     img: "https://randomuser.me/api/portraits/men/30.jpg",
   },
 
@@ -431,6 +431,7 @@ const Index = () => {
         .pay-mastercard { background:#D92F21; border:1px solid rgba(0,0,0,0.12); color:white; font-style:italic; }
         .pay-apple { background:black; color:white; }
         .pay-google { background:white; border:1px solid rgba(0,0,0,0.12); color:black; }
+        .pay-dolapay { background:#007bff; color:#fff; }
         .stats-section {
           background: linear-gradient(to bottom, var(--section-alt), var(--bg) 15%, var(--bg) 85%, var(--section-alt));
           position: relative;
@@ -1475,6 +1476,10 @@ const Index = () => {
             <span className="pay-badge pay-google">
               <i className="fab fa-google" style={{ marginRight: 4 }} />
               Google Pay
+            </span>
+            <span className="pay-badge pay-dolapay">
+              <i className="fab fa-dolapay" style={{ marginRight: 4 }} />
+              Dolapay
             </span>
           </div>
         </div>
