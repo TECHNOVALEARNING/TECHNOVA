@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Header, Footer, CourseCard, Course } from "@/components/site/shared";
 import { supabase } from "@/integrations/supabase/client";
 import logoImg from "@/assets/logo.png";
-import appMockupGif from "@/assets/app_mockup.gif";
+import appMockupGif from "@/assets/techgif.gif";
 import SEOHead from "@/components/SEOHead";
 import { getEmbedUrl, getVideoThumbnailUrl, isDirectVideo } from "@/lib/videoUtils";
 import { BookOpen, Loader2 } from "lucide-react";
