@@ -5,9 +5,10 @@ import { useQuery } from "@tanstack/react-query";
 import { Header, Footer, CourseCard, Course } from "@/components/site/shared";
 import { supabase } from "@/integrations/supabase/client";
 import logoImg from "@/assets/logo.png";
+import appMockupGif from "@/assets/app_mockup.gif";
 import SEOHead from "@/components/SEOHead";
 import { getEmbedUrl, getVideoThumbnailUrl, isDirectVideo } from "@/lib/videoUtils";
-import { BookOpen } from "lucide-react";
+import { BookOpen, Loader2 } from "lucide-react";
 
 const SUBCAT_LABELS: Record<string, string> = {
   notion: "Notion",
@@ -641,15 +642,10 @@ const Index = () => {
                     paddingTop: "56.25%" /* 16:9 Aspect Ratio */,
                     borderRadius: "var(--radius)",
                     overflow: "hidden",
-                    cursor: !isPlaying ? "pointer" : "default",
-                  }}
-                  onClick={() => {
-                    if (!isPlaying && welcomeVideoUrl) {
-                      setIsPlaying(true);
-                    }
+                    cursor: "default",
                   }}
                 >
-                  {welcomeVideoUrl && isPlaying && isLoadedDelayed ? (
+                  {welcomeVideoUrl && welcomeVideoUrl !== "#" && isLoadedDelayed ? (
                     isDirectVideo(welcomeVideoUrl) ? (
                       <video
                         src={welcomeVideoUrl}
@@ -685,36 +681,8 @@ const Index = () => {
                       />
                     )
                   ) : (
-                    /* Facade (Image + Play button) */
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        width: "100%",
-                        height: "100%",
-                      }}
-                    >
-                      <img
-                        src={getVideoThumbnailUrl(welcomeVideoUrl)}
-                        alt="Welcome video preview"
-                        style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                        loading="eager"
-                        fetchpriority="high"
-                      />
-                      {/* Dark overlay */}
-                      <div className="absolute inset-0 bg-black/30 flex items-center justify-center transition-all hover:bg-black/40 duration-300">
-                        {/* Play button */}
-                        <div className="h-16 w-16 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-lg transition-transform hover:scale-110 duration-300 cursor-pointer group">
-                          <svg
-                            viewBox="0 0 24 24"
-                            fill="currentColor"
-                            className="h-7 w-7 text-[color:var(--primary)] translate-x-0.5"
-                          >
-                            <path d="M8 5v14l11-7z" />
-                          </svg>
-                        </div>
-                      </div>
+                    <div className="absolute inset-0 bg-black flex items-center justify-center">
+                      <Loader2 className="h-8 w-8 animate-spin text-primary" />
                     </div>
                   )}
                 </div>
@@ -1288,7 +1256,7 @@ const Index = () => {
               </div>
               <div style={{ textAlign: "center" }}>
                 <img
-                  src="https://i.pinimg.com/1200x/70/33/bf/7033bf7f530e1f088911e04c0b3dc361.jpg"
+                  src={appMockupGif}
                   alt="Mobile App"
                   style={{
                     maxWidth: "100%",
