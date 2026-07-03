@@ -444,7 +444,7 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
         }
       />
       {/* ─── HEADER ─── */}
-      <header className="sticky top-0 z-40 border-b border-gray-100 bg-white/90 backdrop-blur-md">
+      <header className="sticky top-0 z-40 border-b border-border bg-card/90 backdrop-blur-md">
         <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 h-14">
           <Link
             to={customSlug ? `/` : `/store/${profile?.store_slug || slug || ""}`}
@@ -460,7 +460,7 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                 {storeName.charAt(0)?.toUpperCase()}
               </div>
             )}
-            <span className="text-sm font-bold text-gray-900 truncate">{storeName}</span>
+            <span className="text-sm font-bold text-foreground truncate">{storeName}</span>
             {ownerBadge && (
               <VerifiedBadge grade={ownerBadge} size="sm" expiresAt={ownerBadgeExpires} />
             )}
@@ -468,22 +468,22 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
           <div className="flex items-center gap-2 sm:gap-3">
             <Link
               to="/"
-              className="text-xs text-gray-500 hover:text-gray-900 font-medium transition-colors"
+              className="text-xs text-muted-foreground hover:text-foreground font-medium transition-colors"
             >
               <span className="hidden sm:inline">Accueil TECHNOVA</span>
               <span className="sm:hidden">Accueil</span>
             </Link>
-            <span className="text-gray-200">|</span>
+            <span className="text-border">|</span>
             <Link
               to={customSlug ? `/` : `/store/${profile?.store_slug || slug || ""}`}
               className="hidden sm:block"
             >
-              <Button variant="ghost" size="sm" className="text-xs text-gray-600">
+              <Button variant="ghost" size="sm" className="text-xs text-muted-foreground hover:text-foreground">
                 Boutique
               </Button>
             </Link>
             <a href="https://technovalearning.com/buyer-login">
-              <Button variant="outline" size="sm" className="text-xs gap-1.5 border-gray-200">
+              <Button variant="outline" size="sm" className="text-xs gap-1.5 border-border text-foreground hover:bg-muted">
                 <ShoppingBag className="h-3.5 w-3.5" />
                 <span className="hidden sm:inline">Mes Achats</span>
               </Button>
@@ -495,19 +495,19 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
       <main className="flex-1 pb-24 lg:pb-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
           {/* Breadcrumb */}
-          <div className="mb-4 sm:mb-6 flex flex-wrap items-center gap-2 text-xs sm:text-sm text-gray-500">
-            <Link to="/" className="hover:text-gray-900 transition-colors">
+          <div className="mb-4 sm:mb-6 flex flex-wrap items-center gap-2 text-xs sm:text-sm text-muted-foreground">
+            <Link to="/" className="hover:text-foreground transition-colors">
               Accueil TECHNOVA
             </Link>
-            <span className="text-gray-300">/</span>
+            <span className="text-border">/</span>
             <Link
               to={customSlug ? `/` : `/store/${profile?.store_slug || slug || ""}`}
-              className="hover:text-gray-900 transition-colors"
+              className="hover:text-foreground transition-colors"
             >
               Boutique
             </Link>
-            <span className="text-gray-300">/</span>
-            <span className="text-gray-800 font-semibold truncate max-w-[200px]">
+            <span className="text-border">/</span>
+            <span className="text-foreground font-semibold truncate max-w-[200px]">
               {product.title}
             </span>
           </div>
@@ -519,7 +519,7 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="relative rounded-2xl overflow-hidden border border-gray-100 bg-white shadow-sm"
+                className="relative rounded-2xl overflow-hidden border border-border bg-card shadow-sm"
               >
                 {product.thumbnail_url ? (
                   <img
@@ -558,8 +558,8 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                 transition={{ delay: 0.05 }}
                 className="lg:hidden"
               >
-                <div className="flex items-center gap-2 mb-2 text-xs text-gray-500">
-                  <span className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2.5 py-1 font-medium text-gray-700">
+                <div className="flex items-center gap-2 mb-2 text-xs text-muted-foreground">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-1 font-medium text-foreground">
                     {typeIcons[product.type]} {typeLabels[product.type] || product.type}
                   </span>
                   {!hideSales && salesCount > 0 && (
@@ -568,7 +568,7 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                     </span>
                   )}
                 </div>
-                <h1 className="text-2xl font-extrabold text-gray-900 leading-tight">
+                <h1 className="text-2xl font-extrabold text-foreground leading-tight">
                   {product.title}
                 </h1>
                 <div className="mt-3 flex items-baseline gap-2">
@@ -592,13 +592,13 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                 ].map((t) => (
                   <div
                     key={t.label}
-                    className="rounded-xl border border-gray-100 bg-white p-2.5 sm:p-3 text-center"
+                    className="rounded-xl border border-border bg-card p-2.5 sm:p-3 text-center"
                   >
                     <t.icon
                       className="mx-auto h-4 w-4 sm:h-5 sm:w-5 mb-1"
                       style={{ color: brandColor }}
                     />
-                    <div className="text-[10px] sm:text-xs font-semibold text-gray-900 leading-tight">
+                    <div className="text-[10px] sm:text-xs font-semibold text-foreground leading-tight">
                       {t.label}
                     </div>
                     <div className="text-[9px] sm:text-[10px] text-gray-400 mt-0.5 hidden sm:block">
@@ -614,14 +614,14 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.08 }}
-                  className="rounded-2xl border border-gray-100 bg-white p-5 sm:p-7 space-y-4 shadow-sm"
+                  className="rounded-2xl border border-border bg-card p-5 sm:p-7 space-y-4 shadow-sm"
                 >
-                  <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                  <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
                     {lang === "fr" ? "Fichiers (1)" : "Files (1)"}
                   </h2>
 
                   {/* Warning/Alert box */}
-                  <div className="flex items-start gap-3 rounded-xl bg-amber-50/60 border border-amber-100/80 p-4 text-amber-800">
+                  <div className="flex items-start gap-3 rounded-xl bg-amber-500/10 border border-amber-500/20 p-4 text-amber-800 dark:text-amber-200">
                     <Lock
                       className="h-5 w-5 text-amber-600 shrink-0 mt-0.5"
                       style={{ color: brandColor }}
@@ -634,21 +634,21 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                   </div>
 
                   {/* File row */}
-                  <div className="flex items-center justify-between p-3.5 rounded-xl border border-gray-100 bg-gray-50/50 hover:bg-gray-50 transition-all">
+                  <div className="flex items-center justify-between p-3.5 rounded-xl border border-border bg-muted/30 hover:bg-muted/50 transition-all">
                     <div className="flex items-center gap-3 min-w-0">
-                      <div className="h-10 w-10 rounded-lg bg-gray-100 flex items-center justify-center shrink-0">
-                        <Download className="h-5 w-5 text-gray-400" />
+                      <div className="h-10 w-10 rounded-lg bg-muted flex items-center justify-center shrink-0">
+                        <Download className="h-5 w-5 text-muted-foreground" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="text-sm font-semibold text-gray-800 truncate">
+                        <div className="text-sm font-semibold text-foreground truncate">
                           {getFileName(product.download_url)}
                         </div>
-                        <div className="text-[11px] text-gray-400 mt-0.5 uppercase tracking-wider font-semibold">
+                        <div className="text-[11px] text-muted-foreground mt-0.5 uppercase tracking-wider font-semibold">
                           Zip • Archive
                         </div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-100 text-gray-500 text-xs font-bold shrink-0">
+                    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-muted text-muted-foreground text-xs font-bold shrink-0">
                       <Lock className="h-3.5 w-3.5 animate-pulse" />
                       {lang === "fr" ? "Verrouillé" : "Locked"}
                     </div>
@@ -662,14 +662,14 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 }}
-                  className="rounded-2xl border border-gray-100 bg-white p-5 sm:p-7"
+                  className="rounded-2xl border border-border bg-card p-5 sm:p-7"
                 >
-                  <h2 className="mb-4 text-lg font-bold text-gray-900">À propos de ce produit</h2>
+                  <h2 className="mb-4 text-lg font-bold text-foreground">À propos de ce produit</h2>
                   <div
                     dangerouslySetInnerHTML={{
                       __html: processDescriptionWithVideos(product.description),
                     }}
-                    className="prose prose-sm max-w-none leading-relaxed text-gray-700 [&_h1]:text-2xl [&_h1]:font-bold [&_h1]:mb-4 [&_h1]:text-gray-900 [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:mb-3 [&_h2]:text-gray-900 [&_p]:mb-4 [&_p]:text-gray-600 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:mb-4 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:mb-4 [&_li]:mb-1 [&_li]:text-gray-600 [&_a]:underline [&_img]:rounded-lg [&_img]:my-4 [&_blockquote]:border-l-4 [&_blockquote]:border-gray-200 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-gray-500 [&_.video-embed]:my-6 [&_iframe]:rounded-xl [&_iframe]:border [&_iframe]:border-gray-100"
+                    className="prose prose-sm max-w-none leading-relaxed text-muted-foreground dark:prose-invert [&_h1]:text-2xl [&_h1]:font-bold [&_h1]:mb-4 [&_h1]:text-foreground [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:mb-3 [&_h2]:text-foreground [&_p]:mb-4 [&_p]:text-muted-foreground [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:mb-4 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:mb-4 [&_li]:mb-1 [&_li]:text-muted-foreground [&_a]:underline [&_img]:rounded-lg [&_img]:my-4 [&_blockquote]:border-l-4 [&_blockquote]:border-border [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-muted-foreground [&_.video-embed]:my-6 [&_iframe]:rounded-xl [&_iframe]:border [&_iframe]:border-border"
                     style={{ "--tw-prose-links": brandColor } as any}
                   />
                 </motion.div>
@@ -680,9 +680,9 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.12 }}
-                className="rounded-2xl border border-gray-100 bg-white p-5 sm:p-7"
+                className="rounded-2xl border border-border bg-card p-5 sm:p-7"
               >
-                <h2 className="mb-4 text-lg font-bold text-gray-900">Ce qui est inclus</h2>
+                <h2 className="mb-4 text-lg font-bold text-foreground">Ce qui est inclus</h2>
                 <ul className="space-y-3">
                   {[
                     product.type === "course"
@@ -694,7 +694,7 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                     "Support direct du créateur",
                     "Accès depuis votre espace « Mes achats »",
                   ].map((item) => (
-                    <li key={item} className="flex items-start gap-3 text-sm text-gray-700">
+                    <li key={item} className="flex items-start gap-3 text-sm text-muted-foreground">
                       <CheckCircle2
                         className="mt-0.5 h-5 w-5 flex-shrink-0"
                         style={{ color: brandColor }}
@@ -711,11 +711,11 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.13 }}
-                  className="rounded-2xl border border-gray-100 bg-white p-5 sm:p-7"
+                  className="rounded-2xl border border-border bg-card p-5 sm:p-7"
                 >
                   <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-lg font-bold text-gray-900">Contenu de la formation</h2>
-                    <span className="text-xs font-semibold text-gray-500">
+                    <h2 className="text-lg font-bold text-foreground">Contenu de la formation</h2>
+                    <span className="text-xs font-semibold text-muted-foreground">
                       {lessons.length} leçon{lessons.length > 1 ? "s" : ""}
                     </span>
                   </div>
@@ -724,7 +724,7 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                       <AccordionItem
                         key={i}
                         value={`lesson-${i}`}
-                        className="rounded-xl border border-gray-100 bg-gray-50/60 px-4"
+                        className="rounded-xl border border-border bg-muted/20 px-4"
                       >
                         <AccordionTrigger className="hover:no-underline py-4 text-left">
                           <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -735,20 +735,20 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                               {String(i + 1).padStart(2, "0")}
                             </div>
                             <div className="flex-1 min-w-0">
-                              <div className="text-sm font-semibold text-gray-900 truncate">
+                              <div className="text-sm font-semibold text-foreground truncate">
                                 {l.title}
                               </div>
                               {l.duration_minutes && (
-                                <div className="text-[11px] text-gray-500 mt-0.5 flex items-center gap-1">
+                                <div className="text-[11px] text-muted-foreground mt-0.5 flex items-center gap-1">
                                   <Clock className="h-3 w-3" /> {l.duration_minutes} min
                                 </div>
                               )}
                             </div>
-                            <Lock className="h-4 w-4 text-gray-300 shrink-0" />
+                            <Lock className="h-4 w-4 text-muted-foreground shrink-0" />
                           </div>
                         </AccordionTrigger>
                         {l.description && (
-                          <AccordionContent className="text-sm text-gray-600 pb-4 leading-relaxed pl-10">
+                          <AccordionContent className="text-sm text-muted-foreground pb-4 leading-relaxed pl-10">
                             {l.description}
                           </AccordionContent>
                         )}
@@ -764,20 +764,20 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.15 }}
-                  className="rounded-2xl border border-gray-100 bg-white p-5 sm:p-7"
+                  className="rounded-2xl border border-border bg-card p-5 sm:p-7"
                 >
-                  <h2 className="mb-4 text-lg font-bold text-gray-900">Questions fréquentes</h2>
+                  <h2 className="mb-4 text-lg font-bold text-foreground">Questions fréquentes</h2>
                   <Accordion type="single" collapsible className="space-y-2">
                     {faqs.map((faq, index) => (
                       <AccordionItem
                         key={index}
                         value={`faq-${index}`}
-                        className="rounded-xl border border-gray-100 bg-gray-50/60 px-4"
+                        className="rounded-xl border border-border bg-muted/20 px-4"
                       >
-                        <AccordionTrigger className="text-sm font-medium text-gray-900 hover:no-underline py-4 text-left">
+                        <AccordionTrigger className="text-sm font-medium text-foreground hover:no-underline py-4 text-left">
                           {faq.question}
                         </AccordionTrigger>
-                        <AccordionContent className="text-sm text-gray-600 pb-4 leading-relaxed">
+                        <AccordionContent className="text-sm text-muted-foreground pb-4 leading-relaxed">
                           {faq.answer}
                         </AccordionContent>
                       </AccordionItem>
@@ -800,9 +800,9 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.18 }}
-                className="rounded-2xl border border-gray-100 bg-white p-5 sm:p-6"
+                className="rounded-2xl border border-border bg-card p-5 sm:p-6"
               >
-                <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-400">
+                <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
                   Vendu par
                 </h2>
                 <div className="flex items-center gap-4">
@@ -822,7 +822,7 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                   )}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 min-w-0">
-                      <div className="text-base font-bold text-gray-900 truncate">{storeName}</div>
+                      <div className="text-base font-bold text-foreground truncate">{storeName}</div>
                       {ownerBadge && (
                         <VerifiedBadge
                           grade={ownerBadge}
@@ -833,7 +833,7 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                       )}
                     </div>
                     {profile.store_description && (
-                      <p className="text-xs text-gray-500 line-clamp-2 mt-0.5">
+                      <p className="text-xs text-muted-foreground line-clamp-2 mt-0.5">
                         {profile.store_description
                           .replace(/<[^>]*>/g, " ")
                           .replace(/\s+/g, " ")
@@ -854,8 +854,8 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
             <div className="lg:col-span-2">
               {/* Desktop title */}
               <div className="hidden lg:block mb-5">
-                <div className="flex items-center gap-2 mb-3 text-xs text-gray-500">
-                  <span className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2.5 py-1 font-medium text-gray-700">
+                <div className="flex items-center gap-2 mb-3 text-xs text-muted-foreground">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-1 font-medium text-foreground">
                     {typeIcons[product.type]} {typeLabels[product.type] || product.type}
                   </span>
                   {!hideSales && salesCount > 0 && (
@@ -864,7 +864,7 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                     </span>
                   )}
                 </div>
-                <h1 className="text-3xl font-extrabold text-gray-900 leading-tight">
+                <h1 className="text-3xl font-extrabold text-foreground leading-tight">
                   {product.title}
                 </h1>
               </div>
@@ -873,7 +873,7 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.15 }}
-                className="lg:sticky lg:top-20 rounded-2xl border border-gray-100 bg-white p-5 sm:p-6 space-y-5 shadow-sm"
+                className="lg:sticky lg:top-20 rounded-2xl border border-border bg-card p-5 sm:p-6 space-y-5 shadow-sm"
               >
                 {/* Price */}
                 <div>
@@ -885,7 +885,7 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                       {formatPrice(product.price)}
                     </span>
                     {product.original_price && product.original_price > product.price && (
-                      <span className="text-base text-gray-400 line-through">
+                      <span className="text-base text-muted-foreground line-through">
                         {formatPrice(product.original_price)}
                       </span>
                     )}
@@ -895,14 +895,14 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                       </span>
                     )}
                   </div>
-                  <p className="mt-1 text-xs text-gray-500 flex items-center gap-1">
+                  <p className="mt-1 text-xs text-muted-foreground flex items-center gap-1">
                     <Lock className="h-3 w-3" /> Paiement unique • Pas d'abonnement
                   </p>
                 </div>
 
                 {/* CTA */}
                 <button
-                  className="w-full text-base font-bold py-4 rounded-xl text-white transition-all hover:opacity-95 hover:scale-[1.01] active:scale-[0.99] shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                  className="w-full text-base font-bold py-4 rounded-xl text-white transition-all hover:opacity-95 hover:scale-[1.01] active:scale-[0.98] shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                   style={{
                     backgroundColor: isSoldOut ? "#9CA3AF" : brandColor,
                     boxShadow: isSoldOut ? "none" : `0 8px 24px -8px ${brandColor}80`,
@@ -914,7 +914,7 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                 </button>
 
                 {/* Quick benefits */}
-                <ul className="space-y-2 text-xs text-gray-600">
+                <ul className="space-y-2 text-xs text-muted-foreground">
                   <li className="flex items-center gap-2">
                     <Zap className="h-3.5 w-3.5" style={{ color: brandColor }} />
                     Livré instantanément après paiement
@@ -929,11 +929,11 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                   </li>
                 </ul>
 
-                <Separator className="bg-gray-100" />
+                <Separator className="bg-border" />
 
                 {/* Payment methods */}
                 <div className="space-y-2">
-                  <p className="text-[11px] uppercase tracking-wide text-gray-400 font-semibold">
+                  <p className="text-[11px] uppercase tracking-wide text-muted-foreground font-semibold">
                     Moyens de paiement
                   </p>
                   <div className="flex items-center gap-1.5 flex-wrap">
@@ -974,12 +974,12 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                   </div>
                 </div>
 
-                <Separator className="bg-gray-100" />
+                <Separator className="bg-border" />
 
-                <div className="flex items-center justify-between gap-3 text-xs text-gray-500">
+                <div className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
                   <button
                     onClick={handleShare}
-                    className="flex items-center gap-1.5 hover:text-gray-900 transition-colors"
+                    className="flex items-center gap-1.5 hover:text-foreground transition-colors"
                   >
                     <Share2 className="h-3.5 w-3.5" />
                     Partager
@@ -987,14 +987,14 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                   {profile.contact && (
                     <a
                       href={`mailto:${profile.contact}`}
-                      className="flex items-center gap-1.5 hover:text-gray-900 transition-colors"
+                      className="flex items-center gap-1.5 hover:text-foreground transition-colors"
                     >
                       <MessageCircle className="h-3.5 w-3.5" />
                       Contact
                     </a>
                   )}
                   <button
-                    className="flex items-center gap-1.5 hover:text-gray-900 transition-colors"
+                    className="flex items-center gap-1.5 hover:text-foreground transition-colors"
                     onClick={() => setReportOpen(true)}
                   >
                     <Flag className="h-3.5 w-3.5" />
@@ -1013,7 +1013,7 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
               transition={{ delay: 0.25 }}
               className="mt-14"
             >
-              <h2 className="text-xl font-bold text-gray-900 mb-5">
+              <h2 className="text-xl font-bold text-foreground mb-5">
                 Autres produits de {storeName}
               </h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
@@ -1030,9 +1030,9 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                           ? `/${rp.id}`
                           : `/store/${profile?.store_slug || slug || ""}/${rp.id}`
                       }
-                      className="group border border-gray-100 rounded-2xl overflow-hidden bg-white hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
+                      className="group border border-border rounded-2xl overflow-hidden bg-card hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
                     >
-                      <div className="relative aspect-square overflow-hidden bg-gray-50">
+                      <div className="relative aspect-square overflow-hidden bg-muted">
                         {rp.thumbnail_url ? (
                           <img
                             src={rp.thumbnail_url}
@@ -1041,7 +1041,7 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                           />
                         ) : (
                           <div className="h-full w-full flex items-center justify-center">
-                            <Package className="h-8 w-8 text-gray-200" />
+                            <Package className="h-8 w-8 text-muted-foreground" />
                           </div>
                         )}
                         {rDisc && (
@@ -1054,7 +1054,7 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                         )}
                       </div>
                       <div className="p-3 space-y-1">
-                        <h3 className="text-sm font-semibold text-gray-900 line-clamp-2 leading-tight">
+                        <h3 className="text-sm font-semibold text-foreground line-clamp-2 leading-tight">
                           {rp.title}
                         </h3>
                         <div className="flex items-baseline gap-1.5">
@@ -1062,7 +1062,7 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                             {formatPrice(rp.price)}
                           </span>
                           {rp.original_price && rp.original_price > rp.price && (
-                            <span className="text-[10px] line-through text-gray-300">
+                            <span className="text-[10px] line-through text-muted-foreground">
                               {formatPrice(rp.original_price)}
                             </span>
                           )}
@@ -1078,10 +1078,10 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
       </main>
 
       {/* Mobile sticky purchase bar */}
-      <div className="lg:hidden fixed bottom-0 inset-x-0 z-40 border-t border-gray-200 bg-white/95 backdrop-blur-md px-4 py-3 shadow-[0_-8px_24px_-12px_rgba(0,0,0,0.15)]">
+      <div className="lg:hidden fixed bottom-0 inset-x-0 z-40 border-t border-border bg-card/95 backdrop-blur-md px-4 py-3 shadow-[0_-8px_24px_-12px_rgba(0,0,0,0.15)]">
         <div className="flex items-center gap-3">
           <div className="flex-1 min-w-0">
-            <div className="text-[10px] text-gray-400 uppercase tracking-wide">Prix</div>
+            <div className="text-[10px] text-muted-foreground uppercase tracking-wide">Prix</div>
             <div className="flex items-baseline gap-1.5">
               <span className="text-lg font-extrabold truncate" style={{ color: brandColor }}>
                 {formatPrice(product.price)}
@@ -1102,7 +1102,7 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
       </div>
 
       {/* Footer */}
-      <footer className="border-t border-gray-100 bg-white mt-12 hidden lg:block">
+      <footer className="border-t border-border bg-card mt-12 hidden lg:block">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-10">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
             <div className="flex items-center gap-2.5">
@@ -1116,18 +1116,18 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                   {storeName.charAt(0)?.toUpperCase()}
                 </div>
               )}
-              <span className="text-base font-bold text-gray-900">{storeName}</span>
+              <span className="text-base font-bold text-foreground">{storeName}</span>
             </div>
 
             <div className="space-y-3">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Liens
               </h3>
               <ul className="space-y-2.5">
                 <li>
                   <a
                     href="https://portal.technovalearning.com/dashboard"
-                    className="inline-flex items-center gap-2 text-sm font-medium text-gray-900 hover:opacity-70"
+                    className="inline-flex items-center gap-2 text-sm font-medium text-foreground hover:opacity-70"
                   >
                     <ShoppingBag className="h-4 w-4" />
                     Voir mes commandes
@@ -1136,7 +1136,7 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                 <li>
                   <Link
                     to={customSlug ? `/` : `/store/${profile?.store_slug || slug || ""}`}
-                    className="text-sm text-gray-600 hover:text-gray-900"
+                    className="text-sm text-muted-foreground hover:text-foreground"
                   >
                     Boutique
                   </Link>
@@ -1145,14 +1145,14 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
             </div>
 
             <div className="space-y-3">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Légal
               </h3>
               <ul className="space-y-2.5">
                 <li>
                   <Link
                     to={customSlug ? `/legal` : `/store/${profile?.store_slug || slug || ""}/legal`}
-                    className="text-sm text-gray-600 hover:text-gray-900"
+                    className="text-sm text-muted-foreground hover:text-foreground"
                   >
                     Mentions légales
                   </Link>
@@ -1160,7 +1160,7 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                 <li>
                   <Link
                     to={customSlug ? `/terms` : `/store/${profile?.store_slug || slug || ""}/terms`}
-                    className="text-sm text-gray-600 hover:text-gray-900"
+                    className="text-sm text-muted-foreground hover:text-foreground"
                   >
                     Conditions générales
                   </Link>
@@ -1172,7 +1172,7 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                         ? `/privacy`
                         : `/store/${profile?.store_slug || slug || ""}/privacy`
                     }
-                    className="text-sm text-gray-600 hover:text-gray-900"
+                    className="text-sm text-muted-foreground hover:text-foreground"
                   >
                     Politique de confidentialité
                   </Link>
@@ -1182,16 +1182,16 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
           </div>
 
           {storeInfo?.footer_disclaimer && (
-            <p className="mt-10 text-xs leading-relaxed text-gray-400 max-w-4xl">
+            <p className="mt-10 text-xs leading-relaxed text-muted-foreground max-w-4xl">
               {storeInfo.footer_disclaimer}
             </p>
           )}
 
-          <div className="mt-8 pt-6 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <p className="text-xs text-gray-400">
+          <div className="mt-8 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p className="text-xs text-muted-foreground">
               {storeName} © {new Date().getFullYear()} Tous droits réservés.
             </p>
-            <p className="text-xs text-gray-300">
+            <p className="text-xs text-muted-foreground">
               Propulsé par{" "}
               <Link to="/" className="hover:underline font-medium" style={{ color: brandColor }}>
                 TECHNOVA

@@ -273,13 +273,16 @@ const StorePage = ({ customSlug }: { customSlug?: string }) => {
 
   if (notFound) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-white px-4">
-        <Package className="h-16 w-16 text-gray-200 mb-4" />
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Boutique introuvable</h1>
-        <p className="text-gray-500 mb-6">Cette boutique n'existe pas ou a été supprimée.</p>
-        <Link to="/">
-          <Button>Retour à l'accueil</Button>
-        </Link>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background px-4">
+        <div className="text-center max-w-md">
+          <h1 className="text-2xl font-bold text-foreground mb-2">Boutique introuvable</h1>
+          <p className="text-muted-foreground mb-6">
+            La boutique que vous recherchez n'existe pas ou a été désactivée.
+          </p>
+          <Link to="/">
+            <Button>Retour à l'accueil</Button>
+          </Link>
+        </div>
       </div>
     );
   }
@@ -331,7 +334,7 @@ const StorePage = ({ customSlug }: { customSlug?: string }) => {
   return (
     <div className="min-h-screen flex flex-col bg-background" style={{ fontFamily: storeFont }}>
       {/* ─── HEADER ─── */}
-      <header className="sticky top-0 z-50 border-b border-gray-100 bg-white">
+      <header className="sticky top-0 z-50 border-b border-border bg-card">
         <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 h-14">
           <Link to={customSlug ? `/` : `/store/${slug}`} className="flex items-center gap-3">
             {logoUrl ? (
@@ -344,7 +347,7 @@ const StorePage = ({ customSlug }: { customSlug?: string }) => {
                 {storeName.charAt(0)?.toUpperCase()}
               </div>
             )}
-            <span className="text-sm font-bold text-gray-900">{storeName}</span>
+            <span className="text-sm font-bold text-foreground">{storeName}</span>
             {ownerBadge && (
               <VerifiedBadge grade={ownerBadge} size="sm" showLabel expiresAt={ownerBadgeExpires} />
             )}
@@ -357,7 +360,7 @@ const StorePage = ({ customSlug }: { customSlug?: string }) => {
                 onClick={() => setActiveTab(tab.key)}
                 className={cn(
                   "text-sm font-medium transition-colors",
-                  activeTab === tab.key ? "text-gray-900" : "text-gray-400 hover:text-gray-600",
+                  activeTab === tab.key ? "text-foreground" : "text-muted-foreground hover:text-foreground/80",
                 )}
                 style={
                   activeTab === tab.key
@@ -373,17 +376,17 @@ const StorePage = ({ customSlug }: { customSlug?: string }) => {
           <div className="flex items-center gap-2 sm:gap-3">
             <Link
               to="/"
-              className="text-xs text-gray-500 hover:text-gray-900 font-medium transition-colors"
+              className="text-xs text-muted-foreground hover:text-foreground font-medium transition-colors"
             >
               <span className="hidden sm:inline">Accueil TECHNOVA</span>
               <span className="sm:hidden">Accueil</span>
             </Link>
-            <span className="text-gray-200">|</span>
+            <span className="text-border">|</span>
             <a href="https://technovalearning.com/buyer-login">
               <Button
                 variant="outline"
                 size="sm"
-                className="text-xs gap-1.5 border-gray-200 text-gray-700 hover:bg-gray-50"
+                className="text-xs gap-1.5 border-border text-foreground hover:bg-muted"
               >
                 <ShoppingBag className="h-3.5 w-3.5" />
                 <span className="hidden sm:inline">Mes achats</span>
@@ -392,14 +395,14 @@ const StorePage = ({ customSlug }: { customSlug?: string }) => {
           </div>
         </div>
         {/* Mobile nav */}
-        <div className="md:hidden flex items-center gap-5 px-4 pb-2 border-t border-gray-50 pt-2 overflow-x-auto">
+        <div className="md:hidden flex items-center gap-5 px-4 pb-2 border-t border-border pt-2 overflow-x-auto">
           {navigationTabs.map((tab) => (
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
               className={cn(
                 "text-xs font-medium whitespace-nowrap",
-                activeTab === tab.key ? "text-gray-900" : "text-gray-400",
+                activeTab === tab.key ? "text-foreground" : "text-muted-foreground",
               )}
             >
               {tab.label}
@@ -444,7 +447,7 @@ const StorePage = ({ customSlug }: { customSlug?: string }) => {
                 {storeName.charAt(0)?.toUpperCase()}
               </div>
             )}
-            <h1 className="text-2xl font-bold text-gray-900 inline-flex items-center gap-2 justify-center">
+            <h1 className="text-2xl font-bold text-foreground inline-flex items-center gap-2 justify-center">
               {storeName}
               {ownerBadge && (
                 <VerifiedBadge
@@ -457,11 +460,11 @@ const StorePage = ({ customSlug }: { customSlug?: string }) => {
             </h1>
             {storeDescription && (
               <div
-                className="prose prose-sm max-w-none text-gray-600 leading-relaxed mx-auto"
+                className="prose prose-sm max-w-none text-muted-foreground leading-relaxed mx-auto dark:prose-invert"
                 dangerouslySetInnerHTML={{ __html: processDescriptionWithVideos(storeDescription) }}
               />
             )}
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-muted-foreground">
               {products.length} produit{products.length !== 1 ? "s" : ""} disponible
               {products.length !== 1 ? "s" : ""}
             </p>
@@ -479,7 +482,7 @@ const StorePage = ({ customSlug }: { customSlug?: string }) => {
           <>
             {/* Title */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-8 pb-2">
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+              <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
                 {`Découvrez les produits de ${storeName}`}
               </h1>
             </div>
@@ -488,18 +491,18 @@ const StorePage = ({ customSlug }: { customSlug?: string }) => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
               <div className="flex flex-col sm:flex-row gap-3">
                 <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     placeholder="Rechercher…"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="pl-10 h-11 bg-gray-50 border-gray-200 rounded-lg focus:ring-1 focus:border-gray-300"
+                    className="pl-10 h-11 bg-card border-border rounded-lg text-foreground focus:ring-1 focus:border-border"
                     style={{ focusRingColor: brandColor } as any}
                   />
                 </div>
                 {types.length > 1 && (
                   <Select value={typeFilter} onValueChange={setTypeFilter}>
-                    <SelectTrigger className="w-full sm:w-44 h-11 bg-gray-50 border-gray-200 rounded-lg">
+                    <SelectTrigger className="w-full sm:w-44 h-11 bg-card border-border rounded-lg text-foreground">
                       <SelectValue placeholder="Type de produit" />
                     </SelectTrigger>
                     <SelectContent>
@@ -648,7 +651,7 @@ const StorePage = ({ customSlug }: { customSlug?: string }) => {
       </main>
 
       {/* ─── FOOTER ─── */}
-      <footer className="border-t border-gray-100 bg-white mt-auto">
+      <footer className="border-t border-border bg-card mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-10 sm:py-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
             {/* Brand */}
@@ -664,20 +667,20 @@ const StorePage = ({ customSlug }: { customSlug?: string }) => {
                     {storeName.charAt(0)?.toUpperCase()}
                   </div>
                 )}
-                <span className="text-base font-bold text-gray-900">{storeName}</span>
+                <span className="text-base font-bold text-foreground">{storeName}</span>
               </div>
             </div>
 
             {/* Links */}
             <div className="space-y-4">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Liens
               </h3>
               <ul className="space-y-2.5">
                 <li>
                   <a
                     href="https://portal.technovalearning.com/dashboard"
-                    className="inline-flex items-center gap-2 text-sm font-medium text-gray-900 hover:opacity-70"
+                    className="inline-flex items-center gap-2 text-sm font-medium text-foreground hover:opacity-70"
                   >
                     <ShoppingBag className="h-4 w-4" />
                     Voir mes commandes
@@ -687,7 +690,7 @@ const StorePage = ({ customSlug }: { customSlug?: string }) => {
                   <li key={tab.key}>
                     <button
                       onClick={() => setActiveTab(tab.key)}
-                      className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                      className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                     >
                       {tab.label}
                     </button>
@@ -698,14 +701,14 @@ const StorePage = ({ customSlug }: { customSlug?: string }) => {
 
             {/* Legal */}
             <div className="space-y-4">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Légal
               </h3>
               <ul className="space-y-2.5">
                 <li>
                   <Link
                     to={customSlug ? `/legal` : `/store/${slug}/legal`}
-                    className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
                     Mentions légales
                   </Link>
@@ -713,7 +716,7 @@ const StorePage = ({ customSlug }: { customSlug?: string }) => {
                 <li>
                   <Link
                     to={customSlug ? `/terms` : `/store/${slug}/terms`}
-                    className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
                     Conditions générales
                   </Link>
@@ -721,7 +724,7 @@ const StorePage = ({ customSlug }: { customSlug?: string }) => {
                 <li>
                   <Link
                     to={customSlug ? `/privacy` : `/store/${slug}/privacy`}
-                    className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
                     Politique de confidentialité
                   </Link>
@@ -731,16 +734,16 @@ const StorePage = ({ customSlug }: { customSlug?: string }) => {
           </div>
 
           {store?.footer_disclaimer && (
-            <p className="mt-10 text-xs leading-relaxed text-gray-400 max-w-4xl">
+            <p className="mt-10 text-xs leading-relaxed text-muted-foreground max-w-4xl">
               {store.footer_disclaimer}
             </p>
           )}
 
-          <div className="mt-8 pt-6 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <p className="text-xs text-gray-400">
+          <div className="mt-8 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p className="text-xs text-muted-foreground">
               {storeName} © {new Date().getFullYear()} Tous droits réservés.
             </p>
-            <p className="text-xs text-gray-300">
+            <p className="text-xs text-muted-foreground">
               Propulsé par{" "}
               <Link to="/" className="hover:underline font-medium" style={{ color: brandColor }}>
                 TECHNOVA
