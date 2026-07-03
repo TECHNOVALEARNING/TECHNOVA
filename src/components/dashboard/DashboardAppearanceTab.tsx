@@ -592,58 +592,48 @@ const DashboardAppearanceTab = () => {
         </div>
 
         {/* Vidéo de bienvenue */}
-        {isAdmin && (
-          <div className="rounded-xl border border-border bg-card p-6 space-y-4">
-            <div className="flex items-center gap-3">
-              <Video className="h-4 w-4 text-muted-foreground" />
-              <div>
-                <p className="text-sm font-semibold text-foreground">{t.welcomeVideoTitle}</p>
-                <p className="text-xs text-muted-foreground">{t.welcomeVideoDesc}</p>
-              </div>
+        <div className="rounded-xl border border-border bg-card p-6 space-y-4">
+          <div className="flex items-center gap-3">
+            <Video className="h-4 w-4 text-muted-foreground" />
+            <div>
+              <p className="text-sm font-semibold text-foreground">{t.welcomeVideoTitle}</p>
+              <p className="text-xs text-muted-foreground">{t.welcomeVideoDesc}</p>
             </div>
-            <div className="space-y-4 pt-2">
-              <div className="flex items-center justify-between gap-3">
-                <div className="flex items-start gap-3">
-                  <Switch checked={showVideo} onCheckedChange={setShowVideo} />
-                  <div>
-                    <p className="text-sm font-medium text-foreground">{t.showWelcomeVideoLabel}</p>
-                    <p className="text-xs text-muted-foreground">{t.showWelcomeVideoDesc}</p>
-                  </div>
+          </div>
+          <div className="space-y-4 pt-2">
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-start gap-3">
+                <Switch checked={showVideo} onCheckedChange={setShowVideo} />
+                <div>
+                  <p className="text-sm font-medium text-foreground">{t.showWelcomeVideoLabel}</p>
+                  <p className="text-xs text-muted-foreground">{t.showWelcomeVideoDesc}</p>
                 </div>
               </div>
+            </div>
+            {showVideo && (
               <div className="space-y-4 pt-2 border-t border-border mt-2 animate-in fade-in duration-200">
                 <div className="space-y-2">
                   <label className="text-xs font-semibold text-foreground">
                     {t.videoLinkLabel}
                   </label>
-                  <Input
-                    value={videoUrl}
-                    onChange={(e) => setVideoUrl(e.target.value)}
-                    placeholder="Ex: https://www.youtube.com/watch?v=9xwazD5SyVg"
-                    className="bg-background"
-                  />
-                </div>
-
-                <div className="relative flex items-center py-1">
-                  <div className="flex-grow border-t border-border"></div>
-                  <span className="flex-shrink mx-4 text-[10px] font-medium text-muted-foreground uppercase">
-                    {lang === "fr" ? "Ou" : "Or"}
-                  </span>
-                  <div className="flex-grow border-t border-border"></div>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-xs font-semibold text-foreground block">
-                    {lang === "fr" ? "Télécharger un fichier vidéo" : "Upload a video file"}
-                  </label>
-                  <div className="flex items-center gap-3">
-                    <label className="flex items-center justify-center px-4 py-2 border border-dashed border-border rounded-lg bg-background hover:bg-muted/50 transition-colors cursor-pointer text-xs font-medium gap-2">
-                      <Upload className="h-3.5 w-3.5 text-muted-foreground" />
+                  <div className="flex items-center gap-2">
+                    <Input
+                      value={videoUrl}
+                      onChange={(e) => setVideoUrl(e.target.value)}
+                      placeholder="Ex: https://www.youtube.com/watch?v=9xwazD5SyVg"
+                      className="bg-background flex-1"
+                    />
+                    <label className="flex items-center justify-center h-10 px-4 border border-input rounded-md bg-background hover:bg-muted/50 cursor-pointer text-xs font-medium gap-2 shrink-0 transition-colors">
                       {uploadingVideo ? (
-                        <span className="animate-pulse">{lang === "fr" ? "Téléversement..." : "Uploading..."}</span>
+                        <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
                       ) : (
-                        <span>{lang === "fr" ? "Choisir une vidéo (.mp4, .webm)" : "Choose a video (.mp4, .webm)"}</span>
+                        <Upload className="h-4 w-4 text-muted-foreground" />
                       )}
+                      <span>
+                        {uploadingVideo
+                          ? (lang === "fr" ? "Envoi..." : "Uploading...")
+                          : (lang === "fr" ? "Uploader de mon PC" : "Upload from PC")}
+                      </span>
                       <input
                         type="file"
                         accept="video/*"
@@ -652,20 +642,32 @@ const DashboardAppearanceTab = () => {
                         className="sr-only"
                       />
                     </label>
-                    {videoUrl && isDirectVideo(videoUrl) && (
-                      <span className="text-xs text-green-500 font-medium">✓ {lang === "fr" ? "Vidéo prête" : "Video ready"}</span>
-                    )}
                   </div>
+                  {videoUrl && (
+                    <div className="flex items-center justify-between text-xs text-muted-foreground mt-1">
+                      {isDirectVideo(videoUrl) ? (
+                        <span className="text-green-500 font-medium flex items-center gap-1">✓ {lang === "fr" ? "Fichier vidéo hébergé" : "Hosted video file"}</span>
+                      ) : (
+                        <span>{lang === "fr" ? "Lien externe configuré" : "External link configured"}</span>
+                      )}
+                      <button
+                        onClick={() => setVideoUrl("")}
+                        className="text-red-500 hover:underline flex items-center gap-0.5"
+                      >
+                        <X className="h-3 w-3" /> {lang === "fr" ? "Effacer" : "Clear"}
+                      </button>
+                    </div>
+                  )}
                   <p className="text-[10px] text-muted-foreground">
                     {lang === "fr"
-                      ? "Format recommandé : MP4, taille maximale : 50 Mo."
-                      : "Recommended format: MP4, max size: 50MB."}
+                      ? "Vous pouvez entrer un lien (YouTube, Vimeo, etc.) OU cliquer sur le bouton à droite pour téléverser un fichier de votre ordinateur (max 50 Mo)."
+                      : "You can enter a link (YouTube, Vimeo, etc.) OR click the button on the right to upload a file from your computer (50MB max)."}
                   </p>
                 </div>
               </div>
-            </div>
+            )}
           </div>
-        )}
+        </div>
 
         {/* Sort Order */}
         <div className="rounded-xl border border-border bg-card p-6 space-y-4">
