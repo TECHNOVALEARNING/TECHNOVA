@@ -374,9 +374,18 @@ const DashboardWithdrawals = () => {
                         <Wallet className="h-5 w-5 text-muted-foreground" />
                       </div>
                       <div className="min-w-0">
-                        <p className="text-sm font-semibold text-foreground">
-                          {Number(w.amount).toLocaleString("fr")} FCFA
-                        </p>
+                        <div className="flex items-baseline gap-2">
+                          <p className="text-sm font-semibold text-foreground">
+                            {Number(w.amount).toLocaleString("fr")} FCFA
+                          </p>
+                          {Number(w.fee || 0) > 0 && (
+                            <span className="text-xs text-muted-foreground">
+                              {lang === "fr"
+                                ? `(Frais : ${Number(w.fee).toLocaleString("fr")} FCFA)`
+                                : `(Fee: ${Number(w.fee).toLocaleString("fr")} FCFA)`}
+                            </span>
+                          )}
+                        </div>
                         <p className="text-xs text-muted-foreground truncate">
                           {w.phone_number} ·{" "}
                           {new Date(w.created_at).toLocaleDateString(localeStr, {
