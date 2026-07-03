@@ -72,9 +72,17 @@ const TESTIMONIALS = [
   {
     stars: 5,
     text: '"La formation Cybersécurité m\'a permis de décrocher un poste de consultant. Le paiement par Mobile Money est très pratique."',
-    name: "Koffi Jean-Marc",
-    loc: "Abidjan, Côte d'Ivoire",
+    name: "Cédric TOUDONOU",
+    loc: "Cotonou, Bénin",
     img: "https://i.pinimg.com/1200x/a2/09/d6/a209d6e66859493e14c59bc92e5b2e02.jpg",
+  },
+
+  {
+    stars: 5,
+    text: '"Découvrir Technova a été l\'une des meilleures décisions de ma vie. Leurs formations sont de qualité et abordables."',
+    name: "Léandre HOUNGBEDJI",
+    loc: "Abomey-Calavi, Bénin",
+    img: "https://randomuser.me/api/portraits/men/30.jpg",
   },
 
   {
@@ -84,6 +92,8 @@ const TESTIMONIALS = [
     loc: "Paris, France",
     img: "https://randomuser.me/api/portraits/women/65.jpg",
   },
+
+
 ];
 
 const Index = () => {
@@ -1371,7 +1381,7 @@ const Index = () => {
               </span>
             </h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {TESTIMONIALS.map((t, i) => (
               <motion.div
                 key={i}
