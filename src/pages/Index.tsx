@@ -886,7 +886,7 @@ const Index = () => {
       </div>
 
       {/* ============ FEATURES ============ */}
-      <section id="features" style={{ position: "relative", zIndex: 1, padding: "100px 0" }}>
+      <section id="features" className="section-pad-100" style={{ position: "relative", zIndex: 1 }}>
         <div className="mx-auto" style={{ maxWidth: 1280, padding: "0 24px" }}>
           <div style={{ marginBottom: 48, maxWidth: 600 }}>
             <span className="section-eyebrow">
@@ -974,10 +974,10 @@ const Index = () => {
       {/* ============ COURSES ============ */}
       <section
         id="courses"
+        className="section-pad-100"
         style={{
           position: "relative",
           zIndex: 1,
-          padding: "100px 0",
           background: "var(--section-alt)",
         }}
       >
@@ -1046,8 +1046,8 @@ const Index = () => {
 
       {/* ============ STATS SECTION ============ */}
       <section
-        className="stats-section"
-        style={{ padding: "90px 0", overflow: "hidden", zIndex: 1 }}
+        className="stats-section section-pad-90"
+        style={{ overflow: "hidden", zIndex: 1 }}
       >
         <canvas
           ref={canvasRef}
@@ -1180,10 +1180,10 @@ const Index = () => {
       {/* ============ APPS ============ */}
       <section
         id="apps"
+        className="section-pad-100"
         style={{
           position: "relative",
           zIndex: 1,
-          padding: "100px 0",
           background: "var(--background)",
         }}
       >
@@ -1256,10 +1256,10 @@ const Index = () => {
       {/* ============ ABOUT ============ */}
       <section
         id="about"
+        className="section-pad-100"
         style={{
           position: "relative",
           zIndex: 1,
-          padding: "100px 0",
           background: "var(--section-alt)",
         }}
       >
@@ -1358,7 +1358,7 @@ const Index = () => {
       </section>
 
       {/* ============ TESTIMONIALS ============ */}
-      <section id="avis" style={{ position: "relative", zIndex: 1, padding: "100px 0" }}>
+      <section id="avis" className="section-pad-100" style={{ position: "relative", zIndex: 1 }}>
         <div className="mx-auto" style={{ maxWidth: 1280, padding: "0 24px" }}>
           <div style={{ textAlign: "center", marginBottom: 48 }}>
             <span className="tn-eyebrow">{lang === "fr" ? "Ce que les utilisateurs réalisent grâce à l’apprentissage" : "What users achieve through learning"}</span>
@@ -1473,7 +1473,8 @@ const Index = () => {
       {/* ============ DIGITAL TOOLS PREVIEW ============ */}
       <section
         id="tools"
-        style={{ position: "relative", zIndex: 1, padding: "80px 0", background: "var(--bg)" }}
+        className="section-pad-80"
+        style={{ position: "relative", zIndex: 1, background: "var(--bg)" }}
       >
         <div className="mx-auto" style={{ maxWidth: 1280, padding: "0 24px" }}>
           <div
@@ -1597,7 +1598,7 @@ const Index = () => {
       </section>
 
       {/* ============ CTA ============ */}
-      <section style={{ position: "relative", zIndex: 1, padding: "80px 0" }}>
+      <section className="section-pad-80" style={{ position: "relative", zIndex: 1 }}>
         <div className="mx-auto" style={{ maxWidth: 1280, padding: "0 24px" }}>
           <div className="tn-cta-wrap">
             <h2

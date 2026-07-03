@@ -754,6 +754,17 @@
   .app-glass { padding: 36px 24px; }
 }
 
+/* ============ RESPONSIVE SECTION PADDING ============ */
+.section-pad-100 { padding: 100px 0; }
+.section-pad-90 { padding: 90px 0; }
+.section-pad-80 { padding: 80px 0; }
+
+@media (max-width: 768px) {
+  .section-pad-100 { padding: 48px 0 !important; }
+  .section-pad-90 { padding: 42px 0 !important; }
+  .section-pad-80 { padding: 36px 0 !important; }
+}
+
 @media (max-width: 768px) {
   *, ::before, ::after {
     backdrop-filter: none !important;
