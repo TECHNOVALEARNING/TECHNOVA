@@ -610,62 +610,60 @@ const DashboardAppearanceTab = () => {
                 </div>
               </div>
             </div>
-            {showVideo && (
-              <div className="space-y-4 pt-2 border-t border-border mt-2 animate-in fade-in duration-200">
-                <div className="space-y-2">
-                  <label className="text-xs font-semibold text-foreground">
-                    {t.videoLinkLabel}
-                  </label>
-                  <div className="flex items-center gap-2">
-                    <Input
-                      value={videoUrl}
-                      onChange={(e) => setVideoUrl(e.target.value)}
-                      placeholder="Ex: https://www.youtube.com/watch?v=9xwazD5SyVg"
-                      className="bg-background flex-1"
+            <div className="space-y-4 pt-2 border-t border-border mt-2">
+              <div className="space-y-2">
+                <label className="text-xs font-semibold text-foreground">
+                  {t.videoLinkLabel}
+                </label>
+                <div className="flex items-center gap-2">
+                  <Input
+                    value={videoUrl}
+                    onChange={(e) => setVideoUrl(e.target.value)}
+                    placeholder="Ex: https://www.youtube.com/watch?v=9xwazD5SyVg"
+                    className="bg-background flex-1"
+                  />
+                  <label className="flex items-center justify-center h-10 px-4 border border-input rounded-md bg-background hover:bg-muted/50 cursor-pointer text-xs font-medium gap-2 shrink-0 transition-colors">
+                    {uploadingVideo ? (
+                      <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                    ) : (
+                      <Upload className="h-4 w-4 text-muted-foreground" />
+                    )}
+                    <span>
+                      {uploadingVideo
+                        ? (lang === "fr" ? "Envoi..." : "Uploading...")
+                        : (lang === "fr" ? "Uploader de mon PC" : "Upload from PC")}
+                    </span>
+                    <input
+                      type="file"
+                      accept="video/*"
+                      onChange={handleVideoUpload}
+                      disabled={uploadingVideo}
+                      className="sr-only"
                     />
-                    <label className="flex items-center justify-center h-10 px-4 border border-input rounded-md bg-background hover:bg-muted/50 cursor-pointer text-xs font-medium gap-2 shrink-0 transition-colors">
-                      {uploadingVideo ? (
-                        <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-                      ) : (
-                        <Upload className="h-4 w-4 text-muted-foreground" />
-                      )}
-                      <span>
-                        {uploadingVideo
-                          ? (lang === "fr" ? "Envoi..." : "Uploading...")
-                          : (lang === "fr" ? "Uploader de mon PC" : "Upload from PC")}
-                      </span>
-                      <input
-                        type="file"
-                        accept="video/*"
-                        onChange={handleVideoUpload}
-                        disabled={uploadingVideo}
-                        className="sr-only"
-                      />
-                    </label>
-                  </div>
-                  {videoUrl && (
-                    <div className="flex items-center justify-between text-xs text-muted-foreground mt-1">
-                      {isDirectVideo(videoUrl) ? (
-                        <span className="text-green-500 font-medium flex items-center gap-1">✓ {lang === "fr" ? "Fichier vidéo hébergé" : "Hosted video file"}</span>
-                      ) : (
-                        <span>{lang === "fr" ? "Lien externe configuré" : "External link configured"}</span>
-                      )}
-                      <button
-                        onClick={() => setVideoUrl("")}
-                        className="text-red-500 hover:underline flex items-center gap-0.5"
-                      >
-                        <X className="h-3 w-3" /> {lang === "fr" ? "Effacer" : "Clear"}
-                      </button>
-                    </div>
-                  )}
-                  <p className="text-[10px] text-muted-foreground">
-                    {lang === "fr"
-                      ? "Vous pouvez entrer un lien (YouTube, Vimeo, etc.) OU cliquer sur le bouton à droite pour téléverser un fichier de votre ordinateur (max 50 Mo)."
-                      : "You can enter a link (YouTube, Vimeo, etc.) OR click the button on the right to upload a file from your computer (50MB max)."}
-                  </p>
+                  </label>
                 </div>
+                {videoUrl && (
+                  <div className="flex items-center justify-between text-xs text-muted-foreground mt-1">
+                    {isDirectVideo(videoUrl) ? (
+                      <span className="text-green-500 font-medium flex items-center gap-1">✓ {lang === "fr" ? "Fichier vidéo hébergé" : "Hosted video file"}</span>
+                    ) : (
+                      <span>{lang === "fr" ? "Lien externe configuré" : "External link configured"}</span>
+                    )}
+                    <button
+                      onClick={() => setVideoUrl("")}
+                      className="text-red-500 hover:underline flex items-center gap-0.5"
+                    >
+                      <X className="h-3 w-3" /> {lang === "fr" ? "Effacer" : "Clear"}
+                    </button>
+                  </div>
+                )}
+                <p className="text-[10px] text-muted-foreground">
+                  {lang === "fr"
+                    ? "Vous pouvez entrer un lien (YouTube, Vimeo, etc.) OU cliquer sur le bouton à droite pour téléverser un fichier de votre ordinateur (max 50 Mo)."
+                    : "You can enter a link (YouTube, Vimeo, etc.) OR click the button on the right to upload a file from your computer (50MB max)."}
+                </p>
               </div>
-            )}
+            </div>
           </div>
         </div>
 

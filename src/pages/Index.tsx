@@ -266,7 +266,7 @@ const Index = () => {
       const { data, error } = await supabase
         .from("stores")
         .select("layout_sections")
-        .eq("slug", "easy-tech")
+        .eq("slug", "nova-shop")
         .maybeSingle();
       if (error) throw error;
       return data;
@@ -292,7 +292,7 @@ const Index = () => {
       const { data: storeData } = await supabase
         .from("stores")
         .select("owner_id")
-        .eq("slug", "easy-tech")
+        .eq("slug", "nova-shop")
         .maybeSingle();
 
       const adminId = storeData?.owner_id || "9702b3c5-4acf-42e2-828c-8bf2d50dfff8";
