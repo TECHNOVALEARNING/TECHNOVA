@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import logoImg from "@/assets/logo.png";
 import SEOHead from "@/components/SEOHead";
 import { getEmbedUrl, getVideoThumbnailUrl, isDirectVideo } from "@/lib/videoUtils";
+import { BookOpen } from "lucide-react";
 
 const SUBCAT_LABELS: Record<string, string> = {
   notion: "Notion",
@@ -1221,6 +1222,82 @@ const Index = () => {
                 }}
               >
                 {lang === "fr" ? "Nombre d'entreprises" : "Partner Companies"}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ============ APPS ============ */}
+      <section
+        id="apps"
+        style={{
+          position: "relative",
+          zIndex: 1,
+          padding: "100px 0",
+          background: "var(--background)",
+        }}
+      >
+        <div className="mx-auto" style={{ maxWidth: 1280, padding: "0 24px" }}>
+          <div className="app-glass">
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1.2fr 1fr",
+                gap: 48,
+                alignItems: "center",
+              }}
+              className="max-lg:!grid-cols-1"
+            >
+              <div>
+                <div className="app-icon-wrap">
+                  <BookOpen className="h-8 w-8 text-white" />
+                </div>
+                <span className="section-eyebrow" style={{ color: "rgba(255,255,255,0.7)" }}>
+                  {lang === "fr" ? "Nos Applications" : "Our Applications"}
+                </span>
+                <h2 className="section-title" style={{ color: "white", marginBottom: 16 }}>
+                  TECHNOVA Mobile
+                </h2>
+                <p
+                  style={{
+                    color: "rgba(255,255,255,0.8)",
+                    fontSize: "0.93rem",
+                    marginBottom: 32,
+                    lineHeight: 1.6,
+                  }}
+                >
+                  {lang === "fr"
+                    ? "Accédez à tous vos cours depuis votre smartphone. Téléchargez vos leçons et apprenez hors ligne, partout en Afrique."
+                    : "Access all your courses from your smartphone. Download your lessons and learn offline, anywhere in Africa."}
+                </p>
+                <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+                  <a href="#" className="btn-app btn-app-light">
+                    <svg className="h-4 w-4 mr-1 fill-current" viewBox="0 0 24 24">
+                      <path d="M5 3.23v17.54c0 .54.45.98.99.98.17 0 .34-.05.5-.14L20.25 13.7c.47-.27.75-.76.75-1.3s-.28-1.03-.75-1.3L6.49 3.28C6 3 5.48 3.1 5.12 3.48c-.08.09-.12.2-.12.31z" />
+                    </svg>
+                    Google Play
+                  </a>
+                  <a href="#" className="btn-app btn-app-outline">
+                    <svg className="h-4 w-4 mr-1 fill-current" viewBox="0 0 24 24">
+                      <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.17c.66-.81 1.11-1.93.99-3.06-1 .04-2.22.67-2.94 1.52-.63.73-1.18 1.87-1.03 2.98 1.12.09 2.27-.58 2.98-1.44z" />
+                    </svg>
+                    App Store
+                  </a>
+                </div>
+              </div>
+              <div style={{ textAlign: "center" }}>
+                <img
+                  src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=500&h=600&fit=crop"
+                  alt="Mobile App"
+                  style={{
+                    maxWidth: "100%",
+                    maxHeight: 460,
+                    borderRadius: 16,
+                    boxShadow: "0 24px 60px rgba(0,0,0,0.3)",
+                    objectFit: "cover",
+                  }}
+                />
               </div>
             </div>
           </div>
