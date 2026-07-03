@@ -582,7 +582,7 @@ const Index = () => {
                 </Link>
               </div>
               {/* Social proof */}
-              <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+              {/* <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
                 <div style={{ display: "flex" }}>
                   {[
                     "https://randomuser.me/api/portraits/men/32.jpg",
@@ -603,12 +603,12 @@ const Index = () => {
                       }}
                     />
                   ))}
-                </div>
-                <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", margin: 0 }}>
+                </div> */}
+                {/* <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", margin: 0 }}>
                   <strong style={{ color: "var(--text)" }}>Plusieurs</strong>{" "}
                   {lang === "fr" ? "étudiants nous font déjà confiance" : "students trust us"}
                 </p>
-              </div>
+              </div> */}
             </motion.div>
 
             {/* Right */}
@@ -784,7 +784,7 @@ const Index = () => {
           </div>
 
           {/* Annonces et Publicités */}
-          <motion.div
+          {/* <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -806,8 +806,8 @@ const Index = () => {
                 position: "relative",
                 overflow: "hidden",
               }}
-            >
-              <div
+            > */}
+              {/* <div
                 style={{
                   position: "absolute",
                   top: -20,
@@ -886,7 +886,7 @@ const Index = () => {
                 </p>
               </div>
             </div>
-          </motion.div>
+          </motion.div> */}
         </div>
       </section>
 
