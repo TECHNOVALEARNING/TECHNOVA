@@ -1,4 +1,7 @@
 import {
+  Globe,
+  Moon,
+  Sun,
   LayoutDashboard,
   Package,
   Key,
@@ -93,7 +96,7 @@ const translations = {
 };
 
 export function DashboardSidebar() {
-  const { state } = useSidebar();
+  const { state, isMobile, setOpenMobile } = useSidebar();
   const collapsed = state === "collapsed";
   const location = useLocation();
   const navigate = useNavigate();
@@ -104,11 +107,35 @@ export function DashboardSidebar() {
     typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
   );
 
+  const [theme, setTheme] = useState(() =>
+    typeof window !== "undefined" ? localStorage.getItem("technova_theme") || "light" : "light",
+  );
+
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
     window.addEventListener("technova_lang_changed", handleLangChange);
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
+
+  useEffect(() => {
+    const handleThemeChange = () => {
+      setTheme(localStorage.getItem("technova_theme") || "light");
+    };
+    window.addEventListener("technova_theme_changed", handleThemeChange);
+    return () => window.removeEventListener("technova_theme_changed", handleThemeChange);
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    localStorage.setItem("technova_theme", newTheme);
+    window.dispatchEvent(new Event("technova_theme_changed"));
+  };
+
+  const handleLinkClick = () => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  };
 
   const t = translations[lang === "en" ? "en" : "fr"];
 
@@ -175,6 +202,7 @@ export function DashboardSidebar() {
                       to={item.url}
                       end={item.url === "/dashboard"}
                       className="flex items-center justify-between w-full"
+                      onClick={handleLinkClick}
                     >
                       <div className="flex items-center gap-2">
                         <item.icon className="h-4 w-4 shrink-0" />
@@ -203,7 +231,7 @@ export function DashboardSidebar() {
                   isActive={isActive("/dashboard/settings")}
                   className="dash-menu-item"
                 >
-                  <NavLink to="/dashboard/settings">
+                  <NavLink to="/dashboard/settings" onClick={handleLinkClick}>
                     <Settings className="h-3.5 w-3.5" />
                     {!collapsed && <span>{t.settings}</span>}
                   </NavLink>
@@ -211,7 +239,7 @@ export function DashboardSidebar() {
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild className="dash-menu-item">
-                  <a href="/faq" target="_blank">
+                  <a href="/faq" target="_blank" onClick={handleLinkClick}>
                     <HelpCircle className="h-3.5 w-3.5" />
                     {!collapsed && <span>{t.helpCenter}</span>}
                   </a>
@@ -232,7 +260,7 @@ export function DashboardSidebar() {
                         isActive={isActive(item.url)}
                         className="dash-menu-item"
                       >
-                        <NavLink to={item.url}>
+                        <NavLink to={item.url} onClick={handleLinkClick}>
                           <item.icon className="h-3.5 w-3.5" />
                           {!collapsed && <span>{item.title}</span>}
                         </NavLink>
@@ -245,6 +273,51 @@ export function DashboardSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+
+      {/* Footer Switchers */}
+      <SidebarFooter className="p-3 border-t border-sidebar-border/20 mt-auto">
+        {!collapsed ? (
+          <div className="flex items-center justify-between gap-2">
+            {/* Language Switcher */}
+            <button
+              onClick={() => {
+                const newLang = lang === "fr" ? "en" : "fr";
+                localStorage.setItem("technova_lang", newLang);
+                window.dispatchEvent(new Event("technova_lang_changed"));
+              }}
+              className="flex items-center gap-1.5 text-xs font-bold text-white/80 hover:text-white px-2.5 py-1.5 rounded-md hover:bg-white/5 transition-colors"
+              title="Changer de langue / Switch Language"
+            >
+              <Globe className="h-3.5 w-3.5" />
+              <span>{lang.toUpperCase()}</span>
+            </button>
+
+            {/* Theme Switcher */}
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-full text-white/80 hover:text-white hover:bg-white/5 transition-colors"
+              aria-label="Toggle theme"
+              title={theme === "light" ? "Dark Mode" : "Light Mode"}
+            >
+              {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+            </button>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center gap-3">
+            <button
+              onClick={() => {
+                const newLang = lang === "fr" ? "en" : "fr";
+                localStorage.setItem("technova_lang", newLang);
+                window.dispatchEvent(new Event("technova_lang_changed"));
+              }}
+              className="text-xs font-bold text-white/80 hover:text-white p-1.5"
+              title="Changer de langue / Switch Language"
+            >
+              <span>{lang.toUpperCase()}</span>
+            </button>
+          </div>
+        )}
+      </SidebarFooter>
     </Sidebar>
   );
 }

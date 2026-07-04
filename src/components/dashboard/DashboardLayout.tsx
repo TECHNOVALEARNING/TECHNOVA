@@ -126,7 +126,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
               </button>
             </div>
 
-            <div className="flex items-center gap-2 sm:gap-4">
+            <div className="flex items-center gap-3 sm:gap-4">
               {/* Store Switcher */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -198,7 +198,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
               {/* Language Switcher */}
               <button
                 onClick={() => setLang((l) => (l === "fr" ? "en" : "fr"))}
-                className="flex items-center gap-1.5 text-xs font-bold opacity-80 hover:opacity-100 transition-opacity text-foreground px-2.5 py-1.5 rounded-md hover:bg-muted/50 dark:hover:bg-muted/30"
+                className="hidden sm:flex items-center gap-1.5 text-xs font-bold opacity-80 hover:opacity-100 transition-opacity text-foreground px-2.5 py-1.5 rounded-md hover:bg-muted/50 dark:hover:bg-muted/30"
                 title="Switch Language / Changer de langue"
               >
                 <Globe className="h-3.5 w-3.5" />
@@ -208,7 +208,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
               {/* Theme Switcher */}
               <button
                 onClick={() => setTheme((t) => (t === "light" ? "dark" : "light"))}
-                className="p-2 rounded-full hover:bg-muted/50 dark:hover:bg-muted/30 opacity-80 hover:opacity-100 transition-opacity text-foreground"
+                className="hidden sm:block p-2 rounded-full hover:bg-muted/50 dark:hover:bg-muted/30 opacity-80 hover:opacity-100 transition-opacity text-foreground"
                 aria-label="Toggle theme"
                 title={theme === "light" ? "Dark Mode" : "Light Mode"}
               >
