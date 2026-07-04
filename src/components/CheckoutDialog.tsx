@@ -434,6 +434,7 @@ const CheckoutDialog = ({
 
       // Launch KKiaPay Widget overlay
       const kkiapayKey = import.meta.env.VITE_KKIAPAY_PUBLIC_KEY;
+      console.log("KKiaPay Public Key present:", !!kkiapayKey);
       if (!kkiapayKey) {
         throw new Error(
           "La clé de paiement publique KKiaPay n'est pas configurée. Veuillez contacter le support technique.",
