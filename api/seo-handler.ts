@@ -5,7 +5,7 @@ const METADATA: Record<string, { title: string; description: string; canonical: 
   "/about": {
     title: "À propos de nous — TECHNOVA Learning",
     description:
-      "Découvrez notre mission, notre équipe et notre vision pour l'éducation technologique de qualité en Afrique francophone.",
+      "Découvrez notre mission, notre équipe et notre vision pour l'éducation technologique de qualité dans le monde.",
     canonical: "https://www.technovalearning.com/about",
   },
   "/formations": {

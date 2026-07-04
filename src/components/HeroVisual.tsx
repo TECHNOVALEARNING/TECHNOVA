@@ -274,7 +274,7 @@ const HeroVisual = () => {
                 <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground">
                   Étape 3
                 </p>
-                <p className="text-sm font-bold text-foreground mt-1">Distribution panafricaine</p>
+                <p className="text-sm font-bold text-foreground mt-1">Distribution mondiale</p>
               </div>
 
               {/* Africa SVG */}

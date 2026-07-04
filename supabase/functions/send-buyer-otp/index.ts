@@ -77,7 +77,7 @@ Deno.serve(async (req) => {
         html: `
           <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 40px 20px; background-color: #ffffff; border-radius: 16px; border: 1px solid #f0f0f0;">
             <div style="text-align: center; margin-bottom: 30px;">
-              <img src="https://portal.technovalearning.com/favicon.png" alt="TECHNOVA" width="56" height="56" style="display:block;margin:0 auto;border-radius:12px; object-fit: contain;" />
+              <img src="https://www.technovalearning.com/favicon.png" alt="TECHNOVA" width="56" height="56" style="display:block;margin:0 auto;border-radius:12px; object-fit: contain;" />
               <h2 style="margin: 16px 0 0; color: #0f172a; font-size: 24px; font-weight: 800; letter-spacing: -0.5px;">TECHNOVA</h2>
             </div>
             <p style="color: #334155; font-size: 16px; line-height: 24px;">Bonjour,</p>

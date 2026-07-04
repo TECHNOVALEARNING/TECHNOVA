@@ -679,7 +679,7 @@ const StorePage = ({ customSlug }: { customSlug?: string }) => {
               <ul className="space-y-2.5">
                 <li>
                   <a
-                    href="https://portal.technovalearning.com/dashboard"
+                    href="https://www.technovalearning.com/dashboard"
                     className="inline-flex items-center gap-2 text-sm font-medium text-foreground hover:opacity-70"
                   >
                     <ShoppingBag className="h-4 w-4" />

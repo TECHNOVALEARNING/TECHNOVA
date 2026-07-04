@@ -14,7 +14,7 @@ interface SEOHeadProps {
 const SITE_NAME = "TECHNOVA Learning";
 const SITE_URL = "https://www.technovalearning.com";
 const DEFAULT_DESCRIPTION =
-  "Formations certifiantes en IA, Data, Cybersécurité et Design. Apprenez à votre rythme, où que vous soyez. Paiement Mobile Money ou Visa.";
+  "Plateforme de formations tech, ebooks et produits numériques: cybersécurité, data, IA, design. Paiement Mobile Money & Visa.";
 const DEFAULT_IMAGE = `${SITE_URL}/og-image.jpg?v=technova-20260624`;
 const DEFAULT_KEYWORDS =
   "TECHNOVA, technova learning, formation en ligne intelligence artificielle, formation cybersécurité en ligne certifiante, formation data analyst en ligne, cours en ligne design UX/UI certifiant, formation en ligne paiement Mobile Money, MTN Money, Moov Money, Orange Money, Wave";

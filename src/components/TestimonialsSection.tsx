@@ -153,7 +153,7 @@ const TestimonialsSection = () => {
               Ils nous font confiance
             </h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Des créateurs africains qui transforment leurs compétences en revenus grâce à
+              Des créateurs qui transforment leurs compétences en revenus grâce à
               TECHNOVA.
             </p>
           </motion.div>
