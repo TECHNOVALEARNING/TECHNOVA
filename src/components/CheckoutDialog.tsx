@@ -363,23 +363,7 @@ const CheckoutDialog = ({
 
           if (rpcErr) throw new Error(rpcErr.message);
 
-          // Update order with actual paid details
           const orderId = rpcData?.order_id;
-          if (orderId) {
-            const { error: updateErr } = await supabase
-              .from("orders")
-              .update({
-                amount: Math.round(discountedPrice),
-                payment_method: "kkiapay",
-                moneroo_transaction_id: transactionId,
-                status: "completed"
-              })
-              .eq("id", orderId);
-
-            if (updateErr) {
-              console.error("Failed to update order details after KKiaPay success:", updateErr);
-            }
-          }
 
           // Update promo usage in database
           if (appliedPromo) {
@@ -414,6 +398,7 @@ const CheckoutDialog = ({
               store_slug: storeSlug || null,
               shipping_address: shippingPayload,
               payment_method: "KkiaPay",
+              order_id: orderId,
             },
           });
 

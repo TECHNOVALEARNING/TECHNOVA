@@ -1,4 +1,4 @@
-﻿import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -37,10 +37,31 @@ Deno.serve(async (req) => {
       download_url,
       product_type,
       store_slug,
+      order_id,
+      payment_method,
     } = await req.json();
 
     if (!store_owner_id || !product_title) {
       throw new Error("Paramètres manquants");
+    }
+
+    // Update order with correct amount and status if order_id is provided
+    if (order_id) {
+      console.log(`[notify-sale] Updating order ${order_id} with amount ${amount}`);
+      const { error: updateErr } = await supabase
+        .from("orders")
+        .update({
+          amount: Math.round(amount),
+          payment_method: payment_method || "kkiapay",
+          status: "completed",
+        })
+        .eq("id", order_id);
+
+      if (updateErr) {
+        console.error("[notify-sale] Failed to update order in database:", updateErr);
+      } else {
+        console.log(`[notify-sale] Order ${order_id} updated successfully`);
+      }
     }
 
     const {

@@ -263,7 +263,7 @@ const WithdrawNew = () => {
   const doPayout = async (unlock_token: string) => {
     setSubmitting(true);
     try {
-      const { data, error } = await supabase.functions.invoke("wallet-payout", {
+      const { data, error } = await supabase.functions.invoke("moneroo-payout", {
         body: { wallet_id: selectedWallet, amount: numAmount, unlock_token },
       });
       if (error || data?.error) throw new Error(data?.error || error?.message);
