@@ -125,6 +125,13 @@ export function DashboardSidebar() {
     return () => window.removeEventListener("technova_theme_changed", handleThemeChange);
   }, []);
 
+  // Auto-close mobile sidebar drawer on navigation
+  useEffect(() => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  }, [location.pathname, isMobile, setOpenMobile]);
+
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
     localStorage.setItem("technova_theme", newTheme);
