@@ -98,7 +98,7 @@ Deno.serve(async (req) => {
       );
     }
 
-    const cleanPhone = String(wallet.phone).replace(/\D/g, "");
+    const isManual = wallet.provider_code === "BANK_TRANSFER" || wallet.provider_code === "PAYPAL";
 
     const { data: withdrawal, error: insErr } = await admin
       .from("withdrawals")
@@ -107,14 +107,24 @@ Deno.serve(async (req) => {
         amount,
         fee: 0,
         net_amount: amount,
-        phone_number: `+${cleanPhone}`,
-        operator: wallet.provider_code.toLowerCase().split("_")[0],
+        phone_number: wallet.phone,
+        operator: isManual ? wallet.provider_code.toLowerCase() : wallet.provider_code.toLowerCase().split("_")[0],
         provider_code: wallet.provider_code,
-        status: "processing",
+        status: isManual ? "pending" : "processing",
       })
       .select()
       .single();
     if (insErr) return j({ error: insErr.message }, 400);
+
+    if (isManual) {
+      await admin.from("notifications").insert({
+        user_id: user.id,
+        title: "Retrait en traitement manuel",
+        message: `Votre demande de retrait de ${amount} ${currency} par ${wallet.provider_code === "PAYPAL" ? "PayPal" : "Virement"} a été enregistrée et sera traitée sous 24-48h.`,
+        type: "info",
+      });
+      return j({ success: true, withdrawal_id: withdrawal.id, status: "pending_manual" });
+    }
 
     const payoutId = crypto.randomUUID();
     const payload = {

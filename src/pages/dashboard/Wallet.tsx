@@ -326,19 +326,34 @@ const Wallet = () => {
     if (!user) return;
     if (!name.trim()) return toast.error(t.toastWalletNameRequired);
     if (!firstName.trim() || !lastName.trim()) return toast.error(t.toastHolderRequired);
-    if (phone.length < 6) return toast.error(t.toastInvalidPhone);
+    
+    const isPaypal = provider.code === "PAYPAL";
+    const isBank = provider.code === "BANK_TRANSFER";
+
+    if (isPaypal) {
+      if (!phone.includes("@")) return toast.error("Adresse email PayPal invalide");
+    } else if (isBank) {
+      if (phone.length < 10) return toast.error("Coordonnées bancaires trop courtes (ex: IBAN invalide)");
+    } else {
+      if (phone.replace(/\D/g, "").length < 6) return toast.error(t.toastInvalidPhone);
+    }
+
     if (wallets.length >= 3) return toast.error(t.toastMaxWallets);
 
     setSubmitting(true);
     try {
-      const fullPhone = `${country.dial}${phone}`.replace(/\D/g, "");
+      let finalPhone = phone;
+      if (!isPaypal && !isBank) {
+        const fullPhone = `${country.dial}${phone}`.replace(/\D/g, "");
+        finalPhone = `+${fullPhone}`;
+      }
       const isDefault = wallets.length === 0;
       const { error } = await supabase.from("wallets").insert({
         user_id: user.id,
         name: name.trim(),
         country: country.code,
         provider_code: provider.code,
-        phone: `+${fullPhone}`,
+        phone: finalPhone,
         holder_first_name: firstName.trim(),
         holder_last_name: lastName.trim(),
         is_default: isDefault,
@@ -741,16 +756,35 @@ const Wallet = () => {
 
               <div>
                 <label className="text-xs font-semibold text-gray-700 mb-1 block">
-                  {t.momoNumber}
+                  {provider.code === "BANK_TRANSFER"
+                    ? "Coordonnées bancaires (IBAN & SWIFT/BIC)"
+                    : provider.code === "PAYPAL"
+                      ? "Compte PayPal (Email)"
+                      : t.momoNumber}
                 </label>
                 <div className="flex gap-2">
-                  <div className="flex items-center px-3 rounded-lg border border-gray-200 bg-gray-50 text-sm font-medium text-gray-600">
-                    +{country.dial}
-                  </div>
+                  {provider.code !== "BANK_TRANSFER" && provider.code !== "PAYPAL" && (
+                    <div className="flex items-center px-3 rounded-lg border border-gray-200 bg-gray-50 text-sm font-medium text-gray-600">
+                      +{country.dial}
+                    </div>
+                  )}
                   <Input
                     value={phone}
-                    onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
-                    placeholder="97 00 00 00"
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (provider.code === "BANK_TRANSFER" || provider.code === "PAYPAL") {
+                        setPhone(val);
+                      } else {
+                        setPhone(val.replace(/\D/g, ""));
+                      }
+                    }}
+                    placeholder={
+                      provider.code === "BANK_TRANSFER"
+                        ? "Ex: IBAN: FR76 3000... BIC: ..."
+                        : provider.code === "PAYPAL"
+                          ? "Ex: votre-compte@paypal.com"
+                          : "97 00 00 00"
+                    }
                   />
                 </div>
               </div>

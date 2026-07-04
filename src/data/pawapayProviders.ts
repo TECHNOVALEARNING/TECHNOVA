@@ -34,6 +34,8 @@ export const providerLogos: Record<string, string> = {
   mpesa: mpesaLogo,
   zamtel: zamtelLogo,
   wave: waveLogo,
+  bank: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="%237C2DCC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 22h18"/><path d="M6 18V9"/><path d="M10 18V9"/><path d="M14 18V9"/><path d="M18 18V9"/><path d="m12 2-10 7h20Z"/></svg>`,
+  paypal: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="%23003087" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2" fill="none"/><line x1="2" x2="22" y1="10" y2="10"/><line x1="7" x2="7" y1="15" y2="15"/><line x1="11" x2="11" y1="15" y2="15"/></svg>`,
 };
 
 export interface PawaPayProvider {
@@ -335,17 +337,41 @@ export const pawapayCountries: PawaPayCountry[] = [
         minAmount: 1,
         maxAmount: 20000,
       },
-      {
-        code: "ZAMTEL_ZMB",
-        family: "zamtel",
-        label: "Zamtel Kwacha",
-        currency: "ZMW",
-        minAmount: 1,
-        maxAmount: 20000,
-      },
-    ],
-  },
-];
+        {
+          code: "ZAMTEL_ZMB",
+          family: "zamtel",
+          label: "Zamtel Kwacha",
+          currency: "ZMW",
+          minAmount: 1,
+          maxAmount: 20000,
+        },
+      ],
+    },
+    {
+      code: "INT",
+      name: "Autre Pays (Virement / PayPal)",
+      dial: "00",
+      flag: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%237C2DCC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>`,
+      deposit: [
+        {
+          code: "BANK_TRANSFER",
+          family: "bank",
+          label: "Virement Bancaire (IBAN)",
+          currency: "USD",
+          minAmount: 10,
+          maxAmount: 1000000,
+        },
+        {
+          code: "PAYPAL",
+          family: "paypal",
+          label: "PayPal",
+          currency: "USD",
+          minAmount: 5,
+          maxAmount: 1000000,
+        },
+      ],
+    },
+  ];
 
 /** Find a country by ISO3 code */
 export const findCountry = (code: string) => pawapayCountries.find((c) => c.code === code);
