@@ -131,9 +131,12 @@ export function DashboardSidebar() {
     window.dispatchEvent(new Event("technova_theme_changed"));
   };
 
-  const handleLinkClick = () => {
+  const handleLinkClick = (url: string) => {
+    navigate(url);
     if (isMobile) {
-      setOpenMobile(false);
+      setTimeout(() => {
+        setOpenMobile(false);
+      }, 120);
     }
   };
 
@@ -202,7 +205,10 @@ export function DashboardSidebar() {
                       to={item.url}
                       end={item.url === "/dashboard"}
                       className="flex items-center justify-between w-full"
-                      onClick={handleLinkClick}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleLinkClick(item.url);
+                      }}
                     >
                       <div className="flex items-center gap-2">
                         <item.icon className="h-4 w-4 shrink-0" />
@@ -231,7 +237,13 @@ export function DashboardSidebar() {
                   isActive={isActive("/dashboard/settings")}
                   className="dash-menu-item"
                 >
-                  <NavLink to="/dashboard/settings" onClick={handleLinkClick}>
+                  <NavLink
+                    to="/dashboard/settings"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleLinkClick("/dashboard/settings");
+                    }}
+                  >
                     <Settings className="h-3.5 w-3.5" />
                     {!collapsed && <span>{t.settings}</span>}
                   </NavLink>
@@ -239,7 +251,17 @@ export function DashboardSidebar() {
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild className="dash-menu-item">
-                  <a href="/faq" target="_blank" onClick={handleLinkClick}>
+                  <a
+                    href="/faq"
+                    target="_blank"
+                    onClick={() => {
+                      if (isMobile) {
+                        setTimeout(() => {
+                          setOpenMobile(false);
+                        }, 120);
+                      }
+                    }}
+                  >
                     <HelpCircle className="h-3.5 w-3.5" />
                     {!collapsed && <span>{t.helpCenter}</span>}
                   </a>
@@ -260,7 +282,13 @@ export function DashboardSidebar() {
                         isActive={isActive(item.url)}
                         className="dash-menu-item"
                       >
-                        <NavLink to={item.url} onClick={handleLinkClick}>
+                        <NavLink
+                          to={item.url}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleLinkClick(item.url);
+                          }}
+                        >
                           <item.icon className="h-3.5 w-3.5" />
                           {!collapsed && <span>{item.title}</span>}
                         </NavLink>
@@ -274,9 +302,9 @@ export function DashboardSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      {/* Footer Switchers */}
-      <SidebarFooter className="p-3 border-t border-sidebar-border/20 mt-auto">
-        {!collapsed ? (
+      {/* Footer Switchers (Mobile only) */}
+      {isMobile && (
+        <SidebarFooter className="p-3 border-t border-sidebar-border/20 mt-auto">
           <div className="flex items-center justify-between gap-2">
             {/* Language Switcher */}
             <button
@@ -302,22 +330,8 @@ export function DashboardSidebar() {
               {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
             </button>
           </div>
-        ) : (
-          <div className="flex flex-col items-center gap-3">
-            <button
-              onClick={() => {
-                const newLang = lang === "fr" ? "en" : "fr";
-                localStorage.setItem("technova_lang", newLang);
-                window.dispatchEvent(new Event("technova_lang_changed"));
-              }}
-              className="text-xs font-bold text-white/80 hover:text-white p-1.5"
-              title="Changer de langue / Switch Language"
-            >
-              <span>{lang.toUpperCase()}</span>
-            </button>
-          </div>
-        )}
-      </SidebarFooter>
+        </SidebarFooter>
+      )}
     </Sidebar>
   );
 }
