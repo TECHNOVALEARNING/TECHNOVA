@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useGeoPricing } from "@/contexts/GeoPricingContext";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import {
   Loader2,
   CheckCircle2,
@@ -26,6 +27,7 @@ import {
   Zap,
   Crown,
   CreditCard,
+  ShoppingBag,
 } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -1123,34 +1125,50 @@ const Field = ({
   </div>
 );
 
-const SuccessFreeView = ({ product, fullName, email, accent }: any) => (
-  <motion.div
-    initial={{ opacity: 0, scale: 0.9 }}
-    animate={{ opacity: 1, scale: 1 }}
-    className="flex flex-col items-center justify-center py-12 text-center"
-  >
+const SuccessFreeView = ({ product, fullName, email, accent }: any) => {
+  const navigate = useNavigate();
+  return (
     <motion.div
-      initial={{ scale: 0 }}
-      animate={{ scale: 1 }}
-      transition={{ delay: 0.1, type: "spring" }}
-      className="h-20 w-20 rounded-full flex items-center justify-center mb-5"
-      style={{ background: `linear-gradient(135deg, ${accent}20, ${accent}40)` }}
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="flex flex-col items-center justify-center py-12 text-center"
     >
-      <CheckCircle2 className="h-12 w-12" style={{ color: accent }} />
+      <motion.div
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ delay: 0.1, type: "spring" }}
+        className="h-20 w-20 rounded-full flex items-center justify-center mb-5"
+        style={{ background: `linear-gradient(135deg, ${accent}20, ${accent}40)` }}
+      >
+        <CheckCircle2 className="h-12 w-12" style={{ color: accent }} />
+      </motion.div>
+      <h3 className="text-2xl font-bold text-foreground mb-2">Bravo, c'est à vous !</h3>
+      <p className="text-sm text-muted-foreground mb-6 max-w-xs">
+        Vous avez obtenu <strong className="text-foreground">{product.title}</strong> avec succès.
+      </p>
+      <div className="w-full max-w-xs space-y-2">
+        {product.download_url && (
+          <Button asChild className="w-full" style={{ backgroundColor: accent }}>
+            <a href={product.download_url} target="_blank" rel="noreferrer" download>
+              <Download className="h-4 w-4 mr-2" /> Télécharger le fichier
+            </a>
+          </Button>
+        )}
+        <Button
+          variant={product.download_url ? "outline" : "default"}
+          className={`w-full ${!product.download_url ? "text-white" : ""}`}
+          style={!product.download_url ? { backgroundColor: accent } : undefined}
+          onClick={() => navigate("/buyer-login")}
+        >
+          <ShoppingBag className="h-4 w-4 mr-2" /> Accéder à mes achats
+        </Button>
+      </div>
+      <p className="text-xs text-muted-foreground mt-4 max-w-xs">
+        Un email de confirmation a été envoyé à <strong>{email}</strong>. Pensez à vérifier vos spams.
+      </p>
     </motion.div>
-    <h3 className="text-2xl font-bold text-foreground mb-2">Bravo, c'est à vous !</h3>
-    <p className="text-sm text-muted-foreground mb-6 max-w-xs">
-      Vous avez obtenu <strong className="text-foreground">{product.title}</strong> avec succès.
-    </p>
-    {product.download_url && (
-      <Button asChild className="w-full max-w-xs" style={{ backgroundColor: accent }}>
-        <a href={product.download_url} target="_blank" rel="noreferrer">
-          <Download className="h-4 w-4 mr-2" /> Télécharger
-        </a>
-      </Button>
-    )}
-  </motion.div>
-);
+  );
+};
 
 const PayProcessingView = ({
   status,
@@ -1164,6 +1182,7 @@ const PayProcessingView = ({
   onRetry,
   onClose,
 }: any) => {
+  const navigate = useNavigate();
   if (status === "success") {
     return (
       <div className="flex flex-col items-center text-center py-6">
@@ -1189,20 +1208,30 @@ const PayProcessingView = ({
         <p className="text-xs text-muted-foreground/80 mb-6">
           Tout est dans votre boîte mail + l'espace « Mes achats ».
         </p>
-        {product.download_url && (
+        <div className="w-full max-w-sm space-y-2">
+          {product.download_url && (
+            <Button
+              asChild
+              className="w-full h-12"
+              style={{ background: `linear-gradient(135deg, ${accent}, #C9962E)` }}
+            >
+              <a href={product.download_url} target="_blank" rel="noreferrer" download>
+                <Download className="h-4 w-4 mr-2" /> Télécharger maintenant
+              </a>
+            </Button>
+          )}
           <Button
-            asChild
-            className="w-full max-w-sm h-12 mb-2"
-            style={{ background: `linear-gradient(135deg, ${accent}, #C9962E)` }}
+            variant={product.download_url ? "outline" : "default"}
+            className={`w-full h-11 ${!product.download_url ? "text-white" : ""}`}
+            style={!product.download_url ? { background: `linear-gradient(135deg, ${accent}, #C9962E)` } : undefined}
+            onClick={() => navigate("/buyer-login")}
           >
-            <a href={product.download_url} target="_blank" rel="noreferrer">
-              <Download className="h-4 w-4 mr-2" /> Télécharger maintenant
-            </a>
+            <ShoppingBag className="h-4 w-4 mr-2" /> Accéder à mes achats
           </Button>
-        )}
-        <Button variant="outline" onClick={onClose} className="w-full max-w-sm h-11">
-          Fermer
-        </Button>
+          <Button variant="ghost" onClick={onClose} className="w-full h-10 text-muted-foreground">
+            Fermer
+          </Button>
+        </div>
       </div>
     );
   }

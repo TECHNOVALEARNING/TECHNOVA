@@ -382,7 +382,7 @@ const StorePage = ({ customSlug }: { customSlug?: string }) => {
               <span className="sm:hidden">Accueil</span>
             </Link>
             <span className="text-border">|</span>
-            <a href="https://technovalearning.com/buyer-login">
+            <Link to="/buyer-login">
               <Button
                 variant="outline"
                 size="sm"
@@ -391,7 +391,7 @@ const StorePage = ({ customSlug }: { customSlug?: string }) => {
                 <ShoppingBag className="h-3.5 w-3.5" />
                 <span className="hidden sm:inline">Mes achats</span>
               </Button>
-            </a>
+            </Link>
           </div>
         </div>
         {/* Mobile nav */}

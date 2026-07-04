@@ -22,7 +22,7 @@ const PaymentCallback = () => {
             <span>Pensez à vérifier vos spams</span>
           </div>
           <div className="flex gap-3 justify-center pt-4">
-            <Button onClick={() => navigate("/buyer/login")}>Voir mes achats</Button>
+            <Button onClick={() => navigate("/buyer-login")}>Voir mes achats</Button>
             <Button onClick={() => navigate("/")} variant="outline">
               Retour à l'accueil
             </Button>
