@@ -86,7 +86,10 @@ Deno.serve(async (req) => {
   } catch (e: any) {
     return j({ error: e.message }, 500);
   }
-  function j(b: unknown, s = 200) {
+  function j(b: any, s = 200) {
+    if (b && typeof b === "object" && b.error && !b.message) {
+      b.message = b.error;
+    }
     return new Response(JSON.stringify(b), {
       status: s,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
