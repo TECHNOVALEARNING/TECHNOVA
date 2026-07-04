@@ -131,14 +131,6 @@ export function DashboardSidebar() {
     window.dispatchEvent(new Event("technova_theme_changed"));
   };
 
-  const handleLinkClick = () => {
-    if (isMobile) {
-      setTimeout(() => {
-        setOpenMobile(false);
-      }, 300);
-    }
-  };
-
   const handleFaqClick = () => {
     if (isMobile) {
       setTimeout(() => {
@@ -212,7 +204,6 @@ export function DashboardSidebar() {
                       to={item.url}
                       end={item.url === "/dashboard"}
                       className="flex items-center justify-between w-full"
-                      onClick={handleLinkClick}
                     >
                       <div className="flex items-center gap-2">
                         <item.icon className="h-4 w-4 shrink-0" />
@@ -243,7 +234,6 @@ export function DashboardSidebar() {
                 >
                   <NavLink
                     to="/dashboard/settings"
-                    onClick={handleLinkClick}
                   >
                     <Settings className="h-3.5 w-3.5" />
                     {!collapsed && <span>{t.settings}</span>}
@@ -279,7 +269,6 @@ export function DashboardSidebar() {
                       >
                         <NavLink
                           to={item.url}
-                          onClick={handleLinkClick}
                         >
                           <item.icon className="h-3.5 w-3.5" />
                           {!collapsed && <span>{item.title}</span>}
