@@ -971,7 +971,7 @@ const CreateProduct = () => {
                           <SelectContent>
                             <SelectItem value="one_time">Paiement unique</SelectItem>
                             <SelectItem value="subscription">Abonnement</SelectItem>
-                            {isAdmin && <SelectItem value="free">Gratuit</SelectItem>}
+                            <SelectItem value="free">Gratuit</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>

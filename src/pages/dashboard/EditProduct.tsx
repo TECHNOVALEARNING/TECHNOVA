@@ -310,10 +310,6 @@ const EditProduct = () => {
       toast.error("Vous n'êtes pas autorisé à modifier ce type de produit.");
       return false;
     }
-    if (!isAdmin && pricingModel === "free") {
-      toast.error("Seul l'administrateur peut publier des produits gratuitement.");
-      return false;
-    }
     if (manageSaving) setSaving(true);
 
     try {
@@ -839,7 +835,7 @@ const EditProduct = () => {
                       <SelectContent>
                         <SelectItem value="one_time">Paiement unique</SelectItem>
                         <SelectItem value="subscription">Abonnement</SelectItem>
-                        {isAdmin && <SelectItem value="free">Gratuit</SelectItem>}
+                        <SelectItem value="free">Gratuit</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
