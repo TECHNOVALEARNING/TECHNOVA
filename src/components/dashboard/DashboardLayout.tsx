@@ -91,6 +91,16 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
 
+  // Sync theme when toggled from sidebar (mobile) or other components
+  useEffect(() => {
+    const handleThemeChange = () => {
+      const stored = localStorage.getItem("technova_theme") || "light";
+      setTheme(stored);
+    };
+    window.addEventListener("technova_theme_changed", handleThemeChange);
+    return () => window.removeEventListener("technova_theme_changed", handleThemeChange);
+  }, []);
+
   const t = translations[lang === "en" ? "en" : "fr"];
 
   return (
