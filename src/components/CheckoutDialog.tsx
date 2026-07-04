@@ -323,6 +323,11 @@ const CheckoutDialog = ({
 
   // ─── Initiate payment flow (KKiaPay) ───
   const handleConfirmPay = async () => {
+    if (discountedPrice <= 0) {
+      await handleFreeCheckout();
+      return;
+    }
+
     setLoading(true);
     setPayError("");
     setPayStatus("processing");
@@ -430,7 +435,9 @@ const CheckoutDialog = ({
       // Launch KKiaPay Widget overlay
       const kkiapayKey = import.meta.env.VITE_KKIAPAY_PUBLIC_KEY;
       if (!kkiapayKey) {
-        console.warn("WARNING: VITE_KKIAPAY_PUBLIC_KEY environment variable is not defined.");
+        throw new Error(
+          "La clé de paiement publique KKiaPay n'est pas configurée. Veuillez contacter le support technique.",
+        );
       }
       const isSandbox = import.meta.env.VITE_KKIAPAY_SANDBOX === "true";
 
@@ -482,7 +489,7 @@ const CheckoutDialog = ({
         return;
       }
     }
-    if (isFree) {
+    if (isFree || discountedPrice <= 0) {
       handleFreeCheckout();
       return;
     }
@@ -1130,9 +1137,9 @@ const SuccessFreeView = ({ product, fullName, email, accent }: any) => (
     >
       <CheckCircle2 className="h-12 w-12" style={{ color: accent }} />
     </motion.div>
-    <h3 className="text-2xl font-bold text-gray-900 mb-2">Bravo, c'est à vous !</h3>
-    <p className="text-sm text-gray-500 mb-6 max-w-xs">
-      Vous avez obtenu <strong className="text-gray-900">{product.title}</strong> avec succès.
+    <h3 className="text-2xl font-bold text-foreground mb-2">Bravo, c'est à vous !</h3>
+    <p className="text-sm text-muted-foreground mb-6 max-w-xs">
+      Vous avez obtenu <strong className="text-foreground">{product.title}</strong> avec succès.
     </p>
     {product.download_url && (
       <Button asChild className="w-full max-w-xs" style={{ backgroundColor: accent }}>
@@ -1176,9 +1183,9 @@ const PayProcessingView = ({
             <CheckCircle2 className="h-14 w-14 text-white" />
           </div>
         </motion.div>
-        <h3 className="text-2xl font-bold text-gray-900 mb-2">Paiement réussi !</h3>
-        <p className="text-sm text-gray-500 mb-1">Merci pour votre achat.</p>
-        <p className="text-xs text-gray-400 mb-6">
+        <h3 className="text-2xl font-bold text-foreground mb-2">Paiement réussi !</h3>
+        <p className="text-sm text-muted-foreground mb-1">Merci pour votre achat.</p>
+        <p className="text-xs text-muted-foreground/80 mb-6">
           Tout est dans votre boîte mail + l'espace « Mes achats ».
         </p>
         {product.download_url && (
@@ -1202,11 +1209,11 @@ const PayProcessingView = ({
   if (status === "failed") {
     return (
       <div className="flex flex-col items-center text-center py-6">
-        <div className="h-20 w-20 rounded-full bg-red-50 flex items-center justify-center mb-5">
+        <div className="h-20 w-20 rounded-full bg-red-500/10 flex items-center justify-center mb-5">
           <X className="h-10 w-10 text-red-500" />
         </div>
-        <h3 className="text-2xl font-bold text-gray-900 mb-2">Paiement non confirmé</h3>
-        <p className="text-sm text-gray-500 mb-6 max-w-sm">
+        <h3 className="text-2xl font-bold text-foreground mb-2">Paiement non confirmé</h3>
+        <p className="text-sm text-muted-foreground mb-6 max-w-sm">
           {error || "La transaction n'a pas été validée."}
         </p>
         <div className="flex gap-2 w-full max-w-sm">
@@ -1250,22 +1257,22 @@ const PayProcessingView = ({
         </motion.div>
       </div>
 
-      <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Paiement en cours</h3>
-      <p className="text-sm text-gray-500 mb-1">
+      <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-2">Paiement en cours</h3>
+      <p className="text-sm text-muted-foreground mb-1">
         Veuillez finaliser votre transaction sur le widget sécurisé KKiaPay.
       </p>
-      <p className="text-sm font-mono font-bold text-gray-900 mb-5">
+      <p className="text-sm font-mono font-bold text-foreground mb-5">
         Montant : {amount.toLocaleString()} {currency}
       </p>
 
-      <div className="w-full max-w-sm rounded-2xl border border-gray-200 bg-gray-50 p-4 mb-4">
+      <div className="w-full max-w-sm rounded-2xl border border-border/60 bg-muted/20 p-4 mb-4">
         <div className="flex items-center justify-center gap-3">
           <Loader2 className="h-5 w-5 animate-spin" style={{ color: accent }} />
-          <div className="text-sm text-gray-700 font-semibold">Attente de confirmation...</div>
+          <div className="text-sm text-foreground font-semibold">Attente de confirmation...</div>
         </div>
       </div>
 
-      <ol className="space-y-2 text-left w-full max-w-sm text-xs text-gray-600 mb-4">
+      <ol className="space-y-2 text-left w-full max-w-sm text-xs text-muted-foreground mb-4">
         {[
           "Suivez les instructions dans la fenêtre KKiaPay",
           "Saisissez votre numéro ou vos coordonnées de carte",
