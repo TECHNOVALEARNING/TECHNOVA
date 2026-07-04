@@ -231,7 +231,7 @@ const DashboardRevenue = () => {
         label: (o.products as any)?.title || t.defaultProduct,
         detail: (o.customers as any)?.name || (o.customers as any)?.email || t.defaultCustomer,
         amount: Number(o.amount),
-        netAmount: Number(o.amount) * (1 - COMMISSION_RATE),
+        netAmount: Number(o.amount) * (1 - commissionPct),
         status: o.status,
         date: o.created_at,
         paymentMethod: o.payment_method,
@@ -262,7 +262,7 @@ const DashboardRevenue = () => {
     }
 
     return filtered.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-  }, [orders, withdrawals, filterType, filterPeriod]);
+  }, [orders, withdrawals, filterType, filterPeriod, commissionPct]);
 
   const statusBadge = (status: string, type: "sale" | "withdrawal") => {
     const map: Record<
