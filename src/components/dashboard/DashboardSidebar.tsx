@@ -131,11 +131,21 @@ export function DashboardSidebar() {
     window.dispatchEvent(new Event("technova_theme_changed"));
   };
 
-  const handleLinkClickOnly = () => {
+  const handleLinkClick = (url: string, e: React.MouseEvent) => {
+    if (isMobile) {
+      e.preventDefault();
+      navigate(url);
+      setTimeout(() => {
+        setOpenMobile(false);
+      }, 80);
+    }
+  };
+
+  const handleFaqClick = () => {
     if (isMobile) {
       setTimeout(() => {
         setOpenMobile(false);
-      }, 100);
+      }, 80);
     }
   };
 
@@ -204,7 +214,7 @@ export function DashboardSidebar() {
                       to={item.url}
                       end={item.url === "/dashboard"}
                       className="flex items-center justify-between w-full"
-                      onClick={handleLinkClickOnly}
+                      onClick={(e) => handleLinkClick(item.url, e)}
                     >
                       <div className="flex items-center gap-2">
                         <item.icon className="h-4 w-4 shrink-0" />
@@ -235,7 +245,7 @@ export function DashboardSidebar() {
                 >
                   <NavLink
                     to="/dashboard/settings"
-                    onClick={handleLinkClickOnly}
+                    onClick={(e) => handleLinkClick("/dashboard/settings", e)}
                   >
                     <Settings className="h-3.5 w-3.5" />
                     {!collapsed && <span>{t.settings}</span>}
@@ -247,7 +257,7 @@ export function DashboardSidebar() {
                   <a
                     href="/faq"
                     target="_blank"
-                    onClick={handleLinkClickOnly}
+                    onClick={handleFaqClick}
                   >
                     <HelpCircle className="h-3.5 w-3.5" />
                     {!collapsed && <span>{t.helpCenter}</span>}
@@ -271,7 +281,7 @@ export function DashboardSidebar() {
                       >
                         <NavLink
                           to={item.url}
-                          onClick={handleLinkClickOnly}
+                          onClick={(e) => handleLinkClick(item.url, e)}
                         >
                           <item.icon className="h-3.5 w-3.5" />
                           {!collapsed && <span>{item.title}</span>}
