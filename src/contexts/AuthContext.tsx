@@ -180,26 +180,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
 
-      if (event === "TOKEN_REFRESHED") {
+      if (event === "TOKEN_REFRESHED" || event === "SIGNED_IN") {
         setSession(nextSession);
         setUser(nextSession?.user ?? null);
+        if (nextSession) {
+          void fetchProfile(nextSession.user.id);
+        }
         return;
       }
 
-      if (event === "SIGNED_OUT" && !signingOutRef.current && !nextSession) {
-        setLoading(true);
-        console.log("AuthContext: SIGNED_OUT detected. Checking getSession to verify...");
-        // Try to get session to confirm if truly signed out or just a temporary state
-        void supabase.auth
-          .getSession()
-          .then(async ({ data: { session: recoveredSession } }) => {
-            if (!mounted) return;
-            console.log("AuthContext: getSession check finished. Recovered:", !!recoveredSession);
-            await syncSession(recoveredSession);
-          })
-          .finally(() => {
-            if (mounted) setLoading(false);
-          });
+      if (event === "SIGNED_OUT") {
+        if (signingOutRef.current) {
+          console.log("AuthContext: User clicked logout. Clearing auth state.");
+          setSession(null);
+          setUser(null);
+          setProfile(null);
+        } else {
+          console.log("AuthContext: Ignored transient SIGNED_OUT event to prevent session loss.");
+        }
         return;
       }
 

@@ -186,6 +186,7 @@ const Sidebar = React.forwardRef<
           <SheetContent
             data-sidebar="sidebar"
             data-mobile="true"
+            overlayClassName="bg-transparent"
             className={cn(
               "w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden",
               className,
