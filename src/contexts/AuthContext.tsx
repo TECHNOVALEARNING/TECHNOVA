@@ -144,8 +144,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
     // 1. Get initial session on mount
-    void supabase.auth.getSession().then(async ({ data: { session: initialSession } }) => {
+    console.log("AuthContext: Initializing, fetching session...");
+    void supabase.auth.getSession().then(async ({ data: { session: initialSession }, error }) => {
       if (!mounted) return;
+      if (error) {
+        console.error("AuthContext: Error fetching session on mount:", error);
+      }
+      console.log("AuthContext: Initial session retrieved:", initialSession ? "Logged In" : "No Session");
       if (initialSession) {
         await syncSession(initialSession);
       } else {
@@ -153,6 +158,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
       setLoading(false);
       bootstrapCompletedRef.current = true;
+    }).catch(err => {
+      console.error("AuthContext: Unexpected error during initial getSession:", err);
+      if (mounted) {
+        setLoading(false);
+        bootstrapCompletedRef.current = true;
+      }
     });
 
     // 2. Listen to subsequent auth events
@@ -160,9 +171,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, nextSession) => {
       if (!mounted) return;
+      
+      console.log(`AuthContext: onAuthStateChange event fired: ${event}`, "Session exists:", !!nextSession);
 
       // Ignore initial auth state change events handled by getSession
       if (!bootstrapCompletedRef.current) {
+        console.log("AuthContext: Ignoring initial event before bootstrap completion.");
         return;
       }
 
@@ -174,11 +188,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       if (event === "SIGNED_OUT" && !signingOutRef.current && !nextSession) {
         setLoading(true);
+        console.log("AuthContext: SIGNED_OUT detected. Checking getSession to verify...");
         // Try to get session to confirm if truly signed out or just a temporary state
         void supabase.auth
           .getSession()
           .then(async ({ data: { session: recoveredSession } }) => {
             if (!mounted) return;
+            console.log("AuthContext: getSession check finished. Recovered:", !!recoveredSession);
             await syncSession(recoveredSession);
           })
           .finally(() => {

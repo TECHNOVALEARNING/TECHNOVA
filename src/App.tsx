@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -98,6 +99,15 @@ const ExternalRedirect = ({ to }: { to: string }) => {
 
 const AppContent = () => {
   const { isCustomDomain, storeSlug, loading } = useCustomDomain();
+
+  useEffect(() => {
+    const hostname = window.location.hostname;
+    if (hostname === "technovalearning.com") {
+      window.location.replace(
+        `https://www.technovalearning.com${window.location.pathname}${window.location.search}${window.location.hash}`
+      );
+    }
+  }, []);
 
   if (loading) {
     return (
