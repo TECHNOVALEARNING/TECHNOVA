@@ -143,40 +143,28 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     handleVisibilityChange();
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
-    const scheduleSessionSync = (nextSession: Session | null) => {
-      window.setTimeout(() => {
-        if (!mounted) return;
+    // 1. Get initial session on mount
+    void supabase.auth.getSession().then(async ({ data: { session: initialSession } }) => {
+      if (!mounted) return;
+      if (initialSession) {
+        await syncSession(initialSession);
+      } else {
+        await syncSession(null);
+      }
+      setLoading(false);
+      bootstrapCompletedRef.current = true;
+    });
 
-        void syncSession(nextSession).finally(() => {
-          if (mounted) {
-            setLoading(false);
-          }
-        });
-      }, 0);
-    };
-
-    const recoverAfterUnexpectedSignedOut = () => {
-      window.setTimeout(() => {
-        if (!mounted) return;
-
-        void supabase.auth
-          .getSession()
-          .then(async ({ data: { session: recoveredSession } }) => {
-            if (!mounted) return;
-            await syncSession(recoveredSession);
-          })
-          .finally(() => {
-            if (mounted) setLoading(false);
-          });
-      }, 250);
-    };
-
+    // 2. Listen to subsequent auth events
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, nextSession) => {
       if (!mounted) return;
 
-      bootstrapCompletedRef.current = true;
+      // Ignore initial auth state change events handled by getSession
+      if (!bootstrapCompletedRef.current) {
+        return;
+      }
 
       if (event === "TOKEN_REFRESHED") {
         setSession(nextSession);
@@ -186,12 +174,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       if (event === "SIGNED_OUT" && !signingOutRef.current && !nextSession) {
         setLoading(true);
-        recoverAfterUnexpectedSignedOut();
+        // Try to get session to confirm if truly signed out or just a temporary state
+        void supabase.auth
+          .getSession()
+          .then(async ({ data: { session: recoveredSession } }) => {
+            if (!mounted) return;
+            await syncSession(recoveredSession);
+          })
+          .finally(() => {
+            if (mounted) setLoading(false);
+          });
         return;
       }
 
       setLoading(true);
-      scheduleSessionSync(nextSession);
+      void syncSession(nextSession).finally(() => {
+        if (mounted) setLoading(false);
+      });
     });
 
     return () => {
