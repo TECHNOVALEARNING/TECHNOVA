@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
@@ -97,6 +97,25 @@ const ExternalRedirect = ({ to }: { to: string }) => {
   return null;
 };
 
+const OAuthRedirectHandler = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const hash = location.hash;
+    const pathname = location.pathname;
+    if (
+      hash &&
+      (hash.includes("access_token=") || hash.includes("id_token=") || hash.includes("error=")) &&
+      (pathname === "/" || pathname === "/login" || pathname === "/register")
+    ) {
+      navigate("/dashboard" + hash, { replace: true });
+    }
+  }, [location, navigate]);
+
+  return null;
+};
+
 const AppContent = () => {
   const { isCustomDomain, storeSlug, loading } = useCustomDomain();
 
@@ -106,18 +125,6 @@ const AppContent = () => {
       window.location.replace(
         `https://www.technovalearning.com${window.location.pathname}${window.location.search}${window.location.hash}`
       );
-      return;
-    }
-
-    // Intercept OAuth callback hash parameters on non-dashboard entry pages and route straight to dashboard
-    const hash = window.location.hash;
-    const pathname = window.location.pathname;
-    if (
-      hash &&
-      (hash.includes("access_token=") || hash.includes("id_token=") || hash.includes("error=")) &&
-      (pathname === "/" || pathname === "/login" || pathname === "/register")
-    ) {
-      window.location.replace(`${window.location.origin}/dashboard${hash}`);
     }
   }, []);
 
@@ -153,6 +160,7 @@ const AppContent = () => {
   return (
     <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <ScrollToTop />
+      <OAuthRedirectHandler />
       <AuthProvider>
         <div className="relative min-h-screen overflow-hidden">
           {/* Background floating orbs */}
