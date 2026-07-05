@@ -184,7 +184,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setSession(nextSession);
         setUser(nextSession?.user ?? null);
         if (nextSession) {
-          void fetchProfile(nextSession.user.id);
+          setLoading(true);
+          void fetchProfile(nextSession.user.id).finally(() => {
+            if (mounted) setLoading(false);
+          });
         }
         return;
       }
