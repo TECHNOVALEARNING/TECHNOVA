@@ -8,28 +8,7 @@ import { useState, useEffect, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
-const features = [
-  {
-    icon: GraduationCap,
-    title: "Modules structurés",
-    desc: "Créez des formations avec chapitres, leçons et progression des élèves.",
-  },
-  {
-    icon: Video,
-    title: "Vidéo HD",
-    desc: "Hébergez vos vidéos directement sur la plateforme avec streaming adaptatif.",
-  },
-  {
-    icon: Award,
-    title: "Certificats",
-    desc: "Générez automatiquement des certificats de complétion pour vos étudiants.",
-  },
-  {
-    icon: Users,
-    title: "Communauté",
-    desc: "Espace de discussion intégré pour vos élèves et forums de support.",
-  },
-];
+// Features list will be dynamically translated based on language state.
 
 const Cours = () => {
   const [lang, setLang] = useState(() =>
@@ -101,6 +80,37 @@ const Cours = () => {
       },
     }));
   }, [courses]);
+
+  const localizedFeatures = [
+    {
+      icon: GraduationCap,
+      title: lang === "fr" ? "Modules structurés" : "Structured Modules",
+      desc: lang === "fr" 
+        ? "Accédez à un parcours d'apprentissage clair et structuré par chapitres et leçons."
+        : "Access a clear learning path structured by chapters and lessons.",
+    },
+    {
+      icon: Video,
+      title: lang === "fr" ? "Vidéos de haute qualité" : "High Quality Videos",
+      desc: lang === "fr"
+        ? "Apprenez en toute fluidité grâce à nos vidéos explicatives détaillées."
+        : "Learn smoothly with our detailed explainer videos.",
+    },
+    {
+      icon: Award,
+      title: lang === "fr" ? "Certificats officiels" : "Official Certificates",
+      desc: lang === "fr"
+        ? "Valorisez vos compétences avec un certificat de réussite TECHNOVA."
+        : "Showcase your skills with a TECHNOVA completion certificate.",
+    },
+    {
+      icon: Users,
+      title: lang === "fr" ? "Accompagnement & Échanges" : "Mentorship & Discussion",
+      desc: lang === "fr"
+        ? "Posez vos questions à nos formateurs et échangez avec les autres apprenants."
+        : "Ask your questions to our trainers and interact with other students.",
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-background">
@@ -179,7 +189,7 @@ const Cours = () => {
       <section className="py-24 bg-background">
         <div className="container mx-auto px-6">
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-            {features.map((f, i) => (
+            {localizedFeatures.map((f, i) => (
               <motion.div
                 key={f.title}
                 initial={{ opacity: 0, y: 20 }}
