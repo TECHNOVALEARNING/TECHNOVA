@@ -98,6 +98,7 @@ const Login = () => {
     }
 
     toast.success(t.loginSuccess);
+    navigate("/dashboard", { replace: true });
   };
 
   const handleGoogleLogin = async () => {
