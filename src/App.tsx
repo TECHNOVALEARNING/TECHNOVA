@@ -1,11 +1,12 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { CartProvider } from "@/contexts/CartContext";
 import Index from "./pages/Index";
@@ -97,27 +98,15 @@ const ExternalRedirect = ({ to }: { to: string }) => {
   return null;
 };
 
-const OAuthRedirectHandler = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  useEffect(() => {
-    const hash = location.hash;
-    const pathname = location.pathname;
-    if (
-      hash &&
-      (hash.includes("access_token=") || hash.includes("id_token=") || hash.includes("error=")) &&
-      (pathname === "/" || pathname === "/login" || pathname === "/register")
-    ) {
-      navigate("/dashboard" + hash, { replace: true });
-    }
-  }, [location, navigate]);
-
-  return null;
-};
-
 const AppContent = () => {
   const { isCustomDomain, storeSlug, loading } = useCustomDomain();
+  const [authHashPending, setAuthHashPending] = useState(() => {
+    const hash = window.location.hash;
+    return !!(
+      hash &&
+      (hash.includes("access_token=") || hash.includes("id_token=") || hash.includes("error="))
+    );
+  });
 
   useEffect(() => {
     const hostname = window.location.hostname;
@@ -128,10 +117,45 @@ const AppContent = () => {
     }
   }, []);
 
-  if (loading) {
+  // When the app loads with an OAuth hash (e.g. #access_token=...),
+  // block all rendering and let Supabase consume the token silently.
+  // Once Supabase fires the auth state change, the hash is cleared
+  // and we redirect to /dashboard without any page flashing.
+  useEffect(() => {
+    if (!authHashPending) return;
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED") {
+        // Token consumed — clear hash and redirect to dashboard
+        window.history.replaceState(null, "", "/dashboard");
+        setAuthHashPending(false);
+      } else if (event === "SIGNED_OUT") {
+        // Auth failed — just clear the gate
+        window.history.replaceState(null, "", "/login");
+        setAuthHashPending(false);
+      }
+    });
+
+    // Safety timeout: if Supabase doesn't fire within 8 seconds, unblock
+    const timer = setTimeout(() => {
+      setAuthHashPending(false);
+    }, 8000);
+
+    return () => {
+      subscription.unsubscribe();
+      clearTimeout(timer);
+    };
+  }, [authHashPending]);
+
+  if (authHashPending || loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="h-10 w-10 animate-spin text-primary" />
+          <p className="text-sm text-muted-foreground font-medium animate-pulse">
+            Connexion en cours…
+          </p>
+        </div>
       </div>
     );
   }
@@ -160,7 +184,6 @@ const AppContent = () => {
   return (
     <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <ScrollToTop />
-      <OAuthRedirectHandler />
       <AuthProvider>
         <div className="relative min-h-screen overflow-hidden">
           {/* Background floating orbs */}
