@@ -65,10 +65,31 @@ const ProductDetail = () => {
     typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
   );
 
+  const [timeLeft, setTimeLeft] = useState({ hours: 2, minutes: 14, seconds: 45 });
+
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
     window.addEventListener("technova_lang_changed", handleLangChange);
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
+  }, []);
+
+  useEffect(() => {
+    const updateCountdown = () => {
+      const now = new Date();
+      const midnight = new Date();
+      midnight.setHours(24, 0, 0, 0);
+      
+      const diff = midnight.getTime() - now.getTime();
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      
+      setTimeLeft({ hours, minutes, seconds });
+    };
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+    return () => clearInterval(interval);
   }, []);
 
   const t = translations[lang === "en" ? "en" : "fr"];
@@ -156,6 +177,50 @@ const ProductDetail = () => {
             <p className="mb-8 text-lg text-muted-foreground leading-relaxed">
               {product.description}
             </p>
+
+            {/* Urgent Countdown Timer */}
+            <div className="mb-6 rounded-xl border border-red-200/50 bg-red-50/50 dark:border-red-950/30 dark:bg-red-950/10 p-4">
+              <div className="flex items-center gap-2 text-red-600 dark:text-red-400 mb-2">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                </span>
+                <span className="text-[10px] font-bold uppercase tracking-wider">
+                  {lang === "fr" ? "Offre limitée - Bientôt expiré !" : "Limited time offer - Expiring soon!"}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="flex flex-col items-center">
+                  <span className="bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-300 font-extrabold text-sm px-2 py-0.5 rounded min-w-[32px] text-center border border-red-200/40">
+                    {String(timeLeft.hours).padStart(2, "0")}
+                  </span>
+                  <span className="text-[9px] font-semibold text-muted-foreground mt-1">
+                    {lang === "fr" ? "Heures" : "Hours"}
+                  </span>
+                </div>
+                <span className="text-sm font-bold text-red-400 -mt-3">:</span>
+                <div className="flex flex-col items-center">
+                  <span className="bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-300 font-extrabold text-sm px-2 py-0.5 rounded min-w-[32px] text-center border border-red-200/40">
+                    {String(timeLeft.minutes).padStart(2, "0")}
+                  </span>
+                  <span className="text-[9px] font-semibold text-muted-foreground mt-1">
+                    Min
+                  </span>
+                </div>
+                <span className="text-sm font-bold text-red-400 -mt-3">:</span>
+                <div className="flex flex-col items-center">
+                  <span className="bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-300 font-extrabold text-sm px-2 py-0.5 rounded min-w-[32px] text-center border border-red-200/40 animate-pulse">
+                    {String(timeLeft.seconds).padStart(2, "0")}
+                  </span>
+                  <span className="text-[9px] font-semibold text-muted-foreground mt-1">
+                    Sec
+                  </span>
+                </div>
+                <div className="ml-auto text-[10px] text-muted-foreground font-medium max-w-[100px] text-right">
+                  {lang === "fr" ? "Bénéficiez du meilleur tarif !" : "Get the best price now!"}
+                </div>
+              </div>
+            </div>
 
             <div className="mb-8 rounded-xl border border-border bg-card p-6">
               <div className="mb-4 text-3xl font-bold text-foreground">
