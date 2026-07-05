@@ -131,6 +131,10 @@ const CreateProduct = () => {
   const [fileFormat, setFileFormat] = useState<"audio" | "image" | "pdf" | "video" | null>(null);
   const [videoUrl, setVideoUrl] = useState("");
 
+  // Countdown timer settings
+  const [countdownEnabled, setCountdownEnabled] = useState(false);
+  const [countdownEndsAt, setCountdownEndsAt] = useState("");
+
   // Course modules
   const [courseModules, setCourseModules] = useState<Module[]>([]);
 
@@ -296,6 +300,12 @@ const CreateProduct = () => {
         file_format: fileFormat,
         creator_id: user.id,
         is_published: false,
+        marketing_sections: {
+          countdown_timer: {
+            enabled: countdownEnabled,
+            ends_at: countdownEnabled && countdownEndsAt ? new Date(countdownEndsAt).toISOString() : null,
+          }
+        },
       };
 
       if (selectedType === "license") {
@@ -1041,7 +1051,44 @@ const CreateProduct = () => {
                     </>
                   )}
 
-                  {/* License-specific fields in step 2 */}
+                  {/* Countdown Timer Config */}
+                  {pricingModel !== "free" && category !== "discovery" && (
+                    <div className="p-5 rounded-xl border border-border bg-card space-y-4">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="space-y-0.5">
+                          <label className="text-sm font-semibold text-foreground flex items-center gap-2">
+                            <Clock className="h-4 w-4 text-amber-500" />
+                            Compte à rebours de promotion
+                          </label>
+                          <p className="text-xs text-muted-foreground">
+                            Affichez une urgence de promotion sur la page du produit.
+                          </p>
+                        </div>
+                        <Switch
+                          checked={countdownEnabled}
+                          onCheckedChange={setCountdownEnabled}
+                        />
+                      </div>
+                      
+                      {countdownEnabled && (
+                        <div className="space-y-2 pt-2 border-t border-border animate-in fade-in slide-in-from-top-2">
+                          <label className="text-xs font-semibold text-foreground">
+                            Date et heure d'expiration (Locale) <span className="text-destructive">*</span>
+                          </label>
+                          <Input
+                            type="datetime-local"
+                            value={countdownEndsAt}
+                            onChange={(e) => setCountdownEndsAt(e.target.value)}
+                            required={countdownEnabled}
+                            className="h-12 bg-background"
+                          />
+                          <p className="text-[10px] text-muted-foreground">
+                            Le compte à rebours se terminera exactement à cette heure sur la page du produit.
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  )}
                   {selectedType === "license" && (
                     <div className="p-5 rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50/50 dark:bg-purple-900/10 space-y-4">
                       <p className="text-sm font-semibold text-foreground flex items-center gap-2">

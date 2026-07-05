@@ -69,6 +69,7 @@ interface Product {
   hide_from_store?: boolean | null;
   collect_shipping_address?: boolean | null;
   hide_sales_count?: boolean | null;
+  marketing_sections?: any;
 }
 
 interface StoreInfo {
@@ -119,7 +120,8 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
     typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
   );
 
-  const [timeLeft, setTimeLeft] = useState({ hours: 2, minutes: 14, seconds: 45 });
+  const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
+  const [isExpired, setIsExpired] = useState(false);
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -128,12 +130,24 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
   }, []);
 
   useEffect(() => {
+    const timerConfig = product?.marketing_sections?.countdown_timer;
+    if (!timerConfig?.enabled || !timerConfig?.ends_at) {
+      return;
+    }
+
+    const targetDate = new Date(timerConfig.ends_at);
+
     const updateCountdown = () => {
       const now = new Date();
-      const midnight = new Date();
-      midnight.setHours(24, 0, 0, 0);
+      const diff = targetDate.getTime() - now.getTime();
       
-      const diff = midnight.getTime() - now.getTime();
+      if (diff <= 0) {
+        setIsExpired(true);
+        setTimeLeft({ hours: 0, minutes: 0, seconds: 0 });
+        return;
+      }
+      
+      setIsExpired(false);
       const hours = Math.floor(diff / (1000 * 60 * 60));
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((diff % (1000 * 60)) / 1000);
@@ -144,7 +158,7 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
     updateCountdown();
     const interval = setInterval(updateCountdown, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [product]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -897,48 +911,50 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                 className="lg:sticky lg:top-20 rounded-2xl border border-border bg-card p-5 sm:p-6 space-y-5 shadow-sm"
               >
                 {/* Urgent Countdown Timer */}
-                <div className="rounded-xl border border-red-200/50 bg-red-50/50 dark:border-red-950/30 dark:bg-red-950/10 p-4">
-                  <div className="flex items-center gap-2 text-red-600 dark:text-red-400 mb-2">
-                    <span className="relative flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-                    </span>
-                    <span className="text-[10px] font-bold uppercase tracking-wider">
-                      {lang === "fr" ? "Offre limitée - Bientôt expiré !" : "Limited time offer - Expiring soon!"}
-                    </span>
+                {product.marketing_sections?.countdown_timer?.enabled && !isExpired && (
+                  <div className="rounded-xl border border-red-200/50 bg-red-50/50 dark:border-red-950/30 dark:bg-red-950/10 p-4">
+                    <div className="flex items-center gap-2 text-red-600 dark:text-red-400 mb-2">
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                      </span>
+                      <span className="text-[10px] font-bold uppercase tracking-wider">
+                        {lang === "fr" ? "Offre limitée - Bientôt expiré !" : "Limited time offer - Expiring soon!"}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="flex flex-col items-center">
+                        <span className="bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-300 font-extrabold text-sm px-2 py-0.5 rounded min-w-[32px] text-center border border-red-200/40">
+                          {String(timeLeft.hours).padStart(2, "0")}
+                        </span>
+                        <span className="text-[9px] font-semibold text-muted-foreground mt-1">
+                          {lang === "fr" ? "Heures" : "Hours"}
+                        </span>
+                      </div>
+                      <span className="text-sm font-bold text-red-400 -mt-3">:</span>
+                      <div className="flex flex-col items-center">
+                        <span className="bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-300 font-extrabold text-sm px-2 py-0.5 rounded min-w-[32px] text-center border border-red-200/40">
+                          {String(timeLeft.minutes).padStart(2, "0")}
+                        </span>
+                        <span className="text-[9px] font-semibold text-muted-foreground mt-1">
+                          Min
+                        </span>
+                      </div>
+                      <span className="text-sm font-bold text-red-400 -mt-3">:</span>
+                      <div className="flex flex-col items-center">
+                        <span className="bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-300 font-extrabold text-sm px-2 py-0.5 rounded min-w-[32px] text-center border border-red-200/40 animate-pulse">
+                          {String(timeLeft.seconds).padStart(2, "0")}
+                        </span>
+                        <span className="text-[9px] font-semibold text-muted-foreground mt-1">
+                          Sec
+                        </span>
+                      </div>
+                      <div className="ml-auto text-[10px] text-muted-foreground font-medium max-w-[100px] text-right">
+                        {lang === "fr" ? "Bénéficiez du meilleur tarif !" : "Get the best price now!"}
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <div className="flex flex-col items-center">
-                      <span className="bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-300 font-extrabold text-sm px-2 py-0.5 rounded min-w-[32px] text-center border border-red-200/40">
-                        {String(timeLeft.hours).padStart(2, "0")}
-                      </span>
-                      <span className="text-[9px] font-semibold text-muted-foreground mt-1">
-                        {lang === "fr" ? "Heures" : "Hours"}
-                      </span>
-                    </div>
-                    <span className="text-sm font-bold text-red-400 -mt-3">:</span>
-                    <div className="flex flex-col items-center">
-                      <span className="bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-300 font-extrabold text-sm px-2 py-0.5 rounded min-w-[32px] text-center border border-red-200/40">
-                        {String(timeLeft.minutes).padStart(2, "0")}
-                      </span>
-                      <span className="text-[9px] font-semibold text-muted-foreground mt-1">
-                        Min
-                      </span>
-                    </div>
-                    <span className="text-sm font-bold text-red-400 -mt-3">:</span>
-                    <div className="flex flex-col items-center">
-                      <span className="bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-300 font-extrabold text-sm px-2 py-0.5 rounded min-w-[32px] text-center border border-red-200/40 animate-pulse">
-                        {String(timeLeft.seconds).padStart(2, "0")}
-                      </span>
-                      <span className="text-[9px] font-semibold text-muted-foreground mt-1">
-                        Sec
-                      </span>
-                    </div>
-                    <div className="ml-auto text-[10px] text-muted-foreground font-medium max-w-[100px] text-right">
-                      {lang === "fr" ? "Bénéficiez du meilleur tarif !" : "Get the best price now!"}
-                    </div>
-                  </div>
-                </div>
+                )}
 
                 {/* Price */}
                 <div>

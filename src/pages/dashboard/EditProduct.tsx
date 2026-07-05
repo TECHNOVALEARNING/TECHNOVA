@@ -144,6 +144,10 @@ const EditProduct = () => {
   const [collectShippingAddress, setCollectShippingAddress] = useState(false);
   const [hideSalesCount, setHideSalesCount] = useState(false);
 
+  // Countdown timer settings
+  const [countdownEnabled, setCountdownEnabled] = useState(false);
+  const [countdownEndsAt, setCountdownEndsAt] = useState("");
+
   // Marketing sections
 
   // AI rewriting
@@ -211,6 +215,23 @@ const EditProduct = () => {
       setHideFromStore(!!d.hide_from_store);
       setCollectShippingAddress(!!d.collect_shipping_address);
       setHideSalesCount(!!d.hide_sales_count);
+
+      // Countdown settings loading
+      const marketing: any = data.marketing_sections || {};
+      const timer = marketing.countdown_timer || {};
+      setCountdownEnabled(!!timer.enabled);
+      if (timer.ends_at) {
+        try {
+          const dObj = new Date(timer.ends_at);
+          const offset = dObj.getTimezoneOffset();
+          const localTime = new Date(dObj.getTime() - (offset * 60 * 1000));
+          setCountdownEndsAt(localTime.toISOString().slice(0, 16));
+        } catch (e) {
+          setCountdownEndsAt("");
+        }
+      } else {
+        setCountdownEndsAt("");
+      }
 
       // SEO fields
       setSeoTitle((data as any).seo_title || "");
@@ -355,6 +376,12 @@ const EditProduct = () => {
         hide_from_store: hideFromStore,
         collect_shipping_address: collectShippingAddress,
         hide_sales_count: hideSalesCount,
+        marketing_sections: {
+          countdown_timer: {
+            enabled: countdownEnabled,
+            ends_at: countdownEnabled && countdownEndsAt ? new Date(countdownEndsAt).toISOString() : null,
+          }
+        },
       };
 
       if (type === "license") {
@@ -877,6 +904,45 @@ const EditProduct = () => {
                           />
                         </div>
                       </div>
+                    </div>
+                  )}
+
+                  {/* Countdown Timer Config */}
+                  {pricingModel !== "free" && category !== "discovery" && (
+                    <div className="p-5 rounded-xl border border-border bg-card space-y-4">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="space-y-0.5">
+                          <label className="text-sm font-semibold text-foreground flex items-center gap-2">
+                            <Clock className="h-4 w-4 text-amber-500" />
+                            Compte à rebours de promotion
+                          </label>
+                          <p className="text-xs text-muted-foreground">
+                            Affichez une urgence de promotion sur la page du produit.
+                          </p>
+                        </div>
+                        <Switch
+                          checked={countdownEnabled}
+                          onCheckedChange={setCountdownEnabled}
+                        />
+                      </div>
+                      
+                      {countdownEnabled && (
+                        <div className="space-y-2 pt-2 border-t border-border animate-in fade-in slide-in-from-top-2">
+                          <label className="text-xs font-semibold text-foreground">
+                            Date et heure d'expiration (Locale) <span className="text-destructive">*</span>
+                          </label>
+                          <Input
+                            type="datetime-local"
+                            value={countdownEndsAt}
+                            onChange={(e) => setCountdownEndsAt(e.target.value)}
+                            required={countdownEnabled}
+                            className="h-12 bg-background"
+                          />
+                          <p className="text-[10px] text-muted-foreground">
+                            Le compte à rebours se terminera exactement à cette heure sur la page du produit.
+                          </p>
+                        </div>
+                      )}
                     </div>
                   )}
 
