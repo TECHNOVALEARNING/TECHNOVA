@@ -284,6 +284,10 @@ const DashboardAppearanceTab = () => {
       const newSections = currentSections.map((sec: any) => {
         if (sec.type === "video") {
           videoSectionExists = true;
+          if (!isAdmin) {
+            // Non-admins keep the section unchanged
+            return sec;
+          }
           return {
             ...sec,
             enabled: showVideo,
@@ -300,7 +304,7 @@ const DashboardAppearanceTab = () => {
         return sec;
       });
 
-      if (!videoSectionExists) {
+      if (!videoSectionExists && isAdmin) {
         newSections.push({
           type: "video",
           enabled: showVideo,
@@ -592,80 +596,82 @@ const DashboardAppearanceTab = () => {
         </div>
 
         {/* Vidéo de bienvenue */}
-        <div className="rounded-xl border border-border bg-card p-6 space-y-4">
-          <div className="flex items-center gap-3">
-            <Video className="h-4 w-4 text-muted-foreground" />
-            <div>
-              <p className="text-sm font-semibold text-foreground">{t.welcomeVideoTitle}</p>
-              <p className="text-xs text-muted-foreground">{t.welcomeVideoDesc}</p>
-            </div>
-          </div>
-          <div className="space-y-4 pt-2">
-            <div className="flex items-center justify-between gap-3">
-              <div className="flex items-start gap-3">
-                <Switch checked={showVideo} onCheckedChange={setShowVideo} />
-                <div>
-                  <p className="text-sm font-medium text-foreground">{t.showWelcomeVideoLabel}</p>
-                  <p className="text-xs text-muted-foreground">{t.showWelcomeVideoDesc}</p>
-                </div>
+        {isAdmin && (
+          <div className="rounded-xl border border-border bg-card p-6 space-y-4">
+            <div className="flex items-center gap-3">
+              <Video className="h-4 w-4 text-muted-foreground" />
+              <div>
+                <p className="text-sm font-semibold text-foreground">{t.welcomeVideoTitle}</p>
+                <p className="text-xs text-muted-foreground">{t.welcomeVideoDesc}</p>
               </div>
             </div>
-            <div className="space-y-4 pt-2 border-t border-border mt-2">
-              <div className="space-y-2">
-                <label className="text-xs font-semibold text-foreground">
-                  {t.videoLinkLabel}
-                </label>
-                <div className="flex items-center gap-2">
-                  <Input
-                    value={videoUrl}
-                    onChange={(e) => setVideoUrl(e.target.value)}
-                    placeholder="Ex: https://www.youtube.com/watch?v=9xwazD5SyVg"
-                    className="bg-background flex-1"
-                  />
-                  <label className="flex items-center justify-center h-10 px-4 border border-input rounded-md bg-background hover:bg-muted/50 cursor-pointer text-xs font-medium gap-2 shrink-0 transition-colors">
-                    {uploadingVideo ? (
-                      <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-                    ) : (
-                      <Upload className="h-4 w-4 text-muted-foreground" />
-                    )}
-                    <span>
-                      {uploadingVideo
-                        ? (lang === "fr" ? "Envoi..." : "Uploading...")
-                        : (lang === "fr" ? "Uploader de mon PC" : "Upload from PC")}
-                    </span>
-                    <input
-                      type="file"
-                      accept="video/*"
-                      onChange={handleVideoUpload}
-                      disabled={uploadingVideo}
-                      className="sr-only"
-                    />
-                  </label>
-                </div>
-                {videoUrl && (
-                  <div className="flex items-center justify-between text-xs text-muted-foreground mt-1">
-                    {isDirectVideo(videoUrl) ? (
-                      <span className="text-green-500 font-medium flex items-center gap-1">✓ {lang === "fr" ? "Fichier vidéo hébergé" : "Hosted video file"}</span>
-                    ) : (
-                      <span>{lang === "fr" ? "Lien externe configuré" : "External link configured"}</span>
-                    )}
-                    <button
-                      onClick={() => setVideoUrl("")}
-                      className="text-red-500 hover:underline flex items-center gap-0.5"
-                    >
-                      <X className="h-3 w-3" /> {lang === "fr" ? "Effacer" : "Clear"}
-                    </button>
+            <div className="space-y-4 pt-2">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-start gap-3">
+                  <Switch checked={showVideo} onCheckedChange={setShowVideo} />
+                  <div>
+                    <p className="text-sm font-medium text-foreground">{t.showWelcomeVideoLabel}</p>
+                    <p className="text-xs text-muted-foreground">{t.showWelcomeVideoDesc}</p>
                   </div>
-                )}
-                <p className="text-[10px] text-muted-foreground">
-                  {lang === "fr"
-                    ? "Vous pouvez entrer un lien (YouTube, Vimeo, etc.) OU cliquer sur le bouton à droite pour téléverser un fichier de votre ordinateur (max 50 Mo)."
-                    : "You can enter a link (YouTube, Vimeo, etc.) OR click the button on the right to upload a file from your computer (50MB max)."}
-                </p>
+                </div>
+              </div>
+              <div className="space-y-4 pt-2 border-t border-border mt-2">
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-foreground">
+                    {t.videoLinkLabel}
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      value={videoUrl}
+                      onChange={(e) => setVideoUrl(e.target.value)}
+                      placeholder="Ex: https://www.youtube.com/watch?v=9xwazD5SyVg"
+                      className="bg-background flex-1"
+                    />
+                    <label className="flex items-center justify-center h-10 px-4 border border-input rounded-md bg-background hover:bg-muted/50 cursor-pointer text-xs font-medium gap-2 shrink-0 transition-colors">
+                      {uploadingVideo ? (
+                        <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                      ) : (
+                        <Upload className="h-4 w-4 text-muted-foreground" />
+                      )}
+                      <span>
+                        {uploadingVideo
+                          ? (lang === "fr" ? "Envoi..." : "Uploading...")
+                          : (lang === "fr" ? "Uploader de mon PC" : "Upload from PC")}
+                      </span>
+                      <input
+                        type="file"
+                        accept="video/*"
+                        onChange={handleVideoUpload}
+                        disabled={uploadingVideo}
+                        className="sr-only"
+                      />
+                    </label>
+                  </div>
+                  {videoUrl && (
+                    <div className="flex items-center justify-between text-xs text-muted-foreground mt-1">
+                      {isDirectVideo(videoUrl) ? (
+                        <span className="text-green-500 font-medium flex items-center gap-1">✓ {lang === "fr" ? "Fichier vidéo hébergé" : "Hosted video file"}</span>
+                      ) : (
+                        <span>{lang === "fr" ? "Lien externe configuré" : "External link configured"}</span>
+                      )}
+                      <button
+                        onClick={() => setVideoUrl("")}
+                        className="text-red-500 hover:underline flex items-center gap-0.5"
+                      >
+                        <X className="h-3 w-3" /> {lang === "fr" ? "Effacer" : "Clear"}
+                      </button>
+                    </div>
+                  )}
+                  <p className="text-[10px] text-muted-foreground">
+                    {lang === "fr"
+                      ? "Vous pouvez entrer un lien (YouTube, Vimeo, etc.) OU cliquer sur le bouton à droite pour téléverser un fichier de votre ordinateur (max 50 Mo)."
+                      : "You can enter a link (YouTube, Vimeo, etc.) OR click the button on the right to upload a file from your computer (50MB max)."}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* Sort Order */}
         <div className="rounded-xl border border-border bg-card p-6 space-y-4">
