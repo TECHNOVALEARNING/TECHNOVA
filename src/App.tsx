@@ -106,6 +106,18 @@ const AppContent = () => {
       window.location.replace(
         `https://www.technovalearning.com${window.location.pathname}${window.location.search}${window.location.hash}`
       );
+      return;
+    }
+
+    // Intercept OAuth callback hash parameters on non-dashboard entry pages and route straight to dashboard
+    const hash = window.location.hash;
+    const pathname = window.location.pathname;
+    if (
+      hash &&
+      (hash.includes("access_token=") || hash.includes("id_token=") || hash.includes("error=")) &&
+      (pathname === "/" || pathname === "/login" || pathname === "/register")
+    ) {
+      window.location.replace(`${window.location.origin}/dashboard${hash}`);
     }
   }, []);
 
