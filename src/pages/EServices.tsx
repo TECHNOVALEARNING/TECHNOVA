@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import SEOHead from "@/components/SEOHead";
+import humaniserImg from "@/assets/humaniser.jpg";
 
 interface Skill {
   icon: any;
@@ -229,7 +230,7 @@ const EServices = () => {
         lang === "fr"
           ? "Outil IA de transformation de texte IA en texte humain"
           : "AI tool for transforming AI text into human text",
-      image: "src/assets/humaniser.jpg",
+      image: humaniserImg,
       tags: ["React 19", "Express (Node.js)", "Tailwind CSS 4", "Gemini API", "Motion"],
       stats: "0.8s load time",
       url: "https://humanizer-ai-technova.vercel.app/",
