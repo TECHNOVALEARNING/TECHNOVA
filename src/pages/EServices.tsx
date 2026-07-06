@@ -197,7 +197,7 @@ const EServices = () => {
         lang === "fr" ? "Pixels de conversion configurés" : "Configured conversion pixels",
         lang === "fr" ? "Formulaires de capture intelligents" : "Intelligent capture forms",
       ],
-      price: lang === "fr" ? "À partir de 60 000 FCFA" : "From $100",
+      price: lang === "fr" ? "À partir de 150 000 FCFA" : "From $280",
     },
   ];
 
