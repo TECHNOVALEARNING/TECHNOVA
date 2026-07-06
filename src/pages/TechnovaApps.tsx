@@ -52,9 +52,9 @@ const TechnovaApps = () => {
           ? "Outil d'intelligence artificielle conçu pour humaniser les textes générés par IA afin d'éviter la détection automatique."
           : "AI tool designed to humanize AI-generated text to bypass automated detection algorithms.",
       image: "https://images.unsplash.com/photo-1675557009875-436f0978cf2a?w=800&q=80",
-      tags: ["A venir"],
+      tags: ["React 18", "TypeScript", "Supabase", "Tailwind CSS", "Mobile Money","Technova Humanizer"],
       stats: lang === "fr" ? "0.8s temps de charge" : "0.8s load time",
-      url: "#",
+      url: "https://humanizer-ai-technova.vercel.app/",
       features: [
         lang === "fr" ? "Haute précision sémantique" : "High semantic accuracy",
         lang === "fr" ? "Zéro plagiat" : "Zero plagiarism",
