@@ -1285,7 +1285,7 @@ const Index = () => {
             className="max-lg:!grid-cols-1"
           >
             <img
-              src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&h=600&fit=crop"
+              src="https://i.pinimg.com/1200x/8a/2b/51/8a2b51d771dcd3e25c709d02c3ef1e98.jpg"
               alt="Team"
               style={{ borderRadius: 16, boxShadow: "var(--shadow-lg)", width: "100%" }}
             />
