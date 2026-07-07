@@ -442,6 +442,14 @@ const CheckoutDialog = ({
           product_id: product.id,
           product_title: product.title,
           store_owner_id: product.creator_id,
+          customer_name: fullName,
+          customer_email: email,
+          customer_phone: phone ? `+${fullPhone}` : "+1234567890",
+          promo_code: appliedPromo?.code || null,
+          original_amount: appliedPromo ? effectivePrice : null,
+          shipping_address: shippingPayload,
+          discounted_price: Math.round(discountedPrice),
+          store_slug: storeSlug || null,
         }),
       });
     } catch (err: any) {
