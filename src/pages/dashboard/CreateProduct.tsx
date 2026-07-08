@@ -310,8 +310,12 @@ const CreateProduct = () => {
         toast.info("Envoi du produit sur votre hébergement LWS...");
         downloadUrl = await uploadFileToLWS(downloadFile);
         if (!downloadUrl) {
-          setSaving(false);
-          return;
+          toast.info("L'envoi sur LWS a échoué. Tentative d'envoi alternatif sur Supabase...");
+          downloadUrl = await uploadFile(downloadFile, "downloads");
+          if (!downloadUrl) {
+            setSaving(false);
+            return;
+          }
         }
       } else if (fileFormat === "video" && videoUrl) {
         downloadUrl = videoUrl;
