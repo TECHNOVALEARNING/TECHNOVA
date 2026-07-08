@@ -6,6 +6,7 @@ import { Header, Footer, CourseCard, Course } from "@/components/site/shared";
 import { supabase } from "@/integrations/supabase/client";
 import logoImg from "@/assets/logo.png";
 import appMockupGif from "@/assets/techgif.gif";
+import welcomeGif from "@/assets/welcome.gif";
 import SEOHead from "@/components/SEOHead";
 import { getEmbedUrl, getVideoThumbnailUrl, isDirectVideo } from "@/lib/videoUtils";
 import { BookOpen, Loader2, Search, PackageOpen } from "lucide-react";
@@ -686,9 +687,19 @@ const Index = () => {
                       />
                     )
                   ) : (
-                    <div className="absolute inset-0 bg-black flex items-center justify-center">
-                      <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                    </div>
+                    <img
+                      src={welcomeGif}
+                      alt="Bienvenue sur TECHNOVA Learning"
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                        borderRadius: "var(--radius)",
+                      }}
+                    />
                   )}
                 </div>
               </div>
