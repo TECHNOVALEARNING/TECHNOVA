@@ -6,7 +6,6 @@ import { Header, Footer, CourseCard, Course } from "@/components/site/shared";
 import { supabase } from "@/integrations/supabase/client";
 import logoImg from "@/assets/logo.png";
 import appMockupGif from "@/assets/techgif.gif";
-import welcomeGif from "@/assets/welcome.gif";
 import SEOHead from "@/components/SEOHead";
 import { getEmbedUrl, getVideoThumbnailUrl, isDirectVideo } from "@/lib/videoUtils";
 import { BookOpen, Loader2, Search, PackageOpen } from "lucide-react";
@@ -330,11 +329,11 @@ const Index = () => {
 
   const displayProducts = searchQuery
     ? dbProducts.filter((p) => {
-        return (
-          p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          p.category.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-      })
+      return (
+        p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.category.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    })
     : dbProducts.filter((p) => p.creatorId === adminId).slice(0, 8);
 
   const { data: stats } = useQuery({
@@ -612,7 +611,7 @@ const Index = () => {
                     />
                   ))}
                 </div> */}
-                {/* <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", margin: 0 }}>
+              {/* <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", margin: 0 }}>
                   <strong style={{ color: "var(--text)" }}>Plusieurs</strong>{" "}
                   {lang === "fr" ? "étudiants nous font déjà confiance" : "students trust us"}
                 </p>
@@ -651,7 +650,7 @@ const Index = () => {
                     cursor: "default",
                   }}
                 >
-                  {welcomeVideoUrl && welcomeVideoUrl !== "#" && isLoadedDelayed ? (
+                  {welcomeVideoUrl && welcomeVideoUrl !== "#" && isLoadedDelayed && (
                     isDirectVideo(welcomeVideoUrl) ? (
                       <video
                         src={welcomeVideoUrl}
@@ -686,20 +685,6 @@ const Index = () => {
                         allowFullScreen
                       />
                     )
-                  ) : (
-                    <img
-                      src={welcomeGif}
-                      alt="Bienvenue sur TECHNOVA Learning"
-                      style={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                        borderRadius: "var(--radius)",
-                      }}
-                    />
                   )}
                 </div>
               </div>
@@ -792,7 +777,7 @@ const Index = () => {
                 overflow: "hidden",
               }}
             > */}
-              {/* <div
+          {/* <div
                 style={{
                   position: "absolute",
                   top: -20,
