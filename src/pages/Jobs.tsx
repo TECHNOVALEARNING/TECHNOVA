@@ -689,7 +689,7 @@ const Jobs = () => {
   });
 
   return (
-    <div className="min-h-screen bg-background font-sans transition-colors duration-300">
+    <div className="min-h-screen bg-background font-sans transition-colors duration-300" style={{ fontFamily: "'Manrope', -apple-system, sans-serif" }}>
       <SEOHead
         title={
           lang === "fr"

@@ -91,7 +91,7 @@ const Premium = () => {
       style={{
         background: "var(--bg)",
         color: "var(--text)",
-        fontFamily: "'Outfit', sans-serif",
+        fontFamily: "'Manrope', -apple-system, sans-serif",
       }}
     >
       <SEOHead

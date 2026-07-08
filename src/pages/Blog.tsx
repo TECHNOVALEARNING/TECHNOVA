@@ -354,7 +354,7 @@ export default function Blog() {
   const gridArticles = filteredArticles.slice(1);
 
   return (
-    <div className="min-h-screen bg-background text-foreground transition-colors duration-300 font-sans">
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300 font-sans" style={{ fontFamily: "'Manrope', -apple-system, sans-serif" }}>
       <SEOHead
         title={
           lang === "fr"

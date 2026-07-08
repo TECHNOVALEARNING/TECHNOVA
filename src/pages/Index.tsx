@@ -8,7 +8,7 @@ import logoImg from "@/assets/logo.png";
 import appMockupGif from "@/assets/techgif.gif";
 import SEOHead from "@/components/SEOHead";
 import { getEmbedUrl, getVideoThumbnailUrl, isDirectVideo } from "@/lib/videoUtils";
-import { BookOpen, Loader2 } from "lucide-react";
+import { BookOpen, Loader2, Search, PackageOpen } from "lucide-react";
 
 const SUBCAT_LABELS: Record<string, string> = {
   notion: "Notion",
@@ -100,6 +100,7 @@ const Index = () => {
   const [lang, setLang] = useState(() =>
     typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
   );
+  const [searchQuery, setSearchQuery] = useState("");
   const [isPlaying, setIsPlaying] = useState(true);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -277,7 +278,7 @@ const Index = () => {
     return defaultUrl;
   })();
 
-  const { data: dbProducts = [] } = useQuery({
+  const { data: productsData = { products: [], adminId: "9702b3c5-4acf-42e2-828c-8bf2d50dfff8" } } = useQuery({
     queryKey: ["public_products_home"],
     staleTime: 1000 * 60 * 10, // Cache for 10 minutes
     queryFn: async () => {
@@ -287,15 +288,13 @@ const Index = () => {
         .select("owner_id")
         .eq("slug", "nova-shop")
         .maybeSingle();
-
       const adminId = storeData?.owner_id || "9702b3c5-4acf-42e2-828c-8bf2d50dfff8";
 
       const { data, error } = await supabase
         .from("products")
         .select("*")
-        .eq("creator_id", adminId)
         .order("created_at", { ascending: false })
-        .limit(30);
+        .limit(100);
       if (error) throw error;
       const active = (data || []).filter((p: any) => {
         if (p.category === "discovery") {
@@ -308,7 +307,7 @@ const Index = () => {
           return true;
         }
       });
-      return active.slice(0, 8).map((p: any) => ({
+      const products = active.map((p: any) => ({
         slug: p.id,
         title: p.title,
         cover:
@@ -319,9 +318,23 @@ const Index = () => {
         price: `${p.price} FCFA`,
         oldPrice: p.original_price ? `${p.original_price} FCFA` : undefined,
         duration: lang === "fr" ? "Accès à vie" : "Lifetime access",
+        creatorId: p.creator_id,
       })) as Course[];
+
+      return { products, adminId };
     },
   });
+
+  const { products: dbProducts, adminId } = productsData;
+
+  const displayProducts = searchQuery
+    ? dbProducts.filter((p) => {
+        return (
+          p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          p.category.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+      })
+    : dbProducts.filter((p) => p.creatorId === adminId).slice(0, 8);
 
   const { data: stats } = useQuery({
     queryKey: ["homepage_stats"],
@@ -1018,38 +1031,104 @@ const Index = () => {
                   : "Build your future with our selected ebooks and templates."}
               </p>
             </div>
+
+            {/* Premium glassmorphism search bar */}
+            <div className="relative w-full sm:w-80 md:w-96">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[color:var(--text-secondary)]" style={{ transform: "translateY(-50%)" }} />
+              <input
+                type="text"
+                placeholder={
+                  lang === "fr" ? "Rechercher un produit, ebook..." : "Search product, ebook..."
+                }
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                style={{
+                  width: "100%",
+                  paddingLeft: "2.25rem",
+                  paddingRight: "2.5rem",
+                  paddingTop: "0.625rem",
+                  paddingBottom: "0.625rem",
+                  borderRadius: "12px",
+                  border: "1px solid var(--card-border)",
+                  background: "var(--card)",
+                  backdropFilter: "var(--glass-blur)",
+                  WebkitBackdropFilter: "var(--glass-blur)",
+                  fontSize: "0.875rem",
+                  color: "var(--text)",
+                  outline: "none",
+                  boxShadow: "var(--shadow-sm)",
+                  transition: "all 0.25s",
+                }}
+                className="focus:ring-2 focus:ring-blue-500/20"
+                onFocus={(e) => {
+                  e.target.style.borderColor = "var(--blue)";
+                  e.target.style.boxShadow = "0 0 0 3px rgba(0, 113, 227, 0.15)";
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = "var(--card-border)";
+                  e.target.style.boxShadow = "var(--shadow-sm)";
+                }}
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[color:var(--text-secondary)] hover:text-[color:var(--text)] transition-colors"
+                  style={{ background: "none", border: "none", cursor: "pointer", transform: "translateY(-50%)" }}
+                >
+                  <i className="fas fa-times"></i>
+                </button>
+              )}
+            </div>
           </div>
 
-          {dbProducts.length > 0 ? (
+          {displayProducts.length > 0 ? (
             <>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {dbProducts.map((c, i) => (
+                {displayProducts.map((c, i) => (
                   <CourseCard key={c.slug} c={c} i={i} />
                 ))}
               </div>
-              <div className="flex justify-center mt-12">
-                <Link to="/store" className="tn-btn-primary">
-                  {lang === "fr" ? "Voir tous les produits" : "See all products"}{" "}
-                  <i className="fas fa-arrow-right" style={{ marginLeft: 6 }} />
-                </Link>
-              </div>
+              {!searchQuery && (
+                <div className="flex justify-center mt-12">
+                  <Link to="/store" className="tn-btn-primary">
+                    {lang === "fr" ? "Voir tous les produits" : "See all products"}{" "}
+                    <i className="fas fa-arrow-right" style={{ marginLeft: 6 }} />
+                  </Link>
+                </div>
+              )}
             </>
           ) : (
             <div style={{ textAlign: "center", padding: "48px 0", color: "var(--text-secondary)" }}>
-              <i
-                className="fas fa-graduation-cap"
-                style={{
-                  fontSize: "3rem",
-                  marginBottom: 16,
-                  display: "block",
-                  color: "var(--blue)",
-                }}
-              />
-              <p>
-                {lang === "fr"
-                  ? "Les formations sont en cours de chargement..."
-                  : "Loading courses..."}
-              </p>
+              {dbProducts.length === 0 ? (
+                <>
+                  <i
+                    className="fas fa-graduation-cap"
+                    style={{
+                      fontSize: "3rem",
+                      marginBottom: 16,
+                      display: "block",
+                      color: "var(--blue)",
+                    }}
+                  />
+                  <p>
+                    {lang === "fr"
+                      ? "Les formations sont en cours de chargement..."
+                      : "Loading courses..."}
+                  </p>
+                </>
+              ) : (
+                <div className="text-center py-12 bg-[color:var(--card)] border border-[color:var(--card-border)] rounded-3xl p-8 max-w-md mx-auto backdrop-blur-md">
+                  <PackageOpen className="h-14 w-14 text-[color:var(--text-secondary)] mx-auto mb-4" />
+                  <h3 className="text-lg font-bold text-[color:var(--text)] mb-2">
+                    {lang === "fr" ? "Aucun produit trouvé" : "No products found"}
+                  </h3>
+                  <p className="text-sm text-[color:var(--text-secondary)] leading-relaxed">
+                    {lang === "fr"
+                      ? "Modifiez votre recherche pour explorer d'autres produits."
+                      : "Try changing your search query to find other products."}
+                  </p>
+                </div>
+              )}
             </div>
           )}
         </div>

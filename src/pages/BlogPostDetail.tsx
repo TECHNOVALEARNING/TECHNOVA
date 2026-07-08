@@ -897,7 +897,7 @@ export default function BlogPostDetail() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground transition-colors duration-300 font-sans relative">
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300 font-sans relative" style={{ fontFamily: "'Manrope', -apple-system, sans-serif" }}>
       <SEOHead
         title={article ? `${article.title}` : "Chargement de l'article"}
         description={

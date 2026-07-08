@@ -167,7 +167,7 @@ const EServices = () => {
         lang === "fr" ? "Panier et checkout optimisés" : "Optimized cart & checkout flow",
         lang === "fr" ? "Dashboard vendeur simplifié" : "Simplified seller dashboard",
       ],
-      price: lang === "fr" ? "À partir de 4 000 000 FCFA" : "From $7 000",
+      price: lang === "fr" ? "Sur devis" : "Custom quote",
     },
     {
       icon: Layers,
@@ -197,7 +197,7 @@ const EServices = () => {
         lang === "fr" ? "Pixels de conversion configurés" : "Configured conversion pixels",
         lang === "fr" ? "Formulaires de capture intelligents" : "Intelligent capture forms",
       ],
-      price: lang === "fr" ? "À partir de 150 000 FCFA" : "From $280",
+      price: lang === "fr" ? "Sur devis" : "Custom quote",
     },
   ];
 

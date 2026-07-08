@@ -1030,6 +1030,7 @@ export type Course = {
   price: string;
   oldPrice?: string;
   duration: string;
+  creatorId?: string;
 };
 
 const LABEL_MAP: Record<string, { cls: string; fr: string; en: string }> = {
