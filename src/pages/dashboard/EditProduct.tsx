@@ -320,36 +320,6 @@ const EditProduct = () => {
     return data.publicUrl;
   };
 
-  const uploadFileToLWS = async (file: File): Promise<string | null> => {
-    const formData = new FormData();
-    formData.append("file", file);
-
-    try {
-      const response = await fetch("https://lws.technovalearning.com/upload.php", {
-        method: "POST",
-        headers: {
-          "X-Upload-Secret": "technova_lws_upload_secure_token_58934751",
-        },
-        body: formData,
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Erreur serveur");
-      }
-
-      const data = await response.json();
-      if (data.success && data.url) {
-        return data.url;
-      }
-      throw new Error("L'envoi a échoué");
-    } catch (err: any) {
-      console.error("LWS upload error:", err);
-      toast.error("Erreur d'upload sur LWS : " + err.message);
-      return null;
-    }
-  };
-
   const persistProduct = async ({
     showToast = true,
     manageSaving = true,
@@ -372,19 +342,12 @@ const EditProduct = () => {
         newThumbnailUrl = await uploadFile(thumbnailFile, "thumbnails");
       }
       if (downloadFile && fileFormat !== "video") {
-        toast.info("Envoi du produit sur votre hébergement LWS...");
-        const uploadedLwsUrl = await uploadFileToLWS(downloadFile);
-        if (!uploadedLwsUrl) {
-          toast.info("L'envoi sur LWS a échoué. Tentative d'envoi alternatif sur Supabase...");
-          const fallbackUrl = await uploadFile(downloadFile, "downloads");
-          if (!fallbackUrl) {
-            if (manageSaving) setSaving(false);
-            return false;
-          }
-          newDownloadUrl = fallbackUrl;
-        } else {
-          newDownloadUrl = uploadedLwsUrl;
+        const uploadedUrl = await uploadFile(downloadFile, "downloads");
+        if (!uploadedUrl) {
+          if (manageSaving) setSaving(false);
+          return false;
         }
+        newDownloadUrl = uploadedUrl;
       } else if (fileFormat === "video" && videoUrl) {
         newDownloadUrl = videoUrl;
       }

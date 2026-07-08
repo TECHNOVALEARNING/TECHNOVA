@@ -234,36 +234,6 @@ const CreateProduct = () => {
     return data.publicUrl;
   };
 
-  const uploadFileToLWS = async (file: File): Promise<string | null> => {
-    const formData = new FormData();
-    formData.append("file", file);
-
-    try {
-      const response = await fetch("https://lws.technovalearning.com/upload.php", {
-        method: "POST",
-        headers: {
-          "X-Upload-Secret": "technova_lws_upload_secure_token_58934751",
-        },
-        body: formData,
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Erreur serveur");
-      }
-
-      const data = await response.json();
-      if (data.success && data.url) {
-        return data.url;
-      }
-      throw new Error("L'envoi a échoué");
-    } catch (err: any) {
-      console.error("LWS upload error:", err);
-      toast.error("Erreur d'upload sur LWS : " + err.message);
-      return null;
-    }
-  };
-
   const handleSubmit = async () => {
     if (!user || !selectedType || !title.trim()) return;
     if (!isAdmin && selectedType !== "file") {
@@ -307,15 +277,10 @@ const CreateProduct = () => {
         thumbnailUrl = await uploadFile(thumbnailFile, "thumbnails");
       }
       if (downloadFile && fileFormat !== "video") {
-        toast.info("Envoi du produit sur votre hébergement LWS...");
-        downloadUrl = await uploadFileToLWS(downloadFile);
+        downloadUrl = await uploadFile(downloadFile, "downloads");
         if (!downloadUrl) {
-          toast.info("L'envoi sur LWS a échoué. Tentative d'envoi alternatif sur Supabase...");
-          downloadUrl = await uploadFile(downloadFile, "downloads");
-          if (!downloadUrl) {
-            setSaving(false);
-            return;
-          }
+          setSaving(false);
+          return;
         }
       } else if (fileFormat === "video" && videoUrl) {
         downloadUrl = videoUrl;
