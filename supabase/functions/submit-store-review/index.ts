@@ -1,4 +1,4 @@
-﻿import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
@@ -71,6 +71,8 @@ serve(async (req) => {
         title: title?.trim() || null,
         comment: comment.trim(),
         is_public: true,
+        reviewer_name: customer.name,
+        store_owner_id: store.owner_id,
       },
       { onConflict: "store_id,customer_id" },
     );
@@ -88,36 +90,40 @@ serve(async (req) => {
     });
 
     if (ownerEmail) {
-      await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${resendApiKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          from: "Technova <noreply@mail.technova.com>",
-          to: [ownerEmail],
-          subject:
-            sentiment === "positive"
-              ? "Nouvel avis positif sur votre boutique"
-              : "Nouvel avis négatif sur votre boutique",
-          html: `
-            <div style="font-family:Arial,sans-serif;max-width:620px;margin:0 auto;padding:24px;background:#f8fafc;">
-              <div style="background:${sentiment === "positive" ? "linear-gradient(135deg,#059669,#10b981)" : "linear-gradient(135deg,#b91c1c,#ef4444)"};border-radius:20px;padding:28px 24px;text-align:center;">
-                <img src="${LOGO_URL}" alt="Technova" width="52" height="52" style="display:block;margin:0 auto 14px;border-radius:14px;" />
-                <h1 style="margin:0;color:#ffffff;font-size:28px;line-height:1.2;">${sentiment === "positive" ? "Nouvel avis positif" : "Nouvel avis négatif"}</h1>
-              </div>
-              <div style="background:#ffffff;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 20px 20px;padding:28px 24px;">
-                <p style="margin:0 0 10px;color:#111827;font-size:16px;"><strong>${escapeHtml(customer.name)}</strong> a laissé un avis public sur <strong>${escapeHtml(store.name)}</strong>.</p>
-                ${title ? `<p style="margin:0 0 12px;color:#111827;font-size:15px;"><strong>${escapeHtml(title)}</strong></p>` : ""}
-                <div style="border:1px solid #e5e7eb;background:#f9fafb;border-radius:14px;padding:16px;">
-                  <p style="margin:0;color:#374151;font-size:15px;line-height:1.7;">${escapeHtml(comment.trim())}</p>
+      try {
+        await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${resendApiKey}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            from: "Technova <noreply@mail.technova.com>",
+            to: [ownerEmail],
+            subject:
+              sentiment === "positive"
+                ? "Nouvel avis positif sur votre boutique"
+                : "Nouvel avis négatif sur votre boutique",
+            html: `
+              <div style="font-family:Arial,sans-serif;max-width:620px;margin:0 auto;padding:24px;background:#f8fafc;">
+                <div style="background:${sentiment === "positive" ? "linear-gradient(135deg,#059669,#10b981)" : "linear-gradient(135deg,#b91c1c,#ef4444)"};border-radius:20px;padding:28px 24px;text-align:center;">
+                  <img src="${LOGO_URL}" alt="Technova" width="52" height="52" style="display:block;margin:0 auto 14px;border-radius:14px;" />
+                  <h1 style="margin:0;color:#ffffff;font-size:28px;line-height:1.2;">${sentiment === "positive" ? "Nouvel avis positif" : "Nouvel avis négatif"}</h1>
+                </div>
+                <div style="background:#ffffff;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 20px 20px;padding:28px 24px;">
+                  <p style="margin:0 0 10px;color:#111827;font-size:16px;"><strong>${escapeHtml(customer.name)}</strong> a laissé un avis public sur <strong>${escapeHtml(store.name)}</strong>.</p>
+                  ${title ? `<p style="margin:0 0 12px;color:#111827;font-size:15px;"><strong>${escapeHtml(title)}</strong></p>` : ""}
+                  <div style="border:1px solid #e5e7eb;background:#f9fafb;border-radius:14px;padding:16px;">
+                    <p style="margin:0;color:#374151;font-size:15px;line-height:1.7;">${escapeHtml(comment.trim())}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-          `,
-        }),
-      });
+            `,
+          }),
+        });
+      } catch (emailErr) {
+        console.error("[submit-store-review] failed to send email notification via Resend:", emailErr);
+      }
     }
 
     return new Response(JSON.stringify({ success: true }), {

@@ -24,6 +24,13 @@ const moreLinks = [
   { label: "À propos", href: "/about" },
 ];
 
+const allLinks = [
+  { label: "Marketplace", href: "/marketplace" },
+  { label: "Tarifs", href: "/pricing" },
+  ...productLinks,
+  ...moreLinks.filter((l) => l.label !== "Devenir Vendeur"),
+];
+
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [productsOpen, setProductsOpen] = useState(false);
@@ -106,6 +113,15 @@ const Navbar = () => {
                   <LayoutDashboard className="h-4 w-4" /> Dashboard
                 </Button>
               </Link>
+              <Link to="/mes-achats">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-sm font-medium gap-2 text-muted-foreground"
+                >
+                  <ShoppingBag className="h-4 w-4" /> Mes achats
+                </Button>
+              </Link>
               <Link to="/dashboard/profile">
                 <Avatar className="h-8 w-8 cursor-pointer">
                   <AvatarImage src={profile?.avatar_url || ""} />
@@ -149,57 +165,14 @@ const Navbar = () => {
         </button>
       </div>
 
+      {/* Mobile Menu */}
       {mobileOpen && (
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="lg:hidden border-t border-border bg-background px-6 py-4 space-y-2 max-h-[calc(100vh-72px)] overflow-y-auto"
+          className="lg:hidden absolute top-full left-0 right-0 bg-background/95 backdrop-blur-lg border-b border-border px-6 py-4 space-y-3 shadow-lg"
         >
-          <button
-            onClick={() => setProductsOpen(!productsOpen)}
-            className="flex items-center justify-between w-full py-2 text-sm font-medium text-foreground"
-          >
-            Produits{" "}
-            <ChevronDown
-              className={`h-4 w-4 transition-transform ${productsOpen ? "rotate-180" : ""}`}
-            />
-          </button>
-          {productsOpen && (
-            <div className="pl-4 space-y-1">
-              {productLinks.map((l) => (
-                <Link
-                  key={l.label}
-                  to={l.href}
-                  onClick={() => setMobileOpen(false)}
-                  className="block py-1.5 text-sm text-muted-foreground hover:text-foreground"
-                >
-                  {l.label}
-                </Link>
-              ))}
-            </div>
-          )}
-          <Link
-            to="/marketplace"
-            onClick={() => setMobileOpen(false)}
-            className="block py-2 text-sm font-medium text-foreground"
-          >
-            Marketplace
-          </Link>
-          <Link
-            to="/outils-digitaux"
-            onClick={() => setMobileOpen(false)}
-            className="block py-2 text-sm font-medium text-foreground"
-          >
-            Productivité
-          </Link>
-          <Link
-            to="/pricing"
-            onClick={() => setMobileOpen(false)}
-            className="block py-2 text-sm font-medium text-foreground"
-          >
-            Tarifs
-          </Link>
-          {moreLinks.map((l) => (
+          {allLinks.map((l) => (
             <Link
               key={l.label}
               to={l.href}
@@ -209,16 +182,22 @@ const Navbar = () => {
               {l.label}
             </Link>
           ))}
-          <div className="flex gap-3 pt-4 border-t border-border">
+          <div className="flex flex-col gap-2 pt-4 border-t border-border w-full">
             {user ? (
               <>
-                <Link to="/dashboard" onClick={() => setMobileOpen(false)} className="flex-1">
+                <Link to="/dashboard" onClick={() => setMobileOpen(false)} className="w-full">
                   <Button className="w-full" size="sm">
                     Dashboard
                   </Button>
                 </Link>
+                <Link to="/mes-achats" onClick={() => setMobileOpen(false)} className="w-full">
+                  <Button variant="outline" className="w-full gap-2" size="sm">
+                    <ShoppingBag className="h-4 w-4" /> Mes achats
+                  </Button>
+                </Link>
                 <Button
                   variant="outline"
+                  className="w-full"
                   size="sm"
                   onClick={() => {
                     signOut();
@@ -229,7 +208,7 @@ const Navbar = () => {
                 </Button>
               </>
             ) : (
-              <>
+              <div className="flex gap-3 w-full">
                 <Link to="/buyer-login" onClick={() => setMobileOpen(false)} className="flex-1">
                   <Button variant="outline" className="w-full gap-2" size="sm">
                     <ShoppingBag className="h-4 w-4" /> Mes achats
@@ -240,7 +219,7 @@ const Navbar = () => {
                     <Store className="h-4 w-4" /> Devenir vendeur
                   </Button>
                 </Link>
-              </>
+              </div>
             )}
           </div>
         </motion.div>
