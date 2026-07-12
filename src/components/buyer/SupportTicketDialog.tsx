@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { supabase } from "@/integrations/supabase/client";
+import { buyerSupabase as supabase } from "@/integrations/supabase/buyer-client";
 import { Loader2, Send, MessageCircle } from "lucide-react";
 import { toast } from "sonner";
 
