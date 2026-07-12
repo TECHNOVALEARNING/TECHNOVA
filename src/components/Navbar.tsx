@@ -36,6 +36,17 @@ const Navbar = () => {
   const [productsOpen, setProductsOpen] = useState(false);
   const { user, profile, signOut } = useAuth();
 
+  const buyerPortalLink = (() => {
+    const hostname = window.location.hostname;
+    const isMainDomain = hostname.endsWith("technovalearning.com") && !hostname.startsWith("portal.");
+    if (isMainDomain) {
+      return "https://portal.technovalearning.com";
+    }
+    return user ? "/mes-achats" : "/buyer-login";
+  })();
+
+  const isExternalPortal = buyerPortalLink.startsWith("http");
+
   return (
     <motion.nav
       initial={{ y: -10, opacity: 0 }}
@@ -113,15 +124,27 @@ const Navbar = () => {
                   <LayoutDashboard className="h-4 w-4" /> Dashboard
                 </Button>
               </Link>
-              <Link to="/mes-achats">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-sm font-medium gap-2 text-muted-foreground"
-                >
-                  <ShoppingBag className="h-4 w-4" /> Mes achats
-                </Button>
-              </Link>
+              {isExternalPortal ? (
+                <a href={buyerPortalLink}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-sm font-medium gap-2 text-muted-foreground"
+                  >
+                    <ShoppingBag className="h-4 w-4" /> Mes achats
+                  </Button>
+                </a>
+              ) : (
+                <Link to={buyerPortalLink}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-sm font-medium gap-2 text-muted-foreground"
+                  >
+                    <ShoppingBag className="h-4 w-4" /> Mes achats
+                  </Button>
+                </Link>
+              )}
               <Link to="/dashboard/profile">
                 <Avatar className="h-8 w-8 cursor-pointer">
                   <AvatarImage src={profile?.avatar_url || ""} />
@@ -133,15 +156,27 @@ const Navbar = () => {
             </>
           ) : (
             <>
-              <Link to="/buyer-login">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-sm font-medium gap-2 text-muted-foreground"
-                >
-                  <ShoppingBag className="h-4 w-4" /> Mes achats
-                </Button>
-              </Link>
+              {isExternalPortal ? (
+                <a href={buyerPortalLink}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-sm font-medium gap-2 text-muted-foreground"
+                  >
+                    <ShoppingBag className="h-4 w-4" /> Mes achats
+                  </Button>
+                </a>
+              ) : (
+                <Link to={buyerPortalLink}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-sm font-medium gap-2 text-muted-foreground"
+                  >
+                    <ShoppingBag className="h-4 w-4" /> Mes achats
+                  </Button>
+                </Link>
+              )}
               <Link to="/login">
                 <Button
                   variant="ghost"
@@ -190,11 +225,19 @@ const Navbar = () => {
                     Dashboard
                   </Button>
                 </Link>
-                <Link to="/mes-achats" onClick={() => setMobileOpen(false)} className="w-full">
-                  <Button variant="outline" className="w-full gap-2" size="sm">
-                    <ShoppingBag className="h-4 w-4" /> Mes achats
-                  </Button>
-                </Link>
+                {isExternalPortal ? (
+                  <a href={buyerPortalLink} className="w-full">
+                    <Button variant="outline" className="w-full gap-2" size="sm">
+                      <ShoppingBag className="h-4 w-4" /> Mes achats
+                    </Button>
+                  </a>
+                ) : (
+                  <Link to={buyerPortalLink} onClick={() => setMobileOpen(false)} className="w-full">
+                    <Button variant="outline" className="w-full gap-2" size="sm">
+                      <ShoppingBag className="h-4 w-4" /> Mes achats
+                    </Button>
+                  </Link>
+                )}
                 <Button
                   variant="outline"
                   className="w-full"
@@ -209,11 +252,19 @@ const Navbar = () => {
               </>
             ) : (
               <div className="flex gap-3 w-full">
-                <Link to="/buyer-login" onClick={() => setMobileOpen(false)} className="flex-1">
-                  <Button variant="outline" className="w-full gap-2" size="sm">
-                    <ShoppingBag className="h-4 w-4" /> Mes achats
-                  </Button>
-                </Link>
+                {isExternalPortal ? (
+                  <a href={buyerPortalLink} className="flex-1">
+                    <Button variant="outline" className="w-full gap-2" size="sm">
+                      <ShoppingBag className="h-4 w-4" /> Mes achats
+                    </Button>
+                  </a>
+                ) : (
+                  <Link to={buyerPortalLink} onClick={() => setMobileOpen(false)} className="flex-1">
+                    <Button variant="outline" className="w-full gap-2" size="sm">
+                      <ShoppingBag className="h-4 w-4" /> Mes achats
+                    </Button>
+                  </Link>
+                )}
                 <Link to="/register" onClick={() => setMobileOpen(false)} className="flex-1">
                   <Button className="w-full gap-2" size="sm">
                     <Store className="h-4 w-4" /> Devenir vendeur
