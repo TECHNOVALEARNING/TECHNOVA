@@ -102,8 +102,13 @@ const AppContent = () => {
   const { isCustomDomain, storeSlug, loading } = useCustomDomain();
   const [authHashPending, setAuthHashPending] = useState(() => {
     const hash = window.location.hash;
+    const isBuyerPath =
+      window.location.pathname.includes("/buyer-auth") ||
+      window.location.pathname.includes("/buyer-login") ||
+      window.location.pathname.includes("/mes-achats");
     return !!(
       hash &&
+      !isBuyerPath &&
       (hash.includes("access_token=") || hash.includes("id_token=") || hash.includes("error="))
     );
   });
@@ -123,6 +128,16 @@ const AppContent = () => {
   // and we redirect to /dashboard without any page flashing.
   useEffect(() => {
     if (!authHashPending) return;
+
+    const isBuyerPath =
+      window.location.pathname.includes("/buyer-auth") ||
+      window.location.pathname.includes("/buyer-login") ||
+      window.location.pathname.includes("/mes-achats");
+
+    if (isBuyerPath) {
+      setAuthHashPending(false);
+      return;
+    }
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
       if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED") {
