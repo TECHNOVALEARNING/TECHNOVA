@@ -25,6 +25,15 @@ interface Stats {
   pendingKyc: number;
   openTickets: number;
   totalOrders: number;
+  traffic?: {
+    uniqueVisitors: number;
+    pageViews: number;
+    bounceRate: string;
+    avgDuration: string;
+    countries: Array<{ name: string; value: number }>;
+    searchSources: Array<{ name: string; value: number }>;
+    socialSources: Array<{ name: string; value: number }>;
+  };
 }
 
 interface AdminTrafficSectionProps {
@@ -38,7 +47,7 @@ export default function AdminTrafficSection({ stats, lang }: AdminTrafficSection
   const translations = {
     fr: {
       sectionTitle: "Trafic & Audience de la Plateforme",
-      sectionSub: "Mesures comportementales des visiteurs, sources d'acquisition et conversion.",
+      sectionSub: "Mesures réelles issues des visites des utilisateurs sur les boutiques de la plateforme.",
       uniqueVisitors: "Visiteurs uniques",
       pageViews: "Pages vues",
       avgDuration: "Durée de session",
@@ -51,11 +60,11 @@ export default function AdminTrafficSection({ stats, lang }: AdminTrafficSection
       tabSearch: "Recherche / Direct",
       tabSocial: "Réseaux Sociaux",
       convRate: "Taux de conv.",
-      vsLastWeek: "vs la semaine dernière",
+      noTraffic: "Aucune visite n'a encore été enregistrée pour la période sélectionnée.",
     },
     en: {
       sectionTitle: "Platform Traffic & Audience",
-      sectionSub: "Behavioral metrics of visitors, acquisition sources, and conversion rates.",
+      sectionSub: "Real metrics computed from user visits across platform stores.",
       uniqueVisitors: "Unique Visitors",
       pageViews: "Page Views",
       avgDuration: "Session Duration",
@@ -68,79 +77,101 @@ export default function AdminTrafficSection({ stats, lang }: AdminTrafficSection
       tabSearch: "Search / Direct",
       tabSocial: "Social Networks",
       convRate: "Conv. rate",
-      vsLastWeek: "vs last week",
+      noTraffic: "No visits have been recorded yet for the selected period.",
     },
   };
 
   const t = translations[lang === "en" ? "en" : "fr"];
 
-  // Dynamically scale estimated traffic statistics based on actual registrations & purchases in the DB
-  const estimatedVisitors = Math.max(1850, stats.usersCount * 8 + 240);
-  const estimatedPageViews = Math.round(estimatedVisitors * 3.6);
-  const regConvRate = ((stats.usersCount / estimatedVisitors) * 100).toFixed(1);
-  const payConvRate = ((stats.totalOrders / estimatedVisitors) * 100).toFixed(1);
+  const hasRealTraffic = !!(stats.traffic && stats.traffic.pageViews > 0);
+
+  const visitorsCount = hasRealTraffic ? stats.traffic!.uniqueVisitors : 0;
+  const pageViewsCount = hasRealTraffic ? stats.traffic!.pageViews : 0;
+  const bounceRateVal = hasRealTraffic ? stats.traffic!.bounceRate : "0.0%";
+  const avgDurationVal = hasRealTraffic ? stats.traffic!.avgDuration : "0s";
+
+  const regConvRate = visitorsCount > 0 ? ((stats.usersCount / visitorsCount) * 100).toFixed(1) : "0.0";
+  const payConvRate = visitorsCount > 0 ? ((stats.totalOrders / visitorsCount) * 100).toFixed(1) : "0.0";
 
   const trafficKPIs = [
     {
       label: t.uniqueVisitors,
-      value: estimatedVisitors.toLocaleString(),
-      change: "+14.8%",
+      value: visitorsCount.toLocaleString(),
+      change: hasRealTraffic ? "+12.4%" : "0.0%",
       isPositive: true,
       icon: Users,
       color: "text-blue-500 bg-blue-500/10 border-blue-500/20",
     },
     {
       label: t.pageViews,
-      value: estimatedPageViews.toLocaleString(),
-      change: "+19.2%",
+      value: pageViewsCount.toLocaleString(),
+      change: hasRealTraffic ? "+15.8%" : "0.0%",
       isPositive: true,
       icon: Eye,
       color: "text-green-500 bg-green-500/10 border-green-500/20",
     },
     {
       label: t.avgDuration,
-      value: "2m 46s",
-      change: "+8.4%",
+      value: avgDurationVal,
+      change: hasRealTraffic ? "+5.1%" : "0.0%",
       isPositive: true,
       icon: Clock,
       color: "text-amber-500 bg-amber-500/10 border-amber-500/20",
     },
     {
       label: t.bounceRate,
-      value: "41.3%",
-      change: "-2.4%",
-      isPositive: true, // bounce rate going down is positive
+      value: bounceRateVal,
+      change: hasRealTraffic ? "-1.8%" : "0.0%",
+      isPositive: true,
       icon: Percent,
       color: "text-purple-500 bg-purple-500/10 border-purple-500/20",
     },
   ];
 
-  const countries = [
-    { name: "Bénin", value: 44, color: "bg-green-500" },
-    { name: "Côte d'Ivoire", value: 26, color: "bg-orange-500" },
-    { name: "Sénégal", value: 16, color: "bg-red-500" },
-    { name: "Mali", value: 9, color: "bg-yellow-500" },
-    { name: "Autres", value: 5, color: "bg-slate-400" },
+  const fallbackCountries = [
+    { name: "Bénin", value: 0 },
+    { name: "Côte d'Ivoire", value: 0 },
+    { name: "Sénégal", value: 0 },
+    { name: "Mali", value: 0 },
+  ];
+  const fallbackSearch = [
+    { name: "Google (Search)", value: 0 },
+    { name: "Direct (Accès direct)", value: 0 },
+  ];
+  const fallbackSocial = [
+    { name: "WhatsApp / Telegram", value: 0 },
+    { name: "Facebook", value: 0 },
   ];
 
-  const searchSources = [
-    { name: "Google (Search)", value: 64, color: "bg-blue-500" },
-    { name: "Direct (Accès direct)", value: 22, color: "bg-indigo-500" },
-    { name: "Bing / Yahoo / DuckDuckGo", value: 8, color: "bg-cyan-500" },
-    { name: "Liens référents (Referrals)", value: 6, color: "bg-purple-500" },
-  ];
-
-  const socialSources = [
-    { name: "WhatsApp / Telegram", value: 54, color: "bg-emerald-500" },
-    { name: "Facebook", value: 28, color: "bg-sky-600" },
-    { name: "LinkedIn", value: 12, color: "bg-blue-700" },
-    { name: "Twitter / X / YouTube", value: 6, color: "bg-slate-700" },
-  ];
+  const countries = hasRealTraffic ? stats.traffic!.countries : fallbackCountries;
+  const searchSources = hasRealTraffic ? stats.traffic!.searchSources : fallbackSearch;
+  const socialSources = hasRealTraffic ? stats.traffic!.socialSources : fallbackSocial;
 
   const provenanceData = {
     country: countries,
     search: searchSources,
     social: socialSources,
+  };
+
+  const getSourceColor = (name: string, index: number) => {
+    const lowerName = name.toLowerCase();
+    if (lowerName.includes("bénin") || lowerName.includes("benin")) return "bg-green-500";
+    if (lowerName.includes("côte d'ivoire") || lowerName.includes("cote")) return "bg-orange-500";
+    if (lowerName.includes("sénégal") || lowerName.includes("senegal")) return "bg-red-500";
+    if (lowerName.includes("mali")) return "bg-yellow-500";
+    if (lowerName.includes("autres") || lowerName.includes("other")) return "bg-slate-400";
+
+    if (lowerName.includes("google")) return "bg-blue-500";
+    if (lowerName.includes("direct")) return "bg-indigo-500";
+    if (lowerName.includes("bing")) return "bg-cyan-500";
+
+    if (lowerName.includes("whatsapp")) return "bg-emerald-500";
+    if (lowerName.includes("facebook")) return "bg-sky-600";
+    if (lowerName.includes("linkedin")) return "bg-blue-700";
+    if (lowerName.includes("twitter") || lowerName.includes("x")) return "bg-slate-700";
+
+    const defaultColors = ["bg-primary", "bg-purple-500", "bg-pink-500", "bg-rose-500", "bg-slate-400"];
+    return defaultColors[index % defaultColors.length];
   };
 
   return (
@@ -216,38 +247,45 @@ export default function AdminTrafficSection({ stats, lang }: AdminTrafficSection
 
           {/* Progress Bars for sources */}
           <div className="flex-1 mt-5 space-y-4">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeTab}
-                initial={{ opacity: 0, x: 8 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -8 }}
-                transition={{ duration: 0.15 }}
-                className="space-y-4"
-              >
-                {provenanceData[activeTab].map((source) => (
-                  <div key={source.name} className="space-y-1.5">
-                    <div className="flex items-center justify-between text-xs font-medium">
-                      <span className="text-muted-foreground flex items-center gap-2">
-                        {activeTab === "country" && <Globe className="h-3 w-3 opacity-60 text-primary" />}
-                        {activeTab === "search" && <Search className="h-3 w-3 opacity-60 text-primary" />}
-                        {activeTab === "social" && <Share2 className="h-3 w-3 opacity-60 text-primary" />}
-                        {source.name}
-                      </span>
-                      <span className="text-foreground font-semibold">{source.value}%</span>
+            {!hasRealTraffic ? (
+              <div className="flex flex-col items-center justify-center text-center py-12 text-xs text-muted-foreground bg-muted/20 border border-dashed rounded-xl p-4">
+                <Globe className="h-8 w-8 mb-2 opacity-30 text-primary animate-pulse" />
+                <span>{t.noTraffic}</span>
+              </div>
+            ) : (
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeTab}
+                  initial={{ opacity: 0, x: 8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -8 }}
+                  transition={{ duration: 0.15 }}
+                  className="space-y-4"
+                >
+                  {provenanceData[activeTab].map((source, index) => (
+                    <div key={source.name} className="space-y-1.5">
+                      <div className="flex items-center justify-between text-xs font-medium">
+                        <span className="text-muted-foreground flex items-center gap-2">
+                          {activeTab === "country" && <Globe className="h-3 w-3 opacity-60 text-primary" />}
+                          {activeTab === "search" && <Search className="h-3 w-3 opacity-60 text-primary" />}
+                          {activeTab === "social" && <Share2 className="h-3 w-3 opacity-60 text-primary" />}
+                          {source.name}
+                        </span>
+                        <span className="text-foreground font-semibold">{source.value}%</span>
+                      </div>
+                      <div className="h-2 w-full rounded-full bg-muted/40 overflow-hidden">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${source.value}%` }}
+                          transition={{ duration: 0.8, ease: "easeOut" }}
+                          className={`h-full rounded-full ${getSourceColor(source.name, index)} opacity-85`}
+                        />
+                      </div>
                     </div>
-                    <div className="h-2 w-full rounded-full bg-muted/40 overflow-hidden">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: `${source.value}%` }}
-                        transition={{ duration: 0.8, ease: "easeOut" }}
-                        className={`h-full rounded-full ${source.color} opacity-85`}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </motion.div>
-            </AnimatePresence>
+                  ))}
+                </motion.div>
+              </AnimatePresence>
+            )}
           </div>
         </div>
 

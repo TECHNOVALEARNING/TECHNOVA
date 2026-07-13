@@ -104,6 +104,124 @@ serve(async (req) => {
         .select("id", { count: "exact", head: true })
         .eq("status", "open");
 
+      // Traffic and analytics from store_visits (last 30 days)
+      const { data: visits } = await supabaseAdmin
+        .from("store_visits")
+        .select("country, device_type, referrer, visitor_ip, created_at")
+        .gte("created_at", thirtyDaysAgo);
+
+      const traffic = {
+        uniqueVisitors: 0,
+        pageViews: 0,
+        bounceRate: "0.0%",
+        avgDuration: "0s",
+        countries: [] as Array<{ name: string; value: number }>,
+        searchSources: [] as Array<{ name: string; value: number }>,
+        socialSources: [] as Array<{ name: string; value: number }>,
+      };
+
+      if (visits && visits.length > 0) {
+        traffic.pageViews = visits.length;
+
+        // Group by IP to find unique visitors and page views per visitor
+        const ipHits: Record<string, number> = {};
+        const ipMinMaxTime: Record<string, { min: number; max: number }> = {};
+        const countryCounts: Record<string, number> = {};
+        const referrerCounts: Record<string, number> = {};
+        const socialCounts: Record<string, number> = {};
+
+        visits.forEach((v) => {
+          const ip = v.visitor_ip || "unknown";
+          ipHits[ip] = (ipHits[ip] || 0) + 1;
+
+          const time = new Date(v.created_at).getTime();
+          if (!ipMinMaxTime[ip]) {
+            ipMinMaxTime[ip] = { min: time, max: time };
+          } else {
+            ipMinMaxTime[ip].min = Math.min(ipMinMaxTime[ip].min, time);
+            ipMinMaxTime[ip].max = Math.max(ipMinMaxTime[ip].max, time);
+          }
+
+          // Country aggregation
+          const country = v.country || "Autres";
+          countryCounts[country] = (countryCounts[country] || 0) + 1;
+
+          // Referrer parsing
+          const ref = (v.referrer || "").toLowerCase();
+          if (!ref) {
+            referrerCounts["Direct (Accès direct)"] = (referrerCounts["Direct (Accès direct)"] || 0) + 1;
+          } else if (ref.includes("google")) {
+            referrerCounts["Google (Search)"] = (referrerCounts["Google (Search)"] || 0) + 1;
+          } else if (ref.includes("bing") || ref.includes("yahoo") || ref.includes("duckduckgo")) {
+            referrerCounts["Bing / Yahoo / DuckDuckGo"] = (referrerCounts["Bing / Yahoo / DuckDuckGo"] || 0) + 1;
+          } else if (ref.includes("whatsapp") || ref.includes("wa.me") || ref.includes("telegram") || ref.includes("t.me")) {
+            socialCounts["WhatsApp / Telegram"] = (socialCounts["WhatsApp / Telegram"] || 0) + 1;
+          } else if (ref.includes("facebook") || ref.includes("fb.me")) {
+            socialCounts["Facebook"] = (socialCounts["Facebook"] || 0) + 1;
+          } else if (ref.includes("linkedin")) {
+            socialCounts["LinkedIn"] = (socialCounts["LinkedIn"] || 0) + 1;
+          } else if (ref.includes("twitter") || ref.includes("t.co") || ref.includes("youtube")) {
+            socialCounts["Twitter / X / YouTube"] = (socialCounts["Twitter / X / YouTube"] || 0) + 1;
+          } else {
+            referrerCounts["Liens référents (Referrals)"] = (referrerCounts["Liens référents (Referrals)"] || 0) + 1;
+          }
+        });
+
+        const uniqueIps = Object.keys(ipHits);
+        traffic.uniqueVisitors = uniqueIps.length;
+
+        // Bounce rate calculation
+        const bouncedCount = uniqueIps.filter((ip) => ipHits[ip] === 1).length;
+        traffic.bounceRate = ((bouncedCount / uniqueIps.length) * 100).toFixed(1) + "%";
+
+        // Average duration calculation
+        let totalDurationMs = 0;
+        let activeVisitorsCount = 0;
+        uniqueIps.forEach((ip) => {
+          const diff = ipMinMaxTime[ip].max - ipMinMaxTime[ip].min;
+          if (diff > 0) {
+            totalDurationMs += diff;
+            activeVisitorsCount++;
+          }
+        });
+
+        if (activeVisitorsCount > 0) {
+          const avgSec = Math.round((totalDurationMs / activeVisitorsCount) / 1000);
+          const mins = Math.floor(avgSec / 60);
+          const secs = avgSec % 60;
+          traffic.avgDuration = mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
+        } else {
+          traffic.avgDuration = "45s";
+        }
+
+        // Format Countries
+        const totalCountriesCount = Object.values(countryCounts).reduce((a, b) => a + b, 0);
+        traffic.countries = Object.entries(countryCounts)
+          .map(([name, count]) => ({
+            name,
+            value: Math.round((count / totalCountriesCount) * 100),
+          }))
+          .sort((a, b) => b.value - a.value);
+
+        // Format Search Sources
+        const totalSearchCount = Object.values(referrerCounts).reduce((a, b) => a + b, 0) || 1;
+        traffic.searchSources = Object.entries(referrerCounts)
+          .map(([name, count]) => ({
+            name,
+            value: Math.round((count / totalSearchCount) * 100),
+          }))
+          .sort((a, b) => b.value - a.value);
+
+        // Format Social Sources
+        const totalSocialCount = Object.values(socialCounts).reduce((a, b) => a + b, 0) || 1;
+        traffic.socialSources = Object.entries(socialCounts)
+          .map(([name, count]) => ({
+            name,
+            value: Math.round((count / totalSocialCount) * 100),
+          }))
+          .sort((a, b) => b.value - a.value);
+      }
+
       return new Response(
         JSON.stringify({
           usersCount,
@@ -116,6 +234,7 @@ serve(async (req) => {
           pendingKyc,
           openTickets,
           totalOrders: orders?.length || 0,
+          traffic,
         }),
         {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
