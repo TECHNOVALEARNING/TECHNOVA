@@ -348,22 +348,6 @@ const CheckoutDialog = ({
         console.log("KKiaPay payment successful:", response);
         const transactionId = response.transactionId;
 
-        // Trigger GA4 purchase event
-        if (typeof (window as any).gtag !== "undefined") {
-          (window as any).gtag("event", "purchase", {
-            transaction_id: transactionId,
-            value: Math.round(discountedPrice),
-            currency: "XOF",
-            items: [
-              {
-                item_id: product.id,
-                item_name: product.title,
-                price: Math.round(discountedPrice),
-              },
-            ],
-          });
-        }
-
         try {
           // Register successful order in database via process_free_order RPC
           const { data: rpcData, error: rpcErr } = await supabase.rpc("process_free_order", {
@@ -444,21 +428,6 @@ const CheckoutDialog = ({
         );
       }
       const isSandbox = import.meta.env.VITE_KKIAPAY_SANDBOX === "true";
-
-      // Trigger GA4 begin_checkout event
-      if (typeof (window as any).gtag !== "undefined") {
-        (window as any).gtag("event", "begin_checkout", {
-          value: Math.round(discountedPrice),
-          currency: "XOF",
-          items: [
-            {
-              item_id: product.id,
-              item_name: product.title,
-              price: Math.round(discountedPrice),
-            },
-          ],
-        });
-      }
 
       win.openKkiapayWidget({
         amount: Math.round(discountedPrice),

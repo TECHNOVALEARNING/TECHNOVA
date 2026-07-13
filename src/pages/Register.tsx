@@ -161,13 +161,6 @@ const Register = () => {
       return;
     }
 
-    // Trigger GA4 sign_up event on successful registration
-    if (typeof (window as any).gtag !== "undefined") {
-      (window as any).gtag("event", "sign_up", {
-        method: "email",
-      });
-    }
-
     if (data.session?.user) {
       toast.success(t.successCreated);
       navigate("/onboarding", { replace: true });
