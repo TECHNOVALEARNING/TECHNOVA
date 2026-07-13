@@ -14,10 +14,10 @@ interface SEOHeadProps {
 const SITE_NAME = "TECHNOVA Learning";
 const SITE_URL = "https://www.technovalearning.com";
 const DEFAULT_DESCRIPTION =
-  "Plateforme de formations tech, ebooks et produits numériques: cybersécurité, data, IA, design. Paiement Mobile Money & Visa.";
+  "Plateforme de formations tech, ebooks PLR (Droits de Label Privé) et produits numériques libres de droits : cybersécurité, data, IA, design. Paiement Mobile Money & Visa.";
 const DEFAULT_IMAGE = `${SITE_URL}/og-image.jpg?v=technova-20260624`;
 const DEFAULT_KEYWORDS =
-  "TECHNOVA, technova learning, formation en ligne intelligence artificielle, formation cybersécurité en ligne certifiante, formation data analyst en ligne, cours en ligne design UX/UI certifiant, formation en ligne paiement Mobile Money, MTN Money, Moov Money, Orange Money, Wave";
+  "TECHNOVA, technova learning, ebooks PLR, produits PLR, droits de label privé, PLR french, formations PLR, droits de revente, formation en ligne intelligence artificielle, formation cybersécurité en ligne certifiante, formation data analyst en ligne, cours en ligne design UX/UI certifiant, formation en ligne paiement Mobile Money, MTN Money, Moov Money, Orange Money, Wave";
 
 const SEOHead = ({
   title,
@@ -33,7 +33,7 @@ const SEOHead = ({
     ? title.includes(SITE_NAME)
       ? title
       : `${title} | ${SITE_NAME}`
-    : `${SITE_NAME} — Formations Tech : IA, Data, Cybersécurité`;
+    : `${SITE_NAME} — Formations Tech & Ebooks PLR : IA, Data, Cybersécurité`;
 
   const isPortal =
     typeof window !== "undefined" &&
