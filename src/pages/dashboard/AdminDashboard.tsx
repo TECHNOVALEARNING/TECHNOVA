@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
+import AdminTrafficSection from "@/components/dashboard/AdminTrafficSection";
 import { motion } from "framer-motion";
 import {
   Users,
@@ -313,6 +314,8 @@ const AdminDashboard = () => {
                   </div>
                 </motion.div>
               )}
+
+              <AdminTrafficSection stats={stats} lang={lang} />
             </>
           )
         )}
