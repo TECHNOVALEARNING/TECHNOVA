@@ -721,6 +721,7 @@ const EditProduct = () => {
                         <SelectItem value="developpement_personnel">
                           Développement personnel
                         </SelectItem>
+                        <SelectItem value="langue">🌐 Langues</SelectItem>
                         {(isAdmin ||
                           category === "template" ||
                           category === "discovery") && (

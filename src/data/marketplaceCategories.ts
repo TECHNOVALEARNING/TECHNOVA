@@ -52,6 +52,12 @@ export const MARKETPLACE_CATEGORIES: MarketplaceCategory[] = [
     emoji: "✨",
     description: "Croissance personnelle, motivation",
   },
+  {
+    key: "langue",
+    label: "Langues",
+    emoji: "🌐",
+    description: "Apprentissage des langues, linguistique",
+  },
   { key: "other", label: "Autres", emoji: "✨", description: "Tout le reste" },
 ];
 

@@ -942,6 +942,7 @@ const CreateProduct = () => {
                         <SelectItem value="developpement_personnel">
                           ✨ Développement personnel
                         </SelectItem>
+                        <SelectItem value="langue">🌐 Langues</SelectItem>
                         {isAdmin && (
                           <>
                             <SelectItem value="template">📋 Templates</SelectItem>

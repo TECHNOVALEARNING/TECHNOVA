@@ -24,6 +24,7 @@ const categoryLabels: Record<string, Record<string, string>> = {
   divertissement: { fr: "Divertissement", en: "Entertainment" },
   sante_bien_etre: { fr: "Santé et bien être", en: "Health & Well-being" },
   developpement_personnel: { fr: "Développement personnel", en: "Personal Development" },
+  langue: { fr: "Langues", en: "Languages" },
 };
 
 const SUBCAT_LABELS: Record<string, Record<string, string>> = {

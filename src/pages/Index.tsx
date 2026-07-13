@@ -30,6 +30,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   divertissement: "Divertissement",
   sante_bien_etre: "Santé et bien être",
   developpement_personnel: "Développement personnel",
+  langue: "Langues",
   other: "Autre",
 };
 
