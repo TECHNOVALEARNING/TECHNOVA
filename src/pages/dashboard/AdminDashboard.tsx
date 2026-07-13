@@ -263,55 +263,132 @@ const AdminDashboard = () => {
                 ))}
               </div>
 
-              {/* Sales Chart */}
+              {/* Grid with Chart & Analytics panel */}
               {chartData.length > 0 && (
-                <motion.div
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4 }}
-                  className="rounded-2xl border p-5 dash-glass"
-                >
-                  <h3 className="text-sm font-semibold text-foreground mb-4">{t.chartTitle}</h3>
-                  <div className="h-64">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <AreaChart data={chartData}>
-                        <defs>
-                          <linearGradient id="adminGrad" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.3} />
-                            <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0} />
-                          </linearGradient>
-                        </defs>
-                        <XAxis
-                          dataKey="date"
-                          tick={{ fontSize: 11 }}
-                          tickLine={false}
-                          axisLine={false}
-                        />
-                        <YAxis
-                          tick={{ fontSize: 11 }}
-                          tickLine={false}
-                          axisLine={false}
-                          tickFormatter={(v) => `${v / 1000}k`}
-                        />
-                        <Tooltip
-                          contentStyle={{
-                            borderRadius: 12,
-                            border: "1px solid hsl(var(--border))",
-                            background: "hsl(var(--card))",
-                          }}
-                          formatter={(v: number) => [`${v.toLocaleString()} FCFA`, t.chartLabel]}
-                        />
-                        <Area
-                          type="monotone"
-                          dataKey="amount"
-                          stroke="hsl(var(--primary))"
-                          fill="url(#adminGrad)"
-                          strokeWidth={2}
-                        />
-                      </AreaChart>
-                    </ResponsiveContainer>
-                  </div>
-                </motion.div>
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  {/* Sales Chart */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                    className="lg:col-span-2 rounded-2xl border p-5 dash-glass"
+                  >
+                    <h3 className="text-sm font-semibold text-foreground mb-4">{t.chartTitle}</h3>
+                    <div className="h-64">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart data={chartData}>
+                          <defs>
+                            <linearGradient id="adminGrad" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.3} />
+                              <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0} />
+                            </linearGradient>
+                          </defs>
+                          <XAxis
+                            dataKey="date"
+                            tick={{ fontSize: 11 }}
+                            tickLine={false}
+                            axisLine={false}
+                          />
+                          <YAxis
+                            tick={{ fontSize: 11 }}
+                            tickLine={false}
+                            axisLine={false}
+                            tickFormatter={(v) => `${v / 1000}k`}
+                          />
+                          <Tooltip
+                            contentStyle={{
+                              borderRadius: 12,
+                              border: "1px solid hsl(var(--border))",
+                              background: "hsl(var(--card))",
+                            }}
+                            formatter={(v: number) => [`${v.toLocaleString()} FCFA`, t.chartLabel]}
+                          />
+                          <Area
+                            type="monotone"
+                            dataKey="amount"
+                            stroke="hsl(var(--primary))"
+                            fill="url(#adminGrad)"
+                            strokeWidth={2}
+                          />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </motion.div>
+
+                  {/* Analytics Console Panel */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.45 }}
+                    className="rounded-2xl border p-5 dash-glass flex flex-col justify-between"
+                  >
+                    <div>
+                      <h3 className="text-sm font-semibold text-foreground">Suivi du Trafic & SEO</h3>
+                      <p className="text-[11px] text-muted-foreground mt-1 mb-4 leading-relaxed">
+                        Accédez directement aux consoles d'audiences de TECHNOVA pour suivre l'activité de vos utilisateurs et votre visibilité Google.
+                      </p>
+
+                      <div className="space-y-3">
+                        <a
+                          href="https://analytics.google.com"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-3 p-3 rounded-xl border border-border/50 bg-background/50 hover:bg-accent/40 hover:border-orange-500/20 transition-all duration-300 group"
+                        >
+                          <div className="h-9 w-9 rounded-lg bg-orange-500/10 flex items-center justify-center text-orange-500 font-bold group-hover:scale-105 transition-all text-xs shrink-0 border border-orange-500/20">
+                            GA4
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs font-semibold text-foreground">Google Analytics 4</p>
+                            <p className="text-[10px] text-muted-foreground truncate">
+                              Visiteurs uniques, provenance, conversions
+                            </p>
+                          </div>
+                        </a>
+
+                        <a
+                          href="https://search.google.com/search-console"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-3 p-3 rounded-xl border border-border/50 bg-background/50 hover:bg-accent/40 hover:border-blue-500/20 transition-all duration-300 group"
+                        >
+                          <div className="h-9 w-9 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-500 font-bold group-hover:scale-105 transition-all text-xs shrink-0 border border-blue-500/20">
+                            GSC
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs font-semibold text-foreground">Google Search Console</p>
+                            <p className="text-[10px] text-muted-foreground truncate">
+                              SEO, mots-clés de recherche, clics
+                            </p>
+                          </div>
+                        </a>
+
+                        <a
+                          href="https://vercel.com"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-3 p-3 rounded-xl border border-border/50 bg-background/50 hover:bg-accent/40 hover:border-primary/20 transition-all duration-300 group"
+                        >
+                          <div className="h-9 w-9 rounded-lg bg-foreground/10 flex items-center justify-center text-foreground dark:text-white font-bold group-hover:scale-105 transition-all text-xs shrink-0 border border-border/50">
+                            ▲
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs font-semibold text-foreground">Vercel Analytics</p>
+                            <p className="text-[10px] text-muted-foreground truncate">
+                              Performances réelles, Core Web Vitals
+                            </p>
+                          </div>
+                        </a>
+                      </div>
+                    </div>
+
+                    <div className="pt-4 border-t border-border/40 mt-4">
+                      <p className="text-[10px] text-muted-foreground leading-normal">
+                        Note : Google Analytics est configuré dynamiquement. Pour modifier l'ID de mesure, configurez la variable <code className="px-1 py-0.5 rounded bg-muted font-mono">VITE_GA_MEASUREMENT_ID</code> dans vos paramètres Vercel.
+                      </p>
+                    </div>
+                  </motion.div>
+                </div>
               )}
             </>
           )
