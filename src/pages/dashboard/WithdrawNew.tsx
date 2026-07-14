@@ -113,6 +113,25 @@ const translations = {
   },
 };
 
+const getFunctionsErrorMessage = async (error: any): Promise<{ message: string; needsSetup?: boolean }> => {
+  if (!error) return { message: "Une erreur est survenue" };
+  if (error.context && typeof error.context.text === "function") {
+    try {
+      const body = await error.context.text();
+      try {
+        const parsed = JSON.parse(body);
+        return {
+          message: parsed.error || parsed.message || body,
+          needsSetup: !!parsed.needs_setup
+        };
+      } catch {
+        return { message: body };
+      }
+    } catch {}
+  }
+  return { message: error.message || "Une erreur est survenue" };
+};
+
 const WithdrawNew = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading, isAdmin } = useAuth();
@@ -235,12 +254,15 @@ const WithdrawNew = () => {
         body: { pin },
       });
       if (error || data?.error) {
-        if (data?.needs_setup) {
+        const parsedError = await getFunctionsErrorMessage(error);
+        const errMsg = data?.error || parsedError.message;
+        const needsSetup = data?.needs_setup || parsedError.needsSetup;
+        if (needsSetup) {
           toast.error(t.toastCreatePin);
           navigate("/dashboard/wallet");
           return;
         }
-        throw new Error(data?.error || error?.message);
+        throw new Error(errMsg);
       }
       sessionStorage.setItem(
         UNLOCK_KEY,
@@ -266,7 +288,10 @@ const WithdrawNew = () => {
       const { data, error } = await supabase.functions.invoke("moneroo-payout", {
         body: { wallet_id: selectedWallet, amount: numAmount, unlock_token },
       });
-      if (error || data?.error) throw new Error(data?.error || error?.message);
+      if (error || data?.error) {
+        const parsedError = await getFunctionsErrorMessage(error);
+        throw new Error(data?.error || parsedError.message);
+      }
       toast.success(t.toastSuccess);
       setTimeout(() => {
         navigate("/dashboard/withdrawals");

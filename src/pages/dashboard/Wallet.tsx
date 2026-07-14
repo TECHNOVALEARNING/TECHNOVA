@@ -170,6 +170,25 @@ const translations = {
   },
 };
 
+const getFunctionsErrorMessage = async (error: any): Promise<{ message: string; needsSetup?: boolean }> => {
+  if (!error) return { message: "Une erreur est survenue" };
+  if (error.context && typeof error.context.text === "function") {
+    try {
+      const body = await error.context.text();
+      try {
+        const parsed = JSON.parse(body);
+        return {
+          message: parsed.error || parsed.message || body,
+          needsSetup: !!parsed.needs_setup
+        };
+      } catch {
+        return { message: body };
+      }
+    } catch {}
+  }
+  return { message: error.message || "Une erreur est survenue" };
+};
+
 const Wallet = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
@@ -271,13 +290,19 @@ const Wallet = () => {
     setSubmitting(true);
     try {
       const { data, error } = await supabase.functions.invoke("wallet-pin-set", { body: { pin } });
-      if (error || data?.error) throw new Error(data?.error || error?.message);
+      if (error || data?.error) {
+        const parsedError = await getFunctionsErrorMessage(error);
+        throw new Error(data?.error || parsedError.message);
+      }
       toast.success(t.toastPinSuccess);
       // Auto-unlock
       const { data: vData, error: vErr } = await supabase.functions.invoke("wallet-pin-verify", {
         body: { pin },
       });
-      if (vErr || vData?.error) throw new Error(vData?.error || vErr?.message);
+      if (vErr || vData?.error) {
+        const parsedError = await getFunctionsErrorMessage(vErr);
+        throw new Error(vData?.error || parsedError.message);
+      }
       sessionStorage.setItem(
         UNLOCK_KEY,
         JSON.stringify({
@@ -303,7 +328,10 @@ const Wallet = () => {
       const { data, error } = await supabase.functions.invoke("wallet-pin-verify", {
         body: { pin },
       });
-      if (error || data?.error) throw new Error(data?.error || error?.message);
+      if (error || data?.error) {
+        const parsedError = await getFunctionsErrorMessage(error);
+        throw new Error(data?.error || parsedError.message);
+      }
       sessionStorage.setItem(
         UNLOCK_KEY,
         JSON.stringify({
