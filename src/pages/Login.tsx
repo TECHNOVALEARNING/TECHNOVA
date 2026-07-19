@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Percent } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 import { useAuth } from "@/contexts/AuthContext";
@@ -18,6 +18,7 @@ const translations = {
       "Connectez-vous à votre compte TECHNOVA pour gérer votre boutique et vos produits digitaux.",
     heading: "Connexion",
     subtitle: "Connectez-vous à votre compte pour gérer votre boutique.",
+    commissionNotice: "Une commission de 5% est appliquée sur les ventes réalisées par les vendeurs.",
     continueGoogle: "Continuer avec Google",
     googleError: "Erreur lors de la connexion avec Google",
     loginSuccess: "Connexion réussie !",
@@ -37,6 +38,7 @@ const translations = {
     seoDesc: "Log in to your TECHNOVA account to manage your storefront and digital products.",
     heading: "Login",
     subtitle: "Log in to your account to manage your storefront.",
+    commissionNotice: "A 5% commission is applied to sales made by sellers.",
     continueGoogle: "Continue with Google",
     googleError: "Error logging in with Google",
     loginSuccess: "Login successful!",
@@ -139,7 +141,12 @@ const Login = () => {
           </Link>
 
           <h1 className="text-2xl font-extrabold text-foreground mb-2">{t.heading}</h1>
-          <p className="text-sm text-muted-foreground mb-8">{t.subtitle}</p>
+          <p className="text-sm text-muted-foreground mb-6">{t.subtitle}</p>
+
+          <div className="mb-6 p-3 rounded-xl border border-primary/20 bg-primary/5 text-xs text-foreground/80 flex items-center gap-2.5">
+            <Percent className="h-4 w-4 text-primary shrink-0" />
+            <span>{t.commissionNotice}</span>
+          </div>
 
           {/* Google Button */}
           <Button

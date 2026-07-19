@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Eye, EyeOff, ChevronDown, Search } from "lucide-react";
+import { Eye, EyeOff, ChevronDown, Search, Percent } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 import { useAuth } from "@/contexts/AuthContext";
@@ -23,6 +23,7 @@ const translations = {
     visualDesc: "Fichiers, formations et licences — vendez vos produits digitaux avec TECHNOVA.",
     heading: "Créer un compte",
     subtitle: "Commencez à vendre vos produits digitaux dès aujourd'hui.",
+    commissionNotice: "Une commission de 5% est appliquée sur les ventes réalisées par les vendeurs.",
     continueGoogle: "Continuer avec Google",
     googleError: "Erreur lors de l'inscription avec Google",
     orEmail: "ou par email",
@@ -50,6 +51,7 @@ const translations = {
     visualDesc: "Files, courses, and licenses — sell your digital products with TECHNOVA.",
     heading: "Create an account",
     subtitle: "Start selling your digital products today.",
+    commissionNotice: "A 5% commission is applied to sales made by sellers.",
     continueGoogle: "Continue with Google",
     googleError: "Error registering with Google",
     orEmail: "or by email",
@@ -220,7 +222,12 @@ const Register = () => {
           </Link>
 
           <h1 className="text-2xl font-extrabold text-foreground mb-2">{t.heading}</h1>
-          <p className="text-sm text-muted-foreground mb-8">{t.subtitle}</p>
+          <p className="text-sm text-muted-foreground mb-6">{t.subtitle}</p>
+
+          <div className="mb-6 p-3 rounded-xl border border-primary/20 bg-primary/5 text-xs text-foreground/80 flex items-center gap-2.5">
+            <Percent className="h-4 w-4 text-primary shrink-0" />
+            <span>{t.commissionNotice}</span>
+          </div>
 
           {/* Google Button */}
           <Button
