@@ -143,9 +143,17 @@ const Login = () => {
           <h1 className="text-2xl font-extrabold text-foreground mb-2">{t.heading}</h1>
           <p className="text-sm text-muted-foreground mb-6">{t.subtitle}</p>
 
-          <div className="mb-6 p-3 rounded-xl border border-primary/20 bg-primary/5 text-xs text-foreground/80 flex items-center gap-2.5">
-            <Percent className="h-4 w-4 text-primary shrink-0" />
-            <span>{t.commissionNotice}</span>
+          <div className="mb-6 p-3 rounded-xl border border-primary/30 bg-primary/10 text-xs text-foreground font-medium flex items-center gap-2.5 shadow-sm">
+            <Percent className="h-4 w-4 text-primary shrink-0 font-bold" />
+            {lang === "en" ? (
+              <span>
+                A <strong className="font-extrabold text-primary text-sm bg-primary/20 px-2 py-0.5 rounded-md border border-primary/30 inline-block mx-0.5">5%</strong> commission is applied to sales made by sellers.
+              </span>
+            ) : (
+              <span>
+                Une commission de <strong className="font-extrabold text-primary text-sm bg-primary/20 px-2 py-0.5 rounded-md border border-primary/30 inline-block mx-0.5">5%</strong> est appliquée sur les ventes réalisées par les vendeurs.
+              </span>
+            )}
           </div>
 
           {/* Google Button */}
