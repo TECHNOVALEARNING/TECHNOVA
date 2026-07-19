@@ -236,8 +236,8 @@ const CreateProduct = () => {
 
   const handleSubmit = async () => {
     if (!user || !selectedType || !title.trim()) return;
-    if (!isAdmin && selectedType !== "file") {
-      toast.error("Seul l'administrateur peut publier des formations ou des licences.");
+    if (!isAdmin && selectedType !== "file" && selectedType !== "course") {
+      toast.error("Seul l'administrateur peut publier des licences.");
       return;
     }
     if (selectedType === "file") {
@@ -831,7 +831,7 @@ const CreateProduct = () => {
                 </h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   {productTypes
-                    .filter((pt) => isAdmin || pt.type === "file")
+                    .filter((pt) => isAdmin || pt.type === "file" || pt.type === "course")
                     .map((pt) => (
                       <button
                         key={pt.type}

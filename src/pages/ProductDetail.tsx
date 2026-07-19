@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Star, Users, ShoppingCart, CheckCircle } from "lucide-react";
+import { ArrowLeft, Star, Users, ShoppingCart, CheckCircle, GraduationCap } from "lucide-react";
 import { Header } from "@/components/site/shared";
 import { Footer } from "@/components/site/shared";
 import { products } from "@/data/products";
@@ -264,6 +264,19 @@ const ProductDetail = () => {
                   </>
                 )}
               </Button>
+
+              {(product.type === "course" || product.type === "formation") && (
+                <Link to={`/learn/${product.id}`} className="block w-full mt-3">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="w-full py-6 text-sm font-bold gap-2 border-primary/40 text-primary hover:bg-primary/10"
+                  >
+                    <GraduationCap className="h-5 w-5" />
+                    <span>{lang === "fr" ? "Accéder au cours en ligne" : "Access Online Course"}</span>
+                  </Button>
+                </Link>
+              )}
             </div>
 
             <div className="space-y-3">

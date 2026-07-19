@@ -37,6 +37,7 @@ import StoreProductDetail from "./pages/StoreProductDetail";
 import ToolsDirectoryPage from "./pages/ToolsDirectoryPage";
 import Marketplace from "./pages/Marketplace";
 import Cours from "./pages/Cours";
+import CoursePlayer from "./pages/CoursePlayer";
 import Products from "./pages/Products";
 import AdminProducts from "./pages/AdminProducts";
 import AllProducts from "./pages/AllProducts";
@@ -540,6 +541,8 @@ const AppContent = () => {
                   </ProtectedRoute>
                 }
               />
+
+              <Route path="/learn/:courseId" element={<CoursePlayer />} />
 
               <Route path="*" element={<NotFound />} />
             </Routes>

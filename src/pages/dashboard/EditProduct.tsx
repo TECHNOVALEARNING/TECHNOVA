@@ -328,8 +328,8 @@ const EditProduct = () => {
     manageSaving?: boolean;
   } = {}) => {
     if (!id || !user) return false;
-    if (!isAdmin && (type === "course" || type === "license")) {
-      toast.error("Vous n'êtes pas autorisé à modifier ce type de produit.");
+    if (!isAdmin && type === "license") {
+      toast.error("Seul l'administrateur peut modifier des licences.");
       return false;
     }
     if (manageSaving) setSaving(true);
