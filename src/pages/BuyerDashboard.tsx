@@ -10,7 +10,13 @@ import {
   Key,
   Layers,
   LogOut,
+  Award,
+  Play,
+  CheckCircle2,
 } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
+import { getCompletedLessons } from "@/lib/courseProgressSync";
+import { generateCertificatePDF } from "@/lib/certificateGenerator";
 import logo from "@/assets/logo.png";
 import SEOHead from "@/components/SEOHead";
 import { Input } from "@/components/ui/input";
@@ -252,11 +258,19 @@ const BuyerDashboard = () => {
                       </a>
                     </p>
                   )}
-                  <Link to={isPortal ? `/orders/${o.id}` : `/mes-achats/${o.id}`}>
-                    <Button className="w-full text-sm" size="sm">
-                      Voir la commande
-                    </Button>
-                  </Link>
+                  {o.product?.type === "course" ? (
+                    <CourseCardAction
+                      order={o}
+                      customerId={customerId || customerName}
+                      isPortal={isPortal}
+                    />
+                  ) : (
+                    <Link to={isPortal ? `/orders/${o.id}` : `/mes-achats/${o.id}`}>
+                      <Button className="w-full text-sm" size="sm">
+                        Voir la commande
+                      </Button>
+                    </Link>
+                  )}
                 </div>
               </motion.div>
             ))}
@@ -284,6 +298,81 @@ const BuyerDashboard = () => {
           customerId={customerId}
         />
       )}
+    </div>
+  );
+};
+
+const CourseCardAction = ({
+  order,
+  customerId,
+  isPortal,
+}: {
+  order: OrderWithProduct;
+  customerId: string;
+  isPortal: boolean;
+}) => {
+  const [completedCount, setCompletedCount] = useState(0);
+  const [totalCount, setTotalCount] = useState(1);
+
+  useEffect(() => {
+    if (!order.product?.id) return;
+    const loadProgress = async () => {
+      const completed = await getCompletedLessons(order.product!.id, customerId);
+      setCompletedCount(completed.length);
+
+      try {
+        const { data } = await sellerSupabase
+          .from("course_modules")
+          .select("course_lessons(id)")
+          .eq("product_id", order.product!.id);
+
+        if (data) {
+          const total = data.reduce((acc, m: any) => acc + (m.course_lessons?.length || 0), 0);
+          if (total > 0) setTotalCount(total);
+        }
+      } catch {}
+    };
+    loadProgress();
+  }, [order.product?.id, customerId]);
+
+  const percent = Math.min(100, Math.round((completedCount / totalCount) * 100));
+
+  return (
+    <div className="space-y-3">
+      <div>
+        <div className="flex items-center justify-between text-[11px] font-semibold mb-1">
+          <span className="text-muted-foreground">Progression</span>
+          <span className="text-primary font-bold">{percent}%</span>
+        </div>
+        <Progress value={percent} className="h-1.5 w-full" />
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <Link to={`/learn/${order.product?.id}`} className="w-full">
+          <Button size="sm" className="w-full text-xs font-bold gap-1.5">
+            <Play className="h-3.5 w-3.5 fill-primary-foreground" />
+            <span>{percent > 0 ? "Continuer la formation" : "Démarrer la formation"}</span>
+          </Button>
+        </Link>
+
+        {percent === 100 && (
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() =>
+              generateCertificatePDF({
+                studentName: customerId || "Étudiant TECHNOVA",
+                courseTitle: order.product?.title || "Formation",
+                storeName: order.store_owner?.display_name || "TECHNOVA Academy",
+              })
+            }
+            className="w-full text-xs font-bold gap-1.5 border-amber-400 text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/20"
+          >
+            <Award className="h-3.5 w-3.5" />
+            <span>Attestation (PDF)</span>
+          </Button>
+        )}
+      </div>
     </div>
   );
 };

@@ -23,6 +23,8 @@ import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { CourseVideoPlayer } from "@/components/course/CourseVideoPlayer";
+import { getCompletedLessons, saveCompletedLessons } from "@/lib/courseProgressSync";
+import { generateCertificatePDF } from "@/lib/certificateGenerator";
 import SEOHead from "@/components/SEOHead";
 import { toast } from "sonner";
 
@@ -112,13 +114,10 @@ export const CoursePlayer = () => {
           setActiveLesson(allLessons[0]);
         }
 
-        // Load completed lessons from localStorage cache
-        const savedCompleted = localStorage.getItem(`technova_completed_lessons_${courseId}`);
-        if (savedCompleted) {
-          try {
-            setCompletedLessonIds(JSON.parse(savedCompleted));
-          } catch {}
-        }
+        // Load completed lessons from Cloud Sync + Local Cache
+        const userIdentifier = user?.email || user?.id;
+        const syncedCompleted = await getCompletedLessons(courseId, userIdentifier);
+        setCompletedLessonIds(syncedCompleted);
       } catch (e: any) {
         toast.error("Erreur lors du chargement du cours");
       } finally {
@@ -149,7 +148,8 @@ export const CoursePlayer = () => {
     }
     setCompletedLessonIds(updated);
     if (courseId) {
-      localStorage.setItem(`technova_completed_lessons_${courseId}`, JSON.stringify(updated));
+      const userIdentifier = user?.email || user?.id;
+      saveCompletedLessons(courseId, updated, userIdentifier);
     }
 
     // Check if course is 100% completed
@@ -497,13 +497,18 @@ export const CoursePlayer = () => {
               <div className="flex flex-col sm:flex-row items-center gap-3">
                 <Button
                   onClick={() => {
-                    toast.success("Votre certificat est en cours de téléchargement...");
+                    generateCertificatePDF({
+                      studentName: user?.email ? user.email.split("@")[0] : "Étudiant TECHNOVA",
+                      courseTitle: course?.title || "Formation Certifiante",
+                      storeName: course?.stores?.name || "TECHNOVA Academy",
+                    });
+                    toast.success("Votre attestation PDF a été générée !");
                     setShowCertificateModal(false);
                   }}
                   className="w-full rounded-xl py-5 font-bold gap-2 bg-amber-500 hover:bg-amber-600 text-white"
                 >
                   <Download className="h-4 w-4" />
-                  <span>Télécharger le Certificat</span>
+                  <span>Télécharger l'Attestation (PDF)</span>
                 </Button>
 
                 <Button
