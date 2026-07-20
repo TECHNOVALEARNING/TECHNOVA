@@ -339,23 +339,23 @@ const AdminDashboard = () => {
               <AdminTrafficSection stats={stats} lang={lang} />
 
               {/* Store & Products Breakdown Section */}
-              {stats.storeSalesBreakdown && stats.storeSalesBreakdown.length > 0 && (
-                <div className="rounded-2xl border border-border bg-card p-6 space-y-6">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div>
-                      <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
-                        <Store className="h-5 w-5 text-primary" />
-                        <span>Ventes Détaillées par Boutique & Produits</span>
-                      </h2>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Consultez le chiffre d'affaires, le volume de ventes et les produits vendus avec leur prix exact pour chaque boutique.
-                      </p>
-                    </div>
-                    <Badge variant="outline" className="text-xs font-mono self-start sm:self-auto">
-                      {stats.storeSalesBreakdown.length} Boutiques Actives
-                    </Badge>
+              <div className="rounded-2xl border border-border bg-card p-6 space-y-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div>
+                    <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
+                      <Store className="h-5 w-5 text-primary" />
+                      <span>Ventes Détaillées par Boutique & Produits</span>
+                    </h2>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Consultez le chiffre d'affaires, le volume de ventes et les produits vendus avec leur prix exact pour chaque boutique.
+                    </p>
                   </div>
+                  <Badge variant="outline" className="text-xs font-mono self-start sm:self-auto">
+                    {stats.storeSalesBreakdown?.length || 0} Boutiques Actives
+                  </Badge>
+                </div>
 
+                {stats.storeSalesBreakdown && stats.storeSalesBreakdown.length > 0 ? (
                   <div className="space-y-4">
                     {stats.storeSalesBreakdown.map((st) => (
                       <div
@@ -402,39 +402,46 @@ const AdminDashboard = () => {
                       </div>
                     ))}
                   </div>
-                </div>
-              )}
-              {/* Global Purchases Feed (Produit, Prix, Acheteur, Vendeur) */}
-              {stats.recentPurchases && stats.recentPurchases.length > 0 && (
-                <div className="rounded-2xl border border-border bg-card p-6 space-y-6">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div>
-                      <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
-                        <ShoppingCart className="h-5 w-5 text-emerald-500" />
-                        <span>Historique Global des Achats du Site</span>
-                      </h2>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Consultez la liste en direct de toutes les transactions effectuées sur la plateforme avec le produit, le prix de vente, l'acheteur et le vendeur.
-                      </p>
-                    </div>
+                ) : (
+                  <div className="p-8 text-center border border-dashed border-border/60 rounded-xl bg-muted/20">
+                    <Store className="h-8 w-8 text-muted-foreground/40 mx-auto mb-2" />
+                    <p className="text-sm font-semibold text-foreground">Aucune vente par boutique enregistrée</p>
+                    <p className="text-xs text-muted-foreground mt-1">Les performances et produits de chaque boutique s'afficheront ici dès les premières transactions.</p>
+                  </div>
+                )}
+              </div>
 
-                    <div className="flex items-center gap-2">
-                      <div className="relative w-full sm:w-64">
-                        <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-xs" />
-                        <input
-                          type="text"
-                          placeholder="Rechercher produit, acheteur, vendeur..."
-                          value={searchQuery}
-                          onChange={(e) => setSearchQuery(e.target.value)}
-                          className="w-full pl-8 pr-3 py-1.5 rounded-xl border border-border bg-background text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
-                        />
-                      </div>
-                      <Badge variant="outline" className="text-xs font-mono shrink-0 bg-emerald-500/10 text-emerald-600 border-emerald-500/30">
-                        {stats.recentPurchases.length} Achats
-                      </Badge>
-                    </div>
+              {/* Global Purchases Feed (Produit, Prix, Acheteur, Vendeur) */}
+              <div className="rounded-2xl border border-border bg-card p-6 space-y-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div>
+                    <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
+                      <ShoppingCart className="h-5 w-5 text-emerald-500" />
+                      <span>Historique Global des Achats du Site</span>
+                    </h2>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Consultez la liste en direct de toutes les transactions effectuées sur la plateforme avec le produit, le prix de vente, l'acheteur et le vendeur.
+                    </p>
                   </div>
 
+                  <div className="flex items-center gap-2">
+                    <div className="relative w-full sm:w-64">
+                      <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-xs" />
+                      <input
+                        type="text"
+                        placeholder="Rechercher produit, acheteur, vendeur..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full pl-8 pr-3 py-1.5 rounded-xl border border-border bg-background text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                      />
+                    </div>
+                    <Badge variant="outline" className="text-xs font-mono shrink-0 bg-emerald-500/10 text-emerald-600 border-emerald-500/30">
+                      {stats.recentPurchases?.length || 0} Achats
+                    </Badge>
+                  </div>
+                </div>
+
+                {stats.recentPurchases && stats.recentPurchases.length > 0 ? (
                   <div className="overflow-x-auto">
                     <table className="w-full text-left text-xs">
                       <thead className="bg-muted/50 text-muted-foreground font-semibold uppercase tracking-wider">
@@ -504,8 +511,14 @@ const AdminDashboard = () => {
                       </tbody>
                     </table>
                   </div>
-                </div>
-              )}
+                ) : (
+                  <div className="p-8 text-center border border-dashed border-border/60 rounded-xl bg-muted/20">
+                    <ShoppingCart className="h-8 w-8 text-muted-foreground/40 mx-auto mb-2" />
+                    <p className="text-sm font-semibold text-foreground">Aucun achat enregistré pour le moment</p>
+                    <p className="text-xs text-muted-foreground mt-1">Dès qu'une transaction sera effectuée sur le site, le détail avec l'acheteur, le produit, le prix et le vendeur apparaîtra instantanément ici.</p>
+                  </div>
+                )}
+              </div>
             </>
           )
         )}
