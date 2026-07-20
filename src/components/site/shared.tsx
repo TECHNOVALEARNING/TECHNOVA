@@ -1202,8 +1202,8 @@ const BENEFITS = [
   },
   {
     n: "04",
-    t: "Certificat reconnu",
-    d: "Boostez votre CV avec un certificat partageable sur LinkedIn.",
+    t: "Certificat numérique",
+    d: "Boostez votre CV avec un certificat numérique de fin de formation partageable.",
   },
 ];
 export const Benefits = () => (

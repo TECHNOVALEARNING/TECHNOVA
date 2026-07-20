@@ -62,15 +62,15 @@ const faqsFr = [
     ],
   },
   {
-    category: "Attestations et reconnaissance",
+    category: "Certificats numériques de fin de formation",
     items: [
       {
-        q: "Obtient-on une attestation à la fin d'une formation ?",
-        a: "Oui. À la fin de chaque parcours premium, une attestation de fin de formation est délivrée. Cette attestation peut être partagée sur LinkedIn et présentée aux employeurs.",
+        q: "Obtient-on un certificat numérique à la fin d'une formation ?",
+        a: "Oui. Dès qu'une formation est complétée à 100%, un certificat numérique de fin de formation personnalisé au format PDF est généré et téléchargeable immédiatement.",
       },
       {
-        q: "Les attestations TechNova Learning sont-elles reconnues ?",
-        a: "Nos attestations sont reconnus par une communauté croissante d'employeurs et de recruteurs, en particulier dans le secteur numérique à l'international.",
+        q: "Comment utiliser son certificat numérique de fin de formation ?",
+        a: "Votre certificat numérique de fin de formation atteste des compétences acquises et comporte un identifiant unique de vérification. Vous pouvez le télécharger, l'imprimer ou l'ajouter à votre CV et profil professionnel.",
       },
     ],
   },
@@ -175,15 +175,15 @@ const faqsEn = [
     ],
   },
   {
-    category: "Certificates and Recognition",
+    category: "Digital Completion Certificates",
     items: [
       {
-        q: "Do we get a certificate at the end of a course?",
-        a: "Yes. At the end of each premium pathway, a course completion certificate is issued. This certificate can be shared on LinkedIn and presented to employers.",
+        q: "Do we get a digital certificate at the end of a course?",
+        a: "Yes. Upon 100% course completion, a digital completion certificate in PDF format is automatically generated and available for download.",
       },
       {
-        q: "Are TechNova Learning certificates recognized?",
-        a: "Our certificates are recognized by a growing community of employers and recruiters, particularly in the international digital sector.",
+        q: "How can I use my digital completion certificate?",
+        a: "Your digital completion certificate features a unique verification ID and verifies the skills acquired. You can download it, print it, or add it to your CV and professional profile.",
       },
     ],
   },

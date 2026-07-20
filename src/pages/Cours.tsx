@@ -192,8 +192,8 @@ const Cours = () => {
               }}
             >
               {lang === "fr"
-                ? "Acquérez des compétences pratiques recherchées, réalisez des projets concrets et obtenez votre certification reconnue — le tout à votre propre rythme."
-                : "Acquire in-demand practical skills, complete real projects, and earn recognized certificates — all at your own pace."}
+                ? "Acquérez des compétences pratiques recherchées, réalisez des projets concrets et obtenez votre certificat numérique de fin de formation — le tout à votre propre rythme."
+                : "Acquire in-demand practical skills, complete real projects, and earn your digital completion certificate — all at your own pace."}
             </motion.p>
 
             {/* Search Input Bar (Hero Search) */}

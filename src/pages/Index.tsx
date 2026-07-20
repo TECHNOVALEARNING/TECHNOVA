@@ -950,11 +950,11 @@ const Index = () => {
               },
               {
                 icon: "fas fa-certificate",
-                title: lang === "fr" ? "Attestations Reconnues" : "Recognized Attestations",
+                title: lang === "fr" ? "Certificat Numérique" : "Digital Certificate",
                 desc:
                   lang === "fr"
-                    ? "Obtenez des attestations reconnues par les employeurs."
-                    : "Obtain attestations recognized by employers.",
+                    ? "Obtenez un certificat numérique de fin de formation dès la réussite de votre parcours."
+                    : "Obtain a digital completion certificate upon successfully finishing your course.",
               },
               {
                 icon: "fas fa-users",

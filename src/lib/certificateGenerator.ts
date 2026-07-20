@@ -56,15 +56,15 @@ export const generateCertificatePDF = (data: CertificateData) => {
 
   // Titre du Certificat
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(28);
+  doc.setFontSize(24);
   doc.setTextColor(212, 175, 55);
-  doc.text("ATTESTATION DE RÉUSSITE", width / 2, 65, { align: "center" });
+  doc.text("CERTIFICAT NUMÉRIQUE DE FIN DE FORMATION", width / 2, 65, { align: "center" });
 
   // Sous-titre
   doc.setFont("helvetica", "italic");
   doc.setFontSize(12);
   doc.setTextColor(80, 80, 80);
-  doc.text("Ceci certifie officiellement que", width / 2, 78, { align: "center" });
+  doc.text("Ce document numérique atteste que", width / 2, 78, { align: "center" });
 
   // Nom de l'étudiant
   const nameText = (data.studentName || "Étudiant TECHNOVA").toUpperCase();
