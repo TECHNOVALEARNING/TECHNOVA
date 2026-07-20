@@ -257,6 +257,12 @@ export const CoursePlayer = () => {
     );
   }
 
+  const isPortal =
+    window.location.hostname.startsWith("portal.") ||
+    window.location.hostname.startsWith("client.");
+  const hasBuyerSession = typeof window !== "undefined" && !!sessionStorage.getItem("buyer_session");
+  const backPath = isPortal ? "/dashboard" : hasBuyerSession ? "/mes-achats" : "/formations";
+
   return (
     <div className="min-h-screen bg-background flex flex-col font-sans">
       <SEOHead
@@ -268,9 +274,9 @@ export const CoursePlayer = () => {
       <header className="h-16 border-b border-border bg-card/80 backdrop-blur-md px-4 sm:px-6 flex items-center justify-between sticky top-0 z-40">
         <div className="flex items-center gap-3">
           <Link
-            to="/dashboard"
+            to={backPath}
             className="p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-            title="Retour au tableau de bord"
+            title={hasBuyerSession ? "Retour à mes achats" : "Retour aux formations"}
           >
             <ArrowLeft className="h-5 w-5" />
           </Link>

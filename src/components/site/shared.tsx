@@ -220,27 +220,39 @@ export const Header = () => {
           >
             {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
           </button>
-          {hasBuyerSession ? (
+          {hasBuyerSession && (
             <Link
               to="/mes-achats"
-              className="ml-2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-[#0071e3] text-white hover:bg-[#0071e3]/90 h-10 px-4 py-2"
+              className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors bg-secondary text-foreground hover:bg-secondary/80 h-10 px-3.5 py-2 border border-border"
             >
               {lang === "fr" ? "Mes Achats" : "My Purchases"}
             </Link>
-          ) : user ? (
+          )}
+
+          {user ? (
             <Link
               to="/dashboard"
-              className="ml-2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-[#0071e3] text-white hover:bg-[#0071e3]/90 h-10 px-4 py-2"
+              className="ml-1 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors bg-[#0071e3] text-white hover:bg-[#0071e3]/90 h-10 px-4 py-2"
             >
               Dashboard
             </Link>
           ) : (
-            <Link
-              to="/buyer-login"
-              className="ml-2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-[#0071e3] text-white hover:bg-[#0071e3]/90 h-10 px-4 py-2"
-            >
-              {lang === "fr" ? "Mes Achats" : "My Purchases"}
-            </Link>
+            <>
+              {!hasBuyerSession && (
+                <Link
+                  to="/buyer-login"
+                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-2"
+                >
+                  {lang === "fr" ? "Mes Achats" : "My Purchases"}
+                </Link>
+              )}
+              <Link
+                to="/register"
+                className="ml-1 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors bg-[#0071e3] text-white hover:bg-[#0071e3]/90 h-10 px-4 py-2"
+              >
+                {lang === "fr" ? "Devenir vendeur" : "Become a Seller"}
+              </Link>
+            </>
           )}
         </div>
         <div className="lg:hidden flex items-center gap-3">
