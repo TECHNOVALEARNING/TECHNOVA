@@ -201,6 +201,7 @@ export const CourseVideoPlayer = ({
     <div
       ref={containerRef}
       onMouseMove={handleMouseMove}
+      onContextMenu={(e) => e.preventDefault()}
       className="relative w-full aspect-video rounded-2xl overflow-hidden bg-black shadow-2xl border border-white/10 group select-none"
     >
       {/* Embed Fallback (YouTube / Vimeo / Cloudflare / Google Drive / Loom Iframe) */}
@@ -219,8 +220,10 @@ export const CourseVideoPlayer = ({
         <div className="relative w-full h-full flex items-center justify-center">
           <video
             ref={videoRef}
-            src={src}
+            src={cleanSrc}
             autoPlay={autoPlay}
+            controlsList="nodownload noremoteplayback"
+            onContextMenu={(e) => e.preventDefault()}
             onTimeUpdate={handleTimeUpdate}
             onLoadedMetadata={handleLoadedMetadata}
             onEnded={() => {
@@ -379,22 +382,15 @@ export const CourseVideoPlayer = ({
         </div>
       )}
 
-      {/* DYNAMIC ANTI-PIRACY WATERMARK OVERLAY */}
-      <motion.div
-        animate={{
-          top: watermarkPos.top,
-          left: watermarkPos.left,
-        }}
-        transition={{ duration: 1.5, ease: "easeInOut" }}
-        className="absolute z-40 pointer-events-none select-none opacity-40 hover:opacity-10 transition-opacity"
-      >
-        <div className="px-3 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-[11px] font-mono text-white/90 shadow-xl flex items-center gap-1.5 tracking-wider">
-          <ShieldAlert className="h-3 w-3 text-amber-400 shrink-0" />
+      {/* STATIC ANTI-PIRACY WATERMARK OVERLAY */}
+      <div className="absolute top-3 right-3 z-40 pointer-events-none select-none opacity-25">
+        <div className="px-2.5 py-0.5 rounded-full bg-black/40 backdrop-blur-sm border border-white/10 text-[10px] font-mono text-white/80 shadow-md flex items-center gap-1.5 tracking-wider">
+          <ShieldAlert className="h-3 w-3 text-amber-400/80 shrink-0" />
           <span className="font-semibold">{userEmail}</span>
           <span className="text-white/40">•</span>
           <span className="text-white/60">TECHNOVA SECURE</span>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 };

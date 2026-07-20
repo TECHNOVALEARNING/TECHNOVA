@@ -324,6 +324,12 @@ export const CoursePlayer = () => {
                   title={activeLesson.title}
                   userEmail={user?.email || "etudiant@technova.com"}
                   autoPlay={false}
+                  onEnded={() => {
+                    if (activeLesson && !completedLessonIds.includes(activeLesson.id)) {
+                      toggleLessonCompleted(activeLesson.id);
+                      toast.success("Vidéo terminée ! Leçon validée.");
+                    }
+                  }}
                 />
               </div>
 
