@@ -222,6 +222,67 @@ serve(async (req) => {
           .sort((a, b) => b.value - a.value);
       }
 
+      // Detailed store & product sales breakdown
+      const { data: fullOrders } = await supabaseAdmin
+        .from("orders")
+        .select("id, amount, created_at, store_owner_id, product_id, products(id, title, price, type, category), profiles!store_owner_id(display_name, store_name)")
+        .eq("status", "completed");
+
+      const storeSalesMap: Record<
+        string,
+        {
+          storeOwnerId: string;
+          storeName: string;
+          totalRevenue: number;
+          totalOrders: number;
+          productsMap: Record<string, { id: string; title: string; price: number; salesCount: number; revenue: number }>;
+        }
+      > = {};
+
+      fullOrders?.forEach((o: any) => {
+        const ownerId = o.store_owner_id || "unknown";
+        const storeName = o.profiles?.display_name || o.profiles?.store_name || "Boutique Vendeur";
+        const prodId = o.product_id || "unknown";
+        const prodTitle = o.products?.title || "Produit Numérique";
+        const prodPrice = Number(o.products?.price || o.amount || 0);
+        const amount = Number(o.amount || 0);
+
+        if (!storeSalesMap[ownerId]) {
+          storeSalesMap[ownerId] = {
+            storeOwnerId: ownerId,
+            storeName,
+            totalRevenue: 0,
+            totalOrders: 0,
+            productsMap: {},
+          };
+        }
+
+        storeSalesMap[ownerId].totalRevenue += amount;
+        storeSalesMap[ownerId].totalOrders += 1;
+
+        if (!storeSalesMap[ownerId].productsMap[prodId]) {
+          storeSalesMap[ownerId].productsMap[prodId] = {
+            id: prodId,
+            title: prodTitle,
+            price: prodPrice,
+            salesCount: 0,
+            revenue: 0,
+          };
+        }
+        storeSalesMap[ownerId].productsMap[prodId].salesCount += 1;
+        storeSalesMap[ownerId].productsMap[prodId].revenue += amount;
+      });
+
+      const storeSalesBreakdown = Object.values(storeSalesMap)
+        .map((st) => ({
+          storeOwnerId: st.storeOwnerId,
+          storeName: st.storeName,
+          totalRevenue: st.totalRevenue,
+          totalOrders: st.totalOrders,
+          products: Object.values(st.productsMap).sort((a, b) => b.revenue - a.revenue),
+        }))
+        .sort((a, b) => b.totalRevenue - a.totalRevenue);
+
       return new Response(
         JSON.stringify({
           usersCount,
@@ -235,6 +296,7 @@ serve(async (req) => {
           openTickets,
           totalOrders: orders?.length || 0,
           traffic,
+          storeSalesBreakdown,
         }),
         {
           headers: { ...corsHeaders, "Content-Type": "application/json" },

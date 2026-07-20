@@ -30,6 +30,13 @@ interface Stats {
   pendingKyc: number;
   openTickets: number;
   totalOrders: number;
+  storeSalesBreakdown?: Array<{
+    storeOwnerId: string;
+    storeName: string;
+    totalRevenue: number;
+    totalOrders: number;
+    products: Array<{ id: string; title: string; price: number; salesCount: number; revenue: number }>;
+  }>;
 }
 
 const cardVariants = {
@@ -316,6 +323,73 @@ const AdminDashboard = () => {
               )}
 
               <AdminTrafficSection stats={stats} lang={lang} />
+
+              {/* Store & Products Breakdown Section */}
+              {stats.storeSalesBreakdown && stats.storeSalesBreakdown.length > 0 && (
+                <div className="rounded-2xl border border-border bg-card p-6 space-y-6">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                      <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
+                        <Store className="h-5 w-5 text-primary" />
+                        <span>Ventes Détaillées par Boutique & Produits</span>
+                      </h2>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Consultez le chiffre d'affaires, le volume de ventes et les produits vendus avec leur prix exact pour chaque boutique.
+                      </p>
+                    </div>
+                    <Badge variant="outline" className="text-xs font-mono self-start sm:self-auto">
+                      {stats.storeSalesBreakdown.length} Boutiques Actives
+                    </Badge>
+                  </div>
+
+                  <div className="space-y-4">
+                    {stats.storeSalesBreakdown.map((st) => (
+                      <div
+                        key={st.storeOwnerId}
+                        className="rounded-xl border border-border/70 bg-secondary/20 p-4 space-y-3"
+                      >
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-border/40">
+                          <div>
+                            <span className="font-bold text-foreground text-sm flex items-center gap-2">
+                              <i className="fa-solid fa-store text-primary text-xs" />
+                              {st.storeName}
+                            </span>
+                            <span className="text-[11px] text-muted-foreground font-mono">
+                              ID: {st.storeOwnerId.slice(0, 8)}...
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <span className="text-xs font-medium text-muted-foreground">
+                              {st.totalOrders} commande{st.totalOrders > 1 ? "s" : ""}
+                            </span>
+                            <span className="text-sm font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">
+                              {st.totalRevenue.toLocaleString()} FCFA
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Product list in store */}
+                        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                          {st.products.map((p) => (
+                            <div
+                              key={p.id}
+                              className="p-2.5 rounded-lg bg-background border border-border/50 text-xs flex flex-col justify-between"
+                            >
+                              <div className="font-semibold text-foreground truncate mb-1" title={p.title}>
+                                {p.title}
+                              </div>
+                              <div className="flex items-center justify-between text-[11px] text-muted-foreground pt-1 border-t border-border/30">
+                                <span>Prix : <strong className="text-foreground">{p.price.toLocaleString()} F</strong></span>
+                                <span className="font-bold text-primary">{p.salesCount} vente{p.salesCount > 1 ? "s" : ""}</span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </>
           )
         )}

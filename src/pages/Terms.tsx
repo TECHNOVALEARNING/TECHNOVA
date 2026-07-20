@@ -57,8 +57,8 @@ const Terms = () => {
           : "5. Payments, Commission, and Escrow Period",
       content:
         lang === "fr"
-          ? "Les paiements sont traités de manière sécurisée par nos partenaires de paiement agréés (tels que Stripe, Moneroo, Fedapay, etc.). TECHNOVA applique une commission de 5% par transaction. Les fonds issus des ventes sont placés en quarantaine pendant 72 heures (délai de maturation) pour prévenir la fraude au remboursement, puis disponibles pour retrait après validation KYC."
-          : "Payments are processed securely by our certified payment partners (such as Stripe, Moneroo, Fedapay, etc.). TECHNOVA applies a 5% commission per transaction. Funds from sales are held in escrow for 72 hours (maturation period) to prevent refund fraud, and then become available for withdrawal following successful KYC validation.",
+          ? "Les paiements sont traités de manière sécurisée par nos partenaires de paiement agréés (KKiaPay, Cartes Bancaires, Mobile Money). TECHNOVA applique une commission de 15% sur les cours vidéo VOD (non programmés) et de 25% sur les cours programmés en direct Google Meet. Les fonds issus des ventes sont disponibles pour retrait après validation KYC."
+          : "Payments are processed securely by certified payment partners (KKiaPay, Credit Cards, Mobile Money). TECHNOVA applies a 15% commission on non-scheduled VOD video courses and a 25% commission on scheduled live Google Meet sessions. Funds from sales become available for withdrawal following successful KYC validation.",
     },
     {
       title: lang === "fr" ? "6. Propriété intellectuelle" : "6. Intellectual Property",

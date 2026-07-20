@@ -228,11 +228,11 @@ const Register = () => {
             <Percent className="h-4 w-4 text-primary shrink-0 font-bold" />
             {lang === "en" ? (
               <span>
-                A <strong className="font-extrabold text-primary text-sm bg-primary/20 px-2 py-0.5 rounded-md border border-primary/30 inline-block mx-0.5">5%</strong> commission is applied to sales made by sellers.
+                Commissions applied: <strong className="font-extrabold text-primary text-sm bg-primary/20 px-2 py-0.5 rounded-md border border-primary/30 inline-block mx-0.5">15%</strong> for VOD courses and <strong className="font-extrabold text-primary text-sm bg-primary/20 px-2 py-0.5 rounded-md border border-primary/30 inline-block mx-0.5">25%</strong> for scheduled live Google Meet sessions.
               </span>
             ) : (
               <span>
-                Une commission de <strong className="font-extrabold text-primary text-sm bg-primary/20 px-2 py-0.5 rounded-md border border-primary/30 inline-block mx-0.5">5%</strong> est appliquée sur les ventes réalisées par les vendeurs.
+                Commissions appliquées : <strong className="font-extrabold text-primary text-sm bg-primary/20 px-2 py-0.5 rounded-md border border-primary/30 inline-block mx-0.5">15%</strong> pour les cours VOD et <strong className="font-extrabold text-primary text-sm bg-primary/20 px-2 py-0.5 rounded-md border border-primary/30 inline-block mx-0.5">25%</strong> pour les cours programmés en direct Meet.
               </span>
             )}
           </div>

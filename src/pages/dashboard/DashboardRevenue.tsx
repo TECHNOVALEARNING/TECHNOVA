@@ -3,6 +3,7 @@ import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { calculateOrderNet } from "@/lib/commissionHelper";
 import {
   DollarSign,
   TrendingUp,
@@ -158,7 +159,7 @@ const DashboardRevenue = () => {
         supabase
           .from("orders")
           .select(
-            "id, amount, status, created_at, product_id, payment_method, products(title), customers(name, email)",
+            "id, amount, status, created_at, product_id, payment_method, products(title, category, type, marketing_sections), customers(name, email)",
           )
           .eq("store_owner_id", user.id)
           .order("created_at", { ascending: false }),
@@ -176,7 +177,7 @@ const DashboardRevenue = () => {
       setOrders((ordersRes.data as any) || []);
       setWithdrawals(withdrawalsRes.data || []);
 
-      const commPct = Number(feeRes.data?.value_pct ?? 5) / 100;
+      const commPct = Number(feeRes.data?.value_pct ?? 15) / 100;
       setCommissionPct(commPct);
       setLoading(false);
     };
@@ -191,16 +192,32 @@ const DashboardRevenue = () => {
     // Maturity delay: 3 calendar days for all payments (Moneroo)
     const cutoff3d = new Date(now.getTime() - 72 * 60 * 60 * 1000);
 
-    const maturedRevenue = completedOrders
-      .filter((o) => new Date(o.created_at) <= cutoff3d)
-      .reduce((s, o) => s + Number(o.amount), 0);
+    let commission = 0;
+    let netRevenue = 0;
+    let maturedRevenue = 0;
 
-    const pendingRevenue = completedOrders
+    completedOrders
+      .filter((o) => new Date(o.created_at) <= cutoff3d)
+      .forEach((o: any) => {
+        maturedRevenue += Number(o.amount);
+        const { commission: comm, net } = calculateOrderNet(o.amount, o.products);
+        commission += comm;
+        netRevenue += net;
+      });
+
+    let pendingCommission = 0;
+    let pendingFunds = 0;
+    let pendingRevenue = 0;
+
+    completedOrders
       .filter((o) => new Date(o.created_at) > cutoff3d)
-      .reduce((s, o) => s + Number(o.amount), 0);
-    const commission = maturedRevenue * commissionPct;
-    const pendingCommission = pendingRevenue * commissionPct;
-    const netRevenue = maturedRevenue - commission;
+      .forEach((o: any) => {
+        pendingRevenue += Number(o.amount);
+        const { commission: comm, net } = calculateOrderNet(o.amount, o.products);
+        pendingCommission += comm;
+        pendingFunds += net;
+      });
+
     const totalWithdrawn = withdrawals
       .filter((w) => w.status === "completed")
       .reduce((s, w) => s + Number(w.amount) + Number(w.fee || 0), 0);
@@ -208,7 +225,7 @@ const DashboardRevenue = () => {
       .filter((w) => w.status === "pending" || w.status === "processing")
       .reduce((s, w) => s + Number(w.amount) + Number(w.fee || 0), 0);
     const available = netRevenue - totalWithdrawn - pendingWithdrawals;
-    const pendingFunds = pendingRevenue - pendingCommission;
+
     return {
       totalRevenue,
       netRevenue,
@@ -219,7 +236,7 @@ const DashboardRevenue = () => {
       pendingFunds,
       pendingRevenue,
     };
-  }, [orders, withdrawals, commissionPct]);
+  }, [orders, withdrawals]);
 
   const transactions = useMemo(() => {
     const items: Transaction[] = [];

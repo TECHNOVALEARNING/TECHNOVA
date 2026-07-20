@@ -24,6 +24,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { buyerSupabase } from "@/integrations/supabase/buyer-client";
 import { useAuth } from "@/contexts/AuthContext";
 import { CourseVideoPlayer } from "@/components/course/CourseVideoPlayer";
+import ProductReviewForm from "@/components/buyer/ProductReviewForm";
+import ProductReviewsSection from "@/components/store/ProductReviewsSection";
 import { getCompletedLessons, saveCompletedLessons } from "@/lib/courseProgressSync";
 import { generateCertificatePDF } from "@/lib/certificateGenerator";
 import SEOHead from "@/components/SEOHead";
@@ -318,6 +320,113 @@ export const CoursePlayer = () => {
       <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
         {/* Left/Main Viewing Column */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto w-full">
+          {/* Google Meet Live Banner if live course */}
+          {(() => {
+            const m = (course?.marketing_sections as any) || {};
+            const liveDateStr = m.live_date;
+            const meetUrl = m.meet_url;
+            const isLiveCourse = m.format_type === "live_meet" || m.format_type === "hybrid" || !!liveDateStr;
+            const liveDateObj = liveDateStr ? new Date(liveDateStr) : null;
+            const now = new Date();
+            const isLiveUnlocked = liveDateObj ? now.getTime() >= liveDateObj.getTime() - 15 * 60 * 1000 : true;
+
+            if (!isLiveCourse) return null;
+
+            return (
+              <div className="mb-6 p-5 rounded-2xl bg-gradient-to-r from-red-500/10 via-amber-500/10 to-blue-500/10 border border-red-500/30 shadow-lg space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-xl bg-red-500 text-white flex items-center justify-center font-bold text-lg shadow-md shrink-0">
+                      <i className="fa-solid fa-video animate-pulse" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-bold uppercase tracking-wider text-red-600 dark:text-red-400">
+                          🔴 Session en Direct Google Meet
+                        </span>
+                        {m.course_language && (
+                          <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-background border border-border">
+                            {m.course_language === "en"
+                              ? "🇬🇧 English"
+                              : m.course_language === "es"
+                              ? "🇪🇸 Español"
+                              : "🇫🇷 Français"}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-sm font-bold text-foreground">
+                        {liveDateObj
+                          ? `Date du Direct : ${liveDateObj.toLocaleDateString("fr-FR", {
+                              weekday: "long",
+                              day: "numeric",
+                              month: "long",
+                              year: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}`
+                          : "Session de visioconférence programmée"}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-2">
+                    {/* Add to Google Calendar Button */}
+                    {liveDateObj && (
+                      <a
+                        href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
+                          course?.title || "Session Live TECHNOVA"
+                        )}&dates=${liveDateObj.toISOString().replace(/-|:|\.\d\d\d/g, "")}/${new Date(
+                          liveDateObj.getTime() + 90 * 60 * 1000
+                        )
+                          .toISOString()
+                          .replace(/-|:|\.\d\d\d/g, "")}&details=${encodeURIComponent(
+                          "Rejoignez votre formation en direct sur TECHNOVA."
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold bg-secondary hover:bg-secondary/80 text-foreground border border-border transition-colors"
+                      >
+                        <i className="fa-solid fa-calendar-plus text-primary" />
+                        <span>Ajouter au Calendrier</span>
+                      </a>
+                    )}
+
+                    {/* Meet Access Button */}
+                    {meetUrl ? (
+                      <a
+                        href={isLiveUnlocked ? meetUrl : "#"}
+                        target={isLiveUnlocked ? "_blank" : "_self"}
+                        rel="noopener noreferrer"
+                        onClick={(e) => {
+                          if (!isLiveUnlocked) {
+                            e.preventDefault();
+                            toast.info(
+                              "Le lien Google Meet se débloque 15 minutes avant le début de la session !"
+                            );
+                          }
+                        }}
+                        className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-md ${
+                          isLiveUnlocked
+                            ? "bg-red-600 hover:bg-red-700 text-white animate-pulse"
+                            : "bg-muted text-muted-foreground cursor-not-allowed border border-border"
+                        }`}
+                      >
+                        <i className="fa-solid fa-video" />
+                        <span>
+                          {isLiveUnlocked ? "Rejoindre le Google Meet" : "Lien débloqué 15 min avant"}
+                        </span>
+                      </a>
+                    ) : (
+                      <span className="text-xs text-muted-foreground italic">
+                        Lien Meet transmis prochainement
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+
           {activeLesson ? (
             <div className="space-y-6">
               {/* Video Player */}
@@ -421,6 +530,27 @@ export const CoursePlayer = () => {
               <p className="text-sm text-muted-foreground">
                 Choisissez un chapitre dans le menu latéral pour démarrer le cours.
               </p>
+            </div>
+          )}
+
+          {/* Verified Student Reviews & Rating Section */}
+          {courseId && (
+            <div className="mt-12 pt-8 border-t border-border space-y-6">
+              <div className="flex items-center gap-2 text-lg font-bold text-foreground">
+                <i className="fa-solid fa-star text-amber-400" />
+                <span>Avis & Témoignages des Élèves</span>
+              </div>
+
+              {user?.id && (
+                <div className="space-y-2">
+                  <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                    Donner votre avis sur ce cours
+                  </h4>
+                  <ProductReviewForm productId={courseId} customerId={user.id} />
+                </div>
+              )}
+
+              <ProductReviewsSection productId={courseId} />
             </div>
           )}
         </div>

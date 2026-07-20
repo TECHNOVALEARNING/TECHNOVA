@@ -1040,6 +1040,10 @@ export type Course = {
   oldPrice?: string;
   duration: string;
   creatorId?: string;
+  courseLanguage?: string;
+  formatType?: "vod" | "live_meet" | "hybrid";
+  liveDate?: string;
+  meetUrl?: string;
 };
 
 const LABEL_MAP: Record<string, { cls: string; fr: string; en: string }> = {
@@ -1096,6 +1100,25 @@ export const CourseCard = ({ c, i = 0 }: { c: Course; i?: number }) => {
     return <span className="stars-sm">{s}</span>;
   };
 
+  const getLangBadge = (l?: string) => {
+    switch (l) {
+      case "en":
+        return { flag: "🇬🇧", label: "EN" };
+      case "es":
+        return { flag: "🇪🇸", label: "ES" };
+      case "pt":
+        return { flag: "🇵🇹", label: "PT" };
+      case "fr_en":
+        return { flag: "🌐", label: "FR/EN" };
+      case "other":
+        return { flag: "🗣️", label: "Autre" };
+      default:
+        return { flag: "🇫🇷", label: "FR" };
+    }
+  };
+
+  const langBadge = getLangBadge(c.courseLanguage);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -1109,13 +1132,36 @@ export const CourseCard = ({ c, i = 0 }: { c: Course; i?: number }) => {
         navigate(`/product/${c.slug}`);
       }}
     >
-      <div className="course-img-wrap">
+      <div className="course-img-wrap relative">
         <img src={c.cover} alt={c.title} loading="lazy" />
-        <span className="course-badge">{c.category}</span>
+        <div className="absolute top-3 left-3 z-10 flex items-center gap-1.5">
+          <span className="course-badge">{c.category}</span>
+          <span className="px-2 py-0.5 rounded-md bg-black/70 backdrop-blur-md text-white text-[11px] font-bold border border-white/20 flex items-center gap-1 shadow-sm">
+            <span>{langBadge.flag}</span>
+            <span>{langBadge.label}</span>
+          </span>
+        </div>
         {lb.cls && labelTxt && <span className={`label-badge ${lb.cls}`}>{labelTxt}</span>}
       </div>
       <div className="course-body">
         <div className="course-title">{c.title}</div>
+
+        {(c.liveDate || c.formatType === "live_meet" || c.formatType === "hybrid") && (
+          <div className="my-1.5 px-2.5 py-1 rounded-lg bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-[11px] font-bold flex items-center gap-1.5">
+            <i className="fa-solid fa-video text-red-500 animate-pulse" />
+            <span>
+              {c.liveDate
+                ? `Direct Meet — ${new Date(c.liveDate).toLocaleDateString("fr-FR", {
+                    day: "numeric",
+                    month: "short",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}`
+                : "Session en Direct Meet"}
+            </span>
+          </div>
+        )}
+
         <div className="course-meta">
           <span className="students">
             <i className="fas fa-users" style={{ fontSize: "0.65rem", marginRight: 4 }}></i>

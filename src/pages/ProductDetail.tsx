@@ -8,6 +8,7 @@ import { useGeoPricing } from "@/contexts/GeoPricingContext";
 import { useCart } from "@/contexts/CartContext";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
+import ProductReviewsSection from "@/components/store/ProductReviewsSection";
 
 const categoryLabels: Record<string, Record<string, string>> = {
   course: { fr: "Cours", en: "Course" },
@@ -299,6 +300,13 @@ const ProductDetail = () => {
             </div>
           </motion.div>
         </div>
+
+        {/* Verified Student Reviews Section */}
+        {product.id && (
+          <div className="mt-16 pt-10 border-t border-border">
+            <ProductReviewsSection productId={product.id} />
+          </div>
+        )}
       </div>
       <Footer />
     </div>

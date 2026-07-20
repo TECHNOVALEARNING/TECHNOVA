@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { calculateOrderNet } from "@/lib/commissionHelper";
 import { toast } from "sonner";
 import { pawapayCountries, providerLogos } from "@/data/pawapayProviders";
 import SEOHead from "@/components/SEOHead";
@@ -174,7 +175,7 @@ const WithdrawNew = () => {
       const [ordersRes, withdrawalsRes, kycRes, walletsRes, feeRes] = await Promise.all([
         supabase
           .from("orders")
-          .select("amount, created_at")
+          .select("amount, created_at, products(marketing_sections)")
           .eq("store_owner_id", user.id)
           .eq("status", "completed"),
         supabase.from("withdrawals").select("amount, fee, status").eq("user_id", user.id),
@@ -195,14 +196,17 @@ const WithdrawNew = () => {
           .maybeSingle(),
       ]);
       setKycStatus(isAdmin ? "approved" : kycRes.data?.status || null);
-      const commPct = Number(feeRes.data?.value_pct ?? 5) / 100;
+      const commPct = Number(feeRes.data?.value_pct ?? 15) / 100;
       setCommissionPct(commPct);
 
       const cutoff = new Date(Date.now() - 72 * 60 * 60 * 1000);
-      const matured = (ordersRes.data || [])
-        .filter((o) => new Date(o.created_at) <= cutoff)
-        .reduce((s, o) => s + Number(o.amount), 0);
-      const net = matured * (1 - commPct);
+      let net = 0;
+      (ordersRes.data || [])
+        .filter((o: any) => new Date(o.created_at) <= cutoff)
+        .forEach((o: any) => {
+          const { net: orderNet } = calculateOrderNet(o.amount, o.products);
+          net += orderNet;
+        });
       const withdrawn = (withdrawalsRes.data || [])
         .filter((w) => ["pending", "processing", "completed"].includes(w.status))
         .reduce((s, w) => s + Number(w.amount) + Number(w.fee || 0), 0);

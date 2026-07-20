@@ -149,6 +149,12 @@ const EditProduct = () => {
   const [countdownEnabled, setCountdownEnabled] = useState(false);
   const [countdownEndsAt, setCountdownEndsAt] = useState("");
 
+  // Course language & Live Meet settings
+  const [courseLanguage, setCourseLanguage] = useState("fr");
+  const [formatType, setFormatType] = useState<"vod" | "live_meet" | "hybrid">("vod");
+  const [liveDate, setLiveDate] = useState("");
+  const [meetUrl, setMeetUrl] = useState("");
+
   // Marketing sections
 
   // AI rewriting
@@ -217,7 +223,7 @@ const EditProduct = () => {
       setCollectShippingAddress(!!d.collect_shipping_address);
       setHideSalesCount(!!d.hide_sales_count);
 
-      // Countdown settings loading
+      // Marketing & Course Live / Language settings loading
       const marketing: any = data.marketing_sections || {};
       const timer = marketing.countdown_timer || {};
       setCountdownEnabled(!!timer.enabled);
@@ -233,6 +239,22 @@ const EditProduct = () => {
       } else {
         setCountdownEndsAt("");
       }
+
+      setCourseLanguage(marketing.course_language || "fr");
+      setFormatType(marketing.format_type || "vod");
+      if (marketing.live_date) {
+        try {
+          const lObj = new Date(marketing.live_date);
+          const lOffset = lObj.getTimezoneOffset();
+          const lLocal = new Date(lObj.getTime() - (lOffset * 60 * 1000));
+          setLiveDate(lLocal.toISOString().slice(0, 16));
+        } catch (e) {
+          setLiveDate("");
+        }
+      } else {
+        setLiveDate("");
+      }
+      setMeetUrl(marketing.meet_url || "");
 
       // SEO fields
       setSeoTitle((data as any).seo_title || "");
@@ -386,7 +408,11 @@ const EditProduct = () => {
           countdown_timer: {
             enabled: countdownEnabled,
             ends_at: countdownEnabled && countdownEndsAt ? new Date(countdownEndsAt).toISOString() : null,
-          }
+          },
+          course_language: courseLanguage,
+          format_type: formatType,
+          live_date: liveDate ? new Date(liveDate).toISOString() : null,
+          meet_url: meetUrl.trim() || null,
         },
       };
 
@@ -948,6 +974,87 @@ const EditProduct = () => {
                           <p className="text-[10px] text-muted-foreground">
                             Le compte à rebours se terminera exactement à cette heure sur la page du produit.
                           </p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {type === "course" && (
+                    <div className="p-5 rounded-xl border border-primary/20 bg-primary/5 space-y-4 animate-in fade-in">
+                      <div className="flex items-center gap-2 text-sm font-bold text-foreground">
+                        <i className="fa-solid fa-graduation-cap text-primary" />
+                        <span>Paramètres avancés de la formation</span>
+                      </div>
+
+                      {/* Langue du cours */}
+                      <div>
+                        <label className="text-xs font-semibold text-foreground mb-1 block">
+                          Langue de dispensation du cours <span className="text-destructive">*</span>
+                        </label>
+                        <Select value={courseLanguage} onValueChange={setCourseLanguage}>
+                          <SelectTrigger className="h-10 bg-background">
+                            <SelectValue placeholder="Sélectionnez la langue du cours" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="fr">🇫🇷 Français</SelectItem>
+                            <SelectItem value="en">🇬🇧 Anglais (English)</SelectItem>
+                            <SelectItem value="es">🇪🇸 Espagnol (Español)</SelectItem>
+                            <SelectItem value="pt">🇵🇹 Portugais (Português)</SelectItem>
+                            <SelectItem value="fr_en">🌐 Bilingue (Français & Anglais)</SelectItem>
+                            <SelectItem value="other">🗣️ Autre / Langue locale</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      {/* Format de la formation */}
+                      <div>
+                        <label className="text-xs font-semibold text-foreground mb-1 block">
+                          Format de dispensation <span className="text-destructive">*</span>
+                        </label>
+                        <Select value={formatType} onValueChange={(v: any) => setFormatType(v)}>
+                          <SelectTrigger className="h-10 bg-background">
+                            <SelectValue placeholder="Format de dispensation" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="vod">🎥 Vidéo à la demande (VOD enregistrée)</SelectItem>
+                            <SelectItem value="live_meet">🔴 Direct Google Meet (Visio en direct)</SelectItem>
+                            <SelectItem value="hybrid">⚡ Format Hybride (VOD + Directs Meet)</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      {/* Programmation Google Meet si Live ou Hybride */}
+                      {(formatType === "live_meet" || formatType === "hybrid") && (
+                        <div className="space-y-3 p-3 rounded-lg border border-red-500/20 bg-red-500/5">
+                          <div className="text-xs font-bold text-red-600 dark:text-red-400 flex items-center gap-1.5">
+                            <i className="fa-solid fa-video animate-pulse" />
+                            <span>Programmation de la session Google Meet</span>
+                          </div>
+
+                          <div>
+                            <label className="text-[11px] font-medium text-foreground mb-1 block">
+                              Date et Heure du Direct Google Meet
+                            </label>
+                            <Input
+                              type="datetime-local"
+                              value={liveDate}
+                              onChange={(e) => setLiveDate(e.target.value)}
+                              className="h-9 text-xs bg-background"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="text-[11px] font-medium text-foreground mb-1 block">
+                              Lien Google Meet (https://meet.google.com/...)
+                            </label>
+                            <Input
+                              type="url"
+                              value={meetUrl}
+                              onChange={(e) => setMeetUrl(e.target.value)}
+                              placeholder="https://meet.google.com/xyz-abc-def"
+                              className="h-9 text-xs bg-background"
+                            />
+                          </div>
                         </div>
                       )}
                     </div>

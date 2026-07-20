@@ -29,6 +29,8 @@ const Cours = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortBy, setSortBy] = useState<"recent" | "price_asc" | "price_desc">("recent");
 
+  const [selectedLanguage, setSelectedLanguage] = useState("all");
+
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
     window.addEventListener("technova_lang_changed", handleLangChange);
@@ -85,6 +87,15 @@ const Cours = () => {
       });
     }
 
+    // Language filter
+    if (selectedLanguage !== "all") {
+      result = result.filter((c) => {
+        const m = (c.marketing_sections as any) || {};
+        const cLang = m.course_language || "fr";
+        return cLang === selectedLanguage;
+      });
+    }
+
     // Sorting
     if (sortBy === "price_asc") {
       result.sort((a, b) => (a.price || 0) - (b.price || 0));
@@ -93,23 +104,30 @@ const Cours = () => {
     }
 
     return result;
-  }, [rawCourses, searchQuery, selectedCategory, sortBy]);
+  }, [rawCourses, searchQuery, selectedCategory, selectedLanguage, sortBy]);
 
   // Format to Course interface used on Homepage CourseCard
   const formattedCourses: Course[] = useMemo(() => {
-    return filteredCourses.map((p: any) => ({
-      slug: p.id,
-      title: p.title,
-      cover:
-        p.thumbnail_url ||
-        "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=800&q=80",
-      category: p.category ? p.category.charAt(0).toUpperCase() + p.category.slice(1) : lang === "fr" ? "Formation" : "Course",
-      level: lang === "fr" ? "Tous niveaux" : "All levels",
-      price: `${p.price || 0}`,
-      oldPrice: p.original_price ? `${p.original_price}` : undefined,
-      duration: lang === "fr" ? "Accès à vie" : "Lifetime access",
-      description: stripHtml(p.description),
-    }));
+    return filteredCourses.map((p: any) => {
+      const m = (p.marketing_sections as any) || {};
+      return {
+        slug: p.id,
+        title: p.title,
+        cover:
+          p.thumbnail_url ||
+          "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=800&q=80",
+        category: p.category ? p.category.charAt(0).toUpperCase() + p.category.slice(1) : lang === "fr" ? "Formation" : "Course",
+        level: lang === "fr" ? "Tous niveaux" : "All levels",
+        price: `${p.price || 0}`,
+        oldPrice: p.original_price ? `${p.original_price}` : undefined,
+        duration: lang === "fr" ? "Accès à vie" : "Lifetime access",
+        description: stripHtml(p.description),
+        courseLanguage: m.course_language || "fr",
+        formatType: m.format_type || "vod",
+        liveDate: m.live_date || undefined,
+        meetUrl: m.meet_url || undefined,
+      };
+    });
   }, [filteredCourses, lang]);
 
   const seoTitle =
@@ -291,20 +309,39 @@ const Cours = () => {
               </h2>
             </div>
 
-            <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
-              <div className="flex items-center gap-2 text-xs text-muted-foreground font-normal">
-                <i className="fa-solid fa-sliders text-xs" />
-                <span>Trier par :</span>
+            <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+              {/* Language filter */}
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-normal">
+                <i className="fa-solid fa-language text-primary text-xs" />
+                <span>Langue :</span>
+                <select
+                  value={selectedLanguage}
+                  onChange={(e) => setSelectedLanguage(e.target.value)}
+                  className="bg-card border border-border text-xs rounded-xl px-3 py-2 text-foreground font-normal outline-none focus:border-[#0071e3] font-sans"
+                >
+                  <option value="all">🌐 Toutes les langues</option>
+                  <option value="fr">🇫🇷 Français</option>
+                  <option value="en">🇬🇧 English</option>
+                  <option value="es">🇪🇸 Español</option>
+                  <option value="pt">🇵🇹 Português</option>
+                  <option value="fr_en">🌐 Bilingue</option>
+                </select>
               </div>
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as any)}
-                className="bg-card border border-border text-xs rounded-xl px-3 py-2 text-foreground font-normal outline-none focus:border-[#0071e3] font-sans"
-              >
-                <option value="recent">Plus récents</option>
-                <option value="price_asc">Prix : Croissant</option>
-                <option value="price_desc">Prix : Décroissant</option>
-              </select>
+
+              {/* Sorting */}
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-normal">
+                <i className="fa-solid fa-sliders text-xs" />
+                <span>Trier :</span>
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value as any)}
+                  className="bg-card border border-border text-xs rounded-xl px-3 py-2 text-foreground font-normal outline-none focus:border-[#0071e3] font-sans"
+                >
+                  <option value="recent">Plus récents</option>
+                  <option value="price_asc">Prix : Croissant</option>
+                  <option value="price_desc">Prix : Décroissant</option>
+                </select>
+              </div>
             </div>
           </div>
 

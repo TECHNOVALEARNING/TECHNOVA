@@ -135,8 +135,12 @@ const CreateProduct = () => {
   const [countdownEnabled, setCountdownEnabled] = useState(false);
   const [countdownEndsAt, setCountdownEndsAt] = useState("");
 
-  // Course modules
+  // Course modules & advanced settings
   const [courseModules, setCourseModules] = useState<Module[]>([]);
+  const [courseLanguage, setCourseLanguage] = useState("fr");
+  const [formatType, setFormatType] = useState<"vod" | "live_meet" | "hybrid">("vod");
+  const [liveDate, setLiveDate] = useState("");
+  const [meetUrl, setMeetUrl] = useState("");
 
   // Moderation
   const [moderationDialogOpen, setModerationDialogOpen] = useState(false);
@@ -308,7 +312,11 @@ const CreateProduct = () => {
           countdown_timer: {
             enabled: countdownEnabled,
             ends_at: countdownEnabled && countdownEndsAt ? new Date(countdownEndsAt).toISOString() : null,
-          }
+          },
+          course_language: courseLanguage,
+          format_type: formatType,
+          live_date: liveDate ? new Date(liveDate).toISOString() : null,
+          meet_url: meetUrl.trim() || null,
         },
       };
 
@@ -953,6 +961,87 @@ const CreateProduct = () => {
                       </SelectContent>
                     </Select>
                   </div>
+
+                  {selectedType === "course" && (
+                    <div className="p-4 rounded-xl border border-primary/20 bg-primary/5 space-y-4 animate-in fade-in">
+                      <div className="flex items-center gap-2 text-sm font-bold text-foreground">
+                        <i className="fa-solid fa-graduation-cap text-primary" />
+                        <span>Paramètres avancés de la formation</span>
+                      </div>
+
+                      {/* Langue du cours */}
+                      <div>
+                        <label className="text-xs font-semibold text-foreground mb-1 block">
+                          Langue de dispensation du cours <span className="text-destructive">*</span>
+                        </label>
+                        <Select value={courseLanguage} onValueChange={setCourseLanguage}>
+                          <SelectTrigger className="h-10 bg-background">
+                            <SelectValue placeholder="Sélectionnez la langue du cours" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="fr">🇫🇷 Français</SelectItem>
+                            <SelectItem value="en">🇬🇧 Anglais (English)</SelectItem>
+                            <SelectItem value="es">🇪🇸 Espagnol (Español)</SelectItem>
+                            <SelectItem value="pt">🇵🇹 Portugais (Português)</SelectItem>
+                            <SelectItem value="fr_en">🌐 Bilingue (Français & Anglais)</SelectItem>
+                            <SelectItem value="other">🗣️ Autre / Langue locale</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      {/* Format de la formation */}
+                      <div>
+                        <label className="text-xs font-semibold text-foreground mb-1 block">
+                          Format de dispensation <span className="text-destructive">*</span>
+                        </label>
+                        <Select value={formatType} onValueChange={(v: any) => setFormatType(v)}>
+                          <SelectTrigger className="h-10 bg-background">
+                            <SelectValue placeholder="Format de dispensation" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="vod">🎥 Vidéo à la demande (VOD enregistrée)</SelectItem>
+                            <SelectItem value="live_meet">🔴 Direct Google Meet (Visio en direct)</SelectItem>
+                            <SelectItem value="hybrid">⚡ Format Hybride (VOD + Directs Meet)</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      {/* Programmation Google Meet si Live ou Hybride */}
+                      {(formatType === "live_meet" || formatType === "hybrid") && (
+                        <div className="space-y-3 p-3 rounded-lg border border-red-500/20 bg-red-500/5">
+                          <div className="text-xs font-bold text-red-600 dark:text-red-400 flex items-center gap-1.5">
+                            <i className="fa-solid fa-video animate-pulse" />
+                            <span>Programmation de la session Google Meet</span>
+                          </div>
+
+                          <div>
+                            <label className="text-[11px] font-medium text-foreground mb-1 block">
+                              Date et Heure du Direct Google Meet
+                            </label>
+                            <Input
+                              type="datetime-local"
+                              value={liveDate}
+                              onChange={(e) => setLiveDate(e.target.value)}
+                              className="h-9 text-xs bg-background"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="text-[11px] font-medium text-foreground mb-1 block">
+                              Lien Google Meet (https://meet.google.com/...)
+                            </label>
+                            <Input
+                              type="url"
+                              value={meetUrl}
+                              onChange={(e) => setMeetUrl(e.target.value)}
+                              placeholder="https://meet.google.com/xyz-abc-def"
+                              className="h-9 text-xs bg-background"
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
                   {category === "template" && (
                     <div className="animate-in fade-in slide-in-from-top-2">
                       <label className="text-sm font-medium text-foreground mb-1.5 block">
