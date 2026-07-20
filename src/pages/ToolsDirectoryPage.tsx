@@ -16,7 +16,7 @@ export default function ToolsDirectoryPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background text-foreground transition-colors duration-300 font-sans" style={{ fontFamily: "'Manrope', -apple-system, sans-serif" }}>
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300 font-sans">
       <SEOHead
         title={
           lang === "fr"

@@ -29,7 +29,7 @@ import { useGeoPricing } from "@/contexts/GeoPricingContext";
 export const Logo = ({ className = "" }: { className?: string }) => (
   <a href="/" className={`flex items-center gap-2.5 ${className}`}>
     <img src={siteLogo} alt="Logo" className="h-10 sm:h-12 w-auto object-contain" />
-    <span className="font-display text-xl sm:text-2xl font-black tracking-tight text-[color:var(--primary)]">
+    <span className="font-display text-xl sm:text-2xl font-bold tracking-tight text-foreground" style={{ fontFamily: "'Outfit', sans-serif" }}>
       TECHNOVA
     </span>
   </a>
@@ -128,13 +128,13 @@ export const Header = () => {
     <header className="fixed w-full top-0 z-50 backdrop-blur-md bg-background/80 border-b border-border shadow-sm">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <Logo />
-        <nav className="hidden lg:flex items-center gap-8 text-sm font-medium">
+        <nav className="hidden lg:flex items-center gap-8 text-sm font-normal">
           {links.map((l) => (
             <Link
               key={l.label}
               to={l.to}
               onClick={(e) => handleNavClick(e, l.to)}
-              className="hover:text-[color:var(--primary)] transition-colors story-link"
+              className="text-sm font-normal text-muted-foreground hover:text-foreground transition-colors"
             >
               {l.label}
             </Link>
@@ -145,7 +145,7 @@ export const Header = () => {
             <button
               onClick={() => setInfoDropdownOpen(!infoDropdownOpen)}
               onMouseEnter={() => setInfoDropdownOpen(true)}
-              className="flex items-center gap-1 hover:text-[color:var(--primary)] text-muted-foreground transition-colors story-link font-medium text-sm"
+              className="flex items-center gap-1 hover:text-foreground text-muted-foreground transition-colors font-normal text-sm"
             >
               {lang === "fr" ? "Informez-vous" : "Get Informed"}{" "}
               <ChevronDown
@@ -178,7 +178,7 @@ export const Header = () => {
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
               onMouseEnter={() => setDropdownOpen(true)}
-              className="flex items-center gap-1 hover:text-[color:var(--primary)] text-muted-foreground transition-colors story-link font-medium text-sm"
+              className="flex items-center gap-1 hover:text-foreground text-muted-foreground transition-colors font-normal text-sm"
             >
               {lang === "fr" ? "Plus" : "More"}{" "}
               <ChevronDown

@@ -137,6 +137,10 @@
     position: relative;
   }
 
+  .font-display {
+    font-family: 'Outfit', 'Manrope', -apple-system, sans-serif;
+  }
+
   body::before {
     content: '';
     position: fixed;

@@ -130,8 +130,7 @@ const TechnovaApps = () => {
             transition={{ duration: 0.6 }}
           >
             <h1
-              className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-[color:var(--text)] font-display leading-[1.15] mb-6"
-              style={{ fontFamily: "'Outfit', sans-serif" }}
+              className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-[color:var(--text)] leading-[1.15] mb-6"
             >
               {lang === "fr" ? (
                 <>

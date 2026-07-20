@@ -1,19 +1,6 @@
-import { Header, Footer } from "@/components/site/shared";
+import { Header, Footer, CourseCard, type Course } from "@/components/site/shared";
 import { motion } from "framer-motion";
-import {
-  GraduationCap,
-  Video,
-  Award,
-  Users,
-  ArrowRight,
-  Search,
-  Sparkles,
-  Star,
-  Clock,
-  SlidersHorizontal,
-  Globe
-} from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import SEOHead from "@/components/SEOHead";
@@ -23,13 +10,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { useGeoPricing } from "@/contexts/GeoPricingContext";
 
 const CATEGORIES = [
-  { id: "all", labelFr: "Toutes les formations", labelEn: "All Courses", icon: "🌐" },
-  { id: "ia", labelFr: "IA & Data Science", labelEn: "AI & Data", icon: "🤖" },
-  { id: "design", labelFr: "Design & Vidéo", labelEn: "Design & Video", icon: "🎨" },
-  { id: "dev", labelFr: "Développement & Code", labelEn: "Web Development", icon: "💻" },
-  { id: "marketing", labelFr: "Marketing & Vente", labelEn: "Marketing & Sales", icon: "📈" },
-  { id: "business", labelFr: "Business & Freelance", labelEn: "Business & Freelance", icon: "💼" },
-  { id: "langues", labelFr: "Langues", labelEn: "Languages", icon: "🗣️" },
+  { id: "all", labelFr: "Toutes les formations", labelEn: "All Courses", icon: "fa-solid fa-layer-group" },
+  { id: "ia", labelFr: "IA & Data Science", labelEn: "AI & Data", icon: "fa-solid fa-robot" },
+  { id: "design", labelFr: "Design & Vidéo", labelEn: "Design & Video", icon: "fa-solid fa-palette" },
+  { id: "dev", labelFr: "Développement & Code", labelEn: "Web Development", icon: "fa-solid fa-code" },
+  { id: "marketing", labelFr: "Marketing & Vente", labelEn: "Marketing & Sales", icon: "fa-solid fa-chart-line" },
+  { id: "business", labelFr: "Business & Freelance", labelEn: "Business & Freelance", icon: "fa-solid fa-briefcase" },
+  { id: "langues", labelFr: "Langues", labelEn: "Languages", icon: "fa-solid fa-language" },
 ];
 
 const Cours = () => {
@@ -108,6 +95,23 @@ const Cours = () => {
     return result;
   }, [rawCourses, searchQuery, selectedCategory, sortBy]);
 
+  // Format to Course interface used on Homepage CourseCard
+  const formattedCourses: Course[] = useMemo(() => {
+    return filteredCourses.map((p: any) => ({
+      slug: p.id,
+      title: p.title,
+      cover:
+        p.thumbnail_url ||
+        "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=800&q=80",
+      category: p.category ? p.category.charAt(0).toUpperCase() + p.category.slice(1) : lang === "fr" ? "Formation" : "Course",
+      level: lang === "fr" ? "Tous niveaux" : "All levels",
+      price: `${p.price || 0}`,
+      oldPrice: p.original_price ? `${p.original_price}` : undefined,
+      duration: lang === "fr" ? "Accès à vie" : "Lifetime access",
+      description: stripHtml(p.description),
+    }));
+  }, [filteredCourses, lang]);
+
   const seoTitle =
     lang === "en"
       ? "Certifying Courses Catalog — TECHNOVA"
@@ -122,26 +126,35 @@ const Cours = () => {
       <SEOHead title={seoTitle} description={seoDesc} canonicalPath="/formations" />
       <Header />
 
-      {/* Hero Header Banner (Learnixx Style) */}
-      <section className="relative pt-28 pb-16 md:pt-36 md:pb-24 overflow-hidden bg-gradient-to-b from-primary/10 via-background to-background border-b border-border/40">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-primary/15 rounded-full blur-[120px] pointer-events-none" />
+      {/* Hero Header Banner (Matching Homepage Hero Styling & Outfit Font) */}
+      <section className="relative pt-28 pb-16 md:pt-36 md:pb-24 overflow-hidden bg-gradient-to-b from-[#0071e3]/10 via-background to-background border-b border-border/40">
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-[#0071e3]/10 rounded-full blur-[120px] pointer-events-none" />
 
         <div className="container mx-auto px-4 sm:px-6 relative z-10 max-w-6xl">
           <div className="text-center max-w-3xl mx-auto">
-
             <motion.h1
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-foreground tracking-tight leading-tight mb-6"
+              style={{
+                fontFamily: "'Outfit', sans-serif",
+                fontSize: "clamp(2.6rem, 5vw, 4.2rem)",
+                fontWeight: 800,
+                lineHeight: 1.08,
+                letterSpacing: "-0.04em",
+                color: "var(--text)",
+                marginBottom: 24,
+              }}
             >
               {lang === "fr" ? (
                 <>
-                  Propulsez votre carrière numérique avec nos <span className="text-gradient">Formations Certifiantes</span>
+                  Propulsez votre carrière numérique avec nos{" "}
+                  <span style={{ color: "#0071e3" }}>Formations Certifiantes</span>
                 </>
               ) : (
                 <>
-                  Boost your digital career with our <span className="text-gradient">Certified Courses</span>
+                  Boost your digital career with our{" "}
+                  <span style={{ color: "#0071e3" }}>Certified Courses</span>
                 </>
               )}
             </motion.h1>
@@ -150,7 +163,15 @@ const Cours = () => {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="text-base sm:text-lg text-muted-foreground mb-10 leading-relaxed"
+              style={{
+                fontSize: "1.05rem",
+                color: "var(--text-secondary)",
+                lineHeight: 1.7,
+                maxWidth: 540,
+                marginBottom: 36,
+                marginLeft: "auto",
+                marginRight: "auto",
+              }}
             >
               {lang === "fr"
                 ? "Acquérez des compétences pratiques recherchées, réalisez des projets concrets et obtenez votre certification reconnue — le tout à votre propre rythme."
@@ -164,8 +185,8 @@ const Cours = () => {
               transition={{ delay: 0.3 }}
               className="relative max-w-2xl mx-auto"
             >
-              <div className="relative flex items-center rounded-2xl bg-card border border-border/80 shadow-lg p-2 focus-within:border-primary/50 transition-all">
-                <Search className="h-5 w-5 text-muted-foreground ml-3 shrink-0" />
+              <div className="relative flex items-center rounded-2xl bg-card border border-border/80 shadow-lg p-2 focus-within:border-[#0071e3]/50 transition-all">
+                <i className="fa-solid fa-magnifying-glass text-muted-foreground ml-3 shrink-0 text-sm" />
                 <Input
                   type="text"
                   placeholder={
@@ -175,18 +196,18 @@ const Cours = () => {
                   }
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="border-0 shadow-none focus-visible:ring-0 text-sm sm:text-base text-foreground placeholder:text-muted-foreground bg-transparent"
+                  className="border-0 shadow-none focus-visible:ring-0 text-sm sm:text-base text-foreground placeholder:text-muted-foreground bg-transparent font-normal"
                 />
                 {searchQuery && (
                   <button
                     onClick={() => setSearchQuery("")}
-                    className="text-xs text-muted-foreground hover:text-foreground px-2"
+                    className="text-xs text-muted-foreground hover:text-foreground px-2 font-normal"
                   >
                     Effacer
                   </button>
                 )}
-                <Button className="rounded-xl px-5 text-sm font-semibold shrink-0">
-                  {lang === "fr" ? "Rechercher" : "Search"}
+                <Button className="rounded-xl px-5 text-sm font-medium shrink-0 gap-2 bg-[#0071e3] hover:bg-[#0071e3]/90 text-white">
+                  <span>{lang === "fr" ? "Rechercher" : "Search"}</span>
                 </Button>
               </div>
             </motion.div>
@@ -195,39 +216,39 @@ const Cours = () => {
           {/* Trust Highlights Strip */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-14 pt-8 border-t border-border/60 max-w-4xl mx-auto">
             <div className="flex items-center gap-3 text-left">
-              <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
-                <Users className="h-5 w-5" />
+              <div className="h-10 w-10 rounded-xl bg-[#0071e3]/10 flex items-center justify-center text-[#0071e3] shrink-0">
+                <i className="fa-solid fa-user-graduate text-base" />
               </div>
               <div>
-                <div className="font-extrabold text-foreground text-sm">15k+ Apprenants</div>
-                <div className="text-xs text-muted-foreground">Communauté active</div>
+                <div className="font-semibold text-foreground text-sm tracking-tight">15k+ Apprenants</div>
+                <div className="text-xs text-muted-foreground font-normal">Communauté active</div>
               </div>
             </div>
             <div className="flex items-center gap-3 text-left">
-              <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
-                <Video className="h-5 w-5" />
+              <div className="h-10 w-10 rounded-xl bg-[#0071e3]/10 flex items-center justify-center text-[#0071e3] shrink-0">
+                <i className="fa-solid fa-circle-play text-base" />
               </div>
               <div>
-                <div className="font-extrabold text-foreground text-sm">Accès à vie</div>
-                <div className="text-xs text-muted-foreground">Vidéos & ressources</div>
+                <div className="font-semibold text-foreground text-sm tracking-tight">Accès à vie</div>
+                <div className="text-xs text-muted-foreground font-normal">Vidéos & ressources</div>
               </div>
             </div>
             <div className="flex items-center gap-3 text-left">
-              <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
-                <Award className="h-5 w-5" />
+              <div className="h-10 w-10 rounded-xl bg-[#0071e3]/10 flex items-center justify-center text-[#0071e3] shrink-0">
+                <i className="fa-solid fa-certificate text-base" />
               </div>
               <div>
-                <div className="font-extrabold text-foreground text-sm">Certifications</div>
-                <div className="text-xs text-muted-foreground">Validées TECHNOVA</div>
+                <div className="font-semibold text-foreground text-sm tracking-tight">Certifications</div>
+                <div className="text-xs text-muted-foreground font-normal">Validées TECHNOVA</div>
               </div>
             </div>
             <div className="flex items-center gap-3 text-left">
-              <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
-                <Globe className="h-5 w-5" />
+              <div className="h-10 w-10 rounded-xl bg-[#0071e3]/10 flex items-center justify-center text-[#0071e3] shrink-0">
+                <i className="fa-solid fa-globe text-base" />
               </div>
               <div>
-                <div className="font-extrabold text-foreground text-sm">100% En Ligne</div>
-                <div className="text-xs text-muted-foreground">Mobile Money & CB</div>
+                <div className="font-semibold text-foreground text-sm tracking-tight">100% En Ligne</div>
+                <div className="text-xs text-muted-foreground font-normal">Mobile Money & CB</div>
               </div>
             </div>
           </div>
@@ -245,13 +266,13 @@ const Cours = () => {
                 <button
                   key={cat.id}
                   onClick={() => setSelectedCategory(cat.id)}
-                  className={`flex items-center gap-2 px-4 py-2.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
+                  className={`flex items-center gap-2.5 px-4 py-2.5 rounded-full text-xs font-medium whitespace-nowrap transition-all ${
                     active
-                      ? "bg-primary text-primary-foreground shadow-md scale-105"
+                      ? "bg-[#0071e3] text-white shadow-md"
                       : "bg-card border border-border text-muted-foreground hover:text-foreground hover:bg-muted"
                   }`}
                 >
-                  <span>{cat.icon}</span>
+                  <i className={`${cat.icon} text-xs`} />
                   <span>{lang === "en" ? cat.labelEn : cat.labelFr}</span>
                 </button>
               );
@@ -261,23 +282,24 @@ const Cours = () => {
           {/* Catalog Filter Header & Sorting */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 pb-4 border-b border-border">
             <div>
-              <h2 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2">
-                <span>{lang === "fr" ? "Toutes les formations" : "All Courses"}</span>
-                <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-primary/10 text-primary">
-                  {filteredCourses.length}
+              <h2 className="section-title">
+                <span className="title-motion-wrap">
+                  <span className="title-motion">
+                    {lang === "fr" ? "Toutes les formations" : "All Courses"}
+                  </span>
                 </span>
               </h2>
             </div>
 
             <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
-              <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                <SlidersHorizontal className="h-3.5 w-3.5" />
+              <div className="flex items-center gap-2 text-xs text-muted-foreground font-normal">
+                <i className="fa-solid fa-sliders text-xs" />
                 <span>Trier par :</span>
               </div>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
-                className="bg-card border border-border text-xs rounded-xl px-3 py-2 text-foreground font-medium outline-none focus:border-primary"
+                className="bg-card border border-border text-xs rounded-xl px-3 py-2 text-foreground font-normal outline-none focus:border-[#0071e3] font-sans"
               >
                 <option value="recent">Plus récents</option>
                 <option value="price_asc">Prix : Croissant</option>
@@ -286,7 +308,7 @@ const Cours = () => {
             </div>
           </div>
 
-          {/* Course Grid */}
+          {/* Course Grid (Exact Homepage CourseCard Component) */}
           {isLoading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {[...Array(8)].map((_, i) => (
@@ -301,103 +323,19 @@ const Cours = () => {
                 </div>
               ))}
             </div>
-          ) : filteredCourses.length > 0 ? (
+          ) : formattedCourses.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {filteredCourses.map((product, i) => {
-                const priceFormatted =
-                  product.price > 0 ? formatPrice(product.price) : lang === "fr" ? "Gratuit" : "Free";
-                const oldPriceFormatted = product.original_price
-                  ? formatPrice(product.original_price)
-                  : null;
-
-                return (
-                  <motion.div
-                    key={product.id}
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.04 }}
-                    className="group rounded-2xl border border-border bg-card overflow-hidden hover:shadow-xl hover:border-primary/30 transition-all duration-300 flex flex-col justify-between"
-                  >
-                    <div>
-                      {/* Course Thumbnail Wrapper */}
-                      <div className="relative aspect-video w-full overflow-hidden bg-muted">
-                        <img
-                          src={
-                            product.thumbnail_url ||
-                            "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=800&q=80"
-                          }
-                          alt={product.title}
-                          className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60" />
-
-                        <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-background/90 backdrop-blur-md text-[11px] font-semibold text-foreground shadow-sm">
-                          {product.category || "Formation"}
-                        </span>
-
-                        <span className="absolute bottom-3 right-3 px-2 py-0.5 rounded-md bg-black/60 backdrop-blur-md text-[10px] font-medium text-white flex items-center gap-1">
-                          <Clock className="h-3 w-3" />
-                          Accès à vie
-                        </span>
-                      </div>
-
-                      {/* Course Card Body */}
-                      <div className="p-5">
-                        <div className="flex items-center gap-1.5 text-xs text-amber-500 font-semibold mb-2">
-                          <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500" />
-                          <span>4.9</span>
-                          <span className="text-muted-foreground font-normal">(1.2k élèves)</span>
-                        </div>
-
-                        <h3 className="font-bold text-foreground text-sm sm:text-base line-clamp-2 mb-2 group-hover:text-primary transition-colors leading-snug">
-                          {product.title}
-                        </h3>
-
-                        <p className="text-xs text-muted-foreground line-clamp-2 mb-4 leading-relaxed font-normal">
-                          {stripHtml(product.description) ||
-                            (lang === "fr"
-                              ? "Formation complète certifiante avec exercices et ressources téléchargeables."
-                              : "Complete certifying course with exercises and downloadable resources.")}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Footer & Price Row */}
-                    <div className="p-5 pt-0">
-                      <div className="pt-3 border-t border-border/60 flex items-center justify-between">
-                        <div>
-                          <div className="text-xs text-muted-foreground">Prix :</div>
-                          <div className="flex items-baseline gap-1.5">
-                            <span className="text-lg font-extrabold text-primary">
-                              {priceFormatted}
-                            </span>
-                            {oldPriceFormatted && (
-                              <span className="text-xs text-muted-foreground line-through">
-                                {oldPriceFormatted}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-
-                        <Link to={`/product/${product.id}`}>
-                          <Button size="sm" className="rounded-xl px-3.5 gap-1 font-semibold text-xs">
-                            <span>Explorer</span>
-                            <ArrowRight className="h-3.5 w-3.5" />
-                          </Button>
-                        </Link>
-                      </div>
-                    </div>
-                  </motion.div>
-                );
-              })}
+              {formattedCourses.map((c, i) => (
+                <CourseCard key={c.slug} c={c} i={i} />
+              ))}
             </div>
           ) : (
-            <div className="text-center py-20 rounded-3xl border border-dashed border-border bg-card max-w-md mx-auto">
-              <GraduationCap className="h-12 w-12 mx-auto text-muted-foreground/40 mb-4" />
+            <div className="text-center py-20 rounded-3xl border border-dashed border-border bg-card max-w-md mx-auto p-8">
+              <i className="fa-solid fa-graduation-cap text-4xl text-muted-foreground/30 mb-4 block" />
               <h3 className="text-lg font-bold text-foreground mb-2">
                 {lang === "fr" ? "Aucune formation trouvée" : "No courses found"}
               </h3>
-              <p className="text-sm text-muted-foreground mb-6">
+              <p className="text-sm text-muted-foreground mb-6 font-normal">
                 {lang === "fr"
                   ? "Essayez de modifier votre recherche ou sélectionnez une autre catégorie."
                   : "Try modifying your search or selecting another category."}
@@ -408,6 +346,7 @@ const Cours = () => {
                   setSearchQuery("");
                   setSelectedCategory("all");
                 }}
+                className="rounded-xl font-normal"
               >
                 Réinitialiser les filtres
               </Button>
@@ -416,13 +355,17 @@ const Cours = () => {
         </div>
       </section>
 
-      {/* 3-Step Success Guide Section (Learnixx Style) */}
+      {/* 3-Step Success Guide Section (Homepage Style) */}
       <section className="py-20 bg-background border-t border-border">
         <div className="container mx-auto px-4 sm:px-6 max-w-6xl text-center">
-          <h2 className="text-2xl sm:text-4xl font-extrabold text-foreground mb-4">
-            {lang === "fr" ? "Votre parcours en 3 étapes simples" : "Your Journey in 3 Simple Steps"}
+          <h2 className="section-title mb-4">
+            <span className="title-motion-wrap">
+              <span className="title-motion">
+                {lang === "fr" ? "Votre parcours en 3 étapes simples" : "Your Journey in 3 Simple Steps"}
+              </span>
+            </span>
           </h2>
-          <p className="text-sm sm:text-base text-muted-foreground max-w-xl mx-auto mb-14">
+          <p className="text-sm sm:text-base text-muted-foreground max-w-xl mx-auto mb-14 font-normal">
             {lang === "fr"
               ? "Tout est pensé pour vous offrir un apprentissage fluide, pragmatique et valorisant."
               : "Everything is designed to provide you with a smooth, practical, and rewarding learning experience."}
@@ -430,38 +373,38 @@ const Cours = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="relative p-8 rounded-3xl bg-card border border-border text-left hover:shadow-lg transition">
-              <div className="h-12 w-12 rounded-2xl bg-primary/10 text-primary font-black text-xl flex items-center justify-center mb-6">
-                01
+              <div className="h-12 w-12 rounded-2xl bg-[#0071e3]/10 text-[#0071e3] font-bold text-base flex items-center justify-center mb-6">
+                <i className="fa-solid fa-magnifying-glass text-base" />
               </div>
-              <h3 className="font-bold text-lg text-foreground mb-2">
-                {lang === "fr" ? "Choisissez votre formation" : "Choose Your Course"}
+              <h3 className="font-bold text-lg text-foreground mb-2 tracking-tight">
+                {lang === "fr" ? "01. Choisissez votre formation" : "01. Choose Your Course"}
               </h3>
-              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed font-normal">
                 Parcourez le catalogue et sélectionnez le programme certifiant qui correspond à vos objectifs professionnels.
               </p>
             </div>
 
             <div className="relative p-8 rounded-3xl bg-card border border-border text-left hover:shadow-lg transition">
-              <div className="h-12 w-12 rounded-2xl bg-primary/10 text-primary font-black text-xl flex items-center justify-center mb-6">
-                02
+              <div className="h-12 w-12 rounded-2xl bg-[#0071e3]/10 text-[#0071e3] font-bold text-base flex items-center justify-center mb-6">
+                <i className="fa-solid fa-laptop-code text-base" />
               </div>
-              <h3 className="font-bold text-lg text-foreground mb-2">
-                {lang === "fr" ? "Apprenez à votre rythme" : "Learn at Your Own Pace"}
+              <h3 className="font-bold text-lg text-foreground mb-2 tracking-tight">
+                {lang === "fr" ? "02. Apprenez à votre rythme" : "02. Learn at Your Own Pace"}
               </h3>
-              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed font-normal">
                 Accédez immédiatement aux contenus vidéo de haute qualité, ressources pratiques et exercices interactifs.
               </p>
             </div>
 
             <div className="relative p-8 rounded-3xl bg-card border border-border text-left hover:shadow-lg transition">
-              <div className="h-12 w-12 rounded-2xl bg-primary/10 text-primary font-black text-xl flex items-center justify-center mb-6">
-                03
+              <div className="h-12 w-12 rounded-2xl bg-[#0071e3]/10 text-[#0071e3] font-bold text-base flex items-center justify-center mb-6">
+                <i className="fa-solid fa-award text-base" />
               </div>
-              <h3 className="font-bold text-lg text-foreground mb-2">
-                {lang === "fr" ? "Obtenez votre certification" : "Get Your Certificate"}
+              <h3 className="font-bold text-lg text-foreground mb-2 tracking-tight">
+                {lang === "fr" ? "03. Obtenez votre certification" : "03. Earn Your Certificate"}
               </h3>
-              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                Validez vos acquis, recevez votre certificat certifié TECHNOVA et valorisez-le sur votre profil et CV.
+              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed font-normal">
+                Validez vos leçons, complétez le parcours et téléchargez votre diplôme certifiant au format PDF.
               </p>
             </div>
           </div>
