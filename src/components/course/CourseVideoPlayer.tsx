@@ -154,28 +154,47 @@ export const CourseVideoPlayer = ({
     return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
   };
 
-  // Detect YouTube or Vimeo embeds
-  const isEmbed =
-    src.includes("youtube.com") ||
-    src.includes("youtu.be") ||
-    src.includes("vimeo.com") ||
-    src.includes("cloudflarestream.com") && src.includes("/iframe");
+  const cleanSrc = (src || "").trim();
 
-  // Format YouTube/Vimeo embed URL cleanly if needed
+  // Detect whether video is a direct binary video file (.mp4, .webm, .ogg, .mov, .m3u8)
+  const isDirectVideo = /\.(mp4|webm|ogg|mov|m3u8)(\?.*)?$/i.test(cleanSrc);
+  const isEmbed = !isDirectVideo && cleanSrc.length > 0;
+
+  // Format YouTube/Vimeo/Google Drive/Loom/Iframe URLs cleanly
   const getEmbedUrl = (url: string) => {
-    if (url.includes("youtube.com/watch?v=")) {
-      const id = url.split("v=")[1]?.split("&")[0];
+    if (!url) return "";
+    const u = url.trim();
+
+    // Check if user pasted full <iframe> code by mistake
+    if (u.includes("<iframe") && u.includes("src=")) {
+      const match = u.match(/src=["']([^"']+)["']/);
+      if (match && match[1]) {
+        return match[1];
+      }
+    }
+
+    if (u.includes("youtube.com/watch?v=")) {
+      const id = u.split("v=")[1]?.split("&")[0];
       return `https://www.youtube.com/embed/${id}?autoplay=${autoPlay ? 1 : 0}&modestbranding=1&rel=0`;
     }
-    if (url.includes("youtu.be/")) {
-      const id = url.split("youtu.be/")[1]?.split("?")[0];
+    if (u.includes("youtube.com/embed/")) {
+      return u;
+    }
+    if (u.includes("youtu.be/")) {
+      const id = u.split("youtu.be/")[1]?.split("?")[0];
       return `https://www.youtube.com/embed/${id}?autoplay=${autoPlay ? 1 : 0}&modestbranding=1&rel=0`;
     }
-    if (url.includes("vimeo.com/") && !url.includes("player.vimeo.com")) {
-      const id = url.split("vimeo.com/")[1]?.split("?")[0];
+    if (u.includes("vimeo.com/") && !u.includes("player.vimeo.com")) {
+      const id = u.split("vimeo.com/")[1]?.split("?")[0];
       return `https://player.vimeo.com/video/${id}?autoplay=${autoPlay ? 1 : 0}`;
     }
-    return url;
+    if (u.includes("drive.google.com")) {
+      return u.replace("/view", "/preview").replace("/edit", "/preview");
+    }
+    if (u.includes("loom.com/share/")) {
+      return u.replace("/share/", "/embed/");
+    }
+    return u;
   };
 
   return (
@@ -184,14 +203,14 @@ export const CourseVideoPlayer = ({
       onMouseMove={handleMouseMove}
       className="relative w-full aspect-video rounded-2xl overflow-hidden bg-black shadow-2xl border border-white/10 group select-none"
     >
-      {/* Embed Fallback (YouTube / Vimeo / Cloudflare Iframe) */}
+      {/* Embed Fallback (YouTube / Vimeo / Cloudflare / Google Drive / Loom Iframe) */}
       {isEmbed ? (
         <div className="relative w-full h-full">
           <iframe
-            src={getEmbedUrl(src)}
+            src={getEmbedUrl(cleanSrc)}
             title={title || "Video Lesson"}
             className="w-full h-full border-0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
           />
         </div>
