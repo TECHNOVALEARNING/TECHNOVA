@@ -64,6 +64,15 @@ export const CoursePlayer = () => {
   const [loading, setLoading] = useState(true);
   const [openModuleIds, setOpenModuleIds] = useState<string[]>([]);
   const [showCertificateModal, setShowCertificateModal] = useState(false);
+  const [isGeneratingCert, setIsGeneratingCert] = useState(false);
+  const [reminderActive, setReminderActive] = useState(false);
+
+  useEffect(() => {
+    if (courseId && user?.id) {
+      const saved = localStorage.getItem(`live_reminder_${courseId}_${user.id}`);
+      if (saved === "true") setReminderActive(true);
+    }
+  }, [courseId, user]);
 
   // Load course, modules, and lessons
   useEffect(() => {
@@ -390,6 +399,31 @@ export const CoursePlayer = () => {
                         <span>Ajouter au Calendrier</span>
                       </a>
                     )}
+
+                    {/* Email Reminder Notification Button */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const nextState = !reminderActive;
+                        setReminderActive(nextState);
+                        if (user?.id) {
+                          localStorage.setItem(`live_reminder_${courseId}_${user.id}`, String(nextState));
+                        }
+                        if (nextState) {
+                          toast.success("Rappel activé ! Vous recevrez une notification par e-mail 24h et 1h avant le direct.");
+                        } else {
+                          toast.info("Rappel des événements désactivé.");
+                        }
+                      }}
+                      className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all border ${
+                        reminderActive
+                          ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-600 dark:text-emerald-400 shadow-sm"
+                          : "bg-secondary hover:bg-secondary/80 text-foreground border-border"
+                      }`}
+                    >
+                      <i className={`fa-solid ${reminderActive ? "fa-bell-circle-check text-emerald-500" : "fa-bell text-amber-500"}`} />
+                      <span>{reminderActive ? "Rappel Email Activé" : "Rappel Email (24h & 1h)"}</span>
+                    </button>
 
                     {/* Meet Access Button */}
                     {meetUrl ? (

@@ -57,8 +57,8 @@ const Terms = () => {
           : "5. Payments, Commission, and Escrow Period",
       content:
         lang === "fr"
-          ? "Les paiements sont traités de manière sécurisée par nos partenaires de paiement agréés (KKiaPay, Cartes Bancaires, Mobile Money). TECHNOVA applique une commission de 15% sur les cours vidéo VOD (non programmés) et de 25% sur les cours programmés en direct Google Meet. Les fonds issus des ventes sont disponibles pour retrait après validation KYC."
-          : "Payments are processed securely by certified payment partners (KKiaPay, Credit Cards, Mobile Money). TECHNOVA applies a 15% commission on non-scheduled VOD video courses and a 25% commission on scheduled live Google Meet sessions. Funds from sales become available for withdrawal following successful KYC validation.",
+          ? "Les paiements sont traités de manière sécurisée par nos partenaires de paiement agréés (KKiaPay, Cartes Bancaires, Mobile Money). TECHNOVA applique une commission de 5% sur les E-books et Templates, 15% sur les cours vidéo VOD (non programmés) et 25% sur les cours programmés en direct Google Meet. Les fonds issus des ventes sont disponibles pour retrait après validation KYC."
+          : "Payments are processed securely by certified payment partners (KKiaPay, Credit Cards, Mobile Money). TECHNOVA applies a 5% commission on E-books & Templates, 15% on non-scheduled VOD video courses, and 25% on scheduled live Google Meet sessions. Funds from sales become available for withdrawal following successful KYC validation.",
     },
     {
       title: lang === "fr" ? "6. Propriété intellectuelle" : "6. Intellectual Property",

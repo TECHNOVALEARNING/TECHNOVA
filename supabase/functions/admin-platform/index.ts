@@ -222,11 +222,13 @@ serve(async (req) => {
           .sort((a, b) => b.value - a.value);
       }
 
-      // Detailed store & product sales breakdown
+      // Detailed store & product sales breakdown + recent purchases list
       const { data: fullOrders } = await supabaseAdmin
         .from("orders")
-        .select("id, amount, created_at, store_owner_id, product_id, products(id, title, price, type, category), profiles!store_owner_id(display_name, store_name)")
-        .eq("status", "completed");
+        .select(
+          "id, amount, created_at, payment_method, status, store_owner_id, product_id, products(id, title, price, type, category), customers(name, email), profiles!store_owner_id(display_name, store_name)"
+        )
+        .order("created_at", { ascending: false });
 
       const storeSalesMap: Record<
         string,
@@ -239,7 +241,21 @@ serve(async (req) => {
         }
       > = {};
 
-      fullOrders?.forEach((o: any) => {
+      const recentPurchases = (fullOrders || []).map((o: any) => ({
+        id: o.id,
+        amount: Number(o.amount),
+        createdAt: o.created_at,
+        paymentMethod: o.payment_method || "kkiapay",
+        status: o.status,
+        productTitle: o.products?.title || "Produit Numérique",
+        productPrice: Number(o.products?.price || o.amount || 0),
+        buyerName: o.customers?.name || "Client",
+        buyerEmail: o.customers?.email || "-",
+        sellerName: o.profiles?.display_name || o.profiles?.store_name || "Boutique Vendeur",
+        storeOwnerId: o.store_owner_id,
+      }));
+
+      fullOrders?.filter((o: any) => o.status === "completed").forEach((o: any) => {
         const ownerId = o.store_owner_id || "unknown";
         const storeName = o.profiles?.display_name || o.profiles?.store_name || "Boutique Vendeur";
         const prodId = o.product_id || "unknown";
@@ -297,6 +313,7 @@ serve(async (req) => {
           totalOrders: orders?.length || 0,
           traffic,
           storeSalesBreakdown,
+          recentPurchases,
         }),
         {
           headers: { ...corsHeaders, "Content-Type": "application/json" },

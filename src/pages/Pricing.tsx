@@ -82,13 +82,13 @@ const translations = {
       </>
     ),
     heroDesc:
-      "Pas d'abonnement, pas de frais cachés. Créez votre boutique gratuitement avec 15% de commission sur les cours VOD et 25% sur les cours programmés en direct Meet.",
+      "Pas d'abonnement, pas de frais cachés. 5% de commission sur les e-books & templates, 15% sur les cours VOD et 25% sur les cours programmés en direct Meet.",
     ctaHero: "Créer ma boutique gratuite",
     howItWorks: "Comment ça marche ?",
     transparency: "Un modèle transparent aligné sur votre succès",
-    exampleLabel: "Exemple : Vous vendez une formation VOD à",
-    receivesLabel: "Vous recevez (85%)",
-    commissionLabel: "Commission TECHNOVA (15% VOD / 25% Direct Meet)",
+    exampleLabel: "Exemple : Vous vendez un e-book à",
+    receivesLabel: "Vous recevez (95%)",
+    commissionLabel: "Commission TECHNOVA (5% Ebooks / 15% VOD / 25% Direct Meet)",
     includedTitle: "Tout est inclus, sans frais supplémentaires",
     readyToSell: "Prêt à vendre ?",
     ctaBottomDesc:
@@ -98,22 +98,22 @@ const translations = {
   en: {
     seoTitle: "Pricing - TechNova",
     seoDesc:
-      "TECHNOVA Pricing: 15% commission for VOD courses and 25% for scheduled live Google Meet sessions. Sell your digital products without subscription.",
+      "TECHNOVA Pricing: 5% commission for E-books & Templates, 15% for VOD courses and 25% for scheduled live Google Meet sessions. Sell without subscription.",
     eyebrow: "Simple commission-based model",
     heroTitle: (
       <>
         0 FCFA to start. <br />
-        Simple commission rate.
+        5% for E-books.
       </>
     ),
     heroDesc:
-      "No subscription, no hidden fees. 15% commission on VOD video courses and 25% on scheduled live Google Meet sessions.",
+      "No subscription, no hidden fees. 5% commission on E-books & Templates, 15% on VOD video courses and 25% on scheduled live Google Meet sessions.",
     ctaHero: "Create my free storefront",
     howItWorks: "How it works?",
     transparency: "A transparent model aligned with your success",
-    exampleLabel: "Example: You sell a VOD course for",
-    receivesLabel: "You receive (85%)",
-    commissionLabel: "TECHNOVA Commission (15% VOD / 25% Live Meet)",
+    exampleLabel: "Example: You sell an E-book for",
+    receivesLabel: "You receive (95%)",
+    commissionLabel: "TECHNOVA Commission (5% E-books / 15% VOD / 25% Live Meet)",
     includedTitle: "Everything is included, at no extra cost",
     readyToSell: "Ready to sell?",
     ctaBottomDesc:

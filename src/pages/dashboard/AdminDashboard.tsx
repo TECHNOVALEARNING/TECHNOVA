@@ -37,6 +37,19 @@ interface Stats {
     totalOrders: number;
     products: Array<{ id: string; title: string; price: number; salesCount: number; revenue: number }>;
   }>;
+  recentPurchases?: Array<{
+    id: string;
+    amount: number;
+    createdAt: string;
+    paymentMethod: string;
+    status: string;
+    productTitle: string;
+    productPrice: number;
+    buyerName: string;
+    buyerEmail: string;
+    sellerName: string;
+    storeOwnerId: string;
+  }>;
 }
 
 const cardVariants = {
@@ -387,6 +400,84 @@ const AdminDashboard = () => {
                         </div>
                       </div>
                     ))}
+                  </div>
+                </div>
+              )}
+              {/* Global Purchases Feed (Produit, Prix, Acheteur, Vendeur) */}
+              {stats.recentPurchases && stats.recentPurchases.length > 0 && (
+                <div className="rounded-2xl border border-border bg-card p-6 space-y-6">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                      <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
+                        <ShoppingCart className="h-5 w-5 text-emerald-500" />
+                        <span>Historique Global des Achats du Site</span>
+                      </h2>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Consultez la liste en direct de toutes les transactions effectuées sur la plateforme avec le produit, le prix de vente, l'acheteur et le vendeur.
+                      </p>
+                    </div>
+                    <Badge variant="outline" className="text-xs font-mono self-start sm:self-auto bg-emerald-500/10 text-emerald-600 border-emerald-500/30">
+                      {stats.recentPurchases.length} Achats enregistrés
+                    </Badge>
+                  </div>
+
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-xs">
+                      <thead className="bg-muted/50 text-muted-foreground font-semibold uppercase tracking-wider">
+                        <tr>
+                          <th className="px-4 py-3 rounded-l-xl">Produit Acheté</th>
+                          <th className="px-4 py-3">Prix de Vente</th>
+                          <th className="px-4 py-3">Acheteur (Client)</th>
+                          <th className="px-4 py-3">Vendeur / Boutique</th>
+                          <th className="px-4 py-3">Date</th>
+                          <th className="px-4 py-3 rounded-r-xl">Statut</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-border/40">
+                        {stats.recentPurchases.map((pur) => (
+                          <tr key={pur.id} className="hover:bg-muted/30 transition-colors">
+                            <td className="px-4 py-3 font-semibold text-foreground max-w-[200px] truncate" title={pur.productTitle}>
+                              <div className="flex items-center gap-2">
+                                <i className="fa-solid fa-bag-shopping text-primary text-xs" />
+                                <span className="truncate">{pur.productTitle}</span>
+                              </div>
+                            </td>
+                            <td className="px-4 py-3 font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">
+                              {pur.amount.toLocaleString()} FCFA
+                            </td>
+                            <td className="px-4 py-3">
+                              <div className="font-semibold text-foreground">{pur.buyerName}</div>
+                              <div className="text-[11px] text-muted-foreground">{pur.buyerEmail}</div>
+                            </td>
+                            <td className="px-4 py-3 font-medium text-foreground">
+                              <div className="flex items-center gap-1.5">
+                                <i className="fa-solid fa-store text-xs text-muted-foreground" />
+                                <span>{pur.sellerName}</span>
+                              </div>
+                            </td>
+                            <td className="px-4 py-3 text-muted-foreground font-mono text-[11px]">
+                              {new Date(pur.createdAt).toLocaleString("fr-FR", {
+                                day: "2-digit",
+                                month: "short",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}
+                            </td>
+                            <td className="px-4 py-3">
+                              <span
+                                className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                                  pur.status === "completed"
+                                    ? "bg-emerald-500/10 text-emerald-600 border border-emerald-500/30"
+                                    : "bg-amber-500/10 text-amber-600 border border-amber-500/30"
+                                }`}
+                              >
+                                {pur.status === "completed" ? "Payé (Complété)" : pur.status}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               )}
