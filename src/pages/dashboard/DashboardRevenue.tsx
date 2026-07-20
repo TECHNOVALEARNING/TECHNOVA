@@ -15,9 +15,11 @@ import {
   Wallet,
   Clock,
   Smartphone,
+  Printer,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 import {
   Select,
   SelectContent,
@@ -360,12 +362,79 @@ const DashboardRevenue = () => {
             <h1 className="text-2xl font-bold text-foreground">{t.title}</h1>
             <p className="text-sm text-muted-foreground mt-1">{t.subtitle}</p>
           </div>
-          <Link to="/dashboard/withdrawals">
-            <Button className="gap-2">
-              <Wallet className="h-4 w-4" />
-              {t.btnWithdraw}
-            </Button>
-          </Link>
+          <div className="flex flex-wrap items-center gap-2">
+            {orders.length > 0 && (
+              <>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    if (orders.length === 0) return;
+                    const headers = [
+                      "ID Commande",
+                      "Date",
+                      "Client",
+                      "Email Client",
+                      "Produit",
+                      "Montant Brut (FCFA)",
+                      "Commission %",
+                      "Commission (FCFA)",
+                      "Revenu Net (FCFA)",
+                      "Statut",
+                    ];
+
+                    const rows = orders.map((o: any) => {
+                      const { gross, commission, net, ratePct } = calculateOrderNet(o.amount, o.products);
+                      return [
+                        `"${o.id}"`,
+                        `"${new Date(o.created_at).toLocaleString("fr-FR")}"`,
+                        `"${o.customers?.name || "Client"}"`,
+                        `"${o.customers?.email || "-"}"`,
+                        `"${(o.products?.title || "Produit").replace(/"/g, '""')}"`,
+                        gross,
+                        `"${ratePct}%"`,
+                        commission,
+                        net,
+                        `"${o.status === "completed" ? "Complété" : o.status}"`,
+                      ].join(",");
+                    });
+
+                    const csvContent =
+                      "data:text/csv;charset=utf-8,\uFEFF" + [headers.join(","), ...rows].join("\n");
+                    const encodedUri = encodeURI(csvContent);
+                    const link = document.createElement("a");
+                    link.setAttribute("href", encodedUri);
+                    link.setAttribute("download", `releve_financier_technova_${new Date().toISOString().slice(0,10)}.csv`);
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    toast.success("Relevé financier exporté en CSV !");
+                  }}
+                  className="rounded-xl text-xs font-semibold gap-1.5 border-border"
+                >
+                  <Download className="h-4 w-4 text-primary" />
+                  <span>Exporter Relevé CSV</span>
+                </Button>
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => window.print()}
+                  className="rounded-xl text-xs font-semibold gap-1.5 border-border hidden sm:flex"
+                >
+                  <Printer className="h-4 w-4 text-foreground" />
+                  <span>Imprimer Relevé</span>
+                </Button>
+              </>
+            )}
+
+            <Link to="/dashboard/withdrawals">
+              <Button className="gap-2">
+                <Wallet className="h-4 w-4" />
+                {t.btnWithdraw}
+              </Button>
+            </Link>
+          </div>
         </div>
 
         {/* Stats Cards */}

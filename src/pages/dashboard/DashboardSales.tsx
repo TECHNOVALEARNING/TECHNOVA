@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
-import { ShoppingCart, TrendingUp, Calendar, Package, Tag } from "lucide-react";
+import { ShoppingCart, TrendingUp, Calendar, Package, Tag, Download, Printer } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { calculateOrderNet } from "@/lib/commissionHelper";
+import { toast } from "sonner";
 import { format } from "date-fns";
 import { fr, enUS } from "date-fns/locale";
 
@@ -77,7 +80,7 @@ const DashboardSales = () => {
       const { data } = await supabase
         .from("orders")
         .select(
-          "id, amount, status, created_at, promo_code, original_amount, products(title, thumbnail_url), customers(name, email)",
+          "id, amount, status, created_at, promo_code, original_amount, products(title, thumbnail_url, category, type, marketing_sections), customers(name, email)",
         )
         .eq("store_owner_id", user.id)
         .order("created_at", { ascending: false });
@@ -147,9 +150,78 @@ const DashboardSales = () => {
   return (
     <DashboardLayout>
       <div className="space-y-6 max-w-6xl">
-        <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-foreground">{t.title}</h1>
-          <p className="text-xs sm:text-sm text-muted-foreground mt-1">{t.subTitle}</p>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-xl sm:text-2xl font-bold text-foreground">{t.title}</h1>
+            <p className="text-xs sm:text-sm text-muted-foreground mt-1">{t.subTitle}</p>
+          </div>
+
+          {orders.length > 0 && (
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  if (orders.length === 0) return;
+                  const headers = [
+                    "ID Commande",
+                    "Date",
+                    "Client",
+                    "Email Client",
+                    "Produit",
+                    "Montant Brut (FCFA)",
+                    "Commission %",
+                    "Commission (FCFA)",
+                    "Revenu Net (FCFA)",
+                    "Code Promo",
+                    "Statut",
+                  ];
+
+                  const rows = orders.map((o) => {
+                    const { gross, commission, net, ratePct } = calculateOrderNet(o.amount, o.product);
+                    return [
+                      `"${o.id}"`,
+                      `"${new Date(o.created_at).toLocaleString("fr-FR")}"`,
+                      `"${o.customer?.name || "Client"}"`,
+                      `"${o.customer?.email || "-"}"`,
+                      `"${(o.product?.title || "Produit").replace(/"/g, '""')}"`,
+                      gross,
+                      `"${ratePct}%"`,
+                      commission,
+                      net,
+                      `"${o.promo_code || "Aucun"}"`,
+                      `"${o.status === "completed" ? "Complété" : o.status}"`,
+                    ].join(",");
+                  });
+
+                  const csvContent =
+                    "data:text/csv;charset=utf-8,\uFEFF" + [headers.join(","), ...rows].join("\n");
+                  const encodedUri = encodeURI(csvContent);
+                  const link = document.createElement("a");
+                  link.setAttribute("href", encodedUri);
+                  link.setAttribute("download", `releve_ventes_technova_${new Date().toISOString().slice(0,10)}.csv`);
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                  toast.success("Relevé des ventes exporté en CSV !");
+                }}
+                className="rounded-xl text-xs font-semibold gap-1.5 border-border"
+              >
+                <Download className="h-4 w-4 text-primary" />
+                <span>Exporter CSV</span>
+              </Button>
+
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => window.print()}
+                className="rounded-xl text-xs font-semibold gap-1.5 border-border hidden sm:flex"
+              >
+                <Printer className="h-4 w-4 text-foreground" />
+                <span>Imprimer Relevé</span>
+              </Button>
+            </div>
+          )}
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
