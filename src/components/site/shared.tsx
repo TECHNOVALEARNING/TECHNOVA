@@ -616,6 +616,7 @@ export const Footer = () => {
               { label: lang === "fr" ? "À propos" : "About", href: "/about" },
               { label: "Blog", href: "/blog" },
               { label: "FAQ", href: "/faq" },
+              { label: "Devenir formateur", href: "/register" },
             ].map((lnk) => (
               <li key={lnk.label} className="flex items-center gap-2">
                 <ChevronRight className="h-3.5 w-3.5 flex-none text-[color:var(--primary)]" />
