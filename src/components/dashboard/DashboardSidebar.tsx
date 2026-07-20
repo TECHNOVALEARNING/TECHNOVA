@@ -149,21 +149,21 @@ export function DashboardSidebar() {
   const t = translations[lang === "en" ? "en" : "fr"];
 
   const mainItems = [
-    { title: t.home, url: "/dashboard", icon: LayoutDashboard },
-    { title: t.products, url: "/dashboard/products", icon: Package },
-    { title: t.sales, url: "/dashboard/sales", icon: ShoppingCart },
-    { title: t.analytics, url: "/dashboard/analytics", icon: BarChart3 },
-    { title: t.more, url: "/dashboard/others", icon: LayoutGrid, badge: "New" },
+    { title: t.home, url: "/dashboard", icon: LayoutDashboard, faIcon: "fa-solid fa-house" },
+    { title: t.products, url: "/dashboard/products", icon: Package, faIcon: "fa-solid fa-box-archive" },
+    { title: t.sales, url: "/dashboard/sales", icon: ShoppingCart, faIcon: "fa-solid fa-cart-shopping" },
+    { title: t.analytics, url: "/dashboard/analytics", icon: BarChart3, faIcon: "fa-solid fa-chart-line" },
+    { title: t.more, url: "/dashboard/others", icon: LayoutGrid, badge: "New", faIcon: "fa-solid fa-border-all" },
   ];
 
   const adminItems = [
-    { title: t.overview, url: "/admin", icon: BarChart3 },
-    { title: t.users, url: "/admin/users", icon: Users },
-    { title: t.withdrawals, url: "/admin/withdrawals", icon: Wallet },
-    { title: t.support, url: "/admin/support", icon: MessageCircle },
-    { title: t.moderation, url: "/admin/moderation", icon: Package },
-    { title: t.kyc, url: "/admin/kyc", icon: Shield },
-    { title: t.badges, url: "/admin/badges", icon: BadgeCheck },
+    { title: t.overview, url: "/admin", icon: BarChart3, faIcon: "fa-solid fa-gauge-high" },
+    { title: t.users, url: "/admin/users", icon: Users, faIcon: "fa-solid fa-users" },
+    { title: t.withdrawals, url: "/admin/withdrawals", icon: Wallet, faIcon: "fa-solid fa-wallet" },
+    { title: t.support, url: "/admin/support", icon: MessageCircle, faIcon: "fa-solid fa-headset" },
+    { title: t.moderation, url: "/admin/moderation", icon: Package, faIcon: "fa-solid fa-shield-halved" },
+    { title: t.kyc, url: "/admin/kyc", icon: Shield, faIcon: "fa-solid fa-id-card" },
+    { title: t.badges, url: "/admin/badges", icon: BadgeCheck, faIcon: "fa-solid fa-circle-check" },
   ];
 
   const isActive = (path: string) => {
@@ -212,8 +212,12 @@ export function DashboardSidebar() {
                       end={item.url === "/dashboard"}
                       className="flex items-center justify-between w-full"
                     >
-                      <div className="flex items-center gap-2">
-                        <item.icon className="h-4 w-4 shrink-0" />
+                      <div className="flex items-center gap-2.5">
+                        {item.faIcon ? (
+                          <i className={`${item.faIcon} text-sm shrink-0 w-4 text-center`} />
+                        ) : (
+                          <item.icon className="h-4 w-4 shrink-0" />
+                        )}
                         {!collapsed && <span>{item.title}</span>}
                       </div>
                       {!collapsed && item.badge && (
@@ -277,7 +281,11 @@ export function DashboardSidebar() {
                         <NavLink
                           to={item.url}
                         >
-                          <item.icon className="h-3.5 w-3.5" />
+                          {item.faIcon ? (
+                            <i className={`${item.faIcon} text-xs shrink-0 w-4 text-center`} />
+                          ) : (
+                            <item.icon className="h-3.5 w-3.5" />
+                          )}
                           {!collapsed && <span>{item.title}</span>}
                         </NavLink>
                       </SidebarMenuButton>

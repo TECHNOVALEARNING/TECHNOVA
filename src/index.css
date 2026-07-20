@@ -2,6 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Suppress Tawk.to pop-up / widget UI permanently while preserving background API execution */
+#tawk-bubble-container,
+#tawk-default-container,
+div[id*="tawk"],
+iframe[title*="tawk"],
+iframe[src*="tawk.to"],
+.tawk-min-container,
+.tawk-card,
+.tawk-button,
+.tawk-overlay {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  position: fixed !important;
+  top: -9999px !important;
+  left: -9999px !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
 @layer base {
   :root {
     --background: 240 20% 96%;
