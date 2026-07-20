@@ -724,9 +724,34 @@ const Jobs = () => {
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               {lang === "fr"
-                ? "Trouvez des opportunités ciblées dans les métiers du digital et de la tech partout dans le monde."
-                : "Explore highly-targeted job offers and internships in tech and digital sectors worldwide."}
+                ? "Trouvez des opportunités ciblées dans les métiers du digital et de la tech en Afrique et partout dans le monde."
+                : "Explore highly-targeted job offers and internships in tech and digital sectors across Benin, Africa, and worldwide."}
             </p>
+
+            {/* External Partner Recruitment Portals */}
+            <div className="flex flex-wrap items-center justify-center gap-4 mt-8">
+              <a
+                href="https://www.emploibenin.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2.5 px-5 py-3 rounded-2xl bg-card border border-border/80 hover:border-primary/60 text-foreground font-semibold text-sm shadow-md hover:shadow-lg transition-all duration-300 group hover:-translate-y-0.5"
+              >
+                <i className="fa-solid fa-briefcase text-primary group-hover:scale-110 transition-transform" />
+                <span>{lang === "fr" ? "Recrutement au Bénin" : "Recruitment in Benin"}</span>
+                <i className="fa-solid fa-arrow-up-right-from-square text-xs text-muted-foreground group-hover:text-primary transition-colors" />
+              </a>
+
+              <a
+                href="https://www.cdiscussion.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2.5 px-5 py-3 rounded-2xl bg-card border border-border/80 hover:border-primary/60 text-foreground font-semibold text-sm shadow-md hover:shadow-lg transition-all duration-300 group hover:-translate-y-0.5"
+              >
+                <i className="fa-solid fa-globe text-primary group-hover:scale-110 transition-transform" />
+                <span>{lang === "fr" ? "Recrutement en Afrique" : "Recruitment in Africa"}</span>
+                <i className="fa-solid fa-arrow-up-right-from-square text-xs text-muted-foreground group-hover:text-primary transition-colors" />
+              </a>
+            </div>
           </motion.div>
         </div>
       </section>
