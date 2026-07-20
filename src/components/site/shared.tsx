@@ -220,26 +220,26 @@ export const Header = () => {
           >
             {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
           </button>
-          {user ? (
-            <Link
-              to="/dashboard"
-              className="ml-2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-[#0071e3] text-white hover:bg-[#0071e3]/90 h-10 px-4 py-2"
-            >
-              Dashboard
-            </Link>
-          ) : hasBuyerSession ? (
+          {hasBuyerSession ? (
             <Link
               to="/mes-achats"
               className="ml-2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-[#0071e3] text-white hover:bg-[#0071e3]/90 h-10 px-4 py-2"
             >
               {lang === "fr" ? "Mes Achats" : "My Purchases"}
             </Link>
-          ) : (
+          ) : user ? (
             <Link
-              to="/register"
+              to="/dashboard"
               className="ml-2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-[#0071e3] text-white hover:bg-[#0071e3]/90 h-10 px-4 py-2"
             >
-              {lang === "fr" ? "Espace vendeur" : "Seller Space"}
+              Dashboard
+            </Link>
+          ) : (
+            <Link
+              to="/buyer-login"
+              className="ml-2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-[#0071e3] text-white hover:bg-[#0071e3]/90 h-10 px-4 py-2"
+            >
+              {lang === "fr" ? "Mes Achats" : "My Purchases"}
             </Link>
           )}
         </div>

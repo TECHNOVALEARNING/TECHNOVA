@@ -235,6 +235,8 @@ const AppContent = () => {
               <Route path="/all-products" element={<AllProducts />} />
               <Route path="/cours" element={<Cours />} />
               <Route path="/formations" element={<Cours />} />
+              <Route path="/learn/:courseId" element={<CoursePlayer />} />
+              <Route path="/learn" element={<Navigate to="/formations" replace />} />
               <Route path="/products" element={<Products />} />
               <Route path="/pricing" element={<Pricing />} />
               <Route path="/partners" element={<Partners />} />
