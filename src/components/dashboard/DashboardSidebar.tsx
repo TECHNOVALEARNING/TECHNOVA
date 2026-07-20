@@ -152,7 +152,6 @@ export function DashboardSidebar() {
     { title: t.home, url: "/dashboard", icon: LayoutDashboard, faIcon: "fa-solid fa-house" },
     { title: t.products, url: "/dashboard/products", icon: Package, faIcon: "fa-solid fa-box-archive" },
     { title: t.sales, url: "/dashboard/sales", icon: ShoppingCart, faIcon: "fa-solid fa-cart-shopping" },
-    { title: "Marketing & Promos", url: "/dashboard/marketing", icon: Megaphone, faIcon: "fa-solid fa-bullhorn" },
     { title: t.analytics, url: "/dashboard/analytics", icon: BarChart3, faIcon: "fa-solid fa-chart-line" },
     { title: t.more, url: "/dashboard/others", icon: LayoutGrid, badge: "New", faIcon: "fa-solid fa-border-all" },
   ];
