@@ -101,6 +101,7 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const [lang, setLang] = useState(() =>
     typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
@@ -416,9 +417,22 @@ const AdminDashboard = () => {
                         Consultez la liste en direct de toutes les transactions effectuées sur la plateforme avec le produit, le prix de vente, l'acheteur et le vendeur.
                       </p>
                     </div>
-                    <Badge variant="outline" className="text-xs font-mono self-start sm:self-auto bg-emerald-500/10 text-emerald-600 border-emerald-500/30">
-                      {stats.recentPurchases.length} Achats enregistrés
-                    </Badge>
+
+                    <div className="flex items-center gap-2">
+                      <div className="relative w-full sm:w-64">
+                        <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-xs" />
+                        <input
+                          type="text"
+                          placeholder="Rechercher produit, acheteur, vendeur..."
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          className="w-full pl-8 pr-3 py-1.5 rounded-xl border border-border bg-background text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                        />
+                      </div>
+                      <Badge variant="outline" className="text-xs font-mono shrink-0 bg-emerald-500/10 text-emerald-600 border-emerald-500/30">
+                        {stats.recentPurchases.length} Achats
+                      </Badge>
+                    </div>
                   </div>
 
                   <div className="overflow-x-auto">
@@ -434,7 +448,18 @@ const AdminDashboard = () => {
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-border/40">
-                        {stats.recentPurchases.map((pur) => (
+                        {stats.recentPurchases
+                          .filter((pur) => {
+                            if (!searchQuery.trim()) return true;
+                            const q = searchQuery.toLowerCase();
+                            return (
+                              pur.productTitle.toLowerCase().includes(q) ||
+                              pur.buyerName.toLowerCase().includes(q) ||
+                              pur.buyerEmail.toLowerCase().includes(q) ||
+                              pur.sellerName.toLowerCase().includes(q)
+                            );
+                          })
+                          .map((pur) => (
                           <tr key={pur.id} className="hover:bg-muted/30 transition-colors">
                             <td className="px-4 py-3 font-semibold text-foreground max-w-[200px] truncate" title={pur.productTitle}>
                               <div className="flex items-center gap-2">

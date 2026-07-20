@@ -223,12 +223,59 @@ serve(async (req) => {
       }
 
       // Detailed store & product sales breakdown + recent purchases list
-      const { data: fullOrders } = await supabaseAdmin
+      const { data: rawOrders } = await supabaseAdmin
         .from("orders")
-        .select(
-          "id, amount, created_at, payment_method, status, store_owner_id, product_id, products(id, title, price, type, category), customers(name, email), profiles!store_owner_id(display_name, store_name)"
-        )
+        .select("id, amount, created_at, payment_method, status, store_owner_id, product_id, customer_id")
         .order("created_at", { ascending: false });
+
+      const ordersList = rawOrders || [];
+
+      const productIds = Array.from(new Set(ordersList.map((o: any) => o.product_id).filter(Boolean)));
+      const customerIds = Array.from(new Set(ordersList.map((o: any) => o.customer_id).filter(Boolean)));
+      const ownerIds = Array.from(new Set(ordersList.map((o: any) => o.store_owner_id).filter(Boolean)));
+
+      const [productsRes, customersRes, profilesRes] = await Promise.all([
+        productIds.length > 0
+          ? supabaseAdmin.from("products").select("id, title, price, type, category").in("id", productIds)
+          : Promise.resolve({ data: [] }),
+        customerIds.length > 0
+          ? supabaseAdmin.from("customers").select("id, name, email").in("id", customerIds)
+          : Promise.resolve({ data: [] }),
+        ownerIds.length > 0
+          ? supabaseAdmin
+              .from("profiles")
+              .select("id, display_name, store_name, first_name, last_name")
+              .in("id", ownerIds)
+          : Promise.resolve({ data: [] }),
+      ]);
+
+      const prodMap = Object.fromEntries((productsRes.data || []).map((p: any) => [p.id, p]));
+      const custMap = Object.fromEntries((customersRes.data || []).map((c: any) => [c.id, c]));
+      const profMap = Object.fromEntries((profilesRes.data || []).map((pr: any) => [pr.id, pr]));
+
+      const recentPurchases = ordersList.map((o: any) => {
+        const prod = prodMap[o.product_id];
+        const cust = custMap[o.customer_id];
+        const prof = profMap[o.store_owner_id];
+        const sellerName =
+          prof?.display_name ||
+          prof?.store_name ||
+          (prof?.first_name ? `${prof.first_name} ${prof.last_name || ""}`.trim() : "Boutique Vendeur");
+
+        return {
+          id: o.id,
+          amount: Number(o.amount || 0),
+          createdAt: o.created_at,
+          paymentMethod: o.payment_method || "kkiapay",
+          status: o.status || "completed",
+          productTitle: prod?.title || "Produit Numérique",
+          productPrice: Number(prod?.price || o.amount || 0),
+          buyerName: cust?.name || "Client Technova",
+          buyerEmail: cust?.email || "-",
+          sellerName: sellerName || "Vendeur Technova",
+          storeOwnerId: o.store_owner_id || "-",
+        };
+      });
 
       const storeSalesMap: Record<
         string,
@@ -241,53 +288,46 @@ serve(async (req) => {
         }
       > = {};
 
-      const recentPurchases = (fullOrders || []).map((o: any) => ({
-        id: o.id,
-        amount: Number(o.amount),
-        createdAt: o.created_at,
-        paymentMethod: o.payment_method || "kkiapay",
-        status: o.status,
-        productTitle: o.products?.title || "Produit Numérique",
-        productPrice: Number(o.products?.price || o.amount || 0),
-        buyerName: o.customers?.name || "Client",
-        buyerEmail: o.customers?.email || "-",
-        sellerName: o.profiles?.display_name || o.profiles?.store_name || "Boutique Vendeur",
-        storeOwnerId: o.store_owner_id,
-      }));
+      ordersList
+        .filter((o: any) => o.status === "completed")
+        .forEach((o: any) => {
+          const ownerId = o.store_owner_id || "unknown";
+          const prof = profMap[ownerId];
+          const storeName =
+            prof?.display_name ||
+            prof?.store_name ||
+            (prof?.first_name ? `${prof.first_name} ${prof.last_name || ""}`.trim() : "Boutique Vendeur");
+          const prodId = o.product_id || "unknown";
+          const prod = prodMap[prodId];
+          const prodTitle = prod?.title || "Produit Numérique";
+          const prodPrice = Number(prod?.price || o.amount || 0);
+          const amount = Number(o.amount || 0);
 
-      fullOrders?.filter((o: any) => o.status === "completed").forEach((o: any) => {
-        const ownerId = o.store_owner_id || "unknown";
-        const storeName = o.profiles?.display_name || o.profiles?.store_name || "Boutique Vendeur";
-        const prodId = o.product_id || "unknown";
-        const prodTitle = o.products?.title || "Produit Numérique";
-        const prodPrice = Number(o.products?.price || o.amount || 0);
-        const amount = Number(o.amount || 0);
+          if (!storeSalesMap[ownerId]) {
+            storeSalesMap[ownerId] = {
+              storeOwnerId: ownerId,
+              storeName,
+              totalRevenue: 0,
+              totalOrders: 0,
+              productsMap: {},
+            };
+          }
 
-        if (!storeSalesMap[ownerId]) {
-          storeSalesMap[ownerId] = {
-            storeOwnerId: ownerId,
-            storeName,
-            totalRevenue: 0,
-            totalOrders: 0,
-            productsMap: {},
-          };
-        }
+          storeSalesMap[ownerId].totalRevenue += amount;
+          storeSalesMap[ownerId].totalOrders += 1;
 
-        storeSalesMap[ownerId].totalRevenue += amount;
-        storeSalesMap[ownerId].totalOrders += 1;
-
-        if (!storeSalesMap[ownerId].productsMap[prodId]) {
-          storeSalesMap[ownerId].productsMap[prodId] = {
-            id: prodId,
-            title: prodTitle,
-            price: prodPrice,
-            salesCount: 0,
-            revenue: 0,
-          };
-        }
-        storeSalesMap[ownerId].productsMap[prodId].salesCount += 1;
-        storeSalesMap[ownerId].productsMap[prodId].revenue += amount;
-      });
+          if (!storeSalesMap[ownerId].productsMap[prodId]) {
+            storeSalesMap[ownerId].productsMap[prodId] = {
+              id: prodId,
+              title: prodTitle,
+              price: prodPrice,
+              salesCount: 0,
+              revenue: 0,
+            };
+          }
+          storeSalesMap[ownerId].productsMap[prodId].salesCount += 1;
+          storeSalesMap[ownerId].productsMap[prodId].revenue += amount;
+        });
 
       const storeSalesBreakdown = Object.values(storeSalesMap)
         .map((st) => ({
