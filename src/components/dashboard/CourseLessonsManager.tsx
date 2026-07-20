@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import RichTextEditor from "@/components/RichTextEditor";
+import { toast } from "sonner";
 
 export interface Lesson {
   id: string;
@@ -63,8 +64,8 @@ const translations = {
     lessonTitleLabel: "Titre de la leçon",
     lessonTitlePlaceholder: "Ex: 1. Introduction à la formation",
     durationLabel: "Durée estimée (min)",
-    videoUrlLabel: "Vidéo de la leçon (Lien externe)",
-    videoUrlPlaceholder: "https://drive.google.com/... ou YouTube",
+    videoUrlLabel: "Vidéo de la leçon (Lien externe sécurisé)",
+    videoUrlPlaceholder: "https://drive.google.com/..., Cloudflare Stream, Vimeo ou MP4",
     writtenContentLabel: "Contenu écrit (Texte enrichi)",
     writtenContentPlaceholder: "Rédigez le cours ici, ajoutez des explications, des liens...",
     resourceLabel: "Ressource téléchargeable (Optionnel)",
@@ -90,8 +91,8 @@ const translations = {
     lessonTitleLabel: "Lesson title",
     lessonTitlePlaceholder: "e.g., 1. Introduction to the course",
     durationLabel: "Estimated duration (min)",
-    videoUrlLabel: "Lesson video (External link)",
-    videoUrlPlaceholder: "https://drive.google.com/... or YouTube",
+    videoUrlLabel: "Lesson video (Secure external link)",
+    videoUrlPlaceholder: "https://drive.google.com/..., Cloudflare Stream, Vimeo or MP4",
     writtenContentLabel: "Written content (Rich text)",
     writtenContentPlaceholder: "Write the course here, add explanations, links...",
     resourceLabel: "Downloadable resource (Optional)",
@@ -449,11 +450,22 @@ const CourseLessonsManager = ({ modules, onModulesChange }: CourseLessonsManager
                     </div>
                     <Input
                       value={editingContext.lesson.video_url}
-                      onChange={(e) =>
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        const lower = val.toLowerCase();
+                        if (lower.includes("youtube.com") || lower.includes("youtu.be")) {
+                          toast.error(
+                            "Les liens YouTube sont interdits pour des raisons de sécurité. Veuillez utiliser Google Drive, Cloudflare Stream, Vimeo ou un fichier .mp4 direct."
+                          );
+                          updateLesson(editingContext.module.id, editingContext.lesson.id, {
+                            video_url: "",
+                          });
+                          return;
+                        }
                         updateLesson(editingContext.module.id, editingContext.lesson.id, {
-                          video_url: e.target.value,
-                        })
-                      }
+                          video_url: val,
+                        });
+                      }}
                       placeholder={t.videoUrlPlaceholder}
                     />
                   </div>
