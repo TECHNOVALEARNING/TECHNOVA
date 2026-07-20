@@ -63,6 +63,12 @@ const Cours = () => {
     },
   });
 
+  // Helper to strip HTML tags for clean text preview
+  const stripHtml = (htmlStr: string) => {
+    if (!htmlStr) return "";
+    return htmlStr.replace(/<[^>]*>?/gm, "").trim();
+  };
+
   // Filter & Sort courses
   const filteredCourses = useMemo(() => {
     let result = [...rawCourses];
@@ -343,12 +349,12 @@ const Cours = () => {
                           <span className="text-muted-foreground font-normal">(1.2k élèves)</span>
                         </div>
 
-                        <h3 className="font-bold text-foreground text-base line-clamp-2 mb-3 group-hover:text-primary transition-colors">
+                        <h3 className="font-bold text-foreground text-sm sm:text-base line-clamp-2 mb-2 group-hover:text-primary transition-colors leading-snug">
                           {product.title}
                         </h3>
 
-                        <p className="text-xs text-muted-foreground line-clamp-2 mb-4 leading-relaxed">
-                          {product.description ||
+                        <p className="text-xs text-muted-foreground line-clamp-2 mb-4 leading-relaxed font-normal">
+                          {stripHtml(product.description) ||
                             (lang === "fr"
                               ? "Formation complète certifiante avec exercices et ressources téléchargeables."
                               : "Complete certifying course with exercises and downloadable resources.")}

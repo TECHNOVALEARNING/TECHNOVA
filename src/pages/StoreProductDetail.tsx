@@ -121,7 +121,7 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
     typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
   );
 
-  const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [isExpired, setIsExpired] = useState(false);
 
   useEffect(() => {
@@ -144,16 +144,17 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
       
       if (diff <= 0) {
         setIsExpired(true);
-        setTimeLeft({ hours: 0, minutes: 0, seconds: 0 });
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
         return;
       }
       
       setIsExpired(false);
-      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((diff % (1000 * 60)) / 1000);
       
-      setTimeLeft({ hours, minutes, seconds });
+      setTimeLeft({ days, hours, minutes, seconds });
     };
 
     updateCountdown();
@@ -923,7 +924,16 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                         {lang === "fr" ? "Offre limitée - Bientôt expiré !" : "Limited time offer - Expiring soon!"}
                       </span>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1.5 flex-wrap sm:flex-nowrap">
+                      <div className="flex flex-col items-center">
+                        <span className="bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-300 font-extrabold text-sm px-2 py-0.5 rounded min-w-[32px] text-center border border-red-200/40">
+                          {String(timeLeft.days).padStart(2, "0")}
+                        </span>
+                        <span className="text-[9px] font-semibold text-muted-foreground mt-1">
+                          {lang === "fr" ? "Jours" : "Days"}
+                        </span>
+                      </div>
+                      <span className="text-sm font-bold text-red-400 -mt-3">:</span>
                       <div className="flex flex-col items-center">
                         <span className="bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-300 font-extrabold text-sm px-2 py-0.5 rounded min-w-[32px] text-center border border-red-200/40">
                           {String(timeLeft.hours).padStart(2, "0")}
@@ -950,7 +960,7 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                           Sec
                         </span>
                       </div>
-                      <div className="ml-auto text-[10px] text-muted-foreground font-medium max-w-[100px] text-right">
+                      <div className="ml-auto text-[10px] text-muted-foreground font-medium max-w-[90px] text-right hidden sm:block">
                         {lang === "fr" ? "Bénéficiez du meilleur tarif !" : "Get the best price now!"}
                       </div>
                     </div>
