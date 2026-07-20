@@ -21,6 +21,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
+import { buyerSupabase } from "@/integrations/supabase/buyer-client";
 import { useAuth } from "@/contexts/AuthContext";
 import { CourseVideoPlayer } from "@/components/course/CourseVideoPlayer";
 import { getCompletedLessons, saveCompletedLessons } from "@/lib/courseProgressSync";
@@ -68,30 +69,86 @@ export const CoursePlayer = () => {
       if (!courseId) return;
       setLoading(true);
       try {
-        // Fetch course product info
-        const { data: productData, error: productErr } = await supabase
+        // 1. Fetch course product info (resilient against RLS store join issues)
+        let productData: any = null;
+
+        // Try sellerSupabase first
+        const { data: pData } = await supabase
           .from("products")
-          .select("*, stores(name, logo_url)")
+          .select("*")
           .eq("id", courseId)
           .maybeSingle();
 
-        if (productErr || !productData) {
+        if (pData) {
+          productData = pData;
+        } else {
+          // Fallback to buyerSupabase
+          const { data: bData } = await buyerSupabase
+            .from("products")
+            .select("*")
+            .eq("id", courseId)
+            .maybeSingle();
+          if (bData) {
+            productData = bData;
+          }
+        }
+
+        // Check if course product exists in sessionStorage buyer session orders as ultimate fallback
+        if (!productData) {
+          try {
+            const rawSession = sessionStorage.getItem("buyer_session");
+            if (rawSession) {
+              const bSession = JSON.parse(rawSession);
+              const orderMatch = (bSession.orders || []).find(
+                (o: any) => o.product?.id === courseId
+              );
+              if (orderMatch?.product) {
+                productData = orderMatch.product;
+              }
+            }
+          } catch (e) {
+            console.error("Error reading buyer session fallback:", e);
+          }
+        }
+
+        if (!productData) {
+          console.error("Course product not found for ID:", courseId);
           toast.error("Cours introuvable");
           navigate("/formations");
           return;
         }
 
+        // Try fetching store info optionally
+        if (productData.store_id) {
+          const { data: storeData } = await supabase
+            .from("stores")
+            .select("name, logo_url")
+            .eq("id", productData.store_id)
+            .maybeSingle();
+          if (storeData) {
+            productData.stores = storeData;
+          }
+        }
+
         setCourse(productData);
 
-        // Fetch modules with lessons
-        const { data: modulesData, error: modulesErr } = await supabase
+        // 2. Fetch modules with lessons
+        let modulesData: any[] = [];
+        const { data: mData } = await supabase
           .from("course_modules")
           .select("*, course_lessons(*)")
           .eq("product_id", courseId)
           .order("position", { ascending: true });
 
-        if (modulesErr) {
-          console.error("Error fetching modules:", modulesErr);
+        if (mData && mData.length > 0) {
+          modulesData = mData;
+        } else {
+          const { data: bmData } = await buyerSupabase
+            .from("course_modules")
+            .select("*, course_lessons(*)")
+            .eq("product_id", courseId)
+            .order("position", { ascending: true });
+          if (bmData) modulesData = bmData;
         }
 
         const formattedModules: Module[] = (modulesData || []).map((m: any) => ({
