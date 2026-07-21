@@ -32,7 +32,7 @@ const translations = {
     seoTitle: "À propos de TechNova Learning",
     seoDesc:
       "TechNova Learning est une plateforme de formation en ligne dédiée à l'acquisition de compétences numériques. Notre mission : rendre l'éducation de qualité accessible à tous dans le monde entier.",
-    eyebrow: "Pour les apprenants du monde entier",
+    eyebrow: "NOTRE OBJECTIF",
     heroTitle: (
       <>
         À propos de{" "}
@@ -42,24 +42,23 @@ const translations = {
       </>
     ),
     heroDesc:
-      "Une plateforme de formation en ligne dédiée à l'acquisition de compétences numériques et professionnelles, accessible à tous.",
-    missionTitle: "Notre Mission",
+      "Une plateforme de formation en ligne dédiée à l'accès au savoir, abordable et de qualité, partout dans le monde.",
+    missionTitle: "Mission et vision",
     missionDesc1:
-      "We believe that everyone deserves access to quality training, regardless of income level, geographical location, or educational background.",
+      "Our mission is to tear down the barriers to accessing knowledge by providing affordable, accessible, and high-quality educational resources worldwide. We dream of a world where financial means never stand as a barrier to personal growth and success.",
     missionDesc1Real:
-      "Nous croyons que chaque personne mérite d'accéder à une formation de qualité, quel que soit son niveau de revenus, sa localisation géographique ou son parcours scolaire.",
+      "« Notre mission est de faire tomber les obstacles à l'accès au savoir, en proposant des ressources éducatives abordables, accessibles et de qualité, partout dans le monde. Nous rêvons d'un monde où les moyens financiers ne constituent jamais un frein à l'épanouissement et à la réussite de chacun. »",
     missionDesc2:
-      "TechNova Learning a été conçu pour éliminer les barrières à l'apprentissage numérique, pour tous ceux qui souhaitent acquérir des compétences clés depuis n'importe où.",
+      "s'engage chaque jour à éliminer les barrières financières et technologiques pour permettre à chacun d'apprendre et de réussir.",
     visionTitle: "Notre Vision",
     visionDesc1: (
       <>
         D'ici 2030, notre objectif est de{" "}
-        <strong>former 1 million d'apprenants francophones</strong> aux compétences numériques du
-        futur.
+        <strong>former 1 million d'apprenants francophones et internationaux</strong> aux compétences d'avenir.
       </>
     ),
     visionDesc2:
-      "Nous voulons être la référence absolue en matière de formation en ligne au niveau mondial, en créant le pont entre le talent et les opportunités professionnelles.",
+      "Nous voulons être la référence absolue en matière d'accès universel au savoir de qualité.",
     teachTitle: "Ce que nous enseignons",
     teachDesc: "Des parcours structurés sur les métiers les plus demandés du marché.",
     webTitle: "Développement Web",
