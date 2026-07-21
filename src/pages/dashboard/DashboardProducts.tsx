@@ -188,6 +188,32 @@ const DashboardProducts = () => {
     fetchProducts();
   };
 
+  const handleToggleLiveEnded = async (p: Product) => {
+    const m = (p.marketing_sections as any) || {};
+    const currentEnded = m.live_ended === true;
+    const newEnded = !currentEnded;
+
+    if (newEnded) {
+      if (!window.confirm(`Voulez-vous vraiment marquer la session en direct de "${p.title}" comme terminée ? Cela fermera immédiatement les inscriptions et achats pour ce direct.`)) {
+        return;
+      }
+    }
+
+    try {
+      const updatedM = { ...m, live_ended: newEnded };
+      const { error } = await supabase
+        .from("products")
+        .update({ marketing_sections: updatedM })
+        .eq("id", p.id);
+
+      if (error) throw error;
+      toast.success(newEnded ? "La session en direct a été clôturée ! Les ventes du direct sont désormais fermées." : "La session en direct a été réouverte.");
+      fetchProducts();
+    } catch (err: any) {
+      toast.error("Erreur lors de la mise à jour: " + (err.message || "Réessayez."));
+    }
+  };
+
   const handleDuplicate = async (p: Product) => {
     const { id, created_at, ...rest } = p;
     const { error } = await supabase.from("products").insert({
@@ -254,6 +280,16 @@ const DashboardProducts = () => {
     published: "bg-green-500",
   };
 
+  const pendingLiveCourses = products.filter((p) => {
+    if (p.type !== "course") return false;
+    const m = (p.marketing_sections as any) || {};
+    const isLiveFormat = m.format_type === "live_meet" || m.format_type === "hybrid" || !!m.live_date;
+    if (!isLiveFormat) return false;
+    const liveDateObj = m.live_date ? new Date(m.live_date) : null;
+    const isPastDate = liveDateObj ? new Date().getTime() > liveDateObj.getTime() : false;
+    return isPastDate && m.live_ended !== true;
+  });
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
@@ -264,6 +300,33 @@ const DashboardProducts = () => {
             <Plus className="h-4 w-4 mr-2" /> {t.addProduct}
           </Button>
         </div>
+
+        {/* Trainer Live Closure Reminder Banner */}
+        {pendingLiveCourses.length > 0 && (
+          <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-in fade-in">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-xl bg-amber-500 text-white flex items-center justify-center font-bold text-lg shrink-0">
+                <i className="fa-solid fa-bell animate-bounce" />
+              </div>
+              <div>
+                <h4 className="text-xs font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider">
+                  Rappel Formateur : Session Live en attente de clôture
+                </h4>
+                <p className="text-xs text-foreground font-medium">
+                  Votre direct pour <strong>"{pendingLiveCourses[0].title}"</strong> s'est déroulé. N'oubliez pas de le clôturer.
+                </p>
+              </div>
+            </div>
+            <Button
+              size="sm"
+              onClick={() => handleToggleLiveEnded(pendingLiveCourses[0])}
+              className="rounded-xl text-xs font-bold bg-amber-600 hover:bg-amber-700 text-white shrink-0 gap-1.5 shadow"
+            >
+              <i className="fa-solid fa-flag-checkered" />
+              <span>Clôturer le Direct</span>
+            </Button>
+          </div>
+        )}
 
         {/* Search + Filters */}
         <div className="space-y-4">
@@ -398,6 +461,22 @@ const DashboardProducts = () => {
                             <Link2 className="h-4 w-4 mr-2" /> {t.link}
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
+                          {p.type === "course" && (
+                            <>
+                              <DropdownMenuItem onClick={() => handleToggleLiveEnded(p)}>
+                                {(p.marketing_sections as any)?.live_ended ? (
+                                  <>
+                                    <i className="fa-solid fa-rotate-left h-4 w-4 mr-2 text-primary" /> Réouvrir le Direct
+                                  </>
+                                ) : (
+                                  <>
+                                    <i className="fa-solid fa-flag-checkered h-4 w-4 mr-2 text-amber-500" /> Clôturer le Direct
+                                  </>
+                                )}
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                            </>
+                          )}
                           <DropdownMenuItem onClick={() => togglePublish(p)}>
                             {p.is_published ? (
                               <>

@@ -995,7 +995,9 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                 {/* CTA */}
                 {(() => {
                   const m = (product?.marketing_sections as any) || {};
-                  const isLiveEnded = m.live_ended === true;
+                  const liveDateObj = m.live_date ? new Date(m.live_date) : null;
+                  const isAutoExpired = liveDateObj ? (new Date().getTime() > liveDateObj.getTime() + 6 * 60 * 60 * 1000) : false;
+                  const isLiveEnded = m.live_ended === true || isAutoExpired;
 
                   if (isLiveEnded) {
                     return (

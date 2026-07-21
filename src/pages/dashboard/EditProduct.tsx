@@ -154,6 +154,7 @@ const EditProduct = () => {
   const [formatType, setFormatType] = useState<"vod" | "live_meet" | "hybrid">("vod");
   const [liveDate, setLiveDate] = useState("");
   const [meetUrl, setMeetUrl] = useState("");
+  const [liveEnded, setLiveEnded] = useState(false);
 
   // Marketing sections
 
@@ -255,6 +256,7 @@ const EditProduct = () => {
         setLiveDate("");
       }
       setMeetUrl(marketing.meet_url || "");
+      setLiveEnded(marketing.live_ended === true);
 
       // SEO fields
       setSeoTitle((data as any).seo_title || "");
@@ -413,6 +415,7 @@ const EditProduct = () => {
           format_type: formatType,
           live_date: liveDate ? new Date(liveDate).toISOString() : null,
           meet_url: meetUrl.trim() || null,
+          live_ended: liveEnded,
         },
       };
 
@@ -1055,6 +1058,44 @@ const EditProduct = () => {
                               className="h-9 text-xs bg-background"
                             />
                           </div>
+
+                          {/* Live Session End Status Toggle */}
+                          <div className="pt-2 border-t border-red-500/20 flex items-center justify-between gap-3">
+                            <div>
+                              <span className="text-xs font-bold text-foreground flex items-center gap-1.5">
+                                <i className="fa-solid fa-flag-checkered text-amber-500" />
+                                <span>Statut du Direct</span>
+                              </span>
+                              <p className="text-[11px] text-muted-foreground">
+                                {liveEnded
+                                  ? "🏁 Direct clôturé par vous. Ventes du direct fermées."
+                                  : "🔴 Direct actif. Inscriptions et ventes ouvertes."}
+                              </p>
+                            </div>
+                            <Button
+                              type="button"
+                              size="sm"
+                              variant={liveEnded ? "outline" : "default"}
+                              onClick={() => setLiveEnded((prev) => !prev)}
+                              className={`rounded-xl text-xs font-bold gap-1.5 shrink-0 ${
+                                liveEnded
+                                  ? "border-primary text-primary hover:bg-primary/10"
+                                  : "bg-amber-600 hover:bg-amber-700 text-white"
+                              }`}
+                            >
+                              {liveEnded ? (
+                                <>
+                                  <i className="fa-solid fa-rotate-left" />
+                                  <span>Réouvrir le Direct</span>
+                                </>
+                              ) : (
+                                <>
+                                  <i className="fa-solid fa-flag-checkered" />
+                                  <span>Clôturer le Direct</span>
+                                </>
+                              )}
+                            </Button>
+                          </div>
                         </div>
                       )}
                     </div>
@@ -1132,10 +1173,22 @@ const EditProduct = () => {
                       <h2 className="text-lg font-bold text-foreground">Fichiers du produit</h2>
 
                       {type === "course" ? (
-                        <CourseLessonsManager
-                          modules={courseModules}
-                          onModulesChange={setCourseModules}
-                        />
+                        formatType === "live_meet" ? (
+                          <div className="p-6 rounded-2xl border border-red-500/30 bg-red-500/5 space-y-3">
+                            <div className="flex items-center gap-2 font-bold text-red-600 dark:text-red-400">
+                              <i className="fa-solid fa-video text-lg animate-pulse" />
+                              <span>Formation 100% en Direct Google Meet</span>
+                            </div>
+                            <p className="text-xs text-muted-foreground leading-relaxed">
+                              Cette formation est programmée en direct par visioconférence Google Meet. La date du direct et le lien du Meet sont configurés dans l'onglet <strong>Tarification & Format</strong>. Vous n'avez pas besoin de télécharger de modules ou de leçons vidéo enregistrées.
+                            </p>
+                          </div>
+                        ) : (
+                          <CourseLessonsManager
+                            modules={courseModules}
+                            onModulesChange={setCourseModules}
+                          />
+                        )
                       ) : (
                         <>
                           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">

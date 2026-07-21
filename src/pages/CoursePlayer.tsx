@@ -660,12 +660,71 @@ export const CoursePlayer = () => {
               )}
             </div>
           ) : (
-            <div className="text-center py-20 bg-card rounded-3xl border border-dashed border-border p-8">
-              <BookOpen className="h-12 w-12 text-muted-foreground/40 mx-auto mb-4" />
-              <h3 className="text-lg font-bold text-foreground mb-2">Sélectionnez une leçon</h3>
-              <p className="text-sm text-muted-foreground">
-                Choisissez un chapitre dans le menu latéral pour démarrer le cours.
-              </p>
+            <div className="space-y-6">
+              {/* Dedicated Live Meet Overview Card */}
+              <div className="p-6 sm:p-8 bg-card rounded-3xl border border-border shadow-sm space-y-4">
+                <div className="flex items-center justify-between gap-4 border-b border-border pb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="h-12 w-12 rounded-2xl bg-red-500/10 text-red-500 flex items-center justify-center shrink-0 font-bold text-xl">
+                      <i className="fa-solid fa-chalkboard-user" />
+                    </div>
+                    <div>
+                      <span className="text-xs font-bold uppercase tracking-wider text-red-600 dark:text-red-400">
+                        Formation en Direct Google Meet
+                      </span>
+                      <h2 className="text-lg sm:text-xl font-extrabold text-foreground">
+                        {course?.title}
+                      </h2>
+                    </div>
+                  </div>
+
+                  <Button
+                    size="sm"
+                    onClick={() => setShowContactModal(true)}
+                    className="rounded-xl text-xs font-bold gap-1.5 shrink-0"
+                  >
+                    <MessageSquare className="h-4 w-4" />
+                    <span>Contacter l'Instructeur</span>
+                  </Button>
+                </div>
+
+                {course?.description && (
+                  <div className="space-y-2">
+                    <h4 className="text-xs font-bold text-foreground uppercase tracking-wider">
+                      Présentation de la Formation
+                    </h4>
+                    <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">
+                      {course.description}
+                    </p>
+                  </div>
+                )}
+
+                {/* Course Resource File Download if attached to course product */}
+                {course?.download_url && (
+                  <div className="p-4 rounded-2xl bg-secondary/30 border border-border flex items-center justify-between mt-4">
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                        <FileText className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <h4 className="text-xs font-bold text-foreground">Support de cours téléchargeable</h4>
+                        <p className="text-[11px] text-muted-foreground">Fichiers & documents d'accompagnement</p>
+                      </div>
+                    </div>
+                    <a
+                      href={course.download_url}
+                      target="_blank"
+                      rel="noreferrer"
+                      download
+                    >
+                      <Button size="sm" variant="outline" className="rounded-xl gap-1.5 text-xs font-semibold">
+                        <Download className="h-3.5 w-3.5" />
+                        <span>Télécharger le Support</span>
+                      </Button>
+                    </a>
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
@@ -691,15 +750,16 @@ export const CoursePlayer = () => {
           )}
         </div>
 
-        {/* Right/Sidebar Modules Column */}
-        <div className="w-full lg:w-96 border-t lg:border-t-0 lg:border-l border-border bg-card/50 overflow-y-auto p-4 sm:p-6 shrink-0">
-          <div className="mb-6">
-            <h3 className="font-extrabold text-foreground text-base mb-1">Sommaire du cours</h3>
-            <p className="text-xs text-muted-foreground">
-              {modules.length} module{modules.length > 1 ? "s" : ""} • {allLessons.length} leçon
-              {allLessons.length > 1 ? "s" : ""}
-            </p>
-          </div>
+        {/* Right/Sidebar Modules Column - Only show if modules exist */}
+        {modules.length > 0 && (
+          <div className="w-full lg:w-96 border-t lg:border-t-0 lg:border-l border-border bg-card/50 overflow-y-auto p-4 sm:p-6 shrink-0">
+            <div className="mb-6">
+              <h3 className="font-extrabold text-foreground text-base mb-1">Sommaire du cours</h3>
+              <p className="text-xs text-muted-foreground">
+                {modules.length} module{modules.length > 1 ? "s" : ""} • {allLessons.length} leçon
+                {allLessons.length > 1 ? "s" : ""}
+              </p>
+            </div>
 
           {/* Modules Accordion */}
           <div className="space-y-3">
@@ -788,6 +848,7 @@ export const CoursePlayer = () => {
             })}
           </div>
         </div>
+      )}
       </div>
 
       {/* CERTIFICATE COMPLETION MODAL */}
