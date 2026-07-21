@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -9,6 +9,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { CartProvider } from "@/contexts/CartContext";
+
 import Index from "./pages/Index";
 import SearchPage from "./pages/SearchPage";
 import Cart from "./pages/Cart";
@@ -98,6 +99,15 @@ const ExternalRedirect = ({ to }: { to: string }) => {
   window.location.href = to;
   return null;
 };
+
+const PageLoader = () => (
+  <div className="min-h-[60vh] flex items-center justify-center bg-background">
+    <div className="flex flex-col items-center gap-3">
+      <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <p className="text-xs text-muted-foreground font-medium animate-pulse">Chargement en cours…</p>
+    </div>
+  </div>
+);
 
 const AppContent = () => {
   const { isCustomDomain, storeSlug, loading } = useCustomDomain();

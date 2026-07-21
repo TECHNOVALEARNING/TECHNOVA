@@ -651,7 +651,7 @@ const Index = () => {
                     cursor: "default",
                   }}
                 >
-                  {welcomeVideoUrl && welcomeVideoUrl !== "#" && isLoadedDelayed && (
+                  {welcomeVideoUrl && welcomeVideoUrl !== "#" && isLoadedDelayed ? (
                     isDirectVideo(welcomeVideoUrl) ? (
                       <video
                         src={welcomeVideoUrl}
@@ -686,6 +686,19 @@ const Index = () => {
                         allowFullScreen
                       />
                     )
+                  ) : (
+                    <img
+                      src={appMockupGif}
+                      alt="TECHNOVA Showcase"
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                    />
                   )}
                 </div>
               </div>
