@@ -17,8 +17,14 @@ const Products = () => {
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
 
+  const nonCourseProducts = products.filter(
+    (p) => p.category !== "course" && p.category !== "formation" && p.type !== "course",
+  );
+
   const filtered =
-    activeCategory === "all" ? products : products.filter((p) => p.category === activeCategory);
+    activeCategory === "all"
+      ? nonCourseProducts
+      : nonCourseProducts.filter((p) => p.category === activeCategory);
 
   const seoTitle =
     lang === "en"

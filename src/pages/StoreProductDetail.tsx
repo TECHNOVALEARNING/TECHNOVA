@@ -993,17 +993,40 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                 </div>
 
                 {/* CTA */}
-                <button
-                  className="w-full text-base font-bold py-4 rounded-xl text-white transition-all hover:opacity-95 hover:scale-[1.01] active:scale-[0.98] shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-                  style={{
-                    backgroundColor: isSoldOut ? "#9CA3AF" : brandColor,
-                    boxShadow: isSoldOut ? "none" : `0 8px 24px -8px ${brandColor}80`,
-                  }}
-                  onClick={handleBuy}
-                  disabled={isSoldOut}
-                >
-                  {isSoldOut ? "Épuisé" : "Acheter maintenant"}
-                </button>
+                {(() => {
+                  const m = (product?.marketing_sections as any) || {};
+                  const isLiveEnded = m.live_ended === true;
+
+                  if (isLiveEnded) {
+                    return (
+                      <div className="space-y-3">
+                        <button
+                          disabled
+                          className="w-full text-sm font-bold py-4 rounded-xl text-slate-500 bg-slate-200 dark:bg-slate-800 dark:text-slate-400 cursor-not-allowed border border-border"
+                        >
+                          🏁 Session Live Terminée (Inscriptions Fermées)
+                        </button>
+                        <p className="text-xs text-center text-muted-foreground italic">
+                          La session en direct s'est achevée. Les inscriptions sont closes.
+                        </p>
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <button
+                      className="w-full text-base font-bold py-4 rounded-xl text-white transition-all hover:opacity-95 hover:scale-[1.01] active:scale-[0.98] shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                      style={{
+                        backgroundColor: isSoldOut ? "#9CA3AF" : brandColor,
+                        boxShadow: isSoldOut ? "none" : `0 8px 24px -8px ${brandColor}80`,
+                      }}
+                      onClick={handleBuy}
+                      disabled={isSoldOut}
+                    >
+                      {isSoldOut ? "Épuisé" : "Acheter maintenant"}
+                    </button>
+                  );
+                })()}
 
                 {/* Quick benefits */}
                 <ul className="space-y-2 text-xs text-muted-foreground">

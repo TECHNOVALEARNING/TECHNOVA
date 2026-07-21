@@ -70,6 +70,27 @@ export const CoursePlayer = () => {
   const [isGeneratingCert, setIsGeneratingCert] = useState(false);
   const [reminderActive, setReminderActive] = useState(false);
 
+  const handleEndLiveSession = async () => {
+    if (!course?.id) return;
+    if (!window.confirm("Êtes-vous sûr de vouloir clore cette session en direct ? Cela fermera les nouvelles ventes en direct et affichera le statut 'Direct Terminé'.")) {
+      return;
+    }
+    try {
+      const currentM = (course.marketing_sections as any) || {};
+      const updatedM = { ...currentM, live_ended: true };
+      const { error } = await supabase
+        .from("products")
+        .update({ marketing_sections: updatedM })
+        .eq("id", course.id);
+
+      if (error) throw error;
+      setCourse((prev: any) => prev ? { ...prev, marketing_sections: updatedM } : prev);
+      toast.success("La session en direct a été clôturée avec succès ! Les nouvelles inscriptions sont désormais fermées.");
+    } catch (err: any) {
+      toast.error("Erreur lors de la clôture du direct : " + (err.message || "Réessayez."));
+    }
+  };
+
   useEffect(() => {
     if (courseId && user?.id) {
       const saved = localStorage.getItem(`live_reminder_${courseId}_${user.id}`);
@@ -352,8 +373,52 @@ export const CoursePlayer = () => {
             const liveDateObj = liveDateStr ? new Date(liveDateStr) : null;
             const now = new Date();
             const isLiveUnlocked = liveDateObj ? now.getTime() >= liveDateObj.getTime() - 15 * 60 * 1000 : true;
+            const isLiveExpired = liveDateObj ? now.getTime() > liveDateObj.getTime() + 2 * 60 * 60 * 1000 : false;
 
             if (!isLiveCourse) return null;
+
+            if (isLiveExpired) {
+              return (
+                <div className="mb-6 p-5 rounded-2xl bg-muted/40 border border-border/80 shadow-sm space-y-3">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 rounded-xl bg-slate-500/20 text-slate-500 dark:text-slate-400 flex items-center justify-center font-bold text-lg shrink-0">
+                        <i className="fa-solid fa-calendar-check text-slate-500" />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">
+                            🏁 Session en Direct Expirée & Terminée
+                          </span>
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-500/10 text-slate-600 border border-slate-500/30">
+                            Replay VOD & Ressources
+                          </span>
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-0.5">
+                          {liveDateObj
+                            ? `Le direct s'est déroulé le : ${liveDateObj.toLocaleDateString("fr-FR", {
+                                weekday: "long",
+                                day: "numeric",
+                                month: "long",
+                                year: "numeric",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}`
+                            : "Session en direct terminée."}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <span className="px-3 py-2 rounded-xl text-xs font-bold bg-muted text-muted-foreground border border-border flex items-center gap-1.5">
+                        <i className="fa-solid fa-circle-check text-emerald-500" />
+                        <span>Direct Terminé (Consulter les Leçons & Replay)</span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              );
+            }
 
             return (
               <div className="mb-6 p-5 rounded-2xl bg-gradient-to-r from-red-500/10 via-amber-500/10 to-blue-500/10 border border-red-500/30 shadow-lg space-y-3">
@@ -468,6 +533,19 @@ export const CoursePlayer = () => {
                       <span className="text-xs text-muted-foreground italic">
                         Lien Meet transmis prochainement
                       </span>
+                    )}
+
+                    {/* Trainer Action: Close Live Stream */}
+                    {(user?.id === course?.creator_id || user?.id === course?.stores?.owner_id || isAdmin) && (
+                      <button
+                        type="button"
+                        onClick={handleEndLiveSession}
+                        className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-900 text-white border border-slate-700 transition-colors shadow"
+                        title="Formateur: Clôturer la session en direct pour fermer les ventes"
+                      >
+                        <i className="fa-solid fa-flag-checkered text-amber-400" />
+                        <span>Clôturer le Direct (Formateur)</span>
+                      </button>
                     )}
                   </div>
                 </div>

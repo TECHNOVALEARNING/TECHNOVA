@@ -254,28 +254,52 @@ const ProductDetail = () => {
               <div className="mb-4 text-3xl font-bold text-foreground">
                 {formatPrice(product.price)}
               </div>
-              <Button
-                size="lg"
-                className={`w-full py-6 text-base font-semibold ${
-                  inCart
-                    ? "bg-muted text-muted-foreground"
-                    : "bg-gold-gradient text-accent-foreground hover:opacity-90"
-                }`}
-                onClick={() => addToCart(product)}
-                disabled={inCart}
-              >
-                {inCart ? (
-                  <>
-                    <CheckCircle className="mr-2 h-5 w-5" />
-                    {t.alreadyInCart}
-                  </>
-                ) : (
-                  <>
-                    <ShoppingCart className="mr-2 h-5 w-5" />
-                    {t.addToCart}
-                  </>
-                )}
-              </Button>
+              {(() => {
+                const m = (product as any)?.marketing_sections || {};
+                const isLiveEnded = m.live_ended === true;
+
+                if (isLiveEnded) {
+                  return (
+                    <div className="space-y-2">
+                      <Button
+                        size="lg"
+                        disabled
+                        className="w-full py-6 text-sm font-bold bg-muted text-muted-foreground cursor-not-allowed border border-border"
+                      >
+                        🏁 Session Live Terminée (Inscriptions Fermées)
+                      </Button>
+                      <p className="text-xs text-center text-muted-foreground italic">
+                        La session en direct s'est achevée. Les inscriptions sont fermées.
+                      </p>
+                    </div>
+                  );
+                }
+
+                return (
+                  <Button
+                    size="lg"
+                    className={`w-full py-6 text-base font-semibold ${
+                      inCart
+                        ? "bg-muted text-muted-foreground"
+                        : "bg-gold-gradient text-accent-foreground hover:opacity-90"
+                    }`}
+                    onClick={() => addToCart(product)}
+                    disabled={inCart}
+                  >
+                    {inCart ? (
+                      <>
+                        <CheckCircle className="mr-2 h-5 w-5" />
+                        {t.alreadyInCart}
+                      </>
+                    ) : (
+                      <>
+                        <ShoppingCart className="mr-2 h-5 w-5" />
+                        {t.addToCart}
+                      </>
+                    )}
+                  </Button>
+                );
+              })()}
               <Button
                 size="lg"
                 variant="outline"
