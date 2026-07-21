@@ -257,7 +257,7 @@ const ProductDetail = () => {
               {(() => {
                 const m = (product as any)?.marketing_sections || {};
                 const liveDateObj = m.live_date ? new Date(m.live_date) : null;
-                const isAutoExpired = liveDateObj ? (new Date().getTime() > liveDateObj.getTime() + 6 * 60 * 60 * 1000) : false;
+                const isAutoExpired = liveDateObj ? (new Date().getTime() > liveDateObj.getTime() + 5 * 60 * 1000) : false;
                 const isLiveEnded = m.live_ended === true || isAutoExpired;
 
                 if (isLiveEnded) {
@@ -268,10 +268,12 @@ const ProductDetail = () => {
                         disabled
                         className="w-full py-6 text-sm font-bold bg-muted text-muted-foreground cursor-not-allowed border border-border"
                       >
-                        🏁 Session Live Terminée (Inscriptions Fermées)
+                        🏁 Inscriptions Closes (Direct en cours ou terminé)
                       </Button>
                       <p className="text-xs text-center text-muted-foreground italic">
-                        La session en direct s'est achevée. Les inscriptions sont fermées.
+                        {m.live_ended === true
+                          ? "La session en direct s'est achevée. Les inscriptions sont fermées."
+                          : "Le direct a démarré depuis plus de 5 minutes. Les inscriptions sont fermées pour ne pas rater le début du cours."}
                       </p>
                     </div>
                   );
