@@ -166,13 +166,13 @@ const Cours = () => {
             >
               {lang === "fr" ? (
                 <>
-                  Propulsez votre carrière numérique avec nos{" "}
-                  <span style={{ color: "#0071e3" }}>Formations Certifiantes</span>
+                  Propulsez votre carrière numérique et entrepreneuriale avec nos{" "}
+                  <span style={{ color: "#0071e3" }}>Formations</span>
                 </>
               ) : (
                 <>
-                  Boost your digital career with our{" "}
-                  <span style={{ color: "#0071e3" }}>Certified Courses</span>
+                  Boost your digital and entrepreneurial career with our{" "}
+                  <span style={{ color: "#0071e3" }}>Courses</span>
                 </>
               )}
             </motion.h1>
