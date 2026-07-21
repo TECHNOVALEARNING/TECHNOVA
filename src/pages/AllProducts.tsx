@@ -93,7 +93,7 @@ const AllProducts = () => {
       if (error) throw error;
 
       const active = (data || []).filter((p: any) => {
-        if (p.category === "discovery") {
+        if (p.category === "discovery" || p.type === "course" || p.category === "course" || p.category === "formation") {
           return false;
         }
         try {

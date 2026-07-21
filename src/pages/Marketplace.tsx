@@ -236,9 +236,14 @@ const Marketplace = () => {
           fetch(`${base}?sort=relevance&limit=12`, { headers }).then((r) => r.json()),
         ]);
 
-        setTopProducts(popRes?.products || []);
-        setNewProducts(newRes?.products || []);
-        setRecommended(recoRes?.products || []);
+        const filterNonCourse = (list: any[]) =>
+          (list || []).filter(
+            (p) => p.type !== "course" && p.category !== "course" && p.category !== "formation",
+          );
+
+        setTopProducts(filterNonCourse(popRes?.products));
+        setNewProducts(filterNonCourse(newRes?.products));
+        setRecommended(filterNonCourse(recoRes?.products));
       } catch (e) {
         console.error("Marketplace fetch error", e);
       } finally {
