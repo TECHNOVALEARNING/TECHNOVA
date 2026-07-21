@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Star, Users, ShoppingCart, CheckCircle, GraduationCap } from "lucide-react";
+import { ArrowLeft, Star, Users, ShoppingCart, CheckCircle, GraduationCap, MessageSquare } from "lucide-react";
 import { Header } from "@/components/site/shared";
 import { Footer } from "@/components/site/shared";
 import { products } from "@/data/products";
@@ -69,6 +69,7 @@ const ProductDetail = () => {
 
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [isExpired, setIsExpired] = useState(false);
+  const [showContactModal, setShowContactModal] = useState(false);
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -288,6 +289,15 @@ const ProductDetail = () => {
                   </Button>
                 </Link>
               )}
+              <Button
+                size="lg"
+                variant="outline"
+                onClick={() => setShowContactModal(true)}
+                className="w-full py-5 text-sm font-bold gap-2 border-border mt-3"
+              >
+                <MessageSquare className="h-4 w-4 text-primary" />
+                <span>{lang === "fr" ? "Contacter l'instructeur" : "Contact Instructor"}</span>
+              </Button>
             </div>
 
             <div className="space-y-3">
@@ -308,6 +318,14 @@ const ProductDetail = () => {
           </div>
         )}
       </div>
+
+      <ContactTrainerModal
+        isOpen={showContactModal}
+        onClose={() => setShowContactModal(false)}
+        courseTitle={product.title || "Formation TECHNOVA"}
+        sellerName={(product as any).author || (product as any).store_name || "L'Instructeur"}
+        sellerId={(product as any).creator_id || (product as any).store_id}
+      />
       <Footer />
     </div>
   );

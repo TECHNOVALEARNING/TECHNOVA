@@ -16,7 +16,8 @@ import {
   Lock,
   GraduationCap,
   ShieldCheck,
-  Share2
+  Share2,
+  MessageSquare,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -26,6 +27,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { CourseVideoPlayer } from "@/components/course/CourseVideoPlayer";
 import ProductReviewForm from "@/components/buyer/ProductReviewForm";
 import ProductReviewsSection from "@/components/store/ProductReviewsSection";
+import { ContactTrainerModal } from "@/components/ContactTrainerModal";
 import { getCompletedLessons, saveCompletedLessons } from "@/lib/courseProgressSync";
 import { generateCertificatePDF } from "@/lib/certificateGenerator";
 import SEOHead from "@/components/SEOHead";
@@ -64,6 +66,7 @@ export const CoursePlayer = () => {
   const [loading, setLoading] = useState(true);
   const [openModuleIds, setOpenModuleIds] = useState<string[]>([]);
   const [showCertificateModal, setShowCertificateModal] = useState(false);
+  const [showContactModal, setShowContactModal] = useState(false);
   const [isGeneratingCert, setIsGeneratingCert] = useState(false);
   const [reminderActive, setReminderActive] = useState(false);
 
@@ -312,6 +315,17 @@ export const CoursePlayer = () => {
             <Progress value={progressPercent} className="h-2 w-full" />
           </div>
 
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => setShowContactModal(true)}
+            className="rounded-xl text-xs font-bold gap-1.5 border-border"
+          >
+            <MessageSquare className="h-4 w-4 text-primary" />
+            <span className="hidden sm:inline">Contacter l'Instructeur</span>
+            <span className="sm:hidden">Question</span>
+          </Button>
+
           {progressPercent === 100 && (
             <Button
               size="sm"
@@ -493,7 +507,17 @@ export const CoursePlayer = () => {
                   </h2>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowContactModal(true)}
+                    className="rounded-xl text-xs font-semibold gap-1.5 border-primary/30 text-primary hover:bg-primary/10"
+                  >
+                    <MessageSquare className="h-3.5 w-3.5" />
+                    <span>Poser une question</span>
+                  </Button>
+
                   <Button
                     variant="outline"
                     size="sm"
@@ -756,6 +780,15 @@ export const CoursePlayer = () => {
           </div>
         )}
       </AnimatePresence>
+
+      {/* CONTACT TRAINER MODAL */}
+      <ContactTrainerModal
+        isOpen={showContactModal}
+        onClose={() => setShowContactModal(false)}
+        courseTitle={course?.title || "Formation TECHNOVA"}
+        sellerName={course?.stores?.name || "L'Instructeur"}
+        sellerId={course?.creator_id || course?.stores?.owner_id}
+      />
     </div>
   );
 };

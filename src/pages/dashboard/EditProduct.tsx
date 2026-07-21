@@ -736,27 +736,27 @@ const EditProduct = () => {
                       <SelectTrigger className="h-11">
                         <SelectValue placeholder="Sélectionner une catégorie" />
                       </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="marketing">Marketing Digital</SelectItem>
-                        <SelectItem value="design">Design & Créativité</SelectItem>
-                        <SelectItem value="tech">D&eacute;veloppement</SelectItem>
-                        <SelectItem value="business">Business & Finance</SelectItem>
-                        <SelectItem value="education">Éducation & Apprentissage</SelectItem>
-                        <SelectItem value="divertissement">Divertissement</SelectItem>
-                        <SelectItem value="sante_bien_etre">Santé et bien être</SelectItem>
+                      <SelectContent className="bg-popover text-popover-foreground border border-border shadow-xl">
+                        <SelectItem value="marketing"><i className="fa-solid fa-chart-line text-emerald-500 mr-2" /> Marketing Digital</SelectItem>
+                        <SelectItem value="design"><i className="fa-solid fa-palette text-purple-500 mr-2" /> Design & Créativité</SelectItem>
+                        <SelectItem value="tech"><i className="fa-solid fa-laptop-code text-blue-500 mr-2" /> Développement & Tech</SelectItem>
+                        <SelectItem value="business"><i className="fa-solid fa-briefcase text-primary mr-2" /> Business & Finance</SelectItem>
+                        <SelectItem value="education"><i className="fa-solid fa-graduation-cap text-amber-500 mr-2" /> Éducation & Apprentissage</SelectItem>
+                        <SelectItem value="divertissement"><i className="fa-solid fa-gamepad text-indigo-500 mr-2" /> Divertissement</SelectItem>
+                        <SelectItem value="sante_bien_etre"><i className="fa-solid fa-heart-pulse text-red-500 mr-2" /> Santé et bien être</SelectItem>
                         <SelectItem value="developpement_personnel">
-                          Développement personnel
+                          <i className="fa-solid fa-brain text-amber-500 mr-2" /> Développement personnel
                         </SelectItem>
-                        <SelectItem value="langue">🌐 Langues</SelectItem>
+                        <SelectItem value="langue"><i className="fa-solid fa-language text-sky-500 mr-2" /> Langues</SelectItem>
                         {(isAdmin ||
                           category === "template" ||
                           category === "discovery") && (
                           <>
-                            <SelectItem value="template">📋 Templates</SelectItem>
-                            <SelectItem value="discovery">🔍 Découvertes (Lien externe)</SelectItem>
+                            <SelectItem value="template"><i className="fa-solid fa-layer-group text-primary mr-2" /> Templates</SelectItem>
+                            <SelectItem value="discovery"><i className="fa-solid fa-compass text-amber-500 mr-2" /> Découvertes (Lien externe)</SelectItem>
                           </>
                         )}
-                        <SelectItem value="other">Autre</SelectItem>
+                        <SelectItem value="other"><i className="fa-solid fa-cubes text-muted-foreground mr-2" /> Autre</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>

@@ -478,11 +478,11 @@ const BLOG_ARTICLES = [
 ];
 
 const CATEGORIES = [
-  { slug: "All", fr: "Tout", en: "All", emoji: "✨" },
-  { slug: "Digital PLR", fr: "Digital PLR", en: "Digital PLR", emoji: "📦" },
-  { slug: "Marketing", fr: "Marketing", en: "Marketing", emoji: "🚀" },
-  { slug: "Tunnels de Vente", fr: "Tunnels de Vente", en: "Sales Funnels", emoji: "⚡" },
-  { slug: "Niches Riches", fr: "Niches Riches", en: "Profitable Niches", emoji: "💰" },
+  { slug: "All", fr: "Tout", en: "All", faIcon: "fa-solid fa-layer-group" },
+  { slug: "Digital PLR", fr: "Digital PLR", en: "Digital PLR", faIcon: "fa-solid fa-box-open" },
+  { slug: "Marketing", fr: "Marketing", en: "Marketing", faIcon: "fa-solid fa-rocket" },
+  { slug: "Tunnels de Vente", fr: "Tunnels de Vente", en: "Sales Funnels", faIcon: "fa-solid fa-filter" },
+  { slug: "Niches Riches", fr: "Niches Riches", en: "Profitable Niches", faIcon: "fa-solid fa-coins" },
 ];
 
 export default function Blog() {
@@ -571,7 +571,7 @@ export default function Blog() {
                     : "bg-card border-border/80 text-muted-foreground hover:text-foreground hover:bg-secondary/50"
                 }`}
               >
-                <span>{c.emoji}</span>
+                <i className={`${c.faIcon} text-xs`} />
                 <span>{lang === "fr" ? c.fr : c.en}</span>
               </button>
             ))}

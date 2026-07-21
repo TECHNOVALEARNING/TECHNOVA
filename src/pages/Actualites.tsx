@@ -109,14 +109,14 @@ const FALLBACK_ARTICLES = [
 ];
 
 const CATEGORIES = [
-  { slug: "All", fr: "Tout", en: "All", emoji: "✨" },
-  { slug: "technology", fr: "Technologie", en: "Technology", emoji: "💻" },
-  { slug: "business", fr: "Business", en: "Business", emoji: "💼" },
-  { slug: "science", fr: "Science", en: "Science", emoji: "🔬" },
-  { slug: "health", fr: "Santé", en: "Health", emoji: "🏥" },
-  { slug: "entertainment", fr: "Divertissement", en: "Entertainment", emoji: "🎬" },
-  { slug: "sports", fr: "Sports", en: "Sports", emoji: "⚽" },
-  { slug: "world", fr: "Monde", en: "World", emoji: "🌍" },
+  { slug: "All", fr: "Tout", en: "All", faIcon: "fa-solid fa-layer-group" },
+  { slug: "technology", fr: "Technologie", en: "Technology", faIcon: "fa-solid fa-laptop-code" },
+  { slug: "business", fr: "Business", en: "Business", faIcon: "fa-solid fa-briefcase" },
+  { slug: "science", fr: "Science", en: "Science", faIcon: "fa-solid fa-flask" },
+  { slug: "health", fr: "Santé", en: "Health", faIcon: "fa-solid fa-heart-pulse" },
+  { slug: "entertainment", fr: "Divertissement", en: "Entertainment", faIcon: "fa-solid fa-clapperboard" },
+  { slug: "sports", fr: "Sports", en: "Sports", faIcon: "fa-solid fa-trophy" },
+  { slug: "world", fr: "Monde", en: "World", faIcon: "fa-solid fa-globe" },
 ];
 
 export default function Actualites() {
@@ -245,7 +245,7 @@ export default function Actualites() {
                     : "bg-card border-border/80 text-muted-foreground hover:text-foreground hover:bg-secondary/50"
                 }`}
               >
-                <span>{c.emoji}</span>
+                <i className={`${c.faIcon} text-xs`} />
                 <span>{lang === "fr" ? c.fr : c.en}</span>
               </button>
             ))}

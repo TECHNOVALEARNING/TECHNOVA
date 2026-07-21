@@ -937,27 +937,27 @@ const CreateProduct = () => {
                       <SelectTrigger className="h-12">
                         <SelectValue placeholder="Dans quelle catégorie classer ce produit ?" />
                       </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="business">💼 Business</SelectItem>
-                        <SelectItem value="design">🎨 Design</SelectItem>
-                        <SelectItem value="tech">💻 Tech & Code</SelectItem>
-                        <SelectItem value="marketing">📈 Marketing</SelectItem>
-                        <SelectItem value="education">🎓 Éducation</SelectItem>
-                        <SelectItem value="lifestyle">🌿 Lifestyle</SelectItem>
-                        <SelectItem value="creative">🎬 Créatif</SelectItem>
-                        <SelectItem value="divertissement">🎮 Divertissement</SelectItem>
-                        <SelectItem value="sante_bien_etre">❤️ Santé et bien être</SelectItem>
+                      <SelectContent className="bg-popover text-popover-foreground border border-border shadow-xl">
+                        <SelectItem value="business"><i className="fa-solid fa-briefcase text-primary mr-2" /> Business</SelectItem>
+                        <SelectItem value="design"><i className="fa-solid fa-palette text-purple-500 mr-2" /> Design</SelectItem>
+                        <SelectItem value="tech"><i className="fa-solid fa-laptop-code text-blue-500 mr-2" /> Tech & Code</SelectItem>
+                        <SelectItem value="marketing"><i className="fa-solid fa-chart-line text-emerald-500 mr-2" /> Marketing</SelectItem>
+                        <SelectItem value="education"><i className="fa-solid fa-graduation-cap text-amber-500 mr-2" /> Éducation</SelectItem>
+                        <SelectItem value="lifestyle"><i className="fa-solid fa-leaf text-green-500 mr-2" /> Lifestyle</SelectItem>
+                        <SelectItem value="creative"><i className="fa-solid fa-film text-pink-500 mr-2" /> Créatif</SelectItem>
+                        <SelectItem value="divertissement"><i className="fa-solid fa-gamepad text-indigo-500 mr-2" /> Divertissement</SelectItem>
+                        <SelectItem value="sante_bien_etre"><i className="fa-solid fa-heart-pulse text-red-500 mr-2" /> Santé et bien être</SelectItem>
                         <SelectItem value="developpement_personnel">
-                          ✨ Développement personnel
+                          <i className="fa-solid fa-brain text-amber-500 mr-2" /> Développement personnel
                         </SelectItem>
-                        <SelectItem value="langue">🌐 Langues</SelectItem>
+                        <SelectItem value="langue"><i className="fa-solid fa-language text-sky-500 mr-2" /> Langues</SelectItem>
                         {isAdmin && (
                           <>
-                            <SelectItem value="template">📋 Templates</SelectItem>
-                            <SelectItem value="discovery">🔍 Découvertes (Lien externe)</SelectItem>
+                            <SelectItem value="template"><i className="fa-solid fa-layer-group text-primary mr-2" /> Templates</SelectItem>
+                            <SelectItem value="discovery"><i className="fa-solid fa-compass text-amber-500 mr-2" /> Découvertes (Lien externe)</SelectItem>
                           </>
                         )}
-                        <SelectItem value="other">✨ Autres</SelectItem>
+                        <SelectItem value="other"><i className="fa-solid fa-cubes text-muted-foreground mr-2" /> Autres</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>

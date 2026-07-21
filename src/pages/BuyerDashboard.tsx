@@ -13,10 +13,12 @@ import {
   Award,
   Play,
   CheckCircle2,
+  MessageSquare,
 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { getCompletedLessons } from "@/lib/courseProgressSync";
 import { generateCertificatePDF } from "@/lib/certificateGenerator";
+import { ContactTrainerModal } from "@/components/ContactTrainerModal";
 import logo from "@/assets/logo.png";
 import SEOHead from "@/components/SEOHead";
 import { Input } from "@/components/ui/input";
@@ -335,6 +337,7 @@ const CourseCardAction = ({
     loadProgress();
   }, [order.product?.id, customerId]);
 
+  const [showContactModal, setShowContactModal] = useState(false);
   const percent = Math.min(100, Math.round((completedCount / totalCount) * 100));
 
   return (
@@ -355,6 +358,16 @@ const CourseCardAction = ({
           </Button>
         </Link>
 
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={() => setShowContactModal(true)}
+          className="w-full text-xs font-semibold gap-1.5 border-border"
+        >
+          <MessageSquare className="h-3.5 w-3.5 text-primary" />
+          <span>Question au formateur</span>
+        </Button>
+
         {percent === 100 && (
           <Button
             size="sm"
@@ -372,6 +385,14 @@ const CourseCardAction = ({
             <span>Attestation (PDF)</span>
           </Button>
         )}
+
+        <ContactTrainerModal
+          isOpen={showContactModal}
+          onClose={() => setShowContactModal(false)}
+          courseTitle={order.product?.title || "Formation"}
+          sellerName={order.store_owner?.display_name || "L'Instructeur"}
+          sellerId={order.store_owner_id}
+        />
       </div>
     </div>
   );
