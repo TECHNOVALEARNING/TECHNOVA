@@ -276,19 +276,6 @@ const ProductDetail = () => {
                   </>
                 )}
               </Button>
-
-              {(product.type === "course" || product.type === "formation") && (
-                <Link to={`/learn/${product.id}`} className="block w-full mt-3">
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="w-full py-6 text-sm font-bold gap-2 border-primary/40 text-primary hover:bg-primary/10"
-                  >
-                    <GraduationCap className="h-5 w-5" />
-                    <span>{lang === "fr" ? "Accéder au cours en ligne" : "Access Online Course"}</span>
-                  </Button>
-                </Link>
-              )}
               <Button
                 size="lg"
                 variant="outline"
