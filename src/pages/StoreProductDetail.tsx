@@ -1005,18 +1005,6 @@ const StoreProductDetail = ({ customSlug }: { customSlug?: string }) => {
                   {isSoldOut ? "Épuisé" : "Acheter maintenant"}
                 </button>
 
-                {product.type === "course" && (
-                  <Link to={`/learn/${product.id}`} className="block w-full">
-                    <Button
-                      variant="outline"
-                      className="w-full py-4 text-sm font-bold rounded-xl gap-2 border-primary/40 text-primary hover:bg-primary/10"
-                    >
-                      <GraduationCap className="h-4 w-4" />
-                      <span>{lang === "fr" ? "Accéder au cours en ligne" : "Access Online Course"}</span>
-                    </Button>
-                  </Link>
-                )}
-
                 {/* Quick benefits */}
                 <ul className="space-y-2 text-xs text-muted-foreground">
                   <li className="flex items-center gap-2">
