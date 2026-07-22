@@ -197,12 +197,18 @@ export const CourseVideoPlayer = ({
     return u;
   };
 
+  const isDrive = cleanSrc.includes("drive.google.com");
+
   return (
     <div
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onContextMenu={(e) => e.preventDefault()}
-      className="relative w-full aspect-video rounded-2xl overflow-hidden bg-black shadow-2xl border border-white/10 group select-none"
+      className={`relative w-full rounded-2xl overflow-hidden bg-black shadow-2xl border border-white/10 group select-none transition-all ${
+        isDrive
+          ? "aspect-[4/3] sm:aspect-[16/10] min-h-[320px] sm:min-h-[480px]"
+          : "aspect-video"
+      }`}
     >
       {/* Embed Fallback (YouTube / Vimeo / Cloudflare / Google Drive / Loom Iframe) */}
       {isEmbed ? (
@@ -383,7 +389,7 @@ export const CourseVideoPlayer = ({
       )}
 
       {/* STATIC ANTI-PIRACY WATERMARK OVERLAY */}
-      <div className="absolute top-3 right-3 z-40 pointer-events-none select-none opacity-25">
+      <div className="absolute top-3 left-3 z-40 pointer-events-none select-none opacity-25">
         <div className="px-2.5 py-0.5 rounded-full bg-black/40 backdrop-blur-sm border border-white/10 text-[10px] font-mono text-white/80 shadow-md flex items-center gap-1.5 tracking-wider">
           <ShieldAlert className="h-3 w-3 text-amber-400/80 shrink-0" />
           <span className="font-semibold">{userEmail}</span>
