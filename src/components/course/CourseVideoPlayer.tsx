@@ -220,6 +220,21 @@ export const CourseVideoPlayer = ({
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
           />
+          {/* Transparent overlay to block Google Drive header action buttons (pop-out, print, download) */}
+          {cleanSrc.includes("drive.google.com") && (
+            <div 
+              className="absolute top-0 right-0 h-14 w-48 bg-transparent z-40 cursor-default"
+              title="Vidéos sécurisées contre le téléchargement"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+              onContextMenu={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+            />
+          )}
         </div>
       ) : (
         /* Native HTML5 Custom Video Player */
