@@ -141,7 +141,11 @@ export const Header = () => {
           ))}
 
           {/* Dropdown "Informez-vous" */}
-          <div className="relative" onMouseLeave={() => setInfoDropdownOpen(false)}>
+          <div
+            className="relative py-2 -my-2"
+            onMouseEnter={() => setInfoDropdownOpen(true)}
+            onMouseLeave={() => setInfoDropdownOpen(false)}
+          >
             <button
               onClick={() => setInfoDropdownOpen(!infoDropdownOpen)}
               onMouseEnter={() => setInfoDropdownOpen(true)}
@@ -155,7 +159,7 @@ export const Header = () => {
               />
             </button>
             <div
-              className={`absolute top-full left-0 mt-2 w-48 rounded-xl border border-border bg-white dark:bg-[#1c1c1e] p-2 shadow-xl transition-all before:content-[''] before:absolute before:-top-2 before:left-0 before:right-0 before:h-2 ${
+              className={`absolute top-full left-0 mt-1 w-48 rounded-xl border border-border bg-white dark:bg-[#1c1c1e] p-2 shadow-xl transition-all before:content-[''] before:absolute before:-top-3 before:left-0 before:right-0 before:h-3 ${
                 infoDropdownOpen ? "opacity-100 visible" : "opacity-0 invisible"
               }`}
             >
@@ -176,7 +180,11 @@ export const Header = () => {
           </div>
 
           {/* Dropdown "Plus" */}
-          <div className="relative" onMouseLeave={() => setDropdownOpen(false)}>
+          <div
+            className="relative py-2 -my-2"
+            onMouseEnter={() => setDropdownOpen(true)}
+            onMouseLeave={() => setDropdownOpen(false)}
+          >
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
               onMouseEnter={() => setDropdownOpen(true)}
@@ -190,7 +198,7 @@ export const Header = () => {
               />
             </button>
             <div
-              className={`absolute top-full right-0 mt-2 w-48 rounded-xl border border-border bg-white dark:bg-[#1c1c1e] p-2 shadow-xl transition-all before:content-[''] before:absolute before:-top-2 before:left-0 before:right-0 before:h-2 ${
+              className={`absolute top-full right-0 mt-1 w-48 rounded-xl border border-border bg-white dark:bg-[#1c1c1e] p-2 shadow-xl transition-all before:content-[''] before:absolute before:-top-3 before:left-0 before:right-0 before:h-3 ${
                 dropdownOpen ? "opacity-100 visible" : "opacity-0 invisible"
               }`}
             >
