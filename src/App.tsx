@@ -55,6 +55,7 @@ import Actualites from "./pages/Actualites";
 import ActualitesDetail from "./pages/ActualitesDetail";
 import TechnovaApps from "./pages/TechnovaApps";
 import Premium from "./pages/Premium";
+import VerifyCertificate from "./pages/VerifyCertificate";
 
 import DashboardOverview from "./pages/dashboard/DashboardOverview";
 import DashboardProducts from "./pages/dashboard/DashboardProducts";
@@ -270,6 +271,7 @@ const AppContent = () => {
               <Route path="/buyer-auth/callback" element={<BuyerOAuthCallback />} />
               <Route path="/mes-achats" element={<BuyerDashboard />} />
               <Route path="/mes-achats/:orderId" element={<BuyerOrderDetail />} />
+              <Route path="/verify-certificate" element={<VerifyCertificate />} />
 
               <Route
                 path="/onboarding"

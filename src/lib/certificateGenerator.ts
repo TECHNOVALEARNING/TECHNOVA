@@ -143,7 +143,8 @@ export const generateCertificatePDF = async (data: CertificateData) => {
   doc.text(`Délivré le : ${dateStr}`, 70, 169);
 
   // QR Code à la place de la Signature
-  const qrCodeUrl = await getQRCodeDataUrl(`https://www.technovalearning.com/formations`);
+  const verifyUrl = `${window.location.origin}/verify-certificate?name=${encodeURIComponent(data.studentName)}&course=${encodeURIComponent(data.courseTitle)}&date=${encodeURIComponent(dateStr)}&org=${encodeURIComponent(data.storeName || "TECHNOVA Learning")}`;
+  const qrCodeUrl = await getQRCodeDataUrl(verifyUrl);
   if (qrCodeUrl) {
     doc.addImage(qrCodeUrl, "PNG", width - 60, 147, 28, 28);
   }

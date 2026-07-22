@@ -263,7 +263,8 @@ const BuyerDashboard = () => {
                   {o.product?.type === "course" ? (
                     <CourseCardAction
                       order={o}
-                      customerId={customerId || customerName}
+                      customerId={customerId}
+                      customerName={customerName}
                       isPortal={isPortal}
                     />
                   ) : (
@@ -307,10 +308,12 @@ const BuyerDashboard = () => {
 const CourseCardAction = ({
   order,
   customerId,
+  customerName,
   isPortal,
 }: {
   order: OrderWithProduct;
   customerId: string;
+  customerName: string;
   isPortal: boolean;
 }) => {
   const [completedCount, setCompletedCount] = useState(0);
@@ -372,13 +375,13 @@ const CourseCardAction = ({
           <Button
             size="sm"
             variant="outline"
-            onClick={() =>
-              generateCertificatePDF({
-                studentName: customerId || "Étudiant TECHNOVA",
+            onClick={async () => {
+              await generateCertificatePDF({
+                studentName: customerName || "Étudiant TECHNOVA",
                 courseTitle: order.product?.title || "Formation",
                 storeName: order.store_owner?.display_name || "TECHNOVA Academy",
-              })
-            }
+              });
+            }}
             className="w-full text-xs font-bold gap-1.5 border-amber-400 text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/20"
           >
             <Award className="h-3.5 w-3.5" />
