@@ -26,17 +26,81 @@ const ProductReviewForm = ({ productId, customerId, brandColor = "#2563EB" }: Pr
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [resolvedCustomerId, setResolvedCustomerId] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
+      if (!customerId) return;
       setLoading(true);
+
+      let actualCustomerId = customerId;
+
+      try {
+        // 1. Check if the passed customerId is actually an auth_id
+        const { data: custByAuth } = await supabase
+          .from("customers")
+          .select("id")
+          .eq("auth_id", customerId)
+          .maybeSingle();
+
+        if (custByAuth) {
+          actualCustomerId = custByAuth.id;
+        } else {
+          // If not found by auth_id, check if there is a customer record with the same ID
+          const { data: custById } = await supabase
+            .from("customers")
+            .select("id")
+            .eq("id", customerId)
+            .maybeSingle();
+
+          if (!custById) {
+            // Check if there is an active session email
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user?.email) {
+              const { data: custByEmail } = await supabase
+                .from("customers")
+                .select("id")
+                .eq("email", user.email)
+                .maybeSingle();
+
+              if (custByEmail) {
+                actualCustomerId = custByEmail.id;
+                // Link auth_id in customers table
+                await supabase.from("customers").update({ auth_id: user.id }).eq("id", custByEmail.id);
+              } else {
+                // Auto create a customer profile if none exists
+                const { data: newCust } = await supabase
+                  .from("customers")
+                  .insert({
+                    email: user.email,
+                    name: user.user_metadata?.full_name || user.email.split("@")[0],
+                    auth_id: user.id,
+                  })
+                  .select("id")
+                  .single();
+                if (newCust) {
+                  actualCustomerId = newCust.id;
+                }
+              }
+            }
+          }
+        }
+      } catch (err) {
+        console.error("Error resolving customer ID:", err);
+      }
+
+      if (!cancelled) {
+        setResolvedCustomerId(actualCustomerId);
+      }
+
       const { data } = await supabase
         .from("product_reviews")
         .select("id, sentiment, title, comment")
         .eq("product_id", productId)
-        .eq("customer_id", customerId)
+        .eq("customer_id", actualCustomerId)
         .maybeSingle();
+
       if (!cancelled && data) {
         const row = data as ReviewRow;
         setExisting(row);
@@ -56,6 +120,12 @@ const ProductReviewForm = ({ productId, customerId, brandColor = "#2563EB" }: Pr
       toast.error("Veuillez rédiger votre avis.");
       return;
     }
+    const finalCustomerId = resolvedCustomerId || customerId;
+    if (!finalCustomerId) {
+      toast.error("Profil client introuvable. Veuillez réessayer.");
+      return;
+    }
+
     setSaving(true);
     try {
       if (existing) {
@@ -70,16 +140,16 @@ const ProductReviewForm = ({ productId, customerId, brandColor = "#2563EB" }: Pr
           .from("product_reviews")
           .insert({
             product_id: productId,
-            customer_id: customerId,
+            customer_id: finalCustomerId,
             sentiment,
             title: title.trim() || null,
             comment: comment.trim(),
-            // store_owner_id & reviewer_name set by trigger
             store_owner_id: "00000000-0000-0000-0000-000000000000",
             reviewer_name: "_",
           } as any)
           .select("id, sentiment, title, comment")
           .single();
+
         if (error) throw error;
         setExisting(data as ReviewRow);
         toast.success("Merci pour votre avis !");
