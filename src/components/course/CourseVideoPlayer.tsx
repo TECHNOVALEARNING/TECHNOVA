@@ -206,18 +206,18 @@ export const CourseVideoPlayer = ({
     >
       {/* Embed Fallback (YouTube / Vimeo / Cloudflare / Google Drive / Loom Iframe) */}
       {isEmbed ? (
-        <div className="relative w-full h-full">
+        <div className="absolute inset-0 w-full h-full">
           <iframe
             src={getEmbedUrl(cleanSrc)}
             title={title || "Video Lesson"}
-            className="w-full h-full border-0"
+            className="absolute inset-0 w-full h-full border-0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
           />
         </div>
       ) : (
         /* Native HTML5 Custom Video Player */
-        <div className="relative w-full h-full flex items-center justify-center">
+        <div className="absolute inset-0 w-full h-full flex items-center justify-center">
           <video
             ref={videoRef}
             src={cleanSrc}

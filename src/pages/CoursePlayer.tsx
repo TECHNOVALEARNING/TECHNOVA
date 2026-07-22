@@ -245,7 +245,16 @@ export const CoursePlayer = () => {
         }
 
         // Load completed lessons from Cloud Sync + Local Cache
-        const userIdentifier = user?.email || user?.id;
+        let buyerEmail = null;
+        try {
+          const rawSession = sessionStorage.getItem("buyer_session");
+          if (rawSession) {
+            const parsed = JSON.parse(rawSession);
+            if (parsed?.email) buyerEmail = parsed.email;
+          }
+        } catch (e) {}
+
+        const userIdentifier = user?.email || user?.id || buyerEmail || "anonymous_student";
         const syncedCompleted = await getCompletedLessons(courseId, userIdentifier);
         setCompletedLessonIds(syncedCompleted);
       } catch (e: any) {
@@ -278,7 +287,16 @@ export const CoursePlayer = () => {
     }
     setCompletedLessonIds(updated);
     if (courseId) {
-      const userIdentifier = user?.email || user?.id;
+      let buyerEmail = null;
+      try {
+        const rawSession = sessionStorage.getItem("buyer_session");
+        if (rawSession) {
+          const parsed = JSON.parse(rawSession);
+          if (parsed?.email) buyerEmail = parsed.email;
+        }
+      } catch (e) {}
+
+      const userIdentifier = user?.email || user?.id || buyerEmail || "anonymous_student";
       saveCompletedLessons(courseId, updated, userIdentifier);
     }
 
@@ -601,7 +619,17 @@ export const CoursePlayer = () => {
                     "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
                   }
                   title={activeLesson.title}
-                  userEmail={user?.email || "etudiant@technova.com"}
+                  userEmail={(() => {
+                    if (user?.email) return user.email;
+                    try {
+                      const rawSession = sessionStorage.getItem("buyer_session");
+                      if (rawSession) {
+                        const parsed = JSON.parse(rawSession);
+                        if (parsed?.email) return parsed.email;
+                      }
+                    } catch (e) {}
+                    return "etudiant@technova.com";
+                  })()}
                   autoPlay={false}
                   onEnded={() => {
                     if (activeLesson && !completedLessonIds.includes(activeLesson.id)) {
