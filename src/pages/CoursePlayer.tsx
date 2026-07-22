@@ -69,6 +69,44 @@ export const CoursePlayer = () => {
   const [showContactModal, setShowContactModal] = useState(false);
   const [isGeneratingCert, setIsGeneratingCert] = useState(false);
   const [reminderActive, setReminderActive] = useState(false);
+  const [studentName, setStudentName] = useState("");
+
+  useEffect(() => {
+    if (!user) return;
+    const fetchStudentName = async () => {
+      try {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("full_name")
+          .eq("id", user.id)
+          .maybeSingle();
+
+        if (profile?.full_name) {
+          setStudentName(profile.full_name);
+        } else {
+          const metaName = user.user_metadata?.full_name;
+          if (metaName) {
+            setStudentName(metaName);
+          } else {
+            const { data: customer } = await supabase
+              .from("customers")
+              .select("name")
+              .eq("auth_id", user.id)
+              .maybeSingle();
+
+            if (customer?.name) {
+              setStudentName(customer.name);
+            } else {
+              setStudentName(user.email ? user.email.split("@")[0] : "Étudiant TECHNOVA");
+            }
+          }
+        }
+      } catch (e) {
+        console.error("Error loading student name:", e);
+      }
+    };
+    fetchStudentName();
+  }, [user]);
 
   const handleEndLiveSession = async () => {
     if (!course?.id) return;
@@ -876,7 +914,7 @@ export const CoursePlayer = () => {
               <div className="p-4 rounded-2xl bg-muted/40 border border-border mb-6 text-left space-y-2 text-xs text-muted-foreground">
                 <div className="flex items-center justify-between">
                   <span>Titulaire :</span>
-                  <strong className="text-foreground">{user?.email}</strong>
+                  <strong className="text-foreground">{studentName}</strong>
                 </div>
                 <div className="flex items-center justify-between">
                   <span>Organisme :</span>
@@ -892,9 +930,9 @@ export const CoursePlayer = () => {
 
               <div className="flex flex-col sm:flex-row items-center gap-3">
                 <Button
-                  onClick={() => {
-                    generateCertificatePDF({
-                      studentName: user?.email ? user.email.split("@")[0] : "Étudiant TECHNOVA",
+                  onClick={async () => {
+                    await generateCertificatePDF({
+                      studentName: studentName || "Étudiant TECHNOVA",
                       courseTitle: course?.title || "Formation Certifiante",
                       storeName: course?.stores?.name || "TECHNOVA Academy",
                     });

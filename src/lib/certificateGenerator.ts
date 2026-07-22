@@ -8,10 +8,27 @@ export interface CertificateData {
   certificateId?: string;
 }
 
+const getQRCodeDataUrl = async (text: string): Promise<string> => {
+  try {
+    const url = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(text)}`;
+    const response = await fetch(url);
+    const blob = await response.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  } catch (e) {
+    console.error("Error generating QR code:", e);
+    return "";
+  }
+};
+
 /**
  * Génère et déclenche le téléchargement automatique du certificat de réussite au format PDF
  */
-export const generateCertificatePDF = (data: CertificateData) => {
+export const generateCertificatePDF = async (data: CertificateData) => {
   // Format A4 Paysage (Landscape)
   const doc = new jsPDF({
     orientation: "landscape",
@@ -121,23 +138,23 @@ export const generateCertificatePDF = (data: CertificateData) => {
 
   // Informations de vérification
   doc.setFont("helvetica", "normal");
-  doc.setFontSize(9);
-  doc.setTextColor(100, 100, 100);
-  doc.text(`Délivré le : ${dateStr}`, 70, 166);
-  doc.text(`ID d'attestation : ${certId}`, 70, 172);
-
-  // Ligne de Signature à droite
-  doc.setLineWidth(0.4);
-  doc.setDrawColor(150, 150, 150);
-  doc.line(width - 85, 168, width - 25, 168);
-  doc.setFont("helvetica", "bold");
   doc.setFontSize(10);
+  doc.setTextColor(100, 100, 100);
+  doc.text(`Délivré le : ${dateStr}`, 70, 169);
+
+  // QR Code à la place de la Signature
+  const qrCodeUrl = await getQRCodeDataUrl(`https://www.technovalearning.com/formations`);
+  if (qrCodeUrl) {
+    doc.addImage(qrCodeUrl, "PNG", width - 60, 147, 28, 28);
+  }
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(9);
   doc.setTextColor(26, 31, 54);
-  doc.text("Direction TECHNOVA", width - 55, 174, { align: "center" });
+  doc.text("VERIFICATION ACADEMIQUE", width - 46, 180, { align: "center" });
   doc.setFont("helvetica", "italic");
-  doc.setFontSize(8);
+  doc.setFontSize(7.5);
   doc.setTextColor(120, 120, 120);
-  doc.text("Signature officielle et sceau académique", width - 55, 179, { align: "center" });
+  doc.text("Scannez pour valider l'attestation", width - 46, 185, { align: "center" });
 
   // Téléchargement automatique
   const filename = `Attestation_TECHNOVA_${data.courseTitle.replace(/[^a-zA-Z0-9]/g, "_")}.pdf`;
