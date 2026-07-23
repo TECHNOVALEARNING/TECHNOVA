@@ -86,7 +86,12 @@ const AdminProducts = () => {
 
       const { data, error } = await supabase
         .from("products")
-        .select("*")
+        .select(`
+          *,
+          profiles:creator_id (
+            display_name
+          )
+        `)
         .eq("creator_id", adminId)
         .order("created_at", { ascending: false });
 
@@ -115,6 +120,7 @@ const AdminProducts = () => {
         price: `${p.price} FCFA`,
         oldPrice: p.original_price ? `${p.original_price} FCFA` : undefined,
         duration: lang === "fr" ? "Accès à vie" : "Lifetime access",
+        instructorName: p.profiles?.display_name || "Formateur TechNova",
       })) as Course[];
     },
   });

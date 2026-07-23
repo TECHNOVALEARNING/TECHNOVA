@@ -42,7 +42,12 @@ const Cours = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("products")
-        .select("*")
+        .select(`
+          *,
+          profiles:creator_id (
+            display_name
+          )
+        `)
         .eq("type", "course")
         .eq("is_published", true)
         .order("created_at", { ascending: false });
@@ -126,6 +131,7 @@ const Cours = () => {
         formatType: m.format_type || "vod",
         liveDate: m.live_date || undefined,
         meetUrl: m.meet_url || undefined,
+        instructorName: p.profiles?.display_name || "Formateur TechNova",
       };
     });
   }, [filteredCourses, lang]);

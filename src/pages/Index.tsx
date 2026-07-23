@@ -293,7 +293,12 @@ const Index = () => {
 
       const { data, error } = await supabase
         .from("products")
-        .select("*")
+        .select(`
+          *,
+          profiles:creator_id (
+            display_name
+          )
+        `)
         .order("created_at", { ascending: false })
         .limit(100);
       if (error) throw error;
@@ -320,6 +325,7 @@ const Index = () => {
         oldPrice: p.original_price ? `${p.original_price} FCFA` : undefined,
         duration: lang === "fr" ? "Accès à vie" : "Lifetime access",
         creatorId: p.creator_id,
+        instructorName: p.profiles?.display_name || "Formateur TechNova",
       })) as Course[];
 
       return { products, adminId };

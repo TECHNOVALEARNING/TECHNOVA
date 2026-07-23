@@ -1052,6 +1052,7 @@ export type Course = {
   formatType?: "vod" | "live_meet" | "hybrid";
   liveDate?: string;
   meetUrl?: string;
+  instructorName?: string;
 };
 
 const LABEL_MAP: Record<string, { cls: string; fr: string; en: string }> = {
@@ -1068,7 +1069,7 @@ export const CourseCard = ({ c, i = 0 }: { c: Course; i?: number }) => {
   const [lang, setLang] = useState(() =>
     typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
   );
-  const { formatPrice, currency } = useGeoPricing();
+  const { formatPrice } = useGeoPricing();
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -1096,17 +1097,6 @@ export const CourseCard = ({ c, i = 0 }: { c: Course; i?: number }) => {
 
   const lb = LABEL_MAP[label] || {};
   const labelTxt = lang === "fr" ? lb.fr : lb.en;
-  const buyBtnText = lang === "fr" ? "Acheter" : "Buy";
-
-  const renderStars = (r: string) => {
-    const ratingNum = parseFloat(r);
-    const full = Math.floor(ratingNum);
-    const half = ratingNum % 1 >= 0.5;
-    let s = "";
-    for (let i = 0; i < full; i++) s += "★";
-    if (half) s += "½";
-    return <span className="stars-sm">{s}</span>;
-  };
 
   const getLangBadge = (l?: string) => {
     switch (l) {
@@ -1133,59 +1123,98 @@ export const CourseCard = ({ c, i = 0 }: { c: Course; i?: number }) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: i * 0.05 }}
-      className="course-card cursor-pointer"
-      onClick={(e) => {
-        const target = e.target as HTMLElement;
-        if (target.closest("button") || target.closest("a")) return;
-        navigate(`/product/${c.slug}`);
-      }}
+      className="group flex flex-col h-full bg-card hover:shadow-xl transition-all duration-300 rounded-2xl border border-border/85 overflow-hidden relative cursor-pointer"
+      onClick={() => navigate(`/product/${c.slug}`)}
     >
-      <div className="course-img-wrap relative">
-        <img src={c.cover} alt={c.title} loading="lazy" />
+      {/* Thumbnail Wrap */}
+      <div className="relative w-full aspect-[16/10] overflow-hidden bg-secondary">
+        <img
+          src={c.cover}
+          alt={c.title}
+          loading="lazy"
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+        {/* Badges on Thumbnail */}
         <div className="absolute top-3 left-3 z-10 flex items-center gap-1.5">
-          <span className="course-badge">{c.category}</span>
-          <span className="px-2 py-0.5 rounded-md bg-black/70 backdrop-blur-md text-white text-[11px] font-bold border border-white/20 flex items-center gap-1 shadow-sm">
+          <span className="px-2 py-0.5 rounded-md bg-black/60 backdrop-blur-md text-white text-[10px] font-bold tracking-wider uppercase border border-white/10 shadow-sm">
+            {c.category}
+          </span>
+          <span className="px-2 py-0.5 rounded-md bg-black/60 backdrop-blur-md text-white text-[10px] font-bold border border-white/10 flex items-center gap-1 shadow-sm">
             <span>{langBadge.flag}</span>
             <span>{langBadge.label}</span>
           </span>
         </div>
-        {lb.cls && labelTxt && <span className={`label-badge ${lb.cls}`}>{labelTxt}</span>}
-      </div>
-      <div className="course-body">
-        <div className="course-title">{c.title}</div>
-
+        {/* Live Meet tag on cover for extra punch */}
         {(c.liveDate || c.formatType === "live_meet" || c.formatType === "hybrid") && (
-          <div className="my-1.5 px-2.5 py-1 rounded-lg bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-[11px] font-bold flex items-center gap-1.5">
-            <i className="fa-solid fa-video text-red-500 animate-pulse" />
-            <span>
-              {c.liveDate
-                ? `Direct Meet — ${new Date(c.liveDate).toLocaleDateString("fr-FR", {
-                    day: "numeric",
-                    month: "short",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}`
-                : "Session en Direct Meet"}
-            </span>
-          </div>
-        )}
-
-        <div className="course-meta">
-          <span className="students">
-            <i className="fas fa-users" style={{ fontSize: "0.65rem", marginRight: 4 }}></i>
-            {students}
+          <span className="absolute bottom-3 left-3 z-10 px-2 py-0.5 rounded-md bg-red-600/90 backdrop-blur-md text-white text-[9px] font-bold tracking-wider uppercase flex items-center gap-1">
+            <span className="h-1.5 w-1.5 rounded-full bg-white animate-ping" />
+            <span>DIRECT MEET</span>
           </span>
-          {renderStars(rating)}
-        </div>
-        <div className="price-row">
-          <div>
-            <div className="price-main">{priceMain}</div>
+        )}
+      </div>
+
+      {/* Content Body */}
+      <div className="flex flex-col flex-1 p-4 justify-between space-y-3">
+        <div className="space-y-1.5">
+          {/* Title */}
+          <h3 className="font-display font-bold text-[14px] sm:text-[15px] leading-tight text-foreground line-clamp-2 min-h-[2.5rem] group-hover:text-primary transition-colors">
+            {c.title}
+          </h3>
+
+          {/* Instructor / Store Name */}
+          <p className="text-xs text-muted-foreground font-medium">
+            {c.instructorName || "Formateur TechNova"}
+          </p>
+
+          {/* Ratings & Label Badges Row */}
+          <div className="flex flex-wrap items-center gap-2 pt-0.5">
+            {/* Rating Stars & Count */}
+            <div className="flex items-center gap-1">
+              <span className="text-xs font-extrabold text-amber-500 flex items-center">
+                ★ {rating}
+              </span>
+              <span className="text-[11px] text-muted-foreground">
+                ({students})
+              </span>
+            </div>
+
+            {/* Custom Label Badges based on type or hash */}
+            {labelTxt && (
+              <span
+                className={`px-1.5 py-0.5 text-[9px] font-extrabold uppercase rounded tracking-wider ${
+                  label === "bestseller"
+                    ? "bg-amber-500/10 text-amber-700 dark:text-amber-400"
+                    : label === "nouveau"
+                    ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
+                    : label === "promo"
+                    ? "bg-red-500/10 text-red-700 dark:text-red-400"
+                    : "bg-indigo-500/10 text-indigo-700 dark:text-indigo-400"
+                }`}
+              >
+                {labelTxt}
+              </span>
+            )}
           </div>
         </div>
-        <Link className="btn-buy" to={`/checkout/${c.slug}`}>
-          <i className="fas fa-shopping-cart" style={{ marginRight: 8 }}></i>
-          {buyBtnText}
-        </Link>
+
+        {/* Price & Details Row */}
+        <div className="flex items-center justify-between pt-1 border-t border-border/40">
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-[16px] font-extrabold text-foreground tracking-tight">
+              {priceMain}
+            </span>
+            {numericOldPrice && numericOldPrice > numericPrice && c.oldPrice && (
+              <span className="text-[11px] text-muted-foreground line-through">
+                {formatPrice(numericOldPrice)}
+              </span>
+            )}
+          </div>
+
+          {/* Clean metadata badge */}
+          <span className="text-[10px] text-muted-foreground/80 bg-muted/50 px-2 py-0.5 rounded-md border border-border/30 font-medium">
+            {c.duration}
+          </span>
+        </div>
       </div>
     </motion.div>
   );
