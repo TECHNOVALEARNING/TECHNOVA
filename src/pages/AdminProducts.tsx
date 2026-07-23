@@ -92,16 +92,25 @@ const AdminProducts = () => {
 
       if (productsError) throw productsError;
 
-      const { data: profilesDataRaw, error: profilesError } = await supabase
-        .from("profiles")
-        .select("id, display_name");
-      if (profilesError) throw profilesError;
+      const creatorIds = Array.from(
+        new Set((productsDataRaw || []).map((p: any) => p.creator_id).filter(Boolean))
+      );
 
       const profilesMap: Record<string, string> = {};
-      if (profilesDataRaw) {
-        profilesDataRaw.forEach((p) => {
-          profilesMap[p.id] = p.display_name || "";
-        });
+      if (creatorIds.length > 0) {
+        try {
+          const { data: profilesDataRaw } = await supabase
+            .from("profiles")
+            .select("id, display_name")
+            .in("id", creatorIds);
+          if (profilesDataRaw) {
+            profilesDataRaw.forEach((p) => {
+              profilesMap[p.id] = p.display_name || "";
+            });
+          }
+        } catch (err) {
+          console.error("Failed to fetch profiles:", err);
+        }
       }
 
       const active = (productsDataRaw || []).filter((p: any) => {
@@ -128,6 +137,7 @@ const AdminProducts = () => {
         oldPrice: p.original_price ? `${p.original_price} FCFA` : undefined,
         duration: lang === "fr" ? "Accès à vie" : "Lifetime access",
         instructorName: p.creator_id ? (profilesMap[p.creator_id] || "Formateur TechNova") : "Formateur TechNova",
+        productType: p.type,
       })) as Course[];
     },
   });

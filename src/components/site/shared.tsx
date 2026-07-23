@@ -1053,6 +1053,7 @@ export type Course = {
   liveDate?: string;
   meetUrl?: string;
   instructorName?: string;
+  productType?: string;
 };
 
 const LABEL_MAP: Record<string, { cls: string; fr: string; en: string }> = {
@@ -1097,6 +1098,17 @@ export const CourseCard = ({ c, i = 0 }: { c: Course; i?: number }) => {
 
   const lb = LABEL_MAP[label] || {};
   const labelTxt = lang === "fr" ? lb.fr : lb.en;
+  const buyBtnText = lang === "fr" ? "Acheter" : "Buy";
+
+  const renderStars = (r: string) => {
+    const ratingNum = parseFloat(r);
+    const full = Math.floor(ratingNum);
+    const half = ratingNum % 1 >= 0.5;
+    let s = "";
+    for (let i = 0; i < full; i++) s += "★";
+    if (half) s += "½";
+    return <span className="stars-sm">{s}</span>;
+  };
 
   const getLangBadge = (l?: string) => {
     switch (l) {
@@ -1117,6 +1129,81 @@ export const CourseCard = ({ c, i = 0 }: { c: Course; i?: number }) => {
 
   const langBadge = getLangBadge(c.courseLanguage);
 
+  // Check if this product is a course/training
+  const isCourse =
+    c.productType === "course" ||
+    (!c.productType &&
+      c.category !== "E-book" &&
+      !c.category.startsWith("Template") &&
+      c.category !== "Discovery");
+
+  if (!isCourse) {
+    // Render original card design for ebooks and templates
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay: i * 0.05 }}
+        className="course-card cursor-pointer"
+        onClick={(e) => {
+          const target = e.target as HTMLElement;
+          if (target.closest("button") || target.closest("a")) return;
+          navigate(`/product/${c.slug}`);
+        }}
+      >
+        <div className="course-img-wrap relative">
+          <img src={c.cover} alt={c.title} loading="lazy" />
+          <div className="absolute top-3 left-3 z-10 flex items-center gap-1.5">
+            <span className="course-badge">{c.category}</span>
+            <span className="px-2 py-0.5 rounded-md bg-black/70 backdrop-blur-md text-white text-[11px] font-bold border border-white/20 flex items-center gap-1 shadow-sm">
+              <span>{langBadge.flag}</span>
+              <span>{langBadge.label}</span>
+            </span>
+          </div>
+          {lb.cls && labelTxt && <span className={`label-badge ${lb.cls}`}>{labelTxt}</span>}
+        </div>
+        <div className="course-body">
+          <div className="course-title">{c.title}</div>
+
+          {(c.liveDate || c.formatType === "live_meet" || c.formatType === "hybrid") && (
+            <div className="my-1.5 px-2.5 py-1 rounded-lg bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-[11px] font-bold flex items-center gap-1.5">
+              <i className="fa-solid fa-video text-red-500 animate-pulse" />
+              <span>
+                {c.liveDate
+                  ? `Direct Meet — ${new Date(c.liveDate).toLocaleDateString("fr-FR", {
+                      day: "numeric",
+                      month: "short",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}`
+                  : "Session en Direct Meet"}
+              </span>
+            </div>
+          )}
+
+          <div className="course-meta">
+            <span className="students">
+              <i className="fas fa-users" style={{ fontSize: "0.65rem", marginRight: 4 }}></i>
+              {students}
+            </span>
+            {renderStars(rating)}
+          </div>
+          <div className="price-row">
+            <div>
+              <div className="price-main">{priceMain}</div>
+            </div>
+          </div>
+          <Link className="btn-buy" to={`/checkout/${c.slug}`}>
+            <i className="fas fa-shopping-cart" style={{ marginRight: 8 }}></i>
+            {buyBtnText}
+          </Link>
+        </div>
+      </motion.div>
+    );
+  }
+
+  // Render Udemy-style card design only for course formations
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}

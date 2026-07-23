@@ -37,7 +37,7 @@ const Cours = () => {
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
 
-  const { data: rawCourses = [], isLoading: isCoursesLoading } = useQuery({
+  const { data: rawCourses = [], isLoading } = useQuery({
     queryKey: ["all_courses_catalog"],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -52,26 +52,38 @@ const Cours = () => {
     },
   });
 
-  const { data: profilesMap = {}, isLoading: isProfilesLoading } = useQuery({
-    queryKey: ["all_creators_profiles"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("id, display_name");
+  const creatorIds = useMemo(() => {
+    return Array.from(new Set(rawCourses.map((c) => c.creator_id).filter(Boolean)));
+  }, [rawCourses]);
 
-      if (error) throw error;
-      
-      const map: Record<string, string> = {};
-      if (data) {
-        data.forEach((p) => {
-          map[p.id] = p.display_name || "";
-        });
+  const { data: profilesMap = {} } = useQuery({
+    queryKey: ["creators_profiles", creatorIds],
+    enabled: creatorIds.length > 0,
+    queryFn: async () => {
+      try {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("id, display_name")
+          .in("id", creatorIds);
+
+        if (error) {
+          console.error("Error fetching profiles:", error);
+          return {};
+        }
+        
+        const map: Record<string, string> = {};
+        if (data) {
+          data.forEach((p) => {
+            map[p.id] = p.display_name || "";
+          });
+        }
+        return map;
+      } catch (err) {
+        console.error("Failed to fetch profiles:", err);
+        return {};
       }
-      return map;
     },
   });
-
-  const isLoading = isCoursesLoading || isProfilesLoading;
 
   // Helper to strip HTML tags for clean text preview
   const stripHtml = (htmlStr: string) => {
@@ -148,6 +160,7 @@ const Cours = () => {
         liveDate: m.live_date || undefined,
         meetUrl: m.meet_url || undefined,
         instructorName: p.creator_id ? (profilesMap[p.creator_id] || "Formateur TechNova") : "Formateur TechNova",
+        productType: "course",
       };
     });
   }, [filteredCourses, profilesMap, lang]);
