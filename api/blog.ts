@@ -18,15 +18,15 @@ const CATEGORY_MAP: Record<string, string> = {
 
 // Fallback placeholder image by category
 const FALLBACK_IMAGES: Record<string, string> = {
-  technology: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80",
-  business: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
-  science: "https://images.unsplash.com/photo-1507413245164-6160d8298b31?w=800&q=80",
-  politics: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=800&q=80",
-  entertainment: "https://images.unsplash.com/photo-1603190287605-e6ade32fa852?w=800&q=80",
-  health: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80",
-  sports: "https://images.unsplash.com/photo-1461896836934-bd45ba8fcb36?w=800&q=80",
-  world: "https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?w=800&q=80",
-  default: "https://images.unsplash.com/photo-1504711434969-e33886168d5c?w=800&q=80",
+  technology: "/news-fallback.jpg",
+  business: "/news-fallback.jpg",
+  science: "/news-fallback.jpg",
+  politics: "/news-fallback.jpg",
+  entertainment: "/news-fallback.jpg",
+  health: "/news-fallback.jpg",
+  sports: "/news-fallback.jpg",
+  world: "/news-fallback.jpg",
+  default: "/news-fallback.jpg",
 };
 
 // Format plain text content to HTML paragraphs

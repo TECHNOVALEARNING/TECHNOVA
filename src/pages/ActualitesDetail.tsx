@@ -160,6 +160,13 @@ const MOCK_LIST = [
   },
 ];
 
+const getSafeArticleImage = (imgUrl?: string) => {
+  if (!imgUrl || imgUrl.includes("unsplash.com")) {
+    return "/news-fallback.jpg";
+  }
+  return imgUrl;
+};
+
 export default function ActualitesDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -402,13 +409,12 @@ export default function ActualitesDetail() {
 
               <div className="aspect-[21/10] md:aspect-[21/9] rounded-3xl overflow-hidden shadow-elegant border border-border mb-12 relative">
                 <img
-                  src={article.image}
+                  src={getSafeArticleImage(article.image)}
                   alt={article.title}
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
-                    target.src =
-                      "https://images.unsplash.com/photo-1504711434969-e33886168d5c?w=800&q=80";
+                    target.src = "/news-fallback.jpg";
                   }}
                 />
               </div>
@@ -433,13 +439,12 @@ export default function ActualitesDetail() {
                       >
                         <div className="aspect-[16/10] overflow-hidden relative">
                           <img
-                            src={rel.image}
+                            src={getSafeArticleImage(rel.image)}
                             alt={rel.title}
                             className="w-full h-full object-cover group-hover:scale-104 transition-transform duration-300"
                             onError={(e) => {
                               const target = e.target as HTMLImageElement;
-                              target.src =
-                                "https://images.unsplash.com/photo-1504711434969-e33886168d5c?w=800&q=80";
+                              target.src = "/news-fallback.jpg";
                             }}
                           />
                         </div>

@@ -70,6 +70,14 @@
       "destination": "/api/seo-handler"
     },
     {
+      "source": "/actualites/:id",
+      "destination": "/api/seo-handler"
+    },
+    {
+      "source": "/blog/:id",
+      "destination": "/api/seo-handler"
+    },
+    {
       "source": "/product/:productId",
       "destination": "/api/product-preview?productId=:productId"
     },

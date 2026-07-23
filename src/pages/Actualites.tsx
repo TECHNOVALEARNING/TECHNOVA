@@ -20,7 +20,7 @@ const FALLBACK_ARTICLES = [
     id: "ia-generative-transforme-entreprises-francaises",
     title: "L'IA générative transforme les entreprises françaises : bilan et perspectives",
     category: "Technology",
-    image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80",
+    image: "/news-fallback.jpg",
     excerpt:
       "De la rédaction automatique à l'analyse prédictive, l'intelligence artificielle générative s'impose dans tous les secteurs. Les entreprises françaises accélèrent leur adoption avec des résultats concrets...",
     date: "24 juin 2026",
@@ -30,7 +30,7 @@ const FALLBACK_ARTICLES = [
     id: "levees-fonds-tech-europe-record-2026",
     title: "Les levées de fonds tech en Europe atteignent un record historique en 2026",
     category: "Business",
-    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
+    image: "/news-fallback.jpg",
     excerpt:
       "L'écosystème tech européen confirme sa montée en puissance avec plus de 45 milliards d'euros levés au premier semestre 2026, porté par l'IA, la cybersécurité et les cleantech...",
     date: "23 juin 2026",
@@ -40,7 +40,7 @@ const FALLBACK_ARTICLES = [
     id: "chatgpt-depasse-2-milliards-utilisateurs",
     title: "ChatGPT franchit le cap des 2 milliards d'utilisateurs actifs mensuels",
     category: "Technology",
-    image: "https://images.unsplash.com/photo-1655720828018-edd2daec9349?w=800&q=80",
+    image: "/news-fallback.jpg",
     excerpt:
       "OpenAI annonce que ChatGPT a dépassé les 2 milliards d'utilisateurs actifs mensuels, confirmant l'adoption massive de l'IA conversationnelle dans le quotidien des internautes du monde entier...",
     date: "22 juin 2026",
@@ -50,7 +50,7 @@ const FALLBACK_ARTICLES = [
     id: "ordinateur-quantique-google-avancee-majeure",
     title: "Google dévoile une avancée majeure en informatique quantique",
     category: "Science",
-    image: "https://images.unsplash.com/photo-1507413245164-6160d8298b31?w=800&q=80",
+    image: "/news-fallback.jpg",
     excerpt:
       "Le nouveau processeur quantique de Google résout en minutes des calculs qui prendraient des milliers d'années aux supercalculateurs classiques. Une étape décisive vers l'informatique quantique pratique...",
     date: "21 juin 2026",
@@ -60,7 +60,7 @@ const FALLBACK_ARTICLES = [
     id: "apple-vision-pro-2-annonce-wwdc",
     title: "Apple annonce le Vision Pro 2 avec un prix enfin accessible",
     category: "Technology",
-    image: "https://images.unsplash.com/photo-1621768216002-5ac171876625?w=800&q=80",
+    image: "/news-fallback.jpg",
     excerpt:
       "Lors de la WWDC 2026, Apple a présenté la deuxième génération de son casque de réalité mixte à un prix divisé par deux. Un pari pour démocratiser le spatial computing...",
     date: "20 juin 2026",
@@ -70,7 +70,7 @@ const FALLBACK_ARTICLES = [
     id: "regulation-ia-mondiale-g7-accord-historique",
     title: "Le G7 signe un accord historique pour la régulation mondiale de l'IA",
     category: "World",
-    image: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=800&q=80",
+    image: "/news-fallback.jpg",
     excerpt:
       "Les dirigeants du G7 ont adopté un cadre commun pour encadrer le développement et l'utilisation de l'intelligence artificielle, avec des principes de transparence et de sécurité...",
     date: "19 juin 2026",
@@ -80,7 +80,7 @@ const FALLBACK_ARTICLES = [
     id: "cybersecurite-attaques-ransomware-hausse-2026",
     title: "Cybersécurité : les attaques ransomware en hausse de 60% en 2026",
     category: "Technology",
-    image: "https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?w=800&q=80",
+    image: "/news-fallback.jpg",
     excerpt:
       "Les experts en cybersécurité alertent sur l'explosion des attaques par rançongiciel, de plus en plus sophistiquées grâce à l'IA. Les PME sont particulièrement vulnérables face à cette menace grandissante...",
     date: "18 juin 2026",
@@ -90,7 +90,7 @@ const FALLBACK_ARTICLES = [
     id: "tesla-robot-optimus-production-masse",
     title: "Tesla lance la production de masse de son robot humanoïde Optimus",
     category: "Business",
-    image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&q=80",
+    image: "/news-fallback.jpg",
     excerpt:
       "Elon Musk annonce le début de la production industrielle du robot Optimus, avec un objectif de 10 000 unités d'ici fin 2026. Le robot sera d'abord déployé dans les usines Tesla...",
     date: "17 juin 2026",
@@ -100,7 +100,7 @@ const FALLBACK_ARTICLES = [
     id: "sante-numerique-ia-diagnostic-medical",
     title: "L'IA surpasse les médecins dans le diagnostic de certains cancers",
     category: "Health",
-    image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80",
+    image: "/news-fallback.jpg",
     excerpt:
       "Une étude publiée dans The Lancet démontre que les systèmes d'IA d'imagerie diagnostiquent certains cancers avec une précision de 97%, dépassant les performances des radiologues les plus expérimentés...",
     date: "16 juin 2026",
@@ -118,6 +118,13 @@ const CATEGORIES = [
   { slug: "sports", fr: "Sports", en: "Sports", faIcon: "fa-solid fa-trophy" },
   { slug: "world", fr: "Monde", en: "World", faIcon: "fa-solid fa-globe" },
 ];
+
+const getSafeArticleImage = (imgUrl?: string) => {
+  if (!imgUrl || imgUrl.includes("unsplash.com")) {
+    return "/news-fallback.jpg";
+  }
+  return imgUrl;
+};
 
 export default function Actualites() {
   const [lang, setLang] = useState(() =>
@@ -242,7 +249,7 @@ export default function Actualites() {
                 className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold border transition-all duration-200 whitespace-nowrap ${
                   selectedCategory === c.slug
                     ? "bg-primary text-primary-foreground border-primary shadow-sm"
-                    : "bg-card border-border/80 text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                    : "bg-card border-border/85 text-muted-foreground hover:text-foreground hover:bg-secondary/50"
                 }`}
               >
                 <i className={`${c.faIcon} text-xs`} />
@@ -300,7 +307,7 @@ export default function Actualites() {
                 >
                   <div className="lg:col-span-7 aspect-video lg:aspect-auto lg:h-[400px] rounded-2xl overflow-hidden relative">
                     <img
-                      src={featuredArticle.image}
+                      src={getSafeArticleImage(featuredArticle.image)}
                       alt={featuredArticle.title}
                       className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-500"
                     />
@@ -350,7 +357,7 @@ export default function Actualites() {
                   >
                     <div className="aspect-video relative overflow-hidden">
                       <img
-                        src={a.image}
+                        src={getSafeArticleImage(a.image)}
                         alt={a.title}
                         className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-500"
                       />
