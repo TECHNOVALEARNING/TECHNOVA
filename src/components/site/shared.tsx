@@ -1154,13 +1154,7 @@ export const CourseCard = ({ c, i = 0 }: { c: Course; i?: number }) => {
       >
         <div className="course-img-wrap relative">
           <img src={c.cover} alt={c.title} loading="lazy" />
-          <div className="absolute top-3 left-3 z-10 flex items-center gap-1.5">
-            <span className="course-badge">{c.category}</span>
-            <span className="px-2 py-0.5 rounded-md bg-black/70 backdrop-blur-md text-white text-[11px] font-bold border border-white/20 flex items-center gap-1 shadow-sm">
-              <span>{langBadge.flag}</span>
-              <span>{langBadge.label}</span>
-            </span>
-          </div>
+          <span className="course-badge">{c.category}</span>
           {lb.cls && labelTxt && <span className={`label-badge ${lb.cls}`}>{labelTxt}</span>}
         </div>
         <div className="course-body">
