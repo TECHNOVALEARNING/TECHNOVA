@@ -130,22 +130,45 @@ function formatArticle(item: any): any {
   };
 }
 
-function shouldKeepArticle(title: string): boolean {
-  if (!title) return false;
+function shouldKeepArticle(item: any): boolean {
+  if (!item || !item.title) return false;
   
+  // 1. Strict language check from API if available
+  if (item.language && typeof item.language === "string") {
+    const lang = item.language.toLowerCase();
+    if (lang !== "french" && lang !== "fr") {
+      return false;
+    }
+  }
+  
+  const title = item.title;
   const lowerTitle = title.toLowerCase();
   
-  // 1. Filter out legal notices, form instances, UUIDs
+  // 2. Filter out legal notices, form instances, UUIDs
   if (lowerTitle.includes("form-instance")) return false;
   if (lowerTitle.includes("annonce-legale")) return false;
   if (/^[a-f0-9]{8}-[a-f0-9]{4}/.test(lowerTitle)) return false;
   
-  // 2. Filter out non-French languages (specifically Vietnamese, which commonly bypasses NewsData language filters)
+  // 3. Filter out non-French languages (specifically Vietnamese, which commonly bypasses NewsData language filters)
   const nonFrenchChars = "đĐưƯơƠăĂạảãấầẩẫậắằẳẵặẹẻẽếềểễệỉĩịọỏõốồổỗộớờởỡợụủũứừửữựỵỷỹ";
   for (let i = 0; i < title.length; i++) {
     if (nonFrenchChars.includes(title[i])) {
       return false;
     }
+  }
+
+  // 4. English words heuristic check (in case the API incorrectly tagged an English article as French)
+  const words = lowerTitle.split(/\s+/);
+  const englishOnlyWords = new Set(["the", "and", "with", "for", "about", "from", "that", "this", "what", "are", "were"]);
+  let englishWordCount = 0;
+  for (const word of words) {
+    const cleanWord = word.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"']/g, "");
+    if (englishOnlyWords.has(cleanWord)) {
+      englishWordCount++;
+    }
+  }
+  if (englishWordCount >= 2) {
+    return false;
   }
   
   return true;
@@ -231,7 +254,7 @@ export default async function handler(req: any, res: any) {
 
     // Format and filter articles (skip those without title and those matching invalid patterns)
     const articles = apiData.results
-      .filter((item: any) => item.title && item.title.trim().length > 10 && shouldKeepArticle(item.title))
+      .filter((item: any) => item.title && item.title.trim().length > 10 && shouldKeepArticle(item))
       .map(formatArticle);
 
     cache[cacheKey] = { data: articles, expiry: now + CACHE_TTL };
