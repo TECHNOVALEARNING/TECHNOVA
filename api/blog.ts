@@ -130,6 +130,27 @@ function formatArticle(item: any): any {
   };
 }
 
+function shouldKeepArticle(title: string): boolean {
+  if (!title) return false;
+  
+  const lowerTitle = title.toLowerCase();
+  
+  // 1. Filter out legal notices, form instances, UUIDs
+  if (lowerTitle.includes("form-instance")) return false;
+  if (lowerTitle.includes("annonce-legale")) return false;
+  if (/^[a-f0-9]{8}-[a-f0-9]{4}/.test(lowerTitle)) return false;
+  
+  // 2. Filter out non-French languages (specifically Vietnamese, which commonly bypasses NewsData language filters)
+  const nonFrenchChars = "đĐưƯơƠăĂạảãấầẩẫậắằẳẵặẹẻẽếềểễệỉĩịọỏõốồổỗộớờởỡợụủũứừửữựỵỷỹ";
+  for (let i = 0; i < title.length; i++) {
+    if (nonFrenchChars.includes(title[i])) {
+      return false;
+    }
+  }
+  
+  return true;
+}
+
 export default async function handler(req: any, res: any) {
   // CORS Headers
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -208,9 +229,9 @@ export default async function handler(req: any, res: any) {
       throw new Error("Invalid response from NewsData.io");
     }
 
-    // Format and filter articles (skip those without title)
+    // Format and filter articles (skip those without title and those matching invalid patterns)
     const articles = apiData.results
-      .filter((item: any) => item.title && item.title.trim().length > 10)
+      .filter((item: any) => item.title && item.title.trim().length > 10 && shouldKeepArticle(item.title))
       .map(formatArticle);
 
     cache[cacheKey] = { data: articles, expiry: now + CACHE_TTL };
