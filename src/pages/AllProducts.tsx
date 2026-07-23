@@ -115,6 +115,7 @@ const AllProducts = () => {
         price: `${p.price} FCFA`,
         oldPrice: p.original_price ? `${p.original_price} FCFA` : undefined,
         duration: lang === "fr" ? "Accès à vie" : "Lifetime access",
+        productType: p.type,
       })) as Course[];
     },
   });

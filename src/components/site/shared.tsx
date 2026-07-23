@@ -1130,79 +1130,8 @@ export const CourseCard = ({ c, i = 0 }: { c: Course; i?: number }) => {
   const langBadge = getLangBadge(c.courseLanguage);
 
   // Check if this product is a course/training
-  const isCourse =
-    c.productType === "course" ||
-    (!c.productType &&
-      c.category !== "E-book" &&
-      !c.category.startsWith("Template") &&
-      c.category !== "Discovery");
+  const isCourse = c.productType === "course" || c.productType === "formation";
 
-  if (!isCourse) {
-    // Render original card design for ebooks and templates
-    return (
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ delay: i * 0.05 }}
-        className="course-card cursor-pointer"
-        onClick={(e) => {
-          const target = e.target as HTMLElement;
-          if (target.closest("button") || target.closest("a")) return;
-          navigate(`/product/${c.slug}`);
-        }}
-      >
-        <div className="course-img-wrap relative">
-          <img src={c.cover} alt={c.title} loading="lazy" />
-          <span className="course-badge">{c.category}</span>
-          {lb.cls && labelTxt && <span className={`label-badge ${lb.cls}`}>{labelTxt}</span>}
-        </div>
-        <div className="course-body">
-          <div className="course-title">{c.title}</div>
-
-          {(c.liveDate || c.formatType === "live_meet" || c.formatType === "hybrid") && (
-            <div className="my-1.5 px-2.5 py-1 rounded-lg bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-[11px] font-bold flex items-center gap-1.5">
-              <i className="fa-solid fa-video text-red-500 animate-pulse" />
-              <span>
-                {c.liveDate
-                  ? `Direct Meet — ${new Date(c.liveDate).toLocaleDateString("fr-FR", {
-                      day: "numeric",
-                      month: "short",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}`
-                  : "Session en Direct Meet"}
-              </span>
-            </div>
-          )}
-
-          <div className="course-meta">
-            <span className="students">
-              <i className="fas fa-users" style={{ fontSize: "0.65rem", marginRight: 4 }}></i>
-              {students}
-            </span>
-            {renderStars(rating)}
-          </div>
-          <div className="price-row">
-            <div className="flex items-baseline gap-2">
-              <div className="price-main">{priceMain}</div>
-              {numericOldPrice && numericOldPrice > numericPrice && c.oldPrice && (
-                <span className="text-[11px] text-muted-foreground line-through">
-                  {formatPrice(numericOldPrice)}
-                </span>
-              )}
-            </div>
-          </div>
-          <Link className="btn-buy" to={`/checkout/${c.slug}`}>
-            <i className="fas fa-shopping-cart" style={{ marginRight: 8 }}></i>
-            {buyBtnText}
-          </Link>
-        </div>
-      </motion.div>
-    );
-  }
-
-  // Render Udemy-style card design only for course formations
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -1225,13 +1154,15 @@ export const CourseCard = ({ c, i = 0 }: { c: Course; i?: number }) => {
           <span className="px-2 py-0.5 rounded-md bg-black/60 backdrop-blur-md text-white text-[10px] font-bold tracking-wider uppercase border border-white/10 shadow-sm">
             {c.category}
           </span>
-          <span className="px-2 py-0.5 rounded-md bg-black/60 backdrop-blur-md text-white text-[10px] font-bold border border-white/10 flex items-center gap-1 shadow-sm">
-            <span>{langBadge.flag}</span>
-            <span>{langBadge.label}</span>
-          </span>
+          {isCourse && (
+            <span className="px-2 py-0.5 rounded-md bg-black/60 backdrop-blur-md text-white text-[10px] font-bold border border-white/10 flex items-center gap-1 shadow-sm">
+              <span>{langBadge.flag}</span>
+              <span>{langBadge.label}</span>
+            </span>
+          )}
         </div>
         {/* Live Meet tag on cover for extra punch */}
-        {(c.liveDate || c.formatType === "live_meet" || c.formatType === "hybrid") && (
+        {isCourse && (c.liveDate || c.formatType === "live_meet" || c.formatType === "hybrid") && (
           <span className="absolute bottom-3 left-3 z-10 px-2 py-0.5 rounded-md bg-red-600/90 backdrop-blur-md text-white text-[9px] font-bold tracking-wider uppercase flex items-center gap-1">
             <span className="h-1.5 w-1.5 rounded-full bg-white animate-ping" />
             <span>DIRECT MEET</span>
@@ -1248,9 +1179,11 @@ export const CourseCard = ({ c, i = 0 }: { c: Course; i?: number }) => {
           </h3>
 
           {/* Instructor / Store Name */}
-          <p className="text-xs text-muted-foreground font-medium">
-            {c.instructorName || "Formateur TechNova"}
-          </p>
+          {isCourse && (
+            <p className="text-xs text-muted-foreground font-medium">
+              {c.instructorName || "Formateur TechNova"}
+            </p>
+          )}
 
           {/* Ratings & Label Badges Row */}
           <div className="flex flex-wrap items-center gap-2 pt-0.5">
