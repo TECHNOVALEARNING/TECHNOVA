@@ -1184,8 +1184,13 @@ export const CourseCard = ({ c, i = 0 }: { c: Course; i?: number }) => {
             {renderStars(rating)}
           </div>
           <div className="price-row">
-            <div>
+            <div className="flex items-baseline gap-2">
               <div className="price-main">{priceMain}</div>
+              {numericOldPrice && numericOldPrice > numericPrice && c.oldPrice && (
+                <span className="text-[11px] text-muted-foreground line-through">
+                  {formatPrice(numericOldPrice)}
+                </span>
+              )}
             </div>
           </div>
           <Link className="btn-buy" to={`/checkout/${c.slug}`}>
