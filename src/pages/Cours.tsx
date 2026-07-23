@@ -37,17 +37,12 @@ const Cours = () => {
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
 
-  const { data: rawCourses = [], isLoading } = useQuery({
+  const { data: rawCourses = [], isLoading: isCoursesLoading } = useQuery({
     queryKey: ["all_courses_catalog"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("products")
-        .select(`
-          *,
-          profiles:creator_id (
-            display_name
-          )
-        `)
+        .select("*")
         .eq("type", "course")
         .eq("is_published", true)
         .order("created_at", { ascending: false });
@@ -56,6 +51,27 @@ const Cours = () => {
       return data || [];
     },
   });
+
+  const { data: profilesMap = {}, isLoading: isProfilesLoading } = useQuery({
+    queryKey: ["all_creators_profiles"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("id, display_name");
+
+      if (error) throw error;
+      
+      const map: Record<string, string> = {};
+      if (data) {
+        data.forEach((p) => {
+          map[p.id] = p.display_name || "";
+        });
+      }
+      return map;
+    },
+  });
+
+  const isLoading = isCoursesLoading || isProfilesLoading;
 
   // Helper to strip HTML tags for clean text preview
   const stripHtml = (htmlStr: string) => {
@@ -131,10 +147,10 @@ const Cours = () => {
         formatType: m.format_type || "vod",
         liveDate: m.live_date || undefined,
         meetUrl: m.meet_url || undefined,
-        instructorName: p.profiles?.display_name || "Formateur TechNova",
+        instructorName: p.creator_id ? (profilesMap[p.creator_id] || "Formateur TechNova") : "Formateur TechNova",
       };
     });
-  }, [filteredCourses, lang]);
+  }, [filteredCourses, profilesMap, lang]);
 
   const seoTitle =
     lang === "en"

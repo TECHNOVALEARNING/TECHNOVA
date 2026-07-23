@@ -291,18 +291,26 @@ const Index = () => {
         .maybeSingle();
       const adminId = storeData?.owner_id || "9702b3c5-4acf-42e2-828c-8bf2d50dfff8";
 
-      const { data, error } = await supabase
+      const { data: productsDataRaw, error: productsError } = await supabase
         .from("products")
-        .select(`
-          *,
-          profiles:creator_id (
-            display_name
-          )
-        `)
+        .select("*")
         .order("created_at", { ascending: false })
         .limit(100);
-      if (error) throw error;
-      const active = (data || []).filter((p: any) => {
+      if (productsError) throw productsError;
+
+      const { data: profilesDataRaw, error: profilesError } = await supabase
+        .from("profiles")
+        .select("id, display_name");
+      if (profilesError) throw profilesError;
+
+      const profilesMap: Record<string, string> = {};
+      if (profilesDataRaw) {
+        profilesDataRaw.forEach((p) => {
+          profilesMap[p.id] = p.display_name || "";
+        });
+      }
+
+      const active = (productsDataRaw || []).filter((p: any) => {
         if (p.category === "discovery") {
           return false;
         }
@@ -325,7 +333,7 @@ const Index = () => {
         oldPrice: p.original_price ? `${p.original_price} FCFA` : undefined,
         duration: lang === "fr" ? "Accès à vie" : "Lifetime access",
         creatorId: p.creator_id,
-        instructorName: p.profiles?.display_name || "Formateur TechNova",
+        instructorName: p.creator_id ? (profilesMap[p.creator_id] || "Formateur TechNova") : "Formateur TechNova",
       })) as Course[];
 
       return { products, adminId };
