@@ -414,9 +414,9 @@ const Index = () => {
         }
         :root {
           --blue: #0071e3; --blue-light: #409cff; --blue-soft: rgba(0,113,227,0.08);
-          --accent: #f5a623; --bg: #f2f2f7; --surface: rgba(255,255,255,0.75);
-          --surface-strong: rgba(255,255,255,0.92); --card: rgba(255,255,255,0.68);
-          --card-border: rgba(255,255,255,0.55); --text: #1d1d1f; --text-secondary: #6e6e73;
+          --accent: #f5a623; --bg: #f2f2f7; --surface: rgba(255,255,255,0.95);
+          --surface-strong: #ffffff; --card: #ffffff;
+          --card-border: rgba(0,0,0,0.12); --text: #1d1d1f; --text-secondary: #6e6e73;
           --divider: rgba(0,0,0,0.08); --glass-blur: blur(24px) saturate(180%);
           --shadow-sm: 0 2px 16px rgba(0,0,0,0.06); --shadow-md: 0 8px 40px rgba(0,0,0,0.09);
           --shadow-lg: 0 20px 60px rgba(0,0,0,0.12); --radius: 20px; --radius-sm: 12px; --radius-lg: 28px;
@@ -424,10 +424,10 @@ const Index = () => {
         }
         [data-theme="dark"] {
           --bg: #000000;
-          --surface: rgba(28,28,30,0.82);
-          --surface-strong: rgba(44,44,46,0.92);
-          --card: rgba(28,28,30,0.72);
-          --card-border: rgba(255,255,255,0.1);
+          --surface: rgba(28,28,30,0.95);
+          --surface-strong: #1c1c1e;
+          --card: #18181b;
+          --card-border: rgba(255,255,255,0.15);
           --text: #f5f5f7;
           --text-secondary: #98989d;
           --divider: rgba(255,255,255,0.08);

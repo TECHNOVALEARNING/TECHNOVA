@@ -91,10 +91,10 @@ iframe[src*="tawk.to"],
     --mtn-yellow: #ffcc00;
     --moov-blue: #0066cc;
     --bg: #f2f2f7;
-    --surface: rgba(255,255,255,0.72);
-    --surface-strong: rgba(255,255,255,0.92);
-    --tn-card: rgba(255,255,255,0.68);
-    --tn-card-border: rgba(255,255,255,0.55);
+    --surface: rgba(255,255,255,0.95);
+    --surface-strong: #ffffff;
+    --tn-card: #ffffff;
+    --tn-card-border: rgba(0,0,0,0.12);
     --text: #1d1d1f;
     --text-secondary: #6e6e73;
     --divider: rgba(0,0,0,0.08);
@@ -131,10 +131,10 @@ iframe[src*="tawk.to"],
 
     /* CLAUDE HTML DARK VARIABLES */
     --bg: #000000;
-    --surface: rgba(28,28,30,0.82);
-    --surface-strong: rgba(44,44,46,0.92);
-    --tn-card: rgba(28,28,30,0.72);
-    --tn-card-border: rgba(255,255,255,0.1);
+    --surface: rgba(28,28,30,0.95);
+    --surface-strong: #1c1c1e;
+    --tn-card: #18181b;
+    --tn-card-border: rgba(255,255,255,0.15);
     --text: #f5f5f7;
     --text-secondary: #98989d;
     --divider: rgba(255,255,255,0.08);

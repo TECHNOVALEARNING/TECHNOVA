@@ -1138,7 +1138,7 @@ export const CourseCard = ({ c, i = 0 }: { c: Course; i?: number }) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: i * 0.05 }}
-      className="group flex flex-col h-full bg-card hover:shadow-xl transition-all duration-300 rounded-2xl border border-border/85 overflow-hidden relative cursor-pointer"
+      className="group flex flex-col h-full bg-white dark:bg-[#18181b] shadow-md hover:shadow-2xl transition-all duration-300 rounded-2xl border border-slate-200/90 dark:border-zinc-700/80 overflow-hidden relative cursor-pointer"
       onClick={() => navigate(`/product/${c.slug}`)}
     >
       {/* Thumbnail Wrap */}
