@@ -109,7 +109,7 @@ const TechnovaApps = () => {
         lang === "fr" ? "CamScanner Pro" : "CamScanner Pro",
         lang === "fr" ? "FL Studio" : "FL Studio",
         lang === "fr" ? "Duolingo Pro" : "Duolingo Pro",
-        lang === "fr" ? "Mots mêlés" : "Crossword Puzzles",
+        lang === "fr" ? "Canva Pro" : "Canva Pro",
       ],
     },
   ];
