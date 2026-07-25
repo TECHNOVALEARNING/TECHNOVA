@@ -31,6 +31,7 @@ import { ContactTrainerModal } from "@/components/ContactTrainerModal";
 import { getCompletedLessons, saveCompletedLessons } from "@/lib/courseProgressSync";
 import { generateCertificatePDF } from "@/lib/certificateGenerator";
 import SEOHead from "@/components/SEOHead";
+import { QuizPlayer, QuizData } from "@/components/course/QuizPlayer";
 import { toast } from "sonner";
 
 interface Lesson {
@@ -277,6 +278,56 @@ export const CoursePlayer = () => {
     if (allLessons.length === 0) return 0;
     return Math.round((completedLessonIds.length / allLessons.length) * 100);
   }, [allLessons, completedLessonIds]);
+
+  // Dynamic Quiz Parser & Comprehension Test Generator
+  const activeQuiz = useMemo<QuizData | null>(() => {
+    if (!activeLesson) return null;
+
+    if (activeLesson.content) {
+      try {
+        if (activeLesson.content.trim().startsWith("{")) {
+          const parsed = JSON.parse(activeLesson.content);
+          if (parsed?.questions && Array.isArray(parsed.questions)) {
+            return parsed as QuizData;
+          }
+        }
+      } catch (e) {
+        // Plain text content
+      }
+    }
+
+    // Default dynamic comprehension quiz for video lessons
+    return {
+      title: `Quiz de Compréhension : ${activeLesson.title}`,
+      passPercentage: 70,
+      questions: [
+        {
+          id: `q1_${activeLesson.id}`,
+          question: `Avez-vous assimilé les éléments clés présentés dans la leçon "${activeLesson.title}" ?`,
+          options: [
+            "Oui, j'ai visionné la vidéo et retenu les concepts fondamentaux",
+            "Je dois revoir certains passages de la vidéo pour consolider mes notions",
+            "Non, je n'ai pas encore terminé l'étude de cette leçon",
+            "Je n'ai pas d'avis",
+          ],
+          correctAnswer: 0,
+          explanation: "Suivre chaque vidéo attentivement permet de valider le module et de progresser vers votre certificat de fin de formation.",
+        },
+        {
+          id: `q2_${activeLesson.id}`,
+          question: `Comment mettre en pratique les acquis de la leçon "${activeLesson.title}" ?`,
+          options: [
+            "En appliquant immédiatement les exercices et méthodes expliqués dans le cours",
+            "En sautant les travaux pratiques",
+            "En conservant uniquement le support théorique sans pratiquer",
+            "Aucune de ces réponses",
+          ],
+          correctAnswer: 0,
+          explanation: "La pratique immédiate est la meilleure méthode pour acquérir des compétences immédiatement exploitables.",
+        },
+      ],
+    };
+  }, [activeLesson]);
 
   const toggleLessonCompleted = (lessonId: string) => {
     let updated: string[];
@@ -722,6 +773,22 @@ export const CoursePlayer = () => {
                       <span>Télécharger</span>
                     </Button>
                   </a>
+                </div>
+              )}
+
+              {/* Dynamic Comprehension Quiz Section */}
+              {activeQuiz && (
+                <div className="pt-4">
+                  <QuizPlayer
+                    quiz={activeQuiz}
+                    lessonTitle={activeLesson.title}
+                    onPass={() => {
+                      if (activeLesson && !completedLessonIds.includes(activeLesson.id)) {
+                        toggleLessonCompleted(activeLesson.id);
+                        toast.success("Quiz réussi ! Leçon validée avec succès.");
+                      }
+                    }}
+                  />
                 </div>
               )}
             </div>

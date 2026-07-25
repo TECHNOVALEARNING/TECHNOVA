@@ -12,11 +12,14 @@ import {
   Download,
   Layers,
   BookOpen,
+  HelpCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import RichTextEditor from "@/components/RichTextEditor";
+import { QuizBuilderModal } from "@/components/course/QuizBuilderModal";
+import { QuizData } from "@/components/course/QuizPlayer";
 import { toast } from "sonner";
 
 export interface Lesson {
@@ -161,9 +164,23 @@ const getEmbedUrl = (url: string) => {
 
 const CourseLessonsManager = ({ modules, onModulesChange }: CourseLessonsManagerProps) => {
   const [editingLessonId, setEditingLessonId] = useState<string | null>(null);
+  const [quizModalOpen, setQuizModalOpen] = useState(false);
   const [lang, setLang] = useState(() =>
     typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
   );
+
+  const getParsedQuiz = (content?: string): QuizData | null => {
+    if (!content) return null;
+    try {
+      if (content.trim().startsWith("{")) {
+        const parsed = JSON.parse(content);
+        if (parsed?.questions && Array.isArray(parsed.questions)) {
+          return parsed as QuizData;
+        }
+      }
+    } catch (e) {}
+    return null;
+  };
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -343,9 +360,14 @@ const CourseLessonsManager = ({ modules, onModulesChange }: CourseLessonsManager
                                       <Video className="h-3 w-3" /> {t.videoConfigured}
                                     </span>
                                   )}
-                                  {lesson.content && lesson.content !== "<p></p>" && (
+                                  {lesson.content && lesson.content !== "<p></p>" && !getParsedQuiz(lesson.content) && (
                                     <span className="flex items-center gap-1">
                                       <FileText className="h-3 w-3" /> {t.richText}
+                                    </span>
+                                  )}
+                                  {getParsedQuiz(lesson.content) && (
+                                    <span className="flex items-center gap-1 text-primary font-bold">
+                                      <HelpCircle className="h-3 w-3" /> Quiz ({getParsedQuiz(lesson.content)?.questions?.length} q)
                                     </span>
                                   )}
                                   {(lesson.resourceFile || lesson.resource_url) && (
@@ -493,6 +515,34 @@ const CourseLessonsManager = ({ modules, onModulesChange }: CourseLessonsManager
                   />
                 </div>
 
+                {/* Quiz de Compréhension Section */}
+                <div className="p-4 rounded-2xl bg-primary/5 border border-primary/20 space-y-2">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <h4 className="text-xs font-bold text-foreground flex items-center gap-1.5">
+                        <HelpCircle className="h-4 w-4 text-primary" />
+                        <span>Quiz de Compréhension</span>
+                      </h4>
+                      <p className="text-[11px] text-muted-foreground mt-0.5">
+                        {getParsedQuiz(editingContext.lesson.content)
+                          ? `Quiz configuré (${getParsedQuiz(editingContext.lesson.content)?.questions?.length} question(s))`
+                          : "Permet d'évaluer la compréhension des élèves."}
+                      </p>
+                    </div>
+                    <Button
+                      type="button"
+                      size="sm"
+                      onClick={() => setQuizModalOpen(true)}
+                      className="rounded-xl text-xs font-bold gap-1.5 shrink-0"
+                    >
+                      <Plus className="h-3.5 w-3.5" />
+                      <span>
+                        {getParsedQuiz(editingContext.lesson.content) ? "Éditer le Quiz" : "Créer un Quiz"}
+                      </span>
+                    </Button>
+                  </div>
+                </div>
+
                 <div>
                   <label className="text-sm font-medium mb-1 block">{t.resourceLabel}</label>
                   <div
@@ -531,6 +581,21 @@ const CourseLessonsManager = ({ modules, onModulesChange }: CourseLessonsManager
           )}
         </SheetContent>
       </Sheet>
+
+      {/* Quiz Builder Modal */}
+      {editingContext && (
+        <QuizBuilderModal
+          isOpen={quizModalOpen}
+          onClose={() => setQuizModalOpen(false)}
+          lessonTitle={editingContext.lesson.title}
+          initialQuiz={getParsedQuiz(editingContext.lesson.content)}
+          onSave={(quizData) => {
+            updateLesson(editingContext.module.id, editingContext.lesson.id, {
+              content: JSON.stringify(quizData),
+            });
+          }}
+        />
+      )}
     </div>
   );
 };
