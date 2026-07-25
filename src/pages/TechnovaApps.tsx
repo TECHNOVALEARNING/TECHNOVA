@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Header, Footer } from "@/components/site/shared";
-import { ExternalLink, CheckCircle2, Sparkles, Smartphone, Shield, Code, Cpu } from "lucide-react";
+import { ExternalLink, CheckCircle2, Sparkles, Smartphone, Shield, Code, Cpu, Download } from "lucide-react";
 import SEOHead from "@/components/SEOHead";
 
 interface AppCard {
@@ -42,6 +42,23 @@ const TechnovaApps = () => {
         lang === "fr" ? "Streaming vidéo HD" : "HD video streaming",
         lang === "fr" ? "Suivi de progression" : "Progress tracking",
         lang === "fr" ? "Attestations officielles" : "Official Attestations",
+      ],
+    },
+    {
+      title: "Mots Mêlés Android",
+      category: lang === "fr" ? "Application Android (APK)" : "Android App (APK)",
+      desc:
+        lang === "fr"
+          ? "Jeu captivant de Mots Mêlés stimulant la réflexion, la mémoire et la concentration. Téléchargement direct de l'APK officiel."
+          : "Engaging Word Search puzzle game to boost focus, memory, and vocabulary. Direct official APK download.",
+      image: "https://images.unsplash.com/photo-1543269865-cbf427effbad?w=800&q=80",
+      tags: ["Android APK", "Jeu", "Mots Mêlés", "Hors-ligne"],
+      stats: lang === "fr" ? "Téléchargement APK" : "APK Download",
+      url: "https://github.com/precieuxAyelesso/Mots-m-l-s-/releases/download/v1.0/base.apk",
+      features: [
+        lang === "fr" ? "Installation APK Android" : "Android APK Installation",
+        lang === "fr" ? "Fonctionne 100% Hors-ligne" : "100% Offline Game",
+        lang === "fr" ? "Gratuit & Sans abonnement" : "Free & Subscription-free",
       ],
     },
     {
@@ -230,10 +247,21 @@ const TechnovaApps = () => {
                       href={app.url}
                       target={app.url.startsWith("http") ? "_blank" : "_self"}
                       rel="noopener noreferrer"
+                      download={app.url.endsWith(".apk") ? "mots-meles-technova.apk" : undefined}
                       className="inline-flex items-center justify-center gap-1.5 px-5 py-3 text-xs font-bold rounded-xl bg-primary text-white hover:bg-primary/95 shadow-glow transition-all duration-200"
                     >
-                      {lang === "fr" ? "Ouvrir l'application" : "Open Application"}
-                      <ExternalLink className="h-3.5 w-3.5" />
+                      {app.url.endsWith(".apk")
+                        ? lang === "fr"
+                          ? "Télécharger l'APK"
+                          : "Download APK"
+                        : lang === "fr"
+                          ? "Ouvrir l'application"
+                          : "Open Application"}
+                      {app.url.endsWith(".apk") ? (
+                        <Download className="h-3.5 w-3.5" />
+                      ) : (
+                        <ExternalLink className="h-3.5 w-3.5" />
+                      )}
                     </a>
                   </div>
                 </div>
