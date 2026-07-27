@@ -93,25 +93,8 @@ const TechnovaApps = () => {
         lang === "fr" ? "Analyse de viralité" : "Virality analysis",
         lang === "fr" ? "Génération de scripts" : "Script generation",
       ],
-    },
-    {
-      title: "Productivity Tools Suite",
-      category: lang === "fr" ? "Utilitaires Web" : "Web Utilities",
-      desc:
-        lang === "fr"
-          ? "Un ensemble d'applications web gratuites et d'outils digitaux pour booster la productivité de vos équipes."
-          : "A set of free web applications and digital tools to boost your team's productivity.",
-      image: "https://i.pinimg.com/1200x/3b/c0/c5/3bc0c5e5cb3b8b85b448c7869823b35d.jpg",
-      tags: ["Applications", "Outils digitaux"],
-      stats: lang === "fr" ? "Gratuit" : "Free",
-      url: "/outils-digitaux",
-      features: [
-        lang === "fr" ? "CamScanner Pro" : "CamScanner Pro",
-        lang === "fr" ? "FL Studio" : "FL Studio",
-        lang === "fr" ? "Duolingo Pro" : "Duolingo Pro",
-        lang === "fr" ? "Mots mêlés" : "Crossword Puzzles",
-      ],
-    },
+    }
+
   ];
 
   return (
