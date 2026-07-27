@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Header, Footer } from "@/components/site/shared";
-import { ExternalLink, CheckCircle2, Sparkles, Smartphone, Shield, Code, Cpu, Download } from "lucide-react";
+import { ExternalLink, CheckCircle2, Sparkles, Smartphone, Shield, Code, Cpu, Download, MessageSquare } from "lucide-react";
 import SEOHead from "@/components/SEOHead";
 
 interface AppCard {
@@ -13,6 +13,8 @@ interface AppCard {
   stats: string;
   url: string;
   features: string[];
+  buttonText?: string;
+  buttonIcon?: "contact" | "download" | "external";
 }
 
 const TechnovaApps = () => {
@@ -45,6 +47,26 @@ const TechnovaApps = () => {
       ],
     },
     {
+      title: "GestCour by Technova",
+      category: lang === "fr" ? "Template Web & Workflow" : "Web & Workflow Template",
+      desc:
+        lang === "fr"
+          ? "Solution web clé en main dédiée à la gestion, au suivi hiérarchique (workflow de visa 5 étapes) et à l'archivage du courrier arrivé et départ pour PME, entreprises et administrations."
+          : "Turnkey web solution for incoming/outgoing mail management, 5-step hierarchical visa workflow, and archiving for SMEs, enterprises, and public administrations.",
+      image: "/gestcour-mockup.png",
+      tags: ["Template Web", "IndexedDB", "React 18", "Workflow Visa", "Audit Log"],
+      stats: lang === "fr" ? "Template Clé en Main" : "Turnkey Template",
+      url: "https://wa.me/22947883735?text=Bonjour%20TECHNOVA,%20je%20souhaite%20acheter%20le%20template%20GestCour%20by%20Technova.",
+      buttonText: lang === "fr" ? "Acheter le Template" : "Purchase Template",
+      buttonIcon: "contact",
+      features: [
+        lang === "fr" ? "Tableau de Bord Analytics 360° & Chart.js" : "360° Analytics Dashboard & Chart.js",
+        lang === "fr" ? "Workflow de Visa Hiérarchique 5 Étapes" : "5-Step Hierarchical Visa Workflow",
+        lang === "fr" ? "100% Autonome & Hors-ligne (IndexedDB)" : "100% Autonomous & Offline (IndexedDB)",
+        lang === "fr" ? "Échéances, Relances & Exports PDF/Excel" : "Deadlines, Reminders & PDF/Excel Exports",
+      ],
+    },
+    {
       title: "Mots Mêlés Android",
       category: lang === "fr" ? "Application Android (APK)" : "Android App (APK)",
       desc:
@@ -69,7 +91,7 @@ const TechnovaApps = () => {
           ? "Outil d'intelligence artificielle conçu pour humaniser les textes générés par IA afin d'éviter la détection automatique."
           : "AI tool designed to humanize AI-generated text to bypass automated detection algorithms.",
       image: "https://images.unsplash.com/photo-1675557009875-436f0978cf2a?w=800&q=80",
-      tags: ["React 18", "TypeScript", "Supabase", "Tailwind CSS", "Mobile Money","Technova Humanizer"],
+      tags: ["React 18", "TypeScript", "Supabase", "Tailwind CSS", "Mobile Money", "Technova Humanizer"],
       stats: lang === "fr" ? "0.8s temps de charge" : "0.8s load time",
       url: "https://humanizer-ai-technova.vercel.app/",
       features: [
@@ -93,8 +115,7 @@ const TechnovaApps = () => {
         lang === "fr" ? "Analyse de viralité" : "Virality analysis",
         lang === "fr" ? "Génération de scripts" : "Script generation",
       ],
-    }
-
+    },
   ];
 
   return (
@@ -231,16 +252,24 @@ const TechnovaApps = () => {
                       target={app.url.startsWith("http") ? "_blank" : "_self"}
                       rel="noopener noreferrer"
                       download={app.url.endsWith(".apk") ? "mots-meles-technova.apk" : undefined}
-                      className="inline-flex items-center justify-center gap-1.5 px-5 py-3 text-xs font-bold rounded-xl bg-primary text-white hover:bg-primary/95 shadow-glow transition-all duration-200"
+                      className={`inline-flex items-center justify-center gap-1.5 px-5 py-3 text-xs font-bold rounded-xl text-white transition-all duration-200 ${
+                        app.buttonIcon === "contact"
+                          ? "bg-emerald-600 hover:bg-emerald-700 shadow-md"
+                          : "bg-primary hover:bg-primary/95 shadow-glow"
+                      }`}
                     >
-                      {app.url.endsWith(".apk")
-                        ? lang === "fr"
-                          ? "Télécharger l'APK"
-                          : "Download APK"
-                        : lang === "fr"
-                          ? "Ouvrir l'application"
-                          : "Open Application"}
-                      {app.url.endsWith(".apk") ? (
+                      {app.buttonText
+                        ? app.buttonText
+                        : app.url.endsWith(".apk")
+                          ? lang === "fr"
+                            ? "Télécharger l'APK"
+                            : "Download APK"
+                          : lang === "fr"
+                            ? "Ouvrir l'application"
+                            : "Open Application"}
+                      {app.buttonIcon === "contact" ? (
+                        <MessageSquare className="h-3.5 w-3.5" />
+                      ) : app.url.endsWith(".apk") ? (
                         <Download className="h-3.5 w-3.5" />
                       ) : (
                         <ExternalLink className="h-3.5 w-3.5" />
