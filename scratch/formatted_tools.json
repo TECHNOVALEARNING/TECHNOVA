@@ -1,0 +1,3214 @@
+[
+  {
+    "id": "carbon-footprint",
+    "name": "Empreinte carbone",
+    "description": "Estimez votre CO₂ annuel (transport, repas…)",
+    "websiteUrl": "https://topapps.fr/outils/carbon-footprint",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": true
+  },
+  {
+    "id": "triangle-solver",
+    "name": "Résolution de triangle",
+    "description": "Loi des sinus/cosinus → angles et côtés manquants",
+    "websiteUrl": "https://topapps.fr/outils/triangle-solver",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": true
+  },
+  {
+    "id": "qr-generator",
+    "name": "Générateur QR Code",
+    "description": "Créez des codes QR instantanément",
+    "websiteUrl": "https://topapps.fr/outils/qr-generator",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": true
+  },
+  {
+    "id": "image-compressor",
+    "name": "Compresseur d'image",
+    "description": "Réduisez le poids de vos images dans le navigateur",
+    "websiteUrl": "https://topapps.fr/outils/image-compressor",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": true
+  },
+  {
+    "id": "password-generator",
+    "name": "Générateur de mot de passe",
+    "description": "Créez des mots de passe sécurisés",
+    "websiteUrl": "https://topapps.fr/outils/password-generator",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": true
+  },
+  {
+    "id": "pdf-merge",
+    "name": "Fusionner des PDF",
+    "description": "Assemblez plusieurs PDF en un seul fichier",
+    "websiteUrl": "https://topapps.fr/outils/pdf-merge",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": true
+  },
+  {
+    "id": "image-resizer",
+    "name": "Redimensionneur d'image",
+    "description": "Redimensionnez vos images dans le navigateur",
+    "websiteUrl": "https://topapps.fr/outils/image-resizer",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": true
+  },
+  {
+    "id": "images-to-pdf",
+    "name": "Images vers PDF",
+    "description": "Convertissez vos photos et images en PDF",
+    "websiteUrl": "https://topapps.fr/outils/images-to-pdf",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": true
+  },
+  {
+    "id": "salary-converter",
+    "name": "Convertisseur brut / net",
+    "description": "Salaire brut → net + coût employeur (France)",
+    "websiteUrl": "https://topapps.fr/outils/salary-converter",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": true
+  },
+  {
+    "id": "pdf-split",
+    "name": "Diviser un PDF",
+    "description": "Extrayez des pages ou découpez un PDF en plusieurs fichiers",
+    "websiteUrl": "https://topapps.fr/outils/pdf-split",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": true
+  },
+  {
+    "id": "vat-calculator",
+    "name": "Calculateur de TVA",
+    "description": "Ajouter ou déduire la TVA",
+    "websiteUrl": "https://topapps.fr/outils/vat-calculator",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": true
+  },
+  {
+    "id": "percentage-calc",
+    "name": "Calculateur de pourcentage",
+    "description": "Calculez rapidement les pourcentages",
+    "websiteUrl": "https://topapps.fr/outils/percentage-calc",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": true
+  },
+  {
+    "id": "currency-converter",
+    "name": "Convertisseur de devises",
+    "description": "Principales devises mondiales",
+    "websiteUrl": "https://topapps.fr/outils/currency-converter",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": true
+  },
+  {
+    "id": "word-counter",
+    "name": "Compteur de mots",
+    "description": "Comptez les mots, caractères et phrases",
+    "websiteUrl": "https://topapps.fr/outils/word-counter",
+    "categories": [
+      "Rédaction & Texte",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": true
+  },
+  {
+    "id": "image-crop",
+    "name": "Recadrage d'image",
+    "description": "Rognez et pivotez une image en ligne",
+    "websiteUrl": "https://topapps.fr/outils/image-crop",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": true
+  },
+  {
+    "id": "timer",
+    "name": "Minuteur / Chronomètre",
+    "description": "Compte à rebours et chronomètre",
+    "websiteUrl": "https://topapps.fr/outils/timer",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": true
+  },
+  {
+    "id": "signature-drawer",
+    "name": "Signature manuscrite",
+    "description": "Dessinez votre signature, export PNG transparent",
+    "websiteUrl": "https://topapps.fr/outils/signature-drawer",
+    "categories": [
+      "Graphisme & Design"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": true
+  },
+  {
+    "id": "heic-converter",
+    "name": "Convertisseur HEIC",
+    "description": "Convertissez des photos iPhone en JPEG/PNG",
+    "websiteUrl": "https://topapps.fr/outils/heic-converter",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": true
+  },
+  {
+    "id": "webp-converter",
+    "name": "Convertisseur WebP / AVIF",
+    "description": "WebP, AVIF → JPG ou PNG en local",
+    "websiteUrl": "https://topapps.fr/outils/webp-converter",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": true
+  },
+  {
+    "id": "iban-validator",
+    "name": "Vérificateur IBAN",
+    "description": "Validez et formatez un IBAN (mod 97)",
+    "websiteUrl": "https://topapps.fr/outils/iban-validator",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": true
+  },
+  {
+    "id": "public-holidays",
+    "name": "Jours fériés",
+    "description": "Jours fériés français et ponts de l'année",
+    "websiteUrl": "https://topapps.fr/outils/public-holidays",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": true
+  },
+  {
+    "id": "loan-calculator",
+    "name": "Calculateur de prêt",
+    "description": "Simulez vos mensualités",
+    "websiteUrl": "https://topapps.fr/outils/loan-calculator",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": true
+  },
+  {
+    "id": "scanned-pdf",
+    "name": "Effet document scanné",
+    "description": "Donnez à un PDF l'apparence d'un document passé au scanner",
+    "websiteUrl": "https://topapps.fr/outils/scanned-pdf",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": true
+  },
+  {
+    "id": "borrowing-capacity",
+    "name": "Capacité d'emprunt",
+    "description": "Montant empruntable selon vos revenus (règle des 35%)",
+    "websiteUrl": "https://topapps.fr/outils/borrowing-capacity",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": true
+  },
+  {
+    "id": "tax-calculator",
+    "name": "Simulateur impôts IR",
+    "description": "Estimation impôt sur le revenu France 2026",
+    "websiteUrl": "https://topapps.fr/outils/tax-calculator",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": true
+  },
+  {
+    "id": "bareme-kilometrique",
+    "name": "Barème kilométrique",
+    "description": "Frais kilométriques déductibles des impôts (2026)",
+    "websiteUrl": "https://topapps.fr/outils/bareme-kilometrique",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "mortgage-calc",
+    "name": "Crédit immobilier",
+    "description": "Mensualités, coût total et tableau d'amortissement",
+    "websiteUrl": "https://topapps.fr/outils/mortgage-calc",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "json-formatter",
+    "name": "Formateur JSON",
+    "description": "Formatez et validez votre JSON",
+    "websiteUrl": "https://topapps.fr/outils/json-formatter",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "fuel-calculator",
+    "name": "Calculateur de carburant",
+    "description": "Coût d'un trajet selon distance et conso",
+    "websiteUrl": "https://topapps.fr/outils/fuel-calculator",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "temperature",
+    "name": "Convertisseur de température",
+    "description": "Celsius, Fahrenheit, Kelvin",
+    "websiteUrl": "https://topapps.fr/outils/temperature",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "date-diff",
+    "name": "Différence de dates",
+    "description": "Jours, semaines, mois entre deux dates",
+    "websiteUrl": "https://topapps.fr/outils/date-diff",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "bmi-calculator",
+    "name": "Calculateur IMC",
+    "description": "Indice de Masse Corporelle",
+    "websiteUrl": "https://topapps.fr/outils/bmi-calculator",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "pomodoro",
+    "name": "Minuteur Pomodoro",
+    "description": "Technique Pomodoro avec cycles configurables",
+    "websiteUrl": "https://topapps.fr/outils/pomodoro",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "discount-calc",
+    "name": "Calculateur de remise",
+    "description": "Calculez les réductions",
+    "websiteUrl": "https://topapps.fr/outils/discount-calc",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "wifi-qr-code",
+    "name": "QR Code WiFi",
+    "description": "Partagez votre WiFi via un QR Code à scanner",
+    "websiteUrl": "https://topapps.fr/outils/wifi-qr-code",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "password-strength",
+    "name": "Force du mot de passe",
+    "description": "Analysez la robustesse d'un mot de passe",
+    "websiteUrl": "https://topapps.fr/outils/password-strength",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "scratchpad",
+    "name": "Bloc-notes rapide",
+    "description": "Note persistante dans votre navigateur",
+    "websiteUrl": "https://topapps.fr/outils/scratchpad",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "base64",
+    "name": "Encodeur/Décodeur Base64",
+    "description": "Encodez et décodez en Base64",
+    "websiteUrl": "https://topapps.fr/outils/base64",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "age-calculator",
+    "name": "Calculateur d'âge",
+    "description": "Calculez votre âge précis",
+    "websiteUrl": "https://topapps.fr/outils/age-calculator",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "email-validator",
+    "name": "Validateur d'email",
+    "description": "Vérifiez la syntaxe d'une adresse email",
+    "websiteUrl": "https://topapps.fr/outils/email-validator",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "url-encoder",
+    "name": "Encodeur/Décodeur URL",
+    "description": "Encodez et décodez les URLs",
+    "websiteUrl": "https://topapps.fr/outils/url-encoder",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "color-converter",
+    "name": "Convertisseur de couleurs",
+    "description": "HEX, RGB, HSL",
+    "websiteUrl": "https://topapps.fr/outils/color-converter",
+    "categories": [
+      "Graphisme & Design"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "timestamp",
+    "name": "Convertisseur Timestamp",
+    "description": "Unix timestamp vers date lisible",
+    "websiteUrl": "https://topapps.fr/outils/timestamp",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "produit-en-croix",
+    "name": "Produit en croix",
+    "description": "Résolvez une règle de trois (a/b = c/x)",
+    "websiteUrl": "https://topapps.fr/outils/produit-en-croix",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "notary-fees",
+    "name": "Frais de notaire",
+    "description": "Estimation des frais d'acquisition (France)",
+    "websiteUrl": "https://topapps.fr/outils/notary-fees",
+    "categories": [
+      "Utilitaires & Quotidien",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "auto-entrepreneur",
+    "name": "Simulateur auto-entrepreneur",
+    "description": "CA → revenu net après charges et impôts",
+    "websiteUrl": "https://topapps.fr/outils/auto-entrepreneur",
+    "categories": [
+      "Utilitaires & Quotidien",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "scientific-calc",
+    "name": "Calculatrice scientifique",
+    "description": "Sin, cos, log, sqrt, puissances et constantes",
+    "websiteUrl": "https://topapps.fr/outils/scientific-calc",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "working-days",
+    "name": "Jours ouvrés",
+    "description": "Jours ouvrés entre deux dates, hors fériés FR",
+    "websiteUrl": "https://topapps.fr/outils/working-days",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "emoji-picker",
+    "name": "Sélecteur d'émojis",
+    "description": "Trouvez et copiez un émoji en un clic",
+    "websiteUrl": "https://topapps.fr/outils/emoji-picker",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "unit-price",
+    "name": "Comparateur prix unitaire",
+    "description": "Meilleur prix au kg ou au litre entre 2 produits",
+    "websiteUrl": "https://topapps.fr/outils/unit-price",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "electricity-calc",
+    "name": "Calculateur électricité",
+    "description": "Coût d'un appareil en kWh/jour, mois, an",
+    "websiteUrl": "https://topapps.fr/outils/electricity-calc",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "compound-interest",
+    "name": "Intérêts composés",
+    "description": "Simulez la croissance de votre capital",
+    "websiteUrl": "https://topapps.fr/outils/compound-interest",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "livret-interest",
+    "name": "Intérêts Livret A / LEP",
+    "description": "Intérêts annuels Livret A, LDDS et LEP",
+    "websiteUrl": "https://topapps.fr/outils/livret-interest",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "timezone-converter",
+    "name": "Convertisseur de fuseaux",
+    "description": "Heure dans les principales villes du monde",
+    "websiteUrl": "https://topapps.fr/outils/timezone-converter",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "uuid-generator",
+    "name": "Générateur UUID",
+    "description": "Générez des UUID v4",
+    "websiteUrl": "https://topapps.fr/outils/uuid-generator",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "siret-validator",
+    "name": "Vérificateur SIRET / SIREN",
+    "description": "Validez un numéro SIRET ou SIREN (algorithme de Luhn)",
+    "websiteUrl": "https://topapps.fr/outils/siret-validator",
+    "categories": [
+      "Utilitaires & Quotidien",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "nir-validator",
+    "name": "Vérificateur n° de Sécu",
+    "description": "Validez un numéro de sécurité sociale (clé NIR)",
+    "websiteUrl": "https://topapps.fr/outils/nir-validator",
+    "categories": [
+      "Utilitaires & Quotidien",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "paid-leave",
+    "name": "Congés payés",
+    "description": "Droits acquis, pris et solde restant",
+    "websiteUrl": "https://topapps.fr/outils/paid-leave",
+    "categories": [
+      "Utilitaires & Quotidien",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "irl-revision",
+    "name": "Révision de loyer (IRL)",
+    "description": "Nouveau loyer selon l'indice INSEE en vigueur",
+    "websiteUrl": "https://topapps.fr/outils/irl-revision",
+    "categories": [
+      "Utilitaires & Quotidien",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "severance-pay",
+    "name": "Indemnité de licenciement",
+    "description": "Calcul légal selon l'ancienneté (France)",
+    "websiteUrl": "https://topapps.fr/outils/severance-pay",
+    "categories": [
+      "Utilitaires & Quotidien",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "child-support",
+    "name": "Pension alimentaire",
+    "description": "Estimation selon la table du ministère de la Justice",
+    "websiteUrl": "https://topapps.fr/outils/child-support",
+    "categories": [
+      "Utilitaires & Quotidien",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "budget-planner",
+    "name": "Simulateur de budget",
+    "description": "Revenus, charges et épargne mensuelle",
+    "websiteUrl": "https://topapps.fr/outils/budget-planner",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "vat-number-validator",
+    "name": "N° TVA intracommunautaire",
+    "description": "Validez ou calculez un n° TVA FR depuis le SIREN",
+    "websiteUrl": "https://topapps.fr/outils/vat-number-validator",
+    "categories": [
+      "Utilitaires & Quotidien",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "savings-goal",
+    "name": "Objectif d'épargne",
+    "description": "Combien de mois pour atteindre votre objectif",
+    "websiteUrl": "https://topapps.fr/outils/savings-goal",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "school-holidays",
+    "name": "Vacances scolaires",
+    "description": "Calendrier zones A, B, C (2025-2027)",
+    "websiteUrl": "https://topapps.fr/outils/school-holidays",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "notice-period",
+    "name": "Préavis de location",
+    "description": "Durée de préavis selon type et zone tendue",
+    "websiteUrl": "https://topapps.fr/outils/notice-period",
+    "categories": [
+      "Utilitaires & Quotidien",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "ptz-calculator",
+    "name": "Simulateur PTZ",
+    "description": "Montant du prêt à taux zéro estimé",
+    "websiteUrl": "https://topapps.fr/outils/ptz-calculator",
+    "categories": [
+      "Utilitaires & Quotidien",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "youtube-thumbnail",
+    "name": "Miniature YouTube",
+    "description": "Récupérez la vignette HD d'une vidéo YouTube",
+    "websiteUrl": "https://topapps.fr/outils/youtube-thumbnail",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "qr-reader",
+    "name": "Lecteur de QR Code",
+    "description": "Décodez un QR Code depuis une image",
+    "websiteUrl": "https://topapps.fr/outils/qr-reader",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "voice-recorder",
+    "name": "Enregistreur vocal",
+    "description": "Enregistrez votre micro, export audio local",
+    "websiteUrl": "https://topapps.fr/outils/voice-recorder",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "barcode-generator",
+    "name": "Générateur de code-barres",
+    "description": "Créez des codes EAN-13 et Code128 en PNG",
+    "websiteUrl": "https://topapps.fr/outils/barcode-generator",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "exif-cleaner",
+    "name": "Suppression métadonnées photo",
+    "description": "Effacez EXIF et position GPS avant de partager",
+    "websiteUrl": "https://topapps.fr/outils/exif-cleaner",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "freelance-calc",
+    "name": "Calculateur freelance",
+    "description": "TJM → revenus nets micro-entreprise ou SASU",
+    "websiteUrl": "https://topapps.fr/outils/freelance-calc",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "photo-censor",
+    "name": "Flouter une zone d'image",
+    "description": "Floutez, pixellisez ou masquez une info sensible",
+    "websiteUrl": "https://topapps.fr/outils/photo-censor",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "regex-tester",
+    "name": "Testeur Regex",
+    "description": "Testez vos expressions régulières",
+    "websiteUrl": "https://topapps.fr/outils/regex-tester",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "units-converter",
+    "name": "Convertisseur d'unités",
+    "description": "Longueur, poids, volume",
+    "websiteUrl": "https://topapps.fr/outils/units-converter",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "tip-calculator",
+    "name": "Calculateur de pourboire",
+    "description": "Calculez les pourboires facilement",
+    "websiteUrl": "https://topapps.fr/outils/tip-calculator",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "calorie-calculator",
+    "name": "Calculateur de calories",
+    "description": "Besoins caloriques quotidiens",
+    "websiteUrl": "https://topapps.fr/outils/calorie-calculator",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "hash-generator",
+    "name": "Générateur de hash",
+    "description": "SHA-256, SHA-384, SHA-512",
+    "websiteUrl": "https://topapps.fr/outils/hash-generator",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "stock-tax",
+    "name": "Impôt plus-value bourse",
+    "description": "PFU 30% ou PEA : impôt sur vos gains en actions",
+    "websiteUrl": "https://topapps.fr/outils/stock-tax",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "retirement-calc",
+    "name": "Calculateur de retraite",
+    "description": "Âge de départ et pension estimée (France)",
+    "websiteUrl": "https://topapps.fr/outils/retirement-calc",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "macro-calculator",
+    "name": "Calculateur de macros",
+    "description": "Calories, protéines, glucides et lipides (TDEE)",
+    "websiteUrl": "https://topapps.fr/outils/macro-calculator",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "chmod-calculator",
+    "name": "Calculateur chmod",
+    "description": "Permissions Unix : octal ↔ rwx",
+    "websiteUrl": "https://topapps.fr/outils/chmod-calculator",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "bac-calculator",
+    "name": "Alcoolémie",
+    "description": "Taux d'alcool estimé et délai avant de conduire",
+    "websiteUrl": "https://topapps.fr/outils/bac-calculator",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "sleep-calculator",
+    "name": "Calculateur de sommeil",
+    "description": "Heures de coucher/réveil par cycles de 90 min",
+    "websiteUrl": "https://topapps.fr/outils/sleep-calculator",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "crypto-tax",
+    "name": "Impôt plus-value crypto",
+    "description": "Flat tax de 30% sur vos gains crypto",
+    "websiteUrl": "https://topapps.fr/outils/crypto-tax",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "roi-calculator",
+    "name": "Calculateur ROI",
+    "description": "Retour sur investissement et point mort",
+    "websiteUrl": "https://topapps.fr/outils/roi-calculator",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "fullscreen-countdown",
+    "name": "Compte à rebours plein écran",
+    "description": "Jusqu'à une date : vacances, examen, retraite…",
+    "websiteUrl": "https://topapps.fr/outils/fullscreen-countdown",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "text-diff",
+    "name": "Comparateur de texte",
+    "description": "Comparez deux textes",
+    "websiteUrl": "https://topapps.fr/outils/text-diff",
+    "categories": [
+      "Rédaction & Texte",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "fancy-text",
+    "name": "Texte stylé Unicode",
+    "description": "Polices spéciales pour bios Instagram, TikTok…",
+    "websiteUrl": "https://topapps.fr/outils/fancy-text",
+    "categories": [
+      "Rédaction & Texte",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "list-comparator",
+    "name": "Comparateur de listes",
+    "description": "Intersection, différence et doublons",
+    "websiteUrl": "https://topapps.fr/outils/list-comparator",
+    "categories": [
+      "Rédaction & Texte",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "number-to-words",
+    "name": "Montant en lettres",
+    "description": "Chiffres → toutes lettres pour vos chèques",
+    "websiteUrl": "https://topapps.fr/outils/number-to-words",
+    "categories": [
+      "Rédaction & Texte",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "case-converter",
+    "name": "Convertisseur de casse",
+    "description": "Majuscules, minuscules, titre…",
+    "websiteUrl": "https://topapps.fr/outils/case-converter",
+    "categories": [
+      "Rédaction & Texte",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "lorem-ipsum",
+    "name": "Lorem Ipsum",
+    "description": "Générez du texte de remplissage",
+    "websiteUrl": "https://topapps.fr/outils/lorem-ipsum",
+    "categories": [
+      "Rédaction & Texte",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "gradient-generator",
+    "name": "Générateur de dégradé",
+    "description": "Créez des dégradés CSS",
+    "websiteUrl": "https://topapps.fr/outils/gradient-generator",
+    "categories": [
+      "Graphisme & Design"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "flexbox-generator",
+    "name": "Générateur Flexbox CSS",
+    "description": "Visualisez et générez du CSS Flexbox",
+    "websiteUrl": "https://topapps.fr/outils/flexbox-generator",
+    "categories": [
+      "Graphisme & Design"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "color-palette",
+    "name": "Palette de couleurs",
+    "description": "Générez des palettes CSS harmonieuses",
+    "websiteUrl": "https://topapps.fr/outils/color-palette",
+    "categories": [
+      "Graphisme & Design"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "contrast-checker",
+    "name": "Vérificateur de contraste",
+    "description": "Accessibilité WCAG AA / AAA",
+    "websiteUrl": "https://topapps.fr/outils/contrast-checker",
+    "categories": [
+      "Graphisme & Design"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "favicon-generator",
+    "name": "Générateur de favicon",
+    "description": "Créez un favicon depuis du texte ou un emoji",
+    "websiteUrl": "https://topapps.fr/outils/favicon-generator",
+    "categories": [
+      "Graphisme & Design"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "svg-to-png",
+    "name": "Convertisseur SVG vers PNG",
+    "description": "Exportez un SVG en PNG à la taille voulue",
+    "websiteUrl": "https://topapps.fr/outils/svg-to-png",
+    "categories": [
+      "Graphisme & Design"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "jwt-decoder",
+    "name": "Décodeur JWT",
+    "description": "Décodez les tokens JWT",
+    "websiteUrl": "https://topapps.fr/outils/jwt-decoder",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "sql-formatter",
+    "name": "Formateur SQL",
+    "description": "Formatez et indentez vos requêtes SQL",
+    "websiteUrl": "https://topapps.fr/outils/sql-formatter",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "aes-encrypt-decrypt",
+    "name": "Chiffrement AES",
+    "description": "Chiffrez/déchiffrez un texte (AES-256-GCM)",
+    "websiteUrl": "https://topapps.fr/outils/aes-encrypt-decrypt",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "http-status",
+    "name": "Codes HTTP",
+    "description": "Référence interactive des statuts HTTP",
+    "websiteUrl": "https://topapps.fr/outils/http-status",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "js-formatter",
+    "name": "Formateur JavaScript",
+    "description": "Beautifiez ou minifiez votre code JavaScript",
+    "websiteUrl": "https://topapps.fr/outils/js-formatter",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "clothing-size",
+    "name": "Tailles de vêtements",
+    "description": "Correspondances EU / US / UK femme et homme",
+    "websiteUrl": "https://topapps.fr/outils/clothing-size",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "time-to-decimal",
+    "name": "Heures ↔ décimal",
+    "description": "Convertissez HH:MM en heures décimales",
+    "websiteUrl": "https://topapps.fr/outils/time-to-decimal",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "shoe-size",
+    "name": "Convertisseur de pointures",
+    "description": "Tailles de chaussures EU / UK / US",
+    "websiteUrl": "https://topapps.fr/outils/shoe-size",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "typing-test",
+    "name": "Test de vitesse de frappe",
+    "description": "Mesurez vos mots par minute (WPM)",
+    "websiteUrl": "https://topapps.fr/outils/typing-test",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "mic-webcam-test",
+    "name": "Test micro & webcam",
+    "description": "Vérifiez votre micro et votre caméra avant une visio",
+    "websiteUrl": "https://topapps.fr/outils/mic-webcam-test",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "random-picker",
+    "name": "Roue aléatoire",
+    "description": "Tirage au sort depuis une liste personnalisée",
+    "websiteUrl": "https://topapps.fr/outils/random-picker",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "tweet-mockup",
+    "name": "Maquette de tweet",
+    "description": "Simulez un post X/Twitter pour vos aperçus et parodies",
+    "websiteUrl": "https://topapps.fr/outils/tweet-mockup",
+    "categories": [
+      "Graphisme & Design"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "coin-flip",
+    "name": "Pile ou face",
+    "description": "Tirage animé avec historique",
+    "websiteUrl": "https://topapps.fr/outils/coin-flip",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "download-time",
+    "name": "Temps de téléchargement",
+    "description": "Durée selon la taille du fichier et votre débit",
+    "websiteUrl": "https://topapps.fr/outils/download-time",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "insta-post-mockup",
+    "name": "Maquette de post Instagram",
+    "description": "Simulez un post Instagram pour vos maquettes",
+    "websiteUrl": "https://topapps.fr/outils/insta-post-mockup",
+    "categories": [
+      "Graphisme & Design"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "dice-roller",
+    "name": "Lanceur de dés",
+    "description": "Lancez des dés virtuels",
+    "websiteUrl": "https://topapps.fr/outils/dice-roller",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "chat-mockup",
+    "name": "Maquette de conversation",
+    "description": "Faux échange style WhatsApp ou iMessage en PNG",
+    "websiteUrl": "https://topapps.fr/outils/chat-mockup",
+    "categories": [
+      "Graphisme & Design"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "totp-generator",
+    "name": "Générateur TOTP",
+    "description": "Codes 2FA à usage unique (RFC 6238)",
+    "websiteUrl": "https://topapps.fr/outils/totp-generator",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "passphrase-gen",
+    "name": "Générateur de passphrase",
+    "description": "Mots aléatoires mémorables",
+    "websiteUrl": "https://topapps.fr/outils/passphrase-gen",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "name-generator",
+    "name": "Générateur de noms",
+    "description": "Prénoms, entreprises, fantasy, pseudos",
+    "websiteUrl": "https://topapps.fr/outils/name-generator",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "handwriting-text",
+    "name": "Texte en écriture manuscrite",
+    "description": "Transformez un texte tapé en page manuscrite",
+    "websiteUrl": "https://topapps.fr/outils/handwriting-text",
+    "categories": [
+      "Rédaction & Texte",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "cooking-converter",
+    "name": "Mesures culinaires",
+    "description": "Cups, tbsp, tsp, oz → ml et grammes",
+    "websiteUrl": "https://topapps.fr/outils/cooking-converter",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "recipe-portions",
+    "name": "Calculateur de portions",
+    "description": "Adaptez une recette pour N personnes",
+    "websiteUrl": "https://topapps.fr/outils/recipe-portions",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "oven-converter",
+    "name": "Températures de four",
+    "description": "°C / °F / Thermostat — guide de cuisson",
+    "websiteUrl": "https://topapps.fr/outils/oven-converter",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "cooking-time",
+    "name": "Temps de cuisson",
+    "description": "Durée selon le poids et le type de viande",
+    "websiteUrl": "https://topapps.fr/outils/cooking-time",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "grocery-list",
+    "name": "Liste de courses",
+    "description": "Ajout par catégorie, cochage et persistance",
+    "websiteUrl": "https://topapps.fr/outils/grocery-list",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "meal-planner",
+    "name": "Planificateur de repas",
+    "description": "Planifiez les repas de la semaine",
+    "websiteUrl": "https://topapps.fr/outils/meal-planner",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "text-to-speech",
+    "name": "Texte vers parole",
+    "description": "Convertissez du texte en audio",
+    "websiteUrl": "https://topapps.fr/outils/text-to-speech",
+    "categories": [
+      "Rédaction & Texte",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "char-counter",
+    "name": "Compteur de caractères avancé",
+    "description": "Statistiques détaillées sur votre texte",
+    "websiteUrl": "https://topapps.fr/outils/char-counter",
+    "categories": [
+      "Rédaction & Texte",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "whitespace-remover",
+    "name": "Suppresseur d'espaces",
+    "description": "Nettoyez les espaces et lignes vides",
+    "websiteUrl": "https://topapps.fr/outils/whitespace-remover",
+    "categories": [
+      "Rédaction & Texte",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "pace-calculator",
+    "name": "Calculateur de pace",
+    "description": "Allure, temps de finition, distance de course",
+    "websiteUrl": "https://topapps.fr/outils/pace-calculator",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "heart-rate-zones",
+    "name": "Zones de fréquence cardiaque",
+    "description": "5 zones d'entraînement selon votre FC max",
+    "websiteUrl": "https://topapps.fr/outils/heart-rate-zones",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "metronome",
+    "name": "Métronome",
+    "description": "Métronome avec son et BPM configurable",
+    "websiteUrl": "https://topapps.fr/outils/metronome",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "chromatic-tuner",
+    "name": "Accordeur chromatique",
+    "description": "Détectez la note jouée via le microphone",
+    "websiteUrl": "https://topapps.fr/outils/chromatic-tuner",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "tap-bpm",
+    "name": "Tap BPM",
+    "description": "Tapez le rythme pour mesurer le tempo",
+    "websiteUrl": "https://topapps.fr/outils/tap-bpm",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "grade-calculator",
+    "name": "Moyenne scolaire",
+    "description": "Moyenne pondérée avec coefficients et mention",
+    "websiteUrl": "https://topapps.fr/outils/grade-calculator",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "flashcards",
+    "name": "Flashcards",
+    "description": "Créez et révisez des fiches recto/verso",
+    "websiteUrl": "https://topapps.fr/outils/flashcards",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "travel-budget",
+    "name": "Budget voyage",
+    "description": "Répartition et suivi des dépenses de voyage",
+    "websiteUrl": "https://topapps.fr/outils/travel-budget",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "power-adapter",
+    "name": "Adaptateur de prises",
+    "description": "Voltage et type de prise par pays",
+    "websiteUrl": "https://topapps.fr/outils/power-adapter",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "gps-distance",
+    "name": "Distance GPS",
+    "description": "Distance entre deux points géographiques",
+    "websiteUrl": "https://topapps.fr/outils/gps-distance",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "led-savings",
+    "name": "Économies LED",
+    "description": "Économies sur votre facture en passant aux LED",
+    "websiteUrl": "https://topapps.fr/outils/led-savings",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "ev-cost",
+    "name": "Coût électrique vs essence",
+    "description": "Coût aux 100 km : électrique, essence, diesel",
+    "websiteUrl": "https://topapps.fr/outils/ev-cost",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "solar-calculator",
+    "name": "Panneaux solaires",
+    "description": "Production estimée et retour sur investissement",
+    "websiteUrl": "https://topapps.fr/outils/solar-calculator",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "paint-calculator",
+    "name": "Calculateur de peinture",
+    "description": "Surface + couches → litres de peinture nécessaires",
+    "websiteUrl": "https://topapps.fr/outils/paint-calculator",
+    "categories": [
+      "Utilitaires & Quotidien",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "tile-calculator",
+    "name": "Calculateur de carrelage",
+    "description": "Surface + format → boîtes (avec % de chutes)",
+    "websiteUrl": "https://topapps.fr/outils/tile-calculator",
+    "categories": [
+      "Utilitaires & Quotidien",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "floor-calculator",
+    "name": "Calculateur de parquet",
+    "description": "Surface + largeur de lame → m² et packs",
+    "websiteUrl": "https://topapps.fr/outils/floor-calculator",
+    "categories": [
+      "Utilitaires & Quotidien",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "wallpaper-calculator",
+    "name": "Calculateur de papier peint",
+    "description": "Dimensions pièce + hauteur lé → nb de rouleaux",
+    "websiteUrl": "https://topapps.fr/outils/wallpaper-calculator",
+    "categories": [
+      "Utilitaires & Quotidien",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "concrete-calculator",
+    "name": "Calculateur de béton",
+    "description": "Volume de dalle ou poteau → sacs de ciment",
+    "websiteUrl": "https://topapps.fr/outils/concrete-calculator",
+    "categories": [
+      "Utilitaires & Quotidien",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "rental-yield",
+    "name": "Rendement locatif",
+    "description": "Rendement brut et net de votre investissement",
+    "websiteUrl": "https://topapps.fr/outils/rental-yield",
+    "categories": [
+      "Utilitaires & Quotidien",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "property-gain",
+    "name": "Plus-value immobilière",
+    "description": "Impôt sur la vente d'un bien et abattements",
+    "websiteUrl": "https://topapps.fr/outils/property-gain",
+    "categories": [
+      "Utilitaires & Quotidien",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "electricity-bill",
+    "name": "Facture électricité",
+    "description": "kWh + abonnement → estimation facture EDF 2026",
+    "websiteUrl": "https://topapps.fr/outils/electricity-bill",
+    "categories": [
+      "Utilitaires & Quotidien",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "tv-size",
+    "name": "Taille TV & recul",
+    "description": "Pouces ↔ cm et distance de recul idéale",
+    "websiteUrl": "https://topapps.fr/outils/tv-size",
+    "categories": [
+      "Utilitaires & Quotidien",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "moving-cost",
+    "name": "Budget déménagement",
+    "description": "Volume + distance + étages → estimation prestataire",
+    "websiteUrl": "https://topapps.fr/outils/moving-cost",
+    "categories": [
+      "Utilitaires & Quotidien",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "ideal-weight",
+    "name": "Poids idéal",
+    "description": "Formules Lorentz, Broca, Devine et Monnerot",
+    "websiteUrl": "https://topapps.fr/outils/ideal-weight",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "blood-pressure",
+    "name": "Tension artérielle",
+    "description": "Interprétation clinique selon les normes OMS",
+    "websiteUrl": "https://topapps.fr/outils/blood-pressure",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "hydration-calc",
+    "name": "Hydratation quotidienne",
+    "description": "Besoins en eau selon poids et activité",
+    "websiteUrl": "https://topapps.fr/outils/hydration-calc",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "menstrual-cycle",
+    "name": "Cycle menstruel",
+    "description": "Prochaines règles, ovulation et fenêtre fertile",
+    "websiteUrl": "https://topapps.fr/outils/menstrual-cycle",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "pregnancy-calc",
+    "name": "Date d'accouchement",
+    "description": "Dernières règles → DPA + semaines d'aménorrhée",
+    "websiteUrl": "https://topapps.fr/outils/pregnancy-calc",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "glycemia-converter",
+    "name": "Convertisseur glycémie",
+    "description": "mmol/L ↔ mg/dL avec interprétation clinique",
+    "websiteUrl": "https://topapps.fr/outils/glycemia-converter",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "one-rm-calculator",
+    "name": "Calculateur 1RM",
+    "description": "Charge maximale estimée (Epley, Brzycki…)",
+    "websiteUrl": "https://topapps.fr/outils/one-rm-calculator",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "vo2max-calculator",
+    "name": "Calculateur VO2max",
+    "description": "VO2max estimé via test de Cooper ou marche",
+    "websiteUrl": "https://topapps.fr/outils/vo2max-calculator",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "basic-auth-generator",
+    "name": "Générateur Basic Auth",
+    "description": "En-tête HTTP Authorization: Basic",
+    "websiteUrl": "https://topapps.fr/outils/basic-auth-generator",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "ipv4-address-converter",
+    "name": "Convertisseur IPv4",
+    "description": "IP ↔ entier, hexadécimal, binaire",
+    "websiteUrl": "https://topapps.fr/outils/ipv4-address-converter",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "json-xml-converter",
+    "name": "JSON vers XML",
+    "description": "Convertissez du JSON en XML",
+    "websiteUrl": "https://topapps.fr/outils/json-xml-converter",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "json-toml-converter",
+    "name": "JSON vers TOML",
+    "description": "Convertissez du JSON en TOML",
+    "websiteUrl": "https://topapps.fr/outils/json-toml-converter",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "ipv4-range-expander",
+    "name": "Expanseur de plage IPv4",
+    "description": "CIDR → réseau, diffusion, liste d'IP",
+    "websiteUrl": "https://topapps.fr/outils/ipv4-range-expander",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "body-fat",
+    "name": "% de masse graisseuse",
+    "description": "Méthode U.S. Navy → % + catégorie",
+    "websiteUrl": "https://topapps.fr/outils/body-fat",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "waist-hip",
+    "name": "Ratio taille/hanches",
+    "description": "Tour de taille ÷ hanches → risque cardiovasculaire",
+    "websiteUrl": "https://topapps.fr/outils/waist-hip",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "storage-converter",
+    "name": "Convertisseur de taille",
+    "description": "B, KB, MB, GB, TB",
+    "websiteUrl": "https://topapps.fr/outils/storage-converter",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "json-to-csv",
+    "name": "JSON vers CSV",
+    "description": "Convertissez JSON en CSV",
+    "websiteUrl": "https://topapps.fr/outils/json-to-csv",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "markdown-preview",
+    "name": "Aperçu Markdown",
+    "description": "Prévisualisez votre Markdown",
+    "websiteUrl": "https://topapps.fr/outils/markdown-preview",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "markdown-to-html",
+    "name": "Markdown vers HTML",
+    "description": "Convertissez Markdown en HTML",
+    "websiteUrl": "https://topapps.fr/outils/markdown-to-html",
+    "categories": [
+      "Rédaction & Texte",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "reading-time",
+    "name": "Estimateur de lecture",
+    "description": "Temps de lecture estimé de votre texte",
+    "websiteUrl": "https://topapps.fr/outils/reading-time",
+    "categories": [
+      "Rédaction & Texte",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "readability-score",
+    "name": "Score de lisibilité",
+    "description": "Indice Flesch-Kincaid et niveau du texte",
+    "websiteUrl": "https://topapps.fr/outils/readability-score",
+    "categories": [
+      "Rédaction & Texte",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "word-frequency",
+    "name": "Fréquence des mots",
+    "description": "Analysez la fréquence de chaque mot",
+    "websiteUrl": "https://topapps.fr/outils/word-frequency",
+    "categories": [
+      "Rédaction & Texte",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "line-sorter",
+    "name": "Tri de lignes",
+    "description": "Trier, dédupliquer ou mélanger des lignes",
+    "websiteUrl": "https://topapps.fr/outils/line-sorter",
+    "categories": [
+      "Rédaction & Texte",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "email-extractor",
+    "name": "Extracteur d'emails",
+    "description": "Extrayez tous les emails d'un texte",
+    "websiteUrl": "https://topapps.fr/outils/email-extractor",
+    "categories": [
+      "Rédaction & Texte",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "email-normalizer",
+    "name": "Normaliseur d'e-mails",
+    "description": "Normalise les e-mails (Gmail : points, +tag)",
+    "websiteUrl": "https://topapps.fr/outils/email-normalizer",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "url-extractor",
+    "name": "Extracteur d'URLs",
+    "description": "Extrayez tous les liens d'un texte",
+    "websiteUrl": "https://topapps.fr/outils/url-extractor",
+    "categories": [
+      "Rédaction & Texte",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "slug-generator",
+    "name": "Générateur de slug",
+    "description": "Créez des slugs URL-friendly",
+    "websiteUrl": "https://topapps.fr/outils/slug-generator",
+    "categories": [
+      "Rédaction & Texte",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "text-formatter",
+    "name": "Formateur de texte",
+    "description": "Alignement, espacement et mise en forme",
+    "websiteUrl": "https://topapps.fr/outils/text-formatter",
+    "categories": [
+      "Rédaction & Texte",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "vcard-generator",
+    "name": "Générateur vCard",
+    "description": "Créez une carte de contact .vcf téléchargeable",
+    "websiteUrl": "https://topapps.fr/outils/vcard-generator",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "weekly-planner",
+    "name": "Planning hebdomadaire",
+    "description": "Organisez votre semaine en un coup d'œil",
+    "websiteUrl": "https://topapps.fr/outils/weekly-planner",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "meeting-timer",
+    "name": "Minuteur de réunion",
+    "description": "Compte à rebours avec ordre du jour",
+    "websiteUrl": "https://topapps.fr/outils/meeting-timer",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "meeting-cost",
+    "name": "Coût d'une réunion",
+    "description": "Coût réel d'une réunion en temps réel",
+    "websiteUrl": "https://topapps.fr/outils/meeting-cost",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "habit-tracker",
+    "name": "Suivi d'habitudes",
+    "description": "Habits quotidiens avec streak et calendrier",
+    "websiteUrl": "https://topapps.fr/outils/habit-tracker",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "eisenhower-matrix",
+    "name": "Matrice d'Eisenhower",
+    "description": "Priorisez vos tâches urgent/important",
+    "websiteUrl": "https://topapps.fr/outils/eisenhower-matrix",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "decision-matrix",
+    "name": "Matrice de décision",
+    "description": "Options + critères pondérés → score et classement",
+    "websiteUrl": "https://topapps.fr/outils/decision-matrix",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "fake-data",
+    "name": "Générateur de fausses données",
+    "description": "Profils français fictifs pour vos tests",
+    "websiteUrl": "https://topapps.fr/outils/fake-data",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "exif-extractor",
+    "name": "Infos & métadonnées image",
+    "description": "Dimensions, poids, type et données EXIF",
+    "websiteUrl": "https://topapps.fr/outils/exif-extractor",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "image-to-base64",
+    "name": "Image vers Base64",
+    "description": "Convertissez des images en Base64",
+    "websiteUrl": "https://topapps.fr/outils/image-to-base64",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "cron-helper",
+    "name": "Assistant Cron",
+    "description": "Comprenez les expressions cron",
+    "websiteUrl": "https://topapps.fr/outils/cron-helper",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "number-generator",
+    "name": "Générateur de nombres",
+    "description": "Nombres aléatoires personnalisés",
+    "websiteUrl": "https://topapps.fr/outils/number-generator",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "placeholder-image",
+    "name": "Placeholder d'image",
+    "description": "Générez des images de remplissage personnalisées",
+    "websiteUrl": "https://topapps.fr/outils/placeholder-image",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "json-diff",
+    "name": "Diff JSON",
+    "description": "Comparez deux objets JSON",
+    "websiteUrl": "https://topapps.fr/outils/json-diff",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "xml-formatter",
+    "name": "Formateur XML",
+    "description": "Formatez et validez votre XML",
+    "websiteUrl": "https://topapps.fr/outils/xml-formatter",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "og-meta",
+    "name": "Balises Open Graph",
+    "description": "Meta tags de partage avec aperçu de la carte",
+    "websiteUrl": "https://topapps.fr/outils/og-meta",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "json-yaml",
+    "name": "JSON ↔ YAML",
+    "description": "Convertissez entre les deux formats",
+    "websiteUrl": "https://topapps.fr/outils/json-yaml",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "code-to-image",
+    "name": "Code en image",
+    "description": "Transformez un extrait de code en belle image",
+    "websiteUrl": "https://topapps.fr/outils/code-to-image",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "url-parser",
+    "name": "Analyseur d'URL",
+    "description": "Décomposez une URL en toutes ses parties",
+    "websiteUrl": "https://topapps.fr/outils/url-parser",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "html-encoder",
+    "name": "Encodeur/Décodeur HTML",
+    "description": "Encodez et décodez les entités HTML",
+    "websiteUrl": "https://topapps.fr/outils/html-encoder",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "css-minifier",
+    "name": "Minifieur CSS",
+    "description": "Minifiez votre code CSS",
+    "websiteUrl": "https://topapps.fr/outils/css-minifier",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "hex-encoder",
+    "name": "Encodeur Hex",
+    "description": "Texte ↔ hexadécimal",
+    "websiteUrl": "https://topapps.fr/outils/hex-encoder",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "hmac-generator",
+    "name": "Générateur HMAC",
+    "description": "Signature HMAC (SHA-1/256/384/512)",
+    "websiteUrl": "https://topapps.fr/outils/hmac-generator",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "unicode-converter",
+    "name": "Encodeur Unicode",
+    "description": "Code point, UTF-8, HTML entity et plus",
+    "websiteUrl": "https://topapps.fr/outils/unicode-converter",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "rsa-generator",
+    "name": "Générateur de clés RSA",
+    "description": "Générez des paires de clés RSA/ECDSA (PEM)",
+    "websiteUrl": "https://topapps.fr/outils/rsa-generator",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "keycode-info",
+    "name": "Infos touche clavier",
+    "description": "event.key, code et keyCode d'une touche",
+    "websiteUrl": "https://topapps.fr/outils/keycode-info",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "docker-run-to-compose",
+    "name": "docker run → compose",
+    "description": "Convertit une commande docker run en compose",
+    "websiteUrl": "https://topapps.fr/outils/docker-run-to-compose",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "gitignore-generator",
+    "name": "Générateur .gitignore",
+    "description": "Générez un .gitignore selon vos langages",
+    "websiteUrl": "https://topapps.fr/outils/gitignore-generator",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "device-information",
+    "name": "Infos appareil",
+    "description": "Navigateur, écran, CPU, fuseau horaire…",
+    "websiteUrl": "https://topapps.fr/outils/device-information",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "subnet-calculator",
+    "name": "Calculateur de sous-réseaux",
+    "description": "CIDR, masque, plage d'IPs, hôtes disponibles",
+    "websiteUrl": "https://topapps.fr/outils/subnet-calculator",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "mac-address-generator",
+    "name": "Générateur d'adresse MAC",
+    "description": "Génère une adresse MAC aléatoire valide",
+    "websiteUrl": "https://topapps.fr/outils/mac-address-generator",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "mac-converter",
+    "name": "Convertisseur MAC",
+    "description": "Formats d'adresse MAC (: / - / sans séparateur)",
+    "websiteUrl": "https://topapps.fr/outils/mac-converter",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "port-reference",
+    "name": "Référence des ports",
+    "description": "Ports TCP/UDP courants avec description",
+    "websiteUrl": "https://topapps.fr/outils/port-reference",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "markdown-table",
+    "name": "Tableau Markdown",
+    "description": "Créez des tableaux Markdown visuellement",
+    "websiteUrl": "https://topapps.fr/outils/markdown-table",
+    "categories": [
+      "Rédaction & Texte",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "alcohol-units",
+    "name": "Unités d'alcool",
+    "description": "Degré + volume → unités + équivalences",
+    "websiteUrl": "https://topapps.fr/outils/alcohol-units",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "css-animation",
+    "name": "Générateur d'animation CSS",
+    "description": "Créez des @keyframes avec aperçu live",
+    "websiteUrl": "https://topapps.fr/outils/css-animation",
+    "categories": [
+      "Graphisme & Design"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "clip-path-generator",
+    "name": "Générateur clip-path CSS",
+    "description": "Formes CSS visuellement avec aperçu live",
+    "websiteUrl": "https://topapps.fr/outils/clip-path-generator",
+    "categories": [
+      "Graphisme & Design"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "css-pattern",
+    "name": "Générateur de pattern CSS",
+    "description": "Rayures, damier, points — background CSS",
+    "websiteUrl": "https://topapps.fr/outils/css-pattern",
+    "categories": [
+      "Graphisme & Design"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "box-shadow",
+    "name": "Générateur box-shadow CSS",
+    "description": "Créez des ombres CSS visuellement",
+    "websiteUrl": "https://topapps.fr/outils/box-shadow",
+    "categories": [
+      "Graphisme & Design"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "border-radius",
+    "name": "Générateur border-radius",
+    "description": "Coins arrondis CSS avec aperçu live",
+    "websiteUrl": "https://topapps.fr/outils/border-radius",
+    "categories": [
+      "Graphisme & Design"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "svg-blob",
+    "name": "Générateur de blobs SVG",
+    "description": "Formes organiques aléatoires pour vos designs",
+    "websiteUrl": "https://topapps.fr/outils/svg-blob",
+    "categories": [
+      "Graphisme & Design"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "grid-generator",
+    "name": "Générateur Grid CSS",
+    "description": "Visualisez et générez du CSS Grid",
+    "websiteUrl": "https://topapps.fr/outils/grid-generator",
+    "categories": [
+      "Graphisme & Design"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "css-loader",
+    "name": "Loaders & spinners CSS",
+    "description": "Galerie d'animations de chargement en CSS pur",
+    "websiteUrl": "https://topapps.fr/outils/css-loader",
+    "categories": [
+      "Graphisme & Design"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "px-rem-converter",
+    "name": "Convertisseur px ↔ rem/em",
+    "description": "Conversions CSS, base configurable",
+    "websiteUrl": "https://topapps.fr/outils/px-rem-converter",
+    "categories": [
+      "Graphisme & Design"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "glassmorphism",
+    "name": "Générateur glassmorphism",
+    "description": "Effet verre dépoli (backdrop-filter) avec aperçu",
+    "websiteUrl": "https://topapps.fr/outils/glassmorphism",
+    "categories": [
+      "Graphisme & Design"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "css-variables",
+    "name": "Variables CSS",
+    "description": "Générez un bloc :root {} avec vos custom properties",
+    "websiteUrl": "https://topapps.fr/outils/css-variables",
+    "categories": [
+      "Graphisme & Design"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "css-units",
+    "name": "Convertisseur d'unités CSS",
+    "description": "px, pt, em, rem, vw, vh, % — base configurable",
+    "websiteUrl": "https://topapps.fr/outils/css-units",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "image-palette",
+    "name": "Palette depuis image",
+    "description": "Extrayez les couleurs dominantes d'une image",
+    "websiteUrl": "https://topapps.fr/outils/image-palette",
+    "categories": [
+      "Graphisme & Design"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "aspect-ratio",
+    "name": "Ratio d'image",
+    "description": "Largeur + ratio → hauteur exacte (16:9, 4:3…)",
+    "websiteUrl": "https://topapps.fr/outils/aspect-ratio",
+    "categories": [
+      "Graphisme & Design"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "font-scale",
+    "name": "Échelle typographique",
+    "description": "Base + ratio → toutes les tailles h1→small en rem",
+    "websiteUrl": "https://topapps.fr/outils/font-scale",
+    "categories": [
+      "Graphisme & Design"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "color-mixer",
+    "name": "Mélangeur de couleurs",
+    "description": "Deux couleurs + % → mélange interpolé HEX/RGB",
+    "websiteUrl": "https://topapps.fr/outils/color-mixer",
+    "categories": [
+      "Graphisme & Design"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "naming-converter",
+    "name": "Convertisseur de nommage",
+    "description": "camelCase, snake_case, kebab-case…",
+    "websiteUrl": "https://topapps.fr/outils/naming-converter",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "stats-calculator",
+    "name": "Calculateur statistiques",
+    "description": "Moyenne, médiane, mode, écart-type",
+    "websiteUrl": "https://topapps.fr/outils/stats-calculator",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "base-converter",
+    "name": "Convertisseur de base",
+    "description": "Binaire, octal, décimal, hexadécimal",
+    "websiteUrl": "https://topapps.fr/outils/base-converter",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "fraction-calc",
+    "name": "Calculateur de fractions",
+    "description": "Additionner, soustraire, multiplier, diviser",
+    "websiteUrl": "https://topapps.fr/outils/fraction-calc",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "speed-converter",
+    "name": "Convertisseur de vitesse",
+    "description": "km/h, mph, m/s, nœuds",
+    "websiteUrl": "https://topapps.fr/outils/speed-converter",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "area-converter",
+    "name": "Convertisseur de surface",
+    "description": "m², km², hectare, acre, ft²…",
+    "websiteUrl": "https://topapps.fr/outils/area-converter",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "gps-converter",
+    "name": "Convertisseur GPS",
+    "description": "DMS ↔ degrés décimaux + lien Google Maps",
+    "websiteUrl": "https://topapps.fr/outils/gps-converter",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "jet-lag-calc",
+    "name": "Calculateur de jet lag",
+    "description": "Jours d'adaptation et conseils de récupération",
+    "websiteUrl": "https://topapps.fr/outils/jet-lag-calc",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "windchill",
+    "name": "Ressenti froid (Windchill)",
+    "description": "Température + vent → ressenti réel",
+    "websiteUrl": "https://topapps.fr/outils/windchill",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "humidex",
+    "name": "Ressenti chaleur (Humidex)",
+    "description": "Température + humidité → indice de chaleur ressentie",
+    "websiteUrl": "https://topapps.fr/outils/humidex",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "dew-point",
+    "name": "Point de rosée",
+    "description": "Température + humidité → température de condensation",
+    "websiteUrl": "https://topapps.fr/outils/dew-point",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "beaufort-scale",
+    "name": "Échelle de Beaufort",
+    "description": "Vitesse du vent → force Beaufort + description",
+    "websiteUrl": "https://topapps.fr/outils/beaufort-scale",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "sunrise-sunset",
+    "name": "Lever & coucher du soleil",
+    "description": "Coordonnées + date → heures solaires exactes",
+    "websiteUrl": "https://topapps.fr/outils/sunrise-sunset",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "grade-converter",
+    "name": "Convertisseur de notes",
+    "description": "France /20 ↔ GPA ↔ A/B/C ↔ ECTS",
+    "websiteUrl": "https://topapps.fr/outils/grade-converter",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "percentile-calc",
+    "name": "Calculateur de percentile",
+    "description": "Rang percentile d'une valeur dans une liste",
+    "websiteUrl": "https://topapps.fr/outils/percentile-calc",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "random-words",
+    "name": "Générateur de mots aléatoires",
+    "description": "Mots aléatoires pour brainstorming",
+    "websiteUrl": "https://topapps.fr/outils/random-words",
+    "categories": [
+      "Rédaction & Texte",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "bracket-generator",
+    "name": "Tableau de tournoi",
+    "description": "Génère un bracket à élimination directe",
+    "websiteUrl": "https://topapps.fr/outils/bracket-generator",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "energy-converter",
+    "name": "Convertisseur d'énergie",
+    "description": "Joules, calories, kWh, BTU",
+    "websiteUrl": "https://topapps.fr/outils/energy-converter",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "pressure-converter",
+    "name": "Convertisseur de pression",
+    "description": "Bar, PSI, atmosphères, Pascal",
+    "websiteUrl": "https://topapps.fr/outils/pressure-converter",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "angle-converter",
+    "name": "Convertisseur d'angles",
+    "description": "Degrés, radians, grades, tours",
+    "websiteUrl": "https://topapps.fr/outils/angle-converter",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "roman-numerals",
+    "name": "Nombres romains",
+    "description": "Entier ↔ chiffres romains",
+    "websiteUrl": "https://topapps.fr/outils/roman-numerals",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "ohms-law",
+    "name": "Loi d'Ohm",
+    "description": "2 valeurs parmi U / I / R / P → les 2 autres",
+    "websiteUrl": "https://topapps.fr/outils/ohms-law",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "resistor-color",
+    "name": "Code couleur résistances",
+    "description": "Valeur en ohms → bandes de couleur (4 ou 5 bandes)",
+    "websiteUrl": "https://topapps.fr/outils/resistor-color",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "pythagoras",
+    "name": "Pythagore & trigonométrie",
+    "description": "2 éléments d'un triangle rectangle → tous les autres",
+    "websiteUrl": "https://topapps.fr/outils/pythagoras",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "shape-area",
+    "name": "Aires & périmètres",
+    "description": "Cercle, triangle, rectangle, trapèze… → calcul complet",
+    "websiteUrl": "https://topapps.fr/outils/shape-area",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "solid-volume",
+    "name": "Volumes de solides",
+    "description": "Sphère, cylindre, cône, cube, pyramide → volume",
+    "websiteUrl": "https://topapps.fr/outils/solid-volume",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "circle-calc",
+    "name": "Calculateur de cercle",
+    "description": "Rayon → diamètre, périmètre, aire (et inverse)",
+    "websiteUrl": "https://topapps.fr/outils/circle-calc",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "golden-ratio",
+    "name": "Nombre d'or",
+    "description": "Valeur → proportions dorées (φ = 1,618…)",
+    "websiteUrl": "https://topapps.fr/outils/golden-ratio",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "quadratic-solver",
+    "name": "Équation du 2e degré",
+    "description": "ax² + bx + c = 0 → discriminant + racines",
+    "websiteUrl": "https://topapps.fr/outils/quadratic-solver",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "gcd-lcm",
+    "name": "PGCD & PPCM",
+    "description": "Deux entiers → PGCD, PPCM + facteurs premiers",
+    "websiteUrl": "https://topapps.fr/outils/gcd-lcm",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "matrix-calc",
+    "name": "Calculateur de matrices",
+    "description": "Matrices 2×2 / 3×3 → déterminant, inverse, produit",
+    "websiteUrl": "https://topapps.fr/outils/matrix-calc",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "molar-mass",
+    "name": "Masse molaire",
+    "description": "Formule chimique (H₂O, NaCl…) → masse en g/mol",
+    "websiteUrl": "https://topapps.fr/outils/molar-mass",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "speed-of-sound",
+    "name": "Vitesse du son",
+    "description": "Température + milieu → vitesse en m/s et km/h",
+    "websiteUrl": "https://topapps.fr/outils/speed-of-sound",
+    "categories": [
+      "Calcul & Science",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "age-on-planets",
+    "name": "Âge sur les planètes",
+    "description": "Âge terrestre → âge sur chaque planète du système solaire",
+    "websiteUrl": "https://topapps.fr/outils/age-on-planets",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "ipv6-ula-generator",
+    "name": "Générateur IPv6 ULA",
+    "description": "Préfixe IPv6 unique local (RFC 4193)",
+    "websiteUrl": "https://topapps.fr/outils/ipv6-ula-generator",
+    "categories": [
+      "Développement & Code",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "moon-phase",
+    "name": "Phase de la lune",
+    "description": "Date → phase lunaire + % d'illumination",
+    "websiteUrl": "https://topapps.fr/outils/moon-phase",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "astro-converter",
+    "name": "Distances astronomiques",
+    "description": "km ↔ UA ↔ années-lumière ↔ parsecs",
+    "websiteUrl": "https://topapps.fr/outils/astro-converter",
+    "categories": [
+      "Utilitaires & Quotidien"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "note-frequency",
+    "name": "Fréquence des notes",
+    "description": "Note + octave → fréquence Hz (A4 = 440 Hz)",
+    "websiteUrl": "https://topapps.fr/outils/note-frequency",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "chord-finder",
+    "name": "Trouveur d'accords",
+    "description": "Tonique + type → notes de l'accord",
+    "websiteUrl": "https://topapps.fr/outils/chord-finder",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "bpm-to-ms",
+    "name": "BPM → durée des notes",
+    "description": "Tempo → durée en ms de chaque valeur rythmique",
+    "websiteUrl": "https://topapps.fr/outils/bpm-to-ms",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "scale-finder",
+    "name": "Trouveur de gammes",
+    "description": "Tonique + mode → notes de la gamme + degrés",
+    "websiteUrl": "https://topapps.fr/outils/scale-finder",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "tone-generator",
+    "name": "Générateur de tonalités",
+    "description": "Fréquences audio, test d'enceintes",
+    "websiteUrl": "https://topapps.fr/outils/tone-generator",
+    "categories": [
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "syllable-counter",
+    "name": "Compteur de syllabes",
+    "description": "Comptez les syllabes dans vos textes",
+    "websiteUrl": "https://topapps.fr/outils/syllable-counter",
+    "categories": [
+      "Rédaction & Texte",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "text-reverser",
+    "name": "Inverseur de texte",
+    "description": "Inversez votre texte",
+    "websiteUrl": "https://topapps.fr/outils/text-reverser",
+    "categories": [
+      "Rédaction & Texte",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "rot13-cipher",
+    "name": "ROT13 / Chiffre César",
+    "description": "Chiffrement par décalage de l'alphabet",
+    "websiteUrl": "https://topapps.fr/outils/rot13-cipher",
+    "categories": [
+      "Rédaction & Texte",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  },
+  {
+    "id": "morse-encoder",
+    "name": "Encodeur Morse",
+    "description": "Texte ↔ code Morse (· −)",
+    "websiteUrl": "https://topapps.fr/outils/morse-encoder",
+    "categories": [
+      "Rédaction & Texte",
+      "Productivité & Automatisation"
+    ],
+    "logoUrl": "https://www.google.com/s2/favicons?sz=256&domain_url=topapps.fr",
+    "isFeatured": false
+  }
+]

@@ -1,0 +1,2226 @@
+[
+  {
+    "id": "carbon-footprint",
+    "name": "Empreinte carbone",
+    "description": "Estimez votre CO₂ annuel (transport, repas…)",
+    "category": "Voyage & Nature",
+    "rank": 1,
+    "url": "https://topapps.fr/outils/carbon-footprint"
+  },
+  {
+    "id": "triangle-solver",
+    "name": "Résolution de triangle",
+    "description": "Loi des sinus/cosinus → angles et côtés manquants",
+    "category": "Calcul & Science",
+    "rank": 2,
+    "url": "https://topapps.fr/outils/triangle-solver"
+  },
+  {
+    "id": "qr-generator",
+    "name": "Générateur QR Code",
+    "description": "Créez des codes QR instantanément",
+    "category": "Productivité",
+    "rank": 10,
+    "url": "https://topapps.fr/outils/qr-generator"
+  },
+  {
+    "id": "image-compressor",
+    "name": "Compresseur d'image",
+    "description": "Réduisez le poids de vos images dans le navigateur",
+    "category": "Productivité",
+    "rank": 20,
+    "url": "https://topapps.fr/outils/image-compressor"
+  },
+  {
+    "id": "password-generator",
+    "name": "Générateur de mot de passe",
+    "description": "Créez des mots de passe sécurisés",
+    "category": "Développement",
+    "rank": 30,
+    "url": "https://topapps.fr/outils/password-generator"
+  },
+  {
+    "id": "pdf-merge",
+    "name": "Fusionner des PDF",
+    "description": "Assemblez plusieurs PDF en un seul fichier",
+    "category": "Productivité",
+    "rank": 35,
+    "url": "https://topapps.fr/outils/pdf-merge"
+  },
+  {
+    "id": "image-resizer",
+    "name": "Redimensionneur d'image",
+    "description": "Redimensionnez vos images dans le navigateur",
+    "category": "Productivité",
+    "rank": 40,
+    "url": "https://topapps.fr/outils/image-resizer"
+  },
+  {
+    "id": "images-to-pdf",
+    "name": "Images vers PDF",
+    "description": "Convertissez vos photos et images en PDF",
+    "category": "Productivité",
+    "rank": 45,
+    "url": "https://topapps.fr/outils/images-to-pdf"
+  },
+  {
+    "id": "salary-converter",
+    "name": "Convertisseur brut / net",
+    "description": "Salaire brut → net + coût employeur (France)",
+    "category": "Calcul & Science",
+    "rank": 50,
+    "url": "https://topapps.fr/outils/salary-converter"
+  },
+  {
+    "id": "pdf-split",
+    "name": "Diviser un PDF",
+    "description": "Extrayez des pages ou découpez un PDF en plusieurs fichiers",
+    "category": "Productivité",
+    "rank": 55,
+    "url": "https://topapps.fr/outils/pdf-split"
+  },
+  {
+    "id": "vat-calculator",
+    "name": "Calculateur de TVA",
+    "description": "Ajouter ou déduire la TVA",
+    "category": "Calcul & Science",
+    "rank": 60,
+    "url": "https://topapps.fr/outils/vat-calculator"
+  },
+  {
+    "id": "percentage-calc",
+    "name": "Calculateur de pourcentage",
+    "description": "Calculez rapidement les pourcentages",
+    "category": "Calcul & Science",
+    "rank": 70,
+    "url": "https://topapps.fr/outils/percentage-calc"
+  },
+  {
+    "id": "currency-converter",
+    "name": "Convertisseur de devises",
+    "description": "Principales devises mondiales",
+    "category": "Calcul & Science",
+    "rank": 80,
+    "url": "https://topapps.fr/outils/currency-converter"
+  },
+  {
+    "id": "word-counter",
+    "name": "Compteur de mots",
+    "description": "Comptez les mots, caractères et phrases",
+    "category": "Texte",
+    "rank": 90,
+    "url": "https://topapps.fr/outils/word-counter"
+  },
+  {
+    "id": "image-crop",
+    "name": "Recadrage d'image",
+    "description": "Rognez et pivotez une image en ligne",
+    "category": "Productivité",
+    "rank": 95,
+    "url": "https://topapps.fr/outils/image-crop"
+  },
+  {
+    "id": "timer",
+    "name": "Minuteur / Chronomètre",
+    "description": "Compte à rebours et chronomètre",
+    "category": "Productivité",
+    "rank": 100,
+    "url": "https://topapps.fr/outils/timer"
+  },
+  {
+    "id": "signature-drawer",
+    "name": "Signature manuscrite",
+    "description": "Dessinez votre signature, export PNG transparent",
+    "category": "Design",
+    "rank": 105,
+    "url": "https://topapps.fr/outils/signature-drawer"
+  },
+  {
+    "id": "heic-converter",
+    "name": "Convertisseur HEIC",
+    "description": "Convertissez des photos iPhone en JPEG/PNG",
+    "category": "Productivité",
+    "rank": 110,
+    "url": "https://topapps.fr/outils/heic-converter"
+  },
+  {
+    "id": "webp-converter",
+    "name": "Convertisseur WebP / AVIF",
+    "description": "WebP, AVIF → JPG ou PNG en local",
+    "category": "Productivité",
+    "rank": 115,
+    "url": "https://topapps.fr/outils/webp-converter"
+  },
+  {
+    "id": "iban-validator",
+    "name": "Vérificateur IBAN",
+    "description": "Validez et formatez un IBAN (mod 97)",
+    "category": "Productivité",
+    "rank": 120,
+    "url": "https://topapps.fr/outils/iban-validator"
+  },
+  {
+    "id": "public-holidays",
+    "name": "Jours fériés",
+    "description": "Jours fériés français et ponts de l'année",
+    "category": "Productivité",
+    "rank": 125,
+    "url": "https://topapps.fr/outils/public-holidays"
+  },
+  {
+    "id": "loan-calculator",
+    "name": "Calculateur de prêt",
+    "description": "Simulez vos mensualités",
+    "category": "Calcul & Science",
+    "rank": 130,
+    "url": "https://topapps.fr/outils/loan-calculator"
+  },
+  {
+    "id": "scanned-pdf",
+    "name": "Effet document scanné",
+    "description": "Donnez à un PDF l'apparence d'un document passé au scanner",
+    "category": "Productivité",
+    "rank": 130,
+    "url": "https://topapps.fr/outils/scanned-pdf"
+  },
+  {
+    "id": "borrowing-capacity",
+    "name": "Capacité d'emprunt",
+    "description": "Montant empruntable selon vos revenus (règle des 35%)",
+    "category": "Calcul & Science",
+    "rank": 135,
+    "url": "https://topapps.fr/outils/borrowing-capacity"
+  },
+  {
+    "id": "tax-calculator",
+    "name": "Simulateur impôts IR",
+    "description": "Estimation impôt sur le revenu France 2026",
+    "category": "Calcul & Science",
+    "rank": 140,
+    "url": "https://topapps.fr/outils/tax-calculator"
+  },
+  {
+    "id": "bareme-kilometrique",
+    "name": "Barème kilométrique",
+    "description": "Frais kilométriques déductibles des impôts (2026)",
+    "category": "Calcul & Science",
+    "rank": 145,
+    "url": "https://topapps.fr/outils/bareme-kilometrique"
+  },
+  {
+    "id": "mortgage-calc",
+    "name": "Crédit immobilier",
+    "description": "Mensualités, coût total et tableau d'amortissement",
+    "category": "Calcul & Science",
+    "rank": 150,
+    "url": "https://topapps.fr/outils/mortgage-calc"
+  },
+  {
+    "id": "json-formatter",
+    "name": "Formateur JSON",
+    "description": "Formatez et validez votre JSON",
+    "category": "Développement",
+    "rank": 160,
+    "url": "https://topapps.fr/outils/json-formatter"
+  },
+  {
+    "id": "fuel-calculator",
+    "name": "Calculateur de carburant",
+    "description": "Coût d'un trajet selon distance et conso",
+    "category": "Calcul & Science",
+    "rank": 170,
+    "url": "https://topapps.fr/outils/fuel-calculator"
+  },
+  {
+    "id": "temperature",
+    "name": "Convertisseur de température",
+    "description": "Celsius, Fahrenheit, Kelvin",
+    "category": "Calcul & Science",
+    "rank": 180,
+    "url": "https://topapps.fr/outils/temperature"
+  },
+  {
+    "id": "date-diff",
+    "name": "Différence de dates",
+    "description": "Jours, semaines, mois entre deux dates",
+    "category": "Calcul & Science",
+    "rank": 190,
+    "url": "https://topapps.fr/outils/date-diff"
+  },
+  {
+    "id": "bmi-calculator",
+    "name": "Calculateur IMC",
+    "description": "Indice de Masse Corporelle",
+    "category": "Calcul & Science",
+    "rank": 200,
+    "url": "https://topapps.fr/outils/bmi-calculator"
+  },
+  {
+    "id": "pomodoro",
+    "name": "Minuteur Pomodoro",
+    "description": "Technique Pomodoro avec cycles configurables",
+    "category": "Productivité",
+    "rank": 210,
+    "url": "https://topapps.fr/outils/pomodoro"
+  },
+  {
+    "id": "discount-calc",
+    "name": "Calculateur de remise",
+    "description": "Calculez les réductions",
+    "category": "Calcul & Science",
+    "rank": 220,
+    "url": "https://topapps.fr/outils/discount-calc"
+  },
+  {
+    "id": "wifi-qr-code",
+    "name": "QR Code WiFi",
+    "description": "Partagez votre WiFi via un QR Code à scanner",
+    "category": "Productivité",
+    "rank": 220,
+    "url": "https://topapps.fr/outils/wifi-qr-code"
+  },
+  {
+    "id": "password-strength",
+    "name": "Force du mot de passe",
+    "description": "Analysez la robustesse d'un mot de passe",
+    "category": "Développement",
+    "rank": 230,
+    "url": "https://topapps.fr/outils/password-strength"
+  },
+  {
+    "id": "scratchpad",
+    "name": "Bloc-notes rapide",
+    "description": "Note persistante dans votre navigateur",
+    "category": "Productivité",
+    "rank": 240,
+    "url": "https://topapps.fr/outils/scratchpad"
+  },
+  {
+    "id": "base64",
+    "name": "Encodeur/Décodeur Base64",
+    "description": "Encodez et décodez en Base64",
+    "category": "Développement",
+    "rank": 250,
+    "url": "https://topapps.fr/outils/base64"
+  },
+  {
+    "id": "age-calculator",
+    "name": "Calculateur d'âge",
+    "description": "Calculez votre âge précis",
+    "category": "Calcul & Science",
+    "rank": 260,
+    "url": "https://topapps.fr/outils/age-calculator"
+  },
+  {
+    "id": "email-validator",
+    "name": "Validateur d'email",
+    "description": "Vérifiez la syntaxe d'une adresse email",
+    "category": "Productivité",
+    "rank": 270,
+    "url": "https://topapps.fr/outils/email-validator"
+  },
+  {
+    "id": "url-encoder",
+    "name": "Encodeur/Décodeur URL",
+    "description": "Encodez et décodez les URLs",
+    "category": "Développement",
+    "rank": 280,
+    "url": "https://topapps.fr/outils/url-encoder"
+  },
+  {
+    "id": "color-converter",
+    "name": "Convertisseur de couleurs",
+    "description": "HEX, RGB, HSL",
+    "category": "Design",
+    "rank": 290,
+    "url": "https://topapps.fr/outils/color-converter"
+  },
+  {
+    "id": "timestamp",
+    "name": "Convertisseur Timestamp",
+    "description": "Unix timestamp vers date lisible",
+    "category": "Productivité",
+    "rank": 300,
+    "url": "https://topapps.fr/outils/timestamp"
+  },
+  {
+    "id": "produit-en-croix",
+    "name": "Produit en croix",
+    "description": "Résolvez une règle de trois (a/b = c/x)",
+    "category": "Calcul & Science",
+    "rank": 300,
+    "url": "https://topapps.fr/outils/produit-en-croix"
+  },
+  {
+    "id": "notary-fees",
+    "name": "Frais de notaire",
+    "description": "Estimation des frais d'acquisition (France)",
+    "category": "Maison & Admin",
+    "rank": 310,
+    "url": "https://topapps.fr/outils/notary-fees"
+  },
+  {
+    "id": "auto-entrepreneur",
+    "name": "Simulateur auto-entrepreneur",
+    "description": "CA → revenu net après charges et impôts",
+    "category": "Maison & Admin",
+    "rank": 320,
+    "url": "https://topapps.fr/outils/auto-entrepreneur"
+  },
+  {
+    "id": "scientific-calc",
+    "name": "Calculatrice scientifique",
+    "description": "Sin, cos, log, sqrt, puissances et constantes",
+    "category": "Calcul & Science",
+    "rank": 330,
+    "url": "https://topapps.fr/outils/scientific-calc"
+  },
+  {
+    "id": "working-days",
+    "name": "Jours ouvrés",
+    "description": "Jours ouvrés entre deux dates, hors fériés FR",
+    "category": "Calcul & Science",
+    "rank": 340,
+    "url": "https://topapps.fr/outils/working-days"
+  },
+  {
+    "id": "emoji-picker",
+    "name": "Sélecteur d'émojis",
+    "description": "Trouvez et copiez un émoji en un clic",
+    "category": "Productivité",
+    "rank": 340,
+    "url": "https://topapps.fr/outils/emoji-picker"
+  },
+  {
+    "id": "unit-price",
+    "name": "Comparateur prix unitaire",
+    "description": "Meilleur prix au kg ou au litre entre 2 produits",
+    "category": "Calcul & Science",
+    "rank": 350,
+    "url": "https://topapps.fr/outils/unit-price"
+  },
+  {
+    "id": "electricity-calc",
+    "name": "Calculateur électricité",
+    "description": "Coût d'un appareil en kWh/jour, mois, an",
+    "category": "Calcul & Science",
+    "rank": 360,
+    "url": "https://topapps.fr/outils/electricity-calc"
+  },
+  {
+    "id": "compound-interest",
+    "name": "Intérêts composés",
+    "description": "Simulez la croissance de votre capital",
+    "category": "Calcul & Science",
+    "rank": 370,
+    "url": "https://topapps.fr/outils/compound-interest"
+  },
+  {
+    "id": "livret-interest",
+    "name": "Intérêts Livret A / LEP",
+    "description": "Intérêts annuels Livret A, LDDS et LEP",
+    "category": "Calcul & Science",
+    "rank": 375,
+    "url": "https://topapps.fr/outils/livret-interest"
+  },
+  {
+    "id": "timezone-converter",
+    "name": "Convertisseur de fuseaux",
+    "description": "Heure dans les principales villes du monde",
+    "category": "Calcul & Science",
+    "rank": 380,
+    "url": "https://topapps.fr/outils/timezone-converter"
+  },
+  {
+    "id": "uuid-generator",
+    "name": "Générateur UUID",
+    "description": "Générez des UUID v4",
+    "category": "Développement",
+    "rank": 390,
+    "url": "https://topapps.fr/outils/uuid-generator"
+  },
+  {
+    "id": "siret-validator",
+    "name": "Vérificateur SIRET / SIREN",
+    "description": "Validez un numéro SIRET ou SIREN (algorithme de Luhn)",
+    "category": "Maison & Admin",
+    "rank": 400,
+    "url": "https://topapps.fr/outils/siret-validator"
+  },
+  {
+    "id": "nir-validator",
+    "name": "Vérificateur n° de Sécu",
+    "description": "Validez un numéro de sécurité sociale (clé NIR)",
+    "category": "Maison & Admin",
+    "rank": 406,
+    "url": "https://topapps.fr/outils/nir-validator"
+  },
+  {
+    "id": "paid-leave",
+    "name": "Congés payés",
+    "description": "Droits acquis, pris et solde restant",
+    "category": "Maison & Admin",
+    "rank": 410,
+    "url": "https://topapps.fr/outils/paid-leave"
+  },
+  {
+    "id": "irl-revision",
+    "name": "Révision de loyer (IRL)",
+    "description": "Nouveau loyer selon l'indice INSEE en vigueur",
+    "category": "Maison & Admin",
+    "rank": 415,
+    "url": "https://topapps.fr/outils/irl-revision"
+  },
+  {
+    "id": "severance-pay",
+    "name": "Indemnité de licenciement",
+    "description": "Calcul légal selon l'ancienneté (France)",
+    "category": "Maison & Admin",
+    "rank": 420,
+    "url": "https://topapps.fr/outils/severance-pay"
+  },
+  {
+    "id": "child-support",
+    "name": "Pension alimentaire",
+    "description": "Estimation selon la table du ministère de la Justice",
+    "category": "Maison & Admin",
+    "rank": 425,
+    "url": "https://topapps.fr/outils/child-support"
+  },
+  {
+    "id": "budget-planner",
+    "name": "Simulateur de budget",
+    "description": "Revenus, charges et épargne mensuelle",
+    "category": "Calcul & Science",
+    "rank": 430,
+    "url": "https://topapps.fr/outils/budget-planner"
+  },
+  {
+    "id": "vat-number-validator",
+    "name": "N° TVA intracommunautaire",
+    "description": "Validez ou calculez un n° TVA FR depuis le SIREN",
+    "category": "Maison & Admin",
+    "rank": 436,
+    "url": "https://topapps.fr/outils/vat-number-validator"
+  },
+  {
+    "id": "savings-goal",
+    "name": "Objectif d'épargne",
+    "description": "Combien de mois pour atteindre votre objectif",
+    "category": "Calcul & Science",
+    "rank": 440,
+    "url": "https://topapps.fr/outils/savings-goal"
+  },
+  {
+    "id": "school-holidays",
+    "name": "Vacances scolaires",
+    "description": "Calendrier zones A, B, C (2025-2027)",
+    "category": "Éducation & Musique",
+    "rank": 446,
+    "url": "https://topapps.fr/outils/school-holidays"
+  },
+  {
+    "id": "notice-period",
+    "name": "Préavis de location",
+    "description": "Durée de préavis selon type et zone tendue",
+    "category": "Maison & Admin",
+    "rank": 450,
+    "url": "https://topapps.fr/outils/notice-period"
+  },
+  {
+    "id": "ptz-calculator",
+    "name": "Simulateur PTZ",
+    "description": "Montant du prêt à taux zéro estimé",
+    "category": "Maison & Admin",
+    "rank": 460,
+    "url": "https://topapps.fr/outils/ptz-calculator"
+  },
+  {
+    "id": "youtube-thumbnail",
+    "name": "Miniature YouTube",
+    "description": "Récupérez la vignette HD d'une vidéo YouTube",
+    "category": "Productivité",
+    "rank": 465,
+    "url": "https://topapps.fr/outils/youtube-thumbnail"
+  },
+  {
+    "id": "qr-reader",
+    "name": "Lecteur de QR Code",
+    "description": "Décodez un QR Code depuis une image",
+    "category": "Productivité",
+    "rank": 470,
+    "url": "https://topapps.fr/outils/qr-reader"
+  },
+  {
+    "id": "voice-recorder",
+    "name": "Enregistreur vocal",
+    "description": "Enregistrez votre micro, export audio local",
+    "category": "Productivité",
+    "rank": 475,
+    "url": "https://topapps.fr/outils/voice-recorder"
+  },
+  {
+    "id": "barcode-generator",
+    "name": "Générateur de code-barres",
+    "description": "Créez des codes EAN-13 et Code128 en PNG",
+    "category": "Productivité",
+    "rank": 480,
+    "url": "https://topapps.fr/outils/barcode-generator"
+  },
+  {
+    "id": "exif-cleaner",
+    "name": "Suppression métadonnées photo",
+    "description": "Effacez EXIF et position GPS avant de partager",
+    "category": "Productivité",
+    "rank": 485,
+    "url": "https://topapps.fr/outils/exif-cleaner"
+  },
+  {
+    "id": "freelance-calc",
+    "name": "Calculateur freelance",
+    "description": "TJM → revenus nets micro-entreprise ou SASU",
+    "category": "Calcul & Science",
+    "rank": 490,
+    "url": "https://topapps.fr/outils/freelance-calc"
+  },
+  {
+    "id": "photo-censor",
+    "name": "Flouter une zone d'image",
+    "description": "Floutez, pixellisez ou masquez une info sensible",
+    "category": "Productivité",
+    "rank": 490,
+    "url": "https://topapps.fr/outils/photo-censor"
+  },
+  {
+    "id": "regex-tester",
+    "name": "Testeur Regex",
+    "description": "Testez vos expressions régulières",
+    "category": "Développement",
+    "rank": 500,
+    "url": "https://topapps.fr/outils/regex-tester"
+  },
+  {
+    "id": "units-converter",
+    "name": "Convertisseur d'unités",
+    "description": "Longueur, poids, volume",
+    "category": "Calcul & Science",
+    "rank": 510,
+    "url": "https://topapps.fr/outils/units-converter"
+  },
+  {
+    "id": "tip-calculator",
+    "name": "Calculateur de pourboire",
+    "description": "Calculez les pourboires facilement",
+    "category": "Calcul & Science",
+    "rank": 520,
+    "url": "https://topapps.fr/outils/tip-calculator"
+  },
+  {
+    "id": "calorie-calculator",
+    "name": "Calculateur de calories",
+    "description": "Besoins caloriques quotidiens",
+    "category": "Calcul & Science",
+    "rank": 530,
+    "url": "https://topapps.fr/outils/calorie-calculator"
+  },
+  {
+    "id": "hash-generator",
+    "name": "Générateur de hash",
+    "description": "SHA-256, SHA-384, SHA-512",
+    "category": "Développement",
+    "rank": 540,
+    "url": "https://topapps.fr/outils/hash-generator"
+  },
+  {
+    "id": "stock-tax",
+    "name": "Impôt plus-value bourse",
+    "description": "PFU 30% ou PEA : impôt sur vos gains en actions",
+    "category": "Calcul & Science",
+    "rank": 545,
+    "url": "https://topapps.fr/outils/stock-tax"
+  },
+  {
+    "id": "retirement-calc",
+    "name": "Calculateur de retraite",
+    "description": "Âge de départ et pension estimée (France)",
+    "category": "Calcul & Science",
+    "rank": 550,
+    "url": "https://topapps.fr/outils/retirement-calc"
+  },
+  {
+    "id": "macro-calculator",
+    "name": "Calculateur de macros",
+    "description": "Calories, protéines, glucides et lipides (TDEE)",
+    "category": "Calcul & Science",
+    "rank": 560,
+    "url": "https://topapps.fr/outils/macro-calculator"
+  },
+  {
+    "id": "chmod-calculator",
+    "name": "Calculateur chmod",
+    "description": "Permissions Unix : octal ↔ rwx",
+    "category": "Développement",
+    "rank": 560,
+    "url": "https://topapps.fr/outils/chmod-calculator"
+  },
+  {
+    "id": "bac-calculator",
+    "name": "Alcoolémie",
+    "description": "Taux d'alcool estimé et délai avant de conduire",
+    "category": "Santé & Sport",
+    "rank": 565,
+    "url": "https://topapps.fr/outils/bac-calculator"
+  },
+  {
+    "id": "sleep-calculator",
+    "name": "Calculateur de sommeil",
+    "description": "Heures de coucher/réveil par cycles de 90 min",
+    "category": "Productivité",
+    "rank": 570,
+    "url": "https://topapps.fr/outils/sleep-calculator"
+  },
+  {
+    "id": "crypto-tax",
+    "name": "Impôt plus-value crypto",
+    "description": "Flat tax de 30% sur vos gains crypto",
+    "category": "Calcul & Science",
+    "rank": 575,
+    "url": "https://topapps.fr/outils/crypto-tax"
+  },
+  {
+    "id": "roi-calculator",
+    "name": "Calculateur ROI",
+    "description": "Retour sur investissement et point mort",
+    "category": "Calcul & Science",
+    "rank": 580,
+    "url": "https://topapps.fr/outils/roi-calculator"
+  },
+  {
+    "id": "fullscreen-countdown",
+    "name": "Compte à rebours plein écran",
+    "description": "Jusqu'à une date : vacances, examen, retraite…",
+    "category": "Productivité",
+    "rank": 585,
+    "url": "https://topapps.fr/outils/fullscreen-countdown"
+  },
+  {
+    "id": "text-diff",
+    "name": "Comparateur de texte",
+    "description": "Comparez deux textes",
+    "category": "Texte",
+    "rank": 590,
+    "url": "https://topapps.fr/outils/text-diff"
+  },
+  {
+    "id": "fancy-text",
+    "name": "Texte stylé Unicode",
+    "description": "Polices spéciales pour bios Instagram, TikTok…",
+    "category": "Texte",
+    "rank": 595,
+    "url": "https://topapps.fr/outils/fancy-text"
+  },
+  {
+    "id": "list-comparator",
+    "name": "Comparateur de listes",
+    "description": "Intersection, différence et doublons",
+    "category": "Texte",
+    "rank": 600,
+    "url": "https://topapps.fr/outils/list-comparator"
+  },
+  {
+    "id": "number-to-words",
+    "name": "Montant en lettres",
+    "description": "Chiffres → toutes lettres pour vos chèques",
+    "category": "Texte",
+    "rank": 605,
+    "url": "https://topapps.fr/outils/number-to-words"
+  },
+  {
+    "id": "case-converter",
+    "name": "Convertisseur de casse",
+    "description": "Majuscules, minuscules, titre…",
+    "category": "Texte",
+    "rank": 610,
+    "url": "https://topapps.fr/outils/case-converter"
+  },
+  {
+    "id": "lorem-ipsum",
+    "name": "Lorem Ipsum",
+    "description": "Générez du texte de remplissage",
+    "category": "Texte",
+    "rank": 620,
+    "url": "https://topapps.fr/outils/lorem-ipsum"
+  },
+  {
+    "id": "gradient-generator",
+    "name": "Générateur de dégradé",
+    "description": "Créez des dégradés CSS",
+    "category": "Design",
+    "rank": 630,
+    "url": "https://topapps.fr/outils/gradient-generator"
+  },
+  {
+    "id": "flexbox-generator",
+    "name": "Générateur Flexbox CSS",
+    "description": "Visualisez et générez du CSS Flexbox",
+    "category": "Design",
+    "rank": 640,
+    "url": "https://topapps.fr/outils/flexbox-generator"
+  },
+  {
+    "id": "color-palette",
+    "name": "Palette de couleurs",
+    "description": "Générez des palettes CSS harmonieuses",
+    "category": "Design",
+    "rank": 650,
+    "url": "https://topapps.fr/outils/color-palette"
+  },
+  {
+    "id": "contrast-checker",
+    "name": "Vérificateur de contraste",
+    "description": "Accessibilité WCAG AA / AAA",
+    "category": "Design",
+    "rank": 660,
+    "url": "https://topapps.fr/outils/contrast-checker"
+  },
+  {
+    "id": "favicon-generator",
+    "name": "Générateur de favicon",
+    "description": "Créez un favicon depuis du texte ou un emoji",
+    "category": "Design",
+    "rank": 670,
+    "url": "https://topapps.fr/outils/favicon-generator"
+  },
+  {
+    "id": "svg-to-png",
+    "name": "Convertisseur SVG vers PNG",
+    "description": "Exportez un SVG en PNG à la taille voulue",
+    "category": "Design",
+    "rank": 675,
+    "url": "https://topapps.fr/outils/svg-to-png"
+  },
+  {
+    "id": "jwt-decoder",
+    "name": "Décodeur JWT",
+    "description": "Décodez les tokens JWT",
+    "category": "Développement",
+    "rank": 680,
+    "url": "https://topapps.fr/outils/jwt-decoder"
+  },
+  {
+    "id": "sql-formatter",
+    "name": "Formateur SQL",
+    "description": "Formatez et indentez vos requêtes SQL",
+    "category": "Développement",
+    "rank": 690,
+    "url": "https://topapps.fr/outils/sql-formatter"
+  },
+  {
+    "id": "aes-encrypt-decrypt",
+    "name": "Chiffrement AES",
+    "description": "Chiffrez/déchiffrez un texte (AES-256-GCM)",
+    "category": "Développement",
+    "rank": 690,
+    "url": "https://topapps.fr/outils/aes-encrypt-decrypt"
+  },
+  {
+    "id": "http-status",
+    "name": "Codes HTTP",
+    "description": "Référence interactive des statuts HTTP",
+    "category": "Développement",
+    "rank": 700,
+    "url": "https://topapps.fr/outils/http-status"
+  },
+  {
+    "id": "js-formatter",
+    "name": "Formateur JavaScript",
+    "description": "Beautifiez ou minifiez votre code JavaScript",
+    "category": "Développement",
+    "rank": 710,
+    "url": "https://topapps.fr/outils/js-formatter"
+  },
+  {
+    "id": "clothing-size",
+    "name": "Tailles de vêtements",
+    "description": "Correspondances EU / US / UK femme et homme",
+    "category": "Calcul & Science",
+    "rank": 720,
+    "url": "https://topapps.fr/outils/clothing-size"
+  },
+  {
+    "id": "time-to-decimal",
+    "name": "Heures ↔ décimal",
+    "description": "Convertissez HH:MM en heures décimales",
+    "category": "Calcul & Science",
+    "rank": 720,
+    "url": "https://topapps.fr/outils/time-to-decimal"
+  },
+  {
+    "id": "shoe-size",
+    "name": "Convertisseur de pointures",
+    "description": "Tailles de chaussures EU / UK / US",
+    "category": "Calcul & Science",
+    "rank": 730,
+    "url": "https://topapps.fr/outils/shoe-size"
+  },
+  {
+    "id": "typing-test",
+    "name": "Test de vitesse de frappe",
+    "description": "Mesurez vos mots par minute (WPM)",
+    "category": "Productivité",
+    "rank": 740,
+    "url": "https://topapps.fr/outils/typing-test"
+  },
+  {
+    "id": "mic-webcam-test",
+    "name": "Test micro & webcam",
+    "description": "Vérifiez votre micro et votre caméra avant une visio",
+    "category": "Productivité",
+    "rank": 745,
+    "url": "https://topapps.fr/outils/mic-webcam-test"
+  },
+  {
+    "id": "random-picker",
+    "name": "Roue aléatoire",
+    "description": "Tirage au sort depuis une liste personnalisée",
+    "category": "Cuisine & Loisirs",
+    "rank": 750,
+    "url": "https://topapps.fr/outils/random-picker"
+  },
+  {
+    "id": "tweet-mockup",
+    "name": "Maquette de tweet",
+    "description": "Simulez un post X/Twitter pour vos aperçus et parodies",
+    "category": "Design",
+    "rank": 755,
+    "url": "https://topapps.fr/outils/tweet-mockup"
+  },
+  {
+    "id": "coin-flip",
+    "name": "Pile ou face",
+    "description": "Tirage animé avec historique",
+    "category": "Cuisine & Loisirs",
+    "rank": 760,
+    "url": "https://topapps.fr/outils/coin-flip"
+  },
+  {
+    "id": "download-time",
+    "name": "Temps de téléchargement",
+    "description": "Durée selon la taille du fichier et votre débit",
+    "category": "Productivité",
+    "rank": 765,
+    "url": "https://topapps.fr/outils/download-time"
+  },
+  {
+    "id": "insta-post-mockup",
+    "name": "Maquette de post Instagram",
+    "description": "Simulez un post Instagram pour vos maquettes",
+    "category": "Design",
+    "rank": 765,
+    "url": "https://topapps.fr/outils/insta-post-mockup"
+  },
+  {
+    "id": "dice-roller",
+    "name": "Lanceur de dés",
+    "description": "Lancez des dés virtuels",
+    "category": "Productivité",
+    "rank": 770,
+    "url": "https://topapps.fr/outils/dice-roller"
+  },
+  {
+    "id": "chat-mockup",
+    "name": "Maquette de conversation",
+    "description": "Faux échange style WhatsApp ou iMessage en PNG",
+    "category": "Design",
+    "rank": 775,
+    "url": "https://topapps.fr/outils/chat-mockup"
+  },
+  {
+    "id": "totp-generator",
+    "name": "Générateur TOTP",
+    "description": "Codes 2FA à usage unique (RFC 6238)",
+    "category": "Développement",
+    "rank": 780,
+    "url": "https://topapps.fr/outils/totp-generator"
+  },
+  {
+    "id": "passphrase-gen",
+    "name": "Générateur de passphrase",
+    "description": "Mots aléatoires mémorables",
+    "category": "Développement",
+    "rank": 790,
+    "url": "https://topapps.fr/outils/passphrase-gen"
+  },
+  {
+    "id": "name-generator",
+    "name": "Générateur de noms",
+    "description": "Prénoms, entreprises, fantasy, pseudos",
+    "category": "Cuisine & Loisirs",
+    "rank": 800,
+    "url": "https://topapps.fr/outils/name-generator"
+  },
+  {
+    "id": "handwriting-text",
+    "name": "Texte en écriture manuscrite",
+    "description": "Transformez un texte tapé en page manuscrite",
+    "category": "Texte",
+    "rank": 805,
+    "url": "https://topapps.fr/outils/handwriting-text"
+  },
+  {
+    "id": "cooking-converter",
+    "name": "Mesures culinaires",
+    "description": "Cups, tbsp, tsp, oz → ml et grammes",
+    "category": "Cuisine & Loisirs",
+    "rank": 810,
+    "url": "https://topapps.fr/outils/cooking-converter"
+  },
+  {
+    "id": "recipe-portions",
+    "name": "Calculateur de portions",
+    "description": "Adaptez une recette pour N personnes",
+    "category": "Cuisine & Loisirs",
+    "rank": 820,
+    "url": "https://topapps.fr/outils/recipe-portions"
+  },
+  {
+    "id": "oven-converter",
+    "name": "Températures de four",
+    "description": "°C / °F / Thermostat — guide de cuisson",
+    "category": "Cuisine & Loisirs",
+    "rank": 830,
+    "url": "https://topapps.fr/outils/oven-converter"
+  },
+  {
+    "id": "cooking-time",
+    "name": "Temps de cuisson",
+    "description": "Durée selon le poids et le type de viande",
+    "category": "Cuisine & Loisirs",
+    "rank": 840,
+    "url": "https://topapps.fr/outils/cooking-time"
+  },
+  {
+    "id": "grocery-list",
+    "name": "Liste de courses",
+    "description": "Ajout par catégorie, cochage et persistance",
+    "category": "Cuisine & Loisirs",
+    "rank": 850,
+    "url": "https://topapps.fr/outils/grocery-list"
+  },
+  {
+    "id": "meal-planner",
+    "name": "Planificateur de repas",
+    "description": "Planifiez les repas de la semaine",
+    "category": "Cuisine & Loisirs",
+    "rank": 860,
+    "url": "https://topapps.fr/outils/meal-planner"
+  },
+  {
+    "id": "text-to-speech",
+    "name": "Texte vers parole",
+    "description": "Convertissez du texte en audio",
+    "category": "Texte",
+    "rank": 870,
+    "url": "https://topapps.fr/outils/text-to-speech"
+  },
+  {
+    "id": "char-counter",
+    "name": "Compteur de caractères avancé",
+    "description": "Statistiques détaillées sur votre texte",
+    "category": "Texte",
+    "rank": 880,
+    "url": "https://topapps.fr/outils/char-counter"
+  },
+  {
+    "id": "whitespace-remover",
+    "name": "Suppresseur d'espaces",
+    "description": "Nettoyez les espaces et lignes vides",
+    "category": "Texte",
+    "rank": 890,
+    "url": "https://topapps.fr/outils/whitespace-remover"
+  },
+  {
+    "id": "pace-calculator",
+    "name": "Calculateur de pace",
+    "description": "Allure, temps de finition, distance de course",
+    "category": "Santé & Sport",
+    "rank": 900,
+    "url": "https://topapps.fr/outils/pace-calculator"
+  },
+  {
+    "id": "heart-rate-zones",
+    "name": "Zones de fréquence cardiaque",
+    "description": "5 zones d'entraînement selon votre FC max",
+    "category": "Santé & Sport",
+    "rank": 910,
+    "url": "https://topapps.fr/outils/heart-rate-zones"
+  },
+  {
+    "id": "metronome",
+    "name": "Métronome",
+    "description": "Métronome avec son et BPM configurable",
+    "category": "Éducation & Musique",
+    "rank": 920,
+    "url": "https://topapps.fr/outils/metronome"
+  },
+  {
+    "id": "chromatic-tuner",
+    "name": "Accordeur chromatique",
+    "description": "Détectez la note jouée via le microphone",
+    "category": "Éducation & Musique",
+    "rank": 930,
+    "url": "https://topapps.fr/outils/chromatic-tuner"
+  },
+  {
+    "id": "tap-bpm",
+    "name": "Tap BPM",
+    "description": "Tapez le rythme pour mesurer le tempo",
+    "category": "Éducation & Musique",
+    "rank": 940,
+    "url": "https://topapps.fr/outils/tap-bpm"
+  },
+  {
+    "id": "grade-calculator",
+    "name": "Moyenne scolaire",
+    "description": "Moyenne pondérée avec coefficients et mention",
+    "category": "Éducation & Musique",
+    "rank": 950,
+    "url": "https://topapps.fr/outils/grade-calculator"
+  },
+  {
+    "id": "flashcards",
+    "name": "Flashcards",
+    "description": "Créez et révisez des fiches recto/verso",
+    "category": "Éducation & Musique",
+    "rank": 960,
+    "url": "https://topapps.fr/outils/flashcards"
+  },
+  {
+    "id": "travel-budget",
+    "name": "Budget voyage",
+    "description": "Répartition et suivi des dépenses de voyage",
+    "category": "Voyage & Nature",
+    "rank": 970,
+    "url": "https://topapps.fr/outils/travel-budget"
+  },
+  {
+    "id": "power-adapter",
+    "name": "Adaptateur de prises",
+    "description": "Voltage et type de prise par pays",
+    "category": "Voyage & Nature",
+    "rank": 980,
+    "url": "https://topapps.fr/outils/power-adapter"
+  },
+  {
+    "id": "gps-distance",
+    "name": "Distance GPS",
+    "description": "Distance entre deux points géographiques",
+    "category": "Voyage & Nature",
+    "rank": 990,
+    "url": "https://topapps.fr/outils/gps-distance"
+  },
+  {
+    "id": "led-savings",
+    "name": "Économies LED",
+    "description": "Économies sur votre facture en passant aux LED",
+    "category": "Voyage & Nature",
+    "rank": 1010,
+    "url": "https://topapps.fr/outils/led-savings"
+  },
+  {
+    "id": "ev-cost",
+    "name": "Coût électrique vs essence",
+    "description": "Coût aux 100 km : électrique, essence, diesel",
+    "category": "Voyage & Nature",
+    "rank": 1015,
+    "url": "https://topapps.fr/outils/ev-cost"
+  },
+  {
+    "id": "solar-calculator",
+    "name": "Panneaux solaires",
+    "description": "Production estimée et retour sur investissement",
+    "category": "Voyage & Nature",
+    "rank": 1020,
+    "url": "https://topapps.fr/outils/solar-calculator"
+  },
+  {
+    "id": "paint-calculator",
+    "name": "Calculateur de peinture",
+    "description": "Surface + couches → litres de peinture nécessaires",
+    "category": "Maison & Admin",
+    "rank": 1030,
+    "url": "https://topapps.fr/outils/paint-calculator"
+  },
+  {
+    "id": "tile-calculator",
+    "name": "Calculateur de carrelage",
+    "description": "Surface + format → boîtes (avec % de chutes)",
+    "category": "Maison & Admin",
+    "rank": 1040,
+    "url": "https://topapps.fr/outils/tile-calculator"
+  },
+  {
+    "id": "floor-calculator",
+    "name": "Calculateur de parquet",
+    "description": "Surface + largeur de lame → m² et packs",
+    "category": "Maison & Admin",
+    "rank": 1050,
+    "url": "https://topapps.fr/outils/floor-calculator"
+  },
+  {
+    "id": "wallpaper-calculator",
+    "name": "Calculateur de papier peint",
+    "description": "Dimensions pièce + hauteur lé → nb de rouleaux",
+    "category": "Maison & Admin",
+    "rank": 1060,
+    "url": "https://topapps.fr/outils/wallpaper-calculator"
+  },
+  {
+    "id": "concrete-calculator",
+    "name": "Calculateur de béton",
+    "description": "Volume de dalle ou poteau → sacs de ciment",
+    "category": "Maison & Admin",
+    "rank": 1070,
+    "url": "https://topapps.fr/outils/concrete-calculator"
+  },
+  {
+    "id": "rental-yield",
+    "name": "Rendement locatif",
+    "description": "Rendement brut et net de votre investissement",
+    "category": "Maison & Admin",
+    "rank": 1080,
+    "url": "https://topapps.fr/outils/rental-yield"
+  },
+  {
+    "id": "property-gain",
+    "name": "Plus-value immobilière",
+    "description": "Impôt sur la vente d'un bien et abattements",
+    "category": "Maison & Admin",
+    "rank": 1085,
+    "url": "https://topapps.fr/outils/property-gain"
+  },
+  {
+    "id": "electricity-bill",
+    "name": "Facture électricité",
+    "description": "kWh + abonnement → estimation facture EDF 2026",
+    "category": "Maison & Admin",
+    "rank": 1090,
+    "url": "https://topapps.fr/outils/electricity-bill"
+  },
+  {
+    "id": "tv-size",
+    "name": "Taille TV & recul",
+    "description": "Pouces ↔ cm et distance de recul idéale",
+    "category": "Maison & Admin",
+    "rank": 1095,
+    "url": "https://topapps.fr/outils/tv-size"
+  },
+  {
+    "id": "moving-cost",
+    "name": "Budget déménagement",
+    "description": "Volume + distance + étages → estimation prestataire",
+    "category": "Maison & Admin",
+    "rank": 1100,
+    "url": "https://topapps.fr/outils/moving-cost"
+  },
+  {
+    "id": "ideal-weight",
+    "name": "Poids idéal",
+    "description": "Formules Lorentz, Broca, Devine et Monnerot",
+    "category": "Santé & Sport",
+    "rank": 1110,
+    "url": "https://topapps.fr/outils/ideal-weight"
+  },
+  {
+    "id": "blood-pressure",
+    "name": "Tension artérielle",
+    "description": "Interprétation clinique selon les normes OMS",
+    "category": "Santé & Sport",
+    "rank": 1120,
+    "url": "https://topapps.fr/outils/blood-pressure"
+  },
+  {
+    "id": "hydration-calc",
+    "name": "Hydratation quotidienne",
+    "description": "Besoins en eau selon poids et activité",
+    "category": "Santé & Sport",
+    "rank": 1130,
+    "url": "https://topapps.fr/outils/hydration-calc"
+  },
+  {
+    "id": "menstrual-cycle",
+    "name": "Cycle menstruel",
+    "description": "Prochaines règles, ovulation et fenêtre fertile",
+    "category": "Santé & Sport",
+    "rank": 1140,
+    "url": "https://topapps.fr/outils/menstrual-cycle"
+  },
+  {
+    "id": "pregnancy-calc",
+    "name": "Date d'accouchement",
+    "description": "Dernières règles → DPA + semaines d'aménorrhée",
+    "category": "Santé & Sport",
+    "rank": 1150,
+    "url": "https://topapps.fr/outils/pregnancy-calc"
+  },
+  {
+    "id": "glycemia-converter",
+    "name": "Convertisseur glycémie",
+    "description": "mmol/L ↔ mg/dL avec interprétation clinique",
+    "category": "Santé & Sport",
+    "rank": 1160,
+    "url": "https://topapps.fr/outils/glycemia-converter"
+  },
+  {
+    "id": "one-rm-calculator",
+    "name": "Calculateur 1RM",
+    "description": "Charge maximale estimée (Epley, Brzycki…)",
+    "category": "Santé & Sport",
+    "rank": 1170,
+    "url": "https://topapps.fr/outils/one-rm-calculator"
+  },
+  {
+    "id": "vo2max-calculator",
+    "name": "Calculateur VO2max",
+    "description": "VO2max estimé via test de Cooper ou marche",
+    "category": "Santé & Sport",
+    "rank": 1180,
+    "url": "https://topapps.fr/outils/vo2max-calculator"
+  },
+  {
+    "id": "basic-auth-generator",
+    "name": "Générateur Basic Auth",
+    "description": "En-tête HTTP Authorization: Basic",
+    "category": "Développement",
+    "rank": 1180,
+    "url": "https://topapps.fr/outils/basic-auth-generator"
+  },
+  {
+    "id": "ipv4-address-converter",
+    "name": "Convertisseur IPv4",
+    "description": "IP ↔ entier, hexadécimal, binaire",
+    "category": "Développement",
+    "rank": 1185,
+    "url": "https://topapps.fr/outils/ipv4-address-converter"
+  },
+  {
+    "id": "json-xml-converter",
+    "name": "JSON vers XML",
+    "description": "Convertissez du JSON en XML",
+    "category": "Développement",
+    "rank": 1186,
+    "url": "https://topapps.fr/outils/json-xml-converter"
+  },
+  {
+    "id": "json-toml-converter",
+    "name": "JSON vers TOML",
+    "description": "Convertissez du JSON en TOML",
+    "category": "Développement",
+    "rank": 1187,
+    "url": "https://topapps.fr/outils/json-toml-converter"
+  },
+  {
+    "id": "ipv4-range-expander",
+    "name": "Expanseur de plage IPv4",
+    "description": "CIDR → réseau, diffusion, liste d'IP",
+    "category": "Développement",
+    "rank": 1188,
+    "url": "https://topapps.fr/outils/ipv4-range-expander"
+  },
+  {
+    "id": "body-fat",
+    "name": "% de masse graisseuse",
+    "description": "Méthode U.S. Navy → % + catégorie",
+    "category": "Santé & Sport",
+    "rank": 1190,
+    "url": "https://topapps.fr/outils/body-fat"
+  },
+  {
+    "id": "waist-hip",
+    "name": "Ratio taille/hanches",
+    "description": "Tour de taille ÷ hanches → risque cardiovasculaire",
+    "category": "Santé & Sport",
+    "rank": 1200,
+    "url": "https://topapps.fr/outils/waist-hip"
+  },
+  {
+    "id": "storage-converter",
+    "name": "Convertisseur de taille",
+    "description": "B, KB, MB, GB, TB",
+    "category": "Calcul & Science",
+    "rank": 1210,
+    "url": "https://topapps.fr/outils/storage-converter"
+  },
+  {
+    "id": "json-to-csv",
+    "name": "JSON vers CSV",
+    "description": "Convertissez JSON en CSV",
+    "category": "Calcul & Science",
+    "rank": 1220,
+    "url": "https://topapps.fr/outils/json-to-csv"
+  },
+  {
+    "id": "markdown-preview",
+    "name": "Aperçu Markdown",
+    "description": "Prévisualisez votre Markdown",
+    "category": "Développement",
+    "rank": 1230,
+    "url": "https://topapps.fr/outils/markdown-preview"
+  },
+  {
+    "id": "markdown-to-html",
+    "name": "Markdown vers HTML",
+    "description": "Convertissez Markdown en HTML",
+    "category": "Texte",
+    "rank": 1240,
+    "url": "https://topapps.fr/outils/markdown-to-html"
+  },
+  {
+    "id": "reading-time",
+    "name": "Estimateur de lecture",
+    "description": "Temps de lecture estimé de votre texte",
+    "category": "Texte",
+    "rank": 1250,
+    "url": "https://topapps.fr/outils/reading-time"
+  },
+  {
+    "id": "readability-score",
+    "name": "Score de lisibilité",
+    "description": "Indice Flesch-Kincaid et niveau du texte",
+    "category": "Texte",
+    "rank": 1260,
+    "url": "https://topapps.fr/outils/readability-score"
+  },
+  {
+    "id": "word-frequency",
+    "name": "Fréquence des mots",
+    "description": "Analysez la fréquence de chaque mot",
+    "category": "Texte",
+    "rank": 1270,
+    "url": "https://topapps.fr/outils/word-frequency"
+  },
+  {
+    "id": "line-sorter",
+    "name": "Tri de lignes",
+    "description": "Trier, dédupliquer ou mélanger des lignes",
+    "category": "Texte",
+    "rank": 1280,
+    "url": "https://topapps.fr/outils/line-sorter"
+  },
+  {
+    "id": "email-extractor",
+    "name": "Extracteur d'emails",
+    "description": "Extrayez tous les emails d'un texte",
+    "category": "Texte",
+    "rank": 1290,
+    "url": "https://topapps.fr/outils/email-extractor"
+  },
+  {
+    "id": "email-normalizer",
+    "name": "Normaliseur d'e-mails",
+    "description": "Normalise les e-mails (Gmail : points, +tag)",
+    "category": "Développement",
+    "rank": 1295,
+    "url": "https://topapps.fr/outils/email-normalizer"
+  },
+  {
+    "id": "url-extractor",
+    "name": "Extracteur d'URLs",
+    "description": "Extrayez tous les liens d'un texte",
+    "category": "Texte",
+    "rank": 1300,
+    "url": "https://topapps.fr/outils/url-extractor"
+  },
+  {
+    "id": "slug-generator",
+    "name": "Générateur de slug",
+    "description": "Créez des slugs URL-friendly",
+    "category": "Texte",
+    "rank": 1310,
+    "url": "https://topapps.fr/outils/slug-generator"
+  },
+  {
+    "id": "text-formatter",
+    "name": "Formateur de texte",
+    "description": "Alignement, espacement et mise en forme",
+    "category": "Texte",
+    "rank": 1320,
+    "url": "https://topapps.fr/outils/text-formatter"
+  },
+  {
+    "id": "vcard-generator",
+    "name": "Générateur vCard",
+    "description": "Créez une carte de contact .vcf téléchargeable",
+    "category": "Productivité",
+    "rank": 1330,
+    "url": "https://topapps.fr/outils/vcard-generator"
+  },
+  {
+    "id": "weekly-planner",
+    "name": "Planning hebdomadaire",
+    "description": "Organisez votre semaine en un coup d'œil",
+    "category": "Productivité",
+    "rank": 1340,
+    "url": "https://topapps.fr/outils/weekly-planner"
+  },
+  {
+    "id": "meeting-timer",
+    "name": "Minuteur de réunion",
+    "description": "Compte à rebours avec ordre du jour",
+    "category": "Productivité",
+    "rank": 1350,
+    "url": "https://topapps.fr/outils/meeting-timer"
+  },
+  {
+    "id": "meeting-cost",
+    "name": "Coût d'une réunion",
+    "description": "Coût réel d'une réunion en temps réel",
+    "category": "Productivité",
+    "rank": 1360,
+    "url": "https://topapps.fr/outils/meeting-cost"
+  },
+  {
+    "id": "habit-tracker",
+    "name": "Suivi d'habitudes",
+    "description": "Habits quotidiens avec streak et calendrier",
+    "category": "Productivité",
+    "rank": 1370,
+    "url": "https://topapps.fr/outils/habit-tracker"
+  },
+  {
+    "id": "eisenhower-matrix",
+    "name": "Matrice d'Eisenhower",
+    "description": "Priorisez vos tâches urgent/important",
+    "category": "Productivité",
+    "rank": 1380,
+    "url": "https://topapps.fr/outils/eisenhower-matrix"
+  },
+  {
+    "id": "decision-matrix",
+    "name": "Matrice de décision",
+    "description": "Options + critères pondérés → score et classement",
+    "category": "Productivité",
+    "rank": 1390,
+    "url": "https://topapps.fr/outils/decision-matrix"
+  },
+  {
+    "id": "fake-data",
+    "name": "Générateur de fausses données",
+    "description": "Profils français fictifs pour vos tests",
+    "category": "Productivité",
+    "rank": 1400,
+    "url": "https://topapps.fr/outils/fake-data"
+  },
+  {
+    "id": "exif-extractor",
+    "name": "Infos & métadonnées image",
+    "description": "Dimensions, poids, type et données EXIF",
+    "category": "Productivité",
+    "rank": 1410,
+    "url": "https://topapps.fr/outils/exif-extractor"
+  },
+  {
+    "id": "image-to-base64",
+    "name": "Image vers Base64",
+    "description": "Convertissez des images en Base64",
+    "category": "Productivité",
+    "rank": 1420,
+    "url": "https://topapps.fr/outils/image-to-base64"
+  },
+  {
+    "id": "cron-helper",
+    "name": "Assistant Cron",
+    "description": "Comprenez les expressions cron",
+    "category": "Productivité",
+    "rank": 1430,
+    "url": "https://topapps.fr/outils/cron-helper"
+  },
+  {
+    "id": "number-generator",
+    "name": "Générateur de nombres",
+    "description": "Nombres aléatoires personnalisés",
+    "category": "Productivité",
+    "rank": 1440,
+    "url": "https://topapps.fr/outils/number-generator"
+  },
+  {
+    "id": "placeholder-image",
+    "name": "Placeholder d'image",
+    "description": "Générez des images de remplissage personnalisées",
+    "category": "Développement",
+    "rank": 1450,
+    "url": "https://topapps.fr/outils/placeholder-image"
+  },
+  {
+    "id": "json-diff",
+    "name": "Diff JSON",
+    "description": "Comparez deux objets JSON",
+    "category": "Développement",
+    "rank": 1460,
+    "url": "https://topapps.fr/outils/json-diff"
+  },
+  {
+    "id": "xml-formatter",
+    "name": "Formateur XML",
+    "description": "Formatez et validez votre XML",
+    "category": "Développement",
+    "rank": 1470,
+    "url": "https://topapps.fr/outils/xml-formatter"
+  },
+  {
+    "id": "og-meta",
+    "name": "Balises Open Graph",
+    "description": "Meta tags de partage avec aperçu de la carte",
+    "category": "Développement",
+    "rank": 1475,
+    "url": "https://topapps.fr/outils/og-meta"
+  },
+  {
+    "id": "json-yaml",
+    "name": "JSON ↔ YAML",
+    "description": "Convertissez entre les deux formats",
+    "category": "Développement",
+    "rank": 1480,
+    "url": "https://topapps.fr/outils/json-yaml"
+  },
+  {
+    "id": "code-to-image",
+    "name": "Code en image",
+    "description": "Transformez un extrait de code en belle image",
+    "category": "Développement",
+    "rank": 1485,
+    "url": "https://topapps.fr/outils/code-to-image"
+  },
+  {
+    "id": "url-parser",
+    "name": "Analyseur d'URL",
+    "description": "Décomposez une URL en toutes ses parties",
+    "category": "Développement",
+    "rank": 1490,
+    "url": "https://topapps.fr/outils/url-parser"
+  },
+  {
+    "id": "html-encoder",
+    "name": "Encodeur/Décodeur HTML",
+    "description": "Encodez et décodez les entités HTML",
+    "category": "Développement",
+    "rank": 1500,
+    "url": "https://topapps.fr/outils/html-encoder"
+  },
+  {
+    "id": "css-minifier",
+    "name": "Minifieur CSS",
+    "description": "Minifiez votre code CSS",
+    "category": "Développement",
+    "rank": 1510,
+    "url": "https://topapps.fr/outils/css-minifier"
+  },
+  {
+    "id": "hex-encoder",
+    "name": "Encodeur Hex",
+    "description": "Texte ↔ hexadécimal",
+    "category": "Développement",
+    "rank": 1520,
+    "url": "https://topapps.fr/outils/hex-encoder"
+  },
+  {
+    "id": "hmac-generator",
+    "name": "Générateur HMAC",
+    "description": "Signature HMAC (SHA-1/256/384/512)",
+    "category": "Développement",
+    "rank": 1520,
+    "url": "https://topapps.fr/outils/hmac-generator"
+  },
+  {
+    "id": "unicode-converter",
+    "name": "Encodeur Unicode",
+    "description": "Code point, UTF-8, HTML entity et plus",
+    "category": "Développement",
+    "rank": 1530,
+    "url": "https://topapps.fr/outils/unicode-converter"
+  },
+  {
+    "id": "rsa-generator",
+    "name": "Générateur de clés RSA",
+    "description": "Générez des paires de clés RSA/ECDSA (PEM)",
+    "category": "Développement",
+    "rank": 1540,
+    "url": "https://topapps.fr/outils/rsa-generator"
+  },
+  {
+    "id": "keycode-info",
+    "name": "Infos touche clavier",
+    "description": "event.key, code et keyCode d'une touche",
+    "category": "Développement",
+    "rank": 1545,
+    "url": "https://topapps.fr/outils/keycode-info"
+  },
+  {
+    "id": "docker-run-to-compose",
+    "name": "docker run → compose",
+    "description": "Convertit une commande docker run en compose",
+    "category": "Développement",
+    "rank": 1548,
+    "url": "https://topapps.fr/outils/docker-run-to-compose"
+  },
+  {
+    "id": "gitignore-generator",
+    "name": "Générateur .gitignore",
+    "description": "Générez un .gitignore selon vos langages",
+    "category": "Développement",
+    "rank": 1550,
+    "url": "https://topapps.fr/outils/gitignore-generator"
+  },
+  {
+    "id": "device-information",
+    "name": "Infos appareil",
+    "description": "Navigateur, écran, CPU, fuseau horaire…",
+    "category": "Productivité",
+    "rank": 1550,
+    "url": "https://topapps.fr/outils/device-information"
+  },
+  {
+    "id": "subnet-calculator",
+    "name": "Calculateur de sous-réseaux",
+    "description": "CIDR, masque, plage d'IPs, hôtes disponibles",
+    "category": "Développement",
+    "rank": 1560,
+    "url": "https://topapps.fr/outils/subnet-calculator"
+  },
+  {
+    "id": "mac-address-generator",
+    "name": "Générateur d'adresse MAC",
+    "description": "Génère une adresse MAC aléatoire valide",
+    "category": "Développement",
+    "rank": 1560,
+    "url": "https://topapps.fr/outils/mac-address-generator"
+  },
+  {
+    "id": "mac-converter",
+    "name": "Convertisseur MAC",
+    "description": "Formats d'adresse MAC (: / - / sans séparateur)",
+    "category": "Développement",
+    "rank": 1570,
+    "url": "https://topapps.fr/outils/mac-converter"
+  },
+  {
+    "id": "port-reference",
+    "name": "Référence des ports",
+    "description": "Ports TCP/UDP courants avec description",
+    "category": "Développement",
+    "rank": 1580,
+    "url": "https://topapps.fr/outils/port-reference"
+  },
+  {
+    "id": "markdown-table",
+    "name": "Tableau Markdown",
+    "description": "Créez des tableaux Markdown visuellement",
+    "category": "Texte",
+    "rank": 1590,
+    "url": "https://topapps.fr/outils/markdown-table"
+  },
+  {
+    "id": "alcohol-units",
+    "name": "Unités d'alcool",
+    "description": "Degré + volume → unités + équivalences",
+    "category": "Cuisine & Loisirs",
+    "rank": 1600,
+    "url": "https://topapps.fr/outils/alcohol-units"
+  },
+  {
+    "id": "css-animation",
+    "name": "Générateur d'animation CSS",
+    "description": "Créez des @keyframes avec aperçu live",
+    "category": "Design",
+    "rank": 1610,
+    "url": "https://topapps.fr/outils/css-animation"
+  },
+  {
+    "id": "clip-path-generator",
+    "name": "Générateur clip-path CSS",
+    "description": "Formes CSS visuellement avec aperçu live",
+    "category": "Design",
+    "rank": 1620,
+    "url": "https://topapps.fr/outils/clip-path-generator"
+  },
+  {
+    "id": "css-pattern",
+    "name": "Générateur de pattern CSS",
+    "description": "Rayures, damier, points — background CSS",
+    "category": "Design",
+    "rank": 1630,
+    "url": "https://topapps.fr/outils/css-pattern"
+  },
+  {
+    "id": "box-shadow",
+    "name": "Générateur box-shadow CSS",
+    "description": "Créez des ombres CSS visuellement",
+    "category": "Design",
+    "rank": 1640,
+    "url": "https://topapps.fr/outils/box-shadow"
+  },
+  {
+    "id": "border-radius",
+    "name": "Générateur border-radius",
+    "description": "Coins arrondis CSS avec aperçu live",
+    "category": "Design",
+    "rank": 1650,
+    "url": "https://topapps.fr/outils/border-radius"
+  },
+  {
+    "id": "svg-blob",
+    "name": "Générateur de blobs SVG",
+    "description": "Formes organiques aléatoires pour vos designs",
+    "category": "Design",
+    "rank": 1655,
+    "url": "https://topapps.fr/outils/svg-blob"
+  },
+  {
+    "id": "grid-generator",
+    "name": "Générateur Grid CSS",
+    "description": "Visualisez et générez du CSS Grid",
+    "category": "Design",
+    "rank": 1660,
+    "url": "https://topapps.fr/outils/grid-generator"
+  },
+  {
+    "id": "css-loader",
+    "name": "Loaders & spinners CSS",
+    "description": "Galerie d'animations de chargement en CSS pur",
+    "category": "Design",
+    "rank": 1665,
+    "url": "https://topapps.fr/outils/css-loader"
+  },
+  {
+    "id": "px-rem-converter",
+    "name": "Convertisseur px ↔ rem/em",
+    "description": "Conversions CSS, base configurable",
+    "category": "Design",
+    "rank": 1670,
+    "url": "https://topapps.fr/outils/px-rem-converter"
+  },
+  {
+    "id": "glassmorphism",
+    "name": "Générateur glassmorphism",
+    "description": "Effet verre dépoli (backdrop-filter) avec aperçu",
+    "category": "Design",
+    "rank": 1675,
+    "url": "https://topapps.fr/outils/glassmorphism"
+  },
+  {
+    "id": "css-variables",
+    "name": "Variables CSS",
+    "description": "Générez un bloc :root {} avec vos custom properties",
+    "category": "Design",
+    "rank": 1680,
+    "url": "https://topapps.fr/outils/css-variables"
+  },
+  {
+    "id": "css-units",
+    "name": "Convertisseur d'unités CSS",
+    "description": "px, pt, em, rem, vw, vh, % — base configurable",
+    "category": "Développement",
+    "rank": 1690,
+    "url": "https://topapps.fr/outils/css-units"
+  },
+  {
+    "id": "image-palette",
+    "name": "Palette depuis image",
+    "description": "Extrayez les couleurs dominantes d'une image",
+    "category": "Design",
+    "rank": 1700,
+    "url": "https://topapps.fr/outils/image-palette"
+  },
+  {
+    "id": "aspect-ratio",
+    "name": "Ratio d'image",
+    "description": "Largeur + ratio → hauteur exacte (16:9, 4:3…)",
+    "category": "Design",
+    "rank": 1710,
+    "url": "https://topapps.fr/outils/aspect-ratio"
+  },
+  {
+    "id": "font-scale",
+    "name": "Échelle typographique",
+    "description": "Base + ratio → toutes les tailles h1→small en rem",
+    "category": "Design",
+    "rank": 1720,
+    "url": "https://topapps.fr/outils/font-scale"
+  },
+  {
+    "id": "color-mixer",
+    "name": "Mélangeur de couleurs",
+    "description": "Deux couleurs + % → mélange interpolé HEX/RGB",
+    "category": "Design",
+    "rank": 1730,
+    "url": "https://topapps.fr/outils/color-mixer"
+  },
+  {
+    "id": "naming-converter",
+    "name": "Convertisseur de nommage",
+    "description": "camelCase, snake_case, kebab-case…",
+    "category": "Calcul & Science",
+    "rank": 1740,
+    "url": "https://topapps.fr/outils/naming-converter"
+  },
+  {
+    "id": "stats-calculator",
+    "name": "Calculateur statistiques",
+    "description": "Moyenne, médiane, mode, écart-type",
+    "category": "Calcul & Science",
+    "rank": 1750,
+    "url": "https://topapps.fr/outils/stats-calculator"
+  },
+  {
+    "id": "base-converter",
+    "name": "Convertisseur de base",
+    "description": "Binaire, octal, décimal, hexadécimal",
+    "category": "Calcul & Science",
+    "rank": 1760,
+    "url": "https://topapps.fr/outils/base-converter"
+  },
+  {
+    "id": "fraction-calc",
+    "name": "Calculateur de fractions",
+    "description": "Additionner, soustraire, multiplier, diviser",
+    "category": "Calcul & Science",
+    "rank": 1770,
+    "url": "https://topapps.fr/outils/fraction-calc"
+  },
+  {
+    "id": "speed-converter",
+    "name": "Convertisseur de vitesse",
+    "description": "km/h, mph, m/s, nœuds",
+    "category": "Calcul & Science",
+    "rank": 1780,
+    "url": "https://topapps.fr/outils/speed-converter"
+  },
+  {
+    "id": "area-converter",
+    "name": "Convertisseur de surface",
+    "description": "m², km², hectare, acre, ft²…",
+    "category": "Calcul & Science",
+    "rank": 1790,
+    "url": "https://topapps.fr/outils/area-converter"
+  },
+  {
+    "id": "gps-converter",
+    "name": "Convertisseur GPS",
+    "description": "DMS ↔ degrés décimaux + lien Google Maps",
+    "category": "Voyage & Nature",
+    "rank": 1800,
+    "url": "https://topapps.fr/outils/gps-converter"
+  },
+  {
+    "id": "jet-lag-calc",
+    "name": "Calculateur de jet lag",
+    "description": "Jours d'adaptation et conseils de récupération",
+    "category": "Voyage & Nature",
+    "rank": 1810,
+    "url": "https://topapps.fr/outils/jet-lag-calc"
+  },
+  {
+    "id": "windchill",
+    "name": "Ressenti froid (Windchill)",
+    "description": "Température + vent → ressenti réel",
+    "category": "Voyage & Nature",
+    "rank": 1820,
+    "url": "https://topapps.fr/outils/windchill"
+  },
+  {
+    "id": "humidex",
+    "name": "Ressenti chaleur (Humidex)",
+    "description": "Température + humidité → indice de chaleur ressentie",
+    "category": "Voyage & Nature",
+    "rank": 1830,
+    "url": "https://topapps.fr/outils/humidex"
+  },
+  {
+    "id": "dew-point",
+    "name": "Point de rosée",
+    "description": "Température + humidité → température de condensation",
+    "category": "Voyage & Nature",
+    "rank": 1840,
+    "url": "https://topapps.fr/outils/dew-point"
+  },
+  {
+    "id": "beaufort-scale",
+    "name": "Échelle de Beaufort",
+    "description": "Vitesse du vent → force Beaufort + description",
+    "category": "Voyage & Nature",
+    "rank": 1850,
+    "url": "https://topapps.fr/outils/beaufort-scale"
+  },
+  {
+    "id": "sunrise-sunset",
+    "name": "Lever & coucher du soleil",
+    "description": "Coordonnées + date → heures solaires exactes",
+    "category": "Voyage & Nature",
+    "rank": 1860,
+    "url": "https://topapps.fr/outils/sunrise-sunset"
+  },
+  {
+    "id": "grade-converter",
+    "name": "Convertisseur de notes",
+    "description": "France /20 ↔ GPA ↔ A/B/C ↔ ECTS",
+    "category": "Éducation & Musique",
+    "rank": 1870,
+    "url": "https://topapps.fr/outils/grade-converter"
+  },
+  {
+    "id": "percentile-calc",
+    "name": "Calculateur de percentile",
+    "description": "Rang percentile d'une valeur dans une liste",
+    "category": "Éducation & Musique",
+    "rank": 1880,
+    "url": "https://topapps.fr/outils/percentile-calc"
+  },
+  {
+    "id": "random-words",
+    "name": "Générateur de mots aléatoires",
+    "description": "Mots aléatoires pour brainstorming",
+    "category": "Texte",
+    "rank": 1890,
+    "url": "https://topapps.fr/outils/random-words"
+  },
+  {
+    "id": "bracket-generator",
+    "name": "Tableau de tournoi",
+    "description": "Génère un bracket à élimination directe",
+    "category": "Cuisine & Loisirs",
+    "rank": 1900,
+    "url": "https://topapps.fr/outils/bracket-generator"
+  },
+  {
+    "id": "energy-converter",
+    "name": "Convertisseur d'énergie",
+    "description": "Joules, calories, kWh, BTU",
+    "category": "Calcul & Science",
+    "rank": 1910,
+    "url": "https://topapps.fr/outils/energy-converter"
+  },
+  {
+    "id": "pressure-converter",
+    "name": "Convertisseur de pression",
+    "description": "Bar, PSI, atmosphères, Pascal",
+    "category": "Calcul & Science",
+    "rank": 1920,
+    "url": "https://topapps.fr/outils/pressure-converter"
+  },
+  {
+    "id": "angle-converter",
+    "name": "Convertisseur d'angles",
+    "description": "Degrés, radians, grades, tours",
+    "category": "Calcul & Science",
+    "rank": 1930,
+    "url": "https://topapps.fr/outils/angle-converter"
+  },
+  {
+    "id": "roman-numerals",
+    "name": "Nombres romains",
+    "description": "Entier ↔ chiffres romains",
+    "category": "Calcul & Science",
+    "rank": 1940,
+    "url": "https://topapps.fr/outils/roman-numerals"
+  },
+  {
+    "id": "ohms-law",
+    "name": "Loi d'Ohm",
+    "description": "2 valeurs parmi U / I / R / P → les 2 autres",
+    "category": "Calcul & Science",
+    "rank": 1950,
+    "url": "https://topapps.fr/outils/ohms-law"
+  },
+  {
+    "id": "resistor-color",
+    "name": "Code couleur résistances",
+    "description": "Valeur en ohms → bandes de couleur (4 ou 5 bandes)",
+    "category": "Calcul & Science",
+    "rank": 1960,
+    "url": "https://topapps.fr/outils/resistor-color"
+  },
+  {
+    "id": "pythagoras",
+    "name": "Pythagore & trigonométrie",
+    "description": "2 éléments d'un triangle rectangle → tous les autres",
+    "category": "Calcul & Science",
+    "rank": 1970,
+    "url": "https://topapps.fr/outils/pythagoras"
+  },
+  {
+    "id": "shape-area",
+    "name": "Aires & périmètres",
+    "description": "Cercle, triangle, rectangle, trapèze… → calcul complet",
+    "category": "Calcul & Science",
+    "rank": 1980,
+    "url": "https://topapps.fr/outils/shape-area"
+  },
+  {
+    "id": "solid-volume",
+    "name": "Volumes de solides",
+    "description": "Sphère, cylindre, cône, cube, pyramide → volume",
+    "category": "Calcul & Science",
+    "rank": 1990,
+    "url": "https://topapps.fr/outils/solid-volume"
+  },
+  {
+    "id": "circle-calc",
+    "name": "Calculateur de cercle",
+    "description": "Rayon → diamètre, périmètre, aire (et inverse)",
+    "category": "Calcul & Science",
+    "rank": 2010,
+    "url": "https://topapps.fr/outils/circle-calc"
+  },
+  {
+    "id": "golden-ratio",
+    "name": "Nombre d'or",
+    "description": "Valeur → proportions dorées (φ = 1,618…)",
+    "category": "Calcul & Science",
+    "rank": 2020,
+    "url": "https://topapps.fr/outils/golden-ratio"
+  },
+  {
+    "id": "quadratic-solver",
+    "name": "Équation du 2e degré",
+    "description": "ax² + bx + c = 0 → discriminant + racines",
+    "category": "Calcul & Science",
+    "rank": 2030,
+    "url": "https://topapps.fr/outils/quadratic-solver"
+  },
+  {
+    "id": "gcd-lcm",
+    "name": "PGCD & PPCM",
+    "description": "Deux entiers → PGCD, PPCM + facteurs premiers",
+    "category": "Calcul & Science",
+    "rank": 2040,
+    "url": "https://topapps.fr/outils/gcd-lcm"
+  },
+  {
+    "id": "matrix-calc",
+    "name": "Calculateur de matrices",
+    "description": "Matrices 2×2 / 3×3 → déterminant, inverse, produit",
+    "category": "Calcul & Science",
+    "rank": 2050,
+    "url": "https://topapps.fr/outils/matrix-calc"
+  },
+  {
+    "id": "molar-mass",
+    "name": "Masse molaire",
+    "description": "Formule chimique (H₂O, NaCl…) → masse en g/mol",
+    "category": "Calcul & Science",
+    "rank": 2060,
+    "url": "https://topapps.fr/outils/molar-mass"
+  },
+  {
+    "id": "speed-of-sound",
+    "name": "Vitesse du son",
+    "description": "Température + milieu → vitesse en m/s et km/h",
+    "category": "Calcul & Science",
+    "rank": 2070,
+    "url": "https://topapps.fr/outils/speed-of-sound"
+  },
+  {
+    "id": "age-on-planets",
+    "name": "Âge sur les planètes",
+    "description": "Âge terrestre → âge sur chaque planète du système solaire",
+    "category": "Voyage & Nature",
+    "rank": 2080,
+    "url": "https://topapps.fr/outils/age-on-planets"
+  },
+  {
+    "id": "ipv6-ula-generator",
+    "name": "Générateur IPv6 ULA",
+    "description": "Préfixe IPv6 unique local (RFC 4193)",
+    "category": "Développement",
+    "rank": 2080,
+    "url": "https://topapps.fr/outils/ipv6-ula-generator"
+  },
+  {
+    "id": "moon-phase",
+    "name": "Phase de la lune",
+    "description": "Date → phase lunaire + % d'illumination",
+    "category": "Voyage & Nature",
+    "rank": 2090,
+    "url": "https://topapps.fr/outils/moon-phase"
+  },
+  {
+    "id": "astro-converter",
+    "name": "Distances astronomiques",
+    "description": "km ↔ UA ↔ années-lumière ↔ parsecs",
+    "category": "Voyage & Nature",
+    "rank": 2100,
+    "url": "https://topapps.fr/outils/astro-converter"
+  },
+  {
+    "id": "note-frequency",
+    "name": "Fréquence des notes",
+    "description": "Note + octave → fréquence Hz (A4 = 440 Hz)",
+    "category": "Éducation & Musique",
+    "rank": 2110,
+    "url": "https://topapps.fr/outils/note-frequency"
+  },
+  {
+    "id": "chord-finder",
+    "name": "Trouveur d'accords",
+    "description": "Tonique + type → notes de l'accord",
+    "category": "Éducation & Musique",
+    "rank": 2120,
+    "url": "https://topapps.fr/outils/chord-finder"
+  },
+  {
+    "id": "bpm-to-ms",
+    "name": "BPM → durée des notes",
+    "description": "Tempo → durée en ms de chaque valeur rythmique",
+    "category": "Éducation & Musique",
+    "rank": 2130,
+    "url": "https://topapps.fr/outils/bpm-to-ms"
+  },
+  {
+    "id": "scale-finder",
+    "name": "Trouveur de gammes",
+    "description": "Tonique + mode → notes de la gamme + degrés",
+    "category": "Éducation & Musique",
+    "rank": 2140,
+    "url": "https://topapps.fr/outils/scale-finder"
+  },
+  {
+    "id": "tone-generator",
+    "name": "Générateur de tonalités",
+    "description": "Fréquences audio, test d'enceintes",
+    "category": "Éducation & Musique",
+    "rank": 2150,
+    "url": "https://topapps.fr/outils/tone-generator"
+  },
+  {
+    "id": "syllable-counter",
+    "name": "Compteur de syllabes",
+    "description": "Comptez les syllabes dans vos textes",
+    "category": "Texte",
+    "rank": 2160,
+    "url": "https://topapps.fr/outils/syllable-counter"
+  },
+  {
+    "id": "text-reverser",
+    "name": "Inverseur de texte",
+    "description": "Inversez votre texte",
+    "category": "Texte",
+    "rank": 2170,
+    "url": "https://topapps.fr/outils/text-reverser"
+  },
+  {
+    "id": "rot13-cipher",
+    "name": "ROT13 / Chiffre César",
+    "description": "Chiffrement par décalage de l'alphabet",
+    "category": "Texte",
+    "rank": 2180,
+    "url": "https://topapps.fr/outils/rot13-cipher"
+  },
+  {
+    "id": "morse-encoder",
+    "name": "Encodeur Morse",
+    "description": "Texte ↔ code Morse (· −)",
+    "category": "Texte",
+    "rank": 2190,
+    "url": "https://topapps.fr/outils/morse-encoder"
+  }
+]
