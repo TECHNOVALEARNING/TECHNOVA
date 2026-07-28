@@ -64,7 +64,7 @@ const TechnovaApps = () => {
         lang === "fr" ? "Workflow de Visa Hiérarchique 5 Étapes" : "5-Step Hierarchical Visa Workflow",
         lang === "fr" ? "100% Autonome & Hors-ligne (IndexedDB)" : "100% Autonomous & Offline (IndexedDB)",
         lang === "fr" ? "Échéances, Relances & Exports PDF/Excel" : "Deadlines, Reminders & PDF/Excel Exports",
-        lang === "fr" ? "License à vie" : "Lifetime License",
+        lang === "fr" ? "License à vie sans base de données: 100 000 FCFA" : "Lifetime License without Database: 100,000 FCFA",
         
       ],
     },
