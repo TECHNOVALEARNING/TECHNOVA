@@ -26,6 +26,7 @@ import { getEmbedUrl } from "@/lib/videoUtils";
 
 import BuyerContentDialog from "@/components/BuyerContentDialog";
 import ProductReviewForm from "@/components/buyer/ProductReviewForm";
+import SupportTicketDialog from "@/components/buyer/SupportTicketDialog";
 import { generateInvoicePDF } from "@/lib/invoice";
 import { useGeoPricing } from "@/contexts/GeoPricingContext";
 

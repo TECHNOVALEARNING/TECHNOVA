@@ -380,6 +380,17 @@ const CheckoutDialog = ({
 
           const orderId = rpcData?.order_id;
 
+          if (orderId && Math.round(discountedPrice) > 0) {
+            try {
+              await supabase
+                .from("orders")
+                .update({ amount: Math.round(discountedPrice) })
+                .eq("id", orderId);
+            } catch (updErr) {
+              console.warn("Could not update order amount in orders table:", updErr);
+            }
+          }
+
           // Update promo usage in database
           if (appliedPromo) {
             const { data: pd } = await supabase

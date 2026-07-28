@@ -80,21 +80,26 @@ const DashboardSales = () => {
       const { data } = await supabase
         .from("orders")
         .select(
-          "id, amount, status, created_at, promo_code, original_amount, products(title, thumbnail_url, category, type, marketing_sections), customers(name, email)",
+          "id, amount, status, created_at, promo_code, original_amount, products(title, price, thumbnail_url, category, type, marketing_sections), customers(name, email)",
         )
         .eq("store_owner_id", user.id)
         .order("created_at", { ascending: false });
 
-      const mapped = (data || []).map((o: any) => ({
-        id: o.id,
-        amount: Number(o.amount),
-        status: o.status,
-        created_at: o.created_at,
-        promo_code: o.promo_code,
-        original_amount: o.original_amount ? Number(o.original_amount) : null,
-        product: o.products,
-        customer: o.customers,
-      }));
+      const mapped = (data || []).map((o: any) => {
+        const prodPrice = o.products?.price ? Number(o.products.price) : 0;
+        const realAmount = Number(o.amount) > 0 ? Number(o.amount) : prodPrice;
+        const realOriginal = o.original_amount ? Number(o.original_amount) : (realAmount > 0 ? realAmount : null);
+        return {
+          id: o.id,
+          amount: realAmount,
+          status: o.status,
+          created_at: o.created_at,
+          promo_code: o.promo_code,
+          original_amount: realOriginal,
+          product: o.products,
+          customer: o.customers,
+        };
+      });
 
       setOrders(mapped);
 

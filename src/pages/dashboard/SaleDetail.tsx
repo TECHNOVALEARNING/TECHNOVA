@@ -139,10 +139,9 @@ const SaleDetail = () => {
   const txId = order.moneroo_transaction_id || order.pawapay_deposit_id || null;
   const country = order.shipping_address?.country || order.shipping_address?.country_name || null;
   const customerPhone = customer?.phone || order.shipping_address?.phone || null;
-  const discount =
-    order.original_amount && order.original_amount > order.amount
-      ? order.original_amount - order.amount
-      : 0;
+  const realAmount = Number(order.amount) > 0 ? Number(order.amount) : (product?.price ? Number(product.price) : 0);
+  const realOriginal = order.original_amount && Number(order.original_amount) > realAmount ? Number(order.original_amount) : realAmount;
+  const discount = realOriginal > realAmount ? realOriginal - realAmount : 0;
   const paymentLabel = PAYMENT_LABEL[order.payment_method || ""] || order.payment_method || "—";
 
   const initials = (customer?.name || "?")
@@ -339,7 +338,7 @@ const SaleDetail = () => {
           <div className="rounded-xl border border-border/60 bg-card overflow-hidden">
             <KvRow
               label="Prix initial"
-              value={`${(order.original_amount || order.amount).toLocaleString("fr-FR")} FCFA`}
+              value={`${realOriginal.toLocaleString("fr-FR")} FCFA`}
             />
             <KvRow
               label="Réduction"
@@ -348,7 +347,7 @@ const SaleDetail = () => {
             />
             <KvRow
               label="Montant net"
-              value={`${order.amount.toLocaleString("fr-FR")} FCFA`}
+              value={`${realAmount.toLocaleString("fr-FR")} FCFA`}
               bold
             />
             <KvRow label="Moyen de paiement" value={paymentLabel} icon={CreditCard} />

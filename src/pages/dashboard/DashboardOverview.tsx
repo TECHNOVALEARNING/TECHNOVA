@@ -81,13 +81,17 @@ const DashboardOverview = () => {
         supabase.from("products").select("*", { count: "exact" }).eq("creator_id", user.id),
         supabase
           .from("orders")
-          .select("amount, created_at, customer_id, product_id, status")
+          .select("amount, created_at, customer_id, product_id, status, products(price)")
           .eq("store_owner_id", user.id)
           .eq("status", "completed"),
       ]);
 
       const products = productsRes.data || [];
-      const orders = ordersRes.data || [];
+      const orders = (ordersRes.data || []).map((o: any) => {
+        const prodPrice = o.products?.price ? Number(o.products.price) : 0;
+        const amount = Number(o.amount) > 0 ? Number(o.amount) : prodPrice;
+        return { ...o, amount };
+      });
       const published = products.filter((p: any) => p.is_published).length;
       const totalRevenue = orders.reduce((sum, o) => sum + Number(o.amount), 0);
 
