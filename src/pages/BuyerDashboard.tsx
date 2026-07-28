@@ -24,7 +24,7 @@ import SEOHead from "@/components/SEOHead";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import BuyerContentDialog from "@/components/BuyerContentDialog";
+import { useGeoPricing } from "@/contexts/GeoPricingContext";
 import { buyerSupabase as supabase } from "@/integrations/supabase/buyer-client";
 import { supabase as sellerSupabase } from "@/integrations/supabase/client";
 
@@ -65,6 +65,7 @@ const typeFilters = [
 const SESSION_DURATION = 30 * 60 * 1000; // 30 minutes
 
 const BuyerDashboard = () => {
+  const { formatPrice } = useGeoPricing();
   const [orders, setOrders] = useState<OrderWithProduct[]>([]);
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
@@ -245,21 +246,33 @@ const BuyerDashboard = () => {
                     </div>
                   )}
                 </div>
-                <div className="p-4">
-                  <h3 className="text-sm font-semibold text-foreground line-clamp-2 mb-2">
-                    {o.product?.title || "Produit"}
-                  </h3>
-                  {o.store_owner?.store_slug && (
-                    <p className="text-xs text-muted-foreground mb-3">
-                      par{" "}
-                      <a
-                        href={`https://technovalearning.com/store/${o.store_owner.store_slug}`}
-                        className="text-primary hover:underline"
-                      >
-                        {o.store_owner.display_name || o.store_owner.store_slug}
-                      </a>
-                    </p>
-                  )}
+                <div className="p-4 flex-1 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <span className="text-[11px] font-mono text-muted-foreground">
+                        {new Date(o.created_at).toLocaleDateString("fr-FR")}
+                      </span>
+                      <span className="text-[11px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                        {Number(o.amount) > 0
+                          ? formatPrice(Number(o.amount))
+                          : "Gratuit"}
+                      </span>
+                    </div>
+                    <h3 className="text-sm font-semibold text-foreground line-clamp-2 mb-2">
+                      {o.product?.title || "Produit"}
+                    </h3>
+                    {o.store_owner?.store_slug && (
+                      <p className="text-xs text-muted-foreground mb-3">
+                        par{" "}
+                        <a
+                          href={`https://technovalearning.com/store/${o.store_owner.store_slug}`}
+                          className="text-primary hover:underline"
+                        >
+                          {o.store_owner.display_name || o.store_owner.store_slug}
+                        </a>
+                      </p>
+                    )}
+                  </div>
                   {o.product?.type === "course" ? (
                     <CourseCardAction
                       order={o}

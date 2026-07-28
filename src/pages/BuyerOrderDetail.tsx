@@ -26,8 +26,8 @@ import { getEmbedUrl } from "@/lib/videoUtils";
 
 import BuyerContentDialog from "@/components/BuyerContentDialog";
 import ProductReviewForm from "@/components/buyer/ProductReviewForm";
-import SupportTicketDialog from "@/components/buyer/SupportTicketDialog";
 import { generateInvoicePDF } from "@/lib/invoice";
+import { useGeoPricing } from "@/contexts/GeoPricingContext";
 
 interface OrderRow {
   id: string;
@@ -55,6 +55,7 @@ interface StoreRow {
 const SESSION_DURATION = 30 * 60 * 1000;
 
 const BuyerOrderDetail = () => {
+  const { formatPrice } = useGeoPricing();
   const { orderId } = useParams();
   const navigate = useNavigate();
   const isPortal =
@@ -314,10 +315,10 @@ const BuyerOrderDetail = () => {
                 </span>
               </div>
               <div className="flex justify-between text-sm py-1">
-                <span className="text-muted-foreground">Total</span>
+                <span className="text-muted-foreground">Total payé</span>
                 <span className="text-foreground font-bold">
                   {Number(order.amount) > 0
-                    ? `${Number(order.amount).toLocaleString("fr-FR")} FCFA`
+                    ? formatPrice(Number(order.amount))
                     : "Gratuit"}
                 </span>
               </div>
