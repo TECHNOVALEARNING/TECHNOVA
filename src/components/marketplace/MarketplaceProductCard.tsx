@@ -86,9 +86,9 @@ export const MarketplaceProductCard = ({ product, index = 0, fixedWidth, sellerB
     return <span className="stars-sm">{s}</span>;
   };
 
-  const priceMain = formatPrice(Number(product.price));
+  const priceMain = formatPrice(product.price);
   const originalPriceFormatted = product.original_price
-    ? formatPrice(Number(product.original_price))
+    ? formatPrice(product.original_price)
     : null;
 
   return (

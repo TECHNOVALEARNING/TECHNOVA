@@ -519,13 +519,30 @@ export const GeoPricingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     detect();
   }, []);
 
-  const convertPrice = (priceInXof: number): number => {
-    const converted = priceInXof / currency.rate;
+  const parseNumericPrice = (val: any): number => {
+    if (val === null || val === undefined) return 0;
+    if (typeof val === "number") return isNaN(val) ? 0 : val;
+    if (typeof val === "string") {
+      const s = val.trim();
+      if (!s) return 0;
+      const noSpaces = s.replace(/\s/g, "");
+      const numericOnly = noSpaces.replace(/[^\d.,]/g, "");
+      const normalized = numericOnly.replace(/,/g, ".");
+      const parsed = parseFloat(normalized);
+      return isNaN(parsed) ? 0 : parsed;
+    }
+    return 0;
+  };
+
+  const convertPrice = (priceInXof: number | string | null | undefined): number => {
+    const numeric = parseNumericPrice(priceInXof);
+    const converted = numeric / currency.rate;
     return Number(converted.toFixed(currency.decimals));
   };
 
-  const formatPrice = (priceInXof: number): string => {
-    const converted = convertPrice(priceInXof);
+  const formatPrice = (priceInXof: number | string | null | undefined): string => {
+    const numeric = parseNumericPrice(priceInXof);
+    const converted = convertPrice(numeric);
     const formattedNumber = new Intl.NumberFormat(currency.locale, {
       minimumFractionDigits: currency.decimals,
       maximumFractionDigits: currency.decimals,

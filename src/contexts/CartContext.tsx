@@ -46,7 +46,22 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   const clearCart = () => setItems([]);
 
-  const total = items.reduce((sum, i) => sum + i.product.price * i.quantity, 0);
+  const parseNumericPrice = (val: any): number => {
+    if (val === null || val === undefined) return 0;
+    if (typeof val === "number") return isNaN(val) ? 0 : val;
+    if (typeof val === "string") {
+      const s = val.trim();
+      if (!s) return 0;
+      const noSpaces = s.replace(/\s/g, "");
+      const numericOnly = noSpaces.replace(/[^\d.,]/g, "");
+      const normalized = numericOnly.replace(/,/g, ".");
+      const parsed = parseFloat(normalized);
+      return isNaN(parsed) ? 0 : parsed;
+    }
+    return 0;
+  };
+
+  const total = items.reduce((sum, i) => sum + parseNumericPrice(i.product.price) * i.quantity, 0);
   const itemCount = items.length;
 
   return (

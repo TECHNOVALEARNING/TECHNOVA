@@ -194,7 +194,22 @@ const CheckoutDialog = ({
   const [payError, setPayError] = useState<string>("");
   const pollRef = useRef<number | null>(null);
 
-  const effectivePrice = product.price;
+  const parseNumericPrice = (val: any): number => {
+    if (val === null || val === undefined) return 0;
+    if (typeof val === "number") return isNaN(val) ? 0 : val;
+    if (typeof val === "string") {
+      const s = val.trim();
+      if (!s) return 0;
+      const noSpaces = s.replace(/\s/g, "");
+      const numericOnly = noSpaces.replace(/[^\d.,]/g, "");
+      const normalized = numericOnly.replace(/,/g, ".");
+      const parsed = parseFloat(normalized);
+      return isNaN(parsed) ? 0 : parsed;
+    }
+    return 0;
+  };
+
+  const effectivePrice = parseNumericPrice(product?.price);
   const isFree = effectivePrice === 0;
   const fullName = `${firstName} ${lastName}`.trim();
   const fullPhone = `${country.dial}${phone}`.replace(/\D/g, "");
