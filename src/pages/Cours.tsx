@@ -11,6 +11,7 @@ import { useGeoPricing } from "@/contexts/GeoPricingContext";
 
 const CATEGORIES = [
   { id: "all", labelFr: "Toutes les formations", labelEn: "All Courses", icon: "fa-solid fa-layer-group" },
+  { id: "live_meet", labelFr: "🔴 Direct Google Meet", labelEn: "🔴 Live Google Meet", icon: "fa-solid fa-video text-emerald-500 font-bold" },
   { id: "ia", labelFr: "IA & Data Science", labelEn: "AI & Data", icon: "fa-solid fa-robot" },
   { id: "design", labelFr: "Design & Vidéo", labelEn: "Design & Video", icon: "fa-solid fa-palette" },
   { id: "dev", labelFr: "Développement & Code", labelEn: "Web Development", icon: "fa-solid fa-code" },
@@ -110,6 +111,16 @@ const Cours = () => {
     if (selectedCategory !== "all") {
       result = result.filter((c) => {
         const cat = (c.category || "").toLowerCase();
+        if (selectedCategory === "live_meet") {
+          const m = (c.marketing_sections as any) || {};
+          return (
+            m.format_type === "live_meet" ||
+            !!m.meet_url ||
+            cat.includes("meet") ||
+            cat.includes("live") ||
+            cat.includes("direct")
+          );
+        }
         if (selectedCategory === "ia") return cat.includes("ia") || cat.includes("intelligence") || cat.includes("data");
         if (selectedCategory === "design") return cat.includes("design") || cat.includes("vidéo") || cat.includes("graphisme");
         if (selectedCategory === "dev") return cat.includes("dev") || cat.includes("code") || cat.includes("web");
@@ -184,6 +195,82 @@ const Cours = () => {
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-[#0071e3]/10 rounded-full blur-[120px] pointer-events-none" />
 
         <div className="container mx-auto px-4 sm:px-6 relative z-10 max-w-6xl">
+          {/* Automatic Google Meet Live Courses Notification Banner */}
+          <motion.div
+            initial={{ opacity: 0, y: -12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="mb-8 p-4 sm:p-5 rounded-2xl border border-emerald-500/30 bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-blue-500/10 backdrop-blur-xl shadow-xl relative overflow-hidden text-left"
+          >
+            <div className="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-emerald-500/20 rounded-full blur-2xl pointer-events-none" />
+            
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 relative z-10">
+              <div className="flex items-start gap-3.5">
+                <div className="relative shrink-0 mt-1">
+                  <div className="h-12 w-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 font-bold shadow-inner">
+                    <i className="fa-solid fa-video text-xl animate-pulse" />
+                  </div>
+                  <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500" />
+                  </span>
+                </div>
+
+                <div className="space-y-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 tracking-wide uppercase">
+                      <span className="h-2 w-2 rounded-full bg-emerald-500 animate-ping" />
+                      {lang === "fr" ? "Direct & Interactif" : "Live & Interactive"}
+                    </span>
+                    <span className="text-xs font-semibold text-muted-foreground flex items-center gap-1">
+                      <i className="fa-brands fa-google text-blue-500" /> Google Meet
+                    </span>
+                  </div>
+
+                  <h3 className="text-base sm:text-lg font-extrabold text-foreground tracking-tight">
+                    {lang === "fr"
+                      ? " Formations & Cours Programmés en Direct via Google Meet !"
+                      : " Live Scheduled Masterclasses via Google Meet!"}
+                  </h3>
+
+                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed max-w-2xl">
+                    {lang === "fr"
+                      ? "En plus de nos cours vidéo enregistrés, nous organisons régulièrement des sessions interactives en direct sur Google Meet. Échangez en temps réel avec vos formateurs, posez vos questions et participez aux travaux pratiques !"
+                      : "In addition to our on-demand video courses, we regularly host live interactive sessions on Google Meet. Engage in real-time with instructors, ask questions live, and join practical workshops!"}
+                  </p>
+
+                  <div className="flex flex-wrap items-center gap-4 pt-1.5 text-xs text-muted-foreground">
+                    <span className="flex items-center gap-1.5 font-medium">
+                      <i className="fa-solid fa-comments text-emerald-500" />
+                      {lang === "fr" ? "Échanges en direct avec le formateur" : "Live Q&A with instructor"}
+                    </span>
+                    <span className="flex items-center gap-1.5 font-medium">
+                      <i className="fa-solid fa-calendar-check text-blue-500" />
+                      {lang === "fr" ? "Lien Meet transmis à l'inscription" : "Meet link sent upon enrollment"}
+                    </span>
+                    <span className="flex items-center gap-1.5 font-medium">
+                      <i className="fa-solid fa-rotate-left text-amber-500" />
+                      {lang === "fr" ? "Replay HD accessible aux inscrits" : "HD Replays available for enrolled"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <Button
+                onClick={() => {
+                  setSelectedCategory("live_meet");
+                  const catalogSection = document.getElementById("catalog-header");
+                  if (catalogSection) catalogSection.scrollIntoView({ behavior: "smooth" });
+                }}
+                size="sm"
+                className="shrink-0 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl gap-2 shadow-md hover:shadow-emerald-500/20 transition-all w-full md:w-auto"
+              >
+                <i className="fa-solid fa-video text-xs" />
+                <span>{lang === "fr" ? "Voir les sessions Google Meet" : "View Google Meet sessions"}</span>
+              </Button>
+            </div>
+          </motion.div>
+
           <div className="text-center max-w-3xl mx-auto">
             <motion.h1
               initial={{ opacity: 0, y: 15 }}
@@ -309,7 +396,7 @@ const Cours = () => {
       </section>
 
       {/* Main Catalog Content */}
-      <section className="py-12 bg-card/30 flex-1">
+      <section id="catalog-header" className="py-12 bg-card/30 flex-1">
         <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
           {/* Category Tabs Scroll Bar */}
           <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-8 no-scrollbar">
