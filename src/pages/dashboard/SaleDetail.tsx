@@ -139,8 +139,8 @@ const SaleDetail = () => {
   const txId = order.moneroo_transaction_id || order.pawapay_deposit_id || null;
   const country = order.shipping_address?.country || order.shipping_address?.country_name || null;
   const customerPhone = customer?.phone || order.shipping_address?.phone || null;
-  const realAmount = Number(order.amount) > 0 ? Number(order.amount) : (product?.price ? Number(product.price) : 0);
-  const realOriginal = order.original_amount && Number(order.original_amount) > realAmount ? Number(order.original_amount) : realAmount;
+  const realAmount = Number(order.amount) || 0;
+  const realOriginal = order.original_amount ? Number(order.original_amount) : realAmount;
   const discount = realOriginal > realAmount ? realOriginal - realAmount : 0;
   const paymentLabel = PAYMENT_LABEL[order.payment_method || ""] || order.payment_method || "—";
 
