@@ -253,6 +253,31 @@ const Cours = () => {
                       {lang === "fr" ? "Replay HD accessible aux inscrits" : "HD Replays available for enrolled"}
                     </span>
                   </div>
+
+                  {/* Contact info to get a scheduled live course */}
+                  <div className="mt-3 pt-2.5 border-t border-emerald-500/20 flex flex-wrap items-center gap-2 sm:gap-3 text-xs">
+                    <span className="font-semibold text-foreground flex items-center gap-1.5">
+                      <i className="fa-solid fa-headset text-emerald-500" />
+                      {lang === "fr"
+                        ? "Pour obtenir un cours programmé, écrivez-nous :"
+                        : "To get a scheduled course, write to us:"}
+                    </span>
+                    <a
+                      href="mailto:support@technovalearning.com"
+                      className="inline-flex items-center gap-1.5 font-bold text-primary hover:underline bg-primary/10 px-2.5 py-1 rounded-lg border border-primary/20 transition-colors"
+                    >
+                      <i className="fa-solid fa-envelope text-xs" /> support@technovalearning.com
+                    </a>
+                    <span className="text-muted-foreground hidden sm:inline">•</span>
+                    <a
+                      href="https://wa.me/33746297360"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 font-bold text-emerald-600 dark:text-emerald-400 hover:underline bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/20 transition-colors"
+                    >
+                      <i className="fa-solid fa-phone text-xs" /> +33 7 46 29 73 60
+                    </a>
+                  </div>
                 </div>
               </div>
 
