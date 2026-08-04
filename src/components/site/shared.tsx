@@ -513,7 +513,7 @@ export const Footer = () => {
               </svg>
             </a>
             <a
-              href="https://www.tiktok.com/"
+              href="https://www.tiktok.com/@technova_learning4?_r=1&_t=ZN-98YPTySDkmc"
               target="_blank"
               rel="noopener noreferrer"
               className="h-10 w-10 rounded-full bg-card/10 hover:bg-black transition-colors flex items-center justify-center text-white shadow-sm hover:-translate-y-1 duration-300"
