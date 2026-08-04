@@ -610,7 +610,7 @@ const Index = () => {
                     transition: "all 0.25s",
                   }}
                 >
-                  {lang === "fr" ? "Voir les formations" : "View courses"}
+                  {lang === "fr" ? "Accéder aux cours" : "Access courses"}
                 </Link>
               </div>
               {/* Social proof */}
