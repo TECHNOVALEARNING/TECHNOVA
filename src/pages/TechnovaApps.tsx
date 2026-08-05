@@ -110,7 +110,7 @@ const TechnovaApps = () => {
           ? "Agent conversationnel IA de viralisation et d'optimisation de contenu pour les réseaux sociaux."
           : "AI conversational agent for viralization and optimization of social media content.",
       image: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=800&q=80",
-      tags: ["A venir"],
+      tags: ["React 19", "Tailwind CSS", "Gemini API", "Local Storage"],
       stats: lang === "fr" ? "92% taux de clic" : "92% CTR rate",
       url: "https://viral-ai-media.vercel.app",
       features: [
