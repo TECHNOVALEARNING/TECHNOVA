@@ -19,7 +19,6 @@ const moreLinks = [
   { label: "Outils de Productivité", href: "/outils-digitaux" },
   { label: "Découvertes", href: "/decouvertes" },
   { label: "FAQ", href: "/faq" },
-  { label: "TECHNOVA APPS", href: "/apps" },
   { label: "Devenir Vendeur", href: "/register" },
   { label: "À propos", href: "/about" },
 ];

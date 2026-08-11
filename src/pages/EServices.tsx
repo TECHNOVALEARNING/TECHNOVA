@@ -236,14 +236,16 @@ const EServices = () => {
       url: "https://humanizer-ai-technova.vercel.app/",
     },
     {
-      title: "Viral IA Agent",
-      category: lang === "fr" ? "Automatisation & IA" : "Automation & AI",
+      title: "Sonorya by Technova",
+      category: lang === "fr" ? "IA Musicale Sur Mesure" : "Custom AI Music",
       desc:
-        lang === "fr" ? "Agent IA de viralisation de contenu" : "AI agent for content viralization",
-      image: "https://i.pinimg.com/736x/b1/bb/ac/b1bbac1e29f08c1c7b5fa1cdb8d5aebb.jpg",
-      tags: ["HTML5 / CSS3", "Vanilla JS", "Gemini API", "Local Storage"],
-      stats: "92% resolution rate",
-      url: "https://viral-ai-media.vercel.app",
+        lang === "fr"
+          ? "Plateforme de création de chansons sur mesure pour événements"
+          : "Custom song creation platform for special events",
+      image: "/sonorya_cover.jpeg",
+      tags: ["Cloudflare D1", "React", "IA Générative", "Mobile Money"],
+      stats: "100% sur mesure",
+      url: "https://www.sonorya.co",
     },
   ];
 

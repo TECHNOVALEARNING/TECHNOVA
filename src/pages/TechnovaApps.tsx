@@ -15,6 +15,7 @@ interface AppCard {
   features: string[];
   buttonText?: string;
   buttonIcon?: "contact" | "download" | "external";
+  upcoming?: boolean;
 }
 
 const TechnovaApps = () => {
@@ -110,12 +111,30 @@ const TechnovaApps = () => {
           ? "Agent conversationnel IA de viralisation et d'optimisation de contenu pour les réseaux sociaux."
           : "AI conversational agent for viralization and optimization of social media content.",
       image: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=800&q=80",
-      tags: ["React 19", "Tailwind CSS", "Gemini API", "Local Storage"],
-      stats: lang === "fr" ? "92% taux de clic" : "92% CTR rate",
-      url: "https://viral-ai-media.vercel.app",
+      tags: ["A venir"],
+      stats: lang === "fr" ? "En développement" : "In development",
+      url: "#",
+      upcoming: true,
       features: [
         lang === "fr" ? "Analyse de viralité" : "Virality analysis",
         lang === "fr" ? "Génération de scripts" : "Script generation",
+      ],
+    },
+    {
+      title: "Sonorya by Technova",
+      category: lang === "fr" ? "IA & Création Musicale Sur Mesure" : "AI & Custom Music Creation",
+      desc:
+        lang === "fr"
+          ? "Plateforme intelligente de création de chansons personnalisées uniques pour vos événements spéciaux (anniversaires, mariages, déclarations)."
+          : "Smart platform for generating unique custom songs for special events (birthdays, weddings, romantic declarations).",
+      image: "/sonorya_cover.jpeg",
+      tags: ["Cloudflare D1", "React", "IA Générative", "Mobile Money"],
+      stats: lang === "fr" ? "Chansons Sur Mesure" : "Custom Songs",
+      url: "https://www.sonorya.co",
+      features: [
+        lang === "fr" ? "Génération musicale personnalisée" : "Custom AI music generation",
+        lang === "fr" ? "Paroles & histoire sur mesure" : "Custom lyrics & story",
+        lang === "fr" ? "Paiements Mobile Money & CB" : "Mobile Money & Card payments",
       ],
     },
   ];
@@ -199,11 +218,19 @@ const TechnovaApps = () => {
                     <img
                       src={app.image}
                       alt={app.title}
-                      className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                      className={`w-full h-full ${
+                        app.image.includes("sonorya")
+                          ? "object-contain p-3 group-hover:scale-105 transition-transform duration-500"
+                          : "object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                      }`}
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
-                        target.src =
-                          "https://images.unsplash.com/photo-1484417894907-623942c8ee29?w=800&q=80";
+                        if (app.image.includes("sonorya")) {
+                          target.src = "/sonorya-logo.png";
+                        } else {
+                          target.src =
+                            "https://images.unsplash.com/photo-1484417894907-623942c8ee29?w=800&q=80";
+                        }
                       }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-black/30 pointer-events-none" />
@@ -250,34 +277,44 @@ const TechnovaApps = () => {
                     <span className="text-[11px] font-extrabold px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shrink-0">
                       {app.stats}
                     </span>
-                    <a
-                      href={app.url}
-                      target={app.url.startsWith("http") ? "_blank" : "_self"}
-                      rel="noopener noreferrer"
-                      download={app.url.endsWith(".apk") ? "mots-meles-technova.apk" : undefined}
-                      className={`inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-bold rounded-xl text-white transition-all duration-200 shadow-sm shrink-0 ${
-                        app.buttonIcon === "contact"
-                          ? "bg-emerald-600 hover:bg-emerald-700"
-                          : "bg-primary hover:bg-primary/95"
-                      }`}
-                    >
-                      {app.buttonText
-                        ? app.buttonText
-                        : app.url.endsWith(".apk")
-                          ? lang === "fr"
-                            ? "Télécharger l'APK"
-                            : "Download APK"
-                          : lang === "fr"
-                            ? "Ouvrir l'application"
-                            : "Open Application"}
-                      {app.buttonIcon === "contact" ? (
-                        <MessageSquare className="h-3.5 w-3.5" />
-                      ) : app.url.endsWith(".apk") ? (
-                        <Download className="h-3.5 w-3.5" />
-                      ) : (
-                        <ExternalLink className="h-3.5 w-3.5" />
-                      )}
-                    </a>
+                    {app.upcoming || app.url === "#" || app.tags.includes("A venir") ? (
+                      <button
+                        disabled
+                        className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-bold rounded-xl bg-muted text-muted-foreground opacity-60 cursor-not-allowed shadow-none shrink-0 border border-border/50"
+                      >
+                        <span>{lang === "fr" ? "Bientôt disponible" : "Coming soon"}</span>
+                        <Sparkles className="h-3.5 w-3.5 text-amber-500" />
+                      </button>
+                    ) : (
+                      <a
+                        href={app.url}
+                        target={app.url.startsWith("http") ? "_blank" : "_self"}
+                        rel="noopener noreferrer"
+                        download={app.url.endsWith(".apk") ? "mots-meles-technova.apk" : undefined}
+                        className={`inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-bold rounded-xl text-white transition-all duration-200 shadow-sm shrink-0 ${
+                          app.buttonIcon === "contact"
+                            ? "bg-emerald-600 hover:bg-emerald-700"
+                            : "bg-primary hover:bg-primary/95"
+                        }`}
+                      >
+                        {app.buttonText
+                          ? app.buttonText
+                          : app.url.endsWith(".apk")
+                            ? lang === "fr"
+                              ? "Télécharger l'APK"
+                              : "Download APK"
+                            : lang === "fr"
+                              ? "Ouvrir l'application"
+                              : "Open Application"}
+                        {app.buttonIcon === "contact" ? (
+                          <MessageSquare className="h-3.5 w-3.5" />
+                        ) : app.url.endsWith(".apk") ? (
+                          <Download className="h-3.5 w-3.5" />
+                        ) : (
+                          <ExternalLink className="h-3.5 w-3.5" />
+                        )}
+                      </a>
+                    )}
                   </div>
                 </div>
               </motion.div>
