@@ -607,12 +607,12 @@ export const Footer = () => {
                 +33 7 46 29 73 60
               </a>
             </li>
-            <li className="flex gap-2.5 items-center">
+            {/* <li className="flex gap-2.5 items-center">
               <i className="fa-brands fa-whatsapp text-base flex-none text-[#25D366]" />
               <a href="https://wa.me/22947883735" className="hover:text-white transition-colors">
                 +229 47 88 37 35
               </a>
-            </li>
+            </li> */}
             <li className="flex gap-2.5 items-start">
               <i className="fa-solid fa-location-dot text-sm mt-1 flex-none text-[color:var(--primary)]" />
               <span>14 Rue Doré, Melun, France</span>
