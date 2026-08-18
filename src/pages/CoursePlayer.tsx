@@ -33,6 +33,7 @@ import { generateCertificatePDF } from "@/lib/certificateGenerator";
 import SEOHead from "@/components/SEOHead";
 import { QuizPlayer, QuizData } from "@/components/course/QuizPlayer";
 import { toast } from "sonner";
+import DOMPurify from "dompurify";
 
 interface Lesson {
   id: string;
@@ -58,7 +59,7 @@ interface Module {
 export const CoursePlayer = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const navigate = useNavigate();
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, isAdmin } = useAuth();
 
   const [course, setCourse] = useState<any>(null);
   const [modules, setModules] = useState<Module[]>([]);
@@ -566,7 +567,7 @@ export const CoursePlayer = () => {
 
                   <div className="flex flex-wrap items-center gap-2">
                     {/* Add to Google Calendar Button */}
-                    {liveDateObj && (
+                    {liveDateObj && !isNaN(liveDateObj.getTime()) && (
                       <a
                         href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
                           course?.title || "Session Live TECHNOVA"
@@ -745,9 +746,12 @@ export const CoursePlayer = () => {
 
               {/* Lesson Description & Details */}
               {activeLesson.description && (
-                <div className="prose dark:prose-invert max-w-none text-sm text-muted-foreground leading-relaxed">
-                  <p>{activeLesson.description}</p>
-                </div>
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: DOMPurify.sanitize(activeLesson.description),
+                  }}
+                  className="prose prose-sm max-w-none text-muted-foreground leading-relaxed dark:prose-invert [&_p]:mb-2 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5"
+                />
               )}
 
               {/* Resource Attachments Download Box */}
@@ -826,9 +830,12 @@ export const CoursePlayer = () => {
                     <h4 className="text-xs font-bold text-foreground uppercase tracking-wider">
                       Présentation de la Formation
                     </h4>
-                    <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">
-                      {course.description}
-                    </p>
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(course.description),
+                      }}
+                      className="prose prose-sm max-w-none text-muted-foreground leading-relaxed dark:prose-invert [&_p]:mb-2 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5"
+                    />
                   </div>
                 )}
 
