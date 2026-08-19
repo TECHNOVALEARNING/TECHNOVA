@@ -96,7 +96,7 @@ const TechnovaApps = () => {
       image: "https://images.unsplash.com/photo-1675557009875-436f0978cf2a?w=800&q=80",
       tags: ["React 18", "TypeScript", "Supabase", "Tailwind CSS", "Mobile Money", "Technova Humanizer"],
       stats: lang === "fr" ? "0.8s temps de charge" : "0.8s load time",
-      url: "https://humanizer-ai-technova.vercel.app/",
+      url: "https://humanizerai.space",
       features: [
         lang === "fr" ? "Haute précision sémantique" : "High semantic accuracy",
         lang === "fr" ? "Zéro plagiat" : "Zero plagiarism",
