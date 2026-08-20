@@ -144,7 +144,7 @@ const TechnovaApps = () => {
         lang === "fr"
           ? "Plateforme de jeu de QCM interactive pour tester ses connaissances, relever des défis et s'entraîner en ligne."
           : "Interactive quiz and trivia platform to test knowledge, take challenges, and practice online.",
-      image: "https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?w=800&q=80",
+      image: "/qcm-cover.jpg",
       tags: ["React", "QCM", "Quiz Interactif", "Vercel"],
       stats: lang === "fr" ? "Quiz Interactifs" : "Interactive Quizzes",
       url: "https://technovaqcm.vercel.app",
@@ -161,7 +161,7 @@ const TechnovaApps = () => {
         lang === "fr"
           ? "Plateforme de gaming permettant de jouer et de gagner des récompenses exclusives."
           : "Gaming platform allowing players to play and earn exclusive rewards.",
-      image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800&q=80",
+      image: "/game-earn-cover.jpg",
       tags: ["A venir"],
       stats: lang === "fr" ? "En développement" : "In development",
       url: "#",

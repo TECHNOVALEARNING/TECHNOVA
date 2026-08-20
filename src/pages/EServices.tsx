@@ -254,7 +254,7 @@ const EServices = () => {
         lang === "fr"
           ? "Plateforme de jeu de QCM interactive pour tester ses connaissances"
           : "Interactive quiz platform to test knowledge",
-      image: "https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?w=800&q=80",
+      image: "/qcm-cover.jpg",
       tags: ["React", "QCM", "Quiz", "Vercel"],
       stats: "Quiz Interactifs",
       url: "https://technovaqcm.vercel.app",
@@ -266,7 +266,7 @@ const EServices = () => {
         lang === "fr"
           ? "Plateforme de gaming pour jouer et gagner des récompenses"
           : "Gaming platform to play and earn rewards",
-      image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800&q=80",
+      image: "/game-earn-cover.jpg",
       tags: ["Gaming", "Récompenses"],
       stats: "En développement",
       url: "#",
