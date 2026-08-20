@@ -272,6 +272,19 @@ const EServices = () => {
       url: "#",
       upcoming: true,
     },
+    {
+      title: "Technova Mobil",
+      category: lang === "fr" ? "Numéros Virtuels, eSIM & IA" : "Virtual Numbers, eSIM & AI",
+      desc:
+        lang === "fr"
+          ? "Numéros virtuels, réception de SMS OTP, eSIM 100% digitale et analyse intelligente par IA"
+          : "Virtual numbers, OTP SMS verification, digital eSIM, and AI-powered message analysis",
+      image: "/technova-mobil-cover.jpg",
+      tags: ["eSIM", "SMS OTP", "Analyse IA"],
+      stats: "En développement",
+      url: "https://www.technovamobil.com",
+      upcoming: true,
+    },
   ];
 
   return (

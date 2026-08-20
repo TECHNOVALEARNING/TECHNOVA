@@ -172,6 +172,24 @@ const TechnovaApps = () => {
         lang === "fr" ? "Système de points & gains" : "Points & earnings system",
       ],
     },
+    {
+      title: "Technova Mobil",
+      category: lang === "fr" ? "Numéros Virtuels, eSIM & IA" : "Virtual Numbers, eSIM & AI",
+      desc:
+        lang === "fr"
+          ? "Plateforme intelligente de numéros virtuels, réception de SMS de vérification (OTP), vente d'eSIM et analyse par IA."
+          : "Smart platform for virtual numbers, verification SMS (OTP), eSIM sales, and AI message analysis.",
+      image: "/technova-mobil-cover.jpg",
+      tags: ["A venir"],
+      stats: lang === "fr" ? "En développement" : "In development",
+      url: "https://www.technovamobil.com",
+      upcoming: true,
+      features: [
+        lang === "fr" ? "Numéros virtuels & Réception OTP sur +200 plateformes" : "Virtual numbers & OTP reception",
+        lang === "fr" ? "eSIM 100% digitale & Connectivité sur +190 pays" : "100% digital eSIM & Global connectivity",
+        lang === "fr" ? "IA d'extraction & Traduction SMS" : "AI message extraction & Translation",
+      ],
+    },
   ];
 
   return (
