@@ -249,7 +249,7 @@ const TechnovaApps = () => {
               >
                 <div>
                   {/* High Prominence Image Header */}
-                  <div className="relative w-full h-52 sm:h-56 overflow-hidden bg-slate-950 flex items-center justify-center">
+                  <div className="relative w-full h-52 sm:h-56 overflow-hidden bg-background flex items-center justify-center">
                     <img
                       src={app.image}
                       alt={app.title}
@@ -268,7 +268,7 @@ const TechnovaApps = () => {
                         }
                       }}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-black/30 pointer-events-none" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
                     <span className="absolute top-3 left-3 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-black/60 text-white backdrop-blur-md border border-white/20 shadow-sm z-10">
                       {app.category}
                     </span>
