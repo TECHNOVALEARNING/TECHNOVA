@@ -137,6 +137,41 @@ const TechnovaApps = () => {
         lang === "fr" ? "Paiements Mobile Money & CB" : "Mobile Money & Card payments",
       ],
     },
+    {
+      title: "TECHNOVA QCM",
+      category: lang === "fr" ? "Plateforme de Jeu & QCM" : "Quiz & Trivia Platform",
+      desc:
+        lang === "fr"
+          ? "Plateforme de jeu de QCM interactive pour tester ses connaissances, relever des défis et s'entraîner en ligne."
+          : "Interactive quiz and trivia platform to test knowledge, take challenges, and practice online.",
+      image: "https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?w=800&q=80",
+      tags: ["React", "QCM", "Quiz Interactif", "Vercel"],
+      stats: lang === "fr" ? "Quiz Interactifs" : "Interactive Quizzes",
+      url: "https://technovaqcm.vercel.app",
+      features: [
+        lang === "fr" ? "Jeu de QCM interactif" : "Interactive quiz gaming",
+        lang === "fr" ? "Suivi des scores & résultats" : "Score & results tracking",
+        lang === "fr" ? "Multiples catégories de test" : "Multiple test categories",
+      ],
+    },
+    {
+      title: "GAME EARN",
+      category: lang === "fr" ? "Gaming & Récompenses" : "Gaming & Rewards",
+      desc:
+        lang === "fr"
+          ? "Plateforme de gaming permettant de jouer et de gagner des récompenses exclusives."
+          : "Gaming platform allowing players to play and earn exclusive rewards.",
+      image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800&q=80",
+      tags: ["A venir"],
+      stats: lang === "fr" ? "En développement" : "In development",
+      url: "#",
+      upcoming: true,
+      features: [
+        lang === "fr" ? "Jouez & Gagnez des récompenses" : "Play & Earn rewards",
+        lang === "fr" ? "Tournois & Défis en ligne" : "Online tournaments & challenges",
+        lang === "fr" ? "Système de points & gains" : "Points & earnings system",
+      ],
+    },
   ];
 
   return (

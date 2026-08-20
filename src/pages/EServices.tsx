@@ -233,7 +233,7 @@ const EServices = () => {
       image: humaniserImg,
       tags: ["React 19", "Express (Node.js)", "Tailwind CSS 4", "Gemini API", "Motion"],
       stats: "0.8s load time",
-      url: "https://humanizer-ai-technova.vercel.app/",
+      url: "https://humanizerai.space",
     },
     {
       title: "Sonorya by Technova",
@@ -246,6 +246,31 @@ const EServices = () => {
       tags: ["Cloudflare D1", "React", "IA Générative", "Mobile Money"],
       stats: "100% sur mesure",
       url: "https://www.sonorya.co",
+    },
+    {
+      title: "TECHNOVA QCM",
+      category: lang === "fr" ? "Plateforme de Jeu & QCM" : "Quiz & Trivia Platform",
+      desc:
+        lang === "fr"
+          ? "Plateforme de jeu de QCM interactive pour tester ses connaissances"
+          : "Interactive quiz platform to test knowledge",
+      image: "https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?w=800&q=80",
+      tags: ["React", "QCM", "Quiz", "Vercel"],
+      stats: "Quiz Interactifs",
+      url: "https://technovaqcm.vercel.app",
+    },
+    {
+      title: "GAME EARN",
+      category: lang === "fr" ? "Gaming & Récompenses" : "Gaming & Rewards",
+      desc:
+        lang === "fr"
+          ? "Plateforme de gaming pour jouer et gagner des récompenses"
+          : "Gaming platform to play and earn rewards",
+      image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800&q=80",
+      tags: ["Gaming", "Récompenses"],
+      stats: "En développement",
+      url: "#",
+      upcoming: true,
     },
   ];
 
