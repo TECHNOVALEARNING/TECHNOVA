@@ -1,7 +1,21 @@
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Header, Footer } from "@/components/site/shared";
-import { ExternalLink, CheckCircle2, Sparkles, Smartphone, Shield, Code, Cpu, Download, MessageSquare } from "lucide-react";
+import {
+  ExternalLink,
+  CheckCircle2,
+  Sparkles,
+  Smartphone,
+  Shield,
+  Code,
+  Cpu,
+  Download,
+  MessageSquare,
+  Search,
+  Globe,
+  Grid,
+  X,
+} from "lucide-react";
 import SEOHead from "@/components/SEOHead";
 
 interface AppCard {
@@ -16,12 +30,16 @@ interface AppCard {
   buttonText?: string;
   buttonIcon?: "contact" | "download" | "external";
   upcoming?: boolean;
+  appType: "web" | "mobile";
 }
 
 const TechnovaApps = () => {
   const [lang, setLang] = useState(() =>
     typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
   );
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeFilter, setActiveFilter] = useState<"all" | "web" | "mobile">("all");
 
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
@@ -33,6 +51,7 @@ const TechnovaApps = () => {
     {
       title: "TECHNOVA Learning",
       category: lang === "fr" ? "Plateforme Web" : "Web Platform",
+      appType: "web",
       desc:
         lang === "fr"
           ? "Plateforme de cours en ligne avec paiements sécurisés par Mobile Money et accès instantané aux formations."
@@ -50,6 +69,7 @@ const TechnovaApps = () => {
     {
       title: "GestCour by Technova",
       category: lang === "fr" ? "Template Web & Workflow" : "Web & Workflow Template",
+      appType: "web",
       desc:
         lang === "fr"
           ? "Solution web clé en main dédiée à la gestion, au suivi hiérarchique (workflow de visa 5 étapes) et à l'archivage du courrier arrivé et départ pour PME, entreprises et administrations."
@@ -66,12 +86,12 @@ const TechnovaApps = () => {
         lang === "fr" ? "100% Autonome & Hors-ligne (IndexedDB)" : "100% Autonomous & Offline (IndexedDB)",
         lang === "fr" ? "Échéances, Relances & Exports PDF/Excel" : "Deadlines, Reminders & PDF/Excel Exports",
         lang === "fr" ? "License à vie sans base de données: 100 000 FCFA" : "Lifetime License without Database: 100,000 FCFA",
-        
       ],
     },
     {
       title: "Mots Mêlés Android",
       category: lang === "fr" ? "Application Android (APK)" : "Android App (APK)",
+      appType: "mobile",
       desc:
         lang === "fr"
           ? "Jeu captivant de Mots Mêlés stimulant la réflexion, la mémoire et la concentration. Téléchargement direct de l'APK officiel."
@@ -89,6 +109,7 @@ const TechnovaApps = () => {
     {
       title: "Technova Humanizer",
       category: lang === "fr" ? "Intelligence Artificielle" : "Artificial Intelligence",
+      appType: "web",
       desc:
         lang === "fr"
           ? "Outil d'intelligence artificielle conçu pour humaniser les textes générés par IA afin d'éviter la détection automatique."
@@ -106,6 +127,7 @@ const TechnovaApps = () => {
     {
       title: "Viral IA Agent",
       category: lang === "fr" ? "Automatisation & IA" : "Automation & AI",
+      appType: "web",
       desc:
         lang === "fr"
           ? "Agent conversationnel IA de viralisation et d'optimisation de contenu pour les réseaux sociaux."
@@ -123,6 +145,7 @@ const TechnovaApps = () => {
     {
       title: "Sonorya by Technova",
       category: lang === "fr" ? "IA & Création Musicale Sur Mesure" : "AI & Custom Music Creation",
+      appType: "web",
       desc:
         lang === "fr"
           ? "Plateforme intelligente de création de chansons personnalisées uniques pour vos événements spéciaux (anniversaires, mariages, déclarations)."
@@ -140,6 +163,7 @@ const TechnovaApps = () => {
     {
       title: "TECHNOVA QCM",
       category: lang === "fr" ? "Plateforme de Jeu & QCM" : "Quiz & Trivia Platform",
+      appType: "web",
       desc:
         lang === "fr"
           ? "Plateforme de jeu de QCM interactive pour tester ses connaissances, relever des défis et s'entraîner en ligne."
@@ -157,6 +181,7 @@ const TechnovaApps = () => {
     {
       title: "GAME EARN",
       category: lang === "fr" ? "Gaming & Récompenses" : "Gaming & Rewards",
+      appType: "mobile",
       desc:
         lang === "fr"
           ? "Plateforme de gaming permettant de jouer et de gagner des récompenses exclusives."
@@ -175,6 +200,7 @@ const TechnovaApps = () => {
     {
       title: "Technova Mobil",
       category: lang === "fr" ? "Numéros Virtuels, eSIM & IA" : "Virtual Numbers, eSIM & AI",
+      appType: "web",
       desc:
         lang === "fr"
           ? "Plateforme intelligente de numéros virtuels, réception de SMS de vérification (OTP), vente d'eSIM et analyse par IA."
@@ -191,6 +217,28 @@ const TechnovaApps = () => {
       ],
     },
   ];
+
+  const counts = useMemo(() => {
+    const web = apps.filter((a) => a.appType === "web").length;
+    const mobile = apps.filter((a) => a.appType === "mobile").length;
+    return { all: apps.length, web, mobile };
+  }, [apps]);
+
+  const filteredApps = useMemo(() => {
+    return apps.filter((app) => {
+      const matchesType = activeFilter === "all" || app.appType === activeFilter;
+      const q = searchQuery.toLowerCase().trim();
+      const matchesQuery =
+        !q ||
+        app.title.toLowerCase().includes(q) ||
+        app.desc.toLowerCase().includes(q) ||
+        app.category.toLowerCase().includes(q) ||
+        app.tags.some((t) => t.toLowerCase().includes(q)) ||
+        app.features.some((f) => f.toLowerCase().includes(q));
+
+      return matchesType && matchesQuery;
+    });
+  }, [apps, activeFilter, searchQuery]);
 
   return (
     <div
@@ -243,7 +291,7 @@ const TechnovaApps = () => {
                 </>
               )}
             </h1>
-            <p className="text-base sm:text-lg text-[color:var(--text-secondary)] leading-relaxed max-w-xl mx-auto mb-10">
+            <p className="text-base sm:text-lg text-[color:var(--text-secondary)] leading-relaxed max-w-xl mx-auto mb-6">
               {lang === "fr"
                 ? "Explorez les applications innovantes et plateformes web conçues par TECHNOVA pour transformer vos activités digitales et booster votre productivité."
                 : "Explore innovative applications and web platforms built by TECHNOVA to transform your digital activities and boost your productivity."}
@@ -252,11 +300,139 @@ const TechnovaApps = () => {
         </div>
       </section>
 
-      {/* Main Apps Showcase Grid */}
-      <section className="py-10 pb-24">
+      {/* Search & Category Filter Control Bar */}
+      <section className="py-2 pb-6">
         <div className="container mx-auto px-4 max-w-7xl">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {apps.map((app, index) => (
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-card/80 backdrop-blur-md p-3 sm:p-4 rounded-3xl border border-border/80 shadow-sm">
+            
+            {/* Search Input Bar */}
+            <div className="relative w-full sm:w-80 md:w-96">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={
+                  lang === "fr"
+                    ? "Rechercher une application..."
+                    : "Search an app..."
+                }
+                className="w-full pl-10 pr-9 py-2 rounded-2xl bg-background border border-border text-xs sm:text-sm font-medium text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              )}
+            </div>
+
+            {/* Category Filter Tabs: Tous, Applications Web, Applications Mobiles */}
+            <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-muted/50 border border-border/50 w-full sm:w-auto overflow-x-auto custom-scrollbar">
+              <button
+                type="button"
+                onClick={() => setActiveFilter("all")}
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all shrink-0 ${
+                  activeFilter === "all"
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "text-muted-foreground hover:text-foreground hover:bg-background/50"
+                }`}
+              >
+                <Grid className="h-3.5 w-3.5" />
+                <span>{lang === "fr" ? "Tous" : "All"}</span>
+                <span
+                  className={`text-[10px] px-1.5 py-0.2 rounded-full font-extrabold ${
+                    activeFilter === "all"
+                      ? "bg-primary-foreground/20 text-primary-foreground"
+                      : "bg-background text-muted-foreground"
+                  }`}
+                >
+                  {counts.all}
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveFilter("web")}
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all shrink-0 ${
+                  activeFilter === "web"
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "text-muted-foreground hover:text-foreground hover:bg-background/50"
+                }`}
+              >
+                <Globe className="h-3.5 w-3.5" />
+                <span>{lang === "fr" ? "Applications Web" : "Web Apps"}</span>
+                <span
+                  className={`text-[10px] px-1.5 py-0.2 rounded-full font-extrabold ${
+                    activeFilter === "web"
+                      ? "bg-primary-foreground/20 text-primary-foreground"
+                      : "bg-background text-muted-foreground"
+                  }`}
+                >
+                  {counts.web}
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveFilter("mobile")}
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all shrink-0 ${
+                  activeFilter === "mobile"
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "text-muted-foreground hover:text-foreground hover:bg-background/50"
+                }`}
+              >
+                <Smartphone className="h-3.5 w-3.5" />
+                <span>{lang === "fr" ? "Applications Mobiles" : "Mobile Apps"}</span>
+                <span
+                  className={`text-[10px] px-1.5 py-0.2 rounded-full font-extrabold ${
+                    activeFilter === "mobile"
+                      ? "bg-primary-foreground/20 text-primary-foreground"
+                      : "bg-background text-muted-foreground"
+                  }`}
+                >
+                  {counts.mobile}
+                </span>
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* Main Apps Showcase Grid */}
+      <section className="py-6 pb-24">
+        <div className="container mx-auto px-4 max-w-7xl">
+          {filteredApps.length === 0 ? (
+            <div className="text-center py-16 px-4 bg-card/60 rounded-3xl border border-border/60 max-w-md mx-auto my-6 shadow-sm">
+              <div className="h-12 w-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mx-auto mb-4 font-bold">
+                <Search className="h-6 w-6" />
+              </div>
+              <h3 className="text-base font-extrabold text-foreground mb-1">
+                {lang === "fr" ? "Aucune application trouvée" : "No applications found"}
+              </h3>
+              <p className="text-xs text-muted-foreground mb-6 leading-relaxed">
+                {lang === "fr"
+                  ? "Essayez de modifier votre terme de recherche ou de changer de filtre."
+                  : "Try adjusting your search query or switching category filters."}
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchQuery("");
+                  setActiveFilter("all");
+                }}
+                className="px-4 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-bold shadow-md hover:bg-primary/90 transition-colors"
+              >
+                {lang === "fr" ? "Réinitialiser la recherche" : "Reset search"}
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredApps.map((app, index) => (
               <motion.div
                 key={app.title}
                 initial={{ opacity: 0, y: 25 }}
@@ -373,6 +549,7 @@ const TechnovaApps = () => {
               </motion.div>
             ))}
           </div>
+          )}
         </div>
       </section>
 
