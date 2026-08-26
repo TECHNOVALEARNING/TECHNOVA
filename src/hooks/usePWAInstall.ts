@@ -102,7 +102,7 @@ export function usePWAInstall() {
   }, []);
 
   return {
-    isInstallable: isInstallable || (isIOS && !isStandalone),
+    isInstallable: !isStandalone,
     hasNativePrompt: !!deferredPrompt,
     isInstalled,
     isStandalone,
