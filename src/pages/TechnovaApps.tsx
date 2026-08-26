@@ -17,6 +17,7 @@ import {
   X,
 } from "lucide-react";
 import SEOHead from "@/components/SEOHead";
+import { PWAInstallButton } from "@/components/pwa/PWAInstallButton";
 
 interface AppCard {
   title: string;
@@ -296,6 +297,14 @@ const TechnovaApps = () => {
                 ? "Explorez les applications innovantes et plateformes web conçues par TECHNOVA pour transformer vos activités digitales et booster votre productivité."
                 : "Explore innovative applications and web platforms built by TECHNOVA to transform your digital activities and boost your productivity."}
             </p>
+
+            <div className="flex items-center justify-center gap-3">
+              <PWAInstallButton
+                variant="default"
+                size="default"
+                className="bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 text-primary-foreground shadow-lg shadow-primary/25 px-6 py-2.5 rounded-2xl text-sm"
+              />
+            </div>
           </motion.div>
         </div>
       </section>

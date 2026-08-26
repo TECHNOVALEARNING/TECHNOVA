@@ -1,0 +1,71 @@
+{
+  "name": "TECHNOVA Learning & Digital Academy",
+  "short_name": "TECHNOVA",
+  "description": "Plateforme leader de formations certifiantes, produits digitaux et applications innovantes TECHNOVA.",
+  "start_url": "/",
+  "id": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "window-controls-overlay", "minimal-ui"],
+  "background_color": "#0B0F19",
+  "theme_color": "#4F46E5",
+  "orientation": "portrait-primary",
+  "lang": "fr-FR",
+  "dir": "ltr",
+  "prefer_related_applications": false,
+  "categories": ["education", "business", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon-maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Formations Certifiantes",
+      "short_name": "Formations",
+      "description": "Accéder aux cours et formations certifiantes",
+      "url": "/formations",
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Technova Apps",
+      "short_name": "Apps",
+      "description": "Découvrir notre écosystème d'applications",
+      "url": "/apps",
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "E-Services",
+      "short_name": "Services",
+      "description": "Explorer nos solutions et services digitaux",
+      "url": "/e-services",
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+    }
+  ]
+}

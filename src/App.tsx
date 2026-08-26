@@ -9,6 +9,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { CartProvider } from "@/contexts/CartContext";
+import { PWAInstallBanner } from "@/components/pwa/PWAInstallBanner";
 
 import Index from "./pages/Index";
 import SearchPage from "./pages/SearchPage";
@@ -562,7 +563,7 @@ const AppContent = () => {
             </Routes>
           </div>
         </div>
-        <SupportChatbot />
+        <PWAInstallBanner />
       </AuthProvider>
     </BrowserRouter>
   );

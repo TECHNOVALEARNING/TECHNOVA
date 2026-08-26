@@ -6,6 +6,7 @@ import { Menu, X, ChevronDown, LayoutDashboard, ShoppingBag, Store } from "lucid
 import logo from "@/assets/logo.png";
 import { useAuth } from "@/contexts/AuthContext";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { PWAInstallButton } from "@/components/pwa/PWAInstallButton";
 
 const productLinks = [
   { label: "Fichiers", href: "/fichiers" },
@@ -190,6 +191,7 @@ const Navbar = () => {
                   <Store className="h-4 w-4" /> Devenir vendeur
                 </Button>
               </Link>
+              <PWAInstallButton size="sm" variant="outline" className="border-primary/40 text-primary hover:bg-primary/10 hover:border-primary text-xs" />
             </>
           )}
         </div>
@@ -271,6 +273,15 @@ const Navbar = () => {
                 </Link>
               </div>
             )}
+
+            {/* PWA App Install Mobile Action */}
+            <div className="pt-2">
+              <PWAInstallButton
+                size="default"
+                variant="default"
+                className="w-full h-11 bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-bold shadow-md shadow-primary/20"
+              />
+            </div>
           </div>
         </motion.div>
       )}

@@ -35,10 +35,10 @@ export const Logo = ({ className = "" }: { className?: string }) => (
   </a>
 );
 
-/* ---------- Header ---------- */
 import { useEffect } from "react";
 import { Moon, Sun, Globe } from "lucide-react";
 import { buyerSupabase } from "@/integrations/supabase/buyer-client";
+import { PWAInstallButton } from "@/components/pwa/PWAInstallButton";
 
 export const Header = () => {
   const [open, setOpen] = useState(false);
@@ -235,6 +235,7 @@ export const Header = () => {
               <i className="fa-solid fa-sun text-sm text-amber-400" />
             )}
           </button>
+          <PWAInstallButton size="sm" variant="outline" className="border-primary/40 text-primary hover:bg-primary/10 hover:border-primary text-xs" />
           {hasBuyerSession && (
             <Link
               to="/mes-achats"
@@ -445,6 +446,15 @@ export const Header = () => {
                   </div>
                 </>
               )}
+
+              {/* PWA App Install CTA */}
+              <div className="pt-2">
+                <PWAInstallButton
+                  size="default"
+                  variant="default"
+                  className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-bold shadow-md shadow-primary/20"
+                />
+              </div>
             </div>
           </div>
         </div>
