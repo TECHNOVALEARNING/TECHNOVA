@@ -191,7 +191,6 @@ const Navbar = () => {
                   <Store className="h-4 w-4" /> Devenir vendeur
                 </Button>
               </Link>
-              <PWAInstallButton size="sm" variant="outline" className="border-primary/40 text-primary hover:bg-primary/10 hover:border-primary text-xs" />
             </>
           )}
         </div>

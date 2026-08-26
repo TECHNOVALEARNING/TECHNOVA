@@ -89,9 +89,6 @@ export const PWAInstallBanner = () => {
                 <h3 className="text-sm font-extrabold text-foreground tracking-tight line-clamp-1">
                   Installer l'application TECHNOVA
                 </h3>
-                <p className="text-xs text-muted-foreground leading-relaxed mt-0.5">
-                  Accès instantané 1-clic, mode hors-ligne et navigation ultra rapide.
-                </p>
               </div>
 
               {/* Close / Dismiss Button */}

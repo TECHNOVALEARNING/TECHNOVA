@@ -235,7 +235,6 @@ export const Header = () => {
               <i className="fa-solid fa-sun text-sm text-amber-400" />
             )}
           </button>
-          <PWAInstallButton size="sm" variant="outline" className="border-primary/40 text-primary hover:bg-primary/10 hover:border-primary text-xs" />
           {hasBuyerSession && (
             <Link
               to="/mes-achats"
