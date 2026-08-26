@@ -86,7 +86,7 @@ export const Header = () => {
 
   const links = [
     { to: "/", label: lang === "fr" ? "Accueil" : "Home" },
-    { to: "/formations", label: lang === "fr" ? "Nos formations" : "Courses" },
+    { to: "/formations", label: lang === "fr" ? "Technova Academy" : "Technova Academy" },
     { to: "/apps", label: lang === "fr" ? "Technova Apps" : "Technova Apps" },
     { to: "/store", label: lang === "fr" ? "Store" : "Store" },
   ];

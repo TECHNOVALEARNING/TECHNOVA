@@ -610,7 +610,7 @@ const Index = () => {
                     transition: "all 0.25s",
                   }}
                 >
-                  {lang === "fr" ? "Accéder aux cours" : "Access courses"}
+                  {lang === "fr" ? "Technova Academy" : "Technova Academy"}
                 </Link>
               </div>
               {/* Social proof */}
