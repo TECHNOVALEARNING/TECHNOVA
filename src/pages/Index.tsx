@@ -535,13 +535,14 @@ const Index = () => {
           ))}
         </div>
 
-        <div className="container mx-auto" style={{ maxWidth: 1280, padding: "0 24px" }}>
+        <div className="w-full mx-auto px-4 sm:px-8 md:px-12 lg:px-16 xl:px-24" style={{ maxWidth: "100%", width: "100%" }}>
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "1fr 1fr",
+              gridTemplateColumns: "1.05fr 1.2fr",
               gap: "48px",
               alignItems: "center",
+              width: "100%",
             }}
             className="max-lg:!grid-cols-1"
           >
