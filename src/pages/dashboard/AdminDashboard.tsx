@@ -180,8 +180,29 @@ const AdminDashboard = () => {
       const openTickets = supportRes.count || 0;
 
       const allOrders = ordersRes.data || [];
-      const completedOrders = allOrders.filter((o) => ["completed", "paid", "success"].includes(o.status));
-      const totalRevenue = completedOrders.reduce((sum, o) => sum + Number(o.amount || 0), 0);
+      const allProducts = productsRes.data || [];
+      const prodMap = Object.fromEntries(allProducts.map((p) => [p.id, p]));
+
+      // Compute effective amounts (if amount is 0, use original_amount or product.price)
+      const processedOrders = allOrders.map((o: any) => {
+        const prod = prodMap[o.product_id];
+        let amount = Number(o.amount || 0);
+        if (amount <= 0 && o.original_amount) {
+          amount = Number(o.original_amount);
+        } else if (amount <= 0 && prod?.price) {
+          amount = Number(prod.price);
+        }
+        return {
+          ...o,
+          computedAmount: amount,
+        };
+      });
+
+      const completedOrders = processedOrders.filter((o) =>
+        ["completed", "paid", "success"].includes(o.status) || (o.status !== "failed" && o.status !== "cancelled" && o.computedAmount > 0)
+      );
+
+      const totalRevenue = completedOrders.reduce((sum, o) => sum + Number(o.computedAmount || 0), 0);
       const commissionPct = Number(feeRes.data?.value_pct ?? 5) / 100;
       const totalCommissions = totalRevenue * commissionPct;
 
@@ -195,9 +216,9 @@ const AdminDashboard = () => {
       completedOrders.forEach((o) => {
         const day = o.created_at?.slice(0, 10);
         if (day && dailySales[day] !== undefined) {
-          dailySales[day] += Number(o.amount || 0);
+          dailySales[day] += Number(o.computedAmount || 0);
         } else if (day) {
-          dailySales[day] = Number(o.amount || 0);
+          dailySales[day] = Number(o.computedAmount || 0);
         }
       });
 
@@ -295,24 +316,22 @@ const AdminDashboard = () => {
           .sort((a, b) => b.value - a.value);
       }
 
-      const allProducts = productsRes.data || [];
       const allStores = storesRes.data || [];
       const allProfiles = usersRes.data || [];
 
       const profMap = Object.fromEntries(allProfiles.map((p) => [p.id, p]));
       const storeByOwnerMap = Object.fromEntries(allStores.map((s) => [s.owner_id, s]));
-      const prodMap = Object.fromEntries(allProducts.map((p) => [p.id, p]));
 
       // Build storeSalesBreakdown for ALL stores on the platform (shows their products & prices & revenue)
       const storeSalesBreakdown = allStores.map((st) => {
         const storeOrders = completedOrders.filter((o) => o.store_owner_id === st.owner_id);
-        const storeRev = storeOrders.reduce((sum, o) => sum + Number(o.amount || 0), 0);
+        const storeRev = storeOrders.reduce((sum, o) => sum + Number(o.computedAmount || o.amount || 0), 0);
         const storeProducts = allProducts.filter((p) => p.creator_id === st.owner_id);
 
         const productsWithSales = storeProducts.map((p) => {
           const pOrders = storeOrders.filter((o) => o.product_id === p.id);
           const pSalesCount = pOrders.length;
-          const pRev = pOrders.reduce((s, o) => s + Number(o.amount || 0), 0);
+          const pRev = pOrders.reduce((s, o) => s + Number(o.computedAmount || o.amount || 0), 0);
           return {
             id: p.id,
             title: p.title,
@@ -332,13 +351,13 @@ const AdminDashboard = () => {
       }).sort((a, b) => b.totalRevenue - a.totalRevenue || b.totalOrders - a.totalOrders);
 
       // Recent purchases list
-      const customerIds = [...new Set(allOrders.map((o) => o.customer_id).filter(Boolean))];
+      const customerIds = [...new Set(processedOrders.map((o) => o.customer_id).filter(Boolean))];
       const { data: custData } = customerIds.length > 0
         ? await supabase.from("customers").select("id, name, email").in("id", customerIds)
         : { data: [] };
       const custMap = Object.fromEntries((custData || []).map((c) => [c.id, c]));
 
-      const recentPurchases = allOrders.map((o) => {
+      const recentPurchases = processedOrders.map((o) => {
         const prod = prodMap[o.product_id];
         const cust = custMap[o.customer_id];
         const prof = profMap[o.store_owner_id];
@@ -351,12 +370,12 @@ const AdminDashboard = () => {
 
         return {
           id: o.id,
-          amount: Number(o.amount || 0),
+          amount: Number(o.computedAmount || o.amount || 0),
           createdAt: o.created_at,
           paymentMethod: o.payment_method || "KkiaPay",
           status: o.status || "completed",
           productTitle: prod?.title || "Produit Numérique",
-          productPrice: Number(prod?.price || o.amount || 0),
+          productPrice: Number(prod?.price || o.computedAmount || o.amount || 0),
           buyerName: cust?.name || "Client Technova",
           buyerEmail: cust?.email || "-",
           sellerName,
@@ -419,14 +438,14 @@ const AdminDashboard = () => {
         },
         {
           label: t.totalRevenue,
-          value: `${stats.totalRevenue.toLocaleString()}${currencySuffix}`,
+          value: `${Math.round(stats.totalRevenue).toLocaleString()}${currencySuffix}`,
           icon: TrendingUp,
           color:
             "from-green-500/10 to-green-600/5 border-green-500/20 text-green-600 dark:text-green-400",
         },
         {
           label: t.commissions,
-          value: `${stats.totalCommissions.toLocaleString()}${currencySuffix}`,
+          value: `${Math.round(stats.totalCommissions).toLocaleString()}${currencySuffix}`,
           icon: DollarSign,
           color:
             "from-purple-500/10 to-purple-600/5 border-purple-500/20 text-purple-600 dark:text-purple-400",

@@ -94,13 +94,42 @@ serve(async (req) => {
         .select("id", { count: "exact", head: true })
         .gte("created_at", "2026-06-05T00:00:00Z");
 
-      // Aggregate all completed or paid orders
-      const { data: orders } = await supabaseAdmin
+      // Fetch all orders with full columns
+      const { data: rawOrders } = await supabaseAdmin
         .from("orders")
-        .select("amount, created_at, status")
-        .or("status.eq.completed,status.eq.paid,status.eq.success");
+        .select("id, amount, original_amount, created_at, payment_method, status, store_owner_id, product_id, customer_id")
+        .order("created_at", { ascending: false });
 
-      const totalRevenue = orders?.reduce((s, o) => s + Number(o.amount || 0), 0) || 0;
+      const ordersList = rawOrders || [];
+
+      // Fetch products to recover price if order.amount was 0 or not updated
+      const productIds = Array.from(new Set(ordersList.map((o: any) => o.product_id).filter(Boolean)));
+      const { data: productsData } = productIds.length > 0
+        ? await supabaseAdmin.from("products").select("id, title, price, type, category").in("id", productIds)
+        : { data: [] };
+      const prodMap = Object.fromEntries((productsData || []).map((p: any) => [p.id, p]));
+
+      // Calculate effective amounts
+      const processedOrders = ordersList.map((o: any) => {
+        const prod = prodMap[o.product_id];
+        let amount = Number(o.amount || 0);
+        if (amount <= 0 && o.original_amount) {
+          amount = Number(o.original_amount);
+        } else if (amount <= 0 && prod?.price) {
+          amount = Number(prod.price);
+        }
+        return {
+          ...o,
+          computedAmount: amount,
+        };
+      });
+
+      // Valid orders for revenue
+      const validCompletedOrders = processedOrders.filter((o: any) =>
+        ["completed", "paid", "success"].includes(o.status) || (o.status !== "failed" && o.status !== "cancelled" && o.computedAmount > 0)
+      );
+
+      const totalRevenue = validCompletedOrders.reduce((s: number, o: any) => s + Number(o.computedAmount || 0), 0);
       const { data: feeRow } = await supabaseAdmin
         .from("platform_fees")
         .select("value_pct")
@@ -126,20 +155,16 @@ serve(async (req) => {
 
       // Sales by day (last 30 days)
       const thirtyDaysAgo = new Date(Date.now() - 30 * 86400000).toISOString();
-      const { data: recentOrders } = await supabaseAdmin
-        .from("orders")
-        .select("amount, created_at")
-        .or("status.eq.completed,status.eq.paid,status.eq.success")
-        .gte("created_at", thirtyDaysAgo);
-
-      recentOrders?.forEach((o) => {
-        const day = o.created_at.slice(0, 10);
-        if (dailySales[day] !== undefined) {
-          dailySales[day] += Number(o.amount || 0);
-        } else {
-          dailySales[day] = Number(o.amount || 0);
-        }
-      });
+      validCompletedOrders
+        .filter((o: any) => o.created_at >= thirtyDaysAgo)
+        .forEach((o: any) => {
+          const day = o.created_at.slice(0, 10);
+          if (dailySales[day] !== undefined) {
+            dailySales[day] += Number(o.computedAmount || 0);
+          } else {
+            dailySales[day] = Number(o.computedAmount || 0);
+          }
+        });
 
       const { count: pendingWithdrawals } = await supabaseAdmin
         .from("withdrawals")
@@ -288,10 +313,7 @@ serve(async (req) => {
       const customerIds = Array.from(new Set(ordersList.map((o: any) => o.customer_id).filter(Boolean)));
       const ownerIds = Array.from(new Set(ordersList.map((o: any) => o.store_owner_id).filter(Boolean)));
 
-      const [productsRes, customersRes, profilesRes, storesRes] = await Promise.all([
-        productIds.length > 0
-          ? supabaseAdmin.from("products").select("id, title, price, type, category").in("id", productIds)
-          : Promise.resolve({ data: [] }),
+      const [customersRes, profilesRes, storesRes, allProductsRes] = await Promise.all([
         customerIds.length > 0
           ? supabaseAdmin.from("customers").select("id, name, email").in("id", customerIds)
           : Promise.resolve({ data: [] }),
@@ -301,20 +323,17 @@ serve(async (req) => {
               .select("id, display_name, store_slug, first_name, last_name")
               .in("id", ownerIds)
           : Promise.resolve({ data: [] }),
-        ownerIds.length > 0
-          ? supabaseAdmin
-              .from("stores")
-              .select("owner_id, name, slug")
-              .in("owner_id", ownerIds)
-          : Promise.resolve({ data: [] }),
+        supabaseAdmin.from("stores").select("id, owner_id, name, slug"),
+        supabaseAdmin.from("products").select("id, title, price, creator_id"),
       ]);
 
-      const prodMap = Object.fromEntries((productsRes.data || []).map((p: any) => [p.id, p]));
       const custMap = Object.fromEntries((customersRes.data || []).map((c: any) => [c.id, c]));
       const profMap = Object.fromEntries((profilesRes.data || []).map((pr: any) => [pr.id, pr]));
       const storeMap = Object.fromEntries((storesRes.data || []).map((st: any) => [st.owner_id, st]));
+      const allStoresList = storesRes.data || [];
+      const allProductsList = allProductsRes.data || [];
 
-      const recentPurchases = ordersList.map((o: any) => {
+      const recentPurchases = processedOrders.map((o: any) => {
         const prod = prodMap[o.product_id];
         const cust = custMap[o.customer_id];
         const prof = profMap[o.store_owner_id];
@@ -328,12 +347,12 @@ serve(async (req) => {
 
         return {
           id: o.id,
-          amount: Number(o.amount || 0),
+          amount: Number(o.computedAmount || o.amount || 0),
           createdAt: o.created_at,
-          paymentMethod: o.payment_method || "kkiapay",
+          paymentMethod: o.payment_method || "KkiaPay",
           status: o.status || "completed",
           productTitle: prod?.title || "Produit Numérique",
-          productPrice: Number(prod?.price || o.amount || 0),
+          productPrice: Number(prod?.price || o.computedAmount || 0),
           buyerName: cust?.name || "Client Technova",
           buyerEmail: cust?.email || "-",
           sellerName: sellerName || "Vendeur Technova",
@@ -341,70 +360,38 @@ serve(async (req) => {
         };
       });
 
-      const storeSalesMap: Record<
-        string,
-        {
-          storeOwnerId: string;
-          storeName: string;
-          totalRevenue: number;
-          totalOrders: number;
-          productsMap: Record<string, { id: string; title: string; price: number; salesCount: number; revenue: number }>;
-        }
-      > = {};
+      const storeSalesMap: Record<string, any> = {};
 
-      ordersList
-        .filter((o: any) => o.status === "completed")
-        .forEach((o: any) => {
-          const ownerId = o.store_owner_id || "unknown";
-          const prof = profMap[ownerId];
-          const store = storeMap[ownerId];
-          const storeName =
-            store?.name ||
-            prof?.display_name ||
-            (prof?.first_name ? `${prof.first_name} ${prof.last_name || ""}`.trim() : null) ||
-            prof?.store_slug ||
-            "Boutique Vendeur";
-          const prodId = o.product_id || "unknown";
-          const prod = prodMap[prodId];
-          const prodTitle = prod?.title || "Produit Numérique";
-          const prodPrice = Number(prod?.price || o.amount || 0);
-          const amount = Number(o.amount || 0);
+      allStoresList.forEach((st: any) => {
+        const storeOrders = validCompletedOrders.filter((o: any) => o.store_owner_id === st.owner_id);
+        const storeRev = storeOrders.reduce((sum: number, o: any) => sum + Number(o.computedAmount || 0), 0);
+        const storeProducts = allProductsList.filter((p: any) => p.creator_id === st.owner_id);
 
-          if (!storeSalesMap[ownerId]) {
-            storeSalesMap[ownerId] = {
-              storeOwnerId: ownerId,
-              storeName,
-              totalRevenue: 0,
-              totalOrders: 0,
-              productsMap: {},
-            };
-          }
-
-          storeSalesMap[ownerId].totalRevenue += amount;
-          storeSalesMap[ownerId].totalOrders += 1;
-
-          if (!storeSalesMap[ownerId].productsMap[prodId]) {
-            storeSalesMap[ownerId].productsMap[prodId] = {
-              id: prodId,
-              title: prodTitle,
-              price: prodPrice,
-              salesCount: 0,
-              revenue: 0,
-            };
-          }
-          storeSalesMap[ownerId].productsMap[prodId].salesCount += 1;
-          storeSalesMap[ownerId].productsMap[prodId].revenue += amount;
+        const productsWithSales = storeProducts.map((p: any) => {
+          const pOrders = storeOrders.filter((o: any) => o.product_id === p.id);
+          const pSalesCount = pOrders.length;
+          const pRev = pOrders.reduce((s: number, o: any) => s + Number(o.computedAmount || 0), 0);
+          return {
+            id: p.id,
+            title: p.title,
+            price: Number(p.price || 0),
+            salesCount: pSalesCount,
+            revenue: pRev,
+          };
         });
 
-      const storeSalesBreakdown = Object.values(storeSalesMap)
-        .map((st) => ({
-          storeOwnerId: st.storeOwnerId,
-          storeName: st.storeName,
-          totalRevenue: st.totalRevenue,
-          totalOrders: st.totalOrders,
-          products: Object.values(st.productsMap).sort((a, b) => b.revenue - a.revenue),
-        }))
-        .sort((a, b) => b.totalRevenue - a.totalRevenue);
+        storeSalesMap[st.owner_id] = {
+          storeOwnerId: st.owner_id,
+          storeName: st.name || profMap[st.owner_id]?.display_name || "Boutique Vendeur",
+          totalRevenue: storeRev,
+          totalOrders: storeOrders.length,
+          products: productsWithSales.sort((a: any, b: any) => b.revenue - a.revenue || b.price - a.price),
+        };
+      });
+
+      const storeSalesBreakdown = Object.values(storeSalesMap).sort(
+        (a: any, b: any) => b.totalRevenue - a.totalRevenue || b.totalOrders - a.totalOrders
+      );
 
       return new Response(
         JSON.stringify({
