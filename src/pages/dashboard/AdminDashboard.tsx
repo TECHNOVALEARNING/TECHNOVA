@@ -133,21 +133,20 @@ const AdminDashboard = () => {
     else setLoading(true);
 
     try {
-      // 1. Try Edge function first
+      // 1. Fetch Edge Function data in parallel with direct queries
+      let edgeData: any = null;
       try {
-        const { data: edgeData, error: edgeErr } = await supabase.functions.invoke("admin-platform", {
+        const edgeRes = await supabase.functions.invoke("admin-platform", {
           body: { action: "stats" },
         });
-
-        if (!edgeErr && edgeData && typeof edgeData.usersCount === "number") {
-          setStats(edgeData);
-          return;
+        if (!edgeRes.error && edgeRes.data) {
+          edgeData = edgeRes.data;
         }
       } catch (e) {
-        console.warn("Edge function stats failed, falling back to direct queries:", e);
+        console.warn("Edge function stats not available:", e);
       }
 
-      // 2. Direct client query fallback (real-time live database calculation)
+      // 2. Direct client queries for 100% reliable store and product catalog
       const thirtyDaysAgo = new Date(Date.now() - 30 * 86400000).toISOString();
 
       const [
@@ -172,16 +171,58 @@ const AdminDashboard = () => {
         supabase.from("platform_fees").select("value_pct").eq("key", "technova_commission_pct").maybeSingle(),
       ]);
 
-      const usersCount = usersRes.count || usersRes.data?.length || 0;
-      const productsCount = productsRes.count || productsRes.data?.length || 0;
-      const storesCount = storesRes.count || storesRes.data?.length || 0;
-      const pendingWithdrawals = withdrawalsRes.count || 0;
-      const pendingKyc = kycRes.count || 0;
-      const openTickets = supportRes.count || 0;
+      const usersCount = edgeData?.usersCount ?? (usersRes.count || usersRes.data?.length || 0);
+      const productsCount = edgeData?.productsCount ?? (productsRes.count || productsRes.data?.length || 0);
+      const pendingWithdrawals = edgeData?.pendingWithdrawals ?? (withdrawalsRes.count || 0);
+      const pendingKyc = edgeData?.pendingKyc ?? (kycRes.count || 0);
+      const openTickets = edgeData?.openTickets ?? (supportRes.count || 0);
 
       const allOrders = ordersRes.data || [];
       const allProducts = productsRes.data || [];
       const prodMap = Object.fromEntries(allProducts.map((p) => [p.id, p]));
+      const allProfiles = usersRes.data || [];
+      const profMap = Object.fromEntries(allProfiles.map((p) => [p.id, p]));
+
+      // Build complete stores list (from stores table + profiles with store_slug + creators with products)
+      const rawStores = storesRes.data || [];
+      const storeMap = new Map<string, { id: string; owner_id: string; name: string; slug: string }>();
+
+      rawStores.forEach((s) => {
+        if (s.owner_id) {
+          storeMap.set(s.owner_id, {
+            id: s.id,
+            owner_id: s.owner_id,
+            name: s.name || profMap[s.owner_id]?.display_name || "Boutique",
+            slug: s.slug || "store",
+          });
+        }
+      });
+
+      allProfiles.forEach((p) => {
+        if (p.store_slug && !storeMap.has(p.id)) {
+          storeMap.set(p.id, {
+            id: p.id,
+            owner_id: p.id,
+            name: p.display_name || (p.first_name ? `${p.first_name} ${p.last_name || ""}`.trim() : null) || p.store_slug,
+            slug: p.store_slug,
+          });
+        }
+      });
+
+      allProducts.forEach((p) => {
+        if (p.creator_id && !storeMap.has(p.creator_id)) {
+          const prof = profMap[p.creator_id];
+          storeMap.set(p.creator_id, {
+            id: p.creator_id,
+            owner_id: p.creator_id,
+            name: prof?.display_name || (prof?.first_name ? `${prof.first_name} ${prof.last_name || ""}`.trim() : null) || "Boutique Vendeur",
+            slug: prof?.store_slug || "store",
+          });
+        }
+      });
+
+      const allStoresList = Array.from(storeMap.values());
+      const storesCount = allStoresList.length;
 
       // Compute effective amounts (if amount is 0, use original_amount or product.price)
       const processedOrders = allOrders.map((o: any) => {
@@ -202,39 +243,46 @@ const AdminDashboard = () => {
         ["completed", "paid", "success"].includes(o.status) || (o.status !== "failed" && o.status !== "cancelled" && o.computedAmount > 0)
       );
 
-      const totalRevenue = completedOrders.reduce((sum, o) => sum + Number(o.computedAmount || 0), 0);
+      const directTotalRevenue = completedOrders.reduce((sum, o) => sum + Number(o.computedAmount || 0), 0);
+      const edgeTotalRevenue = Number(edgeData?.totalRevenue || 0);
+      const totalRevenue = Math.max(edgeTotalRevenue, directTotalRevenue);
+
       const commissionPct = Number(feeRes.data?.value_pct ?? 5) / 100;
       const totalCommissions = totalRevenue * commissionPct;
 
       // 30-day timeline initialized to 0
-      const dailySales: Record<string, number> = {};
-      for (let i = 29; i >= 0; i--) {
-        const d = new Date(Date.now() - i * 86400000);
-        const dayStr = d.toISOString().slice(0, 10);
-        dailySales[dayStr] = 0;
-      }
-      completedOrders.forEach((o) => {
-        const day = o.created_at?.slice(0, 10);
-        if (day && dailySales[day] !== undefined) {
-          dailySales[day] += Number(o.computedAmount || 0);
-        } else if (day) {
-          dailySales[day] = Number(o.computedAmount || 0);
+      const dailySales: Record<string, number> = edgeData?.dailySales || {};
+      if (Object.keys(dailySales).length === 0) {
+        for (let i = 29; i >= 0; i--) {
+          const d = new Date(Date.now() - i * 86400000);
+          const dayStr = d.toISOString().slice(0, 10);
+          dailySales[dayStr] = 0;
         }
-      });
+        completedOrders.forEach((o) => {
+          const day = o.created_at?.slice(0, 10);
+          if (day && dailySales[day] !== undefined) {
+            dailySales[day] += Number(o.computedAmount || 0);
+          } else if (day) {
+            dailySales[day] = Number(o.computedAmount || 0);
+          }
+        });
+      }
 
-      // Traffic calculations
+      // Traffic
+      const traffic = edgeData?.traffic && edgeData.traffic.pageViews > 0
+        ? edgeData.traffic
+        : {
+            uniqueVisitors: 0,
+            pageViews: visitsRes.data?.length || 0,
+            bounceRate: "0.0%",
+            avgDuration: "45s",
+            countries: [] as Array<{ name: string; value: number }>,
+            searchSources: [] as Array<{ name: string; value: number }>,
+            socialSources: [] as Array<{ name: string; value: number }>,
+          };
+
       const visits = visitsRes.data || [];
-      const traffic = {
-        uniqueVisitors: 0,
-        pageViews: visits.length,
-        bounceRate: "0.0%",
-        avgDuration: "0s",
-        countries: [] as Array<{ name: string; value: number }>,
-        searchSources: [] as Array<{ name: string; value: number }>,
-        socialSources: [] as Array<{ name: string; value: number }>,
-      };
-
-      if (visits.length > 0) {
+      if ((!traffic.pageViews || traffic.pageViews === 0) && visits.length > 0) {
         const ipHits: Record<string, number> = {};
         const ipMinMax: Record<string, { min: number; max: number }> = {};
         const countryCounts: Record<string, number> = {};
@@ -296,8 +344,6 @@ const AdminDashboard = () => {
           const mins = Math.floor(avgSec / 60);
           const secs = avgSec % 60;
           traffic.avgDuration = mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
-        } else {
-          traffic.avgDuration = "45s";
         }
 
         const totalCountries = Object.values(countryCounts).reduce((a, b) => a + b, 0) || 1;
@@ -316,14 +362,8 @@ const AdminDashboard = () => {
           .sort((a, b) => b.value - a.value);
       }
 
-      const allStores = storesRes.data || [];
-      const allProfiles = usersRes.data || [];
-
-      const profMap = Object.fromEntries(allProfiles.map((p) => [p.id, p]));
-      const storeByOwnerMap = Object.fromEntries(allStores.map((s) => [s.owner_id, s]));
-
       // Build storeSalesBreakdown for ALL stores on the platform (shows their products & prices & revenue)
-      const storeSalesBreakdown = allStores.map((st) => {
+      const storeSalesBreakdown = allStoresList.map((st) => {
         const storeOrders = completedOrders.filter((o) => o.store_owner_id === st.owner_id);
         const storeRev = storeOrders.reduce((sum, o) => sum + Number(o.computedAmount || o.amount || 0), 0);
         const storeProducts = allProducts.filter((p) => p.creator_id === st.owner_id);
@@ -350,18 +390,18 @@ const AdminDashboard = () => {
         };
       }).sort((a, b) => b.totalRevenue - a.totalRevenue || b.totalOrders - a.totalOrders);
 
-      // Recent purchases list
+      // Recent purchases list (merge edgeData and direct orders)
       const customerIds = [...new Set(processedOrders.map((o) => o.customer_id).filter(Boolean))];
       const { data: custData } = customerIds.length > 0
         ? await supabase.from("customers").select("id, name, email").in("id", customerIds)
         : { data: [] };
       const custMap = Object.fromEntries((custData || []).map((c) => [c.id, c]));
 
-      const recentPurchases = processedOrders.map((o) => {
+      const directPurchases = processedOrders.map((o) => {
         const prod = prodMap[o.product_id];
         const cust = custMap[o.customer_id];
         const prof = profMap[o.store_owner_id];
-        const store = storeByOwnerMap[o.store_owner_id];
+        const store = storeMap.get(o.store_owner_id);
         const sellerName =
           store?.name ||
           prof?.display_name ||
@@ -383,6 +423,16 @@ const AdminDashboard = () => {
         };
       });
 
+      const combinedPurchasesMap = new Map<string, any>();
+      (edgeData?.recentPurchases || []).forEach((p: any) => combinedPurchasesMap.set(p.id, p));
+      directPurchases.forEach((p) => combinedPurchasesMap.set(p.id, p));
+
+      const recentPurchases = Array.from(combinedPurchasesMap.values()).sort(
+        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+
+      const totalOrdersCount = Math.max(edgeData?.totalOrders ?? 0, recentPurchases.length);
+
       setStats({
         usersCount,
         totalRevenue,
@@ -393,7 +443,7 @@ const AdminDashboard = () => {
         pendingWithdrawals,
         pendingKyc,
         openTickets,
-        totalOrders: allOrders.length,
+        totalOrders: totalOrdersCount,
         traffic,
         storeSalesBreakdown,
         recentPurchases,
