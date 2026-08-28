@@ -5,7 +5,8 @@ import { useQuery } from "@tanstack/react-query";
 import { Header, Footer, CourseCard, Course } from "@/components/site/shared";
 import { supabase } from "@/integrations/supabase/client";
 import logoImg from "@/assets/logo.png";
-import appMockupGif from "@/assets/techgif.gif";
+import heroShowcaseImg from "@/assets/hero-showcase.jpg";
+import technovaAppsMobileImg from "@/assets/technova-apps-mobile.png";
 import SEOHead from "@/components/SEOHead";
 import { getEmbedUrl, getVideoThumbnailUrl, isDirectVideo } from "@/lib/videoUtils";
 import { BookOpen, Loader2, Search, PackageOpen } from "lucide-react";
@@ -712,8 +713,8 @@ const Index = () => {
                     )
                   ) : (
                     <img
-                      src={appMockupGif}
-                      alt="TECHNOVA Showcase"
+                      src={heroShowcaseImg}
+                      alt="TECHNOVA Learning Showcase"
                       style={{
                         position: "absolute",
                         top: 0,
@@ -1359,16 +1360,17 @@ const Index = () => {
                   </a>
                 </div>
               </div>
-              <div style={{ textAlign: "center" }}>
+              <div style={{ textAlign: "center", display: "flex", justifyContent: "center", alignItems: "center" }}>
                 <img
-                  src={appMockupGif}
-                  alt="Mobile App"
+                  src={technovaAppsMobileImg}
+                  alt="TECHNOVA Apps Mobile Showcase"
                   style={{
                     maxWidth: "100%",
-                    maxHeight: 460,
-                    borderRadius: 16,
-                    boxShadow: "0 24px 60px rgba(0,0,0,0.3)",
-                    objectFit: "cover",
+                    maxHeight: 480,
+                    boxShadow: "none",
+                    border: "none",
+                    background: "transparent",
+                    objectFit: "contain",
                   }}
                 />
               </div>
