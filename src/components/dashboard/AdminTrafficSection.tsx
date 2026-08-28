@@ -97,32 +97,28 @@ export default function AdminTrafficSection({ stats, lang }: AdminTrafficSection
     {
       label: t.uniqueVisitors,
       value: visitorsCount.toLocaleString(),
-      change: hasRealTraffic ? "+12.4%" : "0.0%",
-      isPositive: true,
+      badge: "30 jours",
       icon: Users,
       color: "text-blue-500 bg-blue-500/10 border-blue-500/20",
     },
     {
       label: t.pageViews,
       value: pageViewsCount.toLocaleString(),
-      change: hasRealTraffic ? "+15.8%" : "0.0%",
-      isPositive: true,
+      badge: "Total",
       icon: Eye,
       color: "text-green-500 bg-green-500/10 border-green-500/20",
     },
     {
       label: t.avgDuration,
       value: avgDurationVal,
-      change: hasRealTraffic ? "+5.1%" : "0.0%",
-      isPositive: true,
+      badge: "Moyenne",
       icon: Clock,
       color: "text-amber-500 bg-amber-500/10 border-amber-500/20",
     },
     {
       label: t.bounceRate,
       value: bounceRateVal,
-      change: hasRealTraffic ? "-1.8%" : "0.0%",
-      isPositive: true,
+      badge: "Rebond",
       icon: Percent,
       color: "text-purple-500 bg-purple-500/10 border-purple-500/20",
     },
@@ -141,6 +137,8 @@ export default function AdminTrafficSection({ stats, lang }: AdminTrafficSection
   const fallbackSocial = [
     { name: "WhatsApp / Telegram", value: 0 },
     { name: "Facebook", value: 0 },
+    { name: "LinkedIn", value: 0 },
+    { name: "TikTok / Instagram", value: 0 },
   ];
 
   const countries = hasRealTraffic ? stats.traffic!.countries : fallbackCountries;
@@ -159,6 +157,10 @@ export default function AdminTrafficSection({ stats, lang }: AdminTrafficSection
     if (lowerName.includes("côte d'ivoire") || lowerName.includes("cote")) return "bg-orange-500";
     if (lowerName.includes("sénégal") || lowerName.includes("senegal")) return "bg-red-500";
     if (lowerName.includes("mali")) return "bg-yellow-500";
+    if (lowerName.includes("togo")) return "bg-emerald-500";
+    if (lowerName.includes("burkina")) return "bg-amber-600";
+    if (lowerName.includes("cameroun")) return "bg-teal-500";
+    if (lowerName.includes("france")) return "bg-blue-600";
     if (lowerName.includes("autres") || lowerName.includes("other")) return "bg-slate-400";
 
     if (lowerName.includes("google")) return "bg-blue-500";
@@ -168,6 +170,7 @@ export default function AdminTrafficSection({ stats, lang }: AdminTrafficSection
     if (lowerName.includes("whatsapp")) return "bg-emerald-500";
     if (lowerName.includes("facebook")) return "bg-sky-600";
     if (lowerName.includes("linkedin")) return "bg-blue-700";
+    if (lowerName.includes("tiktok") || lowerName.includes("instagram")) return "bg-pink-600";
     if (lowerName.includes("twitter") || lowerName.includes("x")) return "bg-slate-700";
 
     const defaultColors = ["bg-primary", "bg-purple-500", "bg-pink-500", "bg-rose-500", "bg-slate-400"];
@@ -204,14 +207,8 @@ export default function AdminTrafficSection({ stats, lang }: AdminTrafficSection
             </div>
             <div className="mt-3 flex items-baseline justify-between">
               <span className="text-2xl font-bold tracking-tight text-foreground">{kpi.value}</span>
-              <span
-                className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
-                  kpi.isPositive
-                    ? "bg-green-500/10 text-green-600 dark:text-green-400"
-                    : "bg-red-500/10 text-red-600 dark:text-red-400"
-                }`}
-              >
-                {kpi.change}
+              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-secondary/80 text-muted-foreground border border-border/50">
+                {kpi.badge}
               </span>
             </div>
           </motion.div>

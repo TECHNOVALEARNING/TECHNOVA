@@ -10,6 +10,12 @@ import { supabase } from "@/integrations/supabase/client";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { CartProvider } from "@/contexts/CartContext";
 import { PWAInstallBanner } from "@/components/pwa/PWAInstallBanner";
+import { usePageTracker } from "@/hooks/usePageTracker";
+
+function GlobalTracker() {
+  usePageTracker();
+  return null;
+}
 
 import Index from "./pages/Index";
 import SearchPage from "./pages/SearchPage";
@@ -197,6 +203,7 @@ const AppContent = () => {
     return (
       <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <ScrollToTop />
+        <GlobalTracker />
         <Routes>
           <Route path="/" element={<BuyerLogin />} />
           <Route path="/auth/callback" element={<BuyerOAuthCallback />} />
@@ -212,6 +219,7 @@ const AppContent = () => {
   return (
     <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <ScrollToTop />
+      <GlobalTracker />
       <AuthProvider>
         <div className="relative min-h-screen overflow-hidden">
           {/* Background floating orbs */}

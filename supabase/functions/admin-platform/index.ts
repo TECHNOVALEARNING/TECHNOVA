@@ -32,6 +32,48 @@ serve(async (req) => {
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
     const supabaseAdmin = createClient(supabaseUrl, serviceRoleKey);
+
+    const body = await req.json().catch(() => ({}));
+    const { action, ...params } = body;
+
+    // ── PUBLIC TRACK VISIT ACTION (No admin login needed, captures all site & store traffic) ──
+    if (action === "track_visit") {
+      let storeOwnerId = params.store_owner_id;
+      if (!storeOwnerId) {
+        const { data: fallbackProfile } = await supabaseAdmin
+          .from("profiles")
+          .select("id")
+          .limit(1)
+          .maybeSingle();
+        storeOwnerId = fallbackProfile?.id || "1d2bf252-8301-4afc-865f-31a210221f83";
+      }
+
+      const clientIp =
+        req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+        req.headers.get("cf-connecting-ip") ||
+        params.visitor_id ||
+        "anon_" + Math.random().toString(36).substring(2, 10);
+
+      const detectedCountry =
+        params.country ||
+        req.headers.get("cf-ipcountry") ||
+        "Bénin";
+
+      await supabaseAdmin.from("store_visits").insert({
+        store_owner_id: storeOwnerId,
+        page_path: params.page_path || "/",
+        referrer: params.referrer || null,
+        user_agent: params.user_agent || req.headers.get("user-agent") || null,
+        device_type: params.device_type || "Desktop",
+        visitor_ip: clientIp,
+        country: detectedCountry,
+      });
+
+      return new Response(JSON.stringify({ success: true }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const user = await getAdminUser(req, supabaseUrl, anonKey);
 
     if (!user) {
@@ -40,8 +82,6 @@ serve(async (req) => {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-
-    const { action, ...params } = await req.json();
 
     // ── DASHBOARD STATS ──
     if (action === "stats") {
@@ -54,12 +94,13 @@ serve(async (req) => {
         .select("id", { count: "exact", head: true })
         .gte("created_at", "2026-06-05T00:00:00Z");
 
+      // Aggregate all completed or paid orders
       const { data: orders } = await supabaseAdmin
         .from("orders")
         .select("amount, created_at, status")
-        .eq("status", "completed");
+        .or("status.eq.completed,status.eq.paid,status.eq.success");
 
-      const totalRevenue = orders?.reduce((s, o) => s + Number(o.amount), 0) || 0;
+      const totalRevenue = orders?.reduce((s, o) => s + Number(o.amount || 0), 0) || 0;
       const { data: feeRow } = await supabaseAdmin
         .from("platform_fees")
         .select("value_pct")
@@ -75,18 +116,29 @@ serve(async (req) => {
         .from("stores")
         .select("id", { count: "exact", head: true });
 
+      // Generate continuous 30-day timeline initialized to 0
+      const dailySales: Record<string, number> = {};
+      for (let i = 29; i >= 0; i--) {
+        const d = new Date(Date.now() - i * 86400000);
+        const dayStr = d.toISOString().slice(0, 10);
+        dailySales[dayStr] = 0;
+      }
+
       // Sales by day (last 30 days)
       const thirtyDaysAgo = new Date(Date.now() - 30 * 86400000).toISOString();
       const { data: recentOrders } = await supabaseAdmin
         .from("orders")
         .select("amount, created_at")
-        .eq("status", "completed")
+        .or("status.eq.completed,status.eq.paid,status.eq.success")
         .gte("created_at", thirtyDaysAgo);
 
-      const dailySales: Record<string, number> = {};
       recentOrders?.forEach((o) => {
         const day = o.created_at.slice(0, 10);
-        dailySales[day] = (dailySales[day] || 0) + Number(o.amount);
+        if (dailySales[day] !== undefined) {
+          dailySales[day] += Number(o.amount || 0);
+        } else {
+          dailySales[day] = Number(o.amount || 0);
+        }
       });
 
       const { count: pendingWithdrawals } = await supabaseAdmin
@@ -143,12 +195,12 @@ serve(async (req) => {
           }
 
           // Country aggregation
-          const country = v.country || "Autres";
+          const country = v.country || "Bénin";
           countryCounts[country] = (countryCounts[country] || 0) + 1;
 
           // Referrer parsing
           const ref = (v.referrer || "").toLowerCase();
-          if (!ref) {
+          if (!ref || ref === "direct") {
             referrerCounts["Direct (Accès direct)"] = (referrerCounts["Direct (Accès direct)"] || 0) + 1;
           } else if (ref.includes("google")) {
             referrerCounts["Google (Search)"] = (referrerCounts["Google (Search)"] || 0) + 1;
@@ -156,11 +208,13 @@ serve(async (req) => {
             referrerCounts["Bing / Yahoo / DuckDuckGo"] = (referrerCounts["Bing / Yahoo / DuckDuckGo"] || 0) + 1;
           } else if (ref.includes("whatsapp") || ref.includes("wa.me") || ref.includes("telegram") || ref.includes("t.me")) {
             socialCounts["WhatsApp / Telegram"] = (socialCounts["WhatsApp / Telegram"] || 0) + 1;
-          } else if (ref.includes("facebook") || ref.includes("fb.me")) {
+          } else if (ref.includes("facebook") || ref.includes("fb.me") || ref.includes("fbclid")) {
             socialCounts["Facebook"] = (socialCounts["Facebook"] || 0) + 1;
-          } else if (ref.includes("linkedin")) {
+          } else if (ref.includes("linkedin") || ref.includes("li_fat_id")) {
             socialCounts["LinkedIn"] = (socialCounts["LinkedIn"] || 0) + 1;
-          } else if (ref.includes("twitter") || ref.includes("t.co") || ref.includes("youtube")) {
+          } else if (ref.includes("tiktok") || ref.includes("ttclid") || ref.includes("instagram")) {
+            socialCounts["TikTok / Instagram"] = (socialCounts["TikTok / Instagram"] || 0) + 1;
+          } else if (ref.includes("twitter") || ref.includes("t.co") || ref.includes("x.com") || ref.includes("youtube")) {
             socialCounts["Twitter / X / YouTube"] = (socialCounts["Twitter / X / YouTube"] || 0) + 1;
           } else {
             referrerCounts["Liens référents (Referrals)"] = (referrerCounts["Liens référents (Referrals)"] || 0) + 1;
@@ -234,7 +288,7 @@ serve(async (req) => {
       const customerIds = Array.from(new Set(ordersList.map((o: any) => o.customer_id).filter(Boolean)));
       const ownerIds = Array.from(new Set(ordersList.map((o: any) => o.store_owner_id).filter(Boolean)));
 
-      const [productsRes, customersRes, profilesRes] = await Promise.all([
+      const [productsRes, customersRes, profilesRes, storesRes] = await Promise.all([
         productIds.length > 0
           ? supabaseAdmin.from("products").select("id, title, price, type, category").in("id", productIds)
           : Promise.resolve({ data: [] }),
@@ -244,23 +298,33 @@ serve(async (req) => {
         ownerIds.length > 0
           ? supabaseAdmin
               .from("profiles")
-              .select("id, display_name, store_name, first_name, last_name")
+              .select("id, display_name, store_slug, first_name, last_name")
               .in("id", ownerIds)
+          : Promise.resolve({ data: [] }),
+        ownerIds.length > 0
+          ? supabaseAdmin
+              .from("stores")
+              .select("owner_id, name, slug")
+              .in("owner_id", ownerIds)
           : Promise.resolve({ data: [] }),
       ]);
 
       const prodMap = Object.fromEntries((productsRes.data || []).map((p: any) => [p.id, p]));
       const custMap = Object.fromEntries((customersRes.data || []).map((c: any) => [c.id, c]));
       const profMap = Object.fromEntries((profilesRes.data || []).map((pr: any) => [pr.id, pr]));
+      const storeMap = Object.fromEntries((storesRes.data || []).map((st: any) => [st.owner_id, st]));
 
       const recentPurchases = ordersList.map((o: any) => {
         const prod = prodMap[o.product_id];
         const cust = custMap[o.customer_id];
         const prof = profMap[o.store_owner_id];
+        const store = storeMap[o.store_owner_id];
         const sellerName =
+          store?.name ||
           prof?.display_name ||
-          prof?.store_name ||
-          (prof?.first_name ? `${prof.first_name} ${prof.last_name || ""}`.trim() : "Boutique Vendeur");
+          (prof?.first_name ? `${prof.first_name} ${prof.last_name || ""}`.trim() : null) ||
+          prof?.store_slug ||
+          "Boutique Vendeur";
 
         return {
           id: o.id,
@@ -293,10 +357,13 @@ serve(async (req) => {
         .forEach((o: any) => {
           const ownerId = o.store_owner_id || "unknown";
           const prof = profMap[ownerId];
+          const store = storeMap[ownerId];
           const storeName =
+            store?.name ||
             prof?.display_name ||
-            prof?.store_name ||
-            (prof?.first_name ? `${prof.first_name} ${prof.last_name || ""}`.trim() : "Boutique Vendeur");
+            (prof?.first_name ? `${prof.first_name} ${prof.last_name || ""}`.trim() : null) ||
+            prof?.store_slug ||
+            "Boutique Vendeur";
           const prodId = o.product_id || "unknown";
           const prod = prodMap[prodId];
           const prodTitle = prod?.title || "Produit Numérique";
