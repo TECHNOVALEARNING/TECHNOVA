@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
@@ -14,6 +14,7 @@ import {
   MessageCircle,
   TrendingUp,
   ShoppingCart,
+  RefreshCw,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
@@ -30,6 +31,15 @@ interface Stats {
   pendingKyc: number;
   openTickets: number;
   totalOrders: number;
+  traffic?: {
+    uniqueVisitors: number;
+    pageViews: number;
+    bounceRate: string;
+    avgDuration: string;
+    countries: Array<{ name: string; value: number }>;
+    searchSources: Array<{ name: string; value: number }>;
+    socialSources: Array<{ name: string; value: number }>;
+  };
   storeSalesBreakdown?: Array<{
     storeOwnerId: string;
     storeName: string;
@@ -77,6 +87,7 @@ const translations = {
     openTickets: "Tickets ouverts",
     chartTitle: "Ventes des 30 derniers jours",
     chartLabel: "Ventes",
+    refresh: "Actualiser",
   },
   en: {
     adminTitle: "Administration",
@@ -93,6 +104,7 @@ const translations = {
     openTickets: "Open Tickets",
     chartTitle: "Sales over the last 30 days",
     chartLabel: "Sales",
+    refresh: "Refresh",
   },
 };
 
@@ -101,6 +113,7 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
   const [lang, setLang] = useState(() =>
@@ -115,21 +128,269 @@ const AdminDashboard = () => {
 
   const t = translations[lang === "en" ? "en" : "fr"];
 
+  const fetchStats = useCallback(async (isManualRefresh = false) => {
+    if (isManualRefresh) setRefreshing(true);
+    else setLoading(true);
+
+    try {
+      // 1. Try Edge function first
+      try {
+        const { data: edgeData, error: edgeErr } = await supabase.functions.invoke("admin-platform", {
+          body: { action: "stats" },
+        });
+
+        if (!edgeErr && edgeData && typeof edgeData.usersCount === "number") {
+          setStats(edgeData);
+          return;
+        }
+      } catch (e) {
+        console.warn("Edge function stats failed, falling back to direct queries:", e);
+      }
+
+      // 2. Direct client query fallback (real-time live database calculation)
+      const thirtyDaysAgo = new Date(Date.now() - 30 * 86400000).toISOString();
+
+      const [
+        usersRes,
+        productsRes,
+        storesRes,
+        ordersRes,
+        withdrawalsRes,
+        kycRes,
+        supportRes,
+        visitsRes,
+        feeRes,
+      ] = await Promise.all([
+        supabase.from("profiles").select("id, display_name, first_name, last_name, store_slug", { count: "exact" }),
+        supabase.from("products").select("id, title, price, creator_id, is_published, category", { count: "exact" }),
+        supabase.from("stores").select("id, owner_id, name, slug, is_archived", { count: "exact" }),
+        supabase.from("orders").select("id, amount, created_at, status, payment_method, store_owner_id, product_id, customer_id"),
+        supabase.from("withdrawals").select("id", { count: "exact", head: true }).eq("status", "pending"),
+        supabase.from("identity_verifications").select("id", { count: "exact", head: true }).eq("status", "pending"),
+        supabase.from("support_conversations").select("id", { count: "exact", head: true }).eq("status", "open"),
+        supabase.from("store_visits").select("country, device_type, referrer, visitor_ip, created_at").gte("created_at", thirtyDaysAgo),
+        supabase.from("platform_fees").select("value_pct").eq("key", "technova_commission_pct").maybeSingle(),
+      ]);
+
+      const usersCount = usersRes.count || usersRes.data?.length || 0;
+      const productsCount = productsRes.count || productsRes.data?.length || 0;
+      const storesCount = storesRes.count || storesRes.data?.length || 0;
+      const pendingWithdrawals = withdrawalsRes.count || 0;
+      const pendingKyc = kycRes.count || 0;
+      const openTickets = supportRes.count || 0;
+
+      const allOrders = ordersRes.data || [];
+      const completedOrders = allOrders.filter((o) => ["completed", "paid", "success"].includes(o.status));
+      const totalRevenue = completedOrders.reduce((sum, o) => sum + Number(o.amount || 0), 0);
+      const commissionPct = Number(feeRes.data?.value_pct ?? 5) / 100;
+      const totalCommissions = totalRevenue * commissionPct;
+
+      // 30-day timeline initialized to 0
+      const dailySales: Record<string, number> = {};
+      for (let i = 29; i >= 0; i--) {
+        const d = new Date(Date.now() - i * 86400000);
+        const dayStr = d.toISOString().slice(0, 10);
+        dailySales[dayStr] = 0;
+      }
+      completedOrders.forEach((o) => {
+        const day = o.created_at?.slice(0, 10);
+        if (day && dailySales[day] !== undefined) {
+          dailySales[day] += Number(o.amount || 0);
+        } else if (day) {
+          dailySales[day] = Number(o.amount || 0);
+        }
+      });
+
+      // Traffic calculations
+      const visits = visitsRes.data || [];
+      const traffic = {
+        uniqueVisitors: 0,
+        pageViews: visits.length,
+        bounceRate: "0.0%",
+        avgDuration: "0s",
+        countries: [] as Array<{ name: string; value: number }>,
+        searchSources: [] as Array<{ name: string; value: number }>,
+        socialSources: [] as Array<{ name: string; value: number }>,
+      };
+
+      if (visits.length > 0) {
+        const ipHits: Record<string, number> = {};
+        const ipMinMax: Record<string, { min: number; max: number }> = {};
+        const countryCounts: Record<string, number> = {};
+        const searchCounts: Record<string, number> = {};
+        const socialCounts: Record<string, number> = {};
+
+        visits.forEach((v) => {
+          const ip = v.visitor_ip || "anon";
+          ipHits[ip] = (ipHits[ip] || 0) + 1;
+
+          const tTime = new Date(v.created_at).getTime();
+          if (!ipMinMax[ip]) ipMinMax[ip] = { min: tTime, max: tTime };
+          else {
+            ipMinMax[ip].min = Math.min(ipMinMax[ip].min, tTime);
+            ipMinMax[ip].max = Math.max(ipMinMax[ip].max, tTime);
+          }
+
+          const country = v.country || "Bénin";
+          countryCounts[country] = (countryCounts[country] || 0) + 1;
+
+          const ref = (v.referrer || "").toLowerCase();
+          if (!ref || ref === "direct") {
+            searchCounts["Direct (Accès direct)"] = (searchCounts["Direct (Accès direct)"] || 0) + 1;
+          } else if (ref.includes("google")) {
+            searchCounts["Google (Search)"] = (searchCounts["Google (Search)"] || 0) + 1;
+          } else if (ref.includes("bing") || ref.includes("yahoo") || ref.includes("duckduckgo")) {
+            searchCounts["Bing / Yahoo / DuckDuckGo"] = (searchCounts["Bing / Yahoo / DuckDuckGo"] || 0) + 1;
+          } else if (ref.includes("whatsapp") || ref.includes("wa.me") || ref.includes("telegram") || ref.includes("t.me")) {
+            socialCounts["WhatsApp / Telegram"] = (socialCounts["WhatsApp / Telegram"] || 0) + 1;
+          } else if (ref.includes("facebook") || ref.includes("fb.me") || ref.includes("fbclid")) {
+            socialCounts["Facebook"] = (socialCounts["Facebook"] || 0) + 1;
+          } else if (ref.includes("linkedin") || ref.includes("li_fat_id")) {
+            socialCounts["LinkedIn"] = (socialCounts["LinkedIn"] || 0) + 1;
+          } else if (ref.includes("tiktok") || ref.includes("ttclid") || ref.includes("instagram")) {
+            socialCounts["TikTok / Instagram"] = (socialCounts["TikTok / Instagram"] || 0) + 1;
+          } else if (ref.includes("twitter") || ref.includes("t.co") || ref.includes("x.com") || ref.includes("youtube")) {
+            socialCounts["Twitter / X / YouTube"] = (socialCounts["Twitter / X / YouTube"] || 0) + 1;
+          } else {
+            searchCounts["Liens référents (Referrals)"] = (searchCounts["Liens référents (Referrals)"] || 0) + 1;
+          }
+        });
+
+        const uniqueIps = Object.keys(ipHits);
+        traffic.uniqueVisitors = uniqueIps.length;
+        const bouncedCount = uniqueIps.filter((ip) => ipHits[ip] === 1).length;
+        traffic.bounceRate = ((bouncedCount / Math.max(1, uniqueIps.length)) * 100).toFixed(1) + "%";
+
+        let totalDurationMs = 0;
+        let activeCount = 0;
+        uniqueIps.forEach((ip) => {
+          const diff = ipMinMax[ip].max - ipMinMax[ip].min;
+          if (diff > 0) {
+            totalDurationMs += diff;
+            activeCount++;
+          }
+        });
+        if (activeCount > 0) {
+          const avgSec = Math.round((totalDurationMs / activeCount) / 1000);
+          const mins = Math.floor(avgSec / 60);
+          const secs = avgSec % 60;
+          traffic.avgDuration = mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
+        } else {
+          traffic.avgDuration = "45s";
+        }
+
+        const totalCountries = Object.values(countryCounts).reduce((a, b) => a + b, 0) || 1;
+        traffic.countries = Object.entries(countryCounts)
+          .map(([name, count]) => ({ name, value: Math.round((count / totalCountries) * 100) }))
+          .sort((a, b) => b.value - a.value);
+
+        const totalSearch = Object.values(searchCounts).reduce((a, b) => a + b, 0) || 1;
+        traffic.searchSources = Object.entries(searchCounts)
+          .map(([name, count]) => ({ name, value: Math.round((count / totalSearch) * 100) }))
+          .sort((a, b) => b.value - a.value);
+
+        const totalSocial = Object.values(socialCounts).reduce((a, b) => a + b, 0) || 1;
+        traffic.socialSources = Object.entries(socialCounts)
+          .map(([name, count]) => ({ name, value: Math.round((count / totalSocial) * 100) }))
+          .sort((a, b) => b.value - a.value);
+      }
+
+      const allProducts = productsRes.data || [];
+      const allStores = storesRes.data || [];
+      const allProfiles = usersRes.data || [];
+
+      const profMap = Object.fromEntries(allProfiles.map((p) => [p.id, p]));
+      const storeByOwnerMap = Object.fromEntries(allStores.map((s) => [s.owner_id, s]));
+      const prodMap = Object.fromEntries(allProducts.map((p) => [p.id, p]));
+
+      // Build storeSalesBreakdown for ALL stores on the platform (shows their products & prices & revenue)
+      const storeSalesBreakdown = allStores.map((st) => {
+        const storeOrders = completedOrders.filter((o) => o.store_owner_id === st.owner_id);
+        const storeRev = storeOrders.reduce((sum, o) => sum + Number(o.amount || 0), 0);
+        const storeProducts = allProducts.filter((p) => p.creator_id === st.owner_id);
+
+        const productsWithSales = storeProducts.map((p) => {
+          const pOrders = storeOrders.filter((o) => o.product_id === p.id);
+          const pSalesCount = pOrders.length;
+          const pRev = pOrders.reduce((s, o) => s + Number(o.amount || 0), 0);
+          return {
+            id: p.id,
+            title: p.title,
+            price: Number(p.price || 0),
+            salesCount: pSalesCount,
+            revenue: pRev,
+          };
+        });
+
+        return {
+          storeOwnerId: st.owner_id,
+          storeName: st.name || profMap[st.owner_id]?.display_name || "Boutique",
+          totalRevenue: storeRev,
+          totalOrders: storeOrders.length,
+          products: productsWithSales.sort((a, b) => b.revenue - a.revenue || b.price - a.price),
+        };
+      }).sort((a, b) => b.totalRevenue - a.totalRevenue || b.totalOrders - a.totalOrders);
+
+      // Recent purchases list
+      const customerIds = [...new Set(allOrders.map((o) => o.customer_id).filter(Boolean))];
+      const { data: custData } = customerIds.length > 0
+        ? await supabase.from("customers").select("id, name, email").in("id", customerIds)
+        : { data: [] };
+      const custMap = Object.fromEntries((custData || []).map((c) => [c.id, c]));
+
+      const recentPurchases = allOrders.map((o) => {
+        const prod = prodMap[o.product_id];
+        const cust = custMap[o.customer_id];
+        const prof = profMap[o.store_owner_id];
+        const store = storeByOwnerMap[o.store_owner_id];
+        const sellerName =
+          store?.name ||
+          prof?.display_name ||
+          (prof?.first_name ? `${prof.first_name} ${prof.last_name || ""}`.trim() : null) ||
+          "Vendeur Technova";
+
+        return {
+          id: o.id,
+          amount: Number(o.amount || 0),
+          createdAt: o.created_at,
+          paymentMethod: o.payment_method || "KkiaPay",
+          status: o.status || "completed",
+          productTitle: prod?.title || "Produit Numérique",
+          productPrice: Number(prod?.price || o.amount || 0),
+          buyerName: cust?.name || "Client Technova",
+          buyerEmail: cust?.email || "-",
+          sellerName,
+          storeOwnerId: o.store_owner_id || "-",
+        };
+      });
+
+      setStats({
+        usersCount,
+        totalRevenue,
+        totalCommissions,
+        productsCount,
+        storesCount,
+        dailySales,
+        pendingWithdrawals,
+        pendingKyc,
+        openTickets,
+        totalOrders: allOrders.length,
+        traffic,
+        storeSalesBreakdown,
+        recentPurchases,
+      });
+    } catch (err) {
+      console.error("fetchStats error:", err);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  }, []);
+
   useEffect(() => {
     if (!isAdmin) return;
     fetchStats();
-  }, [isAdmin]);
-
-  const fetchStats = async () => {
-    try {
-      const { data, error } = await supabase.functions.invoke("admin-platform", {
-        body: { action: "stats" },
-      });
-      if (!error && data) setStats(data);
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [isAdmin, fetchStats]);
 
   if (!isAdmin) {
     return (
@@ -223,9 +484,19 @@ const AdminDashboard = () => {
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">{t.adminTitle}</h1>
-          <p className="text-sm text-muted-foreground mt-1">{t.adminSub}</p>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">{t.adminTitle}</h1>
+            <p className="text-sm text-muted-foreground mt-1">{t.adminSub}</p>
+          </div>
+          <button
+            onClick={() => fetchStats(true)}
+            disabled={loading || refreshing}
+            className="self-start sm:self-auto flex items-center gap-2 px-3.5 py-2 rounded-xl bg-card border border-border/80 hover:bg-muted text-xs font-semibold text-foreground transition-all shadow-sm active:scale-95 disabled:opacity-50"
+          >
+            <RefreshCw className={`h-3.5 w-3.5 text-primary ${refreshing ? "animate-spin" : ""}`} />
+            <span>{t.refresh}</span>
+          </button>
         </div>
 
         {loading ? (

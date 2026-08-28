@@ -130,20 +130,16 @@ const StorePage = ({ customSlug }: { customSlug?: string }) => {
           .single();
         if (prof) setOwnerProfile(prof as OwnerProfile);
 
-        supabase.functions
-          .invoke("admin-platform", {
-            body: {
-              action: "track_visit",
-              store_owner_id: storeData.owner_id,
-              page_path: `/store/${slug}`,
-              referrer: document.referrer || null,
-              user_agent: navigator.userAgent || null,
-              device_type: /Mobi|Android|iPhone/i.test(navigator.userAgent) ? "Mobile" : "Desktop",
-              country: sessionStorage.getItem("tech_detected_country") || "Bénin",
-              visitor_id: localStorage.getItem("technova_vid") || "anon",
-            },
-          })
-          .catch(() => {});
+        supabase
+          .from("store_visits")
+          .insert({
+            store_owner_id: storeData.owner_id,
+            page_path: `/store/${slug}`,
+            referrer: document.referrer || null,
+            user_agent: navigator.userAgent || null,
+            device_type: /Mobi|Android|iPhone/i.test(navigator.userAgent) ? "Mobile" : "Desktop",
+          } as any)
+          .then();
 
         const { data: prods } = await supabase
           .from("products")
@@ -212,21 +208,6 @@ const StorePage = ({ customSlug }: { customSlug?: string }) => {
         tiktok_pixel_id: p.tiktok_pixel_id,
         google_ads_id: p.google_ads_id,
       });
-
-      supabase.functions
-        .invoke("admin-platform", {
-          body: {
-            action: "track_visit",
-            store_owner_id: p.id,
-            page_path: `/store/${slug}`,
-            referrer: document.referrer || null,
-            user_agent: navigator.userAgent || null,
-            device_type: /Mobi|Android|iPhone/i.test(navigator.userAgent) ? "Mobile" : "Desktop",
-            country: sessionStorage.getItem("tech_detected_country") || "Bénin",
-            visitor_id: localStorage.getItem("technova_vid") || "anon",
-          },
-        })
-        .catch(() => {});
 
       const { data: prods } = await supabase
         .from("products")
