@@ -121,6 +121,7 @@ const AdminDashboard = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedStores, setExpandedStores] = useState<Record<string, boolean>>({});
   const [storeProductSearch, setStoreProductSearch] = useState<Record<string, string>>({});
+  const [purchasesExpanded, setPurchasesExpanded] = useState(true);
 
   const [lang, setLang] = useState(() =>
     typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
@@ -277,24 +278,6 @@ const AdminDashboard = () => {
 
       const commissionPct = Number(feeRes.data?.value_pct ?? 5) / 100;
       const totalCommissions = totalRevenue * commissionPct;
-
-      // 30-day timeline initialized to 0
-      const dailySales: Record<string, number> = edgeData?.dailySales || {};
-      if (Object.keys(dailySales).length === 0) {
-        for (let i = 29; i >= 0; i--) {
-          const d = new Date(Date.now() - i * 86400000);
-          const dayStr = d.toISOString().slice(0, 10);
-          dailySales[dayStr] = 0;
-        }
-        completedOrders.forEach((o) => {
-          const day = o.created_at?.slice(0, 10);
-          if (day && dailySales[day] !== undefined) {
-            dailySales[day] += Number(o.computedAmount || 0);
-          } else if (day) {
-            dailySales[day] = Number(o.computedAmount || 0);
-          }
-        });
-      }
 
       // Traffic
       const traffic = edgeData?.traffic && edgeData.traffic.pageViews > 0
@@ -460,6 +443,39 @@ const AdminDashboard = () => {
       );
 
       const totalOrdersCount = Math.max(edgeData?.totalOrders ?? 0, recentPurchases.length);
+
+      // Generate continuous 30-day timeline initialized to 0
+      const dailySales: Record<string, number> = {};
+      for (let i = 29; i >= 0; i--) {
+        const d = new Date(Date.now() - i * 86400000);
+        const dayStr = d.toISOString().slice(0, 10);
+        dailySales[dayStr] = 0;
+      }
+
+      // Add edge function daily sales if available (> 0)
+      if (edgeData?.dailySales) {
+        Object.entries(edgeData.dailySales).forEach(([day, amt]) => {
+          const num = Number(amt || 0);
+          if (num > 0) {
+            dailySales[day] = (dailySales[day] || 0) + num;
+          }
+        });
+      }
+
+      // Add all completed purchases from both sources
+      recentPurchases.forEach((p: any) => {
+        if (p.createdAt && ["completed", "paid", "success"].includes(p.status)) {
+          const day = p.createdAt.slice(0, 10);
+          const amt = Number(p.amount || 0);
+          if (amt > 0) {
+            if (dailySales[day] !== undefined) {
+              dailySales[day] += amt;
+            } else {
+              dailySales[day] = amt;
+            }
+          }
+        }
+      });
 
       setStats({
         usersCount,
@@ -886,99 +902,120 @@ const AdminDashboard = () => {
                     </p>
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    <div className="relative w-full sm:w-64">
+                  <div className="flex items-center gap-2.5 flex-wrap sm:flex-nowrap">
+                    <div className="relative w-full sm:w-60">
                       <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-xs" />
                       <input
                         type="text"
-                        placeholder="Rechercher produit, acheteur, vendeur..."
+                        placeholder="Rechercher produit, client..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pl-8 pr-3 py-1.5 rounded-xl border border-border bg-background text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                        className="w-full pl-8 pr-3 py-1.5 rounded-lg border border-border bg-background text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                       />
                     </div>
                     <Badge variant="outline" className="text-xs font-mono shrink-0 bg-emerald-500/10 text-emerald-600 border-emerald-500/30">
                       {stats.recentPurchases?.length || 0} Achats
                     </Badge>
+                    <button
+                      type="button"
+                      onClick={() => setPurchasesExpanded(!purchasesExpanded)}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border/80 bg-secondary/50 hover:bg-secondary text-xs font-medium text-foreground transition-all shadow-sm shrink-0"
+                    >
+                      {purchasesExpanded ? (
+                        <>
+                          <ChevronUp className="h-3.5 w-3.5 text-primary" />
+                          <span>Réduire</span>
+                        </>
+                      ) : (
+                        <>
+                          <ChevronDown className="h-3.5 w-3.5 text-primary" />
+                          <span>Afficher</span>
+                        </>
+                      )}
+                    </button>
                   </div>
                 </div>
 
-                {stats.recentPurchases && stats.recentPurchases.length > 0 ? (
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left text-xs">
-                      <thead className="bg-muted/50 text-muted-foreground font-semibold uppercase tracking-wider">
-                        <tr>
-                          <th className="px-4 py-3 rounded-l-xl">Produit Acheté</th>
-                          <th className="px-4 py-3">Prix de Vente</th>
-                          <th className="px-4 py-3">Acheteur (Client)</th>
-                          <th className="px-4 py-3">Vendeur / Boutique</th>
-                          <th className="px-4 py-3">Date</th>
-                          <th className="px-4 py-3 rounded-r-xl">Statut</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-border/40">
-                        {stats.recentPurchases
-                          .filter((pur) => {
-                            if (!searchQuery.trim()) return true;
-                            const q = searchQuery.toLowerCase();
-                            return (
-                              pur.productTitle.toLowerCase().includes(q) ||
-                              pur.buyerName.toLowerCase().includes(q) ||
-                              pur.buyerEmail.toLowerCase().includes(q) ||
-                              pur.sellerName.toLowerCase().includes(q)
-                            );
-                          })
-                          .map((pur) => (
-                          <tr key={pur.id} className="hover:bg-muted/30 transition-colors">
-                            <td className="px-4 py-3 font-semibold text-foreground max-w-[200px] truncate" title={pur.productTitle}>
-                              <div className="flex items-center gap-2">
-                                <i className="fa-solid fa-bag-shopping text-primary text-xs" />
-                                <span className="truncate">{pur.productTitle}</span>
-                              </div>
-                            </td>
-                            <td className="px-4 py-3 font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">
-                              {pur.amount.toLocaleString()} FCFA
-                            </td>
-                            <td className="px-4 py-3">
-                              <div className="font-semibold text-foreground">{pur.buyerName}</div>
-                              <div className="text-[11px] text-muted-foreground">{pur.buyerEmail}</div>
-                            </td>
-                            <td className="px-4 py-3 font-medium text-foreground">
-                              <div className="flex items-center gap-1.5">
-                                <i className="fa-solid fa-store text-xs text-muted-foreground" />
-                                <span>{pur.sellerName}</span>
-                              </div>
-                            </td>
-                            <td className="px-4 py-3 text-muted-foreground font-mono text-[11px]">
-                              {new Date(pur.createdAt).toLocaleString("fr-FR", {
-                                day: "2-digit",
-                                month: "short",
-                                hour: "2-digit",
-                                minute: "2-digit",
-                              })}
-                            </td>
-                            <td className="px-4 py-3">
-                              <span
-                                className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                                  pur.status === "completed"
-                                    ? "bg-emerald-500/10 text-emerald-600 border border-emerald-500/30"
-                                    : "bg-amber-500/10 text-amber-600 border border-amber-500/30"
-                                }`}
-                              >
-                                {pur.status === "completed" ? "Payé (Complété)" : pur.status}
-                              </span>
-                            </td>
+                {purchasesExpanded && (
+                  stats.recentPurchases && stats.recentPurchases.length > 0 ? (
+                    <div className="overflow-x-auto max-h-96 overflow-y-auto pr-1 rounded-xl border border-border/60 shadow-sm">
+                      <table className="w-full text-left text-xs relative">
+                        <thead className="bg-muted/90 backdrop-blur-md sticky top-0 z-10 text-muted-foreground font-semibold uppercase tracking-wider border-b border-border/60">
+                          <tr>
+                            <th className="px-4 py-3">Produit Acheté</th>
+                            <th className="px-4 py-3">Prix de Vente</th>
+                            <th className="px-4 py-3">Acheteur (Client)</th>
+                            <th className="px-4 py-3">Vendeur / Boutique</th>
+                            <th className="px-4 py-3">Date</th>
+                            <th className="px-4 py-3">Statut</th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                ) : (
-                  <div className="p-8 text-center border border-dashed border-border/60 rounded-xl bg-muted/20">
-                    <ShoppingCart className="h-8 w-8 text-muted-foreground/40 mx-auto mb-2" />
-                    <p className="text-sm font-semibold text-foreground">Aucun achat enregistré pour le moment</p>
-                    <p className="text-xs text-muted-foreground mt-1">Dès qu'une transaction sera effectuée sur le site, le détail avec l'acheteur, le produit, le prix et le vendeur apparaîtra instantanément ici.</p>
-                  </div>
+                        </thead>
+                        <tbody className="divide-y divide-border/40 bg-card">
+                          {stats.recentPurchases
+                            .filter((pur) => {
+                              if (!searchQuery.trim()) return true;
+                              const q = searchQuery.toLowerCase();
+                              return (
+                                pur.productTitle.toLowerCase().includes(q) ||
+                                pur.buyerName.toLowerCase().includes(q) ||
+                                pur.buyerEmail.toLowerCase().includes(q) ||
+                                pur.sellerName.toLowerCase().includes(q)
+                              );
+                            })
+                            .map((pur) => (
+                            <tr key={pur.id} className="hover:bg-muted/30 transition-colors">
+                              <td className="px-4 py-3 font-semibold text-foreground max-w-[200px] truncate" title={pur.productTitle}>
+                                <div className="flex items-center gap-2">
+                                  <i className="fa-solid fa-bag-shopping text-primary text-xs" />
+                                  <span className="truncate">{pur.productTitle}</span>
+                                </div>
+                              </td>
+                              <td className="px-4 py-3 font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">
+                                {pur.amount.toLocaleString()} FCFA
+                              </td>
+                              <td className="px-4 py-3">
+                                <div className="font-semibold text-foreground">{pur.buyerName}</div>
+                                <div className="text-[11px] text-muted-foreground">{pur.buyerEmail}</div>
+                              </td>
+                              <td className="px-4 py-3 font-medium text-foreground">
+                                <div className="flex items-center gap-1.5">
+                                  <i className="fa-solid fa-store text-xs text-muted-foreground" />
+                                  <span>{pur.sellerName}</span>
+                                </div>
+                              </td>
+                              <td className="px-4 py-3 text-muted-foreground font-mono text-[11px]">
+                                {new Date(pur.createdAt).toLocaleString("fr-FR", {
+                                  day: "2-digit",
+                                  month: "short",
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                })}
+                              </td>
+                              <td className="px-4 py-3">
+                                <span
+                                  className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                                    pur.status === "completed"
+                                      ? "bg-emerald-500/10 text-emerald-600 border border-emerald-500/30"
+                                      : "bg-amber-500/10 text-amber-600 border border-amber-500/30"
+                                  }`}
+                                >
+                                  {pur.status === "completed" ? "Payé (Complété)" : pur.status}
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  ) : (
+                    <div className="p-8 text-center border border-dashed border-border/60 rounded-xl bg-muted/20">
+                      <ShoppingCart className="h-8 w-8 text-muted-foreground/40 mx-auto mb-2" />
+                      <p className="text-sm font-semibold text-foreground">Aucun achat enregistré pour le moment</p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Dès qu'une transaction sera effectuée sur le site, le détail avec l'acheteur, le produit, le prix et le vendeur apparaîtra instantanément ici.
+                      </p>
+                    </div>
+                  )
                 )}
               </div>
             </>
