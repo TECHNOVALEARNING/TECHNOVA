@@ -68,46 +68,58 @@ const DashboardAnalytics = () => {
   const fetchAnalytics = async () => {
     if (!user) return;
     setLoading(true);
-    const days = parseInt(period);
-    const startDate = startOfDay(subDays(new Date(), days)).toISOString();
 
-    const [visitsRes, ordersRes, customersRes] = await Promise.all([
+    // Query ALL visits and ALL orders of the user without time restrictions (all-time metrics)
+    const [allVisitsRes, allOrdersRes] = await Promise.all([
       supabase
         .from("store_visits")
         .select("*")
-        .eq("store_owner_id", user.id)
-        .gte("created_at", startDate),
+        .eq("store_owner_id", user.id),
       supabase
         .from("orders")
-        .select("*")
-        .eq("store_owner_id", user.id)
-        .gte("created_at", startDate),
-      supabase
-        .from("orders")
-        .select("customer_id, customers(name, email)")
-        .eq("store_owner_id", user.id)
-        .gte("created_at", startDate),
+        .select("*, customers(name, email)")
+        .eq("store_owner_id", user.id),
     ]);
 
-    const v = visitsRes.data || [];
-    const o = ordersRes.data || [];
-    setVisits(v);
-    setOrders(o);
+    const allVisits = allVisitsRes.data || [];
+    const allOrders = allOrdersRes.data || [];
 
-    // Unique customers
-    const uniqueCustomerIds = [...new Set(o.map((ord: any) => ord.customer_id))];
-    setCustomers(uniqueCustomerIds as any[]);
-
-    const totalRevenue = o.reduce((sum: number, ord: any) => sum + Number(ord.amount || 0), 0);
-    const convRate = v.length > 0 ? Math.round((o.length / v.length) * 100) : 0;
+    // All-time totals since the creation of the boutique
+    const totalRevenue = allOrders.reduce((sum: number, ord: any) => sum + Number(ord.amount || 0), 0);
+    const uniqueCustomerIds = [...new Set(allOrders.map((ord: any) => ord.customer_id).filter(Boolean))];
+    const allTimeConvRate = allVisits.length > 0 ? Math.round((allOrders.length / allVisits.length) * 100) : 0;
 
     setStats({
-      totalVisits: v.length,
-      totalSales: o.length,
+      totalVisits: allVisits.length,
+      totalSales: allOrders.length,
       totalRevenue,
       totalCustomers: uniqueCustomerIds.length,
-      conversionRate: convRate,
+      conversionRate: allTimeConvRate,
     });
+
+    // Time-based filtering for the chart & traffic sources breakdown
+    let v = allVisits;
+    let o = allOrders;
+    let days = period === "all" ? 30 : parseInt(period) || 30;
+
+    if (period !== "all") {
+      const startDate = startOfDay(subDays(new Date(), days)).toISOString();
+      v = allVisits.filter((x: any) => x.created_at >= startDate);
+      o = allOrders.filter((x: any) => x.created_at >= startDate);
+    } else {
+      if (allVisits.length > 0 || allOrders.length > 0) {
+        const dates = [
+          ...allVisits.map((x) => new Date(x.created_at).getTime()),
+          ...allOrders.map((x) => new Date(x.created_at).getTime()),
+        ];
+        const oldest = Math.min(...dates);
+        days = Math.max(7, Math.min(365, Math.ceil((Date.now() - oldest) / 86400000)));
+      }
+    }
+
+    setVisits(v);
+    setOrders(o);
+    setCustomers(uniqueCustomerIds as any[]);
 
     // Chart data
     const interval = eachDayOfInterval({ start: subDays(new Date(), days), end: new Date() });
@@ -115,10 +127,8 @@ const DashboardAnalytics = () => {
       const dayStr = format(day, "yyyy-MM-dd");
       return {
         date: format(day, "dd MMM", { locale: fr }),
-        visites: v.filter((x: any) => format(new Date(x.created_at), "yyyy-MM-dd") === dayStr)
-          .length,
-        ventes: o.filter((x: any) => format(new Date(x.created_at), "yyyy-MM-dd") === dayStr)
-          .length,
+        visites: v.filter((x: any) => format(new Date(x.created_at), "yyyy-MM-dd") === dayStr).length,
+        ventes: o.filter((x: any) => format(new Date(x.created_at), "yyyy-MM-dd") === dayStr).length,
       };
     });
     setChartData(chart);
@@ -208,9 +218,9 @@ const DashboardAnalytics = () => {
     return <Monitor className="h-4 w-4 text-muted-foreground" />;
   };
 
-  const startDateLabel = format(subDays(new Date(), parseInt(period)), "MMMM dd, yyyy", {
-    locale: fr,
-  });
+  const startDateLabel = period === "all"
+    ? "Depuis le début"
+    : format(subDays(new Date(), parseInt(period) || 30), "MMMM dd, yyyy", { locale: fr });
   const endDateLabel = format(new Date(), "MMMM dd, yyyy", { locale: fr });
 
   const maxBarValue = (data: [string, number][]) => {
@@ -225,6 +235,9 @@ const DashboardAnalytics = () => {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-foreground">Analytiques</h1>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Statistiques globales de votre boutique depuis sa création
+            </p>
           </div>
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border bg-card text-sm text-muted-foreground">
@@ -234,14 +247,15 @@ const DashboardAnalytics = () => {
               <span className="capitalize">{endDateLabel}</span>
             </div>
             <Select value={period} onValueChange={setPeriod}>
-              <SelectTrigger className="w-36">
+              <SelectTrigger className="w-44">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="7">7 jours</SelectItem>
-                <SelectItem value="14">14 jours</SelectItem>
-                <SelectItem value="30">30 jours</SelectItem>
-                <SelectItem value="90">3 mois</SelectItem>
+                <SelectItem value="30">30 derniers jours</SelectItem>
+                <SelectItem value="7">7 derniers jours</SelectItem>
+                <SelectItem value="14">14 derniers jours</SelectItem>
+                <SelectItem value="90">3 derniers mois</SelectItem>
+                <SelectItem value="all">Depuis la création (Tout)</SelectItem>
               </SelectContent>
             </Select>
           </div>

@@ -15,6 +15,10 @@ import {
   TrendingUp,
   ShoppingCart,
   RefreshCw,
+  ChevronDown,
+  ChevronUp,
+  ChevronsUpDown,
+  Boxes,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
@@ -115,6 +119,8 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [expandedStores, setExpandedStores] = useState<Record<string, boolean>>({});
+  const [storeProductSearch, setStoreProductSearch] = useState<Record<string, string>>({});
 
   const [lang, setLang] = useState(() =>
     typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
@@ -127,6 +133,28 @@ const AdminDashboard = () => {
   }, []);
 
   const t = translations[lang === "en" ? "en" : "fr"];
+
+  const toggleStore = (ownerId: string) => {
+    setExpandedStores((prev) => ({
+      ...prev,
+      [ownerId]: !prev[ownerId],
+    }));
+  };
+
+  const expandAllStores = () => {
+    if (!stats?.storeSalesBreakdown) return;
+    const allExpanded: Record<string, boolean> = {};
+    stats.storeSalesBreakdown.forEach((s) => (allExpanded[s.storeOwnerId] = true));
+    setExpandedStores(allExpanded);
+  };
+
+  const collapseAllStores = () => {
+    setExpandedStores({});
+  };
+
+  const allAreExpanded = stats?.storeSalesBreakdown?.length
+    ? stats.storeSalesBreakdown.every((s) => expandedStores[s.storeOwnerId])
+    : false;
 
   const fetchStats = useCallback(async (isManualRefresh = false) => {
     if (isManualRefresh) setRefreshing(true);
@@ -690,63 +718,157 @@ const AdminDashboard = () => {
                       Consultez le chiffre d'affaires, le volume de ventes et les produits vendus avec leur prix exact pour chaque boutique.
                     </p>
                   </div>
-                  <Badge variant="outline" className="text-xs font-mono self-start sm:self-auto">
-                    {stats.storeSalesBreakdown?.length || 0} Boutiques Actives
-                  </Badge>
+                  <div className="flex items-center gap-2.5 self-start sm:self-auto">
+                    <Badge variant="outline" className="text-xs font-mono">
+                      {stats.storeSalesBreakdown?.length || 0} Boutiques Actives
+                    </Badge>
+                    {stats.storeSalesBreakdown && stats.storeSalesBreakdown.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={allAreExpanded ? collapseAllStores : expandAllStores}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border/80 bg-secondary/50 hover:bg-secondary text-xs font-medium text-foreground transition-all shadow-sm"
+                      >
+                        <ChevronsUpDown className="h-3.5 w-3.5 text-primary" />
+                        <span>{allAreExpanded ? "Tout réduire" : "Tout déplier"}</span>
+                      </button>
+                    )}
+                  </div>
                 </div>
 
                 {stats.storeSalesBreakdown && stats.storeSalesBreakdown.length > 0 ? (
-                  <div className="space-y-4">
-                    {stats.storeSalesBreakdown.map((st) => (
-                      <div
-                        key={st.storeOwnerId}
-                        className="rounded-xl border border-border/70 bg-secondary/20 p-4 space-y-3"
-                      >
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-border/40">
-                          <div>
-                            <span className="font-bold text-foreground text-sm flex items-center gap-2">
-                              <i className="fa-solid fa-store text-primary text-xs" />
-                              {st.storeName}
-                            </span>
-                            <span className="text-[11px] text-muted-foreground font-mono">
-                              ID: {st.storeOwnerId.slice(0, 8)}...
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <span className="text-xs font-medium text-muted-foreground">
-                              {st.totalOrders} commande{st.totalOrders > 1 ? "s" : ""}
-                            </span>
-                            <span className="text-sm font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">
-                              {st.totalRevenue.toLocaleString()} FCFA
-                            </span>
-                          </div>
-                        </div>
+                  <div className="space-y-3">
+                    {stats.storeSalesBreakdown.map((st) => {
+                      const isExpanded = !!expandedStores[st.storeOwnerId];
+                      const query = (storeProductSearch[st.storeOwnerId] || "").toLowerCase().trim();
+                      const filteredProducts = query
+                        ? st.products.filter((p) => p.title.toLowerCase().includes(query))
+                        : st.products;
 
-                        {/* Product list in store */}
-                        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                          {st.products.map((p) => (
-                            <div
-                              key={p.id}
-                              className="p-2.5 rounded-lg bg-background border border-border/50 text-xs flex flex-col justify-between"
-                            >
-                              <div className="font-semibold text-foreground truncate mb-1" title={p.title}>
-                                {p.title}
+                      return (
+                        <div
+                          key={st.storeOwnerId}
+                          className="rounded-xl border border-border/70 bg-secondary/15 hover:bg-secondary/25 transition-all overflow-hidden"
+                        >
+                          {/* Collapsible header bar */}
+                          <div
+                            onClick={() => toggleStore(st.storeOwnerId)}
+                            className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 cursor-pointer select-none"
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className="h-9 w-9 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0">
+                                <Store className="h-4 w-4" />
                               </div>
-                              <div className="flex items-center justify-between text-[11px] text-muted-foreground pt-1 border-t border-border/30">
-                                <span>Prix : <strong className="text-foreground">{p.price.toLocaleString()} F</strong></span>
-                                <span className="font-bold text-primary">{p.salesCount} vente{p.salesCount > 1 ? "s" : ""}</span>
+                              <div>
+                                <div className="flex items-center gap-2">
+                                  <span className="font-bold text-foreground text-sm">{st.storeName}</span>
+                                  <Badge variant="secondary" className="text-[10px] px-2 py-0.5 rounded-md font-medium">
+                                    {st.products.length} produit{st.products.length > 1 ? "s" : ""}
+                                  </Badge>
+                                </div>
+                                <span className="text-[11px] text-muted-foreground font-mono">
+                                  ID: {st.storeOwnerId.slice(0, 8)}...
+                                </span>
                               </div>
                             </div>
-                          ))}
+
+                            <div className="flex items-center gap-4 self-end sm:self-auto">
+                              <div className="text-right">
+                                <div className="text-xs font-semibold text-foreground">
+                                  {st.totalOrders} commande{st.totalOrders > 1 ? "s" : ""}
+                                </div>
+                                <div className="text-sm font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">
+                                  {st.totalRevenue.toLocaleString()} FCFA
+                                </div>
+                              </div>
+
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  toggleStore(st.storeOwnerId);
+                                }}
+                                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border/60 bg-background text-xs font-semibold text-foreground hover:bg-muted transition-all shadow-sm"
+                              >
+                                {isExpanded ? (
+                                  <>
+                                    <span>Réduire</span>
+                                    <ChevronUp className="h-3.5 w-3.5 text-muted-foreground" />
+                                  </>
+                                ) : (
+                                  <>
+                                    <span>Voir produits</span>
+                                    <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
+                                  </>
+                                )}
+                              </button>
+                            </div>
+                          </div>
+
+                          {/* Collapsible body */}
+                          {isExpanded && (
+                            <motion.div
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: "auto" }}
+                              exit={{ opacity: 0, height: 0 }}
+                              className="border-t border-border/40 bg-background/50 p-4 space-y-3"
+                            >
+                              {st.products.length > 6 && (
+                                <div className="relative max-w-xs">
+                                  <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-xs" />
+                                  <input
+                                    type="text"
+                                    placeholder="Filtrer les produits de la boutique..."
+                                    value={storeProductSearch[st.storeOwnerId] || ""}
+                                    onChange={(e) =>
+                                      setStoreProductSearch((prev) => ({
+                                        ...prev,
+                                        [st.storeOwnerId]: e.target.value,
+                                      }))
+                                    }
+                                    className="w-full pl-8 pr-3 py-1.5 text-xs rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                                  />
+                                </div>
+                              )}
+
+                              {filteredProducts.length > 0 ? (
+                                <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3 max-h-72 overflow-y-auto pr-1">
+                                  {filteredProducts.map((p) => (
+                                    <div
+                                      key={p.id}
+                                      className="p-3 rounded-lg bg-card border border-border/60 text-xs flex flex-col justify-between hover:border-primary/40 transition-all shadow-sm"
+                                    >
+                                      <div className="font-semibold text-foreground line-clamp-2 mb-2" title={p.title}>
+                                        {p.title}
+                                      </div>
+                                      <div className="flex items-center justify-between text-[11px] text-muted-foreground pt-1.5 border-t border-border/30">
+                                        <span>
+                                          Prix : <strong className="text-foreground">{p.price.toLocaleString()} F</strong>
+                                        </span>
+                                        <span className="font-bold text-primary">
+                                          {p.salesCount} vente{p.salesCount > 1 ? "s" : ""}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              ) : (
+                                <div className="text-center py-4 text-xs text-muted-foreground">
+                                  Aucun produit correspondant trouvé.
+                                </div>
+                              )}
+                            </motion.div>
+                          )}
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 ) : (
                   <div className="p-8 text-center border border-dashed border-border/60 rounded-xl bg-muted/20">
                     <Store className="h-8 w-8 text-muted-foreground/40 mx-auto mb-2" />
                     <p className="text-sm font-semibold text-foreground">Aucune vente par boutique enregistrée</p>
-                    <p className="text-xs text-muted-foreground mt-1">Les performances et produits de chaque boutique s'afficheront ici dès les premières transactions.</p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Les performances et produits de chaque boutique s'afficheront ici dès les premières transactions.
+                    </p>
                   </div>
                 )}
               </div>
