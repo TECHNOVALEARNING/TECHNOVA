@@ -979,14 +979,14 @@ const Index = () => {
                     ? "Un accompagnement personnalisé pour répondre à vos questions pendant toute la formation."
                     : "Personalized guidance to answer your questions throughout the training.",
               },
-              {
-                icon: "fas fa-mobile-alt",
-                title: lang === "fr" ? "Paiement Local" : "Local Payment",
-                desc:
-                  lang === "fr"
-                    ? "Payez facilement via MTN MoMo, Moov Money, Orange Money, Wave ou Carte Visa."
-                    : "Pay easily via MTN MoMo, Moov Money, Orange Money, Wave, or Visa Card.",
-              },
+              // {
+              //   icon: "fas fa-mobile-alt",
+              //   title: lang === "fr" ? "Paiement Local" : "Local Payment",
+              //   desc:
+              //     lang === "fr"
+              //       ? "Payez facilement via MTN MoMo, Moov Money, Orange Money, Wave ou Carte Visa."
+              //       : "Pay easily via MTN MoMo, Moov Money, Orange Money, Wave, or Visa Card.",
+              // },
               {
                 icon: "fas fa-certificate",
                 title: lang === "fr" ? "Certificat Numérique" : "Digital Certificate",

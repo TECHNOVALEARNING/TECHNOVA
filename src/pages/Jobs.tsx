@@ -729,7 +729,7 @@ const Jobs = () => {
             </p>
 
             {/* External Partner Recruitment Portals */}
-            <div className="flex flex-wrap items-center justify-center gap-4 mt-8">
+            {/* <div className="flex flex-wrap items-center justify-center gap-4 mt-8">
               <a
                 href="https://www.emploibenin.com"
                 target="_blank"
@@ -751,7 +751,7 @@ const Jobs = () => {
                 <span>{lang === "fr" ? "Recrutement en Afrique" : "Recruitment in Africa"}</span>
                 <i className="fa-solid fa-arrow-up-right-from-square text-xs text-muted-foreground group-hover:text-primary transition-colors" />
               </a>
-            </div>
+            </div> */}
           </motion.div>
         </div>
       </section>
