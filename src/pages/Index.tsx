@@ -1573,10 +1573,11 @@ const Index = () => {
             {lang === "fr" ? "Payez facilement" : "Pay easily"}
           </h2>
           <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 8 }}>
-            <span className="pay-badge pay-mtn">MTN MoMo</span>
+            {/* <span className="pay-badge pay-mtn">MTN MoMo</span>
             <span className="pay-badge pay-moov">Moov Money</span>
             <span className="pay-badge pay-orange">Orange Money</span>
-            <span className="pay-badge pay-wave">Wave</span>
+            <span className="pay-badge pay-wave">Wave</span> */}
+            <span className="pay-badge pay-mtn">Mobile Money</span>
             <span className="pay-badge pay-visa">
               <i className="fab fa-cc-visa" style={{ marginRight: 4 }} />
               VISA
