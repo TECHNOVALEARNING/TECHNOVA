@@ -1483,7 +1483,7 @@ const Index = () => {
 
             {/* BOUTON CTA */}
             <a
-              href="technova-games.vercel.app"
+              href="https://technova-games.vercel.app"
               target="_blank"
               rel="noopener noreferrer"
               className="group inline-flex items-center gap-3 font-['Outfit'] font-bold text-[0.95rem] sm:text-base py-3.5 px-8 rounded-full transition-all duration-300"
