@@ -44,6 +44,7 @@ export const Header = () => {
   const [open, setOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [infoDropdownOpen, setInfoDropdownOpen] = useState(false);
+  const [platformDropdownOpen, setPlatformDropdownOpen] = useState(false);
   const { user, signOut } = useAuth();
   const [theme, setTheme] = useState(() =>
     typeof window !== "undefined" ? localStorage.getItem("technova_theme") || "light" : "light",
@@ -87,8 +88,21 @@ export const Header = () => {
   const links = [
     { to: "/", label: lang === "fr" ? "Accueil" : "Home" },
     { to: "/formations", label: lang === "fr" ? "Technova Academy" : "Technova Academy" },
-    { to: "/apps", label: lang === "fr" ? "Technova Apps" : "Technova Apps" },
-    { to: "/store", label: lang === "fr" ? "Store" : "Store" },
+  ];
+
+  const platformLinks = [
+    {
+      to: "/apps",
+      label: lang === "fr" ? "Technova Apps" : "Technova Apps",
+      desc: lang === "fr" ? "Applications & Solutions logicielles" : "Web apps & software solutions",
+      icon: "fa-solid fa-shapes",
+    },
+    {
+      to: "/#games",
+      label: lang === "fr" ? "Technova Games" : "Technova Games",
+      desc: lang === "fr" ? "Plateformes de jeux compétitifs" : "Competitive gaming platforms",
+      icon: "fa-solid fa-gamepad",
+    },
   ];
 
   const moreDropdownLinks = [
@@ -138,6 +152,64 @@ export const Header = () => {
               {l.label}
             </Link>
           ))}
+
+          {/* Dropdown "Nos Plateformes" */}
+          <div
+            className="relative py-2 -my-2"
+            onMouseEnter={() => setPlatformDropdownOpen(true)}
+            onMouseLeave={() => setPlatformDropdownOpen(false)}
+          >
+            <button
+              onClick={() => setPlatformDropdownOpen(!platformDropdownOpen)}
+              onMouseEnter={() => setPlatformDropdownOpen(true)}
+              className="flex items-center gap-1.5 hover:text-foreground text-muted-foreground transition-colors font-normal text-sm cursor-pointer"
+            >
+              {lang === "fr" ? "Nos Plateformes" : "Our Platforms"}{" "}
+              <i
+                className={`fa-solid fa-chevron-down text-[10px] transition-transform duration-200 ${
+                  platformDropdownOpen ? "rotate-180 text-foreground" : ""
+                }`}
+              />
+            </button>
+            <div
+              className={`absolute top-full left-0 mt-1 w-64 rounded-2xl border border-border bg-white dark:bg-[#1c1c1e] p-2 shadow-xl transition-all duration-200 before:content-[''] before:absolute before:-top-3 before:left-0 before:right-0 before:h-3 ${
+                platformDropdownOpen ? "opacity-100 visible translate-y-0" : "opacity-0 invisible -translate-y-1 pointer-events-none"
+              }`}
+            >
+              {platformLinks.map((l) => (
+                <Link
+                  key={l.label}
+                  to={l.to}
+                  onClick={(e) => {
+                    setPlatformDropdownOpen(false);
+                    handleNavClick(e, l.to);
+                  }}
+                  className="flex items-center gap-3 rounded-xl p-2.5 hover:bg-secondary/70 transition-all group"
+                >
+                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary text-xs shrink-0 group-hover:scale-105 transition-transform">
+                    <i className={l.icon} />
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">
+                      {l.label}
+                    </div>
+                    <div className="text-[11px] text-muted-foreground line-clamp-1">
+                      {l.desc}
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Lien direct "Store" */}
+          <Link
+            to="/store"
+            onClick={(e) => handleNavClick(e, "/store")}
+            className="text-sm font-normal text-muted-foreground hover:text-foreground transition-colors"
+          >
+            {lang === "fr" ? "Store" : "Store"}
+          </Link>
 
           {/* Dropdown "Informez-vous" */}
           <div
@@ -309,19 +381,61 @@ export const Header = () => {
           <div className="px-4 py-6 flex flex-col gap-4">
             {/* Grille de navigation compacte */}
             <div className="grid grid-cols-2 gap-3">
-              {links.map((l) => (
-                <Link
-                  key={l.label}
-                  to={l.to}
-                  onClick={(e) => {
-                    setOpen(false);
-                    handleNavClick(e, l.to);
-                  }}
-                  className="py-3 px-2 font-medium rounded-xl bg-muted/40 hover:bg-muted/60 border border-border/50 text-[14px] text-center transition-colors"
-                >
-                  {l.label}
-                </Link>
-              ))}
+              <Link
+                to="/"
+                onClick={(e) => {
+                  setOpen(false);
+                  handleNavClick(e, "/");
+                }}
+                className="py-3 px-2 font-medium rounded-xl bg-muted/40 hover:bg-muted/60 border border-border/50 text-[14px] text-center transition-colors"
+              >
+                {lang === "fr" ? "Accueil" : "Home"}
+              </Link>
+              <Link
+                to="/store"
+                onClick={(e) => {
+                  setOpen(false);
+                  handleNavClick(e, "/store");
+                }}
+                className="py-3 px-2 font-medium rounded-xl bg-muted/40 hover:bg-muted/60 border border-border/50 text-[14px] text-center transition-colors"
+              >
+                {lang === "fr" ? "Store" : "Store"}
+              </Link>
+              <Link
+                to="/formations"
+                onClick={(e) => {
+                  setOpen(false);
+                  handleNavClick(e, "/formations");
+                }}
+                className="col-span-2 py-3 px-2 font-medium rounded-xl bg-muted/40 hover:bg-muted/60 border border-border/50 text-[14px] text-center transition-colors"
+              >
+                Technova Academy
+              </Link>
+            </div>
+
+            <div className="h-px w-full bg-border/50 my-1" />
+
+            {/* Mobile "Nos Plateformes" section */}
+            <div className="space-y-2">
+              <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider pl-1">
+                {lang === "fr" ? "Nos Plateformes" : "Our Platforms"}
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                {platformLinks.map((l) => (
+                  <Link
+                    key={l.label}
+                    to={l.to}
+                    onClick={(e) => {
+                      setOpen(false);
+                      handleNavClick(e, l.to);
+                    }}
+                    className="py-3 px-2 font-medium rounded-xl bg-muted/40 hover:bg-muted/60 border border-border/50 text-[14px] text-center transition-colors flex flex-col items-center justify-center gap-1.5"
+                  >
+                    <i className={`${l.icon} text-primary text-sm`} />
+                    <span>{l.label}</span>
+                  </Link>
+                ))}
+              </div>
             </div>
 
             <div className="h-px w-full bg-border/50 my-1" />
