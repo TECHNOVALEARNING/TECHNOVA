@@ -194,6 +194,13 @@ const CheckoutDialog = ({
   const [payError, setPayError] = useState<string>("");
   const pollRef = useRef<number | null>(null);
 
+  // Cleanup poll timer on unmount
+  useEffect(() => {
+    return () => {
+      if (pollRef.current) clearTimeout(pollRef.current);
+    };
+  }, []);
+
   const parseNumericPrice = (val: any): number => {
     if (val === null || val === undefined) return 0;
     if (typeof val === "number") return isNaN(val) ? 0 : val;
@@ -326,19 +333,7 @@ const CheckoutDialog = ({
     }
   };
 
-  // ─── Load KKiaPay SDK dynamically ───
-  useEffect(() => {
-    const scriptId = "kkiapay-sdk-script";
-    if (!document.getElementById(scriptId)) {
-      const script = document.createElement("script");
-      script.id = scriptId;
-      script.src = "https://cdn.kkiapay.me/k.js";
-      script.async = true;
-      document.body.appendChild(script);
-    }
-  }, []);
-
-  // ─── Initiate payment flow (KKiaPay) ───
+  // ─── Initiate payment flow (PawaPay) ───
   const handleConfirmPay = async () => {
     if (discountedPrice <= 0) {
       await handleFreeCheckout();
@@ -351,135 +346,146 @@ const CheckoutDialog = ({
     setStep(3);
 
     try {
-      const win = window as any;
-      if (typeof win.openKkiapayWidget === "undefined") {
-        throw new Error(
-          "Le module de paiement KKiaPay n'a pas pu être chargé. Veuillez rafraîchir la page.",
-        );
+      // 1. Register the order via process_free_order RPC
+      const { data: rpcData, error: rpcErr } = await supabase.rpc("process_free_order", {
+        p_name: fullName,
+        p_email: email,
+        p_phone: phone ? `+${fullPhone}` : "+1234567890",
+        p_product_id: product.id,
+        p_store_owner_id: product.creator_id,
+        p_promo_code: appliedPromo?.code || null,
+        p_original_amount: appliedPromo ? effectivePrice : null,
+        p_shipping_address: shippingPayload,
+      });
+
+      if (rpcErr) throw new Error(rpcErr.message);
+
+      const orderId = rpcData?.order_id;
+
+      if (orderId && Math.round(discountedPrice) > 0) {
+        try {
+          await supabase
+            .from("orders")
+            .update({ amount: Math.round(discountedPrice) })
+            .eq("id", orderId);
+        } catch (updErr) {
+          console.warn("Could not update order amount in orders table:", updErr);
+        }
       }
 
-      // Subscribe to success event
-      win.addSuccessListener(async (response: any) => {
-        console.log("KKiaPay payment successful:", response);
-        const transactionId = response.transactionId;
-
-        try {
-          // Register successful order in database via process_free_order RPC
-          const { data: rpcData, error: rpcErr } = await supabase.rpc("process_free_order", {
-            p_name: fullName,
-            p_email: email,
-            p_phone: phone ? `+${fullPhone}` : "+1234567890",
-            p_product_id: product.id,
-            p_store_owner_id: product.creator_id,
-            p_promo_code: appliedPromo?.code || null,
-            p_original_amount: appliedPromo ? effectivePrice : null,
-            p_shipping_address: shippingPayload,
-          });
-
-          if (rpcErr) throw new Error(rpcErr.message);
-
-          const orderId = rpcData?.order_id;
-
-          if (orderId && Math.round(discountedPrice) > 0) {
-            try {
-              await supabase
-                .from("orders")
-                .update({ amount: Math.round(discountedPrice) })
-                .eq("id", orderId);
-            } catch (updErr) {
-              console.warn("Could not update order amount in orders table:", updErr);
-            }
-          }
-
-          // Update promo usage in database
-          if (appliedPromo) {
-            const { data: pd } = await supabase
-              .from("promo_codes")
-              .select("current_uses")
-              .eq("code", appliedPromo.code)
-              .eq("creator_id", product.creator_id)
-              .single();
-            if (pd) {
-              await supabase
-                .from("promo_codes")
-                .update({ current_uses: (pd.current_uses || 0) + 1 })
-                .eq("code", appliedPromo.code)
-                .eq("creator_id", product.creator_id);
-            }
-          }
-
-          // Trigger notify-sale edge function for order fulfillment and emails
-          await supabase.functions.invoke("notify-sale", {
-            body: {
-              store_owner_id: product.creator_id,
+      // 2. Initiate PawaPay deposit
+      const { data: depositData, error: depositErr } = await supabase.functions.invoke(
+        "pawapay-deposit",
+        {
+          body: {
+            amount: Math.round(discountedPrice),
+            currency: provider.currency,
+            provider: provider.code,
+            phone: fullPhone,
+            customer: { name: fullName, email },
+            metadata: {
+              product_id: product.id,
               product_title: product.title,
-              amount: discountedPrice,
-              customer_name: fullName,
-              customer_email: email,
+              store_owner_id: product.creator_id,
               promo_code: appliedPromo?.code || null,
               original_price: appliedPromo ? effectivePrice : null,
-              product_id: product.id,
-              download_url: product.download_url || null,
-              product_type: product.type || null,
-              store_slug: storeSlug || null,
               shipping_address: shippingPayload,
-              payment_method: "KkiaPay",
-              order_id: orderId,
             },
+          },
+        },
+      );
+
+      if (depositErr) throw new Error(depositErr.message || "Erreur d'initialisation du paiement.");
+      if (depositData?.error) throw new Error(depositData.error);
+
+      const currentDepositId = depositData?.depositId;
+      if (!currentDepositId) throw new Error("Aucun identifiant de dépôt reçu.");
+
+      setDepositId(currentDepositId);
+
+      // 3. Poll PawaPay status for completion
+      let attempts = 0;
+      const maxAttempts = 60; // 5 minutes at 5s intervals
+      const pollInterval = 5000;
+
+      const poll = async () => {
+        attempts++;
+        try {
+          const { data: statusData } = await supabase.functions.invoke("pawapay-status", {
+            body: { depositId: currentDepositId, type: "deposits" },
           });
 
-          setPayStatus("success");
-          toast.success("Paiement validé avec succès !");
-        } catch (dbErr: any) {
-          console.error("Order processing database error:", dbErr);
-          setPayStatus("failed");
-          setPayError(dbErr.message || "Erreur de validation de la commande.");
+          const status = statusData?.status;
+
+          if (status === "COMPLETED") {
+            // Update promo usage
+            if (appliedPromo) {
+              const { data: pd } = await supabase
+                .from("promo_codes")
+                .select("current_uses")
+                .eq("code", appliedPromo.code)
+                .eq("creator_id", product.creator_id)
+                .single();
+              if (pd) {
+                await supabase
+                  .from("promo_codes")
+                  .update({ current_uses: (pd.current_uses || 0) + 1 })
+                  .eq("code", appliedPromo.code)
+                  .eq("creator_id", product.creator_id);
+              }
+            }
+
+            // Trigger notify-sale for order fulfillment and emails
+            await supabase.functions.invoke("notify-sale", {
+              body: {
+                store_owner_id: product.creator_id,
+                product_title: product.title,
+                amount: discountedPrice,
+                customer_name: fullName,
+                customer_email: email,
+                promo_code: appliedPromo?.code || null,
+                original_price: appliedPromo ? effectivePrice : null,
+                product_id: product.id,
+                download_url: product.download_url || null,
+                product_type: product.type || null,
+                store_slug: storeSlug || null,
+                shipping_address: shippingPayload,
+                payment_method: "PawaPay",
+                order_id: orderId,
+              },
+            });
+
+            setPayStatus("success");
+            toast.success("Paiement validé avec succès !");
+            return;
+          }
+
+          if (status === "FAILED" || status === "REJECTED") {
+            setPayStatus("failed");
+            setPayError("Le paiement a échoué ou a été refusé par l'opérateur.");
+            toast.error("Le paiement a échoué.");
+            return;
+          }
+
+          // Still pending — continue polling
+          if (attempts < maxAttempts) {
+            pollRef.current = window.setTimeout(poll, pollInterval);
+          } else {
+            setPayStatus("failed");
+            setPayError("Délai d'attente dépassé. Veuillez vérifier votre téléphone et réessayer.");
+          }
+        } catch (pollErr: any) {
+          console.error("Poll error:", pollErr);
+          if (attempts < maxAttempts) {
+            pollRef.current = window.setTimeout(poll, pollInterval);
+          }
         }
-      });
+      };
 
-      // Subscribe to failed/closed event
-      win.addFailedListener((error: any) => {
-        console.error("KKiaPay payment failed:", error);
-        setPayStatus("failed");
-        setPayError("Le paiement a échoué ou a été annulé par l'utilisateur.");
-        toast.error("Le paiement a échoué.");
-      });
-
-      // Launch KKiaPay Widget overlay
-      const kkiapayKey = import.meta.env.VITE_KKIAPAY_PUBLIC_KEY;
-      console.log("KKiaPay Public Key present:", !!kkiapayKey);
-      if (!kkiapayKey) {
-        throw new Error(
-          "La clé de paiement publique KKiaPay n'est pas configurée. Veuillez contacter le support technique.",
-        );
-      }
-      const isSandbox = import.meta.env.VITE_KKIAPAY_SANDBOX === "true";
-
-      win.openKkiapayWidget({
-        amount: Math.round(discountedPrice),
-        position: "center",
-        key: kkiapayKey,
-        sandbox: isSandbox,
-        name: fullName,
-        email: email,
-        phone: fullPhone || "",
-        theme: accent,
-        data: JSON.stringify({
-          product_id: product.id,
-          product_title: product.title,
-          store_owner_id: product.creator_id,
-          customer_name: fullName,
-          customer_email: email,
-          customer_phone: phone ? `+${fullPhone}` : "+1234567890",
-          promo_code: appliedPromo?.code || null,
-          original_amount: appliedPromo ? effectivePrice : null,
-          shipping_address: shippingPayload,
-          discounted_price: Math.round(discountedPrice),
-          store_slug: storeSlug || null,
-        }),
-      });
+      // Start polling after a short delay
+      pollRef.current = window.setTimeout(poll, pollInterval);
     } catch (err: any) {
-      console.error("KKiaPay launch error:", err);
+      console.error("PawaPay payment error:", err);
       setPayStatus("failed");
       setPayError(err.message || "Erreur lors de l'ouverture du module de paiement.");
       toast.error(err.message || "Erreur d'initialisation");
@@ -913,7 +919,7 @@ const CheckoutDialog = ({
                       </div>
                       <div className="flex-1">
                         <div className="text-xs font-bold text-foreground mb-0.5">
-                          Paiement 100% sécurisé via KKiaPay
+                          Paiement 100% sécurisé via Mobile Money
                         </div>
                         <div className="text-[11px] text-muted-foreground leading-relaxed">
                           Réglez instantanément par Mobile Money (MTN, Moov, Orange, Wave) ou par
@@ -1308,7 +1314,7 @@ const PayProcessingView = ({
 
       <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-2">Paiement en cours</h3>
       <p className="text-sm text-muted-foreground mb-1">
-        Veuillez finaliser votre transaction sur le widget sécurisé KKiaPay.
+        Veuillez valider la demande de paiement reçue sur votre téléphone.
       </p>
       <p className="text-sm font-mono font-bold text-foreground mb-5">
         Montant : {amount.toLocaleString()} {currency}
@@ -1323,8 +1329,8 @@ const PayProcessingView = ({
 
       <ol className="space-y-2 text-left w-full max-w-sm text-xs text-muted-foreground mb-4">
         {[
-          "Suivez les instructions dans la fenêtre KKiaPay",
-          "Saisissez votre numéro ou vos coordonnées de carte",
+          "Une demande de paiement a été envoyée sur votre téléphone",
+          "Ouvrez la notification Mobile Money sur votre appareil",
           "Validez avec votre code PIN ou OTP reçu par SMS",
           "Cette page se mettra à jour automatiquement après validation",
         ].map((s, i) => (

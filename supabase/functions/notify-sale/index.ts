@@ -52,7 +52,7 @@ Deno.serve(async (req) => {
         .from("orders")
         .update({
           amount: Math.round(amount),
-          payment_method: payment_method || "kkiapay",
+          payment_method: payment_method || "PawaPay",
           status: "completed",
         })
         .eq("id", order_id);

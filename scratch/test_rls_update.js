@@ -35,7 +35,7 @@ async function testRls() {
       .from("orders")
       .update({
         amount: 5000,
-        payment_method: "kkiapay",
+        payment_method: "PawaPay",
         moneroo_transaction_id: "test_tx_123",
         status: "completed"
       })

@@ -423,7 +423,7 @@ const AdminDashboard = () => {
           id: o.id,
           amount: Number(o.computedAmount || o.amount || 0),
           createdAt: o.created_at,
-          paymentMethod: o.payment_method || "KkiaPay",
+          paymentMethod: o.payment_method || "PawaPay",
           status: o.status || "completed",
           productTitle: prod?.title || "Produit Numérique",
           productPrice: Number(prod?.price || o.computedAmount || o.amount || 0),
