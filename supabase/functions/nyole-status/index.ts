@@ -46,23 +46,7 @@ Deno.serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
     );
 
-    // 1. Si on a l'order_id, vérifier d'abord en local dans la base
-    if (orderId) {
-      const { data: localOrder } = await supabase
-        .from("orders")
-        .select("id, status, amount, pawapay_deposit_id, store_owner_id, product_id, promo_code, original_amount")
-        .eq("id", orderId)
-        .maybeSingle();
-
-      if (localOrder?.status === "completed") {
-        return jsonResponse({
-          status: "SUCCESS",
-          paid: true,
-          local: true,
-          order_id: orderId,
-        });
-      }
-    }
+    // Interroger l'API Nyole via sessionId
 
     // 2. Interroger l'API Nyole si sessionId disponible
     if (sessionId) {
