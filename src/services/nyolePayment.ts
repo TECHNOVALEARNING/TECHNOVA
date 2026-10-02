@@ -141,14 +141,17 @@ export async function initiateNyolePayment(params: NyoleInitParams): Promise<Nyo
 
     // Si on a un orderId, lier la session en base
     if (orderId) {
-      await supabase
-        .from("orders")
-        .update({
-          pawapay_deposit_id: nyoleData.id,
-          payment_method: "Nyole",
-        })
-        .eq("id", orderId)
-        .catch(() => null);
+      try {
+        await supabase
+          .from("orders")
+          .update({
+            pawapay_deposit_id: nyoleData.id,
+            payment_method: "Nyole",
+          })
+          .eq("id", orderId);
+      } catch (dbErr) {
+        console.warn("[NyolePayment] Erreur non bloquante mise à jour commande:", dbErr);
+      }
     }
 
     return {
