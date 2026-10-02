@@ -1715,6 +1715,10 @@ const Index = () => {
               <i className="fab fa-dolapay" style={{ marginRight: 4 }} />
               Dolapay
             </span>
+            <span className="pay-badge" style={{ background: "linear-gradient(135deg, #0ea5e9, #0284c7)", color: "white" }}>
+              <i className="fa-solid fa-wallet" style={{ marginRight: 4 }} />
+              Nyole Pay
+            </span>
           </div>
         </div>
       </section>

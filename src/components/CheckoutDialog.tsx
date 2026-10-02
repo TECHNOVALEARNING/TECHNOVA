@@ -28,6 +28,8 @@ import {
   Crown,
   CreditCard,
   ShoppingBag,
+  ExternalLink,
+  RefreshCw,
 } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -37,6 +39,10 @@ import {
   type PawaPayCountry,
   type PawaPayProvider,
 } from "@/data/pawapayProviders";
+import {
+  initiateNyolePayment,
+  checkNyolePaymentStatus,
+} from "@/services/nyolePayment";
 
 interface CheckoutDialogProps {
   open: boolean;
@@ -191,6 +197,8 @@ const CheckoutDialog = ({
   // Pay status (step 3)
   const [payStatus, setPayStatus] = useState<PayStatus>("idle");
   const [depositId, setDepositId] = useState<string | null>(null);
+  const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
+  const [currentOrderId, setCurrentOrderId] = useState<string | null>(null);
   const [payError, setPayError] = useState<string>("");
   const pollRef = useRef<number | null>(null);
 
@@ -333,7 +341,7 @@ const CheckoutDialog = ({
     }
   };
 
-  // ─── Initiate payment flow (PawaPay) ───
+  // ─── Initiate payment flow (Nyole Pay) ───
   const handleConfirmPay = async () => {
     if (discountedPrice <= 0) {
       await handleFreeCheckout();
@@ -346,7 +354,7 @@ const CheckoutDialog = ({
     setStep(3);
 
     try {
-      // 1. Register the order via process_free_order RPC
+      // 1. Enregistrer la commande via l'opération process_free_order
       const { data: rpcData, error: rpcErr } = await supabase.rpc("process_free_order", {
         p_name: fullName,
         p_email: email,
@@ -361,64 +369,76 @@ const CheckoutDialog = ({
       if (rpcErr) throw new Error(rpcErr.message);
 
       const orderId = rpcData?.order_id;
+      setCurrentOrderId(orderId);
 
       if (orderId && Math.round(discountedPrice) > 0) {
         try {
           await supabase
             .from("orders")
-            .update({ amount: Math.round(discountedPrice) })
+            .update({
+              amount: Math.round(discountedPrice),
+              payment_method: "Nyole",
+            })
             .eq("id", orderId);
         } catch (updErr) {
           console.warn("Could not update order amount in orders table:", updErr);
         }
       }
 
-      // 2. Initiate PawaPay deposit
-      const { data: depositData, error: depositErr } = await supabase.functions.invoke(
-        "pawapay-deposit",
-        {
-          body: {
-            amount: Math.round(discountedPrice),
-            currency: provider.currency,
-            provider: provider.code,
-            phone: fullPhone,
-            customer: { name: fullName, email },
-            metadata: {
-              product_id: product.id,
-              product_title: product.title,
-              store_owner_id: product.creator_id,
-              promo_code: appliedPromo?.code || null,
-              original_price: appliedPromo ? effectivePrice : null,
-              shipping_address: shippingPayload,
-            },
-          },
+      // 2. Initialiser la session de paiement Nyole
+      const nyoleRes = await initiateNyolePayment({
+        orderId,
+        amount: Math.round(discountedPrice),
+        currency: provider.currency || "XOF",
+        description: `Commande #${(orderId || "").slice(0, 8)} - ${product.title}`,
+        customer: {
+          name: fullName,
+          email,
+          phone: `+${fullPhone}`,
         },
-      );
+        metadata: {
+          product_id: product.id,
+          product_title: product.title,
+          store_owner_id: product.creator_id,
+          promo_code: appliedPromo?.code || null,
+          original_price: appliedPromo ? effectivePrice : null,
+          shipping_address: shippingPayload,
+          platform: "TECHNOVA",
+        },
+        returnUrl: `${window.location.origin}/buyer-login?payment=success&order_id=${orderId}`,
+        cancelUrl: window.location.href,
+      });
 
-      if (depositErr) throw new Error(depositErr.message || "Erreur d'initialisation du paiement.");
-      if (depositData?.error) throw new Error(depositData.error);
+      if (!nyoleRes.success || !nyoleRes.checkoutUrl) {
+        throw new Error(nyoleRes.error || "Impossible d'initialiser le paiement Nyole.");
+      }
 
-      const currentDepositId = depositData?.depositId;
-      if (!currentDepositId) throw new Error("Aucun identifiant de dépôt reçu.");
+      const activeSessionId = nyoleRes.sessionId;
+      setDepositId(activeSessionId);
+      setCheckoutUrl(nyoleRes.checkoutUrl);
 
-      setDepositId(currentDepositId);
+      // Ouvrir la page de paiement sécurisée Nyole dans un nouvel onglet
+      try {
+        const popup = window.open(nyoleRes.checkoutUrl, "_blank");
+        if (!popup) {
+          console.info("Popup bloquée, l'utilisateur cliquera sur le bouton dans le dialogue.");
+        }
+      } catch (popErr) {
+        console.warn("Could not auto-open popup:", popErr);
+      }
 
-      // 3. Poll PawaPay status for completion
+      // 3. Boucle de vérification du statut Nyole
       let attempts = 0;
-      const maxAttempts = 60; // 5 minutes at 5s intervals
-      const pollInterval = 5000;
+      const maxAttempts = 75; // 5 minutes (intervalle 4s)
+      const pollInterval = 4000;
 
       const poll = async () => {
         attempts++;
         try {
-          const { data: statusData } = await supabase.functions.invoke("pawapay-status", {
-            body: { depositId: currentDepositId, type: "deposits" },
-          });
+          const statusRes = await checkNyolePaymentStatus(activeSessionId, orderId);
 
-          const status = statusData?.status;
-
-          if (status === "COMPLETED") {
-            // Update promo usage
+          if (statusRes.paid || statusRes.status === "SUCCESS") {
+            // Mettre à jour code promo
             if (appliedPromo) {
               const { data: pd } = await supabase
                 .from("promo_codes")
@@ -435,7 +455,7 @@ const CheckoutDialog = ({
               }
             }
 
-            // Trigger notify-sale for order fulfillment and emails
+            // Déclencher notify-sale
             await supabase.functions.invoke("notify-sale", {
               body: {
                 store_owner_id: product.creator_id,
@@ -450,29 +470,29 @@ const CheckoutDialog = ({
                 product_type: product.type || null,
                 store_slug: storeSlug || null,
                 shipping_address: shippingPayload,
-                payment_method: "PawaPay",
+                payment_method: "Nyole",
                 order_id: orderId,
               },
-            });
+            }).catch(console.error);
 
             setPayStatus("success");
             toast.success("Paiement validé avec succès !");
             return;
           }
 
-          if (status === "FAILED" || status === "REJECTED") {
+          if (statusRes.status === "FAILED" || statusRes.status === "CANCELLED") {
             setPayStatus("failed");
-            setPayError("Le paiement a échoué ou a été refusé par l'opérateur.");
+            setPayError("Le paiement a été interrompu ou a échoué.");
             toast.error("Le paiement a échoué.");
             return;
           }
 
-          // Still pending — continue polling
+          // Toujours en attente
           if (attempts < maxAttempts) {
             pollRef.current = window.setTimeout(poll, pollInterval);
           } else {
             setPayStatus("failed");
-            setPayError("Délai d'attente dépassé. Veuillez vérifier votre téléphone et réessayer.");
+            setPayError("Délai d'attente dépassé. Si vous avez été débité, vos accès seront envoyés par email sous peu.");
           }
         } catch (pollErr: any) {
           console.error("Poll error:", pollErr);
@@ -482,15 +502,31 @@ const CheckoutDialog = ({
         }
       };
 
-      // Start polling after a short delay
-      pollRef.current = window.setTimeout(poll, pollInterval);
+      // Démarrage du polling après 3 secondes
+      pollRef.current = window.setTimeout(poll, 3000);
     } catch (err: any) {
-      console.error("PawaPay payment error:", err);
+      console.error("Nyole payment error:", err);
       setPayStatus("failed");
-      setPayError(err.message || "Erreur lors de l'ouverture du module de paiement.");
+      setPayError(err.message || "Erreur lors de l'initialisation du paiement.");
       toast.error(err.message || "Erreur d'initialisation");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleManualCheck = async () => {
+    if (!depositId) return;
+    toast.info("Vérification en cours auprès de Nyole...");
+    try {
+      const res = await checkNyolePaymentStatus(depositId, currentOrderId || undefined);
+      if (res.paid || res.status === "SUCCESS") {
+        setPayStatus("success");
+        toast.success("Paiement confirmé !");
+      } else {
+        toast.info("Paiement pas encore finalisé. Veuillez compléter la transaction sur Nyole.");
+      }
+    } catch {
+      toast.error("Impossible de vérifier pour l'instant.");
     }
   };
 
@@ -533,6 +569,8 @@ const CheckoutDialog = ({
       setStep(1);
       setPayStatus("idle");
       setDepositId(null);
+      setCheckoutUrl(null);
+      setCurrentOrderId(null);
     }
     onOpenChange(val);
   };
@@ -541,6 +579,7 @@ const CheckoutDialog = ({
     setStep(2);
     setPayStatus("idle");
     setDepositId(null);
+    setCheckoutUrl(null);
     setPayError("");
   };
 
@@ -919,11 +958,10 @@ const CheckoutDialog = ({
                       </div>
                       <div className="flex-1">
                         <div className="text-xs font-bold text-foreground mb-0.5">
-                          Paiement 100% sécurisé via Mobile Money
+                          Paiement 100% sécurisé via Nyole Pay
                         </div>
                         <div className="text-[11px] text-muted-foreground leading-relaxed">
-                          Réglez instantanément par Mobile Money (MTN, Moov, Orange, Wave) ou par
-                          Carte Bancaire. Aucune coordonnée bancaire n'est conservée.
+                          Réglez simplement par Mobile Money (Wave, MTN, Orange Money, Moov, Airtel, M-Pesa) ou Carte Bancaire (Visa, Mastercard) avec confirmation instantanée.
                         </div>
                       </div>
                     </div>
@@ -940,12 +978,12 @@ const CheckoutDialog = ({
                   >
                     {loading ? (
                       <span className="flex items-center gap-2">
-                        <Loader2 className="h-5 w-5 animate-spin" /> Initialisation...
+                        <Loader2 className="h-5 w-5 animate-spin" /> Préparation du paiement...
                       </span>
                     ) : (
                       <span className="flex items-center gap-2 relative z-10">
                         <Lock className="h-4 w-4" />
-                        Payer {discountedPrice.toLocaleString()} {currency}
+                        Payer {discountedPrice.toLocaleString()} {currency} via Nyole Pay
                         <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
                       </span>
                     )}
@@ -971,6 +1009,8 @@ const CheckoutDialog = ({
                     currency={currency}
                     product={product}
                     error={payError}
+                    checkoutUrl={checkoutUrl}
+                    onCheckNow={handleManualCheck}
                     onRetry={handleRetry}
                     onClose={() => handleClose(false)}
                   />
@@ -1204,6 +1244,8 @@ const PayProcessingView = ({
   currency,
   product,
   error,
+  checkoutUrl,
+  onCheckNow,
   onRetry,
   onClose,
 }: any) => {
@@ -1287,7 +1329,7 @@ const PayProcessingView = ({
   return (
     <div className="flex flex-col items-center text-center">
       {/* Animated 3D phone */}
-      <div className="relative h-32 w-32 mb-6">
+      <div className="relative h-28 w-28 mb-5">
         <motion.div
           animate={{ scale: [1, 1.15, 1], opacity: [0.4, 0.7, 0.4] }}
           transition={{ duration: 1.8, repeat: Infinity }}
@@ -1303,7 +1345,7 @@ const PayProcessingView = ({
             boxShadow: `0 20px 50px -12px ${accent}90, inset 0 2px 0 rgba(255,255,255,0.2)`,
           }}
         >
-          <Smartphone className="h-14 w-14 text-amber-300" />
+          <Smartphone className="h-12 w-12 text-amber-300" />
           <motion.div
             animate={{ scale: [1, 1.4, 1], opacity: [1, 0, 1] }}
             transition={{ duration: 1.5, repeat: Infinity }}
@@ -1312,27 +1354,63 @@ const PayProcessingView = ({
         </motion.div>
       </div>
 
-      <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-2">Paiement en cours</h3>
-      <p className="text-sm text-muted-foreground mb-1">
-        Veuillez valider la demande de paiement reçue sur votre téléphone.
+      <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-1">
+        Paiement en cours via Nyole Pay
+      </h3>
+      <p className="text-xs text-muted-foreground mb-1 max-w-sm">
+        Wave • MTN MoMo • Moov • Orange Money • Visa / Mastercard
       </p>
-      <p className="text-sm font-mono font-bold text-foreground mb-5">
+      <p className="text-sm font-mono font-bold text-foreground mb-4">
         Montant : {amount.toLocaleString()} {currency}
       </p>
+
+      {/* Prominent button to open Nyole payment window if popup was blocked */}
+      {checkoutUrl && (
+        <div className="w-full max-w-sm mb-4 space-y-1.5">
+          <Button
+            asChild
+            className="w-full h-12 text-sm font-bold text-white transition-all hover:scale-[1.02]"
+            style={{
+              background: `linear-gradient(135deg, ${accent}, #C9962E)`,
+              boxShadow: `0 10px 28px -8px ${accent}90`,
+            }}
+          >
+            <a href={checkoutUrl} target="_blank" rel="noopener noreferrer">
+              <ExternalLink className="h-4 w-4 mr-2" /> Ouvrir la page de paiement Nyole
+            </a>
+          </Button>
+          <p className="text-[11px] text-muted-foreground">
+            Une fenêtre de paiement sécurisée s'est ouverte. Cliquez ci-dessus pour y accéder.
+          </p>
+        </div>
+      )}
 
       <div className="w-full max-w-sm rounded-2xl border border-border/60 bg-muted/20 p-4 mb-4">
         <div className="flex items-center justify-center gap-3">
           <Loader2 className="h-5 w-5 animate-spin" style={{ color: accent }} />
-          <div className="text-sm text-foreground font-semibold">Attente de confirmation...</div>
+          <div className="text-sm text-foreground font-semibold">
+            En attente de confirmation...
+          </div>
         </div>
+        {onCheckNow && (
+          <div className="mt-3 text-center border-t border-border/40 pt-2.5">
+            <button
+              type="button"
+              onClick={onCheckNow}
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <RefreshCw className="h-3 w-3" />
+              J'ai finalisé mon paiement — Vérifier
+            </button>
+          </div>
+        )}
       </div>
 
       <ol className="space-y-2 text-left w-full max-w-sm text-xs text-muted-foreground mb-4">
         {[
-          "Une demande de paiement a été envoyée sur votre téléphone",
-          "Ouvrez la notification Mobile Money sur votre appareil",
-          "Validez avec votre code PIN ou OTP reçu par SMS",
-          "Cette page se mettra à jour automatiquement après validation",
+          "Sélectionnez votre moyen de paiement sur la page sécurisée Nyole",
+          "Validez la transaction (notification téléphone, QR Wave ou code bancaire)",
+          "Cet écran se validera automatiquement et délivrera votre accès dès confirmation",
         ].map((s, i) => (
           <li key={i} className="flex items-start gap-2">
             <div
@@ -1341,7 +1419,7 @@ const PayProcessingView = ({
             >
               {i + 1}
             </div>
-            {s}
+            <span>{s}</span>
           </li>
         ))}
       </ol>
