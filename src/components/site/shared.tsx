@@ -1176,6 +1176,8 @@ export type Course = {
   meetUrl?: string;
   instructorName?: string;
   productType?: string;
+  salesCount?: number;
+  rankBadge?: string;
 };
 
 const LABEL_MAP: Record<string, { cls: string; fr: string; en: string }> = {
@@ -1283,6 +1285,17 @@ export const CourseCard = ({ c, i = 0 }: { c: Course; i?: number }) => {
             </span>
           )}
         </div>
+
+        {/* Top-Right Ranking / Best-Seller Badge */}
+        {c.rankBadge && (
+          <div className="absolute top-3 right-3 z-10">
+            <span className="px-2.5 py-1 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[10px] font-black tracking-wider uppercase shadow-lg border border-amber-300/40 flex items-center gap-1 backdrop-blur-md">
+              <i className="fa-solid fa-fire text-amber-200 text-[10px] animate-pulse" />
+              <span>{c.rankBadge}</span>
+            </span>
+          </div>
+        )}
+
         {/* Live Meet tag on cover for extra punch */}
         {isCourse && (c.liveDate || c.formatType === "live_meet" || c.formatType === "hybrid") && (
           <span className="absolute bottom-3 left-3 z-10 px-2 py-0.5 rounded-md bg-red-600/90 backdrop-blur-md text-white text-[9px] font-bold tracking-wider uppercase flex items-center gap-1">

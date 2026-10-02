@@ -10,6 +10,7 @@ import technovaAppsMobileImg from "@/assets/technova-apps-mobile.png";
 import SEOHead from "@/components/SEOHead";
 import { getEmbedUrl, getVideoThumbnailUrl, isDirectVideo } from "@/lib/videoUtils";
 import { BookOpen, Loader2, Search, PackageOpen, Gamepad2 } from "lucide-react";
+import { VideoCoursesCarousel } from "@/components/VideoCoursesCarousel";
 
 const SUBCAT_LABELS: Record<string, string> = {
   notion: "Notion",
@@ -979,14 +980,14 @@ const Index = () => {
                     ? "Un accompagnement personnalisé pour répondre à vos questions pendant toute la formation."
                     : "Personalized guidance to answer your questions throughout the training.",
               },
-              // {
-              //   icon: "fas fa-mobile-alt",
-              //   title: lang === "fr" ? "Paiement Local" : "Local Payment",
-              //   desc:
-              //     lang === "fr"
-              //       ? "Payez facilement via MTN MoMo, Moov Money, Orange Money, Wave ou Carte Visa."
-              //       : "Pay easily via MTN MoMo, Moov Money, Orange Money, Wave, or Visa Card.",
-              // },
+              {
+                icon: "fas fa-mobile-alt",
+                title: lang === "fr" ? "Paiement Local" : "Local Payment",
+                desc:
+                  lang === "fr"
+                    ? "Payez facilement via MTN MoMo, Moov Money, Orange Money, Wave ou Carte Visa."
+                    : "Pay easily via MTN MoMo, Moov Money, Orange Money, Wave, or Visa Card.",
+              },
               {
                 icon: "fas fa-certificate",
                 title: lang === "fr" ? "Certificat Numérique" : "Digital Certificate",
@@ -1031,7 +1032,10 @@ const Index = () => {
         </div>
       </section>
 
-      {/* ============ COURSES ============ */}
+      {/* ============ TOP VIDEO COURSES & TUTORIALS (CAROUSEL) ============ */}
+      <VideoCoursesCarousel lang={lang} />
+
+      {/* ============ DIGITAL PRODUCTS (EBOOKS & TEMPLATES) ============ */}
       <section
         id="courses"
         className="section-pad-100"
@@ -1383,130 +1387,113 @@ const Index = () => {
       {/* ============ TECHNOVA GAMES ============ */}
       <section
         id="games"
-        className="relative w-full py-28 md:py-36 overflow-hidden flex items-center justify-center"
+        className="section-pad-100"
         style={{
-          isolation: "isolate",
           position: "relative",
+          zIndex: 1,
+          background: "var(--section-alt)",
         }}
       >
-        {/* Style pour le respect de prefers-reduced-motion */}
-        <style
-          dangerouslySetInnerHTML={{
-            __html: `
-              @media (prefers-reduced-motion: reduce) {
-                #games video { display: none !important; }
-                #games {
-                  background-image: url('/images/technova-games-poster.webp') !important;
-                  background-size: cover !important;
-                  background-position: center !important;
-                }
-              }
-            `,
-          }}
-        />
-
-        {/* 1. LAYER : VIDÉO D'ARRIÈRE-PLAN */}
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          poster="/images/technova-games-poster.webp"
-          className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none select-none"
-          style={{ zIndex: 0 }}
-        >
-          <source src="/videos/technova-games.webm" type="video/webm" />
-          <source src="/videos/technova-games.mp4" type="video/mp4" />
-        </video>
-
-        {/* 2. LAYER : OVERLAYS GAMING (Sombre + Vignette + Dégradé fondu) */}
-        {/* Overlay sombre général pour garantir un contraste optimal */}
-        <div
-          className="absolute inset-0 bg-[#070a10]/65 pointer-events-none"
-          style={{ zIndex: 1 }}
-        />
-
-        {/* Vignette cinématographique sur les bords */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            zIndex: 2,
-            background:
-              "radial-gradient(ellipse at center, transparent 30%, rgba(3, 5, 10, 0.82) 100%)",
-          }}
-        />
-
-        {/* Dégradés verticaux subtils pour fondu naturel avec les sections adjacentes */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            zIndex: 3,
-            background:
-              "linear-gradient(to bottom, var(--background) 0%, transparent 15%, transparent 85%, var(--section-alt) 100%)",
-          }}
-        />
-
-        {/* 3. LAYER : CONTENU (texte flottant élégant sur la vidéo) */}
-        <div className="relative z-10 container mx-auto px-4 sm:px-6 flex justify-center">
-          <motion.div
-            initial={{ opacity: 0, y: 28 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-40px" }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="relative max-w-2xl w-full text-center"
-          >
-            {/* Titre Principal */}
-            <h2
-              className="font-['Outfit'] text-4xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight mb-4"
-              style={{ textShadow: "0 2px 20px rgba(0,0,0,0.6), 0 4px 40px rgba(0,0,0,0.4)" }}
-            >
-              Technova <span style={{ color: "var(--accent)" }}>Games</span>
-            </h2>
-
-            {/* Accroche courte */}
-            <p
-              className="font-['Outfit'] text-lg sm:text-xl font-semibold tracking-wide text-white/90 mb-5"
-              style={{ textShadow: "0 2px 12px rgba(0,0,0,0.5)" }}
-            >
-              {lang === "fr" ? "Affrontez. Rivalisez. Dominez." : "Compete. Rival. Dominate."}
-            </p>
-
-            {/* Description */}
-            <p
-              className="text-sm sm:text-base text-gray-200 max-w-xl mx-auto leading-relaxed mb-10"
-              style={{ textShadow: "0 1px 8px rgba(0,0,0,0.5)" }}
-            >
-              {lang === "fr"
-                ? "Découvrez Technova Games, notre écosystème de plateformes de jeux compétitifs. Rejoignez des milliers de joueurs, affrontez vos adversaires en temps réel et grimpez dans les classements à travers nos différentes arènes de jeu."
-                : "Discover Technova Games, our ecosystem of competitive gaming platforms. Join thousands of players, challenge your opponents in real time, and climb the leaderboards across our diverse gaming arenas."}
-            </p>
-
-            {/* BOUTON CTA */}
-            <a
-              href="https://technova-games.vercel.app"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group inline-flex items-center gap-3 font-['Outfit'] font-bold text-[0.95rem] sm:text-base py-3.5 px-8 rounded-full transition-all duration-300"
+        <div className="mx-auto" style={{ maxWidth: 1280, padding: "0 24px" }}>
+          <div className="app-glass games-glass">
+            <div
               style={{
-                background: "var(--accent)",
-                color: "#090c13",
-                boxShadow: "0 10px 30px rgba(245, 166, 35, 0.35)",
+                display: "grid",
+                gridTemplateColumns: "1.2fr 1fr",
+                gap: 48,
+                alignItems: "center",
               }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = "translateY(-3px)";
-                e.currentTarget.style.boxShadow = "0 16px 42px rgba(245, 166, 35, 0.55)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "translateY(0)";
-                e.currentTarget.style.boxShadow = "0 10px 30px rgba(245, 166, 35, 0.35)";
-              }}
+              className="max-lg:!grid-cols-1"
             >
-              <span>{lang === "fr" ? "Découvrir les jeux" : "Discover the games"}</span>
-              <span className="text-lg transition-transform duration-300 group-hover:translate-x-1 font-sans">
-                →
-              </span>
-            </a>
-          </motion.div>
+              <div>
+                <div
+                  className="app-icon-wrap"
+                  style={{
+                    background: "linear-gradient(135deg, #f5a623, #ff5e3a)",
+                    boxShadow: "0 10px 30px rgba(245, 166, 35, 0.4)",
+                  }}
+                >
+                  <Gamepad2 className="h-8 w-8 text-white" />
+                </div>
+                <span className="section-eyebrow" style={{ color: "rgba(255,255,255,0.7)" }}>
+                  {lang === "fr" ? "Plateforme de Jeux" : "Gaming Platform"}
+                </span>
+                <h2 className="section-title" style={{ color: "white", marginBottom: 12 }}>
+                  TECHNOVA &nbsp; Games
+                </h2>
+                <p
+                  style={{
+                    fontFamily: "'Outfit', sans-serif",
+                    color: "var(--accent)",
+                    fontWeight: 700,
+                    fontSize: "1.1rem",
+                    marginBottom: 12,
+                    letterSpacing: "-0.01em",
+                  }}
+                >
+                  {lang === "fr" ? "Affrontez. Rivalisez. Dominez." : "Compete. Rival. Dominate."}
+                </p>
+                <p
+                  style={{
+                    color: "rgba(255,255,255,0.8)",
+                    fontSize: "0.93rem",
+                    marginBottom: 32,
+                    lineHeight: 1.6,
+                  }}
+                >
+                  {lang === "fr"
+                    ? "Découvrez Technova Games, notre écosystème de plateformes de jeux compétitifs. Rejoignez des milliers de joueurs, affrontez vos adversaires en temps réel et grimpez dans les classements à travers nos différentes arènes de jeu."
+                    : "Discover Technova Games, our ecosystem of competitive gaming platforms. Join thousands of players, challenge your opponents in real time, and climb the leaderboards across our diverse gaming arenas."}
+                </p>
+                <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+                  <a
+                    href="https://technova-games.vercel.app"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-app"
+                    style={{
+                      background: "var(--accent)",
+                      color: "#090c13",
+                      boxShadow: "0 6px 20px rgba(245, 166, 35, 0.35)",
+                    }}
+                  >
+                    <span>{lang === "fr" ? "Découvrir les jeux" : "Discover the games"}</span>
+                    <span className="font-sans font-bold">→</span>
+                  </a>
+                </div>
+              </div>
+
+              {/* Framed Video Container */}
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "100%",
+                }}
+              >
+                <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-white/20 shadow-2xl bg-black/60 group">
+                  <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    poster="/images/technova-games-poster.webp"
+                    className="w-full h-full object-cover object-center pointer-events-none select-none transition-transform duration-700 group-hover:scale-105"
+                  >
+                    <source src="/videos/technova-games.mp4" type="video/mp4" />
+                  </video>
+                  {/* Subtle gloss overlay & glow */}
+                  <div className="absolute inset-0 ring-1 ring-inset ring-white/15 rounded-2xl pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+                  <div className="absolute bottom-3 left-3 px-3 py-1 rounded-full bg-black/70 backdrop-blur-md border border-white/10 text-[11px] font-bold text-white flex items-center gap-1.5 shadow-lg">
+                    <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
+                    <span>Live Arenas</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

@@ -747,6 +747,13 @@ iframe[src*="tawk.to"],
   border-radius: 50%;
   pointer-events: none;
 }
+.games-glass {
+  background: linear-gradient(135deg, rgba(245,166,35,0.12), rgba(236,72,153,0.08));
+  border: 1px solid rgba(245,166,35,0.25);
+}
+.games-glass::before {
+  background: radial-gradient(circle, rgba(245,166,35,0.18), transparent 70%);
+}
 .app-icon-wrap {
   width: 70px; height: 70px;
   background: linear-gradient(135deg, #0071e3, #409cff);

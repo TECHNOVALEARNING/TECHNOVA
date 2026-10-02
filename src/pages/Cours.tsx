@@ -28,7 +28,7 @@ const Cours = () => {
   );
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [sortBy, setSortBy] = useState<"recent" | "price_asc" | "price_desc">("recent");
+  const [sortBy, setSortBy] = useState<"sales_desc" | "recent" | "price_asc" | "price_desc">("sales_desc");
 
   const [selectedLanguage, setSelectedLanguage] = useState("all");
 
@@ -141,10 +141,14 @@ const Cours = () => {
     }
 
     // Sorting
-    if (sortBy === "price_asc") {
+    if (sortBy === "sales_desc") {
+      result.sort((a, b) => (b.sales_count || 0) - (a.sales_count || 0));
+    } else if (sortBy === "price_asc") {
       result.sort((a, b) => (a.price || 0) - (b.price || 0));
     } else if (sortBy === "price_desc") {
       result.sort((a, b) => (b.price || 0) - (a.price || 0));
+    } else if (sortBy === "recent") {
+      result.sort((a, b) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime());
     }
 
     return result;
@@ -484,6 +488,7 @@ const Cours = () => {
                   onChange={(e) => setSortBy(e.target.value as any)}
                   className="bg-card border border-border text-xs rounded-xl px-3 py-2 text-foreground font-normal outline-none focus:border-[#0071e3] font-sans"
                 >
+                  <option value="sales_desc">🔥 Les plus achetées</option>
                   <option value="recent">Plus récents</option>
                   <option value="price_asc">Prix : Croissant</option>
                   <option value="price_desc">Prix : Décroissant</option>
