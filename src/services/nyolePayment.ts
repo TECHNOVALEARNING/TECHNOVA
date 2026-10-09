@@ -185,7 +185,34 @@ export async function checkNyolePaymentStatus(
     return { status: "FAILED", paid: false, orderId, error: "Session inexistante." };
   }
 
-  // 1. Appel Edge Function (si déployée)
+  // 1. Appel du proxy serverless local / Vercel (contourne complètement les restrictions CORS du navigateur)
+  try {
+    const res = await fetch(`/api/nyole-status?sessionId=${encodeURIComponent(sessionId)}`);
+    if (res.ok) {
+      const data = await res.json();
+      const isPaid = Boolean(
+        data.paid === true || data.status === "SUCCESS" || data.status === "COMPLETED",
+      );
+      const isFailed = Boolean(
+        data.status === "FAILED" ||
+        data.status === "CANCELLED" ||
+        data.status === "EXPIRED" ||
+        data.status === "REJECTED",
+      );
+
+      return {
+        status: isPaid ? "SUCCESS" : isFailed ? data.status || "FAILED" : "PENDING",
+        paid: isPaid,
+        orderId: data.order_id || orderId,
+        provider: data.provider,
+        error: data.error,
+      };
+    }
+  } catch (proxyErr) {
+    console.warn("[NyolePayment] Proxy /api/nyole-status warning:", proxyErr);
+  }
+
+  // 2. Appel Edge Function (si déployée)
   try {
     const { data } = await supabase.functions.invoke("nyole-status", {
       body: {
@@ -198,17 +225,17 @@ export async function checkNyolePaymentStatus(
 
     if (data && typeof data.paid === "boolean") {
       const isPaid = Boolean(
-        data.paid === true && (data.status === "SUCCESS" || data.status === "COMPLETED")
+        data.paid === true && (data.status === "SUCCESS" || data.status === "COMPLETED"),
       );
       const isFailed = Boolean(
         data.status === "CANCELLED" ||
         data.status === "FAILED" ||
         data.status === "EXPIRED" ||
-        data.status === "REJECTED"
+        data.status === "REJECTED",
       );
 
       return {
-        status: isPaid ? "SUCCESS" : (isFailed ? data.status : "PENDING"),
+        status: isPaid ? "SUCCESS" : isFailed ? data.status : "PENDING",
         paid: isPaid,
         orderId: data.order_id || orderId,
         provider: data.provider,
@@ -216,61 +243,7 @@ export async function checkNyolePaymentStatus(
       };
     }
   } catch (e) {
-    // Edge function fallback vers API directe
-  }
-
-  // 2. Interrogation directe de l'API officielle Nyole
-  try {
-    const res = await fetch(`${NYOLE_BASE_URL}/checkout/sessions/${sessionId}/status`, {
-      headers: {
-        Authorization: `Bearer ${NYOLE_PUBLIC_KEY}`,
-        Accept: "application/json",
-      },
-    });
-
-    if (res.ok) {
-      const data = await res.json();
-      console.log("[NyolePayment] Réponse statut Nyole:", data);
-
-      const isPaid = Boolean(
-        data.paid === true && (data.status === "SUCCESS" || data.status === "COMPLETED")
-      );
-
-      const isFailed = Boolean(
-        data.status === "CANCELLED" ||
-        data.status === "FAILED" ||
-        data.status === "EXPIRED" ||
-        data.status === "REJECTED"
-      );
-
-      if (isPaid) {
-        return {
-          status: "SUCCESS",
-          paid: true,
-          orderId,
-          provider: data.provider,
-        };
-      }
-
-      if (isFailed) {
-        return {
-          status: data.status || "FAILED",
-          paid: false,
-          orderId,
-          provider: data.provider,
-          error: data.failure_message || "Le paiement a été annulé ou n'a pas abouti.",
-        };
-      }
-
-      return {
-        status: data.status || "PENDING",
-        paid: false,
-        orderId,
-        provider: data.provider,
-      };
-    }
-  } catch (directErr: any) {
-    console.error("[NyolePayment] Erreur vérification directe Nyole:", directErr);
+    // Edge function fallback
   }
 
   return { status: "PENDING", paid: false, orderId };

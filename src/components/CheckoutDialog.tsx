@@ -201,6 +201,7 @@ const CheckoutDialog = ({
   const [currentOrderId, setCurrentOrderId] = useState<string | null>(null);
   const [payError, setPayError] = useState<string>("");
   const pollRef = useRef<number | null>(null);
+  const popupRef = useRef<Window | null>(null);
 
   // Cleanup poll timer on unmount
   useEffect(() => {
@@ -208,6 +209,27 @@ const CheckoutDialog = ({
       if (pollRef.current) clearTimeout(pollRef.current);
     };
   }, []);
+
+  // Écoute de l'événement de succès envoyé par l'onglet de paiement / callback
+  useEffect(() => {
+    const handleMessage = async (event: MessageEvent) => {
+      if (event.data?.type === "NYOLE_PAYMENT_SUCCESS") {
+        console.log("[CheckoutDialog] Reçu NYOLE_PAYMENT_SUCCESS de la fenêtre de paiement:", event.data);
+        if (popupRef.current && !popupRef.current.closed) {
+          try {
+            popupRef.current.close();
+          } catch {}
+        }
+        const sid = event.data.sessionId || depositId;
+        const ord = event.data.ref || currentOrderId;
+        if (sid) {
+          await finalizeSuccessfulPayment(sid, ord || undefined);
+        }
+      }
+    };
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, [depositId, currentOrderId]);
 
   const parseNumericPrice = (val: any): number => {
     if (val === null || val === undefined) return 0;
@@ -458,6 +480,13 @@ const CheckoutDialog = ({
       console.error("Notify-sale error:", notifyErr);
     }
 
+    // Fermer la popup si elle est toujours ouverte
+    if (popupRef.current && !popupRef.current.closed) {
+      try {
+        popupRef.current.close();
+      } catch {}
+    }
+
     setPayStatus("success");
     toast.success("Paiement validé avec succès !");
   };
@@ -480,6 +509,7 @@ const CheckoutDialog = ({
       setCurrentOrderId(tempRef);
 
       // 2. Initialiser la session de paiement Nyole (NE PAS créer de commande payée en base avant confirmation !)
+      const callbackUrl = `${window.location.origin}/payment-callback?ref=${tempRef}&product_id=${product.id}`;
       const nyoleRes = await initiateNyolePayment({
         orderId: tempRef,
         amount: Math.round(discountedPrice),
@@ -499,7 +529,7 @@ const CheckoutDialog = ({
           shipping_address: shippingPayload,
           platform: "TECHNOVA",
         },
-        returnUrl: `${window.location.origin}/buyer-login?payment=success&ref=${tempRef}`,
+        returnUrl: callbackUrl,
         cancelUrl: window.location.href,
       });
 
@@ -514,6 +544,7 @@ const CheckoutDialog = ({
       // Ouvrir la page de paiement sécurisée Nyole dans un nouvel onglet
       try {
         const popup = window.open(nyoleRes.checkoutUrl, "_blank");
+        popupRef.current = popup;
         if (!popup) {
           console.info("Popup bloquée, l'utilisateur cliquera sur le bouton dans le dialogue.");
         }
