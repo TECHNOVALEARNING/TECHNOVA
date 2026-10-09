@@ -49,30 +49,6 @@
     <!-- Font Awesome Icons (Professional Icon Set) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-    <!-- Permanent Tawk.to Visual Shield: Prevents pop-up from flashing at startup -->
-    <style>
-      #tawk-bubble-container,
-      #tawk-default-container,
-      div[id*="tawk"],
-      iframe[title*="tawk"],
-      iframe[src*="tawk.to"],
-      .tawk-min-container,
-      .tawk-card,
-      .tawk-button,
-      .tawk-overlay,
-      .tawk-custom-color {
-        display: none !important;
-        visibility: hidden !important;
-        opacity: 0 !important;
-        pointer-events: none !important;
-        width: 0 !important;
-        height: 0 !important;
-        position: absolute !important;
-        left: -9999px !important;
-        top: -9999px !important;
-      }
-    </style>
-
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="shortcut icon" href="/favicon.ico" />
@@ -148,29 +124,5 @@
       </noscript>
     </div>
     <script type="module" src="/src/main.tsx"></script>
-    <!--Start of Tawk.to Script (Background execution - Widget UI hidden)-->
-    <style>
-      /* Ensure Tawk.to widget stays invisible on the frontend */
-      .tawk-min-container, iframe[src*="tawk.to"] {
-        display: none !important;
-      }
-    </style>
-    <script type="text/javascript">
-    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-    Tawk_API.onLoad = function(){
-      if (typeof Tawk_API.hideWidget === "function") {
-        Tawk_API.hideWidget();
-      }
-    };
-    (function(){
-    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-    s1.async=true;
-    s1.src='https://embed.tawk.to/6a5b8bf47150471d4bbd0491/1jtqpldde';
-    s1.charset='UTF-8';
-    s1.setAttribute('crossorigin','*');
-    s0.parentNode.insertBefore(s1,s0);
-    })();
-    </script>
-    <!--End of Tawk.to Script-->
   </body>
 </html>

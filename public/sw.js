@@ -50,8 +50,7 @@ self.addEventListener('fetch', (event) => {
     url.origin !== self.location.origin ||
     url.pathname.startsWith('/api') ||
     url.pathname.includes('supabase.co') ||
-    url.pathname.includes('googletagmanager') ||
-    url.pathname.includes('tawk.to')
+    url.pathname.includes('googletagmanager')
   ) {
     return;
   }
