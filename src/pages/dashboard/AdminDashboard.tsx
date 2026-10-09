@@ -192,7 +192,7 @@ const AdminDashboard = () => {
         supabase.from("profiles").select("id, display_name, first_name, last_name, store_slug", { count: "exact" }),
         supabase.from("products").select("id, title, price, creator_id, is_published, category", { count: "exact" }),
         supabase.from("stores").select("id, owner_id, name, slug, is_archived", { count: "exact" }),
-        supabase.from("orders").select("id, amount, created_at, status, payment_method, store_owner_id, product_id, customer_id"),
+        supabase.from("orders").select("id, amount, original_amount, created_at, status, payment_method, store_owner_id, product_id, customer_id"),
         supabase.from("withdrawals").select("id", { count: "exact", head: true }).eq("status", "pending"),
         supabase.from("identity_verifications").select("id", { count: "exact", head: true }).eq("status", "pending"),
         supabase.from("support_conversations").select("id", { count: "exact", head: true }).eq("status", "open"),

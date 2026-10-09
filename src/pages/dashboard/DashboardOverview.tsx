@@ -81,13 +81,40 @@ const DashboardOverview = () => {
         supabase.from("products").select("*", { count: "exact" }).eq("creator_id", user.id),
         supabase
           .from("orders")
-          .select("amount, created_at, customer_id, product_id, status")
+          .select("id, amount, original_amount, created_at, customer_id, product_id, status, products(price)")
           .eq("store_owner_id", user.id)
           .eq("status", "completed"),
       ]);
 
       const products = productsRes.data || [];
-      const orders = ordersRes.data || [];
+      const rawOrders = ordersRes.data || [];
+
+      // Auto-heal past 0-amount orders for paid products in background
+      rawOrders.forEach(async (rawOrder: any) => {
+        const rawAmount = Number(rawOrder.amount) || 0;
+        const prodPrice = Number(rawOrder.products?.price) || 0;
+        if (rawAmount === 0 && prodPrice > 0) {
+          const healAmount = Number(rawOrder.original_amount) || prodPrice;
+          try {
+            await supabase.from("orders").update({ amount: healAmount }).eq("id", rawOrder.id);
+          } catch (e) {
+            console.error("Auto-heal order failed in overview:", e);
+          }
+        }
+      });
+
+      const orders = rawOrders.map((o: any) => {
+        const prodPrice = Number(o.products?.price) || 0;
+        let amount = Number(o.amount) || 0;
+        if (amount === 0 && prodPrice > 0) {
+          amount = Number(o.original_amount) || prodPrice;
+        }
+        return {
+          ...o,
+          amount,
+        };
+      });
+
       const published = products.filter((p: any) => p.is_published).length;
       const totalRevenue = orders.reduce((sum, o) => sum + Number(o.amount), 0);
 

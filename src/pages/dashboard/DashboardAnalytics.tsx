@@ -77,12 +77,35 @@ const DashboardAnalytics = () => {
         .eq("store_owner_id", user.id),
       supabase
         .from("orders")
-        .select("*, customers(name, email)")
+        .select("*, customers(name, email), products(price)")
         .eq("store_owner_id", user.id),
     ]);
 
     const allVisits = allVisitsRes.data || [];
-    const allOrders = allOrdersRes.data || [];
+    const rawOrders = allOrdersRes.data || [];
+
+    // Auto-heal in background
+    rawOrders.forEach(async (rawOrder: any) => {
+      const rawAmount = Number(rawOrder.amount) || 0;
+      const prodPrice = Number(rawOrder.products?.price) || 0;
+      if (rawAmount === 0 && prodPrice > 0) {
+        const healAmount = Number(rawOrder.original_amount) || prodPrice;
+        try {
+          await supabase.from("orders").update({ amount: healAmount }).eq("id", rawOrder.id);
+        } catch (e) {
+          console.error("Auto-heal order failed in analytics:", e);
+        }
+      }
+    });
+
+    const allOrders = rawOrders.map((ord: any) => {
+      const prodPrice = Number(ord.products?.price) || 0;
+      let amount = Number(ord.amount || 0);
+      if (amount === 0 && prodPrice > 0) {
+        amount = Number(ord.original_amount) || prodPrice;
+      }
+      return { ...ord, amount };
+    });
 
     // All-time totals since the creation of the boutique
     const totalRevenue = allOrders.reduce((sum: number, ord: any) => sum + Number(ord.amount || 0), 0);

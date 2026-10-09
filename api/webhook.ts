@@ -1,137 +1,265 @@
 import { createClient } from "@supabase/supabase-js";
 import crypto from "crypto";
 
-export default async function handler(req, res) {
+export default async function handler(req: any, res: any) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
   try {
-    // 1. Verifier la signature du webhook (Fortement recommandé en production)
-    // Moneroo envoie un header 'x-moneroo-signature'
-    const signature = req.headers["x-moneroo-signature"];
-    const secret = process.env.MONEROO_WEBHOOK_SECRET; // Utilisation du Hash Secret du Webhook
+    const rawBody = typeof req.body === "string" ? req.body : JSON.stringify(req.body || {});
+    let body = typeof req.body === "string" ? JSON.parse(req.body) : req.body || {};
 
-    if (signature && secret) {
-      const payload = JSON.stringify(req.body);
-      const expectedSignature = crypto.createHmac("sha256", secret).update(payload).digest("hex");
-      // Pour éviter de bloquer si la signature a un format légèrement différent (espaces etc),
-      // on logue juste en cas d'erreur, mais en prod stricte on ferait un return 401.
-      if (signature !== expectedSignature) {
-        console.warn("Webhook signature mismatch. Expected:", expectedSignature, "Got:", signature);
+    const headers = req.headers || {};
+    const monerooSig = headers["x-moneroo-signature"];
+    const nyoleSig = headers["x-nyole-signature"] || headers["x-afriflow-signature"];
+    const nyoleTimestamp = headers["x-nyole-timestamp"] || headers["x-afriflow-timestamp"];
+
+    // 1. Signature check for Moneroo
+    const monerooSecret = process.env.MONEROO_WEBHOOK_SECRET;
+    if (monerooSig && monerooSecret) {
+      try {
+        const expectedSig = crypto.createHmac("sha256", monerooSecret).update(rawBody).digest("hex");
+        if (monerooSig !== expectedSig) {
+          console.warn("[Webhook] Moneroo signature mismatch:", { expected: expectedSig, received: monerooSig });
+        }
+      } catch (sigErr) {
+        console.warn("[Webhook] Moneroo signature check error:", sigErr);
       }
     }
 
-    const { event, data } = req.body;
-
-    // Si c'est pas un succès de paiement, on ignore
-    if (
-      event !== "payment.success" &&
-      event !== "payment.successful" &&
-      event !== "transaction.success"
-    ) {
-      return res.status(200).json({ received: true, message: "Ignored event type" });
+    // 2. Signature check for Nyole (optional)
+    const nyoleSecret = process.env.NYOLE_WEBHOOK_SECRET || process.env.NYOLE_API_KEY;
+    if (nyoleSig && nyoleTimestamp && nyoleSecret) {
+      try {
+        const parts = String(nyoleSig).split(",");
+        const v1Part = parts.find((p) => p.trim().startsWith("v1="));
+        if (v1Part) {
+          const receivedSig = v1Part.trim().slice(3);
+          const expectedSig = crypto
+            .createHmac("sha256", nyoleSecret)
+            .update(`${nyoleTimestamp}.${rawBody}`)
+            .digest("hex");
+          if (expectedSig.toLowerCase() !== receivedSig.toLowerCase()) {
+            console.warn("[Webhook] Nyole signature mismatch");
+          }
+        }
+      } catch (nyoleSigErr) {
+        console.warn("[Webhook] Nyole signature check error:", nyoleSigErr);
+      }
     }
 
-    const metadata = data?.metadata || data?.transaction?.metadata;
-    const purchaseId = metadata?.purchase_id;
+    const event = (body.event || body.type || "").toLowerCase();
+    const status = (body.status || body.data?.status || body.data?.state || "").toUpperCase();
+    const paid = body.paid === true || body.data?.paid === true;
 
-    if (!purchaseId) {
-      return res.status(400).json({ error: "No purchase_id found in metadata" });
+    // Detect if this is a Nyole webhook or payment event
+    const isNyole =
+      Boolean(nyoleSig) ||
+      event.includes("checkout.session") ||
+      event.includes("nyole") ||
+      body.object === "checkout.session" ||
+      body.data?.object === "checkout.session" ||
+      body.data?.metadata?.platform === "TECHNOVA" ||
+      body.metadata?.platform === "TECHNOVA" ||
+      body.payment_method === "Nyole" ||
+      body.data?.payment_method === "Nyole";
+
+    const isSuccess =
+      event === "payment.completed" ||
+      event === "checkout.session.completed" ||
+      event === "payment.success" ||
+      event === "payment.successful" ||
+      event === "transaction.success" ||
+      status === "SUCCESS" ||
+      status === "COMPLETED" ||
+      status === "SUCCESSFUL" ||
+      status === "PAID" ||
+      paid;
+
+    if (!isSuccess) {
+      return res.status(200).json({ received: true, message: "Ignored non-success event", event, status });
     }
 
-    // 2. Mettre à jour Supabase
-    // Nous devons utiliser la Service Role Key car le webhook n'a pas l'auth de l'utilisateur.
-    const supabaseUrl = process.env.VITE_SUPABASE_URL;
+    // Extract order reference / purchase ID
+    const dataObj = body.data || body;
+    const metadata = dataObj.metadata || body.metadata || {};
+    const purchaseId =
+      metadata.order_id ||
+      metadata.purchase_id ||
+      dataObj.order_id ||
+      body.order_id ||
+      body.reference ||
+      dataObj.id;
+
+    const rawAmount = dataObj.amount ?? body.amount ?? metadata.amount ?? 0;
+    const amount = Math.round(Number(rawAmount) || 0);
+
+    const customerName =
+      dataObj.customer_name ||
+      dataObj.customer?.name ||
+      body.customer_name ||
+      body.customer?.name ||
+      "Client";
+    const customerEmail =
+      dataObj.customer_email ||
+      dataObj.customer?.email ||
+      body.customer_email ||
+      body.customer?.email ||
+      null;
+    const customerPhone =
+      dataObj.customer_phone ||
+      dataObj.customer?.phone ||
+      body.customer_phone ||
+      body.customer?.phone ||
+      null;
+
+    const productId = metadata.product_id;
+    const storeOwnerId = metadata.store_owner_id;
+    const promoCode = metadata.promo_code;
+    const originalPrice = metadata.original_price ? Math.round(Number(metadata.original_price)) : null;
+    const shippingAddress = metadata.shipping_address;
+    const paymentMethod = isNyole ? "Nyole" : "Moneroo";
+    const depositId = dataObj.id || body.id || null;
+
+    // Connect to Supabase with Service Role Key
+    const supabaseUrl = process.env.VITE_SUPABASE_URL || "https://jcfrlevtrnhrmyovmuza.supabase.co";
     const supabaseServiceKey =
-      process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY;
+      process.env.SUPABASE_SERVICE_ROLE_KEY ||
+      process.env.VITE_SUPABASE_SERVICE_ROLE_KEY ||
+      process.env.VITE_SUPABASE_ANON_KEY;
+
+    if (!supabaseServiceKey) {
+      return res.status(500).json({ error: "SUPABASE_SERVICE_ROLE_KEY not configured" });
+    }
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    const { error, data: updatedOrder } = await supabase
-      .from("orders")
-      .update({
-        status: "completed",
-        moneroo_transaction_id: data?.id || data?.transaction?.id,
-      })
-      .eq("id", purchaseId)
-      .select("*, products(title, image_url, id)")
-      .single();
+    let updatedOrder: any = null;
 
-    if (error) {
-      console.error("Failed to update purchase in Supabase:", error);
-      return res.status(500).json({ error: "Database update failed" });
-    }
+    // Try finding order by purchaseId (if purchaseId looks like UUID or reference)
+    if (purchaseId) {
+      const { data: existingOrder } = await supabase
+        .from("orders")
+        .select("*, products(*)")
+        .eq("id", purchaseId)
+        .maybeSingle();
 
-    // 3. Envoyer l'email post-achat via Resend
-    if (updatedOrder && updatedOrder.customer_email) {
-      const RESEND_API_KEY = process.env.RESEND_API_KEY;
-      if (RESEND_API_KEY) {
-        const productTitle = updatedOrder.products?.title || "Votre produit";
-        const orderIdDisplay = `CMD-${purchaseId.split("-")[0].toUpperCase()}`;
+      if (existingOrder) {
+        const { data: upd, error: updErr } = await supabase
+          .from("orders")
+          .update({
+            status: "completed",
+            amount: amount > 0 ? amount : existingOrder.amount,
+            payment_method: paymentMethod,
+            pawapay_deposit_id: depositId,
+            moneroo_transaction_id: isNyole ? existingOrder.moneroo_transaction_id : depositId,
+          })
+          .eq("id", purchaseId)
+          .select("*, products(*)")
+          .maybeSingle();
 
-        // Le lien vers le portail client (landing page /login ou un lien direct)
-        // On récupère le host depuis la requête
-        const host = req.headers["x-forwarded-host"] || req.headers.host || "technova.com";
-        const protocol = host.includes("localhost") ? "http" : "https";
-        const portalUrl = `${protocol}://${host}/login`;
-
-        const logoHtml = `<img src="https://i.ibb.co/VvzH3b6/logo.png" alt="TECHNOVA" width="48" height="48" style="display:block;margin:0 auto 12px;border-radius:10px;" />`;
-
-        const customerEmailHtml = `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <div style="background: linear-gradient(135deg, #2563eb, #1e40af); padding: 30px; border-radius: 12px 12px 0 0; text-align: center;">
-              ${logoHtml}
-              <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Merci pour votre achat ! 🙏</h1>
-            </div>
-            <div style="background: #ffffff; padding: 30px; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 12px 12px;">
-              <p style="color: #374151; font-size: 16px;">Bonjour <strong>${updatedOrder.customer_name || "Client"}</strong>,</p>
-              <p style="color: #374151; font-size: 16px;">Votre paiement a bien été validé et votre produit est prêt !</p>
-              
-              <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; margin: 20px 0;">
-                <h3 style="margin: 0 0 12px 0; color: #111827; font-size: 15px;">📋 Récapitulatif de commande</h3>
-                <p style="margin: 5px 0; color: #374151;"><strong>N° Commande :</strong> ${orderIdDisplay}</p>
-                <p style="margin: 5px 0; color: #374151;"><strong>Produit :</strong> ${productTitle}</p>
-                <p style="margin: 5px 0; color: #374151; font-size: 18px;"><strong>Total payé :</strong> ${updatedOrder.amount} ${updatedOrder.currency}</p>
-              </div>
-
-              <div style="text-align: center; margin: 30px 0;">
-                <a href="${portalUrl}" target="_blank" style="display: inline-block; background: #2563eb; color: #ffffff; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 16px;">Accéder à mes achats</a>
-                <p style="color: #6b7280; font-size: 13px; margin-top: 12px;">Connectez-vous avec cette adresse email pour retrouver vos achats.</p>
-              </div>
-              
-              <p style="color: #6b7280; font-size: 14px; margin-top: 20px;">À bientôt sur <strong>TECHNOVA</strong> !</p>
-            </div>
-          </div>
-        `;
-
-        try {
-          const emailRes = await fetch("https://api.resend.com/emails", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${RESEND_API_KEY}`,
-            },
-            body: JSON.stringify({
-              from: "TECHNOVA <noreply@technovalearning.com>", // Make sure to verify this domain on Resend or use delivered-by
-              to: [updatedOrder.customer_email],
-              subject: `Confirmation de commande : ${productTitle} 🎉`,
-              html: customerEmailHtml,
-            }),
-          });
-
-          if (!emailRes.ok) {
-            console.error("Failed to send email:", await emailRes.text());
-          }
-        } catch (emailErr) {
-          console.error("Email send exception:", emailErr);
+        if (!updErr && upd) {
+          updatedOrder = upd;
         }
       }
     }
 
-    return res.status(200).json({ success: true });
-  } catch (err) {
-    console.error("Webhook processing error:", err);
-    return res.status(500).json({ error: "Internal server error" });
+    // If order was not found by direct ID (e.g. temporary reference or missing)
+    if (!updatedOrder && productId && storeOwnerId) {
+      // 1. Upsert customer
+      let customerId = null;
+      if (customerEmail) {
+        const { data: cust } = await supabase
+          .from("customers")
+          .upsert(
+            {
+              name: customerName,
+              email: customerEmail.trim().toLowerCase(),
+              phone: customerPhone,
+            },
+            { onConflict: "email" }
+          )
+          .select("id")
+          .maybeSingle();
+        customerId = cust?.id;
+      }
+
+      // 2. Insert completed order
+      const { data: insOrder, error: insErr } = await supabase
+        .from("orders")
+        .insert({
+          customer_id: customerId,
+          product_id: productId,
+          store_owner_id: storeOwnerId,
+          amount: amount,
+          original_amount: originalPrice,
+          promo_code: promoCode || null,
+          shipping_address: shippingAddress || null,
+          status: "completed",
+          payment_method: paymentMethod,
+          pawapay_deposit_id: depositId,
+        })
+        .select("*, products(*)")
+        .maybeSingle();
+
+      if (!insErr && insOrder) {
+        updatedOrder = insOrder;
+      }
+    }
+
+    // Update promo code usage count if any
+    if (promoCode && storeOwnerId) {
+      try {
+        const { data: promo } = await supabase
+          .from("promo_codes")
+          .select("current_uses")
+          .eq("code", promoCode)
+          .eq("creator_id", storeOwnerId)
+          .maybeSingle();
+        if (promo) {
+          await supabase
+            .from("promo_codes")
+            .update({ current_uses: (promo.current_uses || 0) + 1 })
+            .eq("code", promoCode)
+            .eq("creator_id", storeOwnerId);
+        }
+      } catch (pErr) {
+        console.warn("[Webhook] Promo update warning:", pErr);
+      }
+    }
+
+    // Trigger notify-sale edge function for buyer/seller emails
+    if (updatedOrder) {
+      try {
+        await supabase.functions.invoke("notify-sale", {
+          body: {
+            store_owner_id: updatedOrder.store_owner_id,
+            product_title: updatedOrder.products?.title || "Produit",
+            amount: updatedOrder.amount,
+            customer_name: customerName,
+            customer_email: customerEmail,
+            promo_code: updatedOrder.promo_code,
+            original_price: updatedOrder.original_amount,
+            product_id: updatedOrder.product_id,
+            download_url: updatedOrder.products?.download_url || null,
+            product_type: updatedOrder.products?.type || null,
+            order_id: updatedOrder.id,
+            payment_method: paymentMethod,
+          },
+        });
+      } catch (notifyErr) {
+        console.warn("[Webhook] notify-sale invocation error:", notifyErr);
+      }
+    }
+
+    return res.status(200).json({
+      success: true,
+      order_id: updatedOrder?.id || purchaseId,
+      amount: updatedOrder?.amount || amount,
+    });
+  } catch (err: any) {
+    console.error("[Webhook] Processing exception:", err);
+    return res.status(500).json({ error: "Webhook processing failed", message: err?.message });
   }
 }

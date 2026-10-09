@@ -97,7 +97,7 @@ const DashboardClients = () => {
       const { data: orders } = await supabase
         .from("orders")
         .select(
-          "id, amount, created_at, customer_id, products(title), customers(id, name, email, phone, created_at)",
+          "id, amount, original_amount, created_at, customer_id, products(title, price), customers(id, name, email, phone, created_at)",
         )
         .eq("store_owner_id", user.id)
         .order("created_at", { ascending: false });
@@ -108,20 +108,40 @@ const DashboardClients = () => {
         return;
       }
 
+      // Auto-heal in background
+      (orders as any[]).forEach(async (rawOrder: any) => {
+        const rawAmount = Number(rawOrder.amount) || 0;
+        const prodPrice = Number(rawOrder.products?.price) || 0;
+        if (rawAmount === 0 && prodPrice > 0) {
+          const healAmount = Number(rawOrder.original_amount) || prodPrice;
+          try {
+            await supabase.from("orders").update({ amount: healAmount }).eq("id", rawOrder.id);
+          } catch (e) {
+            console.error("Auto-heal order failed in clients:", e);
+          }
+        }
+      });
+
       // Group by customer
       const clientMap = new Map<string, ClientWithOrders>();
       for (const o of orders as any[]) {
         const c = o.customers;
         if (!c) continue;
+        const prodPrice = Number(o.products?.price) || 0;
+        let effectiveAmount = Number(o.amount) || 0;
+        if (effectiveAmount === 0 && prodPrice > 0) {
+          effectiveAmount = Number(o.original_amount) || prodPrice;
+        }
+
         const existing = clientMap.get(c.id);
         const orderItem = {
           id: o.id,
-          amount: Number(o.amount),
+          amount: effectiveAmount,
           created_at: o.created_at,
           productTitle: o.products?.title || t.defaultProduct,
         };
         if (existing) {
-          existing.totalSpent += Number(o.amount);
+          existing.totalSpent += effectiveAmount;
           existing.orderCount += 1;
           existing.orders.push(orderItem);
         } else {
@@ -131,7 +151,7 @@ const DashboardClients = () => {
             email: c.email,
             phone: c.phone,
             created_at: c.created_at,
-            totalSpent: Number(o.amount),
+            totalSpent: effectiveAmount,
             orderCount: 1,
             orders: [orderItem],
           });

@@ -175,7 +175,7 @@ const WithdrawNew = () => {
       const [ordersRes, withdrawalsRes, kycRes, walletsRes, feeRes] = await Promise.all([
         supabase
           .from("orders")
-          .select("amount, created_at, products(marketing_sections)")
+          .select("id, amount, original_amount, created_at, products(price, marketing_sections)")
           .eq("store_owner_id", user.id)
           .eq("status", "completed"),
         supabase.from("withdrawals").select("amount, fee, status").eq("user_id", user.id),
@@ -201,10 +201,31 @@ const WithdrawNew = () => {
 
       const cutoff = new Date(Date.now() - 72 * 60 * 60 * 1000);
       let net = 0;
-      (ordersRes.data || [])
+      const rawOrders = (ordersRes.data as any) || [];
+
+      // Auto-heal in background
+      rawOrders.forEach(async (rawOrder: any) => {
+        const rawAmount = Number(rawOrder.amount) || 0;
+        const prodPrice = Number(rawOrder.products?.price) || 0;
+        if (rawAmount === 0 && prodPrice > 0) {
+          const healAmount = Number(rawOrder.original_amount) || prodPrice;
+          try {
+            await supabase.from("orders").update({ amount: healAmount }).eq("id", rawOrder.id);
+          } catch (e) {
+            console.error("Auto-heal order failed in withdraw new:", e);
+          }
+        }
+      });
+
+      rawOrders
         .filter((o: any) => new Date(o.created_at) <= cutoff)
         .forEach((o: any) => {
-          const { net: orderNet } = calculateOrderNet(o.amount, o.products);
+          const prodPrice = Number(o.products?.price) || 0;
+          let effectiveAmount = Number(o.amount) || 0;
+          if (effectiveAmount === 0 && prodPrice > 0) {
+            effectiveAmount = Number(o.original_amount) || prodPrice;
+          }
+          const { net: orderNet } = calculateOrderNet(effectiveAmount, o.products);
           net += orderNet;
         });
       const withdrawn = (withdrawalsRes.data || [])

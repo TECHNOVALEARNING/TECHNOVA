@@ -85,16 +85,42 @@ const DashboardSales = () => {
         .eq("store_owner_id", user.id)
         .order("created_at", { ascending: false });
 
-      const mapped = (data || []).map((o: any) => ({
-        id: o.id,
-        amount: Number(o.amount) || 0,
-        status: o.status,
-        created_at: o.created_at,
-        promo_code: o.promo_code,
-        original_amount: o.original_amount ? Number(o.original_amount) : null,
-        product: o.products,
-        customer: o.customers,
-      }));
+      const mapped = (data || []).map((o: any) => {
+        const productPrice = Number(o.products?.price) || 0;
+        let amount = Number(o.amount) || 0;
+        const originalAmount = o.original_amount ? Number(o.original_amount) : (productPrice > 0 ? productPrice : null);
+        if (amount === 0 && productPrice > 0) {
+          amount = originalAmount || productPrice;
+        }
+
+        return {
+          id: o.id,
+          amount,
+          status: o.status,
+          created_at: o.created_at,
+          promo_code: o.promo_code,
+          original_amount: originalAmount,
+          product: o.products,
+          customer: o.customers,
+        };
+      });
+
+      // Auto-heal past 0-amount orders for paid products in background
+      (data || []).forEach(async (rawOrder: any) => {
+        const rawAmount = Number(rawOrder.amount) || 0;
+        const prodPrice = Number(rawOrder.products?.price) || 0;
+        if (rawAmount === 0 && prodPrice > 0) {
+          const healAmount = Number(rawOrder.original_amount) || prodPrice;
+          try {
+            await supabase
+              .from("orders")
+              .update({ amount: healAmount })
+              .eq("id", rawOrder.id);
+          } catch (e) {
+            console.error("Auto-heal order failed:", e);
+          }
+        }
+      });
 
       setOrders(mapped);
 

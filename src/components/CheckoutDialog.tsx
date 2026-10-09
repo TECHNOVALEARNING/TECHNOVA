@@ -364,14 +364,50 @@ const CheckoutDialog = ({
       if (rpcData?.order_id) {
         confirmedOrderId = rpcData.order_id;
         setCurrentOrderId(confirmedOrderId);
-        await supabase
-          .from("orders")
-          .update({
-            amount: Math.round(discountedPrice),
-            payment_method: "Nyole",
-            pawapay_deposit_id: sessionId,
-          })
-          .eq("id", confirmedOrderId);
+
+        // 1. Mise à jour via l'API Webhook serverless (avec privilèges service_role pour garantir l'enregistrement du montant réel)
+        try {
+          await fetch("/api/webhook", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              event: "checkout.session.completed",
+              id: sessionId,
+              amount: Math.round(discountedPrice),
+              payment_method: "Nyole",
+              metadata: {
+                order_id: confirmedOrderId,
+                product_id: product.id,
+                store_owner_id: product.creator_id,
+                promo_code: appliedPromo?.code || null,
+                original_price: appliedPromo ? effectivePrice : null,
+                shipping_address: shippingPayload,
+                platform: "TECHNOVA",
+              },
+              customer: {
+                name: fullName,
+                email,
+                phone: phone ? `+${fullPhone}` : undefined,
+              },
+            }),
+          });
+        } catch (apiErr) {
+          console.warn("Direct webhook notification error:", apiErr);
+        }
+
+        // 2. Mise à jour client directe complémentaire
+        try {
+          await supabase
+            .from("orders")
+            .update({
+              amount: Math.round(discountedPrice),
+              payment_method: "Nyole",
+              pawapay_deposit_id: sessionId,
+            })
+            .eq("id", confirmedOrderId);
+        } catch (updErr) {
+          console.warn("Direct client update warning:", updErr);
+        }
       }
     } catch (createErr) {
       console.error("Order creation error:", createErr);
@@ -1247,6 +1283,28 @@ const Field = ({
 
 const SuccessFreeView = ({ product, fullName, email, accent }: any) => {
   const navigate = useNavigate();
+
+  // Déclencher le téléchargement automatique
+  useEffect(() => {
+    if (product?.download_url) {
+      const timer = setTimeout(() => {
+        try {
+          const a = document.createElement("a");
+          a.href = product.download_url;
+          a.target = "_blank";
+          a.rel = "noreferrer";
+          a.download = "";
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        } catch (e) {
+          console.warn("Auto-download error:", e);
+        }
+      }, 700);
+      return () => clearTimeout(timer);
+    }
+  }, [product?.download_url]);
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
@@ -1263,14 +1321,25 @@ const SuccessFreeView = ({ product, fullName, email, accent }: any) => {
         <CheckCircle2 className="h-12 w-12" style={{ color: accent }} />
       </motion.div>
       <h3 className="text-2xl font-bold text-foreground mb-2">Bravo, c'est à vous !</h3>
-      <p className="text-sm text-muted-foreground mb-6 max-w-xs">
+      <p className="text-sm text-muted-foreground mb-3 max-w-xs">
         Vous avez obtenu <strong className="text-foreground">{product.title}</strong> avec succès.
       </p>
+
+      {product.download_url && (
+        <div className="inline-flex items-center gap-2 text-xs text-emerald-700 dark:text-emerald-300 font-semibold bg-emerald-500/15 py-1.5 px-3.5 rounded-full mb-4">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+          </span>
+          <span>Le téléchargement a démarré automatiquement !</span>
+        </div>
+      )}
+
       <div className="w-full max-w-xs space-y-2">
         {product.download_url && (
           <Button asChild className="w-full" style={{ backgroundColor: accent }}>
             <a href={product.download_url} target="_blank" rel="noreferrer" download>
-              <Download className="h-4 w-4 mr-2" /> Télécharger le fichier
+              <Download className="h-4 w-4 mr-2" /> Télécharger manuellement
             </a>
           </Button>
         )}
@@ -1305,6 +1374,28 @@ const PayProcessingView = ({
   onClose,
 }: any) => {
   const navigate = useNavigate();
+
+  // Déclencher le téléchargement automatique dès validation du paiement
+  useEffect(() => {
+    if (status === "success" && product?.download_url) {
+      const timer = setTimeout(() => {
+        try {
+          const a = document.createElement("a");
+          a.href = product.download_url;
+          a.target = "_blank";
+          a.rel = "noreferrer";
+          a.download = "";
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        } catch (e) {
+          console.warn("Auto-download error:", e);
+        }
+      }, 700);
+      return () => clearTimeout(timer);
+    }
+  }, [status, product?.download_url]);
+
   if (status === "success") {
     return (
       <div className="flex flex-col items-center text-center py-6">
@@ -1326,19 +1417,31 @@ const PayProcessingView = ({
           </div>
         </motion.div>
         <h3 className="text-2xl font-bold text-foreground mb-2">Paiement réussi !</h3>
-        <p className="text-sm text-muted-foreground mb-1">Merci pour votre achat.</p>
+        <p className="text-sm text-muted-foreground mb-2">Merci pour votre achat.</p>
+
+        {product.download_url && (
+          <div className="inline-flex items-center gap-2 text-xs text-emerald-700 dark:text-emerald-300 font-semibold bg-emerald-500/15 py-1.5 px-4 rounded-full mb-3">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+            </span>
+            <span>Le téléchargement a démarré automatiquement !</span>
+          </div>
+        )}
+
         <p className="text-xs text-muted-foreground/80 mb-6">
           Tout est dans votre boîte mail + l'espace « Mes achats ».
         </p>
+
         <div className="w-full max-w-sm space-y-2">
           {product.download_url && (
             <Button
               asChild
-              className="w-full h-12"
+              className="w-full h-12 shadow-md hover:shadow-lg transition-all"
               style={{ background: `linear-gradient(135deg, ${accent}, #C9962E)` }}
             >
               <a href={product.download_url} target="_blank" rel="noreferrer" download>
-                <Download className="h-4 w-4 mr-2" /> Télécharger maintenant
+                <Download className="h-4 w-4 mr-2" /> Télécharger manuellement
               </a>
             </Button>
           )}

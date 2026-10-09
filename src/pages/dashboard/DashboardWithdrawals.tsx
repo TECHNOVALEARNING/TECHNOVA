@@ -211,7 +211,7 @@ const DashboardWithdrawals = () => {
     const [ordersRes, withdrawalsRes, kycRes, feeRes] = await Promise.all([
       supabase
         .from("orders")
-        .select("amount, created_at")
+        .select("id, amount, original_amount, created_at, products(price)")
         .eq("store_owner_id", user!.id)
         .eq("status", "completed"),
       supabase
@@ -237,7 +237,31 @@ const DashboardWithdrawals = () => {
 
     const now = new Date();
     const cutoff72h = new Date(now.getTime() - 72 * 60 * 60 * 1000);
-    const allOrders = ordersRes.data || [];
+    const rawOrders = (ordersRes.data as any) || [];
+
+    // Auto-heal past 0-amount orders in background
+    rawOrders.forEach(async (rawOrder: any) => {
+      const rawAmount = Number(rawOrder.amount) || 0;
+      const prodPrice = Number(rawOrder.products?.price) || 0;
+      if (rawAmount === 0 && prodPrice > 0) {
+        const healAmount = Number(rawOrder.original_amount) || prodPrice;
+        try {
+          await supabase.from("orders").update({ amount: healAmount }).eq("id", rawOrder.id);
+        } catch (e) {
+          console.error("Auto-heal order failed in withdrawals:", e);
+        }
+      }
+    });
+
+    const allOrders = rawOrders.map((o: any) => {
+      const prodPrice = Number(o.products?.price) || 0;
+      let amount = Number(o.amount) || 0;
+      if (amount === 0 && prodPrice > 0) {
+        amount = Number(o.original_amount) || prodPrice;
+      }
+      return { ...o, amount };
+    });
+
     const sales = allOrders.reduce((s, o) => s + Number(o.amount), 0);
     const maturedSales = allOrders
       .filter((o) => new Date(o.created_at) <= cutoff72h)

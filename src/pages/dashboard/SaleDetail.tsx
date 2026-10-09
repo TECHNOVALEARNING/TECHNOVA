@@ -81,8 +81,6 @@ const SaleDetail = () => {
         navigate("/dashboard/sales");
         return;
       }
-      setOrder(o as any);
-
       const [{ data: p }, { data: c }, { data: lic }] = await Promise.all([
         supabase
           .from("products")
@@ -99,6 +97,20 @@ const SaleDetail = () => {
           .select("license_key, status, max_activations, expires_at, activated_at")
           .eq("order_id", o.id),
       ]);
+
+      let finalOrder: any = o;
+      const productPrice = Number(p?.price) || 0;
+      if (Number(o.amount) === 0 && productPrice > 0) {
+        const fallbackAmount = Number(o.original_amount) || productPrice;
+        finalOrder = { ...o, amount: fallbackAmount };
+        supabase
+          .from("orders")
+          .update({ amount: fallbackAmount })
+          .eq("id", o.id)
+          .then(() => {})
+          .catch((err) => console.error("Auto-heal sale detail failed:", err));
+      }
+      setOrder(finalOrder);
 
       const custWithAvatar = { ...c };
       if (c?.auth_id) {
