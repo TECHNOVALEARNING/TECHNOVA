@@ -1,4 +1,6 @@
 import { createRoot } from "react-dom/client";
+// Capture de l'invite d'installation PWA avant le montage de React
+import "./lib/pwa";
 import App from "./App.tsx";
 import "./index.css";
 

@@ -1,5 +1,5 @@
 // TECHNOVA Progressive Web App Service Worker
-const CACHE_NAME = 'technova-pwa-v1';
+const CACHE_NAME = 'technova-pwa-v2';
 const PRECACHE_ASSETS = [
   '/',
   '/index.html',
@@ -64,7 +64,7 @@ self.addEventListener('fetch', (event) => {
         if (cachedResponse) {
           // Fetch update in background (stale-while-revalidate)
           fetch(event.request).then((networkResponse) => {
-            if (networkResponse && networkResponse.status === 200) {
+            if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
               caches.open(CACHE_NAME).then((cache) => cache.put(event.request, networkResponse));
             }
           }).catch(() => {});
@@ -87,8 +87,13 @@ self.addEventListener('fetch', (event) => {
   // HTML / Navigation -> Network first, fallback to cached index.html
   if (event.request.mode === 'navigate' || event.request.headers.get('accept')?.includes('text/html')) {
     event.respondWith(
-      fetch(event.request).catch(() => {
-        return caches.match('/index.html') || caches.match('/');
+      fetch(event.request).catch(async () => {
+        // Hors ligne : on sert la coquille de l'application mise en cache
+        return (
+          (await caches.match('/index.html')) ||
+          (await caches.match('/')) ||
+          new Response('Hors ligne', { status: 503, headers: { 'Content-Type': 'text/plain; charset=utf-8' } })
+        );
       })
     );
   }

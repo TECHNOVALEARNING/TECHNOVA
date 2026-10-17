@@ -5,10 +5,10 @@ import { useQuery } from "@tanstack/react-query";
 import { Header, Footer, CourseCard, Course } from "@/components/site/shared";
 import { supabase } from "@/integrations/supabase/client";
 import logoImg from "@/assets/logo.png";
-import heroShowcaseImg from "@/assets/hero-showcase.jpg";
 import technovaAppsMobileImg from "@/assets/technova-apps-mobile.png";
 import SEOHead from "@/components/SEOHead";
-import { getEmbedUrl, getVideoThumbnailUrl, isDirectVideo } from "@/lib/videoUtils";
+import HeroMotionBackground from "@/components/HeroMotionBackground";
+import HeroShowreel from "@/components/HeroShowreel";
 import { BookOpen, Loader2, Search, PackageOpen, Gamepad2 } from "lucide-react";
 import { VideoCoursesCarousel } from "@/components/VideoCoursesCarousel";
 
@@ -95,8 +95,6 @@ const TESTIMONIALS = [
     loc: "Paris, France",
     img: "https://randomuser.me/api/portraits/women/65.jpg",
   },
-
-
 ];
 
 const Index = () => {
@@ -240,127 +238,95 @@ const Index = () => {
     };
   }, []);
 
-  const [isLoadedDelayed, setIsLoadedDelayed] = useState(false);
-
   useEffect(() => {
     const handleLangChange = () => setLang(localStorage.getItem("technova_lang") || "fr");
     window.addEventListener("technova_lang_changed", handleLangChange);
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
 
-  useEffect(() => {
-    // Delay loading the heavy video scripts/frames slightly to improve core web vitals
-    const timer = setTimeout(() => {
-      setIsLoadedDelayed(true);
-    }, 1200);
-    return () => clearTimeout(timer);
-  }, []);
+  const { data: productsData = { products: [], adminId: "9702b3c5-4acf-42e2-828c-8bf2d50dfff8" } } =
+    useQuery({
+      queryKey: ["public_products_home"],
+      staleTime: 1000 * 60 * 10, // Cache for 10 minutes
+      queryFn: async () => {
+        // Find the administrator's profile id from their store
+        const { data: storeData } = await supabase
+          .from("stores")
+          .select("owner_id")
+          .eq("slug", "nova-shop")
+          .maybeSingle();
+        const adminId = storeData?.owner_id || "9702b3c5-4acf-42e2-828c-8bf2d50dfff8";
 
-  const { data: storeInfo } = useQuery({
-    queryKey: ["public_store_home"],
-    staleTime: 1000 * 60 * 10, // Cache for 10 minutes
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("stores")
-        .select("layout_sections")
-        .eq("slug", "nova-shop")
-        .maybeSingle();
-      if (error) throw error;
-      return data;
-    },
-  });
+        const { data: productsDataRaw, error: productsError } = await supabase
+          .from("products")
+          .select("*")
+          .order("created_at", { ascending: false })
+          .limit(100);
+        if (productsError) throw productsError;
 
-  const welcomeVideoUrl = (() => {
-    const defaultUrl = "#";
-    if (!storeInfo?.layout_sections) return defaultUrl;
-    const sections = Array.isArray(storeInfo.layout_sections) ? storeInfo.layout_sections : [];
-    const videoSection = sections.find((s: any) => s.type === "video");
-    if (videoSection && videoSection.enabled) {
-      return videoSection.config?.video_url || defaultUrl;
-    }
-    return defaultUrl;
-  })();
+        const creatorIds = Array.from(
+          new Set((productsDataRaw || []).map((p: any) => p.creator_id).filter(Boolean)),
+        );
 
-  const { data: productsData = { products: [], adminId: "9702b3c5-4acf-42e2-828c-8bf2d50dfff8" } } = useQuery({
-    queryKey: ["public_products_home"],
-    staleTime: 1000 * 60 * 10, // Cache for 10 minutes
-    queryFn: async () => {
-      // Find the administrator's profile id from their store
-      const { data: storeData } = await supabase
-        .from("stores")
-        .select("owner_id")
-        .eq("slug", "nova-shop")
-        .maybeSingle();
-      const adminId = storeData?.owner_id || "9702b3c5-4acf-42e2-828c-8bf2d50dfff8";
-
-      const { data: productsDataRaw, error: productsError } = await supabase
-        .from("products")
-        .select("*")
-        .order("created_at", { ascending: false })
-        .limit(100);
-      if (productsError) throw productsError;
-
-      const creatorIds = Array.from(
-        new Set((productsDataRaw || []).map((p: any) => p.creator_id).filter(Boolean))
-      );
-
-      const profilesMap: Record<string, string> = {};
-      if (creatorIds.length > 0) {
-        try {
-          const { data: profilesDataRaw } = await supabase
-            .from("profiles")
-            .select("id, display_name")
-            .in("id", creatorIds);
-          if (profilesDataRaw) {
-            profilesDataRaw.forEach((p) => {
-              profilesMap[p.id] = p.display_name || "";
-            });
+        const profilesMap: Record<string, string> = {};
+        if (creatorIds.length > 0) {
+          try {
+            const { data: profilesDataRaw } = await supabase
+              .from("profiles")
+              .select("id, display_name")
+              .in("id", creatorIds);
+            if (profilesDataRaw) {
+              profilesDataRaw.forEach((p) => {
+                profilesMap[p.id] = p.display_name || "";
+              });
+            }
+          } catch (err) {
+            console.error("Failed to fetch profiles:", err);
           }
-        } catch (err) {
-          console.error("Failed to fetch profiles:", err);
         }
-      }
 
-      const active = (productsDataRaw || []).filter((p: any) => {
-        if (p.category === "discovery") {
-          return false;
-        }
-        try {
-          const f = typeof p.features === "string" ? JSON.parse(p.features) : p.features || {};
-          return f.status !== "draft";
-        } catch {
-          return true;
-        }
-      });
-      const products = active.map((p: any) => ({
-        slug: p.id,
-        title: p.title,
-        cover:
-          p.thumbnail_url ||
-          "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=800&q=80",
-        category: getDisplayCategory(p.category || "Formation"),
-        level: lang === "fr" ? "Tous niveaux" : "All levels",
-        price: `${p.price} FCFA`,
-        oldPrice: p.original_price ? `${p.original_price} FCFA` : undefined,
-        duration: lang === "fr" ? "Accès à vie" : "Lifetime access",
-        creatorId: p.creator_id,
-        instructorName: p.creator_id ? (profilesMap[p.creator_id] || "Formateur TechNova") : "Formateur TechNova",
-        productType: p.type,
-      })) as Course[];
+        const active = (productsDataRaw || []).filter((p: any) => {
+          if (p.category === "discovery") {
+            return false;
+          }
+          try {
+            const f = typeof p.features === "string" ? JSON.parse(p.features) : p.features || {};
+            return f.status !== "draft";
+          } catch {
+            return true;
+          }
+        });
+        const products = active.map((p: any) => ({
+          slug: p.id,
+          title: p.title,
+          cover:
+            p.thumbnail_url ||
+            "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=800&q=80",
+          category: getDisplayCategory(p.category || "Formation"),
+          level: lang === "fr" ? "Tous niveaux" : "All levels",
+          price: `${p.price} FCFA`,
+          oldPrice: p.original_price ? `${p.original_price} FCFA` : undefined,
+          duration: lang === "fr" ? "Accès à vie" : "Lifetime access",
+          creatorId: p.creator_id,
+          instructorName: p.creator_id
+            ? profilesMap[p.creator_id] || "Formateur TechNova"
+            : "Formateur TechNova",
+          productType: p.type,
+        })) as Course[];
 
-      return { products, adminId };
-    },
-  });
+        return { products, adminId };
+      },
+    });
 
   const { products: dbProducts, adminId } = productsData;
 
   const displayProducts = searchQuery
     ? dbProducts.filter((p) => {
-      return (
-        p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        p.category.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    })
+        return (
+          p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          p.category.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+      })
     : dbProducts.filter((p) => p.creatorId === adminId).slice(0, 8);
 
   const { data: stats } = useQuery({
@@ -477,17 +443,30 @@ const Index = () => {
           position: relative;
           transition: background 0.3s, color 0.3s;
         }
-        @media (max-width: 1024px) {
-          .hero-video-container {
-            margin-top: 48px;
-            padding: 0 16px;
-          }
-          .hero-badge-left {
-            display: none !important;
-          }
-          .hero-badge-right {
-            display: none !important;
-          }
+        .tn-hero-grid {
+          position:absolute; left:-50%; right:-50%; bottom:-10%; height:55%;
+          background-image:
+            linear-gradient(to right, rgba(0,113,227,0.14) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(0,113,227,0.14) 1px, transparent 1px);
+          background-size:56px 56px;
+          transform:perspective(600px) rotateX(62deg);
+          transform-origin:center top;
+          -webkit-mask-image:linear-gradient(to bottom, transparent, black 35%, black 70%, transparent);
+          mask-image:linear-gradient(to bottom, transparent, black 35%, black 70%, transparent);
+          animation:tnHeroGrid 3.5s linear infinite;
+        }
+        @keyframes tnHeroGrid { from { background-position:0 0; } to { background-position:0 56px; } }
+        @media (prefers-reduced-motion: reduce) { .tn-hero-grid { animation:none; } }
+        .tn-hero-layout { display:grid; grid-template-columns:1fr; gap:48px; align-items:center; }
+        .tn-hero-copy { width:100%; text-align:center; }
+        .tn-hero-copy-inner { display:flex; flex-direction:column; align-items:center; }
+        .tn-hero-ctas { justify-content:center; }
+        .tn-hero-visual { width:100%; min-width:0; }
+        @media (min-width: 992px) {
+          .tn-hero-layout { grid-template-columns:minmax(0,1fr) minmax(0,1.05fr); gap:56px; }
+          .tn-hero-copy { text-align:left; }
+          .tn-hero-copy-inner { align-items:flex-start; }
+          .tn-hero-ctas { justify-content:flex-start; }
         }
       `}</style>
 
@@ -513,45 +492,19 @@ const Index = () => {
         className="relative pt-20 pb-10 md:pt-36 md:pb-24 overflow-hidden"
         style={{ zIndex: 1 }}
       >
-        {/* Shapes */}
-        <div style={{ position: "absolute", inset: 0, pointerEvents: "none", overflow: "hidden" }}>
-          {[
-            { cls: "500px", bg: "var(--blue)", top: "-100px", right: "0" },
-            { cls: "300px", bg: "var(--accent)", bottom: "0", left: "10%" },
-          ].map((s, i) => (
-            <div
-              key={i}
-              style={{
-                position: "absolute",
-                width: s.cls,
-                height: s.cls,
-                background: s.bg,
-                borderRadius: "50%",
-                opacity: 0.06,
-                animation: "heroImageFloat 8s ease-in-out infinite",
-                ...(s.top ? { top: s.top } : { bottom: s.bottom }),
-                ...(s.right ? { right: s.right } : { left: s.left }),
-              }}
-            />
-          ))}
-        </div>
+        {/* Motion design en arrière-plan */}
+        <HeroMotionBackground />
 
-        <div className="w-full mx-auto px-4 sm:px-8 md:px-12 lg:px-16 xl:px-24" style={{ maxWidth: "100%", width: "100%" }}>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1.05fr 1.2fr",
-              gap: "48px",
-              alignItems: "center",
-              width: "100%",
-            }}
-            className="max-lg:!grid-cols-1"
-          >
-            {/* Left */}
+        <div
+          className="tn-hero-layout relative w-full mx-auto px-4 sm:px-8"
+          style={{ maxWidth: 1240, minHeight: "min(72vh, 640px)" }}
+        >
+          <div className="tn-hero-copy">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7 }}
+              className="tn-hero-copy-inner"
             >
               <h1 className="tn-hero-title" style={{ marginBottom: 24, color: "var(--text)" }}>
                 {lang === "fr" ? (
@@ -585,6 +538,7 @@ const Index = () => {
                   alignItems: "center",
                   marginBottom: 36,
                 }}
+                className="tn-hero-ctas"
               >
                 <Link
                   to="/#courses"
@@ -645,154 +599,17 @@ const Index = () => {
                 </p>
               </div> */}
             </motion.div>
-
-            {/* Right */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="hero-video-container"
-              style={{ position: "relative", width: "100%" }}
-            >
-              <div
-                style={{
-                  width: "100%",
-                  background: "var(--card)",
-                  backdropFilter: "var(--glass-blur)",
-                  WebkitBackdropFilter: "var(--glass-blur)",
-                  border: "none",
-                  borderRadius: "var(--radius-lg)",
-                  padding: 0,
-                  boxShadow: "var(--shadow-lg)",
-                  animation: "none",
-                  overflow: "hidden",
-                }}
-              >
-                <div
-                  style={{
-                    position: "relative",
-                    width: "100%",
-                    paddingTop: "56.25%" /* 16:9 Aspect Ratio */,
-                    borderRadius: "var(--radius)",
-                    overflow: "hidden",
-                    cursor: "default",
-                  }}
-                >
-                  {welcomeVideoUrl && welcomeVideoUrl !== "#" && isLoadedDelayed ? (
-                    isDirectVideo(welcomeVideoUrl) ? (
-                      <video
-                        src={welcomeVideoUrl}
-                        controls
-                        autoPlay
-                        muted
-                        loop
-                        preload="auto"
-                        playsInline
-                        style={{
-                          position: "absolute",
-                          top: 0,
-                          left: 0,
-                          width: "100%",
-                          height: "100%",
-                          border: 0,
-                          objectFit: "contain",
-                        }}
-                      />
-                    ) : (
-                      <iframe
-                        src={getEmbedUrl(welcomeVideoUrl, true)}
-                        style={{
-                          position: "absolute",
-                          top: "-10%",
-                          left: "-10%",
-                          width: "120%",
-                          height: "120%",
-                          border: 0,
-                        }}
-                        allow="autoplay; fullscreen; picture-in-picture"
-                        allowFullScreen
-                      />
-                    )
-                  ) : (
-                    <img
-                      src={heroShowcaseImg}
-                      alt="TECHNOVA Learning Showcase"
-                      style={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                      }}
-                    />
-                  )}
-                </div>
-              </div>
-              {/* Stat card */}
-              <div
-                className="hero-badge-left"
-                style={{
-                  position: "absolute",
-                  bottom: 12,
-                  left: -20,
-                  background: "var(--surface-strong)",
-                  backdropFilter: "blur(24px) saturate(180%)",
-                  border: "1px solid var(--card-border)",
-                  borderRadius: "var(--radius)",
-                  padding: "12px 18px",
-                  boxShadow: "var(--shadow-md)",
-                  minWidth: 160,
-                  zIndex: 10,
-                  animation: "heroCardFloat 7s ease-in-out infinite",
-                  animationDelay: "-2s",
-                }}
-              >
-                <div
-                  style={{
-                    fontFamily: "'Outfit',sans-serif",
-                    fontSize: "1.4rem",
-                    fontWeight: 800,
-                    color: "var(--blue)",
-                    letterSpacing: "-0.03em",
-                  }}
-                >
-                  95%
-                </div>
-                <div style={{ fontSize: "0.72rem", color: "var(--text-secondary)", marginTop: 2 }}>
-                  {lang === "fr" ? "Taux de satisfaction" : "Satisfaction rate"}
-                </div>
-              </div>
-              {/* Badge */}
-              <div
-                className="hero-badge-right"
-                style={{
-                  position: "absolute",
-                  top: 12,
-                  right: -12,
-                  background: "linear-gradient(135deg,#0071e3,#409cff)",
-                  borderRadius: "var(--radius)",
-                  padding: "10px 14px",
-                  textAlign: "center",
-                  color: "white",
-                  boxShadow: "var(--shadow-md)",
-                  minWidth: 90,
-                  zIndex: 10,
-                  animation: "heroCardFloat 9s ease-in-out infinite",
-                  animationDelay: "-4s",
-                }}
-              >
-                <div
-                  style={{ fontSize: "1.2rem", fontWeight: 800, fontFamily: "'Outfit',sans-serif" }}
-                >
-                  +10
-                </div>
-                <div style={{ fontSize: "0.68rem", opacity: 0.85 }}>
-                  {lang === "fr" ? "Entreprises" : "Companies"}
-                </div>
-              </div>
-            </motion.div>
           </div>
+
+          {/* Motion design « vidéo » présentant TECHNOVA Learning */}
+          <motion.div
+            className="tn-hero-visual"
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
+            <HeroShowreel lang={lang === "en" ? "en" : "fr"} />
+          </motion.div>
 
           {/* Annonces et Publicités */}
           {/* <motion.div
@@ -947,7 +764,11 @@ const Index = () => {
       </div>
 
       {/* ============ FEATURES ============ */}
-      <section id="features" className="section-pad-100" style={{ position: "relative", zIndex: 1 }}>
+      <section
+        id="features"
+        className="section-pad-100"
+        style={{ position: "relative", zIndex: 1 }}
+      >
         <div className="mx-auto" style={{ maxWidth: 1280, padding: "0 24px" }}>
           <div style={{ marginBottom: 48, maxWidth: 600 }}>
             <span className="section-eyebrow">
@@ -1074,7 +895,10 @@ const Index = () => {
 
             {/* Premium glassmorphism search bar */}
             <div className="relative w-full sm:w-80 md:w-96">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[color:var(--text-secondary)]" style={{ transform: "translateY(-50%)" }} />
+              <Search
+                className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[color:var(--text-secondary)]"
+                style={{ transform: "translateY(-50%)" }}
+              />
               <input
                 type="text"
                 placeholder={
@@ -1113,7 +937,12 @@ const Index = () => {
                 <button
                   onClick={() => setSearchQuery("")}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-[color:var(--text-secondary)] hover:text-[color:var(--text)] transition-colors"
-                  style={{ background: "none", border: "none", cursor: "pointer", transform: "translateY(-50%)" }}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    transform: "translateY(-50%)",
+                  }}
                 >
                   <i className="fas fa-times"></i>
                 </button>
@@ -1175,10 +1004,7 @@ const Index = () => {
       </section>
 
       {/* ============ STATS SECTION ============ */}
-      <section
-        className="stats-section section-pad-90"
-        style={{ overflow: "hidden", zIndex: 1 }}
-      >
+      <section className="stats-section section-pad-90" style={{ overflow: "hidden", zIndex: 1 }}>
         <canvas
           ref={canvasRef}
           style={{
@@ -1365,7 +1191,14 @@ const Index = () => {
                   </a>
                 </div>
               </div>
-              <div style={{ textAlign: "center", display: "flex", justifyContent: "center", alignItems: "center" }}>
+              <div
+                style={{
+                  textAlign: "center",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
                 <img
                   src={technovaAppsMobileImg}
                   alt="TECHNOVA Apps Mobile Showcase"
@@ -1605,7 +1438,11 @@ const Index = () => {
       <section id="avis" className="section-pad-100" style={{ position: "relative", zIndex: 1 }}>
         <div className="mx-auto" style={{ maxWidth: 1280, padding: "0 24px" }}>
           <div style={{ textAlign: "center", marginBottom: 48 }}>
-            <span className="tn-eyebrow">{lang === "fr" ? "Ce que les utilisateurs réalisent grâce à l’apprentissage" : "What users achieve through learning"}</span>
+            <span className="tn-eyebrow">
+              {lang === "fr"
+                ? "Ce que les utilisateurs réalisent grâce à l’apprentissage"
+                : "What users achieve through learning"}
+            </span>
             <h2 className="section-title">
               <span className="title-motion-wrap">
                 <span className="title-motion">
@@ -1715,7 +1552,10 @@ const Index = () => {
               <i className="fab fa-dolapay" style={{ marginRight: 4 }} />
               Dolapay
             </span>
-            <span className="pay-badge" style={{ background: "linear-gradient(135deg, #0ea5e9, #0284c7)", color: "white" }}>
+            <span
+              className="pay-badge"
+              style={{ background: "linear-gradient(135deg, #0ea5e9, #0284c7)", color: "white" }}
+            >
               <i className="fa-solid fa-wallet" style={{ marginRight: 4 }} />
               Nyole Pay
             </span>
