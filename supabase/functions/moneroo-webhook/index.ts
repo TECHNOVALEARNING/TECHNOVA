@@ -1,5 +1,6 @@
 ﻿import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { internalHeaders } from "../_shared/security.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -309,7 +310,7 @@ serve(async (req) => {
           const notifyUrl = `${supabaseUrl}/functions/v1/notify-sale`;
           fetch(notifyUrl, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: internalHeaders(),
             body: JSON.stringify({
               store_owner_id: meta.store_owner_id,
               product_title: product?.title,

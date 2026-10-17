@@ -1,6 +1,7 @@
 // Check status of a Nyole checkout session
 // Endpoint: GET https://app.nyole.com/api/v1/checkout/sessions/{id}/status
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { computeExpectedAmount } from "../_shared/security.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -20,15 +21,13 @@ Deno.serve(async (req) => {
 
   try {
     const body = await req.json().catch(() => ({}));
+    // Clé et URL Nyole uniquement côté serveur : une URL fournie par le client
+    // permettrait de simuler une réponse "payé".
     const apiKey =
       Deno.env.get("NYOLE_API_KEY") ||
-      body.apiKey ||
       "af_live_pub_d06f8f992bc452befbc49b7409d257eed7c2a4726ba0a09a";
 
-    let baseUrl =
-      Deno.env.get("NYOLE_BASE_URL") ||
-      body.baseUrl ||
-      "https://app.nyole.com/api/v1";
+    let baseUrl = Deno.env.get("NYOLE_BASE_URL") || "https://app.nyole.com/api/v1";
 
     if (baseUrl.includes("api.nyole.com")) {
       baseUrl = "https://app.nyole.com/api/v1";
@@ -78,14 +77,41 @@ Deno.serve(async (req) => {
             .eq("id", orderId)
             .maybeSingle();
 
-          if (currentOrder && currentOrder.status !== "completed") {
-            await supabase
-              .from("orders")
-              .update({
-                status: "completed",
-                payment_method: "Nyole",
-              })
-              .eq("id", orderId);
+          // La commande doit être liée à cette session et le montant payé couvrir le prix en base
+          const paidAmount = Math.round(Number(nyoleData.amount));
+          const { expected } = currentOrder?.products
+            ? await computeExpectedAmount(
+                supabase,
+                {
+                  id: currentOrder.product_id,
+                  price: currentOrder.products.price,
+                  creator_id: currentOrder.store_owner_id,
+                },
+                currentOrder.promo_code,
+              )
+            : { expected: Infinity };
+          const linked = currentOrder?.pawapay_deposit_id === sessionId;
+          const amountOk = !isNaN(paidAmount) && paidAmount >= expected;
+          if (currentOrder && currentOrder.status !== "completed" && (!linked || !amountOk)) {
+            console.error("[nyole-status] Validation refusée:", { orderId, linked, paidAmount, expected });
+          }
+
+          const { data: completedNow } =
+            currentOrder && currentOrder.status !== "completed" && linked && amountOk
+              ? await supabase
+                  .from("orders")
+                  .update({
+                    status: "completed",
+                    amount: paidAmount,
+                    payment_method: "Nyole",
+                  })
+                  .eq("id", orderId)
+                  .neq("status", "completed")
+                  .select("id")
+                  .maybeSingle()
+              : { data: null };
+
+          if (currentOrder && completedNow) {
 
             // Mettre à jour code promo si présent
             if (currentOrder.promo_code) {
@@ -110,7 +136,7 @@ Deno.serve(async (req) => {
               body: {
                 store_owner_id: currentOrder.store_owner_id,
                 product_title: currentOrder.products?.title || "Produit TECHNOVA",
-                amount: currentOrder.amount,
+                amount: paidAmount,
                 customer_name: currentOrder.customers?.name || "Client TECHNOVA",
                 customer_email: currentOrder.customers?.email || "",
                 promo_code: currentOrder.promo_code || null,
@@ -123,11 +149,6 @@ Deno.serve(async (req) => {
               },
             }).catch((e) => console.error("[nyole-status] notify-sale error:", e));
           }
-        } else if (isFailed && orderId) {
-          await supabase
-            .from("orders")
-            .update({ status: "failed" })
-            .eq("id", orderId);
         }
 
         return jsonResponse({
@@ -156,6 +177,6 @@ Deno.serve(async (req) => {
     return jsonResponse({ status: "PENDING", paid: false });
   } catch (error: any) {
     console.error("[nyole-status] Exception:", error);
-    return jsonResponse({ error: error.message }, 500);
+    return jsonResponse({ error: "Erreur interne du serveur." }, 500);
   }
 });

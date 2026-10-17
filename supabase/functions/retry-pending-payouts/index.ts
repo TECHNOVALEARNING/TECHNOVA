@@ -1,6 +1,7 @@
 ﻿// Scheduled job: verifies Moneroo payouts stuck in "processing" by polling
 // Moneroo's API, and marks them completed/failed accordingly.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { isInternalCall } from "../_shared/security.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -11,6 +12,9 @@ const MONEROO_BASE = "https://api.moneroo.io/v1";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+
+  // Déclenchement réservé au cron : Bearer service_role ou x-internal-secret
+  if (!isInternalCall(req)) return j({ error: "Unauthorized" }, 401);
 
   try {
     const token = Deno.env.get("MONEROO_SECRET_KEY");

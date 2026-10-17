@@ -220,10 +220,13 @@ const CheckoutDialog = ({
             popupRef.current.close();
           } catch {}
         }
-        const sid = event.data.sessionId || depositId;
-        const ord = event.data.ref || currentOrderId;
+        // Le message de la fenêtre de paiement ne fait pas foi : on revérifie côté serveur
+        const sid = depositId || event.data.sessionId;
         if (sid) {
-          await finalizeSuccessfulPayment(sid, ord || undefined);
+          const res = await checkNyolePaymentStatus(sid, currentOrderId || undefined);
+          if (res.paid && (res.status === "SUCCESS" || res.status === "COMPLETED")) {
+            await finalizeSuccessfulPayment(res.orderId);
+          }
         }
       }
     };
@@ -321,38 +324,27 @@ const CheckoutDialog = ({
   const handleFreeCheckout = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase.rpc("process_free_order", {
-        p_name: fullName,
-        p_email: email,
-        p_phone: `+${fullPhone}`,
-        p_product_id: product.id,
-        p_store_owner_id: product.creator_id,
-        p_promo_code: appliedPromo?.code || null,
-        p_original_amount: appliedPromo ? effectivePrice : null,
-        p_shipping_address: shippingPayload,
+      // Le serveur vérifie que le produit est réellement gratuit (prix en base, promo revalidée)
+      // puis envoie lui-même les emails de confirmation.
+      const { data, error } = await supabase.functions.invoke("process-free-order", {
+        body: {
+          customer: { name: fullName, email, phone: `+${fullPhone}` },
+          metadata: {
+            product_id: product.id,
+            promo_code: appliedPromo?.code || null,
+            shipping_address: shippingPayload,
+            store_slug: storeSlug || null,
+          },
+        },
       });
 
-      if (error) throw new Error(error.message);
-
-      // Trigger notification sale email in the background
-      supabase.functions
-        .invoke("notify-sale", {
-          body: {
-            store_owner_id: product.creator_id,
-            product_title: product.title,
-            amount: 0,
-            customer_name: fullName,
-            customer_email: email,
-            promo_code: appliedPromo?.code || null,
-            original_price: appliedPromo ? effectivePrice : null,
-            product_id: product.id,
-            download_url: product.download_url || null,
-            product_type: product.type || null,
-            store_slug: storeSlug || null,
-            shipping_address: shippingPayload,
-          },
-        })
-        .catch(console.error);
+      if (error || !data?.success) {
+        let message = data?.error;
+        try {
+          message = message || (await (error as any)?.context?.json())?.error;
+        } catch {}
+        throw new Error(message || "Erreur lors de la validation");
+      }
 
       setFreeSuccess(true);
       toast.success("Produit obtenu !");
@@ -363,122 +355,11 @@ const CheckoutDialog = ({
     }
   };
 
-  // ─── Finaliser la commande après confirmation stricte de Nyole ───
-  const finalizeSuccessfulPayment = async (sessionId: string, tempRef?: string) => {
-    let confirmedOrderId = tempRef || currentOrderId || "";
-    try {
-      // 1. Enregistrer la commande officielle dans la base de données
-      const { data: rpcData, error: rpcErr } = await supabase.rpc("process_free_order", {
-        p_name: fullName,
-        p_email: email,
-        p_phone: phone ? `+${fullPhone}` : "+1234567890",
-        p_product_id: product.id,
-        p_store_owner_id: product.creator_id,
-        p_promo_code: appliedPromo?.code || null,
-        p_original_amount: appliedPromo ? effectivePrice : null,
-        p_shipping_address: shippingPayload,
-      });
-
-      if (rpcErr) {
-        console.error("Order creation in database:", rpcErr);
-      }
-
-      if (rpcData?.order_id) {
-        confirmedOrderId = rpcData.order_id;
-        setCurrentOrderId(confirmedOrderId);
-
-        // 1. Mise à jour via l'API Webhook serverless (avec privilèges service_role pour garantir l'enregistrement du montant réel)
-        try {
-          await fetch("/api/webhook", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              event: "checkout.session.completed",
-              id: sessionId,
-              amount: Math.round(discountedPrice),
-              payment_method: "Nyole",
-              metadata: {
-                order_id: confirmedOrderId,
-                product_id: product.id,
-                store_owner_id: product.creator_id,
-                promo_code: appliedPromo?.code || null,
-                original_price: appliedPromo ? effectivePrice : null,
-                shipping_address: shippingPayload,
-                platform: "TECHNOVA",
-              },
-              customer: {
-                name: fullName,
-                email,
-                phone: phone ? `+${fullPhone}` : undefined,
-              },
-            }),
-          });
-        } catch (apiErr) {
-          console.warn("Direct webhook notification error:", apiErr);
-        }
-
-        // 2. Mise à jour client directe complémentaire
-        try {
-          await supabase
-            .from("orders")
-            .update({
-              amount: Math.round(discountedPrice),
-              payment_method: "Nyole",
-              pawapay_deposit_id: sessionId,
-            })
-            .eq("id", confirmedOrderId);
-        } catch (updErr) {
-          console.warn("Direct client update warning:", updErr);
-        }
-      }
-    } catch (createErr) {
-      console.error("Order creation error:", createErr);
-    }
-
-    // 2. Mettre à jour code promo
-    if (appliedPromo) {
-      try {
-        const { data: pd } = await supabase
-          .from("promo_codes")
-          .select("current_uses")
-          .eq("code", appliedPromo.code)
-          .eq("creator_id", product.creator_id)
-          .single();
-        if (pd) {
-          await supabase
-            .from("promo_codes")
-            .update({ current_uses: (pd.current_uses || 0) + 1 })
-            .eq("code", appliedPromo.code)
-            .eq("creator_id", product.creator_id);
-        }
-      } catch (promoErr) {
-        console.warn("Could not update promo count:", promoErr);
-      }
-    }
-
-    // 3. Déclencher notify-sale
-    try {
-      await supabase.functions.invoke("notify-sale", {
-        body: {
-          store_owner_id: product.creator_id,
-          product_title: product.title,
-          amount: discountedPrice,
-          customer_name: fullName,
-          customer_email: email,
-          promo_code: appliedPromo?.code || null,
-          original_price: appliedPromo ? effectivePrice : null,
-          product_id: product.id,
-          download_url: product.download_url || null,
-          product_type: product.type || null,
-          store_slug: storeSlug || null,
-          shipping_address: shippingPayload,
-          payment_method: "Nyole",
-          order_id: confirmedOrderId,
-        },
-      });
-    } catch (notifyErr) {
-      console.error("Notify-sale error:", notifyErr);
-    }
+  // ─── Afficher le succès une fois le paiement confirmé par le serveur ───
+  // La commande est validée côté serveur (/api/nyole-status ou webhook signé) après
+  // vérification auprès de Nyole et contrôle du montant : rien n'est écrit en base ici.
+  const finalizeSuccessfulPayment = async (orderId?: string) => {
+    if (orderId) setCurrentOrderId(orderId);
 
     // Fermer la popup si elle est toujours ouverte
     if (popupRef.current && !popupRef.current.closed) {
@@ -506,12 +387,11 @@ const CheckoutDialog = ({
     try {
       // 1. Générer une référence temporaire unique
       const tempRef = `ORD-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
-      setCurrentOrderId(tempRef);
 
-      // 2. Initialiser la session de paiement Nyole (NE PAS créer de commande payée en base avant confirmation !)
+      // 2. Initialiser la session de paiement Nyole : le serveur crée une commande "pending",
+      //    elle ne passera en "completed" qu'après vérification du paiement côté serveur.
       const callbackUrl = `${window.location.origin}/payment-callback?ref=${tempRef}&product_id=${product.id}`;
       const nyoleRes = await initiateNyolePayment({
-        orderId: tempRef,
         amount: Math.round(discountedPrice),
         currency: provider.currency || "XOF",
         description: `${product.title.slice(0, 40)} - Ref #${tempRef}`,
@@ -539,6 +419,7 @@ const CheckoutDialog = ({
 
       const activeSessionId = nyoleRes.sessionId;
       setDepositId(activeSessionId);
+      if (nyoleRes.orderId) setCurrentOrderId(nyoleRes.orderId);
       setCheckoutUrl(nyoleRes.checkoutUrl);
 
       // Ouvrir la page de paiement sécurisée Nyole dans un nouvel onglet
@@ -560,11 +441,11 @@ const CheckoutDialog = ({
       const poll = async () => {
         attempts++;
         try {
-          const statusRes = await checkNyolePaymentStatus(activeSessionId, tempRef);
+          const statusRes = await checkNyolePaymentStatus(activeSessionId, nyoleRes.orderId || undefined);
 
           // Validation stricte : Nyole doit certifier que le paiement a été payé
           if (statusRes.paid && (statusRes.status === "SUCCESS" || statusRes.status === "COMPLETED")) {
-            await finalizeSuccessfulPayment(activeSessionId, tempRef);
+            await finalizeSuccessfulPayment(statusRes.orderId);
             return;
           }
 
@@ -621,7 +502,7 @@ const CheckoutDialog = ({
     try {
       const res = await checkNyolePaymentStatus(depositId, currentOrderId || undefined);
       if (res.paid && (res.status === "SUCCESS" || res.status === "COMPLETED")) {
-        await finalizeSuccessfulPayment(depositId, currentOrderId || undefined);
+        await finalizeSuccessfulPayment(res.orderId);
       } else if (
         res.status === "FAILED" ||
         res.status === "CANCELLED" ||

@@ -1,6 +1,7 @@
 // Nyole Webhook & Callback IPN Handler
 // Docs: https://nyole.com/docs/webhooks/evenements/ and https://nyole.com/docs/webhooks/signature/
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { computeExpectedAmount } from "../_shared/security.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -58,7 +59,7 @@ Deno.serve(async (req) => {
 
     console.log("[nyole-webhook] Notification reçue:", JSON.stringify(payload).slice(0, 500));
 
-    // Vérification de la signature si le secret est configuré
+    // Vérification de la signature : obligatoire, toute requête non signée est rejetée
     const webhookSecret =
       Deno.env.get("NYOLE_WEBHOOK_SECRET") || Deno.env.get("NYOLE_API_KEY");
     const timestamp =
@@ -66,13 +67,16 @@ Deno.serve(async (req) => {
     const signature =
       req.headers.get("x-afriflow-signature") || req.headers.get("x-nyole-signature");
 
-    if (webhookSecret && signature && timestamp) {
-      const isValid = await verifyHmacSignature(raw, timestamp, signature, webhookSecret);
-      if (!isValid) {
-        console.warn("[nyole-webhook] Signature non valide !");
-        return new Response("Invalid signature", { status: 401 });
-      }
-      console.log("[nyole-webhook] Signature vérifiée avec succès.");
+    if (!webhookSecret) {
+      console.error("[nyole-webhook] NYOLE_WEBHOOK_SECRET non configuré");
+      return new Response("Webhook secret not configured", { status: 500 });
+    }
+    const isValid =
+      Boolean(signature && timestamp) &&
+      (await verifyHmacSignature(raw, timestamp!, signature!, webhookSecret));
+    if (!isValid) {
+      console.warn("[nyole-webhook] Signature absente ou non valide");
+      return new Response("Invalid signature", { status: 401 });
     }
 
     // Récupérer l'identifiant de la commande
@@ -141,23 +145,59 @@ Deno.serve(async (req) => {
         });
       }
 
-      // 2. Mettre à jour la commande à 'completed'
-      await supabase
+      // 2. Le webhook doit concerner la session liée à cette commande
+      const sessionId = payload?.data?.id || payload?.id || payload?.data?.session_id;
+      if (order.pawapay_deposit_id && sessionId && order.pawapay_deposit_id !== sessionId) {
+        console.error("[nyole-webhook] Session ne correspondant pas à la commande:", orderId);
+        return new Response(JSON.stringify({ received: true, error: "Session mismatch" }), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+
+      // 3. Le montant payé doit couvrir le prix du produit en base (promo revalidée)
+      const paidAmount = Math.round(Number(payload?.data?.amount ?? payload?.amount));
+      const { expected } = await computeExpectedAmount(
+        supabase,
+        { id: order.product_id, price: order.products?.price, creator_id: order.store_owner_id },
+        order.promo_code,
+      );
+      if (!order.products || isNaN(paidAmount) || paidAmount < expected) {
+        console.error("[nyole-webhook] Montant insuffisant:", { orderId, paidAmount, expected });
+        return new Response(JSON.stringify({ received: true, error: "Amount mismatch" }), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+
+      // 4. Mettre à jour la commande à 'completed' (conditionnel pour éviter les doublons)
+      const { data: updated } = await supabase
         .from("orders")
         .update({
           status: "completed",
+          amount: paidAmount,
           payment_method: "Nyole",
+          ...(sessionId ? { pawapay_deposit_id: sessionId } : {}),
         })
-        .eq("id", orderId);
+        .eq("id", orderId)
+        .neq("status", "completed")
+        .select("id")
+        .maybeSingle();
+      if (!updated) {
+        return new Response(JSON.stringify({ received: true, status: "Already completed" }), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
 
-      // 3. Récupérer le client
+      // 5. Récupérer le client
       const { data: customer } = await supabase
         .from("customers")
         .select("name, email, phone")
         .eq("id", order.customer_id)
         .maybeSingle();
 
-      // 4. Mettre à jour le code promo
+      // 6. Mettre à jour le code promo
       if (order.promo_code) {
         const { data: promo } = await supabase
           .from("promo_codes")
@@ -175,12 +215,12 @@ Deno.serve(async (req) => {
         }
       }
 
-      // 5. Déclencher notify-sale
+      // 7. Déclencher notify-sale
       await supabase.functions.invoke("notify-sale", {
         body: {
           store_owner_id: order.store_owner_id,
           product_title: order.products?.title || "Produit TECHNOVA",
-          amount: order.amount,
+          amount: paidAmount,
           customer_name: customer?.name || "Client TECHNOVA",
           customer_email: customer?.email || "",
           promo_code: order.promo_code || null,
@@ -198,7 +238,8 @@ Deno.serve(async (req) => {
       await supabase
         .from("orders")
         .update({ status: "failed" })
-        .eq("id", orderId);
+        .eq("id", orderId)
+        .neq("status", "completed");
       console.log("[nyole-webhook] Commande échouée ou annulée:", orderId);
     }
 
@@ -208,7 +249,7 @@ Deno.serve(async (req) => {
     });
   } catch (error: any) {
     console.error("[nyole-webhook] Exception:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ error: "Webhook processing failed" }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });

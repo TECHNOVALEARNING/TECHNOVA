@@ -3,6 +3,7 @@
 // Note: PawaPay does not sign callbacks by default (IP allowlist or shared secret optional).
 // We treat callbacks as advisory + always re-fetch status from PawaPay to confirm.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { internalHeaders } from "../_shared/security.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -183,7 +184,7 @@ async function handleDeposit(supabase: any, depositId: string, tx: any, status?:
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   fetch(`${supabaseUrl}/functions/v1/notify-sale`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: internalHeaders(),
     body: JSON.stringify({
       store_owner_id: storeOwnerId,
       product_title: product?.title,

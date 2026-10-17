@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { internalHeaders, isInternalCall } from "../_shared/security.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -9,6 +10,15 @@ const corsHeaders = {
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
+  }
+
+  // Appel réservé au serveur (webhooks, process-free-order…) : sinon n'importe qui
+  // pourrait envoyer des emails avec un lien arbitraire depuis notre domaine.
+  if (!isInternalCall(req)) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 
   try {
@@ -256,10 +266,7 @@ Deno.serve(async (req) => {
         (hasPromo ? `\n🏷️ Code promo : <code>${promo_code}</code>` : "");
 
       const tgUrl = `${Deno.env.get("SUPABASE_URL")}/functions/v1/telegram-send`;
-      const tgHeaders = {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${Deno.env.get("SUPABASE_ANON_KEY")}`,
-      };
+      const tgHeaders = internalHeaders();
       // Seller
       await fetch(tgUrl, {
         method: "POST",

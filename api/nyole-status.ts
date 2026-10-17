@@ -1,5 +1,9 @@
+import { finalizePayment, getServiceClient, verifyNyoleSession } from "./_lib/payments";
+
+// Vérifie le statut d'une session Nyole auprès de l'API Nyole et, si elle est payée,
+// finalise la commande côté serveur (montant contrôlé par rapport au prix en base).
+// Le navigateur ne peut jamais marquer lui-même une commande comme payée.
 export default async function handler(req: any, res: any) {
-  // CORS headers
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
@@ -11,76 +15,58 @@ export default async function handler(req: any, res: any) {
   const query = req.query || {};
   let body: any = {};
   if (req.body) {
-    body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+    try {
+      body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+    } catch {
+      body = {};
+    }
   }
 
-  const sessionId = query.sessionId || query.session_id || body.sessionId || body.session_id;
+  const sessionId = String(query.sessionId || query.session_id || body.sessionId || body.session_id || "");
 
   if (!sessionId) {
     return res.status(400).json({ error: "sessionId is required", paid: false, status: "FAILED" });
   }
 
-  const apiKey =
-    process.env.NYOLE_API_KEY ||
-    process.env.VITE_NYOLE_PUBLIC_KEY ||
-    "af_live_pub_d06f8f992bc452befbc49b7409d257eed7c2a4726ba0a09a";
-
-  const baseUrl = (
-    process.env.NYOLE_BASE_URL ||
-    process.env.VITE_NYOLE_BASE_URL ||
-    "https://app.nyole.com/api/v1"
-  ).replace(/\/+$/, "");
-
   try {
-    // 1. Check /checkout/sessions/:id/status
-    const statusUrl = `${baseUrl}/checkout/sessions/${sessionId}/status`;
-    const response = await fetch(statusUrl, {
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        Accept: "application/json",
-      },
-    });
+    const verified = await verifyNyoleSession(sessionId);
+    if (!verified) {
+      return res.status(502).json({ error: "Nyole status check error", paid: false, status: "PENDING" });
+    }
 
-    if (!response.ok) {
-      console.warn(`[nyole-status] Nyole returned status ${response.status}`);
-      const text = await response.text();
-      return res.status(response.status).json({
-        error: "Nyole status check error",
-        details: text,
+    if (verified.failed) {
+      return res.status(200).json({ success: true, paid: false, status: verified.status });
+    }
+    if (!verified.paid) {
+      return res.status(200).json({ success: true, paid: false, status: "PENDING" });
+    }
+
+    const result = await finalizePayment(getServiceClient(), "Nyole", sessionId, verified);
+    if (!result.ok) {
+      console.error("[nyole-status] Finalisation refusée:", result.reason, sessionId);
+      return res.status(200).json({
+        success: false,
         paid: false,
-        status: "PENDING",
+        status: result.reason === "amount_mismatch" ? "REJECTED" : "PENDING",
+        error:
+          result.reason === "amount_mismatch"
+            ? "Le montant payé ne correspond pas au prix du produit."
+            : undefined,
       });
     }
 
-    const data: any = await response.json();
-    console.log(`[nyole-status] Status for session ${sessionId}:`, data);
-
-    const isPaid = Boolean(
-      data.paid === true || data.status === "SUCCESS" || data.status === "COMPLETED",
-    );
-
-    const isFailed = Boolean(
-      data.status === "FAILED" ||
-      data.status === "CANCELLED" ||
-      data.status === "EXPIRED" ||
-      data.status === "REJECTED",
-    );
-
     return res.status(200).json({
       success: true,
-      paid: isPaid,
-      status: isPaid ? "SUCCESS" : isFailed ? data.status || "FAILED" : data.status || "PENDING",
-      provider: data.provider || null,
-      order_id: data.order_id || null,
-      amount: data.amount,
-      currency: data.currency,
-      raw: data,
+      paid: true,
+      status: "SUCCESS",
+      order_id: result.orderId,
+      amount: verified.amount,
+      currency: verified.currency,
     });
   } catch (err: any) {
     console.error("[nyole-status] Server exception:", err);
     return res.status(500).json({
       error: "Internal server error while checking Nyole status",
-      message: err.message,
       paid: false,
       status: "PENDING",
     });
