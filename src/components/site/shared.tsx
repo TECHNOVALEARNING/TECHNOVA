@@ -1,4 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { SHOW_TECHNOVA_GAMES } from "@/config/features";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -103,7 +104,7 @@ export const Header = () => {
       desc: lang === "fr" ? "Plateformes de jeux compétitifs" : "Competitive gaming platforms",
       icon: "fa-solid fa-gamepad",
     },
-  ];
+  ].filter((l) => SHOW_TECHNOVA_GAMES || l.to !== "/#games");
 
   const moreDropdownLinks = [
     { to: "/e-services", label: "E-services" },

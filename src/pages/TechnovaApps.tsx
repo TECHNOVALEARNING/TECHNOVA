@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { SHOW_TECHNOVA_GAMES } from "@/config/features";
 import { motion, AnimatePresence } from "framer-motion";
 import { Header, Footer } from "@/components/site/shared";
 import {
@@ -21,6 +22,8 @@ import { PWAInstallButton } from "@/components/pwa/PWAInstallButton";
 
 interface AppCard {
   title: string;
+  /** App de jeu : masquée tant que SHOW_TECHNOVA_GAMES vaut false */
+  gaming?: boolean;
   category: string;
   desc: string;
   image: string;
@@ -48,7 +51,7 @@ const TechnovaApps = () => {
     return () => window.removeEventListener("technova_lang_changed", handleLangChange);
   }, []);
 
-  const apps: AppCard[] = [
+  const allApps: AppCard[] = [
     {
       title: "TECHNOVA Learning",
       category: lang === "fr" ? "Plateforme Web" : "Web Platform",
@@ -181,6 +184,7 @@ const TechnovaApps = () => {
     },
     {
       title: "GAME EARN",
+      gaming: true,
       category: lang === "fr" ? "Gaming & Récompenses" : "Gaming & Rewards",
       appType: "mobile",
       desc:
@@ -218,6 +222,7 @@ const TechnovaApps = () => {
       ],
     },
   ];
+  const apps = allApps.filter((app) => SHOW_TECHNOVA_GAMES || !app.gaming);
 
   const counts = useMemo(() => {
     const web = apps.filter((a) => a.appType === "web").length;
