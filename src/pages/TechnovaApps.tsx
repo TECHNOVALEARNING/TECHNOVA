@@ -153,7 +153,7 @@ const TechnovaApps = () => {
         lang === "fr"
           ? "Plateforme intelligente de création de chansons personnalisées uniques pour vos événements spéciaux (anniversaires, mariages, déclarations)."
           : "Smart platform for generating unique custom songs for special events (birthdays, weddings, romantic declarations).",
-      image: "/sonorya_cover.jpeg",
+      image: "/images/sonorya-banner.webp",
       tags: ["Cloudflare D1", "React", "IA Générative", "Mobile Money"],
       stats: lang === "fr" ? "Chansons Sur Mesure" : "Custom Songs",
       url: "https://www.sonorya.co",
@@ -461,7 +461,7 @@ const TechnovaApps = () => {
                       src={app.image}
                       alt={app.title}
                       className={`w-full h-full ${
-                        app.image.includes("sonorya")
+                        app.image.includes("sonorya_cover")
                           ? "object-contain p-3 group-hover:scale-105 transition-transform duration-500"
                           : "object-cover object-center group-hover:scale-105 transition-transform duration-500"
                       }`}

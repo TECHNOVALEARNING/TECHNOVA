@@ -10,7 +10,6 @@ import SEOHead from "@/components/SEOHead";
 import HeroMotionBackground from "@/components/HeroMotionBackground";
 import TechnovaAIHubSection from "@/components/TechnovaAIHubSection";
 import TechnovaConnectSection from "@/components/TechnovaConnectSection";
-import SonoryaSection from "@/components/SonoryaSection";
 import HeroShowreel from "@/components/HeroShowreel";
 import StatsRibbonBackground from "@/components/StatsRibbonBackground";
 import { SHOW_TECHNOVA_GAMES } from "@/config/features";
@@ -309,8 +308,8 @@ const Index = () => {
         .pay-google { background:white; border:1px solid rgba(0,0,0,0.12); color:black; }
         .pay-dolapay { background:#007bff; color:#fff; }
         /* Séparation des sections : alternance fond transparent / fond légèrement teinté */
-        #features, #courses, #ai-hub, #sonorya, #about, #payment, #cta { background: var(--section-alt) !important; }
-        #video-courses, #stats, #technova-connect, #apps, #avis, #tools {
+        #features, #courses, #ai-hub, #apps, #avis, #tools { background: var(--section-alt) !important; }
+        #video-courses, #stats, #technova-connect, #about, #payment, #cta {
           background: transparent !important; border-top: none !important; border-bottom: none !important;
         }
         .stats-section {
@@ -1015,9 +1014,6 @@ const Index = () => {
 
       {/* ============ TECHNOVA CONNECT ============ */}
       <TechnovaConnectSection lang={lang} />
-
-      {/* ============ SONORYA ============ */}
-      <SonoryaSection lang={lang} />
 
       {/* ============ APPS ============ */}
       <section
