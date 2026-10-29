@@ -6,7 +6,6 @@ import {
   Palette,
   Cpu,
   LineChart,
-  Sparkles,
   ArrowRight,
   CheckCircle2,
   MessageSquare,
@@ -273,16 +272,16 @@ const EServices = () => {
       upcoming: true,
     },
     {
-      title: "Technova Mobil",
-      category: lang === "fr" ? "Numéros Virtuels, eSIM & IA" : "Virtual Numbers, eSIM & AI",
+      title: "Technova Connect",
+      category: lang === "fr" ? "Vérification SMS, Numéros & eSIM" : "SMS Verification, Numbers & eSIM",
       desc:
         lang === "fr"
-          ? "Numéros virtuels, réception de SMS OTP, eSIM 100% digitale et analyse intelligente par IA"
-          : "Virtual numbers, OTP SMS verification, digital eSIM, and AI-powered message analysis",
-      image: "/technova-mobil-cover.jpg",
-      tags: ["eSIM", "SMS OTP", "Analyse IA"],
-      stats: "En développement",
-      url: "https://www.technovamobil.com",
+          ? "Vérification OTP, numéros & voix et eSIM voyage : restez joignable et voyagez connecté, depuis un même espace"
+          : "OTP verification, numbers & voice and travel eSIM: stay reachable and travel connected, from one place",
+      image: "https://technova-dwus535v.manus.space/images/hero/airport-travelers.webp",
+      tags: ["Vérification OTP", "Numéros & Voix", "eSIM Voyage"],
+      stats: lang === "fr" ? "190+ pays" : "190+ countries",
+      url: "https://technova-dwus535v.manus.space",
       upcoming: true,
     },
   ];
@@ -559,7 +558,6 @@ const EServices = () => {
                       <span className="flex items-center gap-1">
                         {project.upcoming ? (
                           <>
-                            <Sparkles className="h-3.5 w-3.5 text-amber-500" />
                             {lang === "fr" ? "En développement" : "In development"}
                           </>
                         ) : (

@@ -5,7 +5,6 @@ import { Header, Footer } from "@/components/site/shared";
 import {
   ExternalLink,
   CheckCircle2,
-  Sparkles,
   Smartphone,
   Shield,
   Code,
@@ -129,21 +128,21 @@ const TechnovaApps = () => {
       ],
     },
     {
-      title: "Viral IA Agent",
-      category: lang === "fr" ? "Automatisation & IA" : "Automation & AI",
+      title: "TechNova AI Hub",
+      category: lang === "fr" ? "Intelligence Artificielle" : "Artificial Intelligence",
       appType: "web",
       desc:
         lang === "fr"
-          ? "Agent conversationnel IA de viralisation et d'optimisation de contenu pour les réseaux sociaux."
-          : "AI conversational agent for viralization and optimization of social media content.",
-      image: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=800&q=80",
-      tags: ["A venir"],
-      stats: lang === "fr" ? "En développement" : "In development",
-      url: "#",
-      upcoming: true,
+          ? "Plus de 60 modèles d'IA (GPT, Claude, Gemini, DeepSeek…) sur une seule plateforme : chat, images, vidéos, code et API, payables en FCFA par Mobile Money ou carte."
+          : "60+ AI models (GPT, Claude, Gemini, DeepSeek…) on one platform: chat, images, videos, code and API, payable in FCFA via Mobile Money or card.",
+      image: "https://www.technovaihub.com/media/technova-hero-poster.jpg",
+      tags: ["60+ modèles IA", "API unique", "Mobile Money", "Sans abonnement"],
+      stats: lang === "fr" ? "50 crédits offerts" : "50 free credits",
+      url: "https://www.technovaihub.com",
       features: [
-        lang === "fr" ? "Analyse de viralité" : "Virality analysis",
-        lang === "fr" ? "Génération de scripts" : "Script generation",
+        lang === "fr" ? "Chat multi-modèles côte à côte" : "Side-by-side multi-model chat",
+        lang === "fr" ? "Génération d'images & vidéos" : "Image & video generation",
+        lang === "fr" ? "Une seule clé API pour tous les modèles" : "One API key for every model",
       ],
     },
     {
@@ -203,22 +202,22 @@ const TechnovaApps = () => {
       ],
     },
     {
-      title: "Technova Mobil",
-      category: lang === "fr" ? "Numéros Virtuels, eSIM & IA" : "Virtual Numbers, eSIM & AI",
+      title: "Technova Connect",
+      category: lang === "fr" ? "Vérification SMS, Numéros & eSIM" : "SMS Verification, Numbers & eSIM",
       appType: "web",
       desc:
         lang === "fr"
-          ? "Plateforme intelligente de numéros virtuels, réception de SMS de vérification (OTP), vente d'eSIM et analyse par IA."
-          : "Smart platform for virtual numbers, verification SMS (OTP), eSIM sales, and AI message analysis.",
-      image: "/technova-mobil-cover.jpg",
-      tags: ["A venir"],
-      stats: lang === "fr" ? "En développement" : "In development",
-      url: "https://www.technovamobil.com",
+          ? "Vérifiez vos comptes, préparez vos données mobiles et voyagez l'esprit léger — tout depuis un même espace : vérification OTP, numéros & voix, eSIM voyage."
+          : "Verify your accounts, get your mobile data ready and travel light — all from one place: OTP verification, numbers & voice, travel eSIM.",
+      image: "https://technova-dwus535v.manus.space/images/hero/airport-travelers.webp",
+      tags: ["Vérification OTP", "Numéros & Voix", "eSIM Voyage", "190+ pays"],
+      stats: lang === "fr" ? "190+ pays couverts" : "190+ countries covered",
+      url: "https://technova-dwus535v.manus.space",
       upcoming: true,
       features: [
-        lang === "fr" ? "Numéros virtuels & Réception OTP sur +200 plateformes" : "Virtual numbers & OTP reception",
-        lang === "fr" ? "eSIM 100% digitale & Connectivité sur +190 pays" : "100% digital eSIM & Global connectivity",
-        lang === "fr" ? "IA d'extraction & Traduction SMS" : "AI message extraction & Translation",
+        lang === "fr" ? "Vérification SMS sur +200 plateformes" : "SMS verification on 200+ platforms",
+        lang === "fr" ? "Numéros & voix : une présence locale sans frontières" : "Numbers & voice: a local presence without borders",
+        lang === "fr" ? "eSIM voyage 100% digitale dans +190 pays" : "100% digital travel eSIM in 190+ countries",
       ],
     },
   ];
@@ -526,7 +525,6 @@ const TechnovaApps = () => {
                         className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-bold rounded-xl bg-muted text-muted-foreground opacity-60 cursor-not-allowed shadow-none shrink-0 border border-border/50"
                       >
                         <span>{lang === "fr" ? "Bientôt disponible" : "Coming soon"}</span>
-                        <Sparkles className="h-3.5 w-3.5 text-amber-500" />
                       </button>
                     ) : (
                       <a

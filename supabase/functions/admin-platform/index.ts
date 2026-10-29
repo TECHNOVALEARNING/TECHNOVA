@@ -302,14 +302,8 @@ serve(async (req) => {
       }
 
       // Detailed store & product sales breakdown + recent purchases list
-      const { data: rawOrders } = await supabaseAdmin
-        .from("orders")
-        .select("id, amount, created_at, payment_method, status, store_owner_id, product_id, customer_id")
-        .order("created_at", { ascending: false });
-
-      const ordersList = rawOrders || [];
-
-      const productIds = Array.from(new Set(ordersList.map((o: any) => o.product_id).filter(Boolean)));
+      // (réutilise ordersList / productIds chargés plus haut : les redéclarer ici
+      // empêchait la fonction de démarrer — BOOT_ERROR)
       const customerIds = Array.from(new Set(ordersList.map((o: any) => o.customer_id).filter(Boolean)));
       const ownerIds = Array.from(new Set(ordersList.map((o: any) => o.store_owner_id).filter(Boolean)));
 

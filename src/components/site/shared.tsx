@@ -99,6 +99,12 @@ export const Header = () => {
       icon: "fa-solid fa-shapes",
     },
     {
+      to: "https://www.technovaihub.com",
+      label: "Technova AI Hub",
+      desc: lang === "fr" ? "60+ modèles d'IA, payables en FCFA" : "60+ AI models, payable in FCFA",
+      icon: "fa-solid fa-brain",
+    },
+    {
       to: "/#games",
       label: lang === "fr" ? "Technova Games" : "Technova Games",
       desc: lang === "fr" ? "Plateformes de jeux compétitifs" : "Competitive gaming platforms",
@@ -177,29 +183,50 @@ export const Header = () => {
                 platformDropdownOpen ? "opacity-100 visible translate-y-0" : "opacity-0 invisible -translate-y-1 pointer-events-none"
               }`}
             >
-              {platformLinks.map((l) => (
-                <Link
-                  key={l.label}
-                  to={l.to}
-                  onClick={(e) => {
-                    setPlatformDropdownOpen(false);
-                    handleNavClick(e, l.to);
-                  }}
-                  className="flex items-center gap-3 rounded-xl p-2.5 hover:bg-secondary/70 transition-all group"
-                >
-                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary text-xs shrink-0 group-hover:scale-105 transition-transform">
-                    <i className={l.icon} />
-                  </div>
-                  <div>
-                    <div className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">
-                      {l.label}
+              {platformLinks.map((l) => {
+                const className =
+                  "flex items-center gap-3 rounded-xl p-2.5 hover:bg-secondary/70 transition-all group";
+                const content = (
+                  <>
+                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary text-xs shrink-0 group-hover:scale-105 transition-transform">
+                      <i className={l.icon} />
                     </div>
-                    <div className="text-[11px] text-muted-foreground line-clamp-1">
-                      {l.desc}
+                    <div>
+                      <div className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">
+                        {l.label}
+                      </div>
+                      <div className="text-[11px] text-muted-foreground line-clamp-1">
+                        {l.desc}
+                      </div>
                     </div>
-                  </div>
-                </Link>
-              ))}
+                  </>
+                );
+                // Les plateformes externes (ex. Technova AI Hub) s'ouvrent dans un nouvel onglet
+                return l.to.startsWith("http") ? (
+                  <a
+                    key={l.label}
+                    href={l.to}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setPlatformDropdownOpen(false)}
+                    className={className}
+                  >
+                    {content}
+                  </a>
+                ) : (
+                  <Link
+                    key={l.label}
+                    to={l.to}
+                    onClick={(e) => {
+                      setPlatformDropdownOpen(false);
+                      handleNavClick(e, l.to);
+                    }}
+                    className={className}
+                  >
+                    {content}
+                  </Link>
+                );
+              })}
             </div>
           </div>
 
@@ -422,20 +449,40 @@ export const Header = () => {
                 {lang === "fr" ? "Nos Plateformes" : "Our Platforms"}
               </div>
               <div className="grid grid-cols-2 gap-3">
-                {platformLinks.map((l) => (
-                  <Link
-                    key={l.label}
-                    to={l.to}
-                    onClick={(e) => {
-                      setOpen(false);
-                      handleNavClick(e, l.to);
-                    }}
-                    className="py-3 px-2 font-medium rounded-xl bg-muted/40 hover:bg-muted/60 border border-border/50 text-[14px] text-center transition-colors flex flex-col items-center justify-center gap-1.5"
-                  >
-                    <i className={`${l.icon} text-primary text-sm`} />
-                    <span>{l.label}</span>
-                  </Link>
-                ))}
+                {platformLinks.map((l) => {
+                  const className =
+                    "py-3 px-2 font-medium rounded-xl bg-muted/40 hover:bg-muted/60 border border-border/50 text-[14px] text-center transition-colors flex flex-col items-center justify-center gap-1.5";
+                  const content = (
+                    <>
+                      <i className={`${l.icon} text-primary text-sm`} />
+                      <span>{l.label}</span>
+                    </>
+                  );
+                  return l.to.startsWith("http") ? (
+                    <a
+                      key={l.label}
+                      href={l.to}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => setOpen(false)}
+                      className={className}
+                    >
+                      {content}
+                    </a>
+                  ) : (
+                    <Link
+                      key={l.label}
+                      to={l.to}
+                      onClick={(e) => {
+                        setOpen(false);
+                        handleNavClick(e, l.to);
+                      }}
+                      className={className}
+                    >
+                      {content}
+                    </Link>
+                  );
+                })}
               </div>
             </div>
 

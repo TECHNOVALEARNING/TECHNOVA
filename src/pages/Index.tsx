@@ -8,6 +8,8 @@ import logoImg from "@/assets/logo.png";
 import technovaAppsMobileImg from "@/assets/technova-apps-mobile.png";
 import SEOHead from "@/components/SEOHead";
 import HeroMotionBackground from "@/components/HeroMotionBackground";
+import TechnovaAIHubSection from "@/components/TechnovaAIHubSection";
+import TechnovaConnectSection from "@/components/TechnovaConnectSection";
 import HeroShowreel from "@/components/HeroShowreel";
 import StatsRibbonBackground from "@/components/StatsRibbonBackground";
 import { SHOW_TECHNOVA_GAMES } from "@/config/features";
@@ -1002,6 +1004,12 @@ const Index = () => {
         </div>
       </section>
 
+      {/* ============ TECHNOVA AI HUB ============ */}
+      <TechnovaAIHubSection lang={lang} />
+
+      {/* ============ TECHNOVA CONNECT ============ */}
+      <TechnovaConnectSection lang={lang} />
+
       {/* ============ APPS ============ */}
       <section
         id="apps"
@@ -1012,8 +1020,12 @@ const Index = () => {
           background: "var(--background)",
         }}
       >
-        <div className="mx-auto" style={{ maxWidth: 1280, padding: "0 24px" }}>
-          <div className="app-glass">
+        {/* Mêmes dimensions que la section TechNova AI Hub */}
+        <div className="mx-auto" style={{ maxWidth: 1140, padding: "0 24px" }}>
+          <div
+            className="app-glass"
+            style={{ borderRadius: 32, padding: "clamp(24px,4vw,48px) clamp(22px,4vw,56px)" }}
+          >
             <div
               style={{
                 display: "grid",
@@ -1073,7 +1085,7 @@ const Index = () => {
                   alt="TECHNOVA Apps Mobile Showcase"
                   style={{
                     maxWidth: "100%",
-                    maxHeight: 480,
+                    maxHeight: 424,
                     boxShadow: "none",
                     border: "none",
                     background: "transparent",
