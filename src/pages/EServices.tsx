@@ -241,7 +241,7 @@ const EServices = () => {
         lang === "fr"
           ? "Plateforme de création de chansons sur mesure pour événements"
           : "Custom song creation platform for special events",
-      image: "/sonorya_cover.jpeg",
+      image: "/images/sonorya-banner.webp",
       tags: ["Cloudflare D1", "React", "IA Générative", "Mobile Money"],
       stats: "100% sur mesure",
       url: "https://www.sonorya.co",

@@ -468,7 +468,7 @@ const TechnovaApps = () => {
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
                         if (app.image.includes("sonorya")) {
-                          target.src = "/sonorya-logo.png";
+                          target.src = "/sonorya-logo.jpg";
                         } else {
                           target.src =
                             "https://images.unsplash.com/photo-1484417894907-623942c8ee29?w=800&q=80";
