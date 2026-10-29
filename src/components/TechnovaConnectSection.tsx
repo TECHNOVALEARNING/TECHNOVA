@@ -35,7 +35,7 @@ const TechnovaConnectSection = ({ lang }: { lang: string }) => {
     <section
       id="technova-connect"
       className="section-pad-100"
-      style={{ position: "relative", zIndex: 1, background: "var(--background)", paddingTop: 0 }}
+      style={{ position: "relative", zIndex: 1, background: "var(--background)" }}
     >
       <style>{`
         .tnc-panel {

@@ -10,6 +10,7 @@ import SEOHead from "@/components/SEOHead";
 import HeroMotionBackground from "@/components/HeroMotionBackground";
 import TechnovaAIHubSection from "@/components/TechnovaAIHubSection";
 import TechnovaConnectSection from "@/components/TechnovaConnectSection";
+import SonoryaSection from "@/components/SonoryaSection";
 import HeroShowreel from "@/components/HeroShowreel";
 import StatsRibbonBackground from "@/components/StatsRibbonBackground";
 import { SHOW_TECHNOVA_GAMES } from "@/config/features";
@@ -307,6 +308,11 @@ const Index = () => {
         .pay-apple { background:black; color:white; }
         .pay-google { background:white; border:1px solid rgba(0,0,0,0.12); color:black; }
         .pay-dolapay { background:#007bff; color:#fff; }
+        /* Séparation des sections : alternance fond transparent / fond légèrement teinté */
+        #features, #courses, #ai-hub, #sonorya, #about, #payment, #cta { background: var(--section-alt) !important; }
+        #video-courses, #stats, #technova-connect, #apps, #avis, #tools {
+          background: transparent !important; border-top: none !important; border-bottom: none !important;
+        }
         .stats-section {
           background: linear-gradient(to bottom, var(--section-alt), var(--bg) 15%, var(--bg) 85%, var(--section-alt));
           position: relative;
@@ -873,7 +879,7 @@ const Index = () => {
       </section>
 
       {/* ============ STATS SECTION ============ */}
-      <section className="stats-section section-pad-90" style={{ overflow: "hidden", zIndex: 1 }}>
+      <section id="stats" className="stats-section section-pad-90" style={{ overflow: "hidden", zIndex: 1 }}>
         {/* Motion design en arrière-plan (ruban animé) */}
         <StatsRibbonBackground />
         <div
@@ -1009,6 +1015,9 @@ const Index = () => {
 
       {/* ============ TECHNOVA CONNECT ============ */}
       <TechnovaConnectSection lang={lang} />
+
+      {/* ============ SONORYA ============ */}
+      <SonoryaSection lang={lang} />
 
       {/* ============ APPS ============ */}
       <section
@@ -1395,6 +1404,7 @@ const Index = () => {
 
       {/* ============ PAYMENT ============ */}
       <section
+        id="payment"
         style={{
           position: "relative",
           zIndex: 1,
@@ -1574,7 +1584,7 @@ const Index = () => {
       </section>
 
       {/* ============ CTA ============ */}
-      <section className="section-pad-80" style={{ position: "relative", zIndex: 1 }}>
+      <section id="cta" className="section-pad-80" style={{ position: "relative", zIndex: 1 }}>
         <div className="mx-auto" style={{ maxWidth: 1280, padding: "0 24px" }}>
           <div className="tn-cta-wrap">
             <h2
