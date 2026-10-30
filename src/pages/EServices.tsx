@@ -235,18 +235,6 @@ const EServices = () => {
       url: "https://humanizerai.space",
     },
     {
-      title: "Sonorya by Technova",
-      category: lang === "fr" ? "IA Musicale Sur Mesure" : "Custom AI Music",
-      desc:
-        lang === "fr"
-          ? "Plateforme de création de chansons sur mesure pour événements"
-          : "Custom song creation platform for special events",
-      image: "/images/sonorya-banner.webp",
-      tags: ["Cloudflare D1", "React", "IA Générative", "Mobile Money"],
-      stats: "100% sur mesure",
-      url: "https://www.sonorya.co",
-    },
-    {
       title: "TECHNOVA QCM",
       category: lang === "fr" ? "Plateforme de Jeu & QCM" : "Quiz & Trivia Platform",
       desc:
@@ -257,19 +245,6 @@ const EServices = () => {
       tags: ["React", "QCM", "Quiz", "Vercel"],
       stats: "Quiz Interactifs",
       url: "https://technovaqcm.vercel.app",
-    },
-    {
-      title: "GAME EARN",
-      category: lang === "fr" ? "Gaming & Récompenses" : "Gaming & Rewards",
-      desc:
-        lang === "fr"
-          ? "Plateforme de gaming pour jouer et gagner des récompenses"
-          : "Gaming platform to play and earn rewards",
-      image: "/game-earn-cover.jpg",
-      tags: ["Gaming", "Récompenses"],
-      stats: "En développement",
-      url: "#",
-      upcoming: true,
     },
     {
       title: "Technova Connect",

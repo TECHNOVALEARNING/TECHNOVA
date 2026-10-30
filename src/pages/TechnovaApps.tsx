@@ -146,24 +146,6 @@ const TechnovaApps = () => {
       ],
     },
     {
-      title: "Sonorya by Technova",
-      category: lang === "fr" ? "IA & Création Musicale Sur Mesure" : "AI & Custom Music Creation",
-      appType: "web",
-      desc:
-        lang === "fr"
-          ? "Plateforme intelligente de création de chansons personnalisées uniques pour vos événements spéciaux (anniversaires, mariages, déclarations)."
-          : "Smart platform for generating unique custom songs for special events (birthdays, weddings, romantic declarations).",
-      image: "/images/sonorya-banner.webp",
-      tags: ["Cloudflare D1", "React", "IA Générative", "Mobile Money"],
-      stats: lang === "fr" ? "Chansons Sur Mesure" : "Custom Songs",
-      url: "https://www.sonorya.co",
-      features: [
-        lang === "fr" ? "Génération musicale personnalisée" : "Custom AI music generation",
-        lang === "fr" ? "Paroles & histoire sur mesure" : "Custom lyrics & story",
-        lang === "fr" ? "Paiements Mobile Money & CB" : "Mobile Money & Card payments",
-      ],
-    },
-    {
       title: "TECHNOVA QCM",
       category: lang === "fr" ? "Plateforme de Jeu & QCM" : "Quiz & Trivia Platform",
       appType: "web",
@@ -460,19 +442,10 @@ const TechnovaApps = () => {
                     <img
                       src={app.image}
                       alt={app.title}
-                      className={`w-full h-full ${
-                        app.image.includes("sonorya_cover")
-                          ? "object-contain p-3 group-hover:scale-105 transition-transform duration-500"
-                          : "object-cover object-center group-hover:scale-105 transition-transform duration-500"
-                      }`}
+                      className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                       onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        if (app.image.includes("sonorya")) {
-                          target.src = "/sonorya-logo.jpg";
-                        } else {
-                          target.src =
-                            "https://images.unsplash.com/photo-1484417894907-623942c8ee29?w=800&q=80";
-                        }
+                        (e.target as HTMLImageElement).src =
+                          "https://images.unsplash.com/photo-1484417894907-623942c8ee29?w=800&q=80";
                       }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
