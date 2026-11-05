@@ -1,3 +1,3 @@
-import handler from "./webhook";
+import handler from "./webhook.js";
 
 export default handler;

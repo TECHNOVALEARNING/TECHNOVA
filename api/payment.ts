@@ -12,7 +12,7 @@ import {
   finalizePayment,
   getServiceClient,
   verifyNyoleSession,
-} from "./_lib/payments";
+} from "./_lib/payments.js";
 import {
   FEEXPAY_MAX_AMOUNT,
   FEEXPAY_MIN_AMOUNT,
@@ -23,7 +23,7 @@ import {
   networksFor,
   verifyFeexpayTransaction,
   FEEXPAY_NETWORKS,
-} from "./_lib/feexpay";
+} from "./_lib/feexpay.js";
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 

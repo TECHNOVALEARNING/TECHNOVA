@@ -1,4 +1,4 @@
-import { finalizePayment, getServiceClient, verifyNyoleSession } from "./_lib/payments";
+import { finalizePayment, getServiceClient, verifyNyoleSession } from "./_lib/payments.js";
 
 // Vérifie le statut d'une session Nyole auprès de l'API Nyole et, si elle est payée,
 // finalise la commande côté serveur (montant contrôlé par rapport au prix en base).

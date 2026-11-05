@@ -6,8 +6,8 @@ import {
   safeEqual,
   verifyMonerooPayment,
   verifyNyoleSession,
-} from "./_lib/payments";
-import { verifyFeexpayTransaction } from "./_lib/feexpay";
+} from "./_lib/payments.js";
+import { verifyFeexpayTransaction } from "./_lib/feexpay.js";
 
 // Corps brut requis pour vérifier la signature HMAC
 export const config = { api: { bodyParser: false } };

@@ -2,7 +2,7 @@
 // - Paiement Mobile Money : POST /api/transactions/public/requesttopay/{réseau}
 // - Statut               : GET  /api/transactions/public/single/status/{reference}
 // La clé API ne doit jamais être exposée au navigateur.
-import type { VerifiedPayment } from "./payments";
+import type { VerifiedPayment } from "./payments.js";
 
 /** Réseaux FeexPay pris en charge par le site, par pays (code ISO 3 lettres du checkout). */
 export const FEEXPAY_NETWORKS: Record<string, { id: string; label: string; redirect?: boolean }[]> = {
