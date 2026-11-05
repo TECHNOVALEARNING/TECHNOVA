@@ -7,6 +7,7 @@ import {
   verifyMonerooPayment,
   verifyNyoleSession,
 } from "./_lib/payments";
+import { verifyFeexpayTransaction } from "./_lib/feexpay";
 
 // Corps brut requis pour vérifier la signature HMAC
 export const config = { api: { bodyParser: false } };
@@ -40,6 +41,13 @@ export default async function handler(req: any, res: any) {
 
   try {
     const rawBody = await readRawBody(req);
+
+    // FeexPay : webhook non signé. L'URL configurée dans le tableau de bord FeexPay
+    // contient un secret (…/api/webhook?provider=feexpay&secret=XXX) et la transaction
+    // est toujours relue auprès de l'API FeexPay avant toute validation.
+    if (String((req.query || {}).provider || "").toLowerCase() === "feexpay") {
+      return await handleFeexpayWebhook(req, res, rawBody);
+    }
 
     const monerooSig = header(req, "x-moneroo-signature");
     const nyoleSig = header(req, "x-nyole-signature") || header(req, "x-afriflow-signature");
@@ -107,4 +115,37 @@ export default async function handler(req: any, res: any) {
     console.error("[Webhook] Processing exception:", err);
     return res.status(500).json({ error: "Webhook processing failed" });
   }
+}
+
+async function handleFeexpayWebhook(req: any, res: any, rawBody: string) {
+  const secret = process.env.FEEXPAY_WEBHOOK_SECRET || "";
+  const provided =
+    String((req.query || {}).secret || "") || header(req, "authorization").replace(/^Bearer\s+/i, "");
+  if (!secret || !safeEqual(provided, secret)) {
+    console.warn("[Webhook] FeexPay : secret absent ou invalide");
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  let body: any;
+  try {
+    body = JSON.parse(rawBody || "{}");
+  } catch {
+    return res.status(400).json({ error: "Invalid JSON" });
+  }
+  // Environnement sandbox ignoré en production (et inversement)
+  const mode = (process.env.FEEXPAY_MODE || "live").toLowerCase();
+  if (body?.env === "sandbox" && mode !== "sandbox") {
+    return res.status(200).json({ received: true, ignored: "sandbox" });
+  }
+
+  const reference = String(body?.reference || body?.order_id || "");
+  if (!reference) return res.status(200).json({ received: true, message: "Missing reference" });
+
+  const verified = await verifyFeexpayTransaction(reference);
+  if (!verified) return res.status(503).json({ error: "Payment verification unavailable" });
+  if (!verified.paid) return res.status(200).json({ received: true, status: verified.status });
+
+  const result = await finalizePayment(getServiceClient(), "FeexPay", reference, verified);
+  if (!result.ok) console.error("[Webhook] FeexPay finalisation refusée:", result.reason, reference);
+  return res.status(200).json({ received: true, success: result.ok });
 }

@@ -184,6 +184,8 @@ export async function verifyMonerooPayment(paymentId: string): Promise<VerifiedP
 
 // ─── Finalisation idempotente d'une commande ───
 
+export type PaymentProvider = "FeexPay" | "Nyole" | "Moneroo";
+
 export interface FinalizeResult {
   ok: boolean;
   orderId?: string;
@@ -199,7 +201,7 @@ export interface FinalizeResult {
  */
 export async function finalizePayment(
   supabase: SupabaseClient,
-  provider: "Nyole" | "Moneroo",
+  provider: PaymentProvider,
   transactionId: string,
   verified: VerifiedPayment,
 ): Promise<FinalizeResult> {

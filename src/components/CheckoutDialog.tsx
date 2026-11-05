@@ -40,9 +40,12 @@ import {
   type PawaPayProvider,
 } from "@/data/pawapayProviders";
 import {
-  initiateNyolePayment,
-  checkNyolePaymentStatus,
-} from "@/services/nyolePayment";
+  checkPaymentStatus,
+  getGatewayConfig,
+  initPayment,
+  type GatewayConfig,
+  type GatewayProvider,
+} from "@/services/paymentGateway";
 
 interface CheckoutDialogProps {
   open: boolean;
@@ -200,6 +203,10 @@ const CheckoutDialog = ({
   const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
   const [currentOrderId, setCurrentOrderId] = useState<string | null>(null);
   const [payError, setPayError] = useState<string>("");
+  // Passerelle utilisée pour la transaction en cours (FeexPay prioritaire, Nyole en secours)
+  const [gateway, setGateway] = useState<GatewayProvider>("feexpay");
+  const [gatewayConfig, setGatewayConfig] = useState<GatewayConfig | null>(null);
+  const [feexNetwork, setFeexNetwork] = useState<string | null>(null);
   const pollRef = useRef<number | null>(null);
   const popupRef = useRef<Window | null>(null);
 
@@ -221,18 +228,29 @@ const CheckoutDialog = ({
           } catch {}
         }
         // Le message de la fenêtre de paiement ne fait pas foi : on revérifie côté serveur
-        const sid = depositId || event.data.sessionId;
-        if (sid) {
-          const res = await checkNyolePaymentStatus(sid, currentOrderId || undefined);
-          if (res.paid && (res.status === "SUCCESS" || res.status === "COMPLETED")) {
-            await finalizeSuccessfulPayment(res.orderId);
-          }
+        if (depositId) {
+          const res = await checkPaymentStatus(gateway, depositId);
+          if (res.paid) await finalizeSuccessfulPayment(res.orderId);
         }
       }
     };
     window.addEventListener("message", handleMessage);
     return () => window.removeEventListener("message", handleMessage);
-  }, [depositId, currentOrderId]);
+  }, [depositId, currentOrderId, gateway]);
+
+  // Passerelles actives (FeexPay / Nyole) et réseaux Mobile Money FeexPay disponibles
+  useEffect(() => {
+    if (open) getGatewayConfig().then(setGatewayConfig);
+  }, [open]);
+
+  const feexNetworks =
+    gatewayConfig?.primary === "feexpay" ? gatewayConfig.feexpay.networks[country.code] || [] : [];
+
+  // Réseau présélectionné selon le pays
+  useEffect(() => {
+    setFeexNetwork(feexNetworks[0]?.id ?? null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [country.code, gatewayConfig]);
 
   const parseNumericPrice = (val: any): number => {
     if (val === null || val === undefined) return 0;
@@ -372,122 +390,92 @@ const CheckoutDialog = ({
     toast.success("Paiement validé avec succès !");
   };
 
-  // ─── Initiate payment flow (Nyole Pay) ───
-  const handleConfirmPay = async () => {
+  // ─── Lancement du paiement : FeexPay en priorité, Nyole en secours ───
+  const startPolling = (provider: GatewayProvider, reference: string) => {
+    let attempts = 0;
+    const maxAttempts = 75; // 5 minutes (intervalle 4s)
+    const poll = async () => {
+      attempts++;
+      try {
+        const res = await checkPaymentStatus(provider, reference);
+        if (res.paid) {
+          await finalizeSuccessfulPayment(res.orderId);
+          return;
+        }
+        if (res.status === "FAILED" || res.status === "REJECTED") {
+          setPayStatus("failed");
+          setPayError(res.error || "Le paiement n'a pas abouti ou a été refusé.");
+          toast.error("Le paiement a échoué.");
+          return;
+        }
+      } catch (pollErr) {
+        console.error("Poll error:", pollErr);
+      }
+      if (attempts < maxAttempts) {
+        pollRef.current = window.setTimeout(poll, 4000);
+      } else {
+        setPayStatus("failed");
+        setPayError("Délai d'attente dépassé. Si vous avez été débité, vos accès seront envoyés par email sous peu.");
+      }
+    };
+    pollRef.current = window.setTimeout(poll, 4000);
+  };
+
+  const handleConfirmPay = async (forceProvider?: GatewayProvider) => {
     if (discountedPrice <= 0) {
       await handleFreeCheckout();
       return;
     }
+    if (pollRef.current) {
+      clearTimeout(pollRef.current);
+      pollRef.current = null;
+    }
 
     setLoading(true);
     setPayError("");
+    setCheckoutUrl(null);
     setPayStatus("processing");
     setStep(3);
 
     try {
-      // 1. Générer une référence temporaire unique
-      const tempRef = `ORD-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
-
-      // 2. Initialiser la session de paiement Nyole : le serveur crée une commande "pending",
-      //    elle ne passera en "completed" qu'après vérification du paiement côté serveur.
-      const callbackUrl = `${window.location.origin}/payment-callback?ref=${tempRef}&product_id=${product.id}`;
-      const nyoleRes = await initiateNyolePayment({
-        amount: Math.round(discountedPrice),
-        currency: provider.currency || "XOF",
-        description: `${product.title.slice(0, 40)} - Ref #${tempRef}`,
-        customer: {
-          name: fullName,
-          email,
-          phone: phone ? `+${fullPhone}` : undefined,
-        },
-        metadata: {
-          product_id: product.id,
-          product_title: product.title,
-          store_owner_id: product.creator_id,
-          promo_code: appliedPromo?.code || null,
-          original_price: appliedPromo ? effectivePrice : null,
-          shipping_address: shippingPayload,
-          platform: "TECHNOVA",
-        },
-        returnUrl: callbackUrl,
-        cancelUrl: window.location.href,
+      // Le serveur crée la commande "pending" au prix en base et choisit la passerelle
+      const pay = await initPayment({
+        productId: product.id,
+        promoCode: appliedPromo?.code || null,
+        customer: { firstName, lastName, email, phone: fullPhone },
+        country: country.code,
+        network: forceProvider === "nyole" ? null : feexNetwork,
+        shippingAddress: shippingPayload,
+        forceProvider,
       });
 
-      if (!nyoleRes.success || !nyoleRes.checkoutUrl) {
-        throw new Error(nyoleRes.error || "Impossible d'initialiser le paiement Nyole.");
+      setGateway(pay.provider);
+      setDepositId(pay.reference);
+      setCurrentOrderId(pay.orderId);
+      setCheckoutUrl(pay.paymentUrl);
+      if (pay.fallback) {
+        console.warn("[Paiement] Bascule vers Nyole :", pay.fallbackReason);
+        toast.info("Paiement redirigé vers Nyole Pay.");
       }
 
-      const activeSessionId = nyoleRes.sessionId;
-      setDepositId(activeSessionId);
-      if (nyoleRes.orderId) setCurrentOrderId(nyoleRes.orderId);
-      setCheckoutUrl(nyoleRes.checkoutUrl);
-
-      // Ouvrir la page de paiement sécurisée Nyole dans un nouvel onglet
-      try {
-        const popup = window.open(nyoleRes.checkoutUrl, "_blank");
-        popupRef.current = popup;
-        if (!popup) {
-          console.info("Popup bloquée, l'utilisateur cliquera sur le bouton dans le dialogue.");
-        }
-      } catch (popErr) {
-        console.warn("Could not auto-open popup:", popErr);
+      if (pay.status === "FAILED") {
+        setPayStatus("failed");
+        setPayError(pay.error || "Le paiement a été refusé par l'opérateur.");
+        return;
       }
 
-      // 3. Boucle de vérification du statut Nyole
-      let attempts = 0;
-      const maxAttempts = 75; // 5 minutes (intervalle 4s)
-      const pollInterval = 4000;
-
-      const poll = async () => {
-        attempts++;
+      // Page externe : Nyole (hébergée) ou opérateur via FeexPay (Wave, Orange…)
+      if (pay.paymentUrl) {
         try {
-          const statusRes = await checkNyolePaymentStatus(activeSessionId, nyoleRes.orderId || undefined);
-
-          // Validation stricte : Nyole doit certifier que le paiement a été payé
-          if (statusRes.paid && (statusRes.status === "SUCCESS" || statusRes.status === "COMPLETED")) {
-            await finalizeSuccessfulPayment(statusRes.orderId);
-            return;
-          }
-
-          if (
-            statusRes.status === "FAILED" ||
-            statusRes.status === "CANCELLED" ||
-            statusRes.status === "EXPIRED" ||
-            statusRes.status === "REJECTED"
-          ) {
-            setPayStatus("failed");
-            setPayError(
-              statusRes.status === "CANCELLED"
-                ? "Le paiement a été annulé."
-                : (statusRes.error || "Le paiement n'a pas abouti ou a été refusé.")
-            );
-            toast.error(
-              statusRes.status === "CANCELLED"
-                ? "Paiement annulé."
-                : "Le paiement a échoué."
-            );
-            return;
-          }
-
-          // Toujours en attente (PENDING)
-          if (attempts < maxAttempts) {
-            pollRef.current = window.setTimeout(poll, pollInterval);
-          } else {
-            setPayStatus("failed");
-            setPayError("Délai d'attente dépassé. Si vous avez été débité, vos accès seront envoyés par email sous peu.");
-          }
-        } catch (pollErr: any) {
-          console.error("Poll error:", pollErr);
-          if (attempts < maxAttempts) {
-            pollRef.current = window.setTimeout(poll, pollInterval);
-          }
+          popupRef.current = window.open(pay.paymentUrl, "_blank");
+        } catch (popErr) {
+          console.warn("Could not auto-open popup:", popErr);
         }
-      };
+      }
 
-      // Démarrage du polling après 4 secondes
-      pollRef.current = window.setTimeout(poll, 4000);
+      startPolling(pay.provider, pay.reference);
     } catch (err: any) {
-      console.error("Nyole payment error:", err);
+      console.error("Payment init error:", err);
       setPayStatus("failed");
       setPayError(err.message || "Erreur lors de l'initialisation du paiement.");
       toast.error(err.message || "Erreur d'initialisation");
@@ -498,26 +486,17 @@ const CheckoutDialog = ({
 
   const handleManualCheck = async () => {
     if (!depositId) return;
-    toast.info("Vérification en cours auprès de Nyole...");
+    toast.info("Vérification du paiement en cours...");
     try {
-      const res = await checkNyolePaymentStatus(depositId, currentOrderId || undefined);
-      if (res.paid && (res.status === "SUCCESS" || res.status === "COMPLETED")) {
+      const res = await checkPaymentStatus(gateway, depositId);
+      if (res.paid) {
         await finalizeSuccessfulPayment(res.orderId);
-      } else if (
-        res.status === "FAILED" ||
-        res.status === "CANCELLED" ||
-        res.status === "EXPIRED" ||
-        res.status === "REJECTED"
-      ) {
+      } else if (res.status === "FAILED" || res.status === "REJECTED") {
         setPayStatus("failed");
-        setPayError(
-          res.status === "CANCELLED"
-            ? "Le paiement a été annulé."
-            : (res.error || "Le paiement n'a pas abouti.")
-        );
+        setPayError(res.error || "Le paiement n'a pas abouti.");
         toast.error("Le paiement n'a pas été validé.");
       } else {
-        toast.info("Paiement non confirmé. Le paiement n'a pas encore été validé par Nyole.");
+        toast.info("Paiement pas encore confirmé. Validez la demande sur votre téléphone.");
       }
     } catch {
       toast.error("Impossible de vérifier pour l'instant.");
@@ -950,6 +929,47 @@ const CheckoutDialog = ({
                     )}
                   </div>
 
+                  {/* Choix du réseau Mobile Money (FeexPay) */}
+                  {feexNetworks.length > 0 && (
+                    <div className="space-y-2">
+                      <div className="text-xs font-bold text-foreground">Réseau Mobile Money</div>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                        {feexNetworks.map((n) => (
+                          <button
+                            key={n.id}
+                            type="button"
+                            onClick={() => setFeexNetwork(n.id)}
+                            className={`rounded-xl border px-3 py-2.5 text-sm font-semibold transition-all ${
+                              feexNetwork === n.id
+                                ? "border-transparent text-white shadow-md"
+                                : "border-border/60 bg-muted/20 text-foreground hover:border-border"
+                            }`}
+                            style={feexNetwork === n.id ? { background: accent } : undefined}
+                          >
+                            {n.label}
+                          </button>
+                        ))}
+                        <button
+                          type="button"
+                          onClick={() => setFeexNetwork(null)}
+                          className={`rounded-xl border px-3 py-2.5 text-sm font-semibold transition-all ${
+                            feexNetwork === null
+                              ? "border-transparent text-white shadow-md"
+                              : "border-border/60 bg-muted/20 text-foreground hover:border-border"
+                          }`}
+                          style={feexNetwork === null ? { background: accent } : undefined}
+                        >
+                          Carte / autre
+                        </button>
+                      </div>
+                      <p className="text-[11px] text-muted-foreground">
+                        {feexNetwork
+                          ? `Une demande de paiement sera envoyée au +${fullPhone}. Validez-la sur votre téléphone.`
+                          : "Vous serez redirigé vers une page de paiement sécurisée (carte bancaire, autres pays…)."}
+                      </p>
+                    </div>
+                  )}
+
                   {/* Trust badge / Payment info */}
                   <div className="rounded-2xl bg-gradient-to-r from-violet-500/5 via-amber-500/5 to-violet-500/5 border border-border/60 p-4">
                     <div className="flex items-start gap-3">
@@ -961,7 +981,7 @@ const CheckoutDialog = ({
                       </div>
                       <div className="flex-1">
                         <div className="text-xs font-bold text-foreground mb-0.5">
-                          Paiement 100% sécurisé via Nyole Pay
+                          Paiement 100% sécurisé
                         </div>
                         <div className="text-[11px] text-muted-foreground leading-relaxed">
                           Réglez simplement par Mobile Money (Wave, MTN, Orange Money, Moov, Airtel, M-Pesa) ou Carte Bancaire (Visa, Mastercard) avec confirmation instantanée.
@@ -971,7 +991,7 @@ const CheckoutDialog = ({
                   </div>
 
                   <Button
-                    onClick={handleConfirmPay}
+                    onClick={() => handleConfirmPay()}
                     disabled={loading}
                     className="relative w-full h-14 text-base font-bold rounded-xl group transition-all overflow-hidden text-white"
                     style={{
@@ -986,7 +1006,8 @@ const CheckoutDialog = ({
                     ) : (
                       <span className="flex items-center gap-2 relative z-10">
                         <Lock className="h-4 w-4" />
-                        Payer {discountedPrice.toLocaleString()} {currency} via Nyole Pay
+                        Payer {discountedPrice.toLocaleString()} {currency}
+                        {feexNetwork ? " par Mobile Money" : ""}
                         <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
                       </span>
                     )}
@@ -1015,6 +1036,8 @@ const CheckoutDialog = ({
                     checkoutUrl={checkoutUrl}
                     onCheckNow={handleManualCheck}
                     onRetry={handleRetry}
+                    gateway={gateway}
+                    onFallback={gateway === "feexpay" ? () => handleConfirmPay("nyole") : undefined}
                     onClose={() => handleClose(false)}
                   />
                 </motion.div>
@@ -1283,8 +1306,11 @@ const PayProcessingView = ({
   checkoutUrl,
   onCheckNow,
   onRetry,
+  gateway,
+  onFallback,
   onClose,
 }: any) => {
+  const isFeex = gateway === "feexpay";
   const navigate = useNavigate();
 
   // Déclencher le téléchargement automatique dès validation du paiement
@@ -1391,6 +1417,15 @@ const PayProcessingView = ({
             Réessayer
           </Button>
         </div>
+        {onFallback && (
+          <button
+            type="button"
+            onClick={onFallback}
+            className="mt-3 text-xs font-semibold text-muted-foreground hover:text-foreground underline underline-offset-2"
+          >
+            Payer autrement (carte, autre opérateur) via Nyole Pay
+          </button>
+        )}
       </div>
     );
   }
@@ -1425,10 +1460,12 @@ const PayProcessingView = ({
       </div>
 
       <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-1">
-        Paiement en cours via Nyole Pay
+        {isFeex ? "Confirmez le paiement sur votre téléphone" : "Paiement en cours via Nyole Pay"}
       </h3>
       <p className="text-xs text-muted-foreground mb-1 max-w-sm">
-        Wave • MTN MoMo • Moov • Orange Money • Visa / Mastercard
+        {isFeex
+          ? `Demande envoyée au +${phone}`
+          : "Wave • MTN MoMo • Moov • Orange Money • Visa / Mastercard"}
       </p>
       <p className="text-sm font-mono font-bold text-foreground mb-4">
         Montant : {amount.toLocaleString()} {currency}
@@ -1446,7 +1483,7 @@ const PayProcessingView = ({
             }}
           >
             <a href={checkoutUrl} target="_blank" rel="noopener noreferrer">
-              <ExternalLink className="h-4 w-4 mr-2" /> Ouvrir la page de paiement Nyole
+              <ExternalLink className="h-4 w-4 mr-2" /> Ouvrir la page de paiement
             </a>
           </Button>
           <p className="text-[11px] text-muted-foreground">
@@ -1477,11 +1514,20 @@ const PayProcessingView = ({
       </div>
 
       <ol className="space-y-2 text-left w-full max-w-sm text-xs text-muted-foreground mb-4">
-        {[
-          "Sélectionnez votre moyen de paiement sur la page sécurisée Nyole",
-          "Validez la transaction (notification téléphone, QR Wave ou code bancaire)",
-          "Cet écran se validera automatiquement et délivrera votre accès dès confirmation",
-        ].map((s, i) => (
+        {(isFeex
+          ? [
+              checkoutUrl
+                ? "Finalisez le paiement sur la page de l'opérateur qui vient de s'ouvrir"
+                : "Une notification de paiement arrive sur votre téléphone",
+              "Saisissez votre code secret Mobile Money pour valider",
+              "Cet écran se validera automatiquement et délivrera votre accès dès confirmation",
+            ]
+          : [
+              "Sélectionnez votre moyen de paiement sur la page sécurisée Nyole",
+              "Validez la transaction (notification téléphone, QR Wave ou code bancaire)",
+              "Cet écran se validera automatiquement et délivrera votre accès dès confirmation",
+            ]
+        ).map((s, i) => (
           <li key={i} className="flex items-start gap-2">
             <div
               className="h-4 w-4 rounded-full text-white flex items-center justify-center text-[9px] font-bold shrink-0 mt-0.5"
