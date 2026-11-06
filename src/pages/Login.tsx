@@ -10,6 +10,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import logo from "@/assets/logo.png";
 import SEOHead from "@/components/SEOHead";
+import { PUBLIC_SELLER_SIGNUP } from "@/config/features";
 
 const translations = {
   fr: {
@@ -30,6 +31,8 @@ const translations = {
     loggingIn: "Connexion...",
     noAccount: "Pas encore de compte ?",
     registerLink: "Créer un compte",
+    sellerByAdmin: "Les comptes vendeurs sont créés par l'administrateur TECHNOVA.",
+    contactUs: "Nous contacter",
     visualHeading: "Gérez votre business digital",
     visualDesc: "Dashboard puissant, analytics en temps réel, paiements automatisés.",
   },
@@ -50,6 +53,8 @@ const translations = {
     loggingIn: "Logging in...",
     noAccount: "Don't have an account yet?",
     registerLink: "Create an account",
+    sellerByAdmin: "Seller accounts are created by the TECHNOVA administrator.",
+    contactUs: "Contact us",
     visualHeading: "Manage your digital business",
     visualDesc: "Powerful dashboard, real-time analytics, automated payouts.",
   },
@@ -240,10 +245,21 @@ const Login = () => {
           </form>
 
           <p className="mt-6 text-center text-sm text-muted-foreground">
-            {t.noAccount}{" "}
-            <Link to="/register" className="font-medium text-primary hover:underline">
-              {t.registerLink}
-            </Link>
+            {PUBLIC_SELLER_SIGNUP ? (
+              <>
+                {t.noAccount}{" "}
+                <Link to="/register" className="font-medium text-primary hover:underline">
+                  {t.registerLink}
+                </Link>
+              </>
+            ) : (
+              <>
+                {t.sellerByAdmin}{" "}
+                <Link to="/contact" className="font-medium text-primary hover:underline">
+                  {t.contactUs}
+                </Link>
+              </>
+            )}
           </p>
         </motion.div>
       </div>

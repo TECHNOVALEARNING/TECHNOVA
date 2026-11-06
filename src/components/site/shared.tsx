@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { SHOW_TECHNOVA_GAMES } from "@/config/features";
+import { PUBLIC_SELLER_SIGNUP, SHOW_TECHNOVA_GAMES } from "@/config/features";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -353,20 +353,31 @@ export const Header = () => {
             </Link>
           ) : (
             <>
-              {!hasBuyerSession && (
+              {!hasBuyerSession &&
+                (PUBLIC_SELLER_SIGNUP ? (
+                  <Link
+                    to="/buyer-login"
+                    className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-2"
+                  >
+                    {lang === "fr" ? "Mes Achats" : "My Purchases"}
+                  </Link>
+                ) : (
+                  <Link
+                    to="/buyer-login"
+                    className="ml-1 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors bg-[#0071e3] text-white hover:bg-[#0071e3]/90 h-10 px-4 py-2"
+                  >
+                    <ShoppingBag className="h-4 w-4" />
+                    {lang === "fr" ? "Mes Achats" : "My Purchases"}
+                  </Link>
+                ))}
+              {PUBLIC_SELLER_SIGNUP && (
                 <Link
-                  to="/buyer-login"
-                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-2"
+                  to="/register"
+                  className="ml-1 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors bg-[#0071e3] text-white hover:bg-[#0071e3]/90 h-10 px-4 py-2"
                 >
-                  {lang === "fr" ? "Mes Achats" : "My Purchases"}
+                  {lang === "fr" ? "Devenir vendeur" : "Become a Seller"}
                 </Link>
               )}
-              <Link
-                to="/register"
-                className="ml-1 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors bg-[#0071e3] text-white hover:bg-[#0071e3]/90 h-10 px-4 py-2"
-              >
-                {lang === "fr" ? "Devenir vendeur" : "Become a Seller"}
-              </Link>
             </>
           )}
         </div>
@@ -579,6 +590,16 @@ export const Header = () => {
                   </button>
                 </>
               ) : (
+                !PUBLIC_SELLER_SIGNUP ? (
+                  <Link
+                    to="/buyer-login"
+                    onClick={() => setOpen(false)}
+                    className="w-full text-center inline-flex items-center justify-center rounded-xl text-base font-medium bg-[#0071e3] text-white hover:bg-[#0071e3]/90 h-12 px-4 py-2 shadow-sm"
+                  >
+                    <ShoppingBag className="h-5 w-5 mr-2" />{" "}
+                    {lang === "fr" ? "Mes Achats" : "My Purchases"}
+                  </Link>
+                ) : (
                 <>
                   <Link
                     to="/register"
@@ -606,6 +627,7 @@ export const Header = () => {
                     </Link>
                   </div>
                 </>
+                )
               )}
 
               {/* PWA App Install CTA */}
@@ -802,7 +824,7 @@ export const Footer = () => {
               { label: lang === "fr" ? "À propos" : "About", href: "/about" },
               { label: "Blog", href: "/blog" },
               { label: "FAQ", href: "/faq" },
-              { label: "Devenir formateur", href: "/register" },
+              ...(PUBLIC_SELLER_SIGNUP ? [{ label: "Devenir formateur", href: "/register" }] : []),
             ].map((lnk) => (
               <li key={lnk.label} className="flex items-center gap-2">
                 <i className="fa-solid fa-chevron-right text-[10px] flex-none text-[color:var(--primary)]" />

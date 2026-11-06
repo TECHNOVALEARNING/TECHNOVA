@@ -34,6 +34,7 @@ import {
 } from "@/components/marketplace/MarketplaceProductCard";
 import { MARKETPLACE_CATEGORIES, PRODUCT_TYPES } from "@/data/marketplaceCategories";
 import { Button } from "@/components/ui/button";
+import { PUBLIC_SELLER_SIGNUP } from "@/config/features";
 import heroImage from "@/assets/marketplace-hero.jpg";
 
 const translations = {
@@ -311,11 +312,13 @@ const Marketplace = () => {
                   <ShoppingBag className="h-4 w-4" /> {t.myPurchases}
                 </Button>
               </Link>
-              <Link to="/register">
-                <Button size="sm" className="rounded-full gap-1.5 shadow-lg shadow-primary/30">
-                  <Store className="h-4 w-4" /> {t.becomeSeller}
-                </Button>
-              </Link>
+              {PUBLIC_SELLER_SIGNUP && (
+                <Link to="/register">
+                  <Button size="sm" className="rounded-full gap-1.5 shadow-lg shadow-primary/30">
+                    <Store className="h-4 w-4" /> {t.becomeSeller}
+                  </Button>
+                </Link>
+              )}
             </div>
           </motion.div>
         </div>

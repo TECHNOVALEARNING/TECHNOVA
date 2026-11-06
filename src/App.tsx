@@ -22,6 +22,7 @@ import SearchPage from "./pages/SearchPage";
 import Cart from "./pages/Cart";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import { PUBLIC_SELLER_SIGNUP } from "./config/features";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Fichiers from "./pages/Fichiers";
@@ -233,7 +234,10 @@ const AppContent = () => {
               <Route path="/search" element={<SearchPage />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
+              <Route
+                path="/register"
+                element={PUBLIC_SELLER_SIGNUP ? <Register /> : <Navigate to="/contact" replace />}
+              />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/fichiers" element={<Fichiers />} />

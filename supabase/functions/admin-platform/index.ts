@@ -83,6 +83,73 @@ serve(async (req) => {
       });
     }
 
+    // ── CRÉER / ACTIVER UN VENDEUR (réservé à l'administrateur) ──
+    // Le drapeau app_metadata.seller ne peut être posé que par le serveur (service_role).
+    if (action === "create_seller") {
+      const json = (payload: unknown, status = 200) =>
+        new Response(JSON.stringify(payload), {
+          status,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+
+      const email = String(params.email || "").trim().toLowerCase();
+      const firstName = String(params.first_name || "").trim().slice(0, 80);
+      const lastName = String(params.last_name || "").trim().slice(0, 80);
+      const phone = String(params.phone || "").replace(/[^\d+]/g, "").slice(0, 20);
+      let password = String(params.password || "");
+
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return json({ error: "Email invalide." }, 400);
+      if (password && password.length < 8) {
+        return json({ error: "Le mot de passe doit contenir au moins 8 caractères." }, 400);
+      }
+      const generated = !password;
+      if (generated) {
+        const bytes = crypto.getRandomValues(new Uint8Array(12));
+        const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
+        password = Array.from(bytes, (b) => alphabet[b % alphabet.length]).join("");
+      }
+
+      const fullName = `${firstName} ${lastName}`.trim();
+      const { data: created, error: createErr } = await supabaseAdmin.auth.admin.createUser({
+        email,
+        password,
+        email_confirm: true,
+        app_metadata: { seller: true },
+        user_metadata: {
+          full_name: fullName || undefined,
+          first_name: firstName || undefined,
+          last_name: lastName || undefined,
+          phone: phone || undefined,
+        },
+      });
+
+      if (!createErr && created?.user) {
+        return json({ success: true, created: true, user_id: created.user.id, email, password });
+      }
+
+      // Compte déjà existant (ex. acheteur) : on lui donne l'accès vendeur, sans toucher au mot de passe
+      const alreadyExists = /already|registered|exists/i.test(createErr?.message || "");
+      if (!alreadyExists) {
+        console.error("[admin-platform] create_seller", createErr);
+        return json({ error: createErr?.message || "Création du compte impossible." }, 400);
+      }
+
+      let existing: any = null;
+      for (let page = 1; page <= 50 && !existing; page++) {
+        const { data: list, error: listErr } = await supabaseAdmin.auth.admin.listUsers({ page, perPage: 1000 });
+        if (listErr) break;
+        existing = list.users.find((u: any) => String(u.email || "").toLowerCase() === email) || null;
+        if (list.users.length < 1000) break;
+      }
+      if (!existing) return json({ error: "Compte existant introuvable." }, 404);
+
+      const { error: updErr } = await supabaseAdmin.auth.admin.updateUserById(existing.id, {
+        app_metadata: { ...(existing.app_metadata || {}), seller: true },
+      });
+      if (updErr) return json({ error: updErr.message }, 400);
+      return json({ success: true, created: false, user_id: existing.id, email });
+    }
+
     // ── DASHBOARD STATS ──
     if (action === "stats") {
       const { data: totalUsers } = await supabaseAdmin

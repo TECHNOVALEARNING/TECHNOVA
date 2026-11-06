@@ -3,6 +3,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import AdminTrafficSection from "@/components/dashboard/AdminTrafficSection";
+import AdminAddSellerDialog from "@/components/dashboard/AdminAddSellerDialog";
 import { motion } from "framer-motion";
 import {
   Users,
@@ -602,14 +603,17 @@ const AdminDashboard = () => {
             <h1 className="text-2xl font-bold text-foreground">{t.adminTitle}</h1>
             <p className="text-sm text-muted-foreground mt-1">{t.adminSub}</p>
           </div>
+          <div className="self-start sm:self-auto flex items-center gap-2">
+          <AdminAddSellerDialog />
           <button
             onClick={() => fetchStats(true)}
             disabled={loading || refreshing}
-            className="self-start sm:self-auto flex items-center gap-2 px-3.5 py-2 rounded-xl bg-card border border-border/80 hover:bg-muted text-xs font-semibold text-foreground transition-all shadow-sm active:scale-95 disabled:opacity-50"
+            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-card border border-border/80 hover:bg-muted text-xs font-semibold text-foreground transition-all shadow-sm active:scale-95 disabled:opacity-50"
           >
             <RefreshCw className={`h-3.5 w-3.5 text-primary ${refreshing ? "animate-spin" : ""}`} />
             <span>{t.refresh}</span>
           </button>
+          </div>
         </div>
 
         {loading ? (
