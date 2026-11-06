@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 
 /**
  * "Vidéo" motion design du héros : 4 scènes qui racontent TECHNOVA Learning
- * (apprendre → coder → vendre → se certifier), enchaînées comme un showreel.
+ * (apprendre → coder → acheter → se certifier), enchaînées comme un showreel.
  *
  * - Enchaînement continu, sans barre de progression : un minuteur CSS invisible
  *   déclenche la scène suivante (pause = animation-play-state: paused)
@@ -17,16 +17,19 @@ const SCENE_MS = 5200;
 
 const T = {
   fr: {
-    scenes: ["Apprenez", "Pratiquez", "Vendez", "Certifiez-vous"],
+    scenes: ["Apprenez", "Pratiquez", "Achetez", "Certifiez-vous"],
     course: "Python pour la Data Science",
     lessons: ["Les bases de Python", "Pandas & NumPy", "Visualiser vos données", "Projet final"],
     progress: "Progression",
     trained: "Modèle entraîné — précision",
     accuracy: "Précision du modèle",
     ebook: "Guide UI/UX Design",
-    sale: "Nouvelle vente",
-    via: "via Mobile Money",
-    balance: "Solde disponible",
+    buySteps: [
+      ["Paiement Mobile Money", "MTN · Moov · Wave"],
+      ["Paiement confirmé", "Reçu envoyé par email"],
+      ["Accès immédiat", "Dans « Mes achats »"],
+    ],
+    download: "Téléchargement",
     certTitle: "Certificat de réussite",
     certFor: "décerné à",
     certCourse: "Data Science & IA",
@@ -35,16 +38,19 @@ const T = {
     pause: "Pause",
   },
   en: {
-    scenes: ["Learn", "Practice", "Sell", "Get certified"],
+    scenes: ["Learn", "Practice", "Buy", "Get certified"],
     course: "Python for Data Science",
     lessons: ["Python basics", "Pandas & NumPy", "Visualize your data", "Final project"],
     progress: "Progress",
     trained: "Model trained — accuracy",
     accuracy: "Model accuracy",
     ebook: "UI/UX Design Guide",
-    sale: "New sale",
-    via: "via Mobile Money",
-    balance: "Available balance",
+    buySteps: [
+      ["Mobile Money payment", "MTN · Moov · Wave"],
+      ["Payment confirmed", "Receipt sent by email"],
+      ["Instant access", "In “My purchases”"],
+    ],
+    download: "Download",
     certTitle: "Certificate of completion",
     certFor: "awarded to",
     certCourse: "Data Science & AI",
@@ -202,8 +208,10 @@ const ScenePractice = ({ t }: { t: (typeof T)["fr"] }) => (
   </div>
 );
 
-// ─── Scène 3 : vendre (ebook + ventes Mobile Money) ───
-const SceneSell = ({ t }: { t: (typeof T)["fr"] }) => (
+const BUY_ICONS = ["fa-mobile-screen-button", "fa-receipt", "fa-unlock"];
+
+// ─── Scène 3 : acheter (ebook + paiement Mobile Money + accès immédiat) ───
+const SceneBuy = ({ t }: { t: (typeof T)["fr"] }) => (
   <div className="tn-sr-scene">
     <motion.div
       className="tn-sr-card tn-sr-ebook"
@@ -218,28 +226,32 @@ const SceneSell = ({ t }: { t: (typeof T)["fr"] }) => (
     </motion.div>
 
     <div className="tn-sr-sales">
-      {[5000, 7500, 3000].map((amount, i) => (
+      {t.buySteps.map(([title, sub], i) => (
         <motion.div
-          key={i}
+          key={title}
           className="tn-sr-card tn-sr-sale"
           initial={{ opacity: 0, x: 40, scale: 0.9 }}
           animate={{ opacity: 1, x: 0, scale: 1 }}
           transition={{ delay: 0.7 + i * 0.75, type: "spring", stiffness: 260, damping: 22 }}
         >
           <span className="tn-sr-sale-ico">
-            <i className="fas fa-bag-shopping" />
+            <i className={`fas ${BUY_ICONS[i]}`} />
           </span>
           <div style={{ minWidth: 0 }}>
-            <div className="tn-sr-strong">{t.sale}</div>
-            <div className="tn-sr-muted">{t.via}</div>
+            <div className="tn-sr-strong">{title}</div>
+            <div className="tn-sr-muted">{sub}</div>
           </div>
-          <span className="tn-sr-amount">+{amount.toLocaleString("fr-FR")} F</span>
+          <span className="tn-sr-amount">
+            <i className="fas fa-check" />
+          </span>
         </motion.div>
       ))}
       <motion.div className="tn-sr-card tn-sr-balance" {...rise(2.9)}>
-        <span className="tn-sr-muted">{t.balance}</span>
+        <span className="tn-sr-muted">
+          <i className="fas fa-download" /> {t.download}
+        </span>
         <span className="tn-sr-balance-val">
-          <CountUp value={15500} delay={3} duration={1.4} /> FCFA
+          <CountUp value={100} delay={3} duration={1.4} /> %
         </span>
       </motion.div>
     </div>
@@ -308,8 +320,8 @@ const SceneCertify = ({ t }: { t: (typeof T)["fr"] }) => (
   </div>
 );
 
-const SCENES = [SceneLearn, ScenePractice, SceneSell, SceneCertify];
-const SCENE_ICONS = ["fa-graduation-cap", "fa-code", "fa-store", "fa-award"];
+const SCENES = [SceneLearn, ScenePractice, SceneBuy, SceneCertify];
+const SCENE_ICONS = ["fa-graduation-cap", "fa-code", "fa-bag-shopping", "fa-award"];
 
 const HeroShowreel = ({ lang }: { lang: Lang }) => {
   const t = T[lang] || T.fr;
