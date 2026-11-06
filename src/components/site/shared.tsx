@@ -20,6 +20,7 @@ import {
   ChevronRight,
   Store,
   ShoppingBag,
+  LogIn,
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import siteLogo from "@/assets/logo.png";
@@ -144,11 +145,20 @@ export const Header = () => {
     }
   };
 
+  const sellerLinkMobile = (
+    <p className="text-center text-sm text-muted-foreground">
+      {lang === "fr" ? "Déjà vendeur ?" : "Already a seller?"}{" "}
+      <Link to="/vendeur" onClick={() => setOpen(false)} className="font-medium text-primary hover:underline">
+        {lang === "fr" ? "Se connecter" : "Sign in"}
+      </Link>
+    </p>
+  );
+
   return (
     <header className="fixed w-full top-0 z-50 backdrop-blur-md bg-background/80 border-b border-border shadow-sm">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <Logo />
-        <nav className="hidden lg:flex items-center gap-8 text-sm font-normal">
+        <nav className="hidden lg:flex items-center gap-5 xl:gap-7 whitespace-nowrap text-sm font-normal">
           {links.map((l) => (
             <Link
               key={l.label}
@@ -353,6 +363,17 @@ export const Header = () => {
             </Link>
           ) : (
             <>
+              {!PUBLIC_SELLER_SIGNUP && (
+                <Link
+                  to="/vendeur"
+                  title={lang === "fr" ? "Connexion réservée aux vendeurs déjà inscrits" : "Sign-in for existing sellers only"}
+                  aria-label={lang === "fr" ? "Connexion vendeur" : "Seller sign-in"}
+                  className="inline-flex items-center gap-1.5 whitespace-nowrap text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-2"
+                >
+                  <LogIn className="h-4 w-4" />
+                  <span className="hidden xl:inline">{lang === "fr" ? "Connexion vendeur" : "Seller sign-in"}</span>
+                </Link>
+              )}
               {!hasBuyerSession &&
                 (PUBLIC_SELLER_SIGNUP ? (
                   <Link
@@ -576,6 +597,7 @@ export const Header = () => {
                   >
                     {lang === "fr" ? "Mes Achats" : "My Purchases"}
                   </Link>
+                  {!PUBLIC_SELLER_SIGNUP && sellerLinkMobile}
                   <button
                     onClick={async () => {
                       sessionStorage.removeItem("buyer_session");
@@ -591,14 +613,17 @@ export const Header = () => {
                 </>
               ) : (
                 !PUBLIC_SELLER_SIGNUP ? (
-                  <Link
-                    to="/buyer-login"
-                    onClick={() => setOpen(false)}
-                    className="w-full text-center inline-flex items-center justify-center rounded-xl text-base font-medium bg-[#0071e3] text-white hover:bg-[#0071e3]/90 h-12 px-4 py-2 shadow-sm"
-                  >
-                    <ShoppingBag className="h-5 w-5 mr-2" />{" "}
-                    {lang === "fr" ? "Mes Achats" : "My Purchases"}
-                  </Link>
+                  <>
+                    <Link
+                      to="/buyer-login"
+                      onClick={() => setOpen(false)}
+                      className="w-full text-center inline-flex items-center justify-center rounded-xl text-base font-medium bg-[#0071e3] text-white hover:bg-[#0071e3]/90 h-12 px-4 py-2 shadow-sm"
+                    >
+                      <ShoppingBag className="h-5 w-5 mr-2" />{" "}
+                      {lang === "fr" ? "Mes Achats" : "My Purchases"}
+                    </Link>
+                    {sellerLinkMobile}
+                  </>
                 ) : (
                 <>
                   <Link
