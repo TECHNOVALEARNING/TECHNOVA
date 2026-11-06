@@ -234,6 +234,8 @@ const AppContent = () => {
               <Route path="/search" element={<SearchPage />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/vendeur" element={<Navigate to="/login" replace />} />
+              <Route path="/espace-vendeur" element={<Navigate to="/login" replace />} />
               <Route
                 path="/register"
                 element={PUBLIC_SELLER_SIGNUP ? <Register /> : <Navigate to="/contact" replace />}

@@ -50,7 +50,7 @@ export default function AdminAddSellerDialog() {
   };
 
   const credentials = result
-    ? `Connexion vendeur TECHNOVA\nAdresse : ${window.location.origin}/login\nEmail : ${result.email}${
+    ? `Connexion vendeur TECHNOVA\nAdresse : ${window.location.origin}/vendeur\nEmail : ${result.email}${
         result.password ? `\nMot de passe provisoire : ${result.password}` : ""
       }`
     : "";
