@@ -146,12 +146,13 @@ export const Header = () => {
   };
 
   const sellerLinkMobile = (
-    <p className="text-center text-sm text-muted-foreground">
-      {lang === "fr" ? "Déjà vendeur ?" : "Already a seller?"}{" "}
-      <Link to="/vendeur" onClick={() => setOpen(false)} className="font-medium text-primary hover:underline">
-        {lang === "fr" ? "Se connecter" : "Sign in"}
-      </Link>
-    </p>
+    <Link
+      to="/vendeur"
+      onClick={() => setOpen(false)}
+      className="self-center inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground"
+    >
+      <LogIn className="h-4 w-4" /> {lang === "fr" ? "Se connecter" : "Sign in"}
+    </Link>
   );
 
   return (
@@ -367,11 +368,11 @@ export const Header = () => {
                 <Link
                   to="/vendeur"
                   title={lang === "fr" ? "Connexion réservée aux vendeurs déjà inscrits" : "Sign-in for existing sellers only"}
-                  aria-label={lang === "fr" ? "Connexion vendeur" : "Seller sign-in"}
+                  aria-label={lang === "fr" ? "Se connecter" : "Sign in"}
                   className="inline-flex items-center gap-1.5 whitespace-nowrap text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-2"
                 >
                   <LogIn className="h-4 w-4" />
-                  <span className="hidden xl:inline">{lang === "fr" ? "Connexion vendeur" : "Seller sign-in"}</span>
+                  <span className="hidden xl:inline">{lang === "fr" ? "Se connecter" : "Sign in"}</span>
                 </Link>
               )}
               {!hasBuyerSession &&
