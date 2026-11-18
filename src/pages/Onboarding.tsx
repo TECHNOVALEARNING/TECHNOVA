@@ -57,7 +57,7 @@ const STEPS = [
 ];
 
 const Onboarding = () => {
-  const { user, refreshProfile } = useAuth();
+  const { user, refreshProfile, signOut } = useAuth();
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [saving, setSaving] = useState(false);
@@ -174,9 +174,19 @@ const Onboarding = () => {
           </div>
           <span className="text-sm font-bold text-foreground">TECHNOVA</span>
         </div>
-        <span className="text-xs text-muted-foreground">
-          Étape {step + 1} sur {STEPS.length}
-        </span>
+        <div className="flex items-center gap-4">
+          <span className="text-xs text-muted-foreground">
+            Étape {step + 1} sur {STEPS.length}
+          </span>
+          {/* Sortie possible à tout moment (mauvais compte, onboarding à reprendre plus tard) */}
+          <button
+            type="button"
+            onClick={() => void signOut()}
+            className="text-xs text-muted-foreground underline-offset-2 hover:text-foreground hover:underline"
+          >
+            Se déconnecter
+          </button>
+        </div>
       </div>
 
       {/* Content */}

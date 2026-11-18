@@ -7,13 +7,24 @@ import { PUBLIC_SELLER_SIGNUP, SELLER_GRANDFATHER_CUTOFF } from "@/config/featur
 
 /**
  * Accès vendeur : comptes créés/activés par l'administrateur (app_metadata.seller,
- * modifiable uniquement côté serveur) ou vendeurs inscrits avant la fermeture des inscriptions.
+ * modifiable uniquement côté serveur) ou vendeurs inscrits avant la fermeture des inscriptions
+ * ET ayant réellement terminé leur onboarding vendeur.
+ * Acheteurs et vendeurs partagent les mêmes comptes : un simple compte acheteur créé avant la
+ * date limite ne doit pas ouvrir l'espace vendeur (sinon il est envoyé vers l'onboarding).
  */
-export function isApprovedSeller(user: User | null, isAdmin: boolean) {
+export function isApprovedSeller(
+  user: User | null,
+  isAdmin: boolean,
+  profile: { onboarding_completed?: boolean | null } | null,
+) {
   if (!user) return false;
   if (isAdmin || PUBLIC_SELLER_SIGNUP) return true;
+  // Activation par l'admin en premier : elle rouvre aussi un compte fermé auparavant
   if (user.app_metadata?.seller === true) return true;
-  return Boolean(user.created_at) && new Date(user.created_at) < new Date(SELLER_GRANDFATHER_CUTOFF);
+  if (user.app_metadata?.seller_closed_at) return false;
+  const createdBeforeCutoff =
+    Boolean(user.created_at) && new Date(user.created_at) < new Date(SELLER_GRANDFATHER_CUTOFF);
+  return createdBeforeCutoff && profile?.onboarding_completed === true;
 }
 
 const SellerAccessDenied = () => {
@@ -69,7 +80,7 @@ const ProtectedRoute = ({
     return <Navigate to="/dashboard" replace />;
   }
 
-  if (!isApprovedSeller(user, isAdmin)) return <SellerAccessDenied />;
+  if (!isApprovedSeller(user, isAdmin, profile)) return <SellerAccessDenied />;
 
   // Redirect to onboarding if not completed (unless already on onboarding page)
   if (profile && !profile.onboarding_completed && location.pathname !== "/onboarding") {

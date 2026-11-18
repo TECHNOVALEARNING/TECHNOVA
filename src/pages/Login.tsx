@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Eye, EyeOff, Percent } from "lucide-react";
+import { Eye, EyeOff, Percent, Store } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 import { useAuth } from "@/contexts/AuthContext";
@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import logo from "@/assets/logo.png";
 import SEOHead from "@/components/SEOHead";
 import { PUBLIC_SELLER_SIGNUP } from "@/config/features";
+import { isApprovedSeller } from "@/components/ProtectedRoute";
 
 const translations = {
   fr: {
@@ -35,6 +36,11 @@ const translations = {
     contactUs: "Nous contacter",
     visualHeading: "Gérez votre business digital",
     visualDesc: "Dashboard puissant, analytics en temps réel, paiements automatisés.",
+    notSellerTitle: "Aucun accès vendeur pour ce compte",
+    notSellerDesc:
+      "Ce compte n'est pas un compte vendeur TECHNOVA. Les comptes vendeurs sont créés uniquement par l'administrateur : contactez-le pour obtenir un accès. Si vous cherchez vos achats, utilisez l'espace « Mes achats ».",
+    myPurchases: "Mes achats",
+    contactAdmin: "Contacter l'administrateur",
   },
   en: {
     seoTitle: "Login",
@@ -57,6 +63,11 @@ const translations = {
     contactUs: "Contact us",
     visualHeading: "Manage your digital business",
     visualDesc: "Powerful dashboard, real-time analytics, automated payouts.",
+    notSellerTitle: "No seller access for this account",
+    notSellerDesc:
+      "This account is not a TECHNOVA seller account. Seller accounts are created only by the administrator: contact them to get access. Looking for your purchases? Use the \"My purchases\" area.",
+    myPurchases: "My purchases",
+    contactAdmin: "Contact the administrator",
   },
 };
 
@@ -66,7 +77,8 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { user, loading: authLoading } = useAuth();
+  const { user, profile, isAdmin, signOut, loading: authLoading } = useAuth();
+  const [notSeller, setNotSeller] = useState(false);
 
   const [lang, setLang] = useState(() =>
     typeof window !== "undefined" ? localStorage.getItem("technova_lang") || "fr" : "fr",
@@ -80,17 +92,24 @@ const Login = () => {
 
   const t = translations[lang === "en" ? "en" : "fr"];
 
+  // Après connexion (email ou Google) : seuls les vendeurs entrent. Un compte qui n'est pas
+  // vendeur est déconnecté aussitôt, au lieu d'être envoyé vers l'onboarding vendeur.
   useEffect(() => {
-    if (!authLoading && user) {
+    if (authLoading || !user) return;
+    if (isApprovedSeller(user, isAdmin, profile)) {
       navigate("/dashboard", { replace: true });
+      return;
     }
-  }, [authLoading, user, navigate]);
+    setNotSeller(true);
+    void signOut();
+  }, [authLoading, user, profile, isAdmin, navigate, signOut]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (loading || authLoading) return;
 
     setLoading(true);
+    setNotSeller(false);
 
     const { error } = await supabase.auth.signInWithPassword({
       email: email.trim().toLowerCase(),
@@ -103,8 +122,6 @@ const Login = () => {
       toast.error(error.message);
       return;
     }
-
-    toast.success(t.loginSuccess);
   };
 
   const handleGoogleLogin = async () => {
@@ -160,6 +177,29 @@ const Login = () => {
               </span>
             )}
           </div>
+
+          {notSeller && (
+            <div
+              role="alert"
+              className="mb-6 rounded-xl border border-border bg-muted/40 p-4 text-sm text-foreground"
+            >
+              <div className="flex items-center gap-2 font-semibold">
+                <Store className="h-4 w-4 text-primary" />
+                {t.notSellerTitle}
+              </div>
+              <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
+                {t.notSellerDesc}
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <Button asChild size="sm">
+                  <Link to="/contact">{t.contactAdmin}</Link>
+                </Button>
+                <Button asChild size="sm" variant="outline">
+                  <Link to="/buyer-login">{t.myPurchases}</Link>
+                </Button>
+              </div>
+            </div>
+          )}
 
           {/* Google Button */}
           <Button

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import CloseSellerAccountCard from "@/components/dashboard/CloseSellerAccountCard";
 import {
   Shield,
   CheckCircle2,
@@ -373,6 +374,8 @@ const DashboardAccountTab = () => {
           )}
         </div>
       )}
+
+      {!isAdmin && <CloseSellerAccountCard lang={lang} />}
     </div>
   );
 };
